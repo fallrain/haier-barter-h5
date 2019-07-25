@@ -89,10 +89,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  * {
-    margin: 0;
-    padding: 0;
-  }
 
   .title {
     font-size: 30px;
@@ -107,7 +103,6 @@ export default {
     margin-right: 24px;
     margin-left: 24px;
     display: flex;
-    display: -webkit-flex;
     flex-direction: row;
     flex-wrap: wrap;
   }
