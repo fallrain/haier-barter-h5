@@ -4,7 +4,9 @@
       <keep-alive
         :exclude="aliveExclude"
       >
-        <router-view></router-view>
+        <router-view>
+
+        </router-view>
       </keep-alive>
     </div>
   </div>
