@@ -36,7 +36,13 @@ module.exports = {
     'no-restricted-syntax': 0,
     'no-lonely-if': 0,
     'consistent-return': 0,
-    'no-restricted-properties': 0
+    'no-restricted-properties': 0,
+    'object-curly-newline': [
+      1,
+      {
+        'ImportDeclaration': 'always'
+      }
+    ]
   },
   parserOptions: {
     parser: 'babel-eslint',

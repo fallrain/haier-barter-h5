@@ -1,12 +1,12 @@
 <template>
-  <div class="w-radio" @click="toggle">
+  <div class="b-radio" @click="toggle">
     <i :class="['val-top iconfont',style]"></i>
-    <span class="w-radio-inf">{{inf}}</span>
+    <span class="b-radio-inf">{{inf}}</span>
   </div>
 </template>
 <script>
 export default {
-  name: 'WRadio',
+  name: 'BRadio',
   // 修改双向绑定的属性和事件
   model: {
     prop: 'checked',
@@ -48,7 +48,7 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-  .w-radio {
+  .b-radio {
     display: flex;
     align-items: center;
     font-size: 10px;
@@ -76,7 +76,7 @@ export default {
     }
   }
 
-  .w-radio-inf {
+  .b-radio-inf {
     margin-left: 5px;
     color: #474E66;
   }

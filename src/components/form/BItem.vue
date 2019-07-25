@@ -1,19 +1,19 @@
 <template>
-  <div class="wItem-item">
-    <div class="wItem-item-left">
-      <span class="wItem-item-title" v-show="title">{{title}}</span>
+  <div class="bItem-item">
+    <div class="bItem-item-left">
+      <span class="bItem-item-title" v-show="title">{{title}}</span>
       <slot name="left"></slot>
     </div>
     <div
-      v-if="arrow"
-      class="wItem-item-right"
+      class="bItem-item-right"
     >
       <span
-        class="wItem-item-right-val"
+        class="bItem-item-right-val"
         v-show="value"
       >{{value}}</span>
       <slot name="right"></slot>
       <i
+        v-if="arrow"
         class="iconfont icon-youjiantou"
         @click="rightHandle"
       ></i>
@@ -23,12 +23,12 @@
 
 <script>
 export default {
-  name: 'WItem',
+  name: 'BItem',
   props: {
     // 是否显示右箭头
     arrow: {
       type: Boolean,
-      default: true
+      default: false
     },
     // 标题
     title: {
@@ -42,42 +42,42 @@ export default {
   methods: {
     rightHandle() {
       /* 右箭头点击事件 */
-      this.$emit('rightClick',this);
+      this.$emit('rightClick', this);
     }
   }
 };
 </script>
 
 <style lang="scss">
-  .wItem-item {
+  .bItem-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    height: 60px;
-    background: #222229;
-    border-bottom: 1px solid #1C1C21;
-    padding-left: 15px;
-    padding-right: 15px;
+    height: 74px;
+    background: #fff;
+    font-size: 28px;
+    //border-bottom: 1px solid #1C1C21;
+    padding-left: 24px;
+    padding-right: 24px;
   }
 
-  .wItem-item-title {
-    font-size: 15px;
-    color: #fff;
+  .bItem-item-title {
+    color: #333;
   }
 
-  .wItem-item-right {
+  .bItem-item-right {
     display: flex;
     align-items: center;
 
-    .iconfont {
+    & > .iconfont {
       margin-left: 30px;
       font-size: 10px;
       color: #838299;
     }
   }
 
-  .wItem-item-right-val {
-    color: #838299;
+  .bItem-item-right-val {
+    color: #333;
   }
 </style>
