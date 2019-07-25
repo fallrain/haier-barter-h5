@@ -1,7 +1,17 @@
 <template>
   <div class="b-fieldset">
-    <p class="b-fieldset-legend">{{title}}</p>
-    <div>
+    <div
+      class="b-fieldset-legend"
+      :class="[
+        headBtmLine && 'headBtmLine'
+      ]"
+    >
+      <span class="b-fieldset-legend-left">{{title}}</span>
+      <span class="b-fieldset-legend-right">
+        <slot name="headRight"></slot>
+      </span>
+    </div>
+    <div class="b-fieldset-default-cnt">
       <slot></slot>
     </div>
   </div>
@@ -13,6 +23,11 @@ export default {
   props: {
     title: {
       default: ''
+    },
+    // head底部线
+    headBtmLine: {
+      type: Boolean,
+      default: false
     }
   }
 };
@@ -20,14 +35,26 @@ export default {
 
 <style lang="scss">
   .b-fieldset {
-    padding: 24px;
+    padding-bottom: 24px;
     background: #fff;
   }
 
   .b-fieldset-legend {
-    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 80px;
     color: #333;
     font-size: 28px;
-    margin-bottom: 24px;
+    padding-left: 24px;
+    padding-right: 24px;
+    &.headBtmLine{
+      border-bottom: 1px solid #F5F5F5;
+    }
+  }
+
+  .b-fieldset-default-cnt {
+    padding-left: 24px;
+    padding-right: 24px;
   }
 </style>

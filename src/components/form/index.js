@@ -1,3 +1,4 @@
+import BActivityList from './BActivityList';
 import BDatePicker from './BDatePicker';
 import BFieldset from './BFieldset';
 import BItem from './BItem';
@@ -12,6 +13,7 @@ import BVerificationcode from './BVerificationcode';
 
 /* eslint-disable import/prefer-default-export */
 export {
+  BActivityList,
   BDatePicker,
   BFieldset,
   BItem,

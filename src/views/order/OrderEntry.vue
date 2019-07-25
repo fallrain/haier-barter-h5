@@ -51,6 +51,7 @@
       </template>
     </b-item>
     <b-fieldset
+      class="mt16"
       title="用户购买的产品"
     >
       <div>
@@ -74,16 +75,47 @@
         </ul>
         <button
           type="button"
-          class="common-btn-primary"
-        >新增产品
+          class="common-btn-primary w100per"
+        >+新增产品
         </button>
       </div>
     </b-fieldset>
+    <b-fieldset
+      class="mt16 orderEntry-rights-fieldset"
+      title="购机权益活动"
+      :headBtmLine="true"
+    >
+      <template
+        v-slot:headRight=""
+      >
+        刷新查看剩余量
+      </template>
+      <div>
+        <b-activity-list
+          :data="activityList"
+          v-model="choosedActivitys"
+        ></b-activity-list>
+        <div class="orderEntry-rights-fieldset-more">查看全部活动></div>
+      </div>
+    </b-fieldset>
+    <div class="orderEntry-btns-par">
+      <button
+        type="button"
+        class="common-submit-btn-primary"
+      >暂存草稿
+      </button>
+      <button
+        type="button"
+        class="common-submit-btn-default"
+      >下一步
+      </button>
+    </div>
   </div>
 </template>
 
 <script>
 import {
+  BActivityList,
   BDatePicker,
   BFieldset,
   BItem,
@@ -94,6 +126,7 @@ import {
 export default {
   name: 'OrderEntry',
   components: {
+    BActivityList,
     BDatePicker,
     BFieldset,
     BItem,
@@ -135,7 +168,24 @@ export default {
           price: '',
           isReport: true
         }
-      ]
+      ],
+      // 活动列表
+      activityList: [
+        {
+          id: 1,
+          activityName: '6月场景套权益昆明小微',
+          inf: '满10000元送7500积分',
+          num: 33
+        },
+        {
+          id: 2,
+          activityName: '6月场景套权益昆明小微',
+          inf: '满10000元送7500积分',
+          num: 21
+        }
+      ],
+      // 选中的活动id
+      choosedActivitys: []
     };
   },
   methods: {}
@@ -211,5 +261,34 @@ export default {
   .orderEntry-reportInf {
     color: #3078CC;
     font-size: 24px;
+  }
+
+  .orderEntry-rights-fieldset {
+    .b-fieldset-legend-left {
+      font-size: 28px;
+      color: #EE534F;
+    }
+
+    .b-fieldset-legend-right {
+      font-size: 24px;
+      color: #1969C6;
+    }
+  }
+
+  .orderEntry-rights-fieldset-more {
+    margin-top: 20px;
+    color: #1969C6;
+    font-size: 24px;
+    text-align: center;
+  }
+
+  .orderEntry-btns-par {
+    display: flex;
+    flex-wrap: nowrap;
+    padding: 24px;
+
+    .common-submit-btn-primary {
+      margin-right: 24px;
+    }
   }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <li
-    class=""
+    class="b-order-product-item"
   >
     <div class="b-order-product-item-head">
       <span class="b-order-product-item-head-name">{{data.name}}</span>
