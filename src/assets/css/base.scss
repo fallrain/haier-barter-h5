@@ -13,6 +13,10 @@
   box-sizing: border-box;
 }
 
+html {
+  background: #F5F5F5;
+}
+
 body {
   line-height: normal;
 }
@@ -133,8 +137,4 @@ html input[disabled] {
 
 title {
   display: block;
-}
-
-html{
-  background: #fff;
 }
