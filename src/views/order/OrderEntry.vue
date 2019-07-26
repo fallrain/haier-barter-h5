@@ -106,6 +106,7 @@
       title="修改原因"
       value="退货"
       :arrow="true"
+      @rightClick="updateReasonClick"
     >
 
     </b-item>
@@ -125,6 +126,12 @@
       :show.sync="chooseGiftPopShow"
       title="选择礼品"
       :list="giftList"
+    ></b-pop-check-list>
+    <b-pop-check-list
+      type="radio"
+      :show.sync="returnReasonPopShow"
+      title="选择修改订单原因"
+      :list="returnReasonList"
     ></b-pop-check-list>
   </div>
 </template>
@@ -221,12 +228,39 @@ export default {
           checkedIds: []
         }
       ],
+      // 退货原因pop show
+      returnReasonPopShow: false,
+      // pop 退货原因
+      returnReasonList: [
+        {
+          id: 1,
+          name: '换货'
+        },
+        {
+          id: 2,
+          name: '录单错误'
+        },
+        {
+          id: 3,
+          name: '信息填写错误'
+        },
+        {
+          id: 4,
+          name: '其他原因',
+          reason: '',
+          placeholder: '请输入您的订单修改原因'
+        }
+      ]
     };
   },
   methods: {
     chooseGift() {
       /* 选择礼品 */
       this.chooseGiftPopShow = true;
+    },
+    updateReasonClick() {
+      /* 选择退换货原因 */
+      this.returnReasonPopShow = true;
     }
   }
 };

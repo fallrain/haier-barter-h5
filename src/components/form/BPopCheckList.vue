@@ -21,10 +21,19 @@
             @click="checkboxClick(item)"
           >
             <span class="b-pop-checkList-item-name">{{item.name}}</span>
-            <i
-              class="b-pop-checkList-icon iconfont"
-              :class="[checkIds.some(v=>v===item.id) && 'icon-duihao']"
-            ></i>
+            <div>
+              <input
+                v-if="item.reason!==undefined"
+                class="b-pop-checkList-item-input"
+                type="text"
+                v-model="item.reason"
+                :placeholder="item.placeholder || '请输入'"
+              >
+              <i
+                class="b-pop-checkList-icon iconfont"
+                :class="[checkIds.some(v=>v===item.id) && 'icon-duihao']"
+              ></i>
+            </div>
           </li>
         </ul>
       </div>
@@ -46,6 +55,11 @@ export default {
     'md-popup-title-bar': PopupTitleBar
   },
   props: {
+    // 类型：checkbox radio
+    type: {
+      type: String,
+      default: 'checkbox'
+    },
     value: {
       type: Array,
       default: () => []
@@ -78,6 +92,10 @@ export default {
   methods: {
     checkboxClick({ id }) {
       const i = this.checkIds.findIndex(v => id === v);
+      if (this.type === 'radio') {
+        this.checkIds = [id];
+        return;
+      }
       if (i === -1) {
         this.checkIds.push(id);
       } else {
@@ -148,5 +166,16 @@ export default {
   .b-pop-checkList-item-name {
     font-size: 28px;
     color: #666;
+  }
+
+  .b-pop-checkList-item-input {
+    background: transparent;
+    border: 0;
+    height: 30px;
+    font-size: 28px;
+    color: #999;
+    text-align: right;
+    width: 320px;
+    padding-right: 10px;
   }
 </style>

@@ -6,6 +6,7 @@
     </div>
     <div
       class="bItem-item-right"
+      @click="rightHandle"
     >
       <span
         class="bItem-item-right-val"
@@ -15,7 +16,6 @@
       <i
         v-if="arrow"
         class="iconfont icon-youjiantou"
-        @click="rightHandle"
       ></i>
     </div>
   </div>
