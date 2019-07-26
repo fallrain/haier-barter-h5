@@ -118,14 +118,36 @@
         </div>
       </div>
     </div>
+    <template>
+  <div class="md-example-child md-example-child-tabs md-example-child-tab-bar-4">
+    <md-tab-bar
+      v-model="current"
+      :items="items"
+      :has-ink="false"
+    >
+      <template slot="item" slot-scope="{ item }">
+        <div class="custom-item">
+          <div class="icon">
+            <md-icon :name="item.icon" />
+          </div>
+          <div class="text">
+            <span v-text="item.label"></span>
+          </div>
+        </div>
+      </template>
+    </md-tab-bar>
+  </div>
+</template>
 
   </div>
 </template>
 
 <script>
+import { TabBar,Icon } from 'mand-mobile'
 export default {
   name: "",
-  components: {},
+  components: {[TabBar.name]: TabBar,
+    [Icon.name]: Icon,},
   data() {
     return {
       noticeShow: false,
@@ -168,7 +190,10 @@ export default {
           id: "4",
           name: "爱到家"
         }
-      ]
+      ],
+      current: 1,
+      items: [{name: 1, label: '全部', icon: 'home'}, {name: 2, label: '跟进中', icon: 'user'}, {name: 3, label: '异常', icon: 'user'}, {name: 4, label: '已成交', icon: 'user'}],
+
     };
   },
   onLoad() {
@@ -437,4 +462,28 @@ export default {
 .app-container{
 background-color: red !important;
 }
+.md-example-child-tab-bar-4{
+  position: absolute;
+  bottom: 0;
+  width: 750px;
+    .custom-item{
+display :flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height :100%;
+    // flex: 1;
+}
+    .text{
+font-size: 20px
+     }
+
+.md-tab-bar-inner{
+   width: 750px !important;
+}
+.md-tab-bar{
+  padding: 0 !important;
+}
+}
+
 </style>
