@@ -4,6 +4,7 @@ import BFieldset from './BFieldset';
 import BItem from './BItem';
 import BModel from './BModel';
 import BOrderProduct from './BOrderProduct';
+import BPopAddressList from './BPopAddressList';
 import BPopCheckList from './BPopCheckList';
 import BRadio from './BRadio';
 import BRadioItem from './BRadioItem';
@@ -20,6 +21,7 @@ export {
   BItem,
   BModel,
   BOrderProduct,
+  BPopAddressList,
   BPopCheckList,
   BRadio,
   BRadioItem,
