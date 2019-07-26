@@ -71,9 +71,9 @@ export default {
     align-items: center;
 
     & > .iconfont {
-      margin-left: 30px;
-      font-size: 10px;
-      color: #838299;
+      margin-left: 12px;
+      font-size: 26px;
+      color: #D9D9D9;
     }
   }
 

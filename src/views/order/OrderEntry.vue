@@ -92,7 +92,7 @@
       </template>
       <div>
         <b-activity-list
-          :isDetail="true"
+          :isDetail="isDetail"
           :data="activityList"
           v-model="choosedActivitys"
           @chooseGift="chooseGift"
@@ -100,6 +100,15 @@
         <div class="orderEntry-rights-fieldset-more">查看全部活动></div>
       </div>
     </b-fieldset>
+    <b-item
+      v-if="isDetail"
+      class="mt16"
+      title="修改原因"
+      value="退货"
+      :arrow="true"
+    >
+
+    </b-item>
     <div class="orderEntry-btns-par">
       <button
         type="button"
@@ -144,6 +153,8 @@ export default {
   },
   data() {
     return {
+      // 是否详情模式
+      isDetail: true,
       // 门店名称
       shopName: '新华百货老大楼',
       // 订单类型单选
