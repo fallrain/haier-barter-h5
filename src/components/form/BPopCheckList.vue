@@ -140,6 +140,7 @@ export default {
 
   .b-pop-checkList-cnt {
     background: #fff;
+    padding-bottom: 24px;
   }
 
   .b-pop-checkList-item {
