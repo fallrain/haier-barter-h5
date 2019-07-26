@@ -10,7 +10,7 @@
         alt=""
         class="notice-image"
         @click="noticeClose"
-      ></img>
+      />
     </div>
     <div class="uni-form-item uni-column search-view">
       <input
@@ -22,7 +22,7 @@
       <img
         src="/static/img/orderFollow-up/search@3x.png"
         class="search-image"
-      ></img>
+      />
       <p class="orderFollowButton">手动录单</p>
     </div>
     <div class="bar-v">
@@ -34,7 +34,7 @@
         <img
           src="/static/img/orderFollow-up/xiala@3x.png"
           class="xialaimage"
-        ></img>
+        />
       </div>
       <div
         class="bar-class"
@@ -54,7 +54,7 @@
         <img
           src="/static/img/orderFollow-up/shaixuan@3x.png"
           class="xialaimage"
-        ></img>
+        />
       </div>
     </div>
     <div
@@ -66,7 +66,7 @@
         v-for="(sort,index) in sortList"
         :key="index"
         class="sort-class"
-        @click="sortClick()"
+        @click="sortClick(sort)"
         v-show="sortShow"
       >{{sort.name}}</p>
       <div style="background-color:white;height: 50px;">
@@ -74,7 +74,7 @@
           class="orderFollowButtonRow"
           v-for="(scenario,index) in scenarioList"
           v-show="scenarioShow"
-          @click="scenarioClick()"
+          @click="scenarioClick(scenario)"
         >{{scenario.name}}</p>
       </div>
     </div>
@@ -89,22 +89,23 @@
           <img
             src="/static/img/orderFollow-up/tel@3x.png"
             class="brandImage"
-          ></img>
+          />
           <span class="hand-class">手工录单</span>
         </div>
         <div class="">
           <img
             src="/static/img/orderFollow-up/time@3x.png"
             class="timeImage"
-          ></img>
+          />
           <span class="time-label">2019-06-1815:33</span>
           <span class="information-class">详细信息</span>
           <img
             src="/static/img/orderFollow-up/xialablue@3x.png"
             class="information-xiala"
-          ></img>
+            @click="detailHide()"
+          />
         </div>
-        <div class="information-p">
+        <div class="information-p" v-show="detailShow">
           <p>意向产品：bingxiang</p>
           <p>海尔/8年</p>
         </div>
@@ -112,7 +113,7 @@
           <img
             src="/static/img/orderFollow-up/dian@3x.png"
             class="dian-Class"
-          ></img>
+          />
           <p class="bottom-button">成交录单</p>
           <p class="bottom-button">发券</p>
         </div>
@@ -154,7 +155,10 @@ export default {
       maskShow: false,
       sortShow: false,
       scenarioShow: false,
+      detailShow:false,
       dataList: [],
+      sortType:'1',
+      scenarioType:'',
       sortList: [
         {
           id: "1",
@@ -196,9 +200,10 @@ export default {
 
     };
   },
-  onLoad() {
-    this.searchData();
+  created() {
     debugger
+    this.searchData();
+
   },
   computed: {},
   methods: {
@@ -213,10 +218,12 @@ export default {
       this.scenarioShow = true;
     },
     preparation() {},
-    sortClick() {
+    sortClick(item) {
+      this.sortType = item.id
       this.maskerHidden();
     },
-    scenarioClick() {
+    scenarioClick(item) {
+      this.scenarioType = item.id
       this.maskerHidden();
     },
     maskerHidden() {
@@ -227,9 +234,27 @@ export default {
     noticeClose() {
       this.noticeShow = false;
     },
+    detailHide(){
+      this.detailShow = !this.detailShow
+    },
     searchData() {
       debugger
-      this.hPost("/orderFollow/queryOrderFollowlList", {
+      this.axPost("/orderFollow/queryOrderFollowlList",
+      {
+        hmcId:'A0008949',
+        sortType:this.sortType,
+        recordMode:'',
+        userStatus:'',
+        orderFollowStatus:'',
+        flowType:'',
+        flowStatus:'',
+        orderFollowSource:'',
+        businessScenarios:this.scenarioType,
+        sourceSystem:'',
+        orderFollowStartDate:'',
+        orderFollowEndDate:'',
+      },
+      {
         pageNum: 1,
         pageSize: 10
       }).then(data => {
