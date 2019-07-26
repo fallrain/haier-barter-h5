@@ -119,35 +119,41 @@
       </div>
     </div>
     <template>
-  <div class="md-example-child md-example-child-tabs md-example-child-tab-bar-4">
-    <md-tab-bar
-      v-model="current"
-      :items="items"
-      :has-ink="false"
-    >
-      <template slot="item" slot-scope="{ item }">
-        <div class="custom-item">
-          <div class="icon">
-            <md-icon :name="item.icon" />
-          </div>
-          <div class="text">
-            <span v-text="item.label"></span>
-          </div>
-        </div>
-      </template>
-    </md-tab-bar>
-  </div>
-</template>
+      <div class="md-example-child md-example-child-tabs md-example-child-tab-bar-4">
+        <md-tab-bar
+          v-model="current"
+          :items="items"
+          :has-ink="false"
+        >
+          <template slot="item" slot-scope="{ item }">
+            <div class="custom-item">
+              <div class="icon">
+                <md-icon :name="item.icon"/>
+              </div>
+              <div class="text">
+                <span v-text="item.label"></span>
+              </div>
+            </div>
+          </template>
+        </md-tab-bar>
+      </div>
+    </template>
 
   </div>
 </template>
 
 <script>
-import { TabBar,Icon } from 'mand-mobile'
+import {
+  Icon,
+  TabBar
+} from 'mand-mobile';
+
 export default {
-  name: "",
-  components: {[TabBar.name]: TabBar,
-    [Icon.name]: Icon,},
+  name: '',
+  components: {
+    [TabBar.name]: TabBar,
+    [Icon.name]: Icon,
+  },
   data() {
     return {
       noticeShow: false,
@@ -157,48 +163,63 @@ export default {
       dataList: [],
       sortList: [
         {
-          id: "1",
-          name: "智能排序"
+          id: '1',
+          name: '智能排序'
         },
         {
-          id: "2",
-          name: "按时间倒序"
+          id: '2',
+          name: '按时间倒序'
         },
         {
-          id: "3",
-          name: "按品牌"
+          id: '3',
+          name: '按品牌'
         },
         {
-          id: "4",
-          name: "按成交可能性"
+          id: '4',
+          name: '按成交可能性'
         }
       ],
       scenarioList: [
         {
-          id: "1",
-          name: "以旧换新"
+          id: '1',
+          name: '以旧换新'
         },
         {
-          id: "2",
-          name: "一站筑家"
+          id: '2',
+          name: '一站筑家'
         },
         {
-          id: "3",
-          name: "认筹"
+          id: '3',
+          name: '认筹'
         },
         {
-          id: "4",
-          name: "爱到家"
+          id: '4',
+          name: '爱到家'
         }
       ],
       current: 1,
-      items: [{name: 1, label: '全部', icon: 'home'}, {name: 2, label: '跟进中', icon: 'user'}, {name: 3, label: '异常', icon: 'user'}, {name: 4, label: '已成交', icon: 'user'}],
+      items: [{
+        name: 1,
+        label: '全部',
+        icon: 'home'
+      }, {
+        name: 2,
+        label: '跟进中',
+        icon: 'user'
+      }, {
+        name: 3,
+        label: '异常',
+        icon: 'user'
+      }, {
+        name: 4,
+        label: '已成交',
+        icon: 'user'
+      }],
 
     };
   },
-  onLoad() {
+  created() {
     this.searchData();
-    debugger
   },
   computed: {},
   methods: {
@@ -212,7 +233,8 @@ export default {
       this.sortShow = false;
       this.scenarioShow = true;
     },
-    preparation() {},
+    preparation() {
+    },
     sortClick() {
       this.maskerHidden();
     },
@@ -228,21 +250,21 @@ export default {
       this.noticeShow = false;
     },
     searchData() {
-      debugger
-      this.hPost("/orderFollow/queryOrderFollowlList", {
-        pageNum: 1,
-        pageSize: 10
-      }).then(data => {
-        if (data.code === 1) {
-          this.dataList = data.data.result;
-        } else {
-          uni.showToast({
-            title: data.msg,
-            duration: 4000,
-            icon: "none"
-          });
-        }
-      });
+      this.orderService.queryOrderFollowlList();
+      /* this.hPost("/orderFollow/queryOrderFollowlList", {
+          pageNum: 1,
+          pageSize: 10
+        }).then(data => {
+          if (data.code === 1) {
+            this.dataList = data.data.result;
+          } else {
+            uni.showToast({
+              title: data.msg,
+              duration: 4000,
+              icon: "none"
+            });
+          }
+        }); */
     },
 
 
@@ -251,239 +273,272 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.notice-class {
-  height: 64px;
-  background-color: #fdf0ce;
-  color: #e89748;
-  font-size: 24px;
-}
-.notice-p {
-  line-height: 64px;
-  margin-left: 24px;
-}
-.notice-image {
-  width: 32px;
-  height: 32px;
-  position: absolute;
-  right: 24px;
-  top: 18px;
-}
-.search-image {
-  width: 32px;
-  height: 32px;
-  position: absolute;
-  left: 480px;
-  top: 25px;
-}
-.search-view {
-  position: relative;
-}
-.input-class {
-  width: 500px;
-  background-color: white;
-  border-radius: 20px;
-  height: 60px;
-  margin-left: 24px;
-  margin-top: 14px;
-  padding-left: 30px !important;
-  color: #666666;
-  font-size: 28px;
-  padding-right: 50px !important;
-}
-.orderFollowButton {
-  padding-left: 24px;
-  padding-right: 24px;
-  height: 60px;
-  line-height: 60px;
-  text-align: center;
-  color: #1969c6;
-  border: 1px #1969c6 solid;
-  font-size: 28px;
-  width: 180px;
-  border-radius: 30px;
-  position: absolute;
-  right: 20px;
-  top: 10px;
-}
-.orderFollowButtonRow {
-
-  padding-left: 24px;
-  padding-right: 24px;
-  height: 60px;
-  line-height: 60px;
-  text-align: center;
-  color: #666666;
-  border: 1px #cccccc solid;
-  font-size: 24px;
-  // width: 180px;
-  border-radius: 30px;
-  float: left;
-  margin-top: 20px;
-  margin-left: 24px;
-}
-.bottom-button {
-  padding-left: 24px;
-  padding-right: 24px;
-  height: 60px;
-  line-height: 60px;
-  text-align: center;
-  color: #1969c6;
-  border: 1px #1969c6 solid;
-  font-size: 24px;
-  // width: 180px;
-  border-radius: 30px;
-  float: right;
-  margin-top: 20px;
-  margin-left: 10px;
-}
-.order-span {
-  display: inline-block;
-  color: #666666;
-  font-size: 28px;
-  padding-left: 56px;
-  line-height: 72px;
-}
-.xialaimage {
-  width: 36px;
-  height: 36px;
-  margin-top: 20px;
-  position: absolute;
-  margin-left: 14px;
-}
-.brandImage {
-  height: 36px;
-  width: 80px;
-}
-.timeImage {
-  width: 32px;
-  height: 32px;
-  position: absolute;
-  margin-top: 14px;
-}
-.time-label {
-  color: #bbbbbb;
-  font-size: 28px;
-  margin-left: 50px;
-}
-.bar-class {
-  height: 72px;
-  width: 250px;
-  float: left;
-  position: relative;
-}
-.bar-v {
-  background-color: white;
-  height: 72px;
-  margin-top: 15px;
-}
-.masker {
-  width: 100%;
-  background-color: #9999;
-  height: 1200px;
-  z-index: 10;
-  position: absolute;
-  opacity: 50%;
-}
-.sort-class {
-  color: #333333;
-  font-size: 28px;
-  background-color: white;
-  height: 80px;
-  line-height: 80px;
-  padding-left: 24px;
-  border-bottom: 1px solid #eeeeee;
-}
-.select-sort {
-  color: #1969c6;
-  font-size: 28px;
-  background-color: white;
-  height: 80px;
-  line-height: 80px;
-  padding-left: 24px;
-  border-bottom: 1px solid #eeeeee;
-}
-.label-class {
-  margin-top: 16px;
-  // height: 290px;
-  background-color: white;
-  padding: 24px;
-}
-.label-span {
-  // display: inline;
-  color: #333333;
-  font-size: 36px;
-}
-.sex-class {
-  color: #999999;
-  font-size: 28px;
-  margin-left: 10px;
-}
-.hand-class {
-  color: #f5a623;
-  font-size: 24px;
-  margin-left: 16px;
-}
-.information-class {
-  color: #1969c6;
-  font-size: 28px;
-  margin-left: 260px;
-}
-.information-xiala {
-  width: 36px;
-  height: 36px;
-  margin-top: 14px;
-  position: absolute;
-  margin-left: 14px;
-}
-.information-p {
-  color: #666666;
-  font-size: 28px;
-  margin-top: 10px;
-  // line-height: 40px;
-  p {
-    line-height: 50px;
-    height: 50px;
+  .notice-class {
+    height: 64px;
+    background-color: #fdf0ce;
+    color: #e89748;
+    font-size: 24px;
   }
-}
-.bottom-class {
-  margin-top: 20px;
-  height: 80px;
-  border-top: 1px solid #eeeeee;
-}
-.dian-Class {
-  width: 36px;
-  height: 6px;
-  margin-top: 50px;
-}
-.page-class{
-  background-color: #F5F5F5;
-  height:1330px;
-}
-.app-container{
-background-color: red !important;
-}
-.md-example-child-tab-bar-4{
-  position: absolute;
-  bottom: 0;
-  width: 750px;
-    .custom-item{
-display :flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height :100%;
-    // flex: 1;
-}
-    .text{
-font-size: 20px
-     }
 
-.md-tab-bar-inner{
-   width: 750px !important;
-}
-.md-tab-bar{
-  padding: 0 !important;
-}
-}
+  .notice-p {
+    line-height: 64px;
+    margin-left: 24px;
+  }
+
+  .notice-image {
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    right: 24px;
+    top: 18px;
+  }
+
+  .search-image {
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    left: 480px;
+    top: 25px;
+  }
+
+  .search-view {
+    position: relative;
+  }
+
+  .input-class {
+    width: 500px;
+    background-color: white;
+    border-radius: 20px;
+    height: 60px;
+    margin-left: 24px;
+    margin-top: 14px;
+    padding-left: 30px !important;
+    color: #666666;
+    font-size: 28px;
+    padding-right: 50px !important;
+  }
+
+  .orderFollowButton {
+    padding-left: 24px;
+    padding-right: 24px;
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+    color: #1969c6;
+    border: 1px #1969c6 solid;
+    font-size: 28px;
+    width: 180px;
+    border-radius: 30px;
+    position: absolute;
+    right: 20px;
+    top: 10px;
+  }
+
+  .orderFollowButtonRow {
+
+    padding-left: 24px;
+    padding-right: 24px;
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+    color: #666666;
+    border: 1px #cccccc solid;
+    font-size: 24px;
+    // width: 180px;
+    border-radius: 30px;
+    float: left;
+    margin-top: 20px;
+    margin-left: 24px;
+  }
+
+  .bottom-button {
+    padding-left: 24px;
+    padding-right: 24px;
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+    color: #1969c6;
+    border: 1px #1969c6 solid;
+    font-size: 24px;
+    // width: 180px;
+    border-radius: 30px;
+    float: right;
+    margin-top: 20px;
+    margin-left: 10px;
+  }
+
+  .order-span {
+    display: inline-block;
+    color: #666666;
+    font-size: 28px;
+    padding-left: 56px;
+    line-height: 72px;
+  }
+
+  .xialaimage {
+    width: 36px;
+    height: 36px;
+    margin-top: 20px;
+    position: absolute;
+    margin-left: 14px;
+  }
+
+  .brandImage {
+    height: 36px;
+    width: 80px;
+  }
+
+  .timeImage {
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    margin-top: 14px;
+  }
+
+  .time-label {
+    color: #bbbbbb;
+    font-size: 28px;
+    margin-left: 50px;
+  }
+
+  .bar-class {
+    height: 72px;
+    width: 250px;
+    float: left;
+    position: relative;
+  }
+
+  .bar-v {
+    background-color: white;
+    height: 72px;
+    margin-top: 15px;
+  }
+
+  .masker {
+    width: 100%;
+    background-color: #9999;
+    height: 1200px;
+    z-index: 10;
+    position: absolute;
+    opacity: 50%;
+  }
+
+  .sort-class {
+    color: #333333;
+    font-size: 28px;
+    background-color: white;
+    height: 80px;
+    line-height: 80px;
+    padding-left: 24px;
+    border-bottom: 1px solid #eeeeee;
+  }
+
+  .select-sort {
+    color: #1969c6;
+    font-size: 28px;
+    background-color: white;
+    height: 80px;
+    line-height: 80px;
+    padding-left: 24px;
+    border-bottom: 1px solid #eeeeee;
+  }
+
+  .label-class {
+    margin-top: 16px;
+    // height: 290px;
+    background-color: white;
+    padding: 24px;
+  }
+
+  .label-span {
+    // display: inline;
+    color: #333333;
+    font-size: 36px;
+  }
+
+  .sex-class {
+    color: #999999;
+    font-size: 28px;
+    margin-left: 10px;
+  }
+
+  .hand-class {
+    color: #f5a623;
+    font-size: 24px;
+    margin-left: 16px;
+  }
+
+  .information-class {
+    color: #1969c6;
+    font-size: 28px;
+    margin-left: 260px;
+  }
+
+  .information-xiala {
+    width: 36px;
+    height: 36px;
+    margin-top: 14px;
+    position: absolute;
+    margin-left: 14px;
+  }
+
+  .information-p {
+    color: #666666;
+    font-size: 28px;
+    margin-top: 10px;
+    // line-height: 40px;
+    p {
+      line-height: 50px;
+      height: 50px;
+    }
+  }
+
+  .bottom-class {
+    margin-top: 20px;
+    height: 80px;
+    border-top: 1px solid #eeeeee;
+  }
+
+  .dian-Class {
+    width: 36px;
+    height: 6px;
+    margin-top: 50px;
+  }
+
+  .page-class {
+    background-color: #F5F5F5;
+    height: 1330px;
+  }
+
+  .app-container {
+    background-color: red !important;
+  }
+
+  .md-example-child-tab-bar-4 {
+    position: absolute;
+    bottom: 0;
+    width: 750px;
+
+    .custom-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      // flex: 1;
+    }
+
+    .text {
+      font-size: 20px
+    }
+
+    .md-tab-bar-inner {
+      width: 750px !important;
+    }
+
+    .md-tab-bar {
+      padding: 0 !important;
+    }
+  }
 
 </style>
