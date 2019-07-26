@@ -120,6 +120,8 @@ export default {
   .b-address-checkList-cnt {
     background: #fff;
     padding-bottom: 24px;
+    height: 652px;
+    overflow-y: auto;
   }
 
   .b-address-checkList-item {
