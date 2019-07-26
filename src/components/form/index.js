@@ -11,6 +11,7 @@ import BTextarea from './BTextarea';
 import BTextLine from './BTextLine';
 import BUpload from './BUpload';
 import BVerificationcode from './BVerificationcode';
+import BUserTag from './BUserTag';
 
 /* eslint-disable import/prefer-default-export */
 export {
@@ -26,5 +27,6 @@ export {
   BTextarea,
   BTextLine,
   BUpload,
-  BVerificationcode
+  BVerificationcode,
+  BUserTag
 };

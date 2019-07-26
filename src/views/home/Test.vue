@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="test-bg">
     <div class="title">常用应用</div>
     <div class="container">
       <div class="child" v-for="(value,key) in commonData" :key="value.name">
@@ -89,7 +89,12 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
+  .test-bg {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+  }
   .title {
     font-size: 30px;
     color: #333;
@@ -108,7 +113,7 @@ export default {
   }
 
   .child {
-    width: calc(25%);
+    width: 25%;
     margin-top: 40px;
     display: flex;
     align-items: center; //垂直居中

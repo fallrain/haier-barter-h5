@@ -3,6 +3,7 @@ const orderFollowErr = () => import('@/views/order/orderFollowErr');
 const orderFollowMiddle = () => import('@/views/order/orderFollowMiddle');
 const orderFollowSearch = () => import('@/views/order/orderFollowSearch');
 const orderFollowFinishend = () => import('@/views/order/orderFollowFinishend');
+const orderFollowCommitResult = () => import('@/views/order/orderFollowCommitResult');
 const prefix = '/order';
 const data = [
   {
@@ -44,6 +45,15 @@ const data = [
     component: orderFollowFinishend,
     meta: {
       title: '订单跟进查询'
+    }
+  },
+
+  {
+    path: `${prefix}/orderFollowCommitResult`,
+    name: `${prefix}.orderFollowCommitResult`,
+    component: orderFollowCommitResult,
+    meta: {
+      title: '订单提交'
     }
   },
 ];
