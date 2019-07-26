@@ -7,22 +7,29 @@
         :key="item.id"
       >
         <i
+          v-if="!isDetail"
           class="bCheckbox-icon iconfont"
           :class="[value.some(v=>v===i)?'icon-duoxuankuang1':'icon-duoxuankuang']"
           @click="checkboxClick(i)"
         ></i>
-        <div>
+        <div :class="[isDetail && 'bCheckbox-item-detail-cnt']">
           <p class="bActivityList-activity-name">{{item.activityName}}</p>
           <div class="bActivityList-activity-description">
-            <span class="bActivityList-activity-description-inf">{{item.inf}}</span>或
+            <span class="bActivityList-activity-description-inf">{{item.inf}}</span>
+            <span v-if="!isDetail">或</span>
             <button
+              v-if="!isDetail"
               type="button"
               class="common-btn-del"
+              @click="chooseGiftClick(item)"
             >选择礼品
             </button>
           </div>
         </div>
-        <div class="bActivityList-activity-num-par">
+        <div
+          v-if="!isDetail"
+          class="bActivityList-activity-num-par"
+        >
           剩余<span class="bActivityList-activity-num">{{item.num}}</span>份
         </div>
       </li>
@@ -33,6 +40,11 @@
 export default {
   name: 'BActivityList',
   props: {
+    // 是否详情模式
+    isDetail: {
+      type: Boolean,
+      default: false
+    },
     data: {
       type: Array,
       default: () => []
@@ -54,6 +66,9 @@ export default {
         this.value.splice(i, 1);
       }
       this.$emit('input', this.value);
+    },
+    chooseGiftClick(item) {
+      this.$emit('chooseGift', item);
     }
   }
 };
@@ -116,5 +131,10 @@ export default {
   .bActivityList-activity-num {
     font-size: 24px;
     color: #EF5A4B;
+  }
+
+  .bCheckbox-item-detail-cnt {
+    border-left: 6px solid #EF5A4B;
+    padding-left: 25px;
   }
 </style>
