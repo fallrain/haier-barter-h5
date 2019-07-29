@@ -11,7 +11,12 @@
         </div>
       </div>
       <div class="order-commit-tag-child">
-        <button class="order-commit-tag-child-btn">70后</button>
+        <button
+          class="order-commit-tag-child-btn"
+          :class="[
+            1+1===2 && 'active'
+          ]"
+        >70后</button>
         <button class="order-commit-tag-child-btn">70后</button>
         <button class="order-commit-tag-child-btn">70后</button>
         <button class="order-commit-tag-child-btn">70后</button>
@@ -28,15 +33,16 @@
 </template>
 
 <script>
-  export default {
-    name: "BUserTag",
-    props: {},
-    methods: {}
-  }
+// 双向绑定： .sync, 也可以实现自定义组件v-model
+export default {
+  name: 'BUserTag',
+  props: {},
+  methods: {}
+};
 </script>
 
 
-<style>
+<style lang="scss">
   .order-commit-tag {
     margin-top: 16px;
     margin-right: 24px;
@@ -95,6 +101,9 @@
 
     &:nth-child(4n) {
       margin-right: 0;
+    }
+    &.active{
+      color: red;
     }
   }
 </style>
