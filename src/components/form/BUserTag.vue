@@ -2,7 +2,7 @@
   <div>
     <div class="order-commit-tag">
       <div class="order-commit-tag-title">
-        <span>年龄层次</span>
+        <span>{{getData.title}}</span>
         <div class="order-commit-tag-desc">
           <i class="iconfont icon-dianzan order-commit-tag-zanimg"></i>
           <span class="order-commit-tag-text">有用(666)</span>
@@ -13,20 +13,12 @@
       <div class="order-commit-tag-child">
         <button
           class="order-commit-tag-child-btn"
-          :class="[
-            1+1===2 && 'active'
-          ]"
-        >70后</button>
-        <button class="order-commit-tag-child-btn">70后</button>
-        <button class="order-commit-tag-child-btn">70后</button>
-        <button class="order-commit-tag-child-btn">70后</button>
-        <button class="order-commit-tag-child-btn">70后</button>
-        <button class="order-commit-tag-child-btn">70后</button>
-        <button class="order-commit-tag-child-btn">70后</button>
-        <button class="order-commit-tag-child-btn">70后</button>
-        <button class="order-commit-tag-child-btn">70后</button>
-        <button class="order-commit-tag-child-btn">70后</button>
-        <button class="order-commit-tag-child-btn">70后</button>
+          :class="['active']"
+          v-for="(item,index) in getData.tagList"
+          :key="index"
+          @click.stop="btnClick"
+        >{{item.content}}
+        </button>
       </div>
     </div>
   </div>
@@ -36,8 +28,23 @@
 // 双向绑定： .sync, 也可以实现自定义组件v-model
 export default {
   name: 'BUserTag',
-  props: {},
-  methods: {}
+  props: {
+    getData: {
+      title: '',
+      tagList: {
+        type: Array,
+        default: () => [{
+          content: '',
+          isChecked: false
+        }]
+      }
+    }
+  },
+  methods: {
+    btnClick() {
+    }
+  },
+  watch: {}
 };
 </script>
 
