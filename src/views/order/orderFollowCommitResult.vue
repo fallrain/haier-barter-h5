@@ -25,7 +25,9 @@
     <b-user-tag
       v-for="(item,index) in dataList"
       :key="index"
-      :getData="item"></b-user-tag>
+      :getData="item"
+      :unusefulCount="unusefulCount"
+      :usefulCount="usefulCount"></b-user-tag>
     <button class="order-commit-add-tag">+新建用户标签</button>
     <button class="order-commit-save-tag">保存用户标签</button>
   </div>
@@ -46,35 +48,14 @@
           {
             title: "年龄层次",
             tagList:
-              [{
-                content: '50后',
-                isChecked: true
-              },
-                {
-                  content: '60后',
-                  isChecked: false
-                },
-                {
-                  content: '70后',
-                  isChecked: false
-                }
-                ,
-                {
-                  content: '80后',
-                  isChecked: false
-                }
-                ,
-                {
-                  content: '90后',
-                  isChecked: false
-                }
-                ,
-                {
-                  content: '00后',
-                  isChecked: false
-                }]
+              [
+                '50后', '60后', '70后', '80后', '90后', '00后'
+              ]
           }
-        ]
+        ],
+        show: [0, 0, 0, 0, 0],
+        usefulCount: 666,
+        unusefulCount: 222
       };
     }
   };

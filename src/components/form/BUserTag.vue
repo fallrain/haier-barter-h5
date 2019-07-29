@@ -5,19 +5,19 @@
         <span>{{getData.title}}</span>
         <div class="order-commit-tag-desc">
           <i class="iconfont icon-dianzan order-commit-tag-zanimg"></i>
-          <span class="order-commit-tag-text">有用(666)</span>
+          <span class="order-commit-tag-text" @click="btnClickUsefulCount()">有用({{usefulCount}})</span>
           <i class="iconfont icon-dianzan-copy order-commit-tag-img"></i>
-          <span class="order-commit-tag-text">没用(222)</span>
+          <span class="order-commit-tag-text" @click="btnClickUnusefulCount()">没用({{unusefulCount}})</span>
         </div>
       </div>
       <div class="order-commit-tag-child">
         <button
           class="order-commit-tag-child-btn"
-          :class="['active']"
+          :class="[ show[index] && 'active']"
           v-for="(item,index) in getData.tagList"
           :key="index"
-          @click.stop="btnClick"
-        >{{item.content}}
+          @click.stop="btnClick(index)"
+        >{{item}}
         </button>
       </div>
     </div>
@@ -33,17 +33,33 @@ export default {
       title: '',
       tagList: {
         type: Array,
-        default: () => [{
-          content: '',
-          isChecked: false
-        }]
+        default: () => []
       }
-    }
+    },
+    show: {
+      type: Array,
+      default: () => [0, 0, 0, 0, 0]
+    },
+    usefulCount: 0,
+    unusefulCount: 0
   },
   methods: {
-    btnClick() {
+    btnClick(index) {
+      this.$set(this.show, index, !this.show[index]);
+      this.$emit('update:show', this.show);
+    },
+    btnClickUnusefulCount() {
+      this.$emit('update:show', --this.unusefulCount);
+    },
+    btnClickUsefulCount() {
+      this.$emit('update:show', ++this.usefulCount);
     }
-  },
+  }
+  ,
+  data() {
+
+  }
+  ,
   watch: {}
 };
 </script>
@@ -110,7 +126,8 @@ export default {
       margin-right: 0;
     }
     &.active{
-      color: red;
+      color: #F5A623;
+      border: 1px solid #F5A623;
     }
   }
 </style>
