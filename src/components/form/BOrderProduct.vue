@@ -47,7 +47,7 @@ export default {
   methods: {
     onDel() {
       /* 删除 */
-      this.emit('onDel', this.data);
+      this.$emit('onDel', this.data);
     }
   }
 };

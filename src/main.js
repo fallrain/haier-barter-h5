@@ -6,7 +6,10 @@ import '@/lib/veeValidate';
 import directives from './directive';
 import mixin from './mixin';
 import wUtil from '@/lib/util/util';
-import { axPost, axGet, axPostJson } from './lib/ajax';
+import '@/services';
+import {
+  axPost, axGet, axPostJson
+} from './lib/ajax';
 
 Vue.config.productionTip = false;
 Vue.prototype.wUtil = wUtil;

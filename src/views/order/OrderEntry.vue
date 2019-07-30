@@ -92,12 +92,23 @@
       </template>
       <div>
         <b-activity-list
+          :isDetail="isDetail"
           :data="activityList"
           v-model="choosedActivitys"
+          @chooseGift="chooseGift"
         ></b-activity-list>
         <div class="orderEntry-rights-fieldset-more">查看全部活动></div>
       </div>
     </b-fieldset>
+    <b-item
+      v-if="isDetail"
+      class="mt16"
+      title="修改原因"
+      value="退货"
+      :arrow="true"
+    >
+
+    </b-item>
     <div class="orderEntry-btns-par">
       <button
         type="button"
@@ -110,6 +121,11 @@
       >下一步
       </button>
     </div>
+    <b-pop-check-list
+      :show.sync="chooseGiftPopShow"
+      title="选择礼品"
+      :list="giftList"
+    ></b-pop-check-list>
   </div>
 </template>
 
@@ -120,6 +136,7 @@ import {
   BFieldset,
   BItem,
   BOrderProduct,
+  BPopCheckList,
   BRadioItem
 } from '@/components/form';
 
@@ -131,10 +148,13 @@ export default {
     BFieldset,
     BItem,
     BOrderProduct,
+    BPopCheckList,
     BRadioItem
   },
   data() {
     return {
+      // 是否详情模式
+      isDetail: true,
       // 门店名称
       shopName: '新华百货老大楼',
       // 订单类型单选
@@ -185,10 +205,30 @@ export default {
         }
       ],
       // 选中的活动id
-      choosedActivitys: []
+      choosedActivitys: [],
+      // 选择礼品pop显示隐藏
+      chooseGiftPopShow: false,
+      // pop礼品列表
+      giftList: [
+        {
+          id: 1,
+          name: '1.双立人厨房六件套（价值 7000积分）',
+          checkedIds: []
+        },
+        {
+          id: 2,
+          name: '2.婴儿料理机（价值 6000积分）',
+          checkedIds: []
+        }
+      ],
     };
   },
-  methods: {}
+  methods: {
+    chooseGift() {
+      /* 选择礼品 */
+      this.chooseGiftPopShow = true;
+    }
+  }
 };
 </script>
 

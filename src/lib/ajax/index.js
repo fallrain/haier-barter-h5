@@ -3,6 +3,9 @@ import axios from 'axios';
 import qs from 'qs';
 import router from '@/router';
 import store from '@/store';
+import {
+  Toast
+} from 'mand-mobile';
 
 const ax = axios.create();
 ax.defaults = Object.assign(
@@ -20,14 +23,14 @@ ax.interceptors.request.use((config) => {
     config.headers.Authorization = localStorage.getItem('acces_token');
   }
   if (!config.params.noLoading) {
-    store.commit('showLoading');
+    Toast.loading('加载中...');
   }
   return config;
 });
 ax.interceptors.response.use((response) => {
   // 关闭遮罩
   if (!response.config.params.noLoading) {
-    store.commit('hideLoading');
+    Toast.hide();
   }
   const { msg } = response.data;
   if (msg === '用户未登陆') {
@@ -36,19 +39,19 @@ ax.interceptors.response.use((response) => {
     });
   }
   if (!(response.config.params && response.config.params.requestNoToast)) {
-    if (response.data.status !== 200) {
-      Vue.prototype.$toast(msg || '请求失败');
+    if (response.data.code !== 1) {
+      Toast.failed(msg || '请求失败');
     }
   }
 
   return response.data;
 }, (error) => {
-  store.commit('hideLoading');
+  Toast.hide();
   // return Promise.reject(error);
-  Vue.prototype.$toast('请求失败');
+  Toast.failed('请求失败');
   error.response.data = {
     data: {
-      status: '06'
+      status: -1
     }
   };
   return error.response.data;

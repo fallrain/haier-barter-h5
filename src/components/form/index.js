@@ -4,6 +4,7 @@ import BFieldset from './BFieldset';
 import BItem from './BItem';
 import BModel from './BModel';
 import BOrderProduct from './BOrderProduct';
+import BPopCheckList from './BPopCheckList';
 import BRadio from './BRadio';
 import BRadioItem from './BRadioItem';
 import BTextarea from './BTextarea';
@@ -19,6 +20,7 @@ export {
   BItem,
   BModel,
   BOrderProduct,
+  BPopCheckList,
   BRadio,
   BRadioItem,
   BTextarea,
