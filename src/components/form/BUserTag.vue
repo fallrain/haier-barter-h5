@@ -4,20 +4,31 @@
       <div class="order-commit-tag-title">
         <span>{{getData.title}}</span>
         <div class="order-commit-tag-desc">
-          <i class="iconfont icon-dianzan order-commit-tag-zanimg"></i>
-          <span class="order-commit-tag-text" @click="btnClickUsefulCount()">有用({{usefulCount}})</span>
-          <i class="iconfont icon-dianzan-copy order-commit-tag-img"></i>
-          <span class="order-commit-tag-text" @click="btnClickUnusefulCount()">没用({{unusefulCount}})</span>
+          <i class="iconfont icon-dianzan order-commit-tag-zanimg"
+             v-if="!usefulCount.isChecked"
+             @click="btnClickUsefulCount()"></i>
+          <i class="iconfont icon-dianzan order-commit-tag-zanimg-click"
+             v-if="usefulCount.isChecked"
+             @click="btnClickUsefulCount()"></i>
+          <span class=" order-commit-tag-text" @click="btnClickUsefulCount()">有用({{usefulCount.count}})</span>
+          <i class="iconfont icon-dianzan-copy order-commit-tag-img"
+             v-if="!unusefulCount.isChecked"
+             @click="btnClickUnusefulCount()"></i>
+          <i class="iconfont icon-dianzan-copy order-commit-tag-img-click"
+             v-if="unusefulCount.isChecked"
+             @click="btnClickUnusefulCount()"
+          ></i>
+          <span class="order-commit-tag-text" @click="btnClickUnusefulCount()">没用({{unusefulCount.count}})</span>
         </div>
       </div>
       <div class="order-commit-tag-child">
         <button
           class="order-commit-tag-child-btn"
-          :class="[ show[index] && 'active']"
+          :class="[item.isChecked && 'active']"
           v-for="(item,index) in getData.tagList"
           :key="index"
           @click.stop="btnClick(index)"
-        >{{item}}
+        >{{item.content}}
         </button>
       </div>
     </div>
@@ -33,33 +44,50 @@ export default {
       title: '',
       tagList: {
         type: Array,
-        default: () => []
+        default: () => [{
+          content: '',
+          isChecked: false
+        }]
       }
     },
-    show: {
-      type: Array,
-      default: () => [0, 0, 0, 0, 0]
+    usefulCount: {
+      count: 0,
+      isChecked: false
     },
-    usefulCount: 0,
-    unusefulCount: 0
+    unusefulCount: {
+      count: 0,
+      isChecked: false
+    }
   },
   methods: {
     btnClick(index) {
-      this.$set(this.show, index, !this.show[index]);
-      this.$emit('update:show', this.show);
+      this.$set(this.getData.tagList[index], 'isChecked', !this.getData.tagList[index].isChecked);
+      this.$emit('update:getData', this.getData);
     },
     btnClickUnusefulCount() {
-      this.$emit('update:show', --this.unusefulCount);
+      if (this.unusefulCount.isChecked) {
+        --this.unusefulCount.count;
+        this.unusefulCount.isChecked = false;
+      } else {
+        ++this.unusefulCount.count;
+        this.unusefulCount.isChecked = true;
+      }
+      this.$emit('update:unusefulCount', this.unusefulCount);
     },
     btnClickUsefulCount() {
-      this.$emit('update:show', ++this.usefulCount);
+      if (this.usefulCount.isChecked) {
+        --this.usefulCount.count;
+        this.usefulCount.isChecked = false;
+      } else {
+        ++this.usefulCount.count;
+        this.usefulCount.isChecked = true;
+      }
+      this.$emit('update:usefulCount', this.usefulCount);
     }
-  }
-  ,
+  },
   data() {
 
-  }
-  ,
+  },
   watch: {}
 };
 </script>
@@ -92,10 +120,22 @@ export default {
     font-size: 30px;
   }
 
+  .order-commit-tag-zanimg-click {
+    color: red;
+    font-size: 30px;
+  }
+
   .order-commit-tag-img {
     margin-left: 26px;
     transform: scaleX(-1);
     color: #CCCCCC;
+    font-size: 30px;
+  }
+
+  .order-commit-tag-img-click {
+    margin-left: 26px;
+    transform: scaleX(-1);
+    color: red;
     font-size: 30px;
   }
 
