@@ -164,7 +164,14 @@ export default {
   },
   computed: {
     tagName() {
-      return '';
+      const tagObj = this.tagList.find(v => v.id === this.form.tag[0]);
+      let name;
+      if (tagObj) {
+        name = tagObj.name;
+      } else {
+        name = '';
+      }
+      return name;
     }
   },
   methods: {
