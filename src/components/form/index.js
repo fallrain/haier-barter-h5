@@ -4,6 +4,7 @@ import BFieldset from './BFieldset';
 import BItem from './BItem';
 import BModel from './BModel';
 import BOrderProduct from './BOrderProduct';
+import BPopAddressList from './BPopAddressList';
 import BPopCheckList from './BPopCheckList';
 import BRadio from './BRadio';
 import BRadioItem from './BRadioItem';
@@ -11,6 +12,7 @@ import BTextarea from './BTextarea';
 import BTextLine from './BTextLine';
 import BUpload from './BUpload';
 import BVerificationcode from './BVerificationcode';
+import BUserTag from './BUserTag';
 
 /* eslint-disable import/prefer-default-export */
 export {
@@ -20,11 +22,13 @@ export {
   BItem,
   BModel,
   BOrderProduct,
+  BPopAddressList,
   BPopCheckList,
   BRadio,
   BRadioItem,
   BTextarea,
   BTextLine,
   BUpload,
-  BVerificationcode
+  BVerificationcode,
+  BUserTag
 };

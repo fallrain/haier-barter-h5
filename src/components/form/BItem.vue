@@ -1,21 +1,29 @@
 <template>
   <div class="bItem-item">
     <div class="bItem-item-left">
-      <span class="bItem-item-title" v-show="title">{{title}}</span>
+      <span
+        class="bItem-item-title eee"
+      >{{title || placeholder}}</span>
       <slot name="left"></slot>
     </div>
     <div
       class="bItem-item-right"
+      @click="rightHandle"
     >
       <span
+        v-if="placeholder"
+        class="bItem-item-right-val"
+      >{{value || placeholder}}</span>
+      <span
+        v-else
         class="bItem-item-right-val"
         v-show="value"
       >{{value}}</span>
       <slot name="right"></slot>
       <i
         v-if="arrow"
-        class="iconfont icon-youjiantou"
-        @click="rightHandle"
+        class="iconfont"
+        :class="[iconClass]"
       ></i>
     </div>
   </div>
@@ -36,6 +44,15 @@ export default {
     },
     // 内容
     value: {
+      default: ''
+    },
+    // 右侧图标class
+    iconClass: {
+      type: String,
+      default: 'icon-youjiantou'
+    },
+    placeholder: {
+      type: String,
       default: ''
     }
   },

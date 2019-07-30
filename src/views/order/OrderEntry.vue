@@ -4,23 +4,38 @@
       <span class="orderEntry-header-name">门店：{{shopName}}</span>
       <i class="iconfont icon-icon-question orderEntry-header-icon"></i>
     </div>
-    <div class="orderEntry-user mt16">
-      <div class="orderEntry-user-head">
-        <span class="name mr16">收货人：王永力</span>
-        <span class="sex mr16">男士</span>
-        <i class="iconfont icon-dianhua mr16"></i>
-        <span class="phone mr16">13884970216</span>
-        <button
-          type="button"
-          class="common-btn-waring"
-        >更改地址
-        </button>
+    <b-fieldset
+      class="mt16"
+      title="用户信息："
+    >
+      <div class="orderEntry-user">
+        <div v-if="haveConsignee">
+          <div class="orderEntry-user-head">
+            <span class="name mr16">收货人：{{consignee.name}}</span>
+            <span class="sex mr16">{{consignee.sex}}</span>
+            <i class="iconfont icon-dianhua mr16"></i>
+            <span class="phone mr16">{{consignee.phone}}</span>
+            <button
+              type="button"
+              class="common-btn-waring"
+            >更改地址
+            </button>
+          </div>
+          <p class="orderEntry-user-address">
+            默认地址：山东省青岛市市南区劲松七路左岸风
+            度小区12号楼2单元602
+          </p>
+        </div>
+        <div v-else>
+          <button
+            type="button"
+            class="common-btn-primary w100per"
+            @click="shwAddressList"
+          >添加或选择用户信息
+          </button>
+        </div>
       </div>
-      <p class="orderEntry-user-address">
-        默认地址：山东省青岛市市南区劲松七路左岸风
-        度小区12号楼2单元602
-      </p>
-    </div>
+    </b-fieldset>
     <b-item
       class="mt16"
       title="购买日期："
@@ -106,8 +121,8 @@
       title="修改原因"
       value="退货"
       :arrow="true"
+      @rightClick="updateReasonClick"
     >
-
     </b-item>
     <div class="orderEntry-btns-par">
       <button
@@ -126,6 +141,17 @@
       title="选择礼品"
       :list="giftList"
     ></b-pop-check-list>
+    <b-pop-check-list
+      type="radio"
+      :show.sync="returnReasonPopShow"
+      title="选择修改订单原因"
+      :list="returnReasonList"
+      v-model="returnReasonVal"
+    ></b-pop-check-list>
+    <b-pop-address-list
+      :show.sync="addressPopShow"
+      :list="addressList"
+    ></b-pop-address-list>
   </div>
 </template>
 
@@ -136,6 +162,7 @@ import {
   BFieldset,
   BItem,
   BOrderProduct,
+  BPopAddressList,
   BPopCheckList,
   BRadioItem
 } from '@/components/form';
@@ -148,6 +175,7 @@ export default {
     BFieldset,
     BItem,
     BOrderProduct,
+    BPopAddressList,
     BPopCheckList,
     BRadioItem
   },
@@ -157,6 +185,12 @@ export default {
       isDetail: true,
       // 门店名称
       shopName: '新华百货老大楼',
+      // 收货人信息
+      consignee: {
+        /* name: '',
+          sex: '男士',
+          phone: '15067543689' */
+      },
       // 订单类型单选
       orderTypes: [
         {
@@ -221,12 +255,92 @@ export default {
           checkedIds: []
         }
       ],
+      // 退货原因pop show
+      returnReasonPopShow: false,
+      // pop 退货原因
+      returnReasonList: [
+        {
+          id: 1,
+          name: '换货'
+        },
+        {
+          id: 2,
+          name: '录单错误'
+        },
+        {
+          id: 3,
+          name: '信息填写错误'
+        },
+        {
+          id: 4,
+          name: '其他原因',
+          reason: '',
+          placeholder: '请输入您的订单修改原因'
+        }
+      ],
+      // 选中的原因id 数组
+      returnReasonVal: [],
+      // 选择收货人列表pop show
+      addressPopShow: false,
+      // 收货人地址pop列表
+      addressList: [
+        {
+          name: '张三',
+          phone: '15000000000',
+          address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
+          tagName: '自己家'
+        },
+        {
+          name: '李四',
+          phone: '15000000000',
+          address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
+          tagName: '办公室'
+        },
+        {
+          name: '王二',
+          phone: '15000000000',
+          address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
+          tagName: '父母家'
+        },
+        {
+          name: '尼古拉斯赵四',
+          phone: '15000000000',
+          address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
+          tagName: '其他'
+        },
+        {
+          name: '莱桑尼丝铁柱',
+          phone: '15000000000',
+          address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
+          tagName: '其他'
+        },
+        {
+          name: '罗伯特英子',
+          phone: '15000000000',
+          address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
+          tagName: '其他'
+        }
+      ]
     };
+  },
+  computed: {
+    haveConsignee() {
+      /* 存在收货人信息 */
+      return this.consignee && JSON.stringify(this.consignee) !== '{}';
+    }
   },
   methods: {
     chooseGift() {
       /* 选择礼品 */
       this.chooseGiftPopShow = true;
+    },
+    updateReasonClick() {
+      /* 选择退换货原因 */
+      this.returnReasonPopShow = true;
+    },
+    shwAddressList() {
+      /* 展示选择用户pop */
+      this.addressPopShow = true;
     }
   }
 };
@@ -254,7 +368,6 @@ export default {
   }
 
   .orderEntry-user {
-    padding: 26px;
     background: #fff;
   }
 
