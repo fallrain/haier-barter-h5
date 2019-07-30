@@ -2,31 +2,23 @@
   <div>
     <div class="order-commit-tag">
       <div class="order-commit-tag-title">
-        <span>年龄层次</span>
+        <span>{{getData.title}}</span>
         <div class="order-commit-tag-desc">
           <i class="iconfont icon-dianzan order-commit-tag-zanimg"></i>
-          <span class="order-commit-tag-text">有用(666)</span>
+          <span class="order-commit-tag-text" @click="btnClickUsefulCount()">有用({{usefulCount}})</span>
           <i class="iconfont icon-dianzan-copy order-commit-tag-img"></i>
-          <span class="order-commit-tag-text">没用(222)</span>
+          <span class="order-commit-tag-text" @click="btnClickUnusefulCount()">没用({{unusefulCount}})</span>
         </div>
       </div>
       <div class="order-commit-tag-child">
         <button
           class="order-commit-tag-child-btn"
-          :class="[
-            1+1===2 && 'active'
-          ]"
-        >70后</button>
-        <button class="order-commit-tag-child-btn">70后</button>
-        <button class="order-commit-tag-child-btn">70后</button>
-        <button class="order-commit-tag-child-btn">70后</button>
-        <button class="order-commit-tag-child-btn">70后</button>
-        <button class="order-commit-tag-child-btn">70后</button>
-        <button class="order-commit-tag-child-btn">70后</button>
-        <button class="order-commit-tag-child-btn">70后</button>
-        <button class="order-commit-tag-child-btn">70后</button>
-        <button class="order-commit-tag-child-btn">70后</button>
-        <button class="order-commit-tag-child-btn">70后</button>
+          :class="[ show[index] && 'active']"
+          v-for="(item,index) in getData.tagList"
+          :key="index"
+          @click.stop="btnClick(index)"
+        >{{item}}
+        </button>
       </div>
     </div>
   </div>
@@ -36,8 +28,39 @@
 // 双向绑定： .sync, 也可以实现自定义组件v-model
 export default {
   name: 'BUserTag',
-  props: {},
-  methods: {}
+  props: {
+    getData: {
+      title: '',
+      tagList: {
+        type: Array,
+        default: () => []
+      }
+    },
+    show: {
+      type: Array,
+      default: () => [0, 0, 0, 0, 0]
+    },
+    usefulCount: 0,
+    unusefulCount: 0
+  },
+  methods: {
+    btnClick(index) {
+      this.$set(this.show, index, !this.show[index]);
+      this.$emit('update:show', this.show);
+    },
+    btnClickUnusefulCount() {
+      this.$emit('update:show', --this.unusefulCount);
+    },
+    btnClickUsefulCount() {
+      this.$emit('update:show', ++this.usefulCount);
+    }
+  }
+  ,
+  data() {
+
+  }
+  ,
+  watch: {}
 };
 </script>
 
@@ -103,7 +126,8 @@ export default {
       margin-right: 0;
     }
     &.active{
-      color: red;
+      color: #F5A623;
+      border: 1px solid #F5A623;
     }
   }
 </style>

@@ -22,7 +22,12 @@
       <span class="order-commit-tip-text">记录用户特征,方便精准服务及二次购买</span>
       <i class="iconfont icon-wenhao order-commit-tip-img"></i>
     </div>
-    <b-user-tag></b-user-tag>
+    <b-user-tag
+      v-for="(item,index) in dataList"
+      :key="index"
+      :getData="item"
+      :unusefulCount="unusefulCount"
+      :usefulCount="usefulCount"></b-user-tag>
     <button class="order-commit-add-tag">+新建用户标签</button>
     <button class="order-commit-save-tag">保存用户标签</button>
   </div>
@@ -36,6 +41,22 @@
     name: 'orderFollowCommitResult',
     components: {
       BUserTag
+    },
+    data() {
+      return {
+        dataList: [
+          {
+            title: "年龄层次",
+            tagList:
+              [
+                '50后', '60后', '70后', '80后', '90后', '00后'
+              ]
+          }
+        ],
+        show: [0, 0, 0, 0, 0],
+        usefulCount: 666,
+        unusefulCount: 222
+      };
     }
   };
 </script>
