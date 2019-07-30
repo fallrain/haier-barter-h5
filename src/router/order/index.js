@@ -60,7 +60,7 @@ const data = [
 
   {
     path: `${prefix}/orderFollowCommitResult`,
-    name: `${prefix}.orderFollowCommitResult`,
+    name: `${module}.orderFollowCommitResult`,
     component: orderFollowCommitResult,
     meta: {
       title: '订单提交'

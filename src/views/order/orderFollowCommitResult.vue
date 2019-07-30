@@ -27,7 +27,8 @@
       :key="index"
       :getData="item"
       :unusefulCount="unusefulCount"
-      :usefulCount="usefulCount"></b-user-tag>
+      :usefulCount="usefulCount"
+    ></b-user-tag>
     <button class="order-commit-add-tag">+新建用户标签</button>
     <button class="order-commit-save-tag">保存用户标签</button>
   </div>
@@ -35,30 +36,32 @@
 
 <script>
 
-  import {BUserTag} from '@/components/form';
+import {
+  BUserTag
+} from '@/components/form';
 
-  export default {
-    name: 'orderFollowCommitResult',
-    components: {
-      BUserTag
-    },
-    data() {
-      return {
-        dataList: [
-          {
-            title: "年龄层次",
-            tagList:
+export default {
+  name: 'orderFollowCommitResult',
+  components: {
+    BUserTag
+  },
+  data() {
+    return {
+      dataList: [
+        {
+          title: '年龄层次',
+          tagList:
               [
                 '50后', '60后', '70后', '80后', '90后', '00后'
               ]
-          }
-        ],
-        show: [0, 0, 0, 0, 0],
-        usefulCount: 666,
-        unusefulCount: 222
-      };
-    }
-  };
+        }
+      ],
+      show: [0, 0, 0, 0, 0],
+      usefulCount: 666,
+      unusefulCount: 222
+    };
+  }
+};
 </script>
 
 

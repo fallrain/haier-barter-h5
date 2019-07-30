@@ -123,7 +123,6 @@
       :arrow="true"
       @rightClick="updateReasonClick"
     >
-
     </b-item>
     <div class="orderEntry-btns-par">
       <button
@@ -147,6 +146,7 @@
       :show.sync="returnReasonPopShow"
       title="选择修改订单原因"
       :list="returnReasonList"
+      v-model="returnReasonVal"
     ></b-pop-check-list>
     <b-pop-address-list
       :show.sync="addressPopShow"
@@ -278,6 +278,8 @@ export default {
           placeholder: '请输入您的订单修改原因'
         }
       ],
+      // 选中的原因id 数组
+      returnReasonVal: [],
       // 选择收货人列表pop show
       addressPopShow: false,
       // 收货人地址pop列表
