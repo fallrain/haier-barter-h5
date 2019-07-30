@@ -1,5 +1,6 @@
 const OrderEntry = () => import(/* webpackChunkName: "OrderEntry" */ '@/views/order/OrderEntry');// 订单录入
 const AddAddress = () => import(/* webpackChunkName: "AddAddress" */ '@/views/order/AddAddress');// 添加/编辑地址
+const OrderUploadInvoice = () => import(/* webpackChunkName: "OrderUploadInvoice" */ '@/views/order/OrderUploadInvoice');// 上传发票
 const orderFollowErr = () => import('@/views/order/orderFollowErr');
 const orderFollowMiddle = () => import('@/views/order/orderFollowMiddle');
 const orderFollowSearch = () => import('@/views/order/orderFollowSearch');
@@ -30,6 +31,14 @@ const data = [
     component: AddAddress,
     meta: {
       title: '用户信息'
+    }
+  },
+  {
+    path: `${prefix}/orderUploadInvoice`,
+    name: `${module}.OrderUploadInvoice`,
+    component: OrderUploadInvoice,
+    meta: {
+      title: '上传发票'
     }
   },
   {

@@ -442,5 +442,13 @@
 /*动画 end*/
 
 /*订单*/
+.orderEntry-btns-par {
+  display: flex;
+  flex-wrap: nowrap;
+  padding: 24px;
 
+  .common-submit-btn-primary {
+    margin-right: 24px;
+  }
+}
 /*订单end*/

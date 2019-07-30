@@ -522,13 +522,4 @@ export default {
     text-align: center;
   }
 
-  .orderEntry-btns-par {
-    display: flex;
-    flex-wrap: nowrap;
-    padding: 24px;
-
-    .common-submit-btn-primary {
-      margin-right: 24px;
-    }
-  }
 </style>

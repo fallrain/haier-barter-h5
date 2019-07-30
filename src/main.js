@@ -11,11 +11,16 @@ import {
   axPost, axGet, axPostJson
 } from './lib/ajax';
 
+import {
+  Toast
+} from 'mand-mobile';
+
 Vue.config.productionTip = false;
 Vue.prototype.wUtil = wUtil;
 Vue.prototype.axPost = axPost;
 Vue.prototype.axPostJson = axPostJson;
 Vue.prototype.axGet = axGet;
+Vue.prototype.$toast = Toast;
 
 
 Object.keys(directives).forEach((name) => {
