@@ -33,6 +33,16 @@
           ></b-radio-item>
         </div>
       </li>
+      <li class="addAddress-form-item-address">
+        <b-item
+          title="地址"
+          :arrow="true"
+          :value="tagName"
+          @rightClick="showTags"
+          iconClass="icon-dingwei"
+          placeholder="选择省/市/区(县)"
+        ></b-item>
+      </li>
       <li>
         <div class="addAddress-form-item">
           <label class="addAddress-form-item-name">详细地址</label>
@@ -45,6 +55,14 @@
         </div>
       </li>
       <li>
+        <b-item
+          title="该地址与用户关系"
+          :arrow="true"
+          :value="tagName"
+          @rightClick="showTags"
+        ></b-item>
+      </li>
+      <li>
         <div class="addAddress-form-item">
           <label class="addAddress-form-item-name">设为默认地址</label>
           <md-switch
@@ -53,6 +71,12 @@
         </div>
       </li>
     </ul>
+    <b-pop-check-list
+      type="radio"
+      :show.sync="tagPopShow"
+      :list="tagList"
+      v-model="form.tag"
+    ></b-pop-check-list>
   </div>
 </template>
 
@@ -62,6 +86,8 @@ import {
 } from 'mand-mobile';
 
 import {
+  BItem,
+  BPopCheckList,
   BRadioItem
 } from '@/components/form';
 
@@ -69,6 +95,8 @@ export default {
   name: 'AddAddress',
   components: {
     'md-switch': Switch,
+    BPopCheckList,
+    BItem,
     BRadioItem
   },
   data() {
@@ -79,6 +107,7 @@ export default {
         sex: 1,
         addressDetail: '',
         isDefault: false,
+        tag: []
       },
       // 订单类型单选
       sexTypes: [
@@ -91,7 +120,39 @@ export default {
           value: '女'
         }
       ],
+      // 地址标签pop show
+      tagPopShow: false,
+      // 地址标签列表
+      tagList: [
+        {
+          id: 1,
+          name: '自己家'
+        },
+        {
+          id: 2,
+          name: '办公室'
+        },
+        {
+          id: 3,
+          name: '父母家'
+        },
+        {
+          id: 4,
+          name: '其他'
+        }
+      ]
     };
+  },
+  computed: {
+    tagName() {
+      return '';
+    }
+  },
+  methods: {
+    showTags() {
+      /* 地址标签显示隐藏 */
+      this.tagPopShow = true;
+    }
   }
 };
 </script>
@@ -102,6 +163,17 @@ export default {
     padding-left: 24px;
     padding-right: 24px;
     padding-bottom: 4px;
+
+    .bItem-item {
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    .bItem-item-right-val,
+    .bItem-item-title {
+      font-size: 26px;
+      color: #666;
+    }
   }
 
   .addAddress-form-item {
@@ -112,7 +184,7 @@ export default {
     padding-left: 3px;
     padding-right: 3px;
     border-bottom: 1px solid #F5F5F5;
-    font-size: 26px;
+    font-size: 28px;
     color: #666;
   }
 
@@ -125,5 +197,12 @@ export default {
 
   .addAddress-form-item-name {
 
+  }
+
+  .addAddress-form-item-address {
+    .icon-dingwei {
+      color: #1969C6;
+      font-size: 40px;
+    }
   }
 </style>
