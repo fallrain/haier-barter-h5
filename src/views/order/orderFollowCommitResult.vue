@@ -25,10 +25,9 @@
     <b-user-tag
       v-for="(item,index) in dataList"
       :key="index"
-      :getData="item"
-      :unusefulCount="unusefulCount"
-      :usefulCount="usefulCount"
-    ></b-user-tag>
+      :getData.sync="item"
+      :unusefulCount.sync="unusefulCount"
+      :usefulCount.sync="usefulCount"></b-user-tag>
     <button class="order-commit-add-tag">+新建用户标签</button>
     <button class="order-commit-save-tag">保存用户标签</button>
   </div>
@@ -52,13 +51,36 @@ export default {
           title: '年龄层次',
           tagList:
               [
-                '50后', '60后', '70后', '80后', '90后', '00后'
+                {
+                  content: '50后',
+                  isChecked: true
+                }, {
+                  content: '60后',
+                  isChecked: false
+                }, {
+                  content: '70后',
+                  isChecked: false
+                }, {
+                  content: '80后',
+                  isChecked: false
+                }, {
+                  content: '90后',
+                  isChecked: false
+                }, {
+                  content: '00后',
+                  isChecked: false
+                }
               ]
         }
       ],
-      show: [0, 0, 0, 0, 0],
-      usefulCount: 666,
-      unusefulCount: 222
+      usefulCount: {
+        count: 666,
+        isChecked: false
+      },
+      unusefulCount: {
+        count: 222,
+        isChecked: false
+      }
     };
   }
 };
@@ -154,22 +176,6 @@ export default {
     background: #F5A623;
     color: #fff;
     font-size: 24px;
-  }
-
-  .order-commit-tag-child-btn {
-    width: calc(25% - 19px);
-    height: 48px;
-    border: 1px solid #D0D0D0;
-    border-radius: 8px;
-    background: #fff;
-    margin-top: 16px;
-    color: #666;
-    font-size: 24px;
-    margin-right: 25px;
-
-    &:nth-child(4n) {
-      margin-right: 0;
-    }
   }
 
 </style>
