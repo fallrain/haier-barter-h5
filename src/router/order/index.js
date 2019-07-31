@@ -1,11 +1,11 @@
 const OrderEntry = () => import(/* webpackChunkName: "OrderEntry" */ '@/views/order/OrderEntry');// 订单录入
 const AddAddress = () => import(/* webpackChunkName: "AddAddress" */ '@/views/order/AddAddress');// 添加/编辑地址
 const OrderUploadInvoice = () => import(/* webpackChunkName: "OrderUploadInvoice" */ '@/views/order/OrderUploadInvoice');// 上传发票
-const orderFollowErr = () => import('@/views/order/orderFollowErr');
-const orderFollowMiddle = () => import('@/views/order/orderFollowMiddle');
-const orderFollowSearch = () => import('@/views/order/orderFollowSearch');
-const orderFollowFinishend = () => import('@/views/order/orderFollowFinishend');
-const orderFollowCommitResult = () => import('@/views/order/orderFollowCommitResult');
+const OrderFollowErr = () => import('@/views/order/OrderFollowErr');
+const OrderFollowMiddle = () => import('@/views/order/OrderFollowMiddle');
+const OrderFollowSearch = () => import('@/views/order/OrderFollowSearch');
+const OrderFollowFinishend = () => import('@/views/order/OrderFollowFinishend');
+const OrderFollowCommitResult = () => import('@/views/order/OrderFollowCommitResult');
 const AddUserTag = () => import('@/views/order/AddUserTag');
 const prefix = '/order';
 const module = 'Order';
@@ -13,7 +13,7 @@ const data = [
   {
     path: '/',
     name: `${module}.orderFollowSearch`,
-    component: orderFollowSearch,
+    component: OrderFollowSearch,
     meta: {
       title: '订单跟进'
     }
@@ -45,7 +45,7 @@ const data = [
   {
     path: `${prefix}/orderFollowErr`,
     name: `${module}.orderFollowErr`,
-    component: orderFollowErr,
+    component: OrderFollowErr,
     meta: {
       title: '订单跟进查询'
     }
@@ -53,7 +53,7 @@ const data = [
   {
     path: `${prefix}/orderFollowMiddle`,
     name: `${module}.orderFollowMiddle`,
-    component: orderFollowMiddle,
+    component: OrderFollowMiddle,
     meta: {
       title: '订单跟进查询'
     }
@@ -62,7 +62,7 @@ const data = [
   {
     path: `${prefix}/orderFollowFinishend`,
     name: `${module}.orderFollowFinishend`,
-    component: orderFollowFinishend,
+    component: OrderFollowFinishend,
     meta: {
       title: '订单跟进查询'
     }
@@ -71,7 +71,7 @@ const data = [
   {
     path: `${prefix}/orderFollowCommitResult`,
     name: `${module}.orderFollowCommitResult`,
-    component: orderFollowCommitResult,
+    component: OrderFollowCommitResult,
     meta: {
       title: '订单提交'
     }
