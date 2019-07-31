@@ -1,5 +1,7 @@
 <template>
-  <div>
+  <div
+    :class="[merge && 'bProductMultUpload-list-merge']"
+  >
     <ul>
       <li
         class="bProductMultUpload-item"
@@ -10,7 +12,10 @@
           <span>{{index+1}}.{{product.name}}</span>
           <span>{{product.price}}元</span>
         </div>
-        <div class="bProductMultUpload-item-cnt">
+        <div
+          v-if="!merge"
+          class="bProductMultUpload-item-cnt"
+        >
           <b-upload
             v-show="value.length < 1"
             :crop="false"
@@ -31,6 +36,31 @@
         </div>
       </li>
     </ul>
+    <div
+      v-if="merge"
+      class="bProductMultUpload-merge-cnt"
+    >
+      <b-upload
+        v-show="value.length < 1"
+        :crop="false"
+        inputOfFile="file"
+        @imageuploaded="imageUploaded"
+        :max-file-size="1024*1024*20"
+        :maxWidth="1280"
+        :compress="70"
+        extensions="png,jpg,jpeg"
+        inputAccept="image/jpg,image/jpeg,image/png"
+        :url="uploadUrl"
+        :multiple-size="1"
+        @errorhandle="uploadError"
+        :imgs="value"
+        :delFun="delImg"
+      ></b-upload>
+      <div class="bProductMultUpload-merge-inf">
+        <p> 多个产品合并(<span class="active"> 可上传多张图片</span>）</p>
+        <p>开一张发票上传购机凭证,包括:发票、购机小票</p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -54,6 +84,10 @@ export default {
     products: {
       type: Array,
       default: () => []
+    },
+    merge: {
+      type: Boolean,
+      default: false
     }
   },
   components: {
@@ -94,6 +128,17 @@ export default {
 </script>
 
 <style lang="scss">
+  .bProductMultUpload-list-merge {
+    border: 1px solid #1969C6;
+    border-radius: 8px;
+
+    .bProductMultUpload-item {
+      border: 0;
+      margin-bottom: 0;
+      border-bottom: 1px solid #F5F5F5;
+    }
+  }
+
   .bProductMultUpload-item {
     background: #fff;
     border: 1px solid #1969C6;
@@ -120,5 +165,22 @@ export default {
     margin-left: 28px;
     font-size: 24px;
     color: #999;
+  }
+
+  .bProductMultUpload-merge-cnt {
+    display: flex;
+    align-items: center;
+    padding: 24px;
+  }
+
+  .bProductMultUpload-merge-inf {
+    margin-left: 28px;
+    color: #999;
+    font-size: 24px;
+    line-height: 30px;
+
+    .active {
+      color: #1969C6;
+    }
   }
 </style>
