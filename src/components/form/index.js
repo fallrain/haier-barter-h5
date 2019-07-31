@@ -15,6 +15,7 @@ import BTextLine from './BTextLine';
 import BUpload from './BUpload';
 import BVerificationcode from './BVerificationcode';
 import BUserTag from './BUserTag';
+import BActivityItem from './BActivityItem';
 
 /* eslint-disable import/prefer-default-export */
 export {
@@ -34,5 +35,6 @@ export {
   BTextLine,
   BUpload,
   BVerificationcode,
-  BUserTag
+  BUserTag,
+  BActivityItem
 };

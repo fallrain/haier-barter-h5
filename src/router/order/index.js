@@ -8,6 +8,7 @@ const OrderFollowSearch = () => import('@/views/order/OrderFollowSearch');
 const OrderFollowFinishend = () => import('@/views/order/OrderFollowFinishend');
 const OrderFollowCommitResult = () => import('@/views/order/OrderFollowCommitResult');
 const AddUserTag = () => import('@/views/order/AddUserTag');
+const OrderFollowActivity = () => import('@/views/order/OrderFollowActivity');
 const prefix = '/order';
 const module = 'Order';
 const data = [
@@ -53,7 +54,7 @@ const data = [
   },
   {
     path: `${prefix}/orderFollowErr`,
-    name: `${module}.orderFollowErr`,
+    name: `${module}.OrderFollowErr`,
     component: OrderFollowErr,
     meta: {
       title: '订单跟进查询'
@@ -61,7 +62,7 @@ const data = [
   },
   {
     path: `${prefix}/orderFollowMiddle`,
-    name: `${module}.orderFollowMiddle`,
+    name: `${module}.OrderFollowMiddle`,
     component: OrderFollowMiddle,
     meta: {
       title: '订单跟进查询'
@@ -70,7 +71,7 @@ const data = [
 
   {
     path: `${prefix}/orderFollowFinishend`,
-    name: `${module}.orderFollowFinishend`,
+    name: `${module}.OrderFollowFinishend`,
     component: OrderFollowFinishend,
     meta: {
       title: '订单跟进查询'
@@ -79,7 +80,7 @@ const data = [
 
   {
     path: `${prefix}/orderFollowCommitResult`,
-    name: `${module}.orderFollowCommitResult`,
+    name: `${module}.OrderFollowCommitResult`,
     component: OrderFollowCommitResult,
     meta: {
       title: '订单提交'
@@ -87,11 +88,20 @@ const data = [
   },
 
   {
-    path: `${prefix}/AddUserTag`,
+    path: `${prefix}/addUserTag`,
     name: `${module}.AddUserTag`,
     component: AddUserTag,
     meta: {
       title: '新建用户标签'
+    }
+  },
+
+  {
+    path: `${prefix}/orderFollowActivity`,
+    name: `${module}.OrderFollowActivity`,
+    component: OrderFollowActivity,
+    meta: {
+      title: '订单录入'
     }
   },
 ];
