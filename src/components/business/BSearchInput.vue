@@ -30,16 +30,13 @@ export default {
   },
   computed: {
     searchVal: {
-      get(val) {
-        return val;
+      get() {
+        return this.value;
       },
       set(val) {
         this.$emit('input', val);
       }
     }
-  },
-  created() {
-    this.searchVal = this.value;
   },
   methods: {
     searchClick() {
