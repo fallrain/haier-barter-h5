@@ -6,6 +6,7 @@ const orderFollowMiddle = () => import('@/views/order/orderFollowMiddle');
 const orderFollowSearch = () => import('@/views/order/orderFollowSearch');
 const orderFollowFinishend = () => import('@/views/order/orderFollowFinishend');
 const orderFollowCommitResult = () => import('@/views/order/orderFollowCommitResult');
+const AddUserTag = () => import('@/views/order/AddUserTag');
 const prefix = '/order';
 const module = 'Order';
 const data = [
@@ -73,6 +74,15 @@ const data = [
     component: orderFollowCommitResult,
     meta: {
       title: '订单提交'
+    }
+  },
+
+  {
+    path: `${prefix}/AddUserTag`,
+    name: `${module}.AddUserTag`,
+    component: AddUserTag,
+    meta: {
+      title: '新建用户标签'
     }
   },
 ];
