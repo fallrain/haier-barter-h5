@@ -1,6 +1,7 @@
 const OrderEntry = () => import(/* webpackChunkName: "OrderEntry" */ '@/views/order/OrderEntry');// 订单录入
 const AddAddress = () => import(/* webpackChunkName: "AddAddress" */ '@/views/order/AddAddress');// 添加/编辑地址
 const OrderUploadInvoice = () => import(/* webpackChunkName: "OrderUploadInvoice" */ '@/views/order/OrderUploadInvoice');// 上传发票
+const SearchProduct = () => import(/* webpackChunkName: "SearchProduct" */ '@/views/order/SearchProduct');// 搜索产品
 const OrderFollowErr = () => import('@/views/order/OrderFollowErr');
 const OrderFollowMiddle = () => import('@/views/order/OrderFollowMiddle');
 const OrderFollowSearch = () => import('@/views/order/OrderFollowSearch');
@@ -40,6 +41,14 @@ const data = [
     component: OrderUploadInvoice,
     meta: {
       title: '上传发票'
+    }
+  },
+  {
+    path: `${prefix}/searchProduct`,
+    name: `${module}.SearchProduct`,
+    component: SearchProduct,
+    meta: {
+      title: '选择产品'
     }
   },
   {
