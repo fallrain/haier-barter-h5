@@ -43,7 +43,7 @@ import {
 import routerData from '@/router/routerData';
 
 export default {
-  name: 'orderFollowCommitResult',
+  name: 'OrderFollowCommitResult',
   components: {
     BUserTag
   },
