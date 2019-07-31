@@ -9,6 +9,8 @@
     <div class="orderUploadInvoice-cnt">
       <b-product-mult-upload
         :products="products"
+        :merge="uploadType===1"
+        v-model="invoiceImg"
       ></b-product-mult-upload>
     </div>
     <div class="orderUploadInvoice-tips mt16">
@@ -98,6 +100,8 @@ export default {
           price: 9999
         }
       ],
+      // 发票图片地址
+      invoiceImg: []
     };
   }
 };
@@ -107,6 +111,11 @@ export default {
   .orderUploadInvoice {
     width: 100%;
     padding: 24px;
+
+    .md-radio-label {
+      color: #666;
+      font-size: 28px;
+    }
   }
 
   .orderUploadInvoice-head {
