@@ -22,7 +22,7 @@ module.exports = {
     'max-len': [1, 150],//最大行
     'eqeqeq': 1,
     'prefer-destructuring': ['warn', {
-      'object': true,
+      'object': false,
       'array': false
     }],//只对象推荐解构
     'no-param-reassign': 0,//vuex不兼容

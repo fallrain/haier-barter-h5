@@ -204,6 +204,10 @@
   margin-top: 23px;
 }
 
+.mt25 {
+  margin-top: 25px;
+}
+
 .mt27 {
   margin-top: 27px;
 }
@@ -438,5 +442,13 @@
 /*动画 end*/
 
 /*订单*/
+.orderEntry-btns-par {
+  display: flex;
+  flex-wrap: nowrap;
+  padding: 24px;
 
+  .common-submit-btn-primary {
+    margin-right: 24px;
+  }
+}
 /*订单end*/

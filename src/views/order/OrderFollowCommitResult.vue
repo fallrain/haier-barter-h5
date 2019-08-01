@@ -28,7 +28,9 @@
       :getData.sync="item"
       :unusefulCount.sync="unusefulCount"
       :usefulCount.sync="usefulCount"></b-user-tag>
-    <button class="order-commit-add-tag">+新建用户标签</button>
+    <router-link :to="routerData[9].path">
+      <button class="order-commit-add-tag">+新建用户标签</button>
+    </router-link>
     <button class="order-commit-save-tag">保存用户标签</button>
   </div>
 </template>
@@ -38,9 +40,10 @@
 import {
   BUserTag
 } from '@/components/form';
+import routerData from '@/router/routerData';
 
 export default {
-  name: 'orderFollowCommitResult',
+  name: 'OrderFollowCommitResult',
   components: {
     BUserTag
   },
@@ -80,7 +83,8 @@ export default {
       unusefulCount: {
         count: 222,
         isChecked: false
-      }
+      },
+      routerData: routerData.data
     };
   }
 };

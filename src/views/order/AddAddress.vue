@@ -37,8 +37,8 @@
         <b-item
           title="地址"
           :arrow="true"
-          :value="tagName"
-          @rightClick="showTags"
+          :value="addressName"
+          @rightClick="showAddressPop"
           iconClass="icon-dingwei"
           placeholder="选择省/市/区(县)"
         ></b-item>
@@ -77,12 +77,21 @@
       :list="tagList"
       v-model="form.tag"
     ></b-pop-check-list>
+    <md-tab-picker
+      title="请选择"
+      describe="请选择您所在的省份、城市、区县"
+      large-radius
+      :data="addressData"
+      v-model="addressPopShow"
+      @change="addressChange"
+    ></md-tab-picker>
   </div>
 </template>
 
 <script>
 import {
-  Switch
+  Switch,
+  TabPicker
 } from 'mand-mobile';
 
 import {
@@ -91,10 +100,13 @@ import {
   BRadioItem
 } from '@/components/form';
 
+import addressData from '@/lib/address';
+
 export default {
   name: 'AddAddress',
   components: {
     'md-switch': Switch,
+    'md-tab-picker': TabPicker,
     BPopCheckList,
     BItem,
     BRadioItem
@@ -140,18 +152,41 @@ export default {
           id: 4,
           name: '其他'
         }
-      ]
+      ],
+      // 地址pop显示隐藏
+      addressPopShow: false,
+      addressName: ''
     };
+  },
+  created() {
+    // 不加入双向绑定
+    this.addressData = addressData;
   },
   computed: {
     tagName() {
-      return '';
+      const tagObj = this.tagList.find(v => v.id === this.form.tag[0]);
+      let name;
+      if (tagObj) {
+        name = tagObj.name;
+      } else {
+        name = '';
+      }
+      return name;
     }
   },
   methods: {
     showTags() {
       /* 地址标签显示隐藏 */
       this.tagPopShow = true;
+    },
+    showAddressPop() {
+      /* 展示地址pop */
+      this.addressPopShow = true;
+    },
+    addressChange(address) {
+      /* 地址change */
+      const addressAy = address.options.map(v => v.label);
+      this.addressName = addressAy.join('/');
     }
   }
 };

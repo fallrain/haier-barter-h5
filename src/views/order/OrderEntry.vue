@@ -133,6 +133,7 @@
       <button
         type="button"
         class="common-submit-btn-default"
+        @click="next"
       >下一步
       </button>
     </div>
@@ -152,6 +153,26 @@
       :show.sync="addressPopShow"
       :list="addressList"
     ></b-pop-address-list>
+    <b-pop
+      :show.sync="multBuyPopShow"
+    >
+      <b-multbuy-check
+        type="radio"
+        title="请选择套购发起人"
+        :persons="multBuySponsor"
+        v-model="multBuySponsorCheckedIds"
+        tips="套购发起人发起套购，并且统一录入用户销售订单"
+      ></b-multbuy-check>
+      <b-multbuy-check
+        class="mt25"
+        title="请选择套购参与人"
+        :persons="multBuyParticipant"
+        v-model="multBuyParticipantCheckIds"
+        tips="套购参秘人可查看套头订单不需要录入订单,但是需确定确单信息正确后自主申报销量。"
+        :checkAll="true"
+        type="checkbox"
+      ></b-multbuy-check>
+    </b-pop>
   </div>
 </template>
 
@@ -162,10 +183,15 @@ import {
   BFieldset,
   BItem,
   BOrderProduct,
+  BPop,
   BPopAddressList,
   BPopCheckList,
   BRadioItem
 } from '@/components/form';
+
+import {
+  BMultbuyCheck
+} from '@/components/business';
 
 export default {
   name: 'OrderEntry',
@@ -174,7 +200,9 @@ export default {
     BDatePicker,
     BFieldset,
     BItem,
+    BMultbuyCheck,
     BOrderProduct,
+    BPop,
     BPopAddressList,
     BPopCheckList,
     BRadioItem
@@ -188,8 +216,8 @@ export default {
       // 收货人信息
       consignee: {
         /* name: '',
-          sex: '男士',
-          phone: '15067543689' */
+            sex: '男士',
+            phone: '15067543689' */
       },
       // 订单类型单选
       orderTypes: [
@@ -203,7 +231,7 @@ export default {
         }
       ],
       // 订单类型
-      orderType: 1,
+      orderType: 2,
       // 购机时间
       buyDate: '',
       // 产品列表
@@ -320,7 +348,58 @@ export default {
           address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
           tagName: '其他'
         }
-      ]
+      ],
+      // 套购pop show
+      multBuyPopShow: false,
+      // 套购发起人
+      multBuySponsor: [
+        {
+          id: 1,
+          name: '陆梦飞',
+          industry: '冰箱'
+        },
+        {
+          id: 2,
+          name: '大飞哥',
+          industry: '彩电'
+        },
+        {
+          id: 3,
+          name: '贾老板',
+          industry: '打怪兽'
+        },
+        {
+          id: 4,
+          name: '蟹老板',
+          industry: '蟹黄包'
+        }
+      ],
+      multBuySponsorCheckedIds: [],
+      // 套购参与人
+      multBuyParticipant: [
+        {
+          id: 1,
+          name: '陆梦飞',
+          industry: '冰箱'
+        },
+        {
+          id: 2,
+          name: '大飞哥',
+          industry: '彩电'
+        },
+        {
+          id: 3,
+          name: '贾老板',
+          industry: '打怪兽'
+        },
+        {
+          id: 4,
+          name: '蟹老板',
+          industry: '蟹黄包'
+        }
+      ],
+      // 参与人选中id
+      multBuyParticipantCheckIds: []
     };
   },
   computed: {
@@ -341,6 +420,14 @@ export default {
     shwAddressList() {
       /* 展示选择用户pop */
       this.addressPopShow = true;
+    },
+    next() {
+      /* 下一步 */
+      // todo 单品、套购值待定
+      if (this.orderType === 2) {
+        // 展示套购发起人
+        this.multBuyPopShow = true;
+      }
     }
   }
 };
@@ -435,13 +522,4 @@ export default {
     text-align: center;
   }
 
-  .orderEntry-btns-par {
-    display: flex;
-    flex-wrap: nowrap;
-    padding: 24px;
-
-    .common-submit-btn-primary {
-      margin-right: 24px;
-    }
-  }
 </style>

@@ -1,11 +1,11 @@
 <template>
-  <div class="wUpload-img-par">
+  <div class="bUpload-img-par">
     <div
       v-show="imgs.length"
-      class="wUpload-img-preshow"
+      class="bUpload-img-preshow"
     >
       <div
-        class="wUpload-preshow"
+        class="bUpload-preshow"
         v-for="(item,index) in imgs"
         :key="item"
       >
@@ -18,8 +18,8 @@
     <vue-core-image-upload
       v-bind="$attrs"
     >
-      <div class="wUpload">
-        <i class="iconfont icon-jia wUpload-icon"></i>
+      <div class="bUpload">
+        <i class="iconfont icon-jiahao bUpload-icon"></i>
       </div>
     </vue-core-image-upload>
   </div>
@@ -28,7 +28,7 @@
 import VueCoreImageUpload from 'vue-core-image-upload';
 
 export default {
-  name: 'WUpload',
+  name: 'BUpload',
   components: { VueCoreImageUpload },
   props: {
     imgs: {
@@ -42,32 +42,32 @@ export default {
 };
 </script>
 <style lang="scss">
-  .wUpload {
+  .bUpload {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100px;
-    height: 100px;
-    border: 1px solid #2F2F38;
+    width: 140px;
+    height: 140px;
+    border: 1px solid #D0D0D0;
     text-align: center;
     border-radius: 6px;
   }
 
-  .wUpload-icon {
-    color: #bbb;
-    font-size: 36px;
+  .bUpload-icon {
+    color: #D0D0D0;
+    font-size: 70px;
   }
 
-  .wUpload-img-preshow {
+  .bUpload-img-preshow {
     display: flex;
   }
 
-  .wUpload-img-par {
+  .bUpload-img-par {
     display: flex;
     flex-wrap: wrap;
   }
 
-  .wUpload-preshow {
+  .bUpload-preshow {
     position: relative;
     width: 56px;
     height: 56px;
