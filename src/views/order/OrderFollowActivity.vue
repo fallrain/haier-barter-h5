@@ -15,6 +15,7 @@
         ref="scrollView"
         :scrolling-x="false"
         @refreshing="$_onRefresh"
+        @end-reached="$_onEndReached"
       >
         <md-scroll-view-refresh
           slot="refresh"
@@ -26,7 +27,8 @@
         <b-activity-item
           v-for="(item,index) in dataList"
           :key="index"
-          :getData="item"></b-activity-item>
+          :getData="item"
+        ></b-activity-item>
         <md-scroll-view-more
           slot="more"
           :is-finished="isFinished"
@@ -113,14 +115,14 @@ export default {
       }
       // async data
       setTimeout(() => {
-        // var dataListitem = {
-        //   title: '111',
-        //   brand: '卡萨帝',
-        // };
-        // this.dataList.push(dataListitem);
-        // if (this.dataList.length >= 5) {
-        //   this.isFinished = true
-        // }
+        const dataListitem = {
+          title: '111',
+          brand: '卡萨帝',
+        };
+        this.dataList.push(dataListitem);
+        if (this.dataList.length >= 5) {
+          this.isFinished = true;
+        }
         this.$refs.scrollView.finishLoadMore();
       }, 1000);
     },
