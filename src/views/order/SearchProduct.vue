@@ -8,7 +8,13 @@
     <b-search-input
       v-model="searchVal"
       @search="search"
-    ></b-search-input>
+      placeholder="点击搜索型号"
+    >
+      <div class="searchProduct-scan-wrap">
+        <i class="iconfont icon-saomiao"></i>
+        <span class="searchProduct-scan-inf">扫描</span>
+      </div>
+    </b-search-input>
     <ul
       class="searchProduct-history"
     >
@@ -139,5 +145,22 @@ export default {
     color: #333;
     font-size: 24px;
     line-height: 40px;
+  }
+
+  .searchProduct-scan-wrap {
+    display: flex;
+    align-items: center;
+    color: #1969C6;
+
+    .icon-saomiao {
+      font-size: 40px;
+    }
+  }
+
+  .searchProduct-scan-inf {
+    line-height: 1;
+    margin-left: 12px;
+    font-size: 10px;
+    writing-mode: vertical-lr;
   }
 </style>

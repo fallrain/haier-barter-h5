@@ -1,4 +1,6 @@
-import { mapState } from 'vuex';
+import {
+  mapState
+} from 'vuex';
 
 export default {
   async beforeRouteEnter(to, from, next) {
@@ -11,6 +13,9 @@ export default {
           pageSize: 10,
           page: 1
         }
+      },
+      scrollView: {
+        isFinished: false
       }
     };
   },
@@ -20,6 +25,30 @@ export default {
     })
   },
   methods: {
+    scrollViewOnEndReached(search) {
+      /* 加载更多 */
+      if (this.scrollView.isFinished) {
+        return;
+      }
+      this.pageCfg.page.page++;
+      if (search) {
+        search({ more: true }).then(({ isFinished }) => {
+          this.scrollView.isFinished = isFinished;
+          this.$refs.scrollView.finishLoadMore();
+        });
+      }
+    },
+    scrollViewOnRefresh(search) {
+      /* 下拉刷新 */
+      this.pageCfg.page.page = 1;
+      this.scrollView.isFinished = false;
+      if (search) {
+        search().then(() => {
+          this.$refs.scrollView.finishRefresh();
+          this.$refs.scrollView.finishLoadMore();
+        });
+      }
+    },
     back() {
       /* 返回上一页 */
       this.$router.back();

@@ -3,6 +3,7 @@ import BDatePicker from './BDatePicker';
 import BFieldset from './BFieldset';
 import BItem from './BItem';
 import BModel from './BModel';
+import BMonthPop from './BMonthPop';
 import BNoticeBar from './BNoticeBar';
 import BOrderProduct from './BOrderProduct';
 import BPop from './BPop';
@@ -24,6 +25,7 @@ export {
   BFieldset,
   BItem,
   BModel,
+  BMonthPop,
   BNoticeBar,
   BOrderProduct,
   BPop,

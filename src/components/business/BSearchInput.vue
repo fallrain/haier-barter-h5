@@ -4,7 +4,7 @@
       <input
         class="bSearchInput"
         type="text"
-        placeholder="点击搜索型号"
+        :placeholder="placeholder"
         v-model="searchVal"
       >
       <i
@@ -12,9 +12,8 @@
         @click="searchClick"
       ></i>
     </div>
-    <div class="bSearchInput-scan-wrap">
-      <i class="iconfont icon-saomiao"></i>
-      <span class="bSearchInput-scan-inf">扫描</span>
+    <div class="bSearchInput-right">
+      <slot></slot>
     </div>
   </div>
 </template>
@@ -26,6 +25,10 @@ export default {
     value: {
       type: String,
       default: ''
+    },
+    placeholder: {
+      type: String,
+      default: '请输入'
     }
   },
   computed: {
@@ -58,6 +61,7 @@ export default {
   }
 
   .bSearchInput-wrap {
+    flex-grow: 1;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -75,26 +79,14 @@ export default {
   }
 
   .bSearchInput {
-    border: 0;
+    width: 100%;
     height: 100%;
+    border: 0;
     font-size: 28px;
   }
 
-  .bSearchInput-scan-wrap {
-    display: flex;
-    align-items: center;
-    color: #1969C6;
+  .bSearchInput-right {
     margin-left: 16px;
-
-    .icon-saomiao {
-      font-size: 40px;
-    }
-  }
-
-  .bSearchInput-scan-inf {
-    line-height: 1;
-    margin-left: 12px;
-    font-size: 10px;
-    writing-mode: vertical-lr;
+    flex-shrink: 0;
   }
 </style>
