@@ -141,7 +141,7 @@
           <img
             src="@/assets/images/orderFollow-up/xialablue@3x.png"
             class="information-xiala"
-            @click="detailHide(data)"
+            @click="detailHide(index)"
           >
         </div>
         <div
@@ -155,9 +155,9 @@
           <img
             src="@/assets/images/orderFollow-up/dian@3x.png"
             class="dian-Class"
-            @click="showMore(data.id)"
+            @click="showMore(index)"
           >
-          <div v-show="show" class="show-class">
+          <div v-show="data.show" class="show-class">
             <p v-for="(item,index) in data.showList" :key="index" @click="updateOrderType(item.id)" class="show-p">{{item.name}}</p>
           </div>
           <p class="bottom-button">成交录单</p>
@@ -207,7 +207,7 @@ export default {
       maskShow: false,
       sortShow: false,
       scenarioShow: false,
-      detailShow: false,
+      // detailShow: false,
       sortBlueShow:false,
       scenarioBlueShow:false,
       dataList: [],
@@ -325,20 +325,15 @@ this.maskShow = !this.maskShow;
       this.sortShow = false;
       this.scenarioShow = false;
     },
-    showMore(id){
-      this.ID = id
-      this.show = true
+    showMore(index){
+      this.ID = this.dataList[index].id
+      this.$set(this.dataList[index],'show',!this.dataList[index].show)
     },
     noticeClose() {
       this.noticeShow = false;
     },
-    detailHide(item) {
-      this.dataList.forEach(ite =>{
-        if(item.id === ite.id){
-          ite.detailShow = !ite.detailShow
-        }
-      })
-
+    detailHide(index) {
+      this.$set(this.dataList[index],'detailShow',!this.dataList[index].detailShow)
     },
     searchData() {
       this.orderService
@@ -370,7 +365,8 @@ this.maskShow = !this.maskShow;
     anylizeData(){
       this.dataList.forEach(item =>{
         item.showList = []
-        item.detailShow = false
+       this.$set(item,'detailShow',false)
+        this.$set(item,'show',false)
             if(item.userStatus === 1){
               item.userS = '高潜'
               item.showList.push({id:'2',name:'取消高潜'})
@@ -413,7 +409,6 @@ this.maskShow = !this.maskShow;
 
     },
     updateOrderType(type){
-      this.show = false
       this.orderService.updateOrderFollowByType(
         {},
          {
