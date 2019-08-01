@@ -41,10 +41,10 @@
 
 <script>
 import {
-  TabBar,
   ScrollView,
-  ScrollViewRefresh,
   ScrollViewMore,
+  ScrollViewRefresh,
+  TabBar,
 } from 'mand-mobile';
 
 import {
@@ -63,7 +63,13 @@ export default {
   data() {
     return {
       current: 1,
-      items: [{ name: 1, label: '可参与活动' }, { name: 2, label: '不可参与活动' }],
+      items: [{
+        name: 1,
+        label: '可参与活动'
+      }, {
+        name: 2,
+        label: '不可参与活动'
+      }],
       isFinished: false,
       dataList: [
         {
@@ -104,8 +110,11 @@ export default {
   methods: {
     $_onRefresh() {
       // async data
+      this.pageCfg.page.page = 1;
+      const data = {
+      };
       setTimeout(() => {
-        this.list += 5;
+        this.query(data);
         this.$refs.scrollView.finishRefresh();
       }, 2000);
     },
@@ -126,6 +135,15 @@ export default {
         this.$refs.scrollView.finishLoadMore();
       }, 1000);
     },
+    query(data) {
+      // todo
+      const formData = {
+        pageNum: this.pageCfg.page.page,
+        pageSize: this.pageCfg.page.pageSize,
+        ...data
+      };
+      console.log(formData);
+    }
   },
 };
 </script>
