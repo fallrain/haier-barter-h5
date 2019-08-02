@@ -193,10 +193,14 @@
 </template>
 
 <script>
-import { Icon, TabBar } from "mand-mobile";
-import {Toast} from 'mand-mobile';
+import {
+  Icon, TabBar,
+  Toast
+} from 'mand-mobile';
+
+
 export default {
-  name: "",
+  name: '',
   components: {
     [TabBar.name]: TabBar,
     [Icon.name]: Icon
@@ -208,72 +212,72 @@ export default {
       sortShow: false,
       scenarioShow: false,
       // detailShow: false,
-      sortBlueShow:false,
-      scenarioBlueShow:false,
+      sortBlueShow: false,
+      scenarioBlueShow: false,
       dataList: [],
-      sortType: "1",
-      scenarioType: "",
-      searchWord:'',
-      show:false,
-      showList:[],
-      ID:'',
+      sortType: '1',
+      scenarioType: '',
+      searchWord: '',
+      show: false,
+      showList: [],
+      ID: '',
       sortList: [
         {
-          id: "1",
-          name: "智能排序"
+          id: '1',
+          name: '智能排序'
         },
         {
-          id: "2",
-          name: "按时间倒序"
+          id: '2',
+          name: '按时间倒序'
         },
         {
-          id: "3",
-          name: "按品牌"
+          id: '3',
+          name: '按品牌'
         },
         {
-          id: "4",
-          name: "按成交可能性"
+          id: '4',
+          name: '按成交可能性'
         }
       ],
       scenarioList: [
         {
-          id: "1",
-          name: "以旧换新"
+          id: '1',
+          name: '以旧换新'
         },
         {
-          id: "2",
-          name: "一站筑家"
+          id: '2',
+          name: '一站筑家'
         },
         {
-          id: "3",
-          name: "认筹"
+          id: '3',
+          name: '认筹'
         },
         {
-          id: "4",
-          name: "爱到家"
+          id: '4',
+          name: '爱到家'
         }
       ],
       current: 1,
       items: [
         {
           name: 1,
-          label: "全部",
-          icon: "home"
+          label: '全部',
+          icon: 'home'
         },
         {
           name: 2,
-          label: "跟进中",
-          icon: "user"
+          label: '跟进中',
+          icon: 'user'
         },
         {
           name: 3,
-          label: "异常",
-          icon: "user"
+          label: '异常',
+          icon: 'user'
         },
         {
           name: 4,
-          label: "已成交",
-          icon: "user"
+          label: '已成交',
+          icon: 'user'
         }
       ]
     };
@@ -288,10 +292,10 @@ export default {
       this.scenarioShow = false;
       this.sortBlueShow = !this.sortBlueShow;
       this.scenarioBlueShow = false;
-      if(this.sortBlueShow){
-        this.maskShow  = true
-      }else{
-      this.maskShow = !this.maskShow;
+      if (this.sortBlueShow) {
+        this.maskShow = true;
+      } else {
+        this.maskShow = !this.maskShow;
       }
     },
     businessScenario() {
@@ -299,20 +303,18 @@ export default {
       this.scenarioShow = true;
       this.scenarioBlueShow = !this.scenarioBlueShow;
       this.sortBlueShow = false;
-          if(this.scenarioBlueShow){
-        this.maskShow  = true
-      }else{
-this.maskShow = !this.maskShow;
+      if (this.scenarioBlueShow) {
+        this.maskShow = true;
+      } else {
+        this.maskShow = !this.maskShow;
       }
-
     },
     preparation() {},
     sortClick(item) {
       this.sortType = item.id;
       this.maskerHidden();
       this.sortBlueShow = false;
-      this.searchData()
-
+      this.searchData();
     },
     scenarioClick(item) {
       this.scenarioType = item.id;
@@ -325,105 +327,101 @@ this.maskShow = !this.maskShow;
       this.sortShow = false;
       this.scenarioShow = false;
     },
-    showMore(index){
-      this.ID = this.dataList[index].id
-      this.$set(this.dataList[index],'show',!this.dataList[index].show)
+    showMore(index) {
+      this.ID = this.dataList[index].id;
+      this.$set(this.dataList[index], 'show', !this.dataList[index].show);
     },
     noticeClose() {
       this.noticeShow = false;
     },
     detailHide(index) {
-      this.$set(this.dataList[index],'detailShow',!this.dataList[index].detailShow)
+      this.$set(this.dataList[index], 'detailShow', !this.dataList[index].detailShow);
     },
     searchData() {
       this.orderService
         .queryOrderFollowlList(
           {
-            hmcId: "A0008949",
+            hmcId: 'A0008949',
             sortType: this.sortType,
-            recordMode: "",
-            userStatus: "",
-            orderFollowStatus: "",
-            flowType: "",
-            flowStatus: "",
-            orderFollowSource: "",
+            recordMode: '',
+            userStatus: '',
+            orderFollowStatus: '',
+            flowType: '',
+            flowStatus: '',
+            orderFollowSource: '',
             businessScenarios: this.scenarioType,
-            sourceSystem: "",
-            orderFollowStartDate: "",
-            orderFollowEndDate: ""
+            sourceSystem: '',
+            orderFollowStartDate: '',
+            orderFollowEndDate: ''
           },
           {
             pageNum: 1,
             pageSize: 10
           }
-        ).then(res => {
-          this.dataList = res.data.result
-          this.anylizeData()
-        })
-
+        ).then((res) => {
+          this.dataList = res.data.result;
+          this.anylizeData();
+        });
     },
-    anylizeData(){
-      this.dataList.forEach(item =>{
-        item.showList = []
-       this.$set(item,'detailShow',false)
-        this.$set(item,'show',false)
-            if(item.userStatus === 1){
-              item.userS = '高潜'
-              item.showList.push({id:'2',name:'取消高潜'})
-            }else{
-              item.userS = ''
-              item.showList.push({id:'6',name:'设为高潜'})
-            }
-            if(item.tardinessStatus === 1){
-              item.tardinessS = '已拖期'
-            }else{
-              item.usetardinessS = ''
-            }
-            if(item.flowStatus === 3){
-              item.flowS = '已忽略'
-              this.grayShow = true
-            }else{
-              item.flowS = ''
-              this.grayShow = false
-            }
-          })
+    anylizeData() {
+      this.dataList.forEach((item) => {
+        item.showList = [];
+        this.$set(item, 'detailShow', false);
+        this.$set(item, 'show', false);
+        if (item.userStatus === 1) {
+          item.userS = '高潜';
+          item.showList.push({ id: '2', name: '取消高潜' });
+        } else {
+          item.userS = '';
+          item.showList.push({ id: '6', name: '设为高潜' });
+        }
+        if (item.tardinessStatus === 1) {
+          item.tardinessS = '已拖期';
+        } else {
+          item.usetardinessS = '';
+        }
+        if (item.flowStatus === 3) {
+          item.flowS = '已忽略';
+          this.grayShow = true;
+        } else {
+          item.flowS = '';
+          this.grayShow = false;
+        }
+      });
     },
-    fuzzySearch(){
-      debugger
+    fuzzySearch() {
+      debugger;
       this.orderService.fuzzySearchOrderFollowList(
         {},
         {
-            pageNum: 1,
-            pageSize: 10,
-            hmcId: "A0008949",
-            keyword:this.searchWord
+          pageNum: 1,
+          pageSize: 10,
+          hmcId: 'A0008949',
+          keyword: this.searchWord
         }
-      ).then(res => {
-        console.log('tag', 'res')
-        this.dataList = res.data.result
-        this.anylizeData()
-        debugger
-
-
-      })
-
+      ).then((res) => {
+        console.log('tag', 'res');
+        this.dataList = res.data.result;
+        this.anylizeData();
+        debugger;
+      });
     },
-    updateOrderType(type){
+    updateOrderType(type) {
       this.orderService.updateOrderFollowByType(
         {},
-         {
-            orderFollowId: this.ID,
-            type: type,
-            transferer: "",
+        {
+          orderFollowId: this.ID,
+          type,
+          transferer: '',
         }
-      ).then(res => {
-        if(res.code === 1){
-          Toast.succeed(res.msg)
-          this.searchData()
-        }else{
-          Toast.failed(res.msg)
+      ).then((res) => {
+        if (res.code === 1) {
+          Toast.succeed(res.msg);
+          this.searchData();
+        } else {
+          Toast.failed(res.msg);
         }
-      })
+      });
     }
   }
 };

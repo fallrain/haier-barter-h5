@@ -36,62 +36,62 @@
 </template>
 
 <script>
-  import {
+import {
+  BPopCheckList,
+  BItem
+} from '@/components/form';
+
+export default {
+  name: 'AddUserTag',
+  components: {
     BPopCheckList,
     BItem
-  } from '@/components/form';
-
-  export default {
-    name: 'AddUserTag',
-    components: {
-      BPopCheckList,
-      BItem
-    },
-    data() {
-      return {
-        form: {
-          tag: []
+  },
+  data() {
+    return {
+      form: {
+        tag: []
+      },
+      tagPopShow: false,
+      tagList: [
+        {
+          id: 1,
+          name: '行为性格'
         },
-        tagPopShow: false,
-        tagList: [
-          {
-            id: 1,
-            name: '行为性格'
-          },
-          {
-            id: 2,
-            name: '家庭结构'
-          },
-          {
-            id: 3,
-            name: '年龄层次'
-          },
-          {
-            id: 4,
-            name: '其他'
-          }
-        ]
-      };
-    },
-    computed: {
-      tagName() {
-        const tagObj = this.tagList.find(v => v.id === this.form.tag[0]);
-        let name;
-        if (tagObj) {
-          name = tagObj.name;
-        } else {
-          name = '';
+        {
+          id: 2,
+          name: '家庭结构'
+        },
+        {
+          id: 3,
+          name: '年龄层次'
+        },
+        {
+          id: 4,
+          name: '其他'
         }
-        return name;
+      ]
+    };
+  },
+  computed: {
+    tagName() {
+      const tagObj = this.tagList.find(v => v.id === this.form.tag[0]);
+      let name;
+      if (tagObj) {
+        name = tagObj.name;
+      } else {
+        name = '';
       }
-    },
-    methods: {
-      showTags() {
-        /* 地址标签显示隐藏 */
-        this.tagPopShow = true;
-      }
+      return name;
     }
-  };
+  },
+  methods: {
+    showTags() {
+      /* 地址标签显示隐藏 */
+      this.tagPopShow = true;
+    }
+  }
+};
 </script>
 
 <style scoped>

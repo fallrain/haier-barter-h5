@@ -1,5 +1,7 @@
 import Vue from 'vue';
-import VeeValidate, { Validator } from 'vee-validate';
+import VeeValidate, {
+  Validator
+} from 'vee-validate';
 import veeCustomRules from './veeCustomRules';
 
 const dictionary = {
