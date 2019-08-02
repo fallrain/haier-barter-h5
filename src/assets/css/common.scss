@@ -402,6 +402,11 @@
   background: $theme-color;
 }
 
+.common-error {
+  color: #FF001F;
+  font-size: 26px;
+}
+
 /*公共 end*/
 
 /*fix*/
@@ -451,4 +456,5 @@
     margin-right: 24px;
   }
 }
+
 /*订单end*/

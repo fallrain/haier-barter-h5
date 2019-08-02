@@ -19,24 +19,25 @@
       :hasInk="false"
     ></md-tab-bar>
     <md-scroll-view
+      v-show="curScrollViewName==='scrollView'"
       class="salesVerification-view"
       ref="scrollView"
       :scrolling-x="false"
       @refreshing="onRefresh"
       @end-reached="onEndReached"
       :end-reached-threshold="100"
-      :immediate-check-end-reaching="true"
+      :immediate-check-end-reaching="scrollView.autoCheck"
       :auto-reflow="true"
     >
       <div class="salesVerification-list">
         <b-scale-item
-          v-for="(item,index) in list"
+          v-for="(item,index) in list['scrollView']"
           :key="index"
           :data="item"
           :index="index"
           @barCodeDeclare="barCodeDeclare"
           @showDetail="showDetail"
-          v-show="choosedIndex===false || (choosedIndex!==false && index===choosedIndex)"
+          v-show="$data[curScrollViewName].choosedIndex===false || ($data[curScrollViewName].choosedIndex!==false && index===$data[curScrollViewName].choosedIndex)"
         ></b-scale-item>
       </div>
       <md-scroll-view-refresh
@@ -52,6 +53,187 @@
       >
       </md-scroll-view-more>
     </md-scroll-view>
+    <md-scroll-view
+      v-show="curScrollViewName==='scrollViewVerify'"
+      class="salesVerification-view"
+      ref="scrollViewVerify"
+      :scrolling-x="false"
+      @refreshing="onRefresh"
+      @end-reached="onEndReached"
+      :end-reached-threshold="100"
+      :immediate-check-end-reaching="scrollViewVerify.autoCheck"
+      :auto-reflow="true"
+    >
+      <div class="salesVerification-list">
+        <b-scale-item
+          v-for="(item,index) in list['scrollViewVerify']"
+          :key="index"
+          :data="item"
+          :index="index"
+          @barCodeDeclare="barCodeDeclare"
+          @showDetail="showDetail"
+          v-show="$data[curScrollViewName].choosedIndex===false || ($data[curScrollViewName].choosedIndex!==false && index===$data[curScrollViewName].choosedIndex)"
+        ></b-scale-item>
+      </div>
+      <md-scroll-view-refresh
+        slot="refresh"
+        slot-scope="{ scrollTop, isRefreshActive, isRefreshing }"
+        :scroll-top="scrollTop"
+        :is-refreshing="isRefreshing"
+        :is-refresh-active="isRefreshActive"
+      ></md-scroll-view-refresh>
+      <md-scroll-view-more
+        slot="more"
+        :is-finished="scrollViewVerify.isFinished"
+      >
+      </md-scroll-view-more>
+    </md-scroll-view>
+    <md-scroll-view
+      v-show="curScrollViewName==='scrollViewOdd'"
+      class="salesVerification-view"
+      ref="scrollViewOdd"
+      :scrolling-x="false"
+      @refreshing="onRefresh"
+      @end-reached="onEndReached"
+      :end-reached-threshold="100"
+      :immediate-check-end-reaching="scrollViewOdd.autoCheck"
+      :auto-reflow="true"
+    >
+      <div class="salesVerification-list">
+        <b-scale-item
+          v-for="(item,index) in list['scrollViewOdd']"
+          :key="index"
+          type="exception"
+          :data="item"
+          :index="index"
+          v-show="$data[curScrollViewName].choosedIndex===false || ($data[curScrollViewName].choosedIndex!==false && index===$data[curScrollViewName].choosedIndex)"
+        >
+          <button
+            slot="headRight"
+            type="button"
+            class="common-btn-primary"
+          >
+            重新提报
+          </button>
+        </b-scale-item>
+      </div>
+      <md-scroll-view-refresh
+        slot="refresh"
+        slot-scope="{ scrollTop, isRefreshActive, isRefreshing }"
+        :scroll-top="scrollTop"
+        :is-refreshing="isRefreshing"
+        :is-refresh-active="isRefreshActive"
+      ></md-scroll-view-refresh>
+      <md-scroll-view-more
+        slot="more"
+        :is-finished="scrollViewOdd.isFinished"
+      >
+      </md-scroll-view-more>
+    </md-scroll-view>
+    <md-scroll-view
+      v-show="curScrollViewName==='scrollViewFail'"
+      class="salesVerification-view"
+      ref="scrollViewFail"
+      :scrolling-x="false"
+      @refreshing="onRefresh"
+      @end-reached="onEndReached"
+      :end-reached-threshold="100"
+      :immediate-check-end-reaching="scrollViewFail.autoCheck"
+      :auto-reflow="true"
+    >
+      <div class="salesVerification-list">
+        <b-scale-item
+          v-for="(item,index) in list['scrollViewFail']"
+          :key="index"
+          type="fail"
+          :data="item"
+          :index="index"
+          v-show="$data[curScrollViewName].choosedIndex===false || ($data[curScrollViewName].choosedIndex!==false && index===$data[curScrollViewName].choosedIndex)"
+        >
+          <button
+            slot="headRight"
+            type="button"
+            class="common-btn-primary"
+          >
+            修改订单
+          </button>
+        </b-scale-item>
+      </div>
+      <md-scroll-view-refresh
+        slot="refresh"
+        slot-scope="{ scrollTop, isRefreshActive, isRefreshing }"
+        :scroll-top="scrollTop"
+        :is-refreshing="isRefreshing"
+        :is-refresh-active="isRefreshActive"
+      ></md-scroll-view-refresh>
+      <md-scroll-view-more
+        slot="more"
+        :is-finished="scrollViewFail.isFinished"
+      >
+      </md-scroll-view-more>
+    </md-scroll-view>
+    <md-scroll-view
+      v-show="curScrollViewName==='scrollViewSuc'"
+      class="salesVerification-view"
+      ref="scrollViewSuc"
+      :scrolling-x="false"
+      @refreshing="onRefresh"
+      @end-reached="onEndReached"
+      :end-reached-threshold="100"
+      :immediate-check-end-reaching="scrollViewSuc.autoCheck"
+      :auto-reflow="true"
+    >
+      <div class="salesVerification-list">
+        <b-scale-item
+          v-for="(item,index) in list['scrollViewSuc']"
+          :key="index"
+          type="success"
+          :data="item"
+          :index="index"
+          v-show="$data[curScrollViewName].choosedIndex===false || ($data[curScrollViewName].choosedIndex!==false && index===$data[curScrollViewName].choosedIndex)"
+        >
+        </b-scale-item>
+      </div>
+      <md-scroll-view-refresh
+        slot="refresh"
+        slot-scope="{ scrollTop, isRefreshActive, isRefreshing }"
+        :scroll-top="scrollTop"
+        :is-refreshing="isRefreshing"
+        :is-refresh-active="isRefreshActive"
+      ></md-scroll-view-refresh>
+      <md-scroll-view-more
+        slot="more"
+        :is-finished="scrollViewSuc.isFinished"
+      >
+      </md-scroll-view-more>
+    </md-scroll-view>
+    <md-dialog
+      title="请输入条码"
+      class="salesVerification-dialog"
+      :closable="false"
+      v-model="qrCodeDialog.open"
+      :btns="qrCodeDialog.btns"
+    >
+      <div>
+        <div class="salesVerification-qrcode-par">
+          <input
+            class="salesVerification-qrcode-ipt"
+            type="text"
+            v-model="qrCodeForm.code"
+            placeholder="请扫描条码信息"
+          >
+          <div
+            class="salesVerification-qrcode-icon-wrap"
+          >
+            <i class="iconfont icon-saomiao"></i>
+          </div>
+        </div>
+        <p class="common-error mt16" v-show="qrCodeDialog.error">{{qrCodeDialog.errorText}}</p>
+        <div class="salesVerification-qrcode-tips">
+          提示信息：发送到发送到发送到发送到发送到发放水电费水电费水电费是电费水费水电费水电费水电费是发送到
+        </div>
+      </div>
+    </md-dialog>
   </div>
 </template>
 
@@ -66,6 +248,7 @@ import {
 } from '@/components/form';
 
 import {
+  Dialog,
   ScrollView,
   ScrollViewMore,
   ScrollViewRefresh,
@@ -75,6 +258,7 @@ import {
 export default {
   name: 'SalesVerification',
   components: {
+    'md-dialog': Dialog,
     'md-tab-bar': TabBar,
     'md-scroll-view': ScrollView,
     'md-scroll-view-refresh': ScrollViewRefresh,
@@ -112,79 +296,159 @@ export default {
           label: '验证成功'
         }
       ],
+      scrollView: {
+        isFinished: false,
+        // 展开的条码序号
+        choosedIndex: false,
+        // 自动检测触发到底部
+        autoCheck: true
+      },
+      // 待验证
+      scrollViewVerify: {
+        isFinished: false,
+        choosedIndex: false,
+        autoCheck: false
+      },
+      // 异常
+      scrollViewOdd: {
+        isFinished: false,
+        choosedIndex: false,
+        autoCheck: false
+      },
+      // 失败
+      scrollViewFail: {
+        isFinished: false,
+        choosedIndex: false,
+        autoCheck: false
+      },
+      // 成功
+      scrollViewSuc: {
+        isFinished: false,
+        choosedIndex: false,
+        autoCheck: false
+      },
       // 销量列表
-      list: [
-        {
-          name: '热水器',
-          type: 'CEH-80V物联网',
-          count: 12,
-          detail: [
-            {
-              buyName: '张子强',
-              time: '2019-06-03',
-              orderName: '王强'
-            },
-            {
-              buyName: '张子强',
-              time: '2019-06-03',
-              orderName: '王强'
-            },
-            {
-              buyName: '张子强',
-              time: '2019-06-03',
-              orderName: '王强'
-            },
-            {
-              buyName: '张子强',
-              time: '2019-06-03',
-              orderName: '王强'
-            },
-            {
-              buyName: '张子强',
-              time: '2019-06-03',
-              orderName: '王强'
-            },
-            {
-              buyName: '张子强',
-              time: '2019-06-03',
-              orderName: '王强'
-            },
-            {
-              buyName: '张子强',
-              time: '2019-06-03',
-              orderName: '王强'
-            },
-            {
-              buyName: '张子强',
-              time: '2019-06-03',
-              orderName: '王强'
-            },
-            {
-              buyName: '张子强',
-              time: '2019-06-03',
-              orderName: '王强'
-            },
-            {
-              buyName: '张子强',
-              time: '2019-06-03',
-              orderName: '王强'
-            },
-            {
-              buyName: '张子强',
-              time: '2019-06-03',
-              orderName: '王强'
-            },
-            {
-              buyName: '张子强',
-              time: '2019-06-03',
-              orderName: '王强'
-            }
-          ]
-        }
-      ],
-      // 被查看详情的item的index
-      choosedIndex: false
+      list: {
+        scrollView: [
+          {
+            name: '热水器',
+            type: 'CEH-80V物联网',
+            count: 12,
+            detail: [
+              {
+                buyName: '张子强',
+                time: '2019-06-03',
+                orderName: '王强',
+                errorReason: '谁知道是怎么回事',
+              },
+              {
+                buyName: '张子强',
+                time: '2019-06-03',
+                orderName: '王强'
+              },
+              {
+                buyName: '张子强',
+                time: '2019-06-03',
+                orderName: '王强'
+              },
+              {
+                buyName: '张子强',
+                time: '2019-06-03',
+                orderName: '王强'
+              },
+              {
+                buyName: '张子强',
+                time: '2019-06-03',
+                orderName: '王强'
+              },
+              {
+                buyName: '张子强',
+                time: '2019-06-03',
+                orderName: '王强'
+              },
+              {
+                buyName: '张子强',
+                time: '2019-06-03',
+                orderName: '王强'
+              },
+              {
+                buyName: '张子强',
+                time: '2019-06-03',
+                orderName: '王强'
+              },
+              {
+                buyName: '张子强',
+                time: '2019-06-03',
+                orderName: '王强'
+              },
+              {
+                buyName: '张子强',
+                time: '2019-06-03',
+                orderName: '王强'
+              },
+              {
+                buyName: '张子强',
+                time: '2019-06-03',
+                orderName: '王强'
+              },
+              {
+                buyName: '张子强',
+                time: '2019-06-03',
+                orderName: '王强'
+              }
+            ]
+          }
+        ],
+        scrollViewVerify: [],
+        scrollViewOdd: [],
+        scrollViewFail: [],
+        scrollViewSuc: [],
+      },
+      qrCodeDialog: {
+        error: false,
+        errorText: '',
+        open: false,
+        btns: [
+          {
+            text: '取消'
+          },
+          {
+            text: '传入工资系统',
+            handler: this.onQrCodeDialogConfirm,
+          },
+        ],
+      },
+      qrCodeForm: {
+        code: ''
+      }
     };
+  },
+  computed: {
+    curScrollViewName() {
+      // 当前tab下的scrollView的ref名字
+      return {
+        1: 'scrollView',
+        2: 'scrollViewVerify',
+        3: 'scrollViewOdd',
+        4: 'scrollViewFail',
+        5: 'scrollViewSuc'
+      }[this.curTab];
+    }
+  },
+  watch: {
+    curTab(val) {
+      const obj = {
+        1: 'scrollView',
+        2: 'scrollViewVerify',
+        3: 'scrollViewOdd',
+        4: 'scrollViewFail',
+        5: 'scrollViewSuc'
+      };
+      Object.values(obj).forEach((v) => {
+        this[v].autoCheck = false;
+      });
+      this[obj[val]].autoCheck = true;
+    }
   },
   methods: {
     confirmDate(dates) {
@@ -195,7 +459,7 @@ export default {
       return new Promise((resolve) => {
         setTimeout(() => {
           for (let i = 0; i < 20; i++) {
-            this.list.push({
+            this.list[this.curScrollViewName].push({
               name: '热水器',
               type: 'CEH-80V物联网',
               count: 12,
@@ -227,31 +491,43 @@ export default {
       });
     },
     onEndReached() {
-      /* 下载更多 */
-      if (this.choosedIndex !== false) {
+      /* 加载更多 */
+      if (this[this.curScrollViewName].choosedIndex !== false) {
         this.$refs.scrollView.finishRefresh();
         this.$refs.scrollView.finishLoadMore();
         return;
       }
-      this.scrollViewOnEndReached(this.search);
+      this.scrollViewOnEndReached(this.search, this.curScrollViewName);
     },
     onRefresh() {
-      if (this.choosedIndex !== false) {
+      /* 下拉刷新 */
+      if (this[this.curScrollViewName].choosedIndex !== false) {
         this.$refs.scrollView.finishRefresh();
         this.$refs.scrollView.finishLoadMore();
         return;
       }
-      this.scrollViewOnRefresh(this.search);
+      this.scrollViewOnRefresh(this.search, this.curScrollViewName);
     },
     barCodeDeclare() {
       /* 销量申报 */
+      this.qrCodeDialog.open = true;
+      // 重置code
+      this.qrCodeForm.code = '';
+      this.qrCodeDialog.error = false;
     },
     showDetail({ isShowDetail, index }) {
       /* 显示详情后隐藏其他 */
       if (isShowDetail) {
-        this.choosedIndex = index;
+        this[this.curScrollViewName].choosedIndex = index;
       } else {
-        this.choosedIndex = false;
+        this[this.curScrollViewName].choosedIndex = false;
+      }
+    },
+    onQrCodeDialogConfirm() {
+      /* 传入工资系统提交 */
+      if (!this.qrCodeForm.code) {
+        this.qrCodeDialog.errorText = '请输入条码';
+        this.qrCodeDialog.error = true;
       }
     }
   }
@@ -289,5 +565,58 @@ export default {
       height: 72px;
       min-height: 72px;
     }
+  }
+
+  .salesVerification-dialog {
+    .md-dialog-btn {
+      font-size: 30px;
+    }
+
+    .md-dialog-title {
+      color: #000;
+      font-size: 28px;
+      margin-bottom: 16px;
+    }
+
+    .md-dialog-body {
+      padding: 24px 40px;
+    }
+  }
+
+  .salesVerification-qrcode-par {
+    display: flex;
+    align-items: center;
+  }
+
+  .salesVerification-qrcode-ipt {
+    flex-grow: 1;
+    height: 60px;
+    background: #F5F5F5;
+    border-radius: 30px;
+    padding-left: 24px;
+    padding-right: 24px;
+    border: 0;
+  }
+
+  .salesVerification-qrcode-icon-wrap {
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    border-radius: 100%;
+    background: #1969C6;
+    color: #fff;
+    text-align: center;
+    margin-left: 16px;
+  }
+
+  .salesVerification-qrcode-icon {
+    font-size: 40px;
+  }
+
+  .salesVerification-qrcode-tips {
+    margin-top: 20px;
+    font-size: 28px;
+    color: #999;
+    line-height: 40px;
   }
 </style>

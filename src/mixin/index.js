@@ -25,27 +25,27 @@ export default {
     })
   },
   methods: {
-    scrollViewOnEndReached(search) {
+    scrollViewOnEndReached(search, scrollView = 'scrollView') {
       /* 加载更多 */
-      if (this.scrollView.isFinished) {
+      if (this[scrollView].isFinished) {
         return;
       }
       this.pageCfg.page.page++;
       if (search) {
         search({ more: true }).then(({ isFinished }) => {
-          this.scrollView.isFinished = isFinished;
-          this.$refs.scrollView.finishLoadMore();
+          this[scrollView].isFinished = isFinished;
+          this.$refs[scrollView].finishLoadMore();
         });
       }
     },
-    scrollViewOnRefresh(search) {
+    scrollViewOnRefresh(search, scrollView = 'scrollView') {
       /* 下拉刷新 */
       this.pageCfg.page.page = 1;
-      this.scrollView.isFinished = false;
+      this[scrollView].isFinished = false;
       if (search) {
         search().then(() => {
-          this.$refs.scrollView.finishRefresh();
-          this.$refs.scrollView.finishLoadMore();
+          this.$refs[scrollView].finishRefresh();
+          this.$refs[scrollView].finishLoadMore();
         });
       }
     },

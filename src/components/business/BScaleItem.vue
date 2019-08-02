@@ -7,16 +7,22 @@
       <span class="name">{{data.name}}</span>
       <span class="type">{{data.type}}</span>
       <div class="bScaleItem-head-right">
-        <span class="count">{{data.count}}</span>
-        <i
-          class="iconfont icon-jiantou9"
-          :class="[isShowDetail && 'reverse']"
-          @click="showDetail(data,index)"
-        ></i>
+        <div v-if="type==='normal' || type==='success'">
+          <span class="count">{{data.count}}</span>
+          <i
+            v-if="type==='normal'"
+            class="iconfont icon-jiantou9"
+            :class="[isShowDetail && 'reverse']"
+            @click="showDetail(data,index)"
+          ></i>
+        </div>
+        <div>
+          <slot name="headRight"></slot>
+        </div>
       </div>
     </div>
     <div
-      v-show="isShowDetail"
+      v-show="type==='exception' || isShowDetail"
       class="bScaleItem-detail"
     >
       <ul v-if="data.detail && data.detail.length">
@@ -28,7 +34,12 @@
           <p class="bScaleItem-detail-title"><span>购买人：</span>{{detail.buyName}}</p>
           <p class="mt16"><span>购机时间：</span>{{detail.time}}</p>
           <p class="mt16"><span>录单人：</span>{{detail.orderName}}</p>
+          <p
+            v-if="type==='exception'"
+            class="bScaleItem-detail-exception-inf mt16"
+          >异常原因：{{detail.errorReason || '暂无'}}</p>
           <button
+            v-if="type==='normal'"
             type="button"
             class="common-btn-primary"
             @click="barCodeClick(data.detail)"
@@ -53,6 +64,11 @@ export default {
     index: {
       type: Number,
       required: true
+    },
+    // 类型：normal exception fail success
+    type: {
+      type: String,
+      default: 'normal'
     }
   },
   data() {
@@ -175,5 +191,9 @@ export default {
   .bScaleItem-detail-title {
     line-height: 40px;
     color: #666;
+  }
+
+  .bScaleItem-detail-exception-inf {
+    color: #FF001F;
   }
 </style>
