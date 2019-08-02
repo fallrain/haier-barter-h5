@@ -17,6 +17,7 @@ import BUpload from './BUpload';
 import BVerificationcode from './BVerificationcode';
 import BUserTag from './BUserTag';
 import BActivityItem from './BActivityItem';
+import BOrderDialog from './BOrderDialog';
 
 /* eslint-disable import/prefer-default-export */
 export {
@@ -38,5 +39,6 @@ export {
   BUpload,
   BVerificationcode,
   BUserTag,
-  BActivityItem
+  BActivityItem,
+  BOrderDialog,
 };
