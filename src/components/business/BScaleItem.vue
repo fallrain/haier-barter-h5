@@ -1,13 +1,17 @@
 <template>
   <div class="bScaleItem">
-    <div class="bScaleItem-head">
+    <div
+      class="bScaleItem-head"
+      :class="[isShowDetail && 'sticky']"
+    >
       <span class="name">{{data.name}}</span>
       <span class="type">{{data.type}}</span>
       <div class="bScaleItem-head-right">
         <span class="count">{{data.count}}</span>
         <i
           class="iconfont icon-jiantou9"
-          @click="showDetail"
+          :class="[isShowDetail && 'reverse']"
+          @click="showDetail(data,index)"
         ></i>
       </div>
     </div>
@@ -22,8 +26,14 @@
           :key="index"
         >
           <p class="bScaleItem-detail-title"><span>购买人：</span>{{detail.buyName}}</p>
-          <p><span>购机时间：</span>{{detail.time}}</p>
-          <p><span>录单人：</span>{{detail.orderName}}</p>
+          <p class="mt16"><span>购机时间：</span>{{detail.time}}</p>
+          <p class="mt16"><span>录单人：</span>{{detail.orderName}}</p>
+          <button
+            type="button"
+            class="common-btn-primary"
+            @click="barCodeClick(data.detail)"
+          >条码申报
+          </button>
         </li>
       </ul>
     </div>
@@ -39,6 +49,10 @@ export default {
       type: Object,
       default: () => {
       }
+    },
+    index: {
+      type: Number,
+      required: true
     }
   },
   data() {
@@ -48,9 +62,18 @@ export default {
     };
   },
   methods: {
-    showDetail() {
+    showDetail(detail, index) {
       /* 显示详情与否 */
       this.isShowDetail = !this.isShowDetail;
+      this.$emit('showDetail', {
+        isShowDetail: this.isShowDetail,
+        detail,
+        index
+      });
+    },
+    barCodeClick(detail) {
+      /* 销量申报按钮click */
+      this.$emit('barCodeDeclare', detail);
     }
   }
 };
@@ -76,6 +99,9 @@ export default {
     align-items: center;
     font-size: 28px;
     height: 88px;
+
+    &.sticky {
+    }
 
     .name {
       color: #333;
@@ -109,6 +135,10 @@ export default {
     .iconfont {
       margin-left: 16px;
       color: #BBB;
+
+      &.reverse {
+        transform: scaleY(-1);
+      }
     }
   }
 
@@ -122,6 +152,7 @@ export default {
   }
 
   .bScaleItem-detail-item {
+    position: relative;
     padding-top: 16px;
     padding-bottom: 16px;
     border-bottom: 1px solid #eee;
@@ -132,6 +163,12 @@ export default {
 
     &:last-child {
       border-bottom: 0;
+    }
+
+    .common-btn-primary {
+      position: absolute;
+      bottom: 24px;
+      right: 24px;
     }
   }
 

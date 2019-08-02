@@ -33,6 +33,10 @@
           v-for="(item,index) in list"
           :key="index"
           :data="item"
+          :index="index"
+          @barCodeDeclare="barCodeDeclare"
+          @showDetail="showDetail"
+          v-show="choosedIndex===false || (choosedIndex!==false && index===choosedIndex)"
         ></b-scale-item>
       </div>
       <md-scroll-view-refresh
@@ -129,10 +133,57 @@ export default {
               buyName: '张子强',
               time: '2019-06-03',
               orderName: '王强'
+            },
+            {
+              buyName: '张子强',
+              time: '2019-06-03',
+              orderName: '王强'
+            },
+            {
+              buyName: '张子强',
+              time: '2019-06-03',
+              orderName: '王强'
+            },
+            {
+              buyName: '张子强',
+              time: '2019-06-03',
+              orderName: '王强'
+            },
+            {
+              buyName: '张子强',
+              time: '2019-06-03',
+              orderName: '王强'
+            },
+            {
+              buyName: '张子强',
+              time: '2019-06-03',
+              orderName: '王强'
+            },
+            {
+              buyName: '张子强',
+              time: '2019-06-03',
+              orderName: '王强'
+            },
+            {
+              buyName: '张子强',
+              time: '2019-06-03',
+              orderName: '王强'
+            },
+            {
+              buyName: '张子强',
+              time: '2019-06-03',
+              orderName: '王强'
+            },
+            {
+              buyName: '张子强',
+              time: '2019-06-03',
+              orderName: '王强'
             }
           ]
         }
       ],
+      // 被查看详情的item的index
+      choosedIndex: false
     };
   },
   methods: {
@@ -177,10 +228,31 @@ export default {
     },
     onEndReached() {
       /* 下载更多 */
+      if (this.choosedIndex !== false) {
+        this.$refs.scrollView.finishRefresh();
+        this.$refs.scrollView.finishLoadMore();
+        return;
+      }
       this.scrollViewOnEndReached(this.search);
     },
     onRefresh() {
+      if (this.choosedIndex !== false) {
+        this.$refs.scrollView.finishRefresh();
+        this.$refs.scrollView.finishLoadMore();
+        return;
+      }
       this.scrollViewOnRefresh(this.search);
+    },
+    barCodeDeclare() {
+      /* 销量申报 */
+    },
+    showDetail({ isShowDetail, index }) {
+      /* 显示详情后隐藏其他 */
+      if (isShowDetail) {
+        this.choosedIndex = index;
+      } else {
+        this.choosedIndex = false;
+      }
     }
   }
 };
