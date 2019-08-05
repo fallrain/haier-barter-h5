@@ -74,6 +74,7 @@ export default {
       dataList: [
         {
           title: '6月场景套权益昆明小微',
+          reasn: '套餐价格不符合',
           brand: '海尔，卡萨帝',
           scope: '所有产品',
           data: '2019-07-30至2019-08-02',
@@ -86,13 +87,14 @@ export default {
             remain: '222',
           }, {
             name: '50T82电视',
-            gift: '500积分',
+            gift: '500积分233222222222222333vvervevrdfvsrftbrthytnjuykuikiuktgteegtgythh235456',
             count: '6',
             remain: '2',
           }
           ]
         }, {
           title: '6月场景套权益昆明小微',
+          reasn: '',
           brand: '海尔，卡萨帝',
           scope: '所有产品',
           data: '2019-07-30至2019-08-02',
