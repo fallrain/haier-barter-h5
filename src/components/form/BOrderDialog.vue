@@ -10,12 +10,14 @@
           <slot name="add-content"></slot>
         </div>
         <div class="order-dialog-btns">
-          <button class="order-dialog-left order-text-gray-color" v-if="dialogContent.leftText"
-                  :class="dialogContent.rightText?'order-dialog-left':'order-left-text-fill'">
+          <button class="order-dialog-left" v-if="dialogContent.leftText"
+                  :class="{'order-left-text-fill': !dialogContent.rightText}"
+                  :style="{color:dialogContent.leftColor?dialogContent.leftColor:'#ccc'}">
             {{dialogContent.leftText}}
           </button>
-          <button class="order-dialog-right order-text-blue-color" v-if="dialogContent.rightText"
-                  :class="dialogContent.leftText?'order-dialog-right':'order-right-text-fill'">
+          <button class="order-dialog-right" v-if="dialogContent.rightText"
+                  :class="{'order-right-text-fill': !dialogContent.leftText}"
+                  :style="{color:dialogContent.rightColor?dialogContent.rightColor:'#4A90E2'}">
             {{dialogContent.rightText}}
           </button>
         </div>
@@ -34,6 +36,8 @@ export default {
       content: '111111111122222222222222222223333333333333333333333332222222222222222222',
       leftText: '左边',
       rightText: '右边',
+      leftColor: '',
+      rightColor: ''
     },
     isOpen: true,
   },
@@ -111,6 +115,7 @@ export default {
     width: 50%;
     height: 88px;
     background: #fff;
+    font-size: 30px;
     border-bottom-left-radius: 10px;
   }
 
@@ -133,11 +138,4 @@ export default {
     border-bottom-left-radius: 10px;
   }
 
-  .order-text-gray-color {
-    color: #ccc;
-  }
-
-  .order-text-blue-color {
-    color: #4A90E2;
-  }
 </style>
