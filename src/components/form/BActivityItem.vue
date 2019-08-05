@@ -4,8 +4,8 @@
       <i class="iconfont icon-liwu activity-gift-img"/>
       <span class="activity-gift-title">{{getData.title}}</span>
     </div>
-    <div class="activity-common-line activity-common-text activity-reason-text" v-if="getData .reason">不可参与原因：{{getData
-      .reason}}
+    <div class="activity-common-line activity-common-text activity-reason-text" v-if="getData.reason">
+      不可参与原因：{{getData.reason}}
     </div>
     <div class="activity-common-line activity-common-text">活动品牌：{{getData.brand}}</div>
     <div class="activity-common-line activity-common-text">试用范围：{{getData.scope}}</div>
@@ -37,9 +37,10 @@
     </div>
     <div class="activity-common-line activity-item activity-common-top activity-common-border" @click="setShowLimit">
       <span class="activity-tip-text activity-count-remain">其他限制</span>
-      <span class="icon iconfont icon-jiantou9 activity-tip-img activity-count-remain"></span>
+      <span class="icon iconfont icon-jiantou9 activity-tip-img activity-count-remain"
+            :class="isShowLimit?'':'activity-tip-img-transform'"></span>
     </div>
-    <div>
+    <div v-if="isShowLimit">
       <div class="activity-common-line activity-common-text">
         用户可兑换日期：<span class="activity-data-text">{{getData.data2}}</span>
       </div>
@@ -53,9 +54,9 @@
     </div>
     <img class="activity-img" v-if="false" src="../../assets/images/orderFollow-up/activity-img.png"/>
     <div class="activity-number">
-      <span class="activity-number-minus activity-number-common">-</span>
-      <span class="activity-number-count">1</span>
-      <span class="activity-number-add activity-number-common">+</span>
+      <span class="activity-number-minus activity-number-common" @click="minusCount">-</span>
+      <span class="activity-number-count">{{this.count}}</span>
+      <span class="activity-number-add activity-number-common" @click="addCount">+</span>
     </div>
   </div>
 </template>
@@ -63,6 +64,12 @@
 <script>
 export default {
   name: 'BActivityItem',
+  data() {
+    return {
+      isShowLimit: true,
+      count: 1,
+    };
+  },
   props: {
     getData: {
       title: '',
@@ -72,7 +79,6 @@ export default {
       data: '',
       data2: '',
       type: '',
-      isShowLimit: true,
       product: {
         type: Array,
         default: () => [{
@@ -88,7 +94,21 @@ export default {
     setShowLimit() {
       this.isShowLimit = !this.isShowLimit;
     },
+    minusCount() {
+      this.count--;
+      if (this.count < 1) {
+        this.count = 1;
+      }
+    },
+    addCount() {
+      this.count++;
+    },
   },
+  watch: {
+    getData(newVal, oldVal) {
+      this.data = newVal;
+    }
+  }
 };
 </script>
 
@@ -282,5 +302,9 @@ export default {
 
   .activity-tip-img {
     font-size: 36px;
+  }
+
+  .activity-tip-img-transform {
+    transform: scaleY(-1);
   }
 </style>

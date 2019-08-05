@@ -1,22 +1,28 @@
 <template>
   <div>
-    <div class="activity-tab-bg">
-      <div class="md-example-child md-example-child-tabs md-example-child-tab-bar-3 activity-tab">
-        <md-tab-bar
+    <div class="activity-tab-bg activity-tab">
+      <md-tab-bar
           v-model="current"
           :items="items"
           :hasInk="false"
         />
-      </div>
     </div>
 
-    <div class="md-example-child md-example-child-scroll-view md-example-child-scroll-view-2">
-      <md-scroll-view
-        ref="scrollView"
-        :scrolling-x="false"
-        @refreshing="$_onRefresh"
-        @end-reached="$_onEndReached"
+    <md-scroll-view
+      class="salesVerification-view"
+      ref="scrollView"
+      :scrolling-x="false"
+      @refreshing="onRefresh"
+      @end-reached="onEndReached"
+      :end-reached-threshold="100"
+      :immediate-check-end-reaching="scrollView.autoCheck"
+      :auto-reflow="true"
       >
+      <b-activity-item
+        v-for="(item,index) in dataList"
+        :key="index"
+        :getData.sync="item"
+      ></b-activity-item>
         <md-scroll-view-refresh
           slot="refresh"
           slot-scope="{ scrollTop, isRefreshActive, isRefreshing }"
@@ -24,18 +30,12 @@
           :is-refreshing="isRefreshing"
           :is-refresh-active="isRefreshActive"
         ></md-scroll-view-refresh>
-        <b-activity-item
-          v-for="(item,index) in dataList"
-          :key="index"
-          :getData="item"
-        ></b-activity-item>
         <md-scroll-view-more
           slot="more"
           :is-finished="isFinished"
         >
         </md-scroll-view-more>
       </md-scroll-view>
-    </div>
   </div>
 </template>
 
@@ -74,7 +74,7 @@ export default {
       dataList: [
         {
           title: '6月场景套权益昆明小微',
-          reasn: '套餐价格不符合',
+          reason: '套餐价格不符合',
           brand: '海尔，卡萨帝',
           scope: '所有产品',
           data: '2019-07-30至2019-08-02',
@@ -110,7 +110,7 @@ export default {
     };
   },
   methods: {
-    $_onRefresh() {
+    onRefresh() {
       // async data
       this.pageCfg.page.page = 1;
       const data = {
@@ -120,7 +120,7 @@ export default {
         this.$refs.scrollView.finishRefresh();
       }, 2000);
     },
-    $_onEndReached() {
+    onEndReached() {
       if (this.isFinished) {
         return;
       }
@@ -152,23 +152,11 @@ export default {
 
 <style lang="scss">
 
-  .md-example-child-scroll-view-2 {
-    /*height: 100%;*/
-    /*background: #F5F5F5;*/
-
-    /*.scroll-view-item {*/
-    /*  text-align: center;*/
-    /*  font-size: 28px;*/
-    /*  font-family: DINAlternate-Bold;*/
-    /*  border-bottom: .5px solid #efefef;*/
-    /*}*/
-  }
-
   .activity-tab-bg {
     .md-tab-bar {
       padding-left: 24px;
       padding-right: 24px;
-      margin-top: 16px;
+      margin-top: 24px;
       margin-bottom: 8px;
       background: #f5f5f5;
     }
@@ -217,5 +205,9 @@ export default {
     .md-tab-bar-item {
       min-height: 0;
     }
+  }
+
+  .salesVerification-view {
+    height: calc(100vh - 84px);
   }
 </style>
