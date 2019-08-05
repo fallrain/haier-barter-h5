@@ -38,7 +38,7 @@
     <div class="activity-common-line activity-item activity-common-top activity-common-border" @click="setShowLimit">
       <span class="activity-tip-text activity-count-remain">其他限制</span>
       <span class="icon iconfont icon-jiantou9 activity-tip-img activity-count-remain"
-            :class="isShowLimit?'':'activity-tip-img-transform'"></span>
+            :class="{'activity-tip-img-transform': isShowLimit}"></span>
     </div>
     <div v-if="isShowLimit">
       <div class="activity-common-line activity-common-text">
