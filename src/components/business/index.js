@@ -1,6 +1,8 @@
 import BMultbuyCheck from './BMultbuyCheck';
 // 多元上传
 import BProductMultUpload from './BProductMultUpload';
+import BReportInstallDetailHead from './BReportInstallDetailHead';
+import BReportInstallItem from './BReportInstallItem';
 import BScaleItem from './BScaleItem';
 import BSearchInput from './BSearchInput';
 
@@ -8,6 +10,8 @@ import BSearchInput from './BSearchInput';
 export {
   BMultbuyCheck,
   BProductMultUpload,
+  BReportInstallDetailHead,
+  BReportInstallItem,
   BScaleItem,
   BSearchInput
 };

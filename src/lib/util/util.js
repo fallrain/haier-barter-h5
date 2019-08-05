@@ -1,4 +1,7 @@
 import Clipboard from 'clipboard';
+import {
+  Toast
+} from 'mand-mobile';
 
 const util = {
   getUrlVal(name) {
@@ -196,6 +199,30 @@ const util = {
       }
     });
     return clipboard;
+  },
+  genQueryStringByObj(obj) {
+    /* 组合成query string */
+    const args = [];
+    for (const p in obj) {
+      obj[p] !== undefined && (args.push(`${p}=${obj[p]}`));
+    }
+    let returnStr = '';
+    if (args.length) {
+      returnStr = `?${args.join('&')}`;
+    }
+    return returnStr;
+  },
+  valid(validAy) {
+    return function () {
+      for (let i = 0; i < validAy.length; i++) {
+        const validObj = validAy[i];
+        if (!validObj.ruleFun()) {
+          Toast.failed(validObj.message);
+          return false;
+        }
+      }
+      return true;
+    };
   }
 };
 

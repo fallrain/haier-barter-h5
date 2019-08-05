@@ -55,7 +55,7 @@ export default {
     },
     copy(selector, text) {
       /* 复制功能 */
-      const copyIns = this.wUtil.clipboardCopy(selector, text);
+      const copyIns = this.bUtil.clipboardCopy(selector, text);
       copyIns.on('success', () => {
         this.$toast('复制成功');
       });
