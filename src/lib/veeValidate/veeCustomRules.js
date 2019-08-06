@@ -1,4 +1,4 @@
-import wValidateRules from '@/lib/wValidate/wValidateRules';
+import wValidateRules from '@/lib/bValidate/bValidateRules';
 
 const { rules } = wValidateRules;
 export default {
