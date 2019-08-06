@@ -192,8 +192,8 @@ export default {
   methods: {
     search(isInit) {
       const formData = {
-        pageNum: this.scrollView.pageNum,
-        pageSize: this.scrollView.pageSize,
+        pageNum: this[this.curScrollViewName].pageNum,
+        pageSize: this[this.curScrollViewName].pageSize,
         hmcId: 'a0008949',
         type: this.curTab
       };

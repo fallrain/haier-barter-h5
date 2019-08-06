@@ -13,6 +13,7 @@ import '@/services';
 import {
   axPost, axGet, axPostJson
 } from './lib/ajax';
+import BValidate from '@/lib/bValidate/BValidate';
 
 Vue.config.productionTip = false;
 Vue.prototype.bUtil = bUtil;
@@ -20,6 +21,7 @@ Vue.prototype.axPost = axPost;
 Vue.prototype.axPostJson = axPostJson;
 Vue.prototype.axGet = axGet;
 Vue.prototype.$toast = Toast;
+Vue.prototype.BValidate = BValidate;
 
 
 Object.keys(directives).forEach((name) => {
