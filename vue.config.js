@@ -11,18 +11,17 @@ module.exports = {
     compress: true,
     proxy: {
       '/api': {
-        target: 'https://hzytest.haier.com/',
+        target: 'http://10.159.152.134:9091/',
         changeOrigin: true,
         pathRewrite: {
           '^/api': ''
         },
-        secure: false
+        // secure: false
       }
     }
   },
   configureWebpack: (config) => {
-    const cfg = {
-    };
+    const cfg = {};
     if (env !== 'dev') {
       return smp.wrap(cfg);
     }

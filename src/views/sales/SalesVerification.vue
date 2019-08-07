@@ -271,6 +271,8 @@ export default {
     return {
       // 搜索值
       searchVal: '',
+      // 搜索日期
+      curSearchDate: this.bUtil.formatDate(new Date(), 'yyyy-MM'),
       // 当前激活的tab
       curTab: 1,
       // tabs
@@ -301,103 +303,68 @@ export default {
         // 展开的条码序号
         choosedIndex: false,
         // 自动检测触发到底部
-        autoCheck: true
+        autoCheck: true,
+        page: {
+          pageNum: 0,
+          pageSize: 10
+        }
       },
       // 待验证
       scrollViewVerify: {
         isFinished: false,
         choosedIndex: false,
-        autoCheck: false
+        autoCheck: false,
+        page: {
+          pageNum: 0,
+          pageSize: 10
+        }
       },
       // 异常
       scrollViewOdd: {
         isFinished: false,
         choosedIndex: false,
-        autoCheck: false
+        autoCheck: false,
+        page: {
+          pageNum: 0,
+          pageSize: 10
+        }
       },
       // 失败
       scrollViewFail: {
         isFinished: false,
         choosedIndex: false,
-        autoCheck: false
+        autoCheck: false,
+        page: {
+          pageNum: 0,
+          pageSize: 10
+        }
       },
       // 成功
       scrollViewSuc: {
         isFinished: false,
         choosedIndex: false,
-        autoCheck: false
+        autoCheck: false,
+        page: {
+          pageNum: 0,
+          pageSize: 10
+        }
       },
       // 销量列表
       list: {
         scrollView: [
-          {
-            name: '热水器',
-            type: 'CEH-80V物联网',
-            count: 12,
-            detail: [
-              {
-                buyName: '张子强',
-                time: '2019-06-03',
-                orderName: '王强',
-                errorReason: '谁知道是怎么回事',
-              },
-              {
-                buyName: '张子强',
-                time: '2019-06-03',
-                orderName: '王强'
-              },
-              {
-                buyName: '张子强',
-                time: '2019-06-03',
-                orderName: '王强'
-              },
-              {
-                buyName: '张子强',
-                time: '2019-06-03',
-                orderName: '王强'
-              },
-              {
-                buyName: '张子强',
-                time: '2019-06-03',
-                orderName: '王强'
-              },
-              {
-                buyName: '张子强',
-                time: '2019-06-03',
-                orderName: '王强'
-              },
-              {
-                buyName: '张子强',
-                time: '2019-06-03',
-                orderName: '王强'
-              },
-              {
-                buyName: '张子强',
-                time: '2019-06-03',
-                orderName: '王强'
-              },
-              {
-                buyName: '张子强',
-                time: '2019-06-03',
-                orderName: '王强'
-              },
-              {
-                buyName: '张子强',
-                time: '2019-06-03',
-                orderName: '王强'
-              },
-              {
-                buyName: '张子强',
-                time: '2019-06-03',
-                orderName: '王强'
-              },
-              {
-                buyName: '张子强',
-                time: '2019-06-03',
-                orderName: '王强'
-              }
-            ]
-          }
+          /* {
+              name: '热水器',
+              type: 'CEH-80V物联网',
+              count: 12,
+              detail: [
+                {
+                  buyName: '张子强',
+                  time: '2019-06-03',
+                  orderName: '王强',
+                  errorReason: '谁知道是怎么回事',
+                }
+              ]
+            } */
         ],
         scrollViewVerify: [],
         scrollViewOdd: [],
@@ -422,6 +389,9 @@ export default {
         code: ''
       }
     };
+  },
+  created() {
+
   },
   computed: {
     curScrollViewName() {
@@ -453,41 +423,43 @@ export default {
   methods: {
     confirmDate(dates) {
       /* 确认时间 */
+      debugger;
     },
     search() {
       /* 搜索 */
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          for (let i = 0; i < 20; i++) {
-            this.list[this.curScrollViewName].push({
-              name: '热水器',
-              type: 'CEH-80V物联网',
-              count: 12,
-              detail: [
-                {
-                  buyName: '张子强',
-                  time: '2019-06-03',
-                  orderName: '王强'
-                },
-                {
-                  buyName: '张子强',
-                  time: '2019-06-03',
-                  orderName: '王强'
-                },
-                {
-                  buyName: '张子强',
-                  time: '2019-06-03',
-                  orderName: '王强'
-                }
-              ]
-            });
+      return this.salesService.getReportEhubProductGroupPage({
+        ...this[this.curScrollViewName].page,
+        // 状态
+        dbDataStatus: this.curTab,
+        // todo 门店id需从接口取
+        mdId: '1',
+        // 购机时间
+        gjTime: this.curSearchDate,
+        // 直销员产品线编码 todo 接口取
+        productLineCode: 'AA',
+        productCode: ''
+      }).then(({ code, data }) => {
+        let isFinished = false;
+        if (code === 1) {
+          const listTemp = data.result.map(v => ({
+            name: v.productLine,
+            type: v.product,
+            count: v.dataCount,
+            product: v.product,
+            detail: []
+          }));
+          if (this[this.curScrollViewName].page.pageNum === 1) {
+            this.list[this.curScrollViewName] = this.list[this.curScrollViewName].concat(listTemp);
+          } else {
+            this.list[this.curScrollViewName] = listTemp;
           }
-          // todo 模拟
-          this.todoNum || (this.todoNum = 1);
-          resolve({
-            isFinished: this.todoNum++ > 1
-          });
-        }, 1500);
+          if (this[this.curScrollViewName].page.pageNum >= data.pages) {
+            isFinished = true;
+          }
+        }
+        return {
+          isFinished
+        };
       });
     },
     onEndReached() {
@@ -515,8 +487,25 @@ export default {
       this.qrCodeForm.code = '';
       this.qrCodeDialog.error = false;
     },
-    showDetail({ isShowDetail, index }) {
+    showDetail({ item, isShowDetail, index }) {
       /* 显示详情后隐藏其他 */
+      // 查询二级详情
+      this.salesService.getReportEhubByProductList({
+        dbDataStatus: this.curTab,
+        // todo
+        mdId: '1',
+        gjTime: this.curSearchDate,
+        productCode: item.product
+      }).then(({ code, data }) => {
+        if (code === 1) {
+          item.detail = data.map(v => ({
+            buyName: '张子强',
+            time: v.gjTime,
+            orderName: '王强',
+            errorReason: '谁知道是怎么回事'
+          }));
+        }
+      });
       if (isShowDetail) {
         this[this.curScrollViewName].choosedIndex = index;
       } else {

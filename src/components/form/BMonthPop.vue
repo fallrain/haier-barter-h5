@@ -55,7 +55,7 @@ export default {
     confirmClick(dates) {
       // 选中时间点确认
       this.curDateText = this.checkCurMonth(dates[1].value);
-      this.$emit('choosed', dates);
+      this.$emit('choosed', dates,);
     }
   }
 };

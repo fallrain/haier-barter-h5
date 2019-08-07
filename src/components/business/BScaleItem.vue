@@ -78,12 +78,12 @@ export default {
     };
   },
   methods: {
-    showDetail(detail, index) {
+    showDetail(item, index) {
       /* 显示详情与否 */
       this.isShowDetail = !this.isShowDetail;
       this.$emit('showDetail', {
         isShowDetail: this.isShowDetail,
-        detail,
+        item,
         index
       });
     },
@@ -153,6 +153,7 @@ export default {
       color: #BBB;
 
       &.reverse {
+        display: inline-block;
         transform: scaleY(-1);
       }
     }

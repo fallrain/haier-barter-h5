@@ -11,7 +11,7 @@ export default {
       pageCfg: {
         page: {
           pageSize: 10,
-          page: 1
+          pageNum: 1
         }
       },
       scrollView: {
@@ -30,7 +30,7 @@ export default {
       if (this[scrollView].isFinished) {
         return;
       }
-      this.pageCfg.page.page++;
+      this[scrollView].page.pageNum++;
       if (search) {
         search({ more: true }).then(({ isFinished }) => {
           this[scrollView].isFinished = isFinished;
@@ -40,7 +40,7 @@ export default {
     },
     scrollViewOnRefresh(search, scrollView = 'scrollView') {
       /* 下拉刷新 */
-      this.pageCfg.page.page = 1;
+      this[scrollView].page.pageNum = 1;
       this[scrollView].isFinished = false;
       if (search) {
         search().then(() => {

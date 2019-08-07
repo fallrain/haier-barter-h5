@@ -112,7 +112,7 @@ export default {
   methods: {
     onRefresh() {
       // async data
-      this.pageCfg.page.page = 1;
+      this.pageCfg.page.pageNum = 1;
       const data = {
       };
       setTimeout(() => {
@@ -140,7 +140,7 @@ export default {
     query(data) {
       // todo
       const formData = {
-        pageNum: this.pageCfg.page.page,
+        pageNum: this.pageCfg.page.pageNum,
         pageSize: this.pageCfg.page.pageSize,
         ...data
       };
