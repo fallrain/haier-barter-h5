@@ -77,10 +77,19 @@
             :key="index"
             :data="item"
             :index="index"
+            type="exception"
             @barCodeDeclare="barCodeDeclare"
             @showDetail="showDetail"
             v-show="$data[curScrollViewName].choosedIndex===false || ($data[curScrollViewName].choosedIndex!==false && index===$data[curScrollViewName].choosedIndex)"
-          ></b-scale-item>
+          >
+            <button
+              slot="headRight"
+              type="button"
+              class="common-btn-primary"
+            >
+              重新提报
+            </button>
+          </b-scale-item>
         </div>
       </div>
     </div>
@@ -99,10 +108,20 @@
             :key="index"
             :data="item"
             :index="index"
+            type="fail"
             @barCodeDeclare="barCodeDeclare"
             @showDetail="showDetail"
             v-show="$data[curScrollViewName].choosedIndex===false || ($data[curScrollViewName].choosedIndex!==false && index===$data[curScrollViewName].choosedIndex)"
-          ></b-scale-item>
+          >
+            <button
+              slot="headRight"
+              type="button"
+              class="common-btn-primary"
+              @click="getFailureOrder(item)"
+            >
+              修改订单
+            </button>
+          </b-scale-item>
         </div>
       </div>
     </div>
@@ -121,6 +140,7 @@
             :key="index"
             :data="item"
             :index="index"
+            type="success"
             @barCodeDeclare="barCodeDeclare"
             @showDetail="showDetail"
             v-show="$data[curScrollViewName].choosedIndex===false || ($data[curScrollViewName].choosedIndex!==false && index===$data[curScrollViewName].choosedIndex)"
