@@ -14,6 +14,7 @@ import {
   axPost, axGet, axPostJson
 } from './lib/ajax';
 import BValidate from '@/lib/bValidate/BValidate';
+import 'mescroll.js/mescroll.min.css';
 
 Vue.config.productionTip = false;
 Vue.prototype.bUtil = bUtil;

@@ -7,103 +7,67 @@
       :items="tabs"
       :hasInk="false"
     ></md-tab-bar>
-    <md-scroll-view
+    <div
       v-show="curScrollViewName==='scrollView'"
       class="reportInstallList-view mt24"
-      ref="scrollView"
-      :scrolling-x="false"
-      @refreshing="onRefresh"
-      @end-reached="onEndReached"
-      :end-reached-threshold="100"
-      :immediate-check-end-reaching="scrollView.autoCheck"
-      :auto-reflow="true"
     >
-      <b-report-install-item
-        v-for="(orderItem,orderIndex) in list['scrollView']"
-        :key="orderIndex"
-        :orderItem="orderItem"
-        @click.native="jump(orderItem,orderIndex)"
-      ></b-report-install-item>
-      <md-scroll-view-refresh
-        slot="refresh"
-        slot-scope="{ scrollTop, isRefreshActive, isRefreshing }"
-        :scroll-top="scrollTop"
-        :is-refreshing="isRefreshing"
-        :is-refresh-active="isRefreshActive"
-      ></md-scroll-view-refresh>
-      <md-scroll-view-more
-        slot="more"
-        :is-finished="scrollView.isFinished"
+      <div
+        id="scrollView"
+        ref="scrollView"
+        class="mescroll"
       >
-      </md-scroll-view-more>
-    </md-scroll-view>
-    <md-scroll-view
+        <div>
+          <b-report-install-item
+            v-for="(orderItem,orderIndex) in scrollView.list"
+            :key="orderIndex"
+            :orderItem="orderItem"
+            @click.native="jump(orderItem,orderIndex)"
+          ></b-report-install-item>
+        </div>
+      </div>
+    </div>
+    <div
       v-show="curScrollViewName==='scrollViewFinished'"
       class="reportInstallList-view mt24"
-      ref="scrollView"
-      :scrolling-x="false"
-      @refreshing="onRefresh"
-      @end-reached="onEndReached"
-      :end-reached-threshold="100"
-      :immediate-check-end-reaching="scrollViewFinished.autoCheck"
-      :auto-reflow="true"
     >
-      <b-report-install-item
-        v-for="(orderItem,orderIndex) in list['scrollViewFinished']"
-        :key="orderIndex"
-        :orderItem="orderItem"
-        @click.native="jump(orderItem,orderIndex)"
-      ></b-report-install-item>
-      <md-scroll-view-refresh
-        slot="refresh"
-        slot-scope="{ scrollTop, isRefreshActive, isRefreshing }"
-        :scroll-top="scrollTop"
-        :is-refreshing="isRefreshing"
-        :is-refresh-active="isRefreshActive"
-      ></md-scroll-view-refresh>
-      <md-scroll-view-more
-        slot="more"
-        :is-finished="scrollViewFinished.isFinished"
+      <div
+        id="scrollViewFinished"
+        ref="scrollViewFinished"
+        class="mescroll"
       >
-      </md-scroll-view-more>
-    </md-scroll-view>
-    <md-scroll-view
+        <div>
+          <b-report-install-item
+            v-for="(orderItem,orderIndex) in scrollViewFinished.list"
+            :key="orderIndex"
+            :orderItem="orderItem"
+            @click.native="jump(orderItem,orderIndex)"
+          ></b-report-install-item>
+        </div>
+      </div>
+    </div>
+    <div
       v-show="curScrollViewName==='scrollViewOdd'"
       class="reportInstallList-view mt24"
-      ref="scrollView"
-      :scrolling-x="false"
-      @refreshing="onRefresh"
-      @end-reached="onEndReached"
-      :end-reached-threshold="100"
-      :immediate-check-end-reaching="scrollViewOdd.autoCheck"
-      :auto-reflow="true"
     >
-      <b-report-install-item
-        v-for="(orderItem,orderIndex) in list['scrollViewOdd']"
-        :key="orderIndex"
-        :orderItem="orderItem"
-        @click.native="jump(orderItem,orderIndex)"
-      ></b-report-install-item>
-      <md-scroll-view-refresh
-        slot="refresh"
-        slot-scope="{ scrollTop, isRefreshActive, isRefreshing }"
-        :scroll-top="scrollTop"
-        :is-refreshing="isRefreshing"
-        :is-refresh-active="isRefreshActive"
-      ></md-scroll-view-refresh>
-      <md-scroll-view-more
-        slot="more"
-        :is-finished="scrollViewOdd.isFinished"
+      <div
+        id="scrollViewOdd"
+        ref="scrollViewOdd"
+        class="mescroll"
       >
-      </md-scroll-view-more>
-    </md-scroll-view>
+        <div>
+          <b-report-install-item
+            v-for="(orderItem,orderIndex) in scrollViewOdd.list"
+            :key="orderIndex"
+            :orderItem="orderItem"
+            @click.native="jump(orderItem,orderIndex)"
+          ></b-report-install-item>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
 import {
-  ScrollView,
-  ScrollViewMore,
-  ScrollViewRefresh,
   TabBar
 } from 'mand-mobile';
 import {
@@ -114,9 +78,6 @@ export default {
   name: 'ReportInstallList',
   components: {
     BReportInstallItem,
-    'md-scroll-view': ScrollView,
-    'md-scroll-view-refresh': ScrollViewRefresh,
-    'md-scroll-view-more': ScrollViewMore,
     'md-tab-bar': TabBar
   },
   data() {
@@ -138,31 +99,23 @@ export default {
           label: '报装异常'
         }
       ],
+      // 代报装
       scrollView: {
-        isFinished: false,
-        // 自动检测触发到底部
-        autoCheck: true,
-        pageNum: 1,
-        pageSize: 10
+        mescroll: null,
+        list: [],
+        isListInit: false
       },
       // 已包装
       scrollViewFinished: {
-        isFinished: false,
-        autoCheck: false,
-        pageNum: 1,
-        pageSize: 10
+        mescroll: null,
+        list: [],
+        isListInit: false
       },
       // 异常
       scrollViewOdd: {
-        isFinished: false,
-        autoCheck: false,
-        pageNum: 1,
-        pageSize: 10
-      },
-      list: {
-        scrollView: [],
-        scrollViewFinished: [],
-        scrollViewOdd: []
+        mescroll: null,
+        list: [],
+        isListInit: false
       }
     };
   },
@@ -183,50 +136,57 @@ export default {
         1: 'scrollViewFinished',
         2: 'scrollViewOdd'
       };
-      Object.values(obj).forEach((v) => {
-        this[v].autoCheck = false;
-      });
-      this[obj[val]].autoCheck = true;
+      const viewName = obj[val];
+      // tab切换后，创建新MeScroll对象（若无创建过），没有加载过则加载
+      this.bUtil.scroviewTabChange(viewName, this);
     }
   },
+  mounted() {
+    // 创建当前tab的MeScroll对象，并下拉刷新
+    this.bUtil.scroviewTabChange(this.curScrollViewName, this);
+  },
   methods: {
-    search(isInit) {
+    upCallback(page) {
+      // 下载过就设置已经初始化
+      this[this.curScrollViewName].isListInit = true;
+      this.search(page).then(({ result, pages }) => {
+        this.$nextTick(() => {
+          // 通过当前页的数据条数，和总页数来判断是否加载完
+          this[this.curScrollViewName].mescroll.endByPage(result.length, pages);
+        });
+      });
+    },
+    search(page) {
       const formData = {
-        pageNum: this[this.curScrollViewName].pageNum,
-        pageSize: this[this.curScrollViewName].pageSize,
+        pageNum: page.num,
+        pageSize: page.size,
         hmcId: 'a0008949',
         type: this.curTab
       };
       return this.reportInstallService.queryReportInstallList(formData).then((res) => {
+        const sroviewObj = {};
         if (res.code === 1) {
           const {
-            result: data
+            result,
+            pages
           } = res.data;
-          if (data && data.length > 0) {
-            const curList = data.map(item => ({
+          sroviewObj.pages = pages;
+          sroviewObj.result = result;
+          if (result && result.length > 0) {
+            const curList = result.map(item => ({
               ...item,
               domainName: 'Haier',
               orderTime: item.requireServiceDate ? item.requireServiceDate.substring(0, 16) : ''
             }));
-            if (isInit) {
-              this.list[this.curScrollViewName] = curList;
+            if (page.num === 1) {
+              this[this.curScrollViewName].list = curList;
             } else {
-              this.list[this.curScrollViewName] = this.list[this.curScrollViewName].concat(curList);
+              this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(curList);
             }
           }
         }
-        return {
-          isFinished: true
-        };
+        return sroviewObj;
       });
-    },
-    onEndReached() {
-      /* 加载更多 */
-      this.scrollViewOnEndReached(this.search, this.curScrollViewName);
-    },
-    onRefresh() {
-      /* 下拉刷新 */
-      this.scrollViewOnRefresh(this.search, this.curScrollViewName);
     },
     jump(orderItem, orderIndex) {
       /* 跳转报装详情 */
@@ -252,11 +212,12 @@ export default {
 </script>
 <style lang="scss">
   .reportInstallList-container {
-    padding: 24px;
+    height: 100vh;
+    padding: 24px 24px 0 24px;
   }
 
   .reportInstallList-view {
-    height: calc(100vh - 60px);
+    height: calc(100vh - 108px);
   }
 
   .reportInstallList-orderItem-card {

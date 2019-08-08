@@ -420,6 +420,11 @@
 /*fix*/
 
 .app-container {
+  .mescroll-downwarp .downwarp-tip,
+  .mescroll-upwarp .upwarp-nodata,
+  .mescroll-upwarp .upwarp-tip {
+    font-size: 24px;
+  }
 }
 
 .common-fix-tabs {
@@ -450,6 +455,7 @@
     }
   }
 }
+
 
 /*fix end*/
 

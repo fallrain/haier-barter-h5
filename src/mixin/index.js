@@ -27,6 +27,7 @@ export default {
   methods: {
     scrollViewOnEndReached(search, scrollView = 'scrollView') {
       /* 加载更多 */
+      debugger
       if (this[scrollView].isFinished) {
         return;
       }
@@ -35,17 +36,20 @@ export default {
         search({ more: true }).then(({ isFinished }) => {
           this[scrollView].isFinished = isFinished;
           this.$refs[scrollView].finishLoadMore();
+          this.$refs[scrollView].reflowScroller();
         });
       }
     },
     scrollViewOnRefresh(search, scrollView = 'scrollView') {
       /* 下拉刷新 */
+      debugger
       this[scrollView].page.pageNum = 1;
       this[scrollView].isFinished = false;
       if (search) {
         search().then(() => {
           this.$refs[scrollView].finishRefresh();
           this.$refs[scrollView].finishLoadMore();
+          this.$refs[scrollView].reflowScroller();
         });
       }
     },

@@ -11,12 +11,12 @@ module.exports = {
     compress: true,
     proxy: {
       '/api': {
-        target: 'http://10.159.152.134:9091/',
+        target: 'https://hzytest.haier.com/',
         changeOrigin: true,
         pathRewrite: {
           '^/api': ''
         },
-        // secure: false
+        secure: false
       }
     }
   },
