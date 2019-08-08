@@ -85,7 +85,8 @@
     </div>
     <b-pop-sort-type
     :show.sync="sortShow"
-      :list="sortList">
+      :list="sortList"
+      v-show="maskShow">
     </b-pop-sort-type>
     <!-- <div
       class="masker"
@@ -228,7 +229,7 @@ import {
 } from "mand-mobile";
 import {BPopSortType,BPopCheckList} from '@/components/form'
 export default {
-  name: "",
+  name: '',
   components: {
     [TabBar.name]: TabBar,
     [Icon.name]: Icon,
@@ -258,38 +259,38 @@ export default {
       ID: "",
       sortList: [
         {
-          id: "1",
-          name: "智能排序"
+          id: '1',
+          name: '智能排序'
         },
         {
-          id: "2",
-          name: "按时间倒序"
+          id: '2',
+          name: '按时间倒序'
         },
         {
-          id: "3",
-          name: "按品牌"
+          id: '3',
+          name: '按品牌'
         },
         {
-          id: "4",
-          name: "按成交可能性"
+          id: '4',
+          name: '按成交可能性'
         }
       ],
       scenarioList: [
         {
-          id: "1",
-          name: "以旧换新"
+          id: '1',
+          name: '以旧换新'
         },
         {
-          id: "2",
-          name: "一站筑家"
+          id: '2',
+          name: '一站筑家'
         },
         {
-          id: "3",
-          name: "认筹"
+          id: '3',
+          name: '认筹'
         },
         {
-          id: "4",
-          name: "爱到家"
+          id: '4',
+          name: '爱到家'
         }
       ],
       current: 0,
@@ -363,6 +364,8 @@ export default {
       this.maskShow = false;
       this.sortShow = false;
       this.scenarioShow = false;
+      this.scenarioBlueShow = false;
+      this.sortBlueShow = false;
     },
     showMore(index) {
       this.ID = this.dataList[index].id;
@@ -385,16 +388,16 @@ export default {
             hmcId: "A0008949",
             queryType:this.current,
             sortType: this.sortType,
-            recordMode: "",
-            userStatus: "",
-            orderFollowStatus: "",
-            flowType: "",
-            flowStatus: "",
-            orderFollowSource: "",
+            recordMode: '',
+            userStatus: '',
+            orderFollowStatus: '',
+            flowType: '',
+            flowStatus: '',
+            orderFollowSource: '',
             businessScenarios: this.scenarioType,
-            sourceSystem: "",
-            orderFollowStartDate: "",
-            orderFollowEndDate: ""
+            sourceSystem: '',
+            orderFollowStartDate: '',
+            orderFollowEndDate: ''
           },
           {
             pageNum: this.pageNum,

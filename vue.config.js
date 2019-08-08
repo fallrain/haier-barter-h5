@@ -21,8 +21,7 @@ module.exports = {
     }
   },
   configureWebpack: (config) => {
-    const cfg = {
-    };
+    const cfg = {};
     if (env !== 'dev') {
       return smp.wrap(cfg);
     }

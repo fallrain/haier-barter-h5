@@ -1,22 +1,28 @@
 <template>
   <div>
-    <div class="activity-tab-bg">
-      <div class="md-example-child md-example-child-tabs md-example-child-tab-bar-3 activity-tab">
-        <md-tab-bar
+    <div class="activity-tab-bg activity-tab">
+      <md-tab-bar
           v-model="current"
           :items="items"
           :hasInk="false"
         />
-      </div>
     </div>
 
-    <div class="md-example-child md-example-child-scroll-view md-example-child-scroll-view-2">
-      <md-scroll-view
-        ref="scrollView"
-        :scrolling-x="false"
-        @refreshing="$_onRefresh"
-        @end-reached="$_onEndReached"
+    <md-scroll-view
+      class="salesVerification-view"
+      ref="scrollView"
+      :scrolling-x="false"
+      @refreshing="onRefresh"
+      @end-reached="onEndReached"
+      :end-reached-threshold="100"
+      :immediate-check-end-reaching="scrollView.autoCheck"
+      :auto-reflow="true"
       >
+      <b-activity-item
+        v-for="(item,index) in dataList"
+        :key="index"
+        :getData.sync="item"
+      ></b-activity-item>
         <md-scroll-view-refresh
           slot="refresh"
           slot-scope="{ scrollTop, isRefreshActive, isRefreshing }"
@@ -24,27 +30,21 @@
           :is-refreshing="isRefreshing"
           :is-refresh-active="isRefreshActive"
         ></md-scroll-view-refresh>
-        <b-activity-item
-          v-for="(item,index) in dataList"
-          :key="index"
-          :getData="item"
-        ></b-activity-item>
         <md-scroll-view-more
           slot="more"
           :is-finished="isFinished"
         >
         </md-scroll-view-more>
       </md-scroll-view>
-    </div>
   </div>
 </template>
 
 <script>
 import {
-  TabBar,
   ScrollView,
-  ScrollViewRefresh,
   ScrollViewMore,
+  ScrollViewRefresh,
+  TabBar,
 } from 'mand-mobile';
 
 import {
@@ -63,11 +63,18 @@ export default {
   data() {
     return {
       current: 1,
-      items: [{ name: 1, label: '可参与活动' }, { name: 2, label: '不可参与活动' }],
+      items: [{
+        name: 1,
+        label: '可参与活动'
+      }, {
+        name: 2,
+        label: '不可参与活动'
+      }],
       isFinished: false,
       dataList: [
         {
           title: '6月场景套权益昆明小微',
+          reason: '套餐价格不符合',
           brand: '海尔，卡萨帝',
           scope: '所有产品',
           data: '2019-07-30至2019-08-02',
@@ -80,13 +87,14 @@ export default {
             remain: '222',
           }, {
             name: '50T82电视',
-            gift: '500积分',
+            gift: '500积分233222222222222333vvervevrdfvsrftbrthytnjuykuikiuktgteegtgythh235456',
             count: '6',
             remain: '2',
           }
           ]
         }, {
           title: '6月场景套权益昆明小微',
+          reasn: '',
           brand: '海尔，卡萨帝',
           scope: '所有产品',
           data: '2019-07-30至2019-08-02',
@@ -102,14 +110,17 @@ export default {
     };
   },
   methods: {
-    $_onRefresh() {
+    onRefresh() {
       // async data
+      this.pageCfg.page.pageNum = 1;
+      const data = {
+      };
       setTimeout(() => {
-        this.list += 5;
+        this.query(data);
         this.$refs.scrollView.finishRefresh();
       }, 2000);
     },
-    $_onEndReached() {
+    onEndReached() {
       if (this.isFinished) {
         return;
       }
@@ -126,29 +137,26 @@ export default {
         this.$refs.scrollView.finishLoadMore();
       }, 1000);
     },
+    query(data) {
+      // todo
+      const formData = {
+        pageNum: this.pageCfg.page.pageNum,
+        pageSize: this.pageCfg.page.pageSize,
+        ...data
+      };
+      console.log(formData);
+    }
   },
 };
 </script>
 
 <style lang="scss">
 
-  .md-example-child-scroll-view-2 {
-    /*height: 100%;*/
-    /*background: #F5F5F5;*/
-
-    /*.scroll-view-item {*/
-    /*  text-align: center;*/
-    /*  font-size: 28px;*/
-    /*  font-family: DINAlternate-Bold;*/
-    /*  border-bottom: .5px solid #efefef;*/
-    /*}*/
-  }
-
   .activity-tab-bg {
     .md-tab-bar {
       padding-left: 24px;
       padding-right: 24px;
-      margin-top: 16px;
+      margin-top: 24px;
       margin-bottom: 8px;
       background: #f5f5f5;
     }
@@ -197,5 +205,9 @@ export default {
     .md-tab-bar-item {
       min-height: 0;
     }
+  }
+
+  .salesVerification-view {
+    height: calc(100vh - 84px);
   }
 </style>

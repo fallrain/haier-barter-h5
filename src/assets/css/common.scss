@@ -204,6 +204,10 @@
   margin-top: 23px;
 }
 
+.mt24 {
+  margin-top: 24px;
+}
+
 .mt25 {
   margin-top: 25px;
 }
@@ -230,6 +234,10 @@
 
 .mr28 {
   margin-right: 28px;
+}
+
+.mb16 {
+  margin-bottom: 16px;
 }
 
 .mb20 {
@@ -402,11 +410,50 @@
   background: $theme-color;
 }
 
+.common-error {
+  color: #FF001F;
+  font-size: 26px;
+}
+
 /*公共 end*/
 
 /*fix*/
 
 .app-container {
+  .mescroll-downwarp .downwarp-tip,
+  .mescroll-upwarp .upwarp-nodata,
+  .mescroll-upwarp .upwarp-tip {
+    font-size: 24px;
+  }
+}
+
+.common-fix-tabs {
+  &.md-tab-bar {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .md-tab-bar-list {
+    border: 1px solid #1969C6;
+    border-radius: 8px;
+  }
+
+  .md-tab-bar-item {
+    min-height: 60px;
+    height: 60px;
+    flex-grow: 1;
+    color: #1969C6;
+    border-right: 1px solid #1969C6;
+
+    &:last-child {
+      border-right: 0;
+    }
+
+    &.is-active {
+      background: #1969C6;
+      color: #fff;
+    }
+  }
 }
 
 
@@ -451,4 +498,5 @@
     margin-right: 24px;
   }
 }
+
 /*订单end*/

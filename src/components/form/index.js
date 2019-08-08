@@ -3,6 +3,7 @@ import BDatePicker from './BDatePicker';
 import BFieldset from './BFieldset';
 import BItem from './BItem';
 import BModel from './BModel';
+import BMonthPop from './BMonthPop';
 import BNoticeBar from './BNoticeBar';
 import BOrderProduct from './BOrderProduct';
 import BPop from './BPop';
@@ -16,7 +17,8 @@ import BUpload from './BUpload';
 import BVerificationcode from './BVerificationcode';
 import BUserTag from './BUserTag';
 import BActivityItem from './BActivityItem';
-
+import BOrderDialog from './BOrderDialog';
+import BPopSortType from './BPopSortType';
 /* eslint-disable import/prefer-default-export */
 export {
   BActivityList,
@@ -24,6 +26,7 @@ export {
   BFieldset,
   BItem,
   BModel,
+  BMonthPop,
   BNoticeBar,
   BOrderProduct,
   BPop,
@@ -36,5 +39,7 @@ export {
   BUpload,
   BVerificationcode,
   BUserTag,
-  BActivityItem
+  BActivityItem,
+  BOrderDialog,
+  BPopSortType
 };

@@ -1,4 +1,7 @@
-import hValidateRules from './wValidateRules';
+import {
+  Toast
+} from 'mand-mobile';
+import hValidateRules from './bValidateRules';
 
 export default class {
   constructor(option) {
@@ -6,8 +9,7 @@ export default class {
     this.hValidateRules = hValidateRules;
   }
 
-  valid(fromData) {
-    const { _this } = this.option;
+  valid() {
     const vdtMap = this.option.rules;
     for (const p in vdtMap) {
       const regs = vdtMap[p];
@@ -16,10 +18,7 @@ export default class {
           continue;
         }
         if (!this.hValidateRules.rules[i](this.option.formData[p], regs[i])) {
-          _this.$vux.toast.show({
-            type: 'text',
-            text: this.option.messages[p][i] || this.hValidateRules.messages[i]
-          });
+          Toast.failed(this.option.messages[p][i] || this.hValidateRules.messages[i]);
           return false;
         }
       }
@@ -28,14 +27,10 @@ export default class {
   }
 
   validOne(name) {
-    const { _this } = this.option;
     const regs = this.option.rules[name];
     for (const i in regs) {
       if (!this.hValidateRules.rules[i](this.option.formData[name], regs[i])) {
-        _this.$vux.toast.show({
-          type: 'text',
-          text: this.option.messages[name][i] || this.hValidateRules.messages[i]
-        });
+        Toast.failed(this.option.messages[name][i] || this.hValidateRules.messages[i]);
         return false;
       }
     }

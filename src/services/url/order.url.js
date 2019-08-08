@@ -2,8 +2,8 @@ const baseURL = 'barter-manage';
 const urls = {
   // 订单列表
   queryOrderFollowlList: '/orderFollow/queryOrderFollowlList',
-  fuzzySearchOrderFollowList:'/orderFollow/fuzzySearchOrderFollowList',
-  updateOrderFollowByType:'/orderFollow/updateOrderFollowByType'
+  fuzzySearchOrderFollowList: '/orderFollow/fuzzySearchOrderFollowList',
+  updateOrderFollowByType: '/orderFollow/updateOrderFollowByType'
 
 };
 

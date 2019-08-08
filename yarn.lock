@@ -5583,6 +5583,11 @@ merge2@^1.2.3:
   resolved "https://registry.npm.taobao.org/merge2/download/merge2-1.2.3.tgz#7ee99dbd69bb6481689253f018488a1b902b0ed5"
   integrity sha1-fumdvWm7ZIFoklPwGEiKG5ArDtU=
 
+mescroll.js@^1.4.1:
+  version "1.4.1"
+  resolved "https://registry.npm.taobao.org/mescroll.js/download/mescroll.js-1.4.1.tgz#42078bddb65dbf2f9e6d916de090e12c2d2b6a3e"
+  integrity sha1-QgeL3bZdvy+ebZFt4JDhLC0raj4=
+
 methods@~1.1.2:
   version "1.1.2"
   resolved "https://registry.npm.taobao.org/methods/download/methods-1.1.2.tgz#5529a4d67654134edcc5266656835b0f851afcee"

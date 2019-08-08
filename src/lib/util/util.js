@@ -1,4 +1,8 @@
 import Clipboard from 'clipboard';
+import {
+  Toast
+} from 'mand-mobile';
+import MeScroll from 'mescroll.js';
 
 const util = {
   getUrlVal(name) {
@@ -196,6 +200,61 @@ const util = {
       }
     });
     return clipboard;
+  },
+  genQueryStringByObj(obj) {
+    /* 组合成query string */
+    const args = [];
+    for (const p in obj) {
+      obj[p] !== undefined && (args.push(`${p}=${obj[p]}`));
+    }
+    let returnStr = '';
+    if (args.length) {
+      returnStr = `?${args.join('&')}`;
+    }
+    return returnStr;
+  },
+  valid(validAy) {
+    return function () {
+      for (let i = 0; i < validAy.length; i++) {
+        const validObj = validAy[i];
+        if (!validObj.ruleFun()) {
+          Toast.failed(validObj.message);
+          return false;
+        }
+      }
+      return true;
+    };
+  },
+  createMeScroll(ref, _this) {
+    /* 创建MeScroll实例 */
+    return new MeScroll(ref, {
+      auto: false,
+      up: {
+        page: {
+          num: 0,
+          size: 10
+        },
+        noMoreSize: 1,
+        htmlNodata: '<p class="upwarp-nodata">-- 数据已到底部 --</p>',
+        callback: _this.upCallback,
+        empty: {
+          warpId: [_this.curScrollViewName],
+          tip: '暂无相关数据~'
+        },
+      }
+    });
+  },
+  scroviewTabChange(viewName, _this) {
+    if (!_this[viewName].mescroll) {
+      // 创建实例
+      _this[viewName].mescroll = _this.bUtil.createMeScroll(_this.$refs[viewName], _this);
+      // 触发下拉刷新
+      _this[viewName].mescroll.triggerDownScroll();
+    }
+    // 未初始化就初始化
+    if (!_this[viewName].isListInit) {
+      _this[viewName].mescroll.triggerDownScroll();
+    }
   }
 };
 

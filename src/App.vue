@@ -13,7 +13,9 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import {
+  mapState
+} from 'vuex';
 
 export default {
   name: 'App',
@@ -28,6 +30,7 @@ export default {
 <style>
   @import 'assets/font/iconfont.css';
 </style>
+
 <style lang="scss">
   @import 'assets/css/common';
 </style>

@@ -2,15 +2,15 @@
   <div class="b-pop-checkList">
     <md-popup
       v-model="popupShow"
-      position="bottom"
+      position="top"
     >
-     <md-popup-title-bar
+     <!-- <md-popup-title-bar
         v-bind="$attrs"
         ok-text="确定"
         cancel-text="取消"
         @confirm="confirm()"
         @cancel="popupShow = false"
-      ></md-popup-title-bar>
+      ></md-popup-title-bar> -->
       <div class="b-pop-checkList-cnt">
         <ul>
           <li
@@ -91,16 +91,21 @@ export default {
   },
   methods: {
     checkboxClick({ id }) {
-      const i = this.checkIds.findIndex(v => id === v);
-      if (this.type === 'radio') {
-        this.checkIds = [id];
-        return;
-      }
-      if (i === -1) {
-        this.checkIds.push(id);
-      } else {
-        this.checkIds.splice(i, 1);
-      }
+      // const i = this.checkIds.findIndex(v => id === v);
+      // if (this.type === 'radio') {
+      //   this.checkIds = [id];
+      //   return;
+      // }
+      // if (i === -1) {
+      //   this.checkIds.push(id);
+      // } else {
+      //   this.checkIds.splice(i, 1);
+      // }
+      this.checkIds = [];
+      this.checkIds.push(id)
+      this.$emit('input', this.checkIds);
+      this.popupShow = false;
+
     },
     chooseGiftClick(item) {
       this.$emit('chooseGift', item);
@@ -178,5 +183,12 @@ export default {
     text-align: right;
     width: 320px;
     padding-right: 10px;
+  }
+  .md-popup-box{
+    margin-top: 170px !important;
+  }
+  .md-popup-mask{
+    height: 1160px;
+    top: 180px;
   }
 </style>

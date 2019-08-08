@@ -3,24 +3,26 @@ import App from '@/App';
 import router from '@/router';
 import store from '@/store';
 import '@/lib/veeValidate';
+import {
+  Toast
+} from 'mand-mobile';
 import directives from './directive';
 import mixin from './mixin';
-import wUtil from '@/lib/util/util';
+import bUtil from '@/lib/util/util';
 import '@/services';
 import {
   axPost, axGet, axPostJson
 } from './lib/ajax';
-
-import {
-  Toast
-} from 'mand-mobile';
+import BValidate from '@/lib/bValidate/BValidate';
+import 'mescroll.js/mescroll.min.css';
 
 Vue.config.productionTip = false;
-Vue.prototype.wUtil = wUtil;
+Vue.prototype.bUtil = bUtil;
 Vue.prototype.axPost = axPost;
 Vue.prototype.axPostJson = axPostJson;
 Vue.prototype.axGet = axGet;
 Vue.prototype.$toast = Toast;
+Vue.prototype.BValidate = BValidate;
 
 
 Object.keys(directives).forEach((name) => {

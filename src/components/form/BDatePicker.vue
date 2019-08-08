@@ -1,10 +1,13 @@
 <template>
-  <div class="b-date-picker">
+  <div
+    class="b-date-picker"
+    :class="[disabled && 'b-date-picker-disabled']"
+  >
     <div
       class="b-date-picker-ipt"
-      @click="isDatePickerShow=true"
+      @click="showPicker"
     >
-      <span>{{value || $attrs.title}}</span>
+      <span class="b-date-picker-ipt-val">{{value || $attrs.title}}</span>
       <i class="iconfont icon-riqi"></i>
     </div>
     <md-date-picker
@@ -38,6 +41,11 @@ export default {
     pattern: {
       type: String,
       default: 'yyyy-MM-dd'
+    },
+    // 禁用
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -52,6 +60,13 @@ export default {
       const date = this.$refs.datePicker.getFormatDate(this.pattern);
       this.$emit('confirm', date);
       this.$emit('input', date);
+    },
+    showPicker() {
+      /* 显示时间选择器 */
+      if (this.disabled) {
+        return;
+      }
+      this.isDatePickerShow = true;
     }
   }
 };
@@ -86,6 +101,16 @@ export default {
 
     .iconfont {
       font-size: 32px;
+    }
+  }
+
+  .b-date-picker-ipt-val {
+
+  }
+
+  .b-date-picker-disabled {
+    .b-date-picker-ipt-val {
+      color: #999;
     }
   }
 </style>
