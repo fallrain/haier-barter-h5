@@ -154,6 +154,7 @@
             slot="headRight"
             type="button"
             class="common-btn-primary"
+            @click="getFailureOrder(item)"
           >
             修改订单
           </button>
@@ -518,7 +519,20 @@ export default {
         this.qrCodeDialog.errorText = '请输入条码';
         this.qrCodeDialog.error = true;
       }
-    }
+    },
+    getFailureOrder(itemInfo) {
+      const argsObj = {
+        mdId: 1,
+        productCode: itemInfo.product,
+        gjTime: this.curSearchDate
+      };
+      this.$router.push({
+        name: 'Sales.SalesChooseOrder',
+        params: {
+          ...argsObj
+        }
+      });
+    },
   }
 };
 </script>
