@@ -83,7 +83,11 @@
         />
       </div>
     </div>
-    <div
+    <b-pop-sort-type
+    :show.sync="sortShow"
+      :list="sortList">
+    </b-pop-sort-type>
+    <!-- <div
       class="masker"
       @click="maskerHidden()"
       v-show="maskShow"
@@ -103,103 +107,136 @@
           @click="scenarioClick(scenario)"
         >{{scenario.name}}</p>
       </div>
-    </div>
+    </div> -->
     <div>
-      <div class="label-class" v-for="(data,index) in dataList" :key="index">
-            <img src="@/assets/images/orderFollow-up/yizhanzhujia@3x.png" class="labelImage">
-        <div class="row-class">
-          <span class="label-span">{{data.userName}}</span>
-          <span class="sex-class" v-show="data.userSex == '1'">先生</span>
-          <span class="sex-class" v-show="data.userSex == '2'">女士</span>
-          <span class="sex-class">
-            <img src="@/assets/images/orderFollow-up/tel@3x.png" class="telImage">
-          </span>
-          <span class="sex-class">{{data.userMobile}}</span>
-        </div>
-        <div class="row-class">
-          <img
-            src="@/assets/images/orderFollow-up/Haier@3x.png"
-            class="brandImage"
-            v-show="data.recordMode =='Haie'"
-          >
-          <img
-            src="@/assets/images/orderFollow-up/Casarte@3x.png"
-            class="brandImage"
-            v-show="data.recordMode =='Casarte'"
-          >
-          <span class="hand-class">{{data.userS}}</span>
-          <span class="handred-class">{{data.tardinessS}}</span>
-          <span class="handgray-class">{{data.flowS}}</span>
-        </div>
-        <div class="row-class">
-          <img
-            src="@/assets/images/orderFollow-up/time@3x.png"
-            class="timeImage"
-          >
-          <span class="time-label">{{data.updatedTime}}</span>
-          <span class="information-class">详细信息</span>
-          <img
-            src="@/assets/images/orderFollow-up/xialablue@3x.png"
-            class="information-xiala"
-            @click="detailHide(index)"
-          >
-        </div>
+      <md-scroll-view
+        ref="scrollView"
+        :scrolling-x="false"
+        @refreshing="$_onRefresh"
+        @end-reached="$_onEndReached"
+      >
+        <md-scroll-view-refresh
+          slot="refresh"
+          slot-scope="{ scrollTop, isRefreshActive, isRefreshing }"
+          :scroll-top="scrollTop"
+          :is-refreshing="isRefreshing"
+          :is-refresh-active="isRefreshActive"
+        ></md-scroll-view-refresh>
         <div
-          class="information-p"
-          v-show="data.detailShow"
+          class="label-class"
+          v-for="(data,index) in dataList"
+          :key="index"
         >
-          <p>意向产品：bingxiang</p>
-          <p>海尔/8年</p>
-        </div>
-        <div class="bottom-class">
           <img
-            src="@/assets/images/orderFollow-up/dian@3x.png"
-            class="dian-Class"
-            @click="showMore(index)"
+            src="@/assets/images/orderFollow-up/yizhanzhujia@3x.png"
+            class="labelImage"
           >
-          <div v-show="data.show" class="show-class">
-            <p v-for="(item,index) in data.showList" :key="index" @click="updateOrderType(item.id)" class="show-p">{{item.name}}</p>
+          <div class="row-class">
+            <span class="label-span">{{data.userName}}</span>
+            <span
+              class="sex-class"
+              v-show="data.userSex == '1'"
+            >先生</span>
+            <span
+              class="sex-class"
+              v-show="data.userSex == '2'"
+            >女士</span>
+            <span class="sex-class">
+              <img
+                src="@/assets/images/orderFollow-up/tel@3x.png"
+                class="telImage"
+              >
+            </span>
+            <span class="sex-class">{{data.userMobile}}</span>
           </div>
-          <p class="bottom-button">成交录单</p>
-          <p class="bottom-button">发券</p>
-        </div>
-      </div>
-    </div>
-    <template>
-      <div class="md-example-child md-example-child-tabs md-example-child-tab-bar-4">
-        <md-tab-bar
-          v-model="current"
-          :items="items"
-          :has-ink="false"
-        >
-          <template
-            slot="item"
-            slot-scope="{ item }"
+          <div class="row-class">
+            <img
+              src="@/assets/images/orderFollow-up/Haier@3x.png"
+              class="brandImage"
+              v-show="data.recordMode =='Haie'"
+            >
+            <img
+              src="@/assets/images/orderFollow-up/Casarte@3x.png"
+              class="brandImage"
+              v-show="data.recordMode =='Casarte'"
+            >
+            <span class="hand-class">{{data.userS}}</span>
+            <span class="handred-class">{{data.tardinessS}}</span>
+            <span class="handgray-class">{{data.flowS}}</span>
+          </div>
+          <div class="row-class">
+            <img
+              src="@/assets/images/orderFollow-up/time@3x.png"
+              class="timeImage"
+            >
+            <span class="time-label">{{data.updatedTime}}</span>
+            <span class="information-class">详细信息</span>
+            <img
+              src="@/assets/images/orderFollow-up/xialablue@3x.png"
+              class="information-xiala"
+              @click="detailHide(index)"
+            >
+          </div>
+          <div
+            class="information-p"
+            v-show="data.detailShow"
           >
-            <div class="custom-item">
-              <div class="icon">
-                <md-icon :name="item.icon" />
-              </div>
-              <div class="text">
-                <span v-text="item.label"></span>
-              </div>
+            <p>意向产品：bingxiang</p>
+            <p>海尔/8年</p>
+          </div>
+          <div class="bottom-class">
+            <img
+              src="@/assets/images/orderFollow-up/dian@3x.png"
+              class="dian-Class"
+              @click="showMore(index)"
+            >
+            <div
+              v-show="data.show"
+              class="show-class"
+            >
+              <p
+                v-for="(item,index) in data.showList"
+                :key="index"
+                @click="updateOrderType(item.id)"
+                class="show-p"
+              >{{item.name}}</p>
             </div>
-          </template>
-        </md-tab-bar>
-      </div>
-    </template>
- <div style="height:60px"></div>
+            <p class="bottom-button">成交录单</p>
+            <p class="bottom-button">发券</p>
+          </div>
+        </div>
+          <md-scroll-view-more
+            slot="more"
+            :is-finished="isFinished"
+          >
+          </md-scroll-view-more>
+      </md-scroll-view>
+
+  </div>
+  <div style="height:60px"></div>
   </div>
 </template>
 
 <script>
-import { Icon, TabBar } from "mand-mobile";
-import {Toast} from 'mand-mobile';
+import {
+  Icon,
+  TabBar,
+  ScrollView,
+  ScrollViewRefresh,
+  ScrollViewMore,
+  Toast
+} from "mand-mobile";
+import {BPopSortType,BPopCheckList} from '@/components/form'
 export default {
   name: "",
   components: {
     [TabBar.name]: TabBar,
-    [Icon.name]: Icon
+    [Icon.name]: Icon,
+    [ScrollView.name]: ScrollView,
+    [ScrollViewRefresh.name]: ScrollViewRefresh,
+    [ScrollViewMore.name]: ScrollViewMore,
+    [Toast.name]: Toast,
+    BPopSortType,BPopCheckList
   },
   data() {
     return {
@@ -207,16 +244,18 @@ export default {
       maskShow: false,
       sortShow: false,
       scenarioShow: false,
+      pageNum:1,
       // detailShow: false,
-      sortBlueShow:false,
-      scenarioBlueShow:false,
+      sortBlueShow: false,
+      scenarioBlueShow: false,
       dataList: [],
       sortType: "1",
       scenarioType: "",
-      searchWord:'',
-      show:false,
-      showList:[],
-      ID:'',
+      searchWord: "",
+      show: false,
+      isFinished:true,
+      showList: [],
+      ID: "",
       sortList: [
         {
           id: "1",
@@ -253,25 +292,25 @@ export default {
           name: "爱到家"
         }
       ],
-      current: 1,
+      current: 0,
       items: [
         {
-          name: 1,
+          name: 0,
           label: "全部",
           icon: "home"
         },
         {
-          name: 2,
+          name: 1,
           label: "跟进中",
           icon: "user"
         },
         {
-          name: 3,
+          name: 2,
           label: "异常",
           icon: "user"
         },
         {
-          name: 4,
+          name: 2,
           label: "已成交",
           icon: "user"
         }
@@ -279,19 +318,21 @@ export default {
     };
   },
   created() {
+    //  window.ScrollViewTrigger1 = () => {
+    //   this.$refs.scrollView.triggerRefresh();
+    // };
     this.searchData();
   },
-  computed: {},
   methods: {
     sort() {
       this.sortShow = true;
       this.scenarioShow = false;
       this.sortBlueShow = !this.sortBlueShow;
       this.scenarioBlueShow = false;
-      if(this.sortBlueShow){
-        this.maskShow  = true
-      }else{
-      this.maskShow = !this.maskShow;
+      if (this.sortBlueShow) {
+        this.maskShow = true;
+      } else {
+        this.maskShow = !this.maskShow;
       }
     },
     businessScenario() {
@@ -299,20 +340,18 @@ export default {
       this.scenarioShow = true;
       this.scenarioBlueShow = !this.scenarioBlueShow;
       this.sortBlueShow = false;
-          if(this.scenarioBlueShow){
-        this.maskShow  = true
-      }else{
-this.maskShow = !this.maskShow;
+      if (this.scenarioBlueShow) {
+        this.maskShow = true;
+      } else {
+        this.maskShow = !this.maskShow;
       }
-
     },
     preparation() {},
     sortClick(item) {
       this.sortType = item.id;
       this.maskerHidden();
       this.sortBlueShow = false;
-      this.searchData()
-
+      this.searchData();
     },
     scenarioClick(item) {
       this.scenarioType = item.id;
@@ -325,21 +364,26 @@ this.maskShow = !this.maskShow;
       this.sortShow = false;
       this.scenarioShow = false;
     },
-    showMore(index){
-      this.ID = this.dataList[index].id
-      this.$set(this.dataList[index],'show',!this.dataList[index].show)
+    showMore(index) {
+      this.ID = this.dataList[index].id;
+      this.$set(this.dataList[index], "show", !this.dataList[index].show);
     },
     noticeClose() {
       this.noticeShow = false;
     },
     detailHide(index) {
-      this.$set(this.dataList[index],'detailShow',!this.dataList[index].detailShow)
+      this.$set(
+        this.dataList[index],
+        "detailShow",
+        !this.dataList[index].detailShow
+      );
     },
     searchData() {
       this.orderService
         .queryOrderFollowlList(
           {
             hmcId: "A0008949",
+            queryType:this.current,
             sortType: this.sortType,
             recordMode: "",
             userStatus: "",
@@ -353,79 +397,101 @@ this.maskShow = !this.maskShow;
             orderFollowEndDate: ""
           },
           {
-            pageNum: 1,
+            pageNum: this.pageNum,
             pageSize: 10
           }
-        ).then(res => {
-          this.dataList = res.data.result
-          this.anylizeData()
-        })
-
+        )
+        .then(res => {
+          this.dataList = res.data.result;
+          this.anylizeData();
+        });
     },
-    anylizeData(){
-      this.dataList.forEach(item =>{
-        item.showList = []
-       this.$set(item,'detailShow',false)
-        this.$set(item,'show',false)
-            if(item.userStatus === 1){
-              item.userS = '高潜'
-              item.showList.push({id:'2',name:'取消高潜'})
-            }else{
-              item.userS = ''
-              item.showList.push({id:'6',name:'设为高潜'})
-            }
-            if(item.tardinessStatus === 1){
-              item.tardinessS = '已拖期'
-            }else{
-              item.usetardinessS = ''
-            }
-            if(item.flowStatus === 3){
-              item.flowS = '已忽略'
-              this.grayShow = true
-            }else{
-              item.flowS = ''
-              this.grayShow = false
-            }
-          })
+    anylizeData() {
+      this.dataList.forEach(item => {
+        item.showList = [];
+        this.$set(item, "detailShow", false);
+        this.$set(item, "show", false);
+        if (item.userStatus === 1) {
+          item.userS = "高潜";
+          item.showList.push({ id: "2", name: "取消高潜" });
+        } else {
+          item.userS = "";
+          item.showList.push({ id: "6", name: "设为高潜" });
+        }
+        if (item.tardinessStatus === 1) {
+          item.tardinessS = "已拖期";
+        } else {
+          item.usetardinessS = "";
+        }
+        if (item.flowStatus === 3) {
+          item.flowS = "已忽略";
+          this.grayShow = true;
+        } else {
+          item.flowS = "";
+          this.grayShow = false;
+        }
+      });
     },
-    fuzzySearch(){
-      debugger
-      this.orderService.fuzzySearchOrderFollowList(
-        {},
-        {
+    fuzzySearch() {
+      debugger;
+      this.orderService
+        .fuzzySearchOrderFollowList(
+          {},
+          {
             pageNum: 1,
             pageSize: 10,
             hmcId: "A0008949",
-            keyword:this.searchWord
-        }
-      ).then(res => {
-        console.log('tag', 'res')
-        this.dataList = res.data.result
-        this.anylizeData()
-        debugger
-
-
-      })
-
+            keyword: this.searchWord
+          }
+        )
+        .then(res => {
+          console.log("tag", "res");
+          this.dataList = res.data.result;
+          this.anylizeData();
+          debugger;
+        });
     },
-    updateOrderType(type){
-      this.orderService.updateOrderFollowByType(
-        {},
-         {
+    updateOrderType(type) {
+      this.orderService
+        .updateOrderFollowByType(
+          {},
+          {
             orderFollowId: this.ID,
             type: type,
-            transferer: "",
+            transferer: ""
+          }
+        )
+        .then(res => {
+          if (res.code === 1) {
+            Toast.succeed(res.msg);
+            this.searchData();
+          } else {
+            Toast.failed(res.msg);
+          }
+        });
+    },
+    $_onRefresh() {
+      // async data
+      setTimeout(() => {
+        this.pageNum = 1;
+        this.searchData();
+        this.$refs.scrollView.finishRefresh();
+      }, 2000);
+    },
+    $_onEndReached() {
+      if (this.isFinished) {
+        return;
+      }
+      // async data
+      setTimeout(() => {
+        this.pageNum ++;
+        if (this.dataList.length >= 10) {
+          this.isFinished = true;
         }
-      ).then(res => {
-        if(res.code === 1){
-          Toast.succeed(res.msg)
-          this.searchData()
-        }else{
-          Toast.failed(res.msg)
-        }
-      })
+        this.$refs.scrollView.finishLoadMore();
+      }, 1000);
     }
-  }
+  },
 };
 </script>
 
@@ -466,6 +532,7 @@ this.maskShow = !this.maskShow;
   width: 500px;
   background-color: white;
   border-radius: 20px;
+  border: 0 !important;
   height: 60px;
   margin-left: 24px;
   margin-top: 14px;
@@ -550,14 +617,14 @@ this.maskShow = !this.maskShow;
   height: 36px;
   width: 90px;
 }
-.telImage{
+.telImage {
   height: 32px;
   width: 32px;
   margin-left: 10px;
   padding-bottom: 2px;
   top: 0;
 }
-.labelImage{
+.labelImage {
   height: 72px;
   width: 56px;
   float: right;
@@ -643,12 +710,12 @@ this.maskShow = !this.maskShow;
   margin-left: 16px;
 }
 .handred-class {
-  color: #FF001F;
+  color: #ff001f;
   font-size: 24px;
   margin-left: 16px;
 }
 .handgray-class {
-  color: #CCCCCC;
+  color: #cccccc;
   font-size: 24px;
   margin-left: 16px;
 }
@@ -727,16 +794,16 @@ this.maskShow = !this.maskShow;
     padding: 0 !important;
   }
 }
-.row-class{
+.row-class {
   margin-bottom: 10px;
 }
-.show-class{
+.show-class {
   position: absolute;
   height: 140px;
   width: 240px;
 }
-.show-p{
-  color:#666666;
+.show-p {
+  color: #666666;
   font-size: 28px;
   text-align: center;
 }
