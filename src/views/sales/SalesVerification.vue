@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="h100vh">
     <b-search-input
       v-model="searchVal"
       @search="search"
@@ -18,196 +18,116 @@
       :items="tabs"
       :hasInk="false"
     ></md-tab-bar>
-    <md-scroll-view
+    <div
       v-show="curScrollViewName==='scrollView'"
-      class="salesVerification-view"
-      ref="scrollView"
-      :scrolling-x="false"
-      @refreshing="onRefresh"
-      @end-reached="onEndReached"
-      :end-reached-threshold="100"
-      :immediate-check-end-reaching="scrollView.autoCheck"
-      :auto-reflow="true"
+      class="reportInstallList-view mt24"
     >
-      <div class="salesVerification-list">
-        <b-scale-item
-          v-for="(item,index) in list['scrollView']"
-          :key="index"
-          :data="item"
-          :index="index"
-          @barCodeDeclare="barCodeDeclare"
-          @showDetail="showDetail"
-          v-show="$data[curScrollViewName].choosedIndex===false || ($data[curScrollViewName].choosedIndex!==false && index===$data[curScrollViewName].choosedIndex)"
-        ></b-scale-item>
-      </div>
-      <md-scroll-view-refresh
-        slot="refresh"
-        slot-scope="{ scrollTop, isRefreshActive, isRefreshing }"
-        :scroll-top="scrollTop"
-        :is-refreshing="isRefreshing"
-        :is-refresh-active="isRefreshActive"
-      ></md-scroll-view-refresh>
-      <md-scroll-view-more
-        slot="more"
-        :is-finished="scrollView.isFinished"
+      <div
+        id="scrollView"
+        ref="scrollView"
+        class="mescroll"
       >
-      </md-scroll-view-more>
-    </md-scroll-view>
-    <md-scroll-view
+        <div class="salesVerification-list">
+          <b-scale-item
+            v-for="(item,index) in scrollView.list"
+            :key="index"
+            :data="item"
+            :index="index"
+            @barCodeDeclare="barCodeDeclare"
+            @showDetail="showDetail"
+            v-show="$data[curScrollViewName].choosedIndex===false || ($data[curScrollViewName].choosedIndex!==false && index===$data[curScrollViewName].choosedIndex)"
+          ></b-scale-item>
+        </div>
+      </div>
+    </div>
+    <div
       v-show="curScrollViewName==='scrollViewVerify'"
-      class="salesVerification-view"
-      ref="scrollViewVerify"
-      :scrolling-x="false"
-      @refreshing="onRefresh"
-      @end-reached="onEndReached"
-      :end-reached-threshold="100"
-      :immediate-check-end-reaching="scrollViewVerify.autoCheck"
-      :auto-reflow="true"
+      class="reportInstallList-view mt24"
     >
-      <div class="salesVerification-list">
-        <b-scale-item
-          v-for="(item,index) in list['scrollViewVerify']"
-          :key="index"
-          :data="item"
-          :index="index"
-          @barCodeDeclare="barCodeDeclare"
-          @showDetail="showDetail"
-          v-show="$data[curScrollViewName].choosedIndex===false || ($data[curScrollViewName].choosedIndex!==false && index===$data[curScrollViewName].choosedIndex)"
-        ></b-scale-item>
-      </div>
-      <md-scroll-view-refresh
-        slot="refresh"
-        slot-scope="{ scrollTop, isRefreshActive, isRefreshing }"
-        :scroll-top="scrollTop"
-        :is-refreshing="isRefreshing"
-        :is-refresh-active="isRefreshActive"
-      ></md-scroll-view-refresh>
-      <md-scroll-view-more
-        slot="more"
-        :is-finished="scrollViewVerify.isFinished"
+      <div
+        id="scrollViewVerify"
+        ref="scrollViewVerify"
+        class="mescroll"
       >
-      </md-scroll-view-more>
-    </md-scroll-view>
-    <md-scroll-view
+        <div class="salesVerification-list">
+          <b-scale-item
+            v-for="(item,index) in scrollViewVerify.list"
+            :key="index"
+            :data="item"
+            :index="index"
+            @barCodeDeclare="barCodeDeclare"
+            @showDetail="showDetail"
+            v-show="$data[curScrollViewName].choosedIndex===false || ($data[curScrollViewName].choosedIndex!==false && index===$data[curScrollViewName].choosedIndex)"
+          ></b-scale-item>
+        </div>
+      </div>
+    </div>
+    <div
       v-show="curScrollViewName==='scrollViewOdd'"
-      class="salesVerification-view"
-      ref="scrollViewOdd"
-      :scrolling-x="false"
-      @refreshing="onRefresh"
-      @end-reached="onEndReached"
-      :end-reached-threshold="100"
-      :immediate-check-end-reaching="scrollViewOdd.autoCheck"
-      :auto-reflow="true"
+      class="reportInstallList-view mt24"
     >
-      <div class="salesVerification-list">
-        <b-scale-item
-          v-for="(item,index) in list['scrollViewOdd']"
-          :key="index"
-          type="exception"
-          :data="item"
-          :index="index"
-          v-show="$data[curScrollViewName].choosedIndex===false || ($data[curScrollViewName].choosedIndex!==false && index===$data[curScrollViewName].choosedIndex)"
-        >
-          <button
-            slot="headRight"
-            type="button"
-            class="common-btn-primary"
-          >
-            重新提报
-          </button>
-        </b-scale-item>
-      </div>
-      <md-scroll-view-refresh
-        slot="refresh"
-        slot-scope="{ scrollTop, isRefreshActive, isRefreshing }"
-        :scroll-top="scrollTop"
-        :is-refreshing="isRefreshing"
-        :is-refresh-active="isRefreshActive"
-      ></md-scroll-view-refresh>
-      <md-scroll-view-more
-        slot="more"
-        :is-finished="scrollViewOdd.isFinished"
+      <div
+        id="scrollViewOdd"
+        ref="scrollViewOdd"
+        class="mescroll"
       >
-      </md-scroll-view-more>
-    </md-scroll-view>
-    <md-scroll-view
+        <div class="salesVerification-list">
+          <b-scale-item
+            v-for="(item,index) in scrollViewOdd.list"
+            :key="index"
+            :data="item"
+            :index="index"
+            @barCodeDeclare="barCodeDeclare"
+            @showDetail="showDetail"
+            v-show="$data[curScrollViewName].choosedIndex===false || ($data[curScrollViewName].choosedIndex!==false && index===$data[curScrollViewName].choosedIndex)"
+          ></b-scale-item>
+        </div>
+      </div>
+    </div>
+    <div
       v-show="curScrollViewName==='scrollViewFail'"
-      class="salesVerification-view"
-      ref="scrollViewFail"
-      :scrolling-x="false"
-      @refreshing="onRefresh"
-      @end-reached="onEndReached"
-      :end-reached-threshold="100"
-      :immediate-check-end-reaching="scrollViewFail.autoCheck"
-      :auto-reflow="true"
+      class="reportInstallList-view mt24"
     >
-      <div class="salesVerification-list">
-        <b-scale-item
-          v-for="(item,index) in list['scrollViewFail']"
-          :key="index"
-          type="fail"
-          :data="item"
-          :index="index"
-          v-show="$data[curScrollViewName].choosedIndex===false || ($data[curScrollViewName].choosedIndex!==false && index===$data[curScrollViewName].choosedIndex)"
-        >
-          <button
-            slot="headRight"
-            type="button"
-            class="common-btn-primary"
-            @click="getFailureOrder(item)"
-          >
-            修改订单
-          </button>
-        </b-scale-item>
-      </div>
-      <md-scroll-view-refresh
-        slot="refresh"
-        slot-scope="{ scrollTop, isRefreshActive, isRefreshing }"
-        :scroll-top="scrollTop"
-        :is-refreshing="isRefreshing"
-        :is-refresh-active="isRefreshActive"
-      ></md-scroll-view-refresh>
-      <md-scroll-view-more
-        slot="more"
-        :is-finished="scrollViewFail.isFinished"
+      <div
+        id="scrollViewFail"
+        ref="scrollViewFail"
+        class="mescroll"
       >
-      </md-scroll-view-more>
-    </md-scroll-view>
-    <md-scroll-view
+        <div class="salesVerification-list">
+          <b-scale-item
+            v-for="(item,index) in scrollViewFail.list"
+            :key="index"
+            :data="item"
+            :index="index"
+            @barCodeDeclare="barCodeDeclare"
+            @showDetail="showDetail"
+            v-show="$data[curScrollViewName].choosedIndex===false || ($data[curScrollViewName].choosedIndex!==false && index===$data[curScrollViewName].choosedIndex)"
+          ></b-scale-item>
+        </div>
+      </div>
+    </div>
+    <div
       v-show="curScrollViewName==='scrollViewSuc'"
-      class="salesVerification-view"
-      ref="scrollViewSuc"
-      :scrolling-x="false"
-      @refreshing="onRefresh"
-      @end-reached="onEndReached"
-      :end-reached-threshold="100"
-      :immediate-check-end-reaching="scrollViewSuc.autoCheck"
-      :auto-reflow="true"
+      class="reportInstallList-view mt24"
     >
-      <div class="salesVerification-list">
-        <b-scale-item
-          v-for="(item,index) in list['scrollViewSuc']"
-          :key="index"
-          type="success"
-          :data="item"
-          :index="index"
-          v-show="$data[curScrollViewName].choosedIndex===false || ($data[curScrollViewName].choosedIndex!==false && index===$data[curScrollViewName].choosedIndex)"
-        >
-        </b-scale-item>
-      </div>
-      <md-scroll-view-refresh
-        slot="refresh"
-        slot-scope="{ scrollTop, isRefreshActive, isRefreshing }"
-        :scroll-top="scrollTop"
-        :is-refreshing="isRefreshing"
-        :is-refresh-active="isRefreshActive"
-      ></md-scroll-view-refresh>
-      <md-scroll-view-more
-        slot="more"
-        :is-finished="scrollViewSuc.isFinished"
+      <div
+        id="scrollViewSuc"
+        ref="scrollViewSuc"
+        class="mescroll"
       >
-      </md-scroll-view-more>
-    </md-scroll-view>
+        <div class="salesVerification-list">
+          <b-scale-item
+            v-for="(item,index) in scrollViewSuc.list"
+            :key="index"
+            :data="item"
+            :index="index"
+            @barCodeDeclare="barCodeDeclare"
+            @showDetail="showDetail"
+            v-show="$data[curScrollViewName].choosedIndex===false || ($data[curScrollViewName].choosedIndex!==false && index===$data[curScrollViewName].choosedIndex)"
+          ></b-scale-item>
+        </div>
+      </div>
+    </div>
     <md-dialog
       title="请输入条码"
       class="salesVerification-dialog"
@@ -250,9 +170,6 @@ import {
 
 import {
   Dialog,
-  ScrollView,
-  ScrollViewMore,
-  ScrollViewRefresh,
   TabBar
 } from 'mand-mobile';
 
@@ -261,9 +178,6 @@ export default {
   components: {
     'md-dialog': Dialog,
     'md-tab-bar': TabBar,
-    'md-scroll-view': ScrollView,
-    'md-scroll-view-refresh': ScrollViewRefresh,
-    'md-scroll-view-more': ScrollViewMore,
     BMonthPop,
     BScaleItem,
     BSearchInput
@@ -300,77 +214,67 @@ export default {
         }
       ],
       scrollView: {
-        isFinished: false,
+        // 下拉刷新对象
+        mescroll: null,
+        list: [
+          /* {
+             name: '热水器',
+             type: 'CEH-80V物联网',
+             count: 12,
+             detail: [
+               {
+                 buyName: '张子强',
+                 time: '2019-06-03',
+                 orderName: '王强',
+                 errorReason: '谁知道是怎么回事',
+               }
+             ]
+           } */
+        ],
+        // 是否已经刷新过
+        isListInit: false,
         // 展开的条码序号
         choosedIndex: false,
-        // 自动检测触发到底部
-        autoCheck: true,
-        page: {
-          pageNum: 0,
-          pageSize: 10
-        }
       },
       // 待验证
       scrollViewVerify: {
-        isFinished: false,
+        // 下拉刷新对象
+        mescroll: null,
+        list: [],
+        // 是否已经刷新过
+        isListInit: false,
+        // 展开的条码序号
         choosedIndex: false,
-        autoCheck: false,
-        page: {
-          pageNum: 0,
-          pageSize: 10
-        }
       },
       // 异常
       scrollViewOdd: {
-        isFinished: false,
+        // 下拉刷新对象
+        mescroll: null,
+        list: [],
+        // 是否已经刷新过
+        isListInit: false,
+        // 展开的条码序号
         choosedIndex: false,
-        autoCheck: false,
-        page: {
-          pageNum: 0,
-          pageSize: 10
-        }
       },
       // 失败
       scrollViewFail: {
-        isFinished: false,
+        // 下拉刷新对象
+        mescroll: null,
+        list: [],
+        // 是否已经刷新过
+        isListInit: false,
+        // 展开的条码序号
         choosedIndex: false,
-        autoCheck: false,
-        page: {
-          pageNum: 0,
-          pageSize: 10
-        }
       },
       // 成功
       scrollViewSuc: {
-        isFinished: false,
+        // 下拉刷新对象
+        mescroll: null,
+        list: [],
+        // 是否已经刷新过
+        isListInit: false,
+        // 展开的条码序号
         choosedIndex: false,
-        autoCheck: false,
-        page: {
-          pageNum: 0,
-          pageSize: 10
-        }
-      },
-      // 销量列表
-      list: {
-        scrollView: [
-          /* {
-              name: '热水器',
-              type: 'CEH-80V物联网',
-              count: 12,
-              detail: [
-                {
-                  buyName: '张子强',
-                  time: '2019-06-03',
-                  orderName: '王强',
-                  errorReason: '谁知道是怎么回事',
-                }
-              ]
-            } */
-        ],
-        scrollViewVerify: [],
-        scrollViewOdd: [],
-        scrollViewFail: [],
-        scrollViewSuc: [],
       },
       qrCodeDialog: {
         error: false,
@@ -415,21 +319,41 @@ export default {
         4: 'scrollViewFail',
         5: 'scrollViewSuc'
       };
-      Object.values(obj).forEach((v) => {
-        this[v].autoCheck = false;
-      });
-      this[obj[val]].autoCheck = true;
+      const viewName = obj[val];
+      // tab切换后，创建新MeScroll对象（若无创建过），没有加载过则加载
+      this.bUtil.scroviewTabChange(viewName, this);
     }
+  },
+  mounted() {
+    // 创建当前tab的MeScroll对象，并下拉刷新
+    this.bUtil.scroviewTabChange(this.curScrollViewName, this);
   },
   methods: {
     confirmDate(dates) {
       /* 确认时间 */
       debugger;
     },
-    search() {
+    upCallback(page) {
+      // 下载过就设置已经初始化
+      this[this.curScrollViewName].isListInit = true;
+      // 如果已经展开，则禁止请求数据，直接结束刷新数据
+      if (this[this.curScrollViewName].choosedIndex !== false) {
+        this[this.curScrollViewName].mescroll.endUpScroll(null);
+        this[this.curScrollViewName].mescroll.endDownScroll();
+        return;
+      }
+      this.search(page).then(({ result, pages }) => {
+        this.$nextTick(() => {
+          // 通过当前页的数据条数，和总页数来判断是否加载完
+          this[this.curScrollViewName].mescroll.endByPage(result.length, pages);
+        });
+      });
+    },
+    search(page) {
       /* 搜索 */
       return this.salesService.getReportEhubProductGroupPage({
-        ...this[this.curScrollViewName].page,
+        pageNum: page.num,
+        pageSize: page.size,
         // 状态
         dbDataStatus: this.curTab,
         // todo 门店id需从接口取
@@ -440,46 +364,30 @@ export default {
         productLineCode: 'AA',
         productCode: ''
       }).then(({ code, data }) => {
-        let isFinished = false;
+        const sroviewObj = {};
         if (code === 1) {
-          const listTemp = data.result.map(v => ({
+          const {
+            result,
+            pages
+          } = data;
+          sroviewObj.pages = pages;
+          sroviewObj.result = result;
+
+          const listTemp = result.map(v => ({
             name: v.productLine,
             type: v.product,
             count: v.dataCount,
             product: v.product,
             detail: []
           }));
-          if (this[this.curScrollViewName].page.pageNum === 1) {
-            this.list[this.curScrollViewName] = this.list[this.curScrollViewName].concat(listTemp);
+          if (page.num === 1) {
+            this[this.curScrollViewName].list = listTemp;
           } else {
-            this.list[this.curScrollViewName] = listTemp;
-          }
-          if (this[this.curScrollViewName].page.pageNum >= data.pages) {
-            isFinished = true;
+            this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(listTemp);
           }
         }
-        return {
-          isFinished
-        };
+        return sroviewObj;
       });
-    },
-    onEndReached() {
-      /* 加载更多 */
-      if (this[this.curScrollViewName].choosedIndex !== false) {
-        this.$refs.scrollView.finishRefresh();
-        this.$refs.scrollView.finishLoadMore();
-        return;
-      }
-      this.scrollViewOnEndReached(this.search, this.curScrollViewName);
-    },
-    onRefresh() {
-      /* 下拉刷新 */
-      if (this[this.curScrollViewName].choosedIndex !== false) {
-        this.$refs.scrollView.finishRefresh();
-        this.$refs.scrollView.finishLoadMore();
-        return;
-      }
-      this.scrollViewOnRefresh(this.search, this.curScrollViewName);
     },
     barCodeDeclare() {
       /* 销量申报 */
