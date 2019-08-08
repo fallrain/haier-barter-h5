@@ -37,8 +37,41 @@
 export default {
   name: 'SalesChooseOrder',
   data() {
-    return {};
-  }
+    return {
+      params: {
+        mdId: '',
+        productCode: '',
+        gjTime: ''
+      },
+      list: [
+        {
+          //购买人
+          yhName:''
+        }
+      ],
+    };
+  },
+  methods: {
+    getParams() {
+      this.params = this.$route.params;
+    },
+    getChooseOrder() {
+      this.salesService.getValidationFailureOrder({
+        mdId: this.params.mdId,
+        productCode: this.params.productCode,
+        gjTime: this.params.gjTime
+      }).then((res) => {
+        if (res.code === 1) {
+          const data = res.data;
+          this.list = data;
+        }
+      });
+    },
+  },
+  created() {
+    this.getParams();
+    this.getChooseOrder();
+  },
 };
 </script>
 

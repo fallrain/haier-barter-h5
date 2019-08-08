@@ -11,5 +11,9 @@ export default {
   getReportEhubByProductList(data) {
     /* 查询二级列表 */
     return axPost(urls.getReportEhubByProductList, data);
+  },
+  getValidationFailureOrder(data) {
+    /* 展示验证失败的销量对应的订单 */
+    return axPost(urls.getValidationFailureOrder, data);
   }
 };

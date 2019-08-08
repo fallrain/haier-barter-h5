@@ -4,6 +4,8 @@ const urls = {
   getReportEhubProductGroupPage: '/reportEhub/getReportEhubProductGroupPage',
   // 二级
   getReportEhubByProductList: '/reportEhub/getReportEhubByProductList',
+  // 展示验证失败的销量对应的订单
+  getValidationFailureOrder: '/reportEhub/getValidationFailureOrder',
 };
 
 Object.entries(urls).forEach(([key, value]) => {

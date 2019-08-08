@@ -238,7 +238,7 @@ const util = {
         htmlNodata: '<p class="upwarp-nodata">-- 数据已到底部 --</p>',
         callback: _this.upCallback,
         empty: {
-          warpId: [_this.curScrollViewName],
+          warpId: _this.curScrollViewName,
           tip: '暂无相关数据~'
         },
       }
