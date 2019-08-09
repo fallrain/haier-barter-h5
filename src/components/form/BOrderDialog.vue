@@ -33,13 +33,13 @@ export default {
   props: {
     dialogContent: {
       title: '标题',
-      content: '111111111122222222222222222223333333333333333333333332222222222222222222',
+      content: '123',
       leftText: '左边',
       rightText: '右边',
       leftColor: '',
       rightColor: ''
     },
-    isOpen: true,
+    isOpen: false,
   },
   methods: {
     dismissDialog() {
@@ -57,6 +57,7 @@ export default {
     margin: 0;
     padding: 0;
     position: absolute;
+    z-index: 9;
   }
 
 

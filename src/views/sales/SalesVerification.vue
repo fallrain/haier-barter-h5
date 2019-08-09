@@ -77,10 +77,21 @@
             :key="index"
             :data="item"
             :index="index"
+            type="exception"
             @barCodeDeclare="barCodeDeclare"
             @showDetail="showDetail"
             v-show="$data[curScrollViewName].choosedIndex===false || ($data[curScrollViewName].choosedIndex!==false && index===$data[curScrollViewName].choosedIndex)"
-          ></b-scale-item>
+          >
+            <button
+              slot="headRight"
+              type="button"
+              class="common-btn-primary"
+              @click="reCommit(item, index)"
+              v-show="item.detail[0].errorType"
+            >
+              重新提报
+            </button>
+          </b-scale-item>
         </div>
       </div>
     </div>
@@ -99,10 +110,20 @@
             :key="index"
             :data="item"
             :index="index"
+            type="fail"
             @barCodeDeclare="barCodeDeclare"
             @showDetail="showDetail"
             v-show="$data[curScrollViewName].choosedIndex===false || ($data[curScrollViewName].choosedIndex!==false && index===$data[curScrollViewName].choosedIndex)"
-          ></b-scale-item>
+          >
+            <button
+              slot="headRight"
+              type="button"
+              class="common-btn-primary"
+              @click="getFailureOrder(item)"
+            >
+              修改订单
+            </button>
+          </b-scale-item>
         </div>
       </div>
     </div>
@@ -121,6 +142,7 @@
             :key="index"
             :data="item"
             :index="index"
+            type="success"
             @barCodeDeclare="barCodeDeclare"
             @showDetail="showDetail"
             v-show="$data[curScrollViewName].choosedIndex===false || ($data[curScrollViewName].choosedIndex!==false && index===$data[curScrollViewName].choosedIndex)"
@@ -378,8 +400,19 @@ export default {
             type: v.product,
             count: v.dataCount,
             product: v.product,
-            detail: []
+            detail: [
+              {
+                hmcId: v.hmcId,
+                id: `${v.id}`,
+                buyName: v.yhName,
+                time: v.gjTime,
+                orderName: v.hmcName,
+                errorReason: v.ehubMsg,
+                errorType: v.ehubExceptionType
+              }
+            ]
           }));
+          console.log(listTemp);
           if (page.num === 1) {
             this[this.curScrollViewName].list = listTemp;
           } else {
@@ -408,10 +441,10 @@ export default {
       }).then(({ code, data }) => {
         if (code === 1) {
           item.detail = data.map(v => ({
-            buyName: '张子强',
+            buyName: v.yhName,
             time: v.gjTime,
-            orderName: '王强',
-            errorReason: '谁知道是怎么回事'
+            orderName: v.hmcName,
+            errorReason: v.ehubMsg
           }));
         }
       });
@@ -438,6 +471,20 @@ export default {
         name: 'Sales.SalesChooseOrder',
         params: {
           ...argsObj
+        }
+      });
+    },
+    reCommit(item, index) {
+      console.log(item);
+      this.salesService.reportEhubAgain({
+        hmcId: 'A00123',
+        id: item.detail[0].id,
+        ehubExceptionType: item.detail[0].errorType
+      }).then((res) => {
+        if (res.code === 1) {
+          this[this.curScrollViewName].list.splice(index, 1);
+        } else {
+          item.detail[0].errorReason = res.data;
         }
       });
     },
