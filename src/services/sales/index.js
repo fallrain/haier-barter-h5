@@ -15,5 +15,9 @@ export default {
   getValidationFailureOrder(data) {
     /* 展示验证失败的销量对应的订单 */
     return axPost(urls.getValidationFailureOrder, data);
+  },
+  reportEhubAgain(data) {
+    /* 展示验证失败的销量对应的订单 */
+    return axPost(urls.reportEhubAgain, data);
   }
 };
