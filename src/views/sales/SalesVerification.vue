@@ -471,6 +471,7 @@ export default {
           barCode: this.qrCodeForm.code
         }).then((res) => {
           if (res.code === 1) {
+
           } else {
 
           }
