@@ -19,5 +19,9 @@ export default {
   reportEhubAgain(data) {
     /* 展示验证失败的销量对应的订单 */
     return axPost(urls.reportEhubAgain, data);
+  },
+  saveEhubBarCode(data) {
+    /* 条码提报 */
+    return axPost(urls.saveEhubBarCode, data);
   }
 };

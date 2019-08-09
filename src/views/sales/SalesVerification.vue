@@ -313,7 +313,9 @@ export default {
         ],
       },
       qrCodeForm: {
-        code: ''
+        code: '',
+        id: '',
+        hmcId: ''
       }
     };
   },
@@ -412,7 +414,6 @@ export default {
               }
             ]
           }));
-          console.log(listTemp);
           if (page.num === 1) {
             this[this.curScrollViewName].list = listTemp;
           } else {
@@ -422,12 +423,14 @@ export default {
         return sroviewObj;
       });
     },
-    barCodeDeclare() {
+    barCodeDeclare(detail) {
       /* 销量申报 */
       this.qrCodeDialog.open = true;
       // 重置code
       this.qrCodeForm.code = '';
       this.qrCodeDialog.error = false;
+      this.qrCodeForm.id = detail.id;
+      this.qrCodeForm.hmcId = detail.hmcId;
     },
     showDetail({ item, isShowDetail, index }) {
       /* 显示详情后隐藏其他 */
@@ -441,6 +444,8 @@ export default {
       }).then(({ code, data }) => {
         if (code === 1) {
           item.detail = data.map(v => ({
+            hmcId: v.hmcId,
+            id: `${v.id}`,
             buyName: v.yhName,
             time: v.gjTime,
             orderName: v.hmcName,
@@ -459,6 +464,17 @@ export default {
       if (!this.qrCodeForm.code) {
         this.qrCodeDialog.errorText = '请输入条码';
         this.qrCodeDialog.error = true;
+      } else {
+        this.salesService.saveEhubBarCode({
+          hmcId: 'A00123',
+          id: this.qrCodeForm.id,
+          barCode: this.qrCodeForm.code
+        }).then((res) => {
+          if (res.code === 1) {
+          } else {
+
+          }
+        });
       }
     },
     getFailureOrder(itemInfo) {
@@ -475,7 +491,6 @@ export default {
       });
     },
     reCommit(item, index) {
-      console.log(item);
       this.salesService.reportEhubAgain({
         hmcId: 'A00123',
         id: item.detail[0].id,
