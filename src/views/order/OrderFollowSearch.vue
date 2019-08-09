@@ -27,108 +27,76 @@
       >
       <p class="orderFollowButton">手动录单</p>
     </div>
-    <div class="bar-v">
+
+    <!-- <div class="bar-v">
       <div
         class="bar-class"
-        @click="sort()"
-        v-show="!sortBlueShow"
-      >
-        <p class="order-span">智能排序</p>
-        <img
-          src="@/assets/images/orderFollow-up/xiala@3x.png"
-          class="xialaimage"
-        >
-      </div>
-      <div
-        class="bar-class"
-        @click="sort()"
-        v-show="sortBlueShow"
-      >
-        <p class="order-span-blue">智能排序</p>
-        <img
-          src="@/assets/images/orderFollow-up/shangla@3x.png"
-          class="xialaimage"
-        >
-      </div>
-      <div
-        class="bar-class"
-        @click="businessScenario()"
-        v-show="!scenarioBlueShow"
-      >
-        <p class="order-span">业务场景</p>
-        <img
-          src="@/assets/images/orderFollow-up/xiala@3x.png"
-          class="xialaimage"
-        >
-      </div>
-      <div
-        class="bar-class"
-        @click="businessScenario()"
-        v-show="scenarioBlueShow"
-      >
-        <p class="order-span-blue">业务场景</p>
-        <img
-          src="@/assets/images/orderFollow-up/shangla@3x.png"
-          class="xialaimage"
-        >
-      </div>
-      <div class="bar-class">
-        <p
-          class="order-span"
-          @click="preparation()"
-        >筛选</p>
-        <img
-          src="@/assets/images/orderFollow-up/shaixuan@3x.png"
-          class="xialaimage"
-        />
-      </div>
-    </div>
-    <b-pop-sort-type
-    :show.sync="sortShow"
-      :list="sortList"
-      v-show="maskShow">
-    </b-pop-sort-type>
-    <!-- <div
-      class="masker"
-      @click="maskerHidden()"
-      v-show="maskShow"
-    >
-      <p
-        v-for="(sort,index) in sortList"
+        v-for="(item,index) in headList"
         :key="index"
-        class="sort-class"
-        @click="sortClick(sort)"
-        v-show="sortShow"
-      >{{sort.name}}</p>
-      <div style="background-color:white;height: 50px;">
-        <p
-          class="orderFollowButtonRow"
-          v-for="(scenario,index) in scenarioList"
-          v-show="scenarioShow"
-          @click="scenarioClick(scenario)"
-        >{{scenario.name}}</p>
+      >
+        <p class="order-span" v-bind:class="{active:item.isActive}" @click="headSwitch(index)">{{item.name}}</p>
+        <img
+          v-bind:src="item.activeIcon"
+          class="xialaimage"
+        >
       </div>
     </div> -->
-    <div>
-      <md-scroll-view
-        ref="scrollView"
-        :scrolling-x="false"
-        @refreshing="$_onRefresh"
-        @end-reached="$_onEndReached"
+    <!-- <b-pop-sort-type
+    :show.sync="sortShow"
+      :list="sortList"
       >
-        <md-scroll-view-refresh
-          slot="refresh"
-          slot-scope="{ scrollTop, isRefreshActive, isRefreshing }"
-          :scroll-top="scrollTop"
-          :is-refreshing="isRefreshing"
-          :is-refresh-active="isRefreshActive"
-        ></md-scroll-view-refresh>
-        <div
+    </b-pop-sort-type>
+    <b-pop-button
+    :show.sync="scenarioShow"
+    :list="scenarioList"
+    ></b-pop-button> -->
+   <div
+        id="scrollView"
+        ref="scrollView"
+        class="mescroll"
+   v-show="curScrollViewName==='scrollView'"
+      >
+      <b-order-follow-item
+            :list="scrollView.list"
+      ></b-order-follow-item>
+   </div>
+   <div
+        id="scrollViewFinished"
+        ref="scrollViewFinished"
+        class="mescroll"
+   v-show="curScrollViewName==='scrollViewFinished'"
+      >
+      <b-order-follow-item
+            :list="scrollView.list"
+      ></b-order-follow-item>
+   </div>
+   <div
+        id="scrollViewOdd"
+        ref="scrollViewOdd"
+        class="mescroll"
+   v-show="curScrollViewName==='scrollViewOdd'"
+      >
+      <b-order-follow-item
+            :list="scrollView.list"
+      ></b-order-follow-item>
+   </div>
+   <div
+        id="scrollViewProgress"
+        ref="scrollViewProgress"
+        class="mescroll"
+   v-show="curScrollViewName==='scrollViewProgress'"
+      >
+      <b-order-follow-item
+            :list="scrollView.list"
+      ></b-order-follow-item>
+   </div>
+        <!-- <div
           class="label-class"
-          v-for="(data,index) in dataList"
+          v-for="(data,index) in scrollView.list"
           :key="index"
-        >
-          <img
+        > -->
+
+          <!-- <img
             src="@/assets/images/orderFollow-up/yizhanzhujia@3x.png"
             class="labelImage"
           >
@@ -205,19 +173,28 @@
             <p class="bottom-button">成交录单</p>
             <p class="bottom-button">发券</p>
           </div>
-        </div>
-          <md-scroll-view-more
-            slot="more"
-            :is-finished="isFinished"
-          >
-          </md-scroll-view-more>
-      </md-scroll-view>
-
-  </div>
+        </div> -->
   <div style="height:60px"></div>
+  <div class="md-example-child md-example-child-tabs md-example-child-tab-bar-4">
+    <md-tab-bar
+      v-model="curTab"
+      :items="items"
+      :has-ink="false"
+    >
+       <template slot="item" slot-scope="{ item }">
+        <div class="custom-item">
+          <div class="icon">
+            <md-icon :name="item.icon" />
+          </div>
+          <div class="text">
+            <span v-text="item.label"></span>
+          </div>
+        </div>
+       </template>
+    </md-tab-bar>
+  </div>
   </div>
 </template>
-
 <script>
 import {
   Icon,
@@ -227,7 +204,9 @@ import {
   ScrollViewMore,
   Toast
 } from "mand-mobile";
-import {BPopSortType,BPopCheckList} from '@/components/form'
+import {BPopSortType,BPopButton} from '@/components/form';
+import {BOrderFollowItem} from '@/components/orderFollow'
+
 export default {
   name: '',
   components: {
@@ -237,63 +216,17 @@ export default {
     [ScrollViewRefresh.name]: ScrollViewRefresh,
     [ScrollViewMore.name]: ScrollViewMore,
     [Toast.name]: Toast,
-    BPopSortType,BPopCheckList
+    BPopSortType,BPopButton,BOrderFollowItem
   },
   data() {
     return {
       noticeShow: false,
-      maskShow: false,
-      sortShow: false,
-      scenarioShow: false,
       pageNum:1,
       // detailShow: false,
-      sortBlueShow: false,
-      scenarioBlueShow: false,
-      dataList: [],
-      sortType: "1",
-      scenarioType: "",
       searchWord: "",
       show: false,
       isFinished:true,
-      showList: [],
-      ID: "",
-      sortList: [
-        {
-          id: '1',
-          name: '智能排序'
-        },
-        {
-          id: '2',
-          name: '按时间倒序'
-        },
-        {
-          id: '3',
-          name: '按品牌'
-        },
-        {
-          id: '4',
-          name: '按成交可能性'
-        }
-      ],
-      scenarioList: [
-        {
-          id: '1',
-          name: '以旧换新'
-        },
-        {
-          id: '2',
-          name: '一站筑家'
-        },
-        {
-          id: '3',
-          name: '认筹'
-        },
-        {
-          id: '4',
-          name: '爱到家'
-        }
-      ],
-      current: 0,
+      curTab: 0,
       items: [
         {
           name: 0,
@@ -311,82 +244,135 @@ export default {
           icon: "user"
         },
         {
-          name: 2,
+          name: 3,
           label: "已成交",
           icon: "user"
         }
-      ]
+      ],
+      preIndex:'',
+      currentScrollView:{},
+      currentList:[],
+       // 订单跟进全部
+      scrollView: {
+        mescroll: null,
+        list: [],
+        isListInit: false
+      },
+      // 已完成
+      scrollViewFinished: {
+        mescroll: null,
+        list: [],
+        isListInit: false
+      },
+      // 异常
+      scrollViewOdd: {
+        mescroll: null,
+        list: [],
+        isListInit: false
+      },
+      //进行中
+      scrollViewProgress: {
+        mescroll: null,
+        list: [],
+        isListInit: false
+      }
     };
   },
   created() {
-    //  window.ScrollViewTrigger1 = () => {
-    //   this.$refs.scrollView.triggerRefresh();
-    // };
-    this.searchData();
+    // this.searchData();
+  },
+   computed: {
+    curScrollViewName() {
+      // 当前tab下的scrollView的ref名字
+      return {
+        0: 'scrollView',
+        1: 'scrollViewProgress',
+        2: 'scrollViewOdd',
+        3: 'scrollViewFinished',
+      }[this.curTab];
+    }
+  },
+  watch: {
+    curTab(val) {
+      const obj = {
+         0: 'scrollView',
+        1: 'scrollViewProgress',
+        2: 'scrollViewOdd',
+        3: 'scrollViewFinished',
+      };
+      const viewName = obj[val];
+      // tab切换后，创建新MeScroll对象（若无创建过），没有加载过则加载
+      this.bUtil.scroviewTabChange(viewName, this);
+
+    }
+  },
+  mounted() {
+    // 创建当前tab的MeScroll对象，并下拉刷新
+    this.bUtil.scroviewTabChange(this.curScrollViewName, this);
   },
   methods: {
-    sort() {
-      this.sortShow = true;
-      this.scenarioShow = false;
-      this.sortBlueShow = !this.sortBlueShow;
-      this.scenarioBlueShow = false;
-      if (this.sortBlueShow) {
-        this.maskShow = true;
-      } else {
-        this.maskShow = !this.maskShow;
+    change(item, index, prevIndex){
+      debugger
+      this.curTab = index
+    },
+    headSwitch(index){
+      if(index === this.preIndex){
+        this.headList[index].isActive = false
+        this.preIndex = ''
+        this.sortShow = false
+        this.scenarioShow = false
+        return
+      }
+      for(var i = 0; i < this.headList.length;i ++){
+        if(i === index){
+          this.preIndex = index
+          this.headList[i].isActive = true
+        }else{
+           this.headList[i].isActive = false
+        }
+      }
+      if(index === 0){
+        this.sortShow = true
+        this.scenarioShow = false
+      }else if(index === 1){
+        this.sortShow = false
+        this.scenarioShow = true
+      }else{
+        this.sortShow = false
+        this.scenarioShow = false
       }
     },
-    businessScenario() {
-      this.sortShow = false;
-      this.scenarioShow = true;
-      this.scenarioBlueShow = !this.scenarioBlueShow;
-      this.sortBlueShow = false;
-      if (this.scenarioBlueShow) {
-        this.maskShow = true;
-      } else {
-        this.maskShow = !this.maskShow;
-      }
+    upCallback(page) {
+      // 下载过就设置已经初始化
+      this[this.curScrollViewName].isListInit = true;
+      this.searchData(page).then(({ result, pages }) => {
+        this.$nextTick(() => {
+          // 通过当前页的数据条数，和总页数来判断是否加载完
+          this[this.curScrollViewName].mescroll.endByPage(result.length, pages);
+        });
+      });
     },
+
+
     preparation() {},
-    sortClick(item) {
-      this.sortType = item.id;
-      this.maskerHidden();
-      this.sortBlueShow = false;
-      this.searchData();
-    },
+
     scenarioClick(item) {
       this.scenarioType = item.id;
       this.scenarioBlueShow = false;
       this.maskerHidden();
-      this.searchData;
+      this.searchData();
     },
-    maskerHidden() {
-      this.maskShow = false;
-      this.sortShow = false;
-      this.scenarioShow = false;
-      this.scenarioBlueShow = false;
-      this.sortBlueShow = false;
-    },
-    showMore(index) {
-      this.ID = this.dataList[index].id;
-      this.$set(this.dataList[index], "show", !this.dataList[index].show);
-    },
+
+
     noticeClose() {
       this.noticeShow = false;
     },
-    detailHide(index) {
-      this.$set(
-        this.dataList[index],
-        "detailShow",
-        !this.dataList[index].detailShow
-      );
-    },
-    searchData() {
-      this.orderService
+    searchData(page) {
+      return this.orderService
         .queryOrderFollowlList(
           {
             hmcId: "A0008949",
-            queryType:this.current,
+            queryType:this.curTab,
             sortType: this.sortType,
             recordMode: '',
             userStatus: '',
@@ -400,17 +386,40 @@ export default {
             orderFollowEndDate: ''
           },
           {
-            pageNum: this.pageNum,
-            pageSize: 10
+            pageNum: page.num,
+            pageSize: page.size
           }
         )
         .then(res => {
-          this.dataList = res.data.result;
-          this.anylizeData();
+          const sroviewObj = {};
+        if (res.code === 1) {
+
+          const {
+            result,
+            pages
+          } = res.data;
+          sroviewObj.pages = pages;
+          sroviewObj.result = result;
+          if (result && result.length > 0) {
+           const curList = result
+           this.anylizeData(curList)
+            // this.$nextTick(() => {
+           if (page.num === 1) {
+              this[this.curScrollViewName].list = this.currentList;
+            } else {
+              this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(this.currentList);
+            }
+        // });
+
+          }
+          // this.dataList = res.data.result;
+        }
+        return sroviewObj;
+
         });
     },
-    anylizeData() {
-      this.dataList.forEach(item => {
+    anylizeData(curList) {
+      curList.forEach(item => {
         item.showList = [];
         this.$set(item, "detailShow", false);
         this.$set(item, "show", false);
@@ -434,9 +443,11 @@ export default {
           this.grayShow = false;
         }
       });
+      this.currentList = curList
+
     },
     fuzzySearch() {
-      debugger;
+
       this.orderService
         .fuzzySearchOrderFollowList(
           {},
@@ -461,7 +472,7 @@ export default {
           {
             orderFollowId: this.ID,
             type: type,
-            transferer: ""
+            remark: ""
           }
         )
         .then(res => {
@@ -473,27 +484,7 @@ export default {
           }
         });
     },
-    $_onRefresh() {
-      // async data
-      setTimeout(() => {
-        this.pageNum = 1;
-        this.searchData();
-        this.$refs.scrollView.finishRefresh();
-      }, 2000);
-    },
-    $_onEndReached() {
-      if (this.isFinished) {
-        return;
-      }
-      // async data
-      setTimeout(() => {
-        this.pageNum ++;
-        if (this.dataList.length >= 10) {
-          this.isFinished = true;
-        }
-        this.$refs.scrollView.finishLoadMore();
-      }, 1000);
-    }
+
   },
 };
 </script>
@@ -592,7 +583,9 @@ export default {
   margin-top: 5px;
   margin-left: 10px;
 }
-
+.bar-class .order-span.active{
+  color:#1969c6
+}
 .order-span {
   display: inline-block;
   color: #666666;
@@ -728,7 +721,9 @@ export default {
   font-size: 28px;
   margin-left: 230px;
 }
-
+.label-class{
+  position: relative;
+}
 .information-xiala {
   width: 36px;
   height: 36px;

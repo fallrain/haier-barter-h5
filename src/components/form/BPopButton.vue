@@ -4,28 +4,17 @@
       v-model="popupShow"
       position="top"
     >
-     <!-- <md-popup-title-bar
-        v-bind="$attrs"
-        ok-text="确定"
-        cancel-text="取消"
-        @confirm="confirm()"
-        @cancel="popupShow = false"
-      ></md-popup-title-bar> -->
       <div class="b-pop-checkList-cnt">
         <ul>
-          <li
-            class="b-pop-checkList-item1"
-            :class="[checkIds.some(v=>v===item.id) && 'active']"
+          <div style="background-color:white;height: 50px;">
+        <p
+          class="b-pop-checkList-item"
+           :class="[checkIds.some(v=>v===item.id) && 'active']"
             v-for="(item,index) in list"
             :key="index"
             @click="checkboxClick(item)"
-          >
-            <span class="b-pop-checkList-item-name">{{item.name}}</span>
-              <i
-                class="b-pop-checkList-icon iconfont"
-                :class="[checkIds.some(v=>v===item.id) && 'icon-duihao']"
-              ></i>
-          </li>
+        ><span class="b-pop-checkList-item-name">{{item.name}}</span></p>
+      </div>
         </ul>
       </div>
     </md-popup>
@@ -39,7 +28,7 @@ import {
 } from 'mand-mobile';
 
 export default {
-  name: 'BPopSortType',
+  name: 'BPopButton',
   inheritAttrs: true,
   components: {
     'md-popup': Popup,
@@ -82,6 +71,7 @@ export default {
   },
   methods: {
     checkboxClick({ id }) {
+      debugger
       // const i = this.checkIds.findIndex(v => id === v);
       // if (this.type === 'radio') {
       //   this.checkIds = [id];
@@ -139,16 +129,24 @@ export default {
     padding-bottom: 24px;
   }
 
-  .b-pop-checkList-item1 {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  .b-pop-checkList-item {
     padding-left: 24px;
-    padding-right: 24px;
-    height: 80px;
-    border-bottom: 1px solid #D0D0D0;
+  padding-right: 24px;
+  height: 60px;
+  line-height: 60px;
+  text-align: center;
+  color: #666666;
+  border: 1px #cccccc solid;
+  font-size: 24px;
+  // width: 180px;
+  border-radius: 30px;
+  float: left;
+  margin-top: 10px;
+  margin-left: 24px;
+
     &.active {
-      .b-pop-checkList-item-name {
+       border-color: #1969C6;
+      .b-pop-checkList-item-name{
         color: #1969C6;
       }
     }
@@ -181,4 +179,7 @@ export default {
     height: 1160px;
     top: 180px;
   }
+  .orderFollowButtonRow {
+
+}
 </style>
