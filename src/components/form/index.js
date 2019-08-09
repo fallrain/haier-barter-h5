@@ -18,7 +18,8 @@ import BVerificationcode from './BVerificationcode';
 import BUserTag from './BUserTag';
 import BActivityItem from './BActivityItem';
 import BOrderDialog from './BOrderDialog';
-
+import BPopSortType from './BPopSortType';
+import BPopButton from './BPopButton';
 /* eslint-disable import/prefer-default-export */
 export {
   BActivityList,
@@ -41,4 +42,6 @@ export {
   BUserTag,
   BActivityItem,
   BOrderDialog,
+  BPopSortType,
+  BPopButton
 };
