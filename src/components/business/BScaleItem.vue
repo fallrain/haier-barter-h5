@@ -42,7 +42,7 @@
             v-if="type==='normal'"
             type="button"
             class="common-btn-primary"
-            @click="barCodeClick(data.detail)"
+            @click="barCodeClick(detail)"
           >条码申报
           </button>
         </li>

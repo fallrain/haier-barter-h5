@@ -1,5 +1,11 @@
 <template>
   <div>
+    <div class="salesChooseOrders-dialog">
+      <b-order-dialog
+        :dialogContent="dialogContent"
+        :isOpen.sync="isOpen"
+        v-show="isOpen"></b-order-dialog>
+    </div>
     <div class="salesChooseOrder-header">
       <i class="iconfont icon-xinxi"></i>
       <span>如果要修改非本人录入的订单 请联系录单人进行修改</span>
@@ -7,35 +13,38 @@
     <ul class="salesChooseOrders-list">
       <li
         class="salesChooseOrders-item"
+        v-for="(itemInfo,index) in list"
+        :key="index"
+        @click="itemClick(itemInfo,index)"
+        :class="{'active': index == clickNo}"
       >
         <div class="salesChooseOrders-item-flex">
-          <span class="salesChooseOrders-item-name">购买人：王大象</span>
-          <span class="salesChooseOrders-item-time">购机时间：2019-06-28</span>
+          <span class="salesChooseOrders-item-name">购买人：{{itemInfo.yhName}}</span>
+          <span class="salesChooseOrders-item-time">购机时间：{{itemInfo.gjTime}}</span>
         </div>
         <div class="salesChooseOrders-item-flex">
-          <span class="salesChooseOrders-item-time">录单人：陆梦飞</span>
-          <span class="salesChooseOrders-item-money">订单金额：8,800元</span>
-        </div>
-      </li>
-      <li
-        class="salesChooseOrders-item active"
-      >
-        <div class="salesChooseOrders-item-flex">
-          <span class="salesChooseOrders-item-name">购买人：王大象</span>
-          <span class="salesChooseOrders-item-time">购机时间：2019-06-28</span>
-        </div>
-        <div class="salesChooseOrders-item-flex">
-          <span class="salesChooseOrders-item-time">录单人：陆梦飞</span>
-          <span class="salesChooseOrders-item-money">订单金额：8,800元</span>
+          <span class="salesChooseOrders-item-time">录单人：{{itemInfo.hmcName}}</span>
+          <span class="salesChooseOrders-item-money">订单金额：{{itemInfo.orderTotalPrice}}元</span>
         </div>
       </li>
     </ul>
+    <div class="salesChooseOrders-btn">
+      <button class="salesChooseOrders-confirm"
+              @click="confirm">确定
+      </button>
+    </div>
   </div>
 </template>
 
 <script>
+  import {
+    BOrderDialog
+  } from '@/components/form';
 export default {
   name: 'SalesChooseOrder',
+  components: {
+    BOrderDialog
+  },
   data() {
     return {
       params: {
@@ -43,12 +52,42 @@ export default {
         productCode: '',
         gjTime: ''
       },
+      //联网获取的数据
       list: [
         {
           //购买人
-          yhName:''
+          yhName: '',
+          //录单人
+          hmcName: '',
+          //购机时间
+          gjTime: '',
+          //订单金额
+          orderTotalPrice: '',
         }
       ],
+      // 判断点击的是哪条item
+      clickNo: -1,
+      // 弹框显示的内容&&是否需要显示
+      dialogContent: {
+        title: '',
+        content: '请联系录单人处理',
+        leftText: '',
+        rightText: '知道了',
+        leftColor: '',
+        rightColor: ''
+      },
+      isOpen: false,
+      //暂存点击的item信息
+      itemInfo: {
+        //购买人
+        yhName: '',
+        //录单人
+        hmcName: '',
+        //购机时间
+        gjTime: '',
+        //订单金额
+        orderTotalPrice: '',
+      },
     };
   },
   methods: {
@@ -67,6 +106,24 @@ export default {
         }
       });
     },
+    itemClick(itemInfo, index) {
+      this.clickNo = index;
+      this.itemInfo = itemInfo;
+      this.dialogContent.content = "请联系录单人" + itemInfo.hmcName + "处理";
+    },
+    confirm() {
+      //TODO 添加是否录单人的判断
+      if (false) {
+        this.isOpen = !this.isOpen;
+      } else {
+        this.$router.push({
+          name: 'Order.OrderEntry',
+          params: {
+            ...this.itemInfo
+          }
+        });
+      }
+    },
   },
   created() {
     this.getParams();
@@ -75,9 +132,15 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
   .salesChooseOrder {
 
+  }
+
+  .salesChooseOrders-dialog {
+    .order-dialog-content {
+      text-align: center;
+    }
   }
 
   .salesChooseOrder-header {
@@ -131,5 +194,22 @@ export default {
 
   .salesChooseOrders-item-time {
     color: #bbb;
+  }
+
+  .salesChooseOrders-confirm {
+    position: absolute;
+    width: calc(100% - 48px);
+    height: 84px;
+    bottom: 40px;
+    right: 24px;
+    left: 24px;
+    border-radius: 8px;
+    background: #1969C6;
+    color: #fff;
+    font-size: 34px;
+  }
+
+  .salesChooseOrders-btn {
+    position: flex;
   }
 </style>

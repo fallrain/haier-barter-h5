@@ -6,6 +6,10 @@ const urls = {
   getReportEhubByProductList: '/reportEhub/getReportEhubByProductList',
   // 展示验证失败的销量对应的订单
   getValidationFailureOrder: '/reportEhub/getValidationFailureOrder',
+  // 异常销量重传接口
+  reportEhubAgain: '/reportEhub/reportEhubAgain',
+  // 条码提报
+  saveEhubBarCode: '/reportEhub/saveEhubBarCode',
 };
 
 Object.entries(urls).forEach(([key, value]) => {

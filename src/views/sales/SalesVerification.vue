@@ -2,7 +2,7 @@
   <div class="h100vh">
     <b-search-input
       v-model="searchVal"
-      @search="search"
+      @search="searchByCondition"
       placeholder="搜索用户姓名、电话或产品"
     >
       <div class="salesVerification-search-right">
@@ -77,10 +77,21 @@
             :key="index"
             :data="item"
             :index="index"
+            type="exception"
             @barCodeDeclare="barCodeDeclare"
             @showDetail="showDetail"
             v-show="$data[curScrollViewName].choosedIndex===false || ($data[curScrollViewName].choosedIndex!==false && index===$data[curScrollViewName].choosedIndex)"
-          ></b-scale-item>
+          >
+            <button
+              slot="headRight"
+              type="button"
+              class="common-btn-primary"
+              @click="reCommit(item, index)"
+              v-show="item.detail[0].errorType"
+            >
+              重新提报
+            </button>
+          </b-scale-item>
         </div>
       </div>
     </div>
@@ -99,10 +110,20 @@
             :key="index"
             :data="item"
             :index="index"
+            type="fail"
             @barCodeDeclare="barCodeDeclare"
             @showDetail="showDetail"
             v-show="$data[curScrollViewName].choosedIndex===false || ($data[curScrollViewName].choosedIndex!==false && index===$data[curScrollViewName].choosedIndex)"
-          ></b-scale-item>
+          >
+            <button
+              slot="headRight"
+              type="button"
+              class="common-btn-primary"
+              @click="getFailureOrder(item)"
+            >
+              修改订单
+            </button>
+          </b-scale-item>
         </div>
       </div>
     </div>
@@ -121,6 +142,7 @@
             :key="index"
             :data="item"
             :index="index"
+            type="success"
             @barCodeDeclare="barCodeDeclare"
             @showDetail="showDetail"
             v-show="$data[curScrollViewName].choosedIndex===false || ($data[curScrollViewName].choosedIndex!==false && index===$data[curScrollViewName].choosedIndex)"
@@ -170,7 +192,8 @@ import {
 
 import {
   Dialog,
-  TabBar
+  TabBar,
+  Toast
 } from 'mand-mobile';
 
 export default {
@@ -291,7 +314,9 @@ export default {
         ],
       },
       qrCodeForm: {
-        code: ''
+        code: '',
+        id: '',
+        hmcId: ''
       }
     };
   },
@@ -349,6 +374,9 @@ export default {
         });
       });
     },
+    searchByCondition(){
+      this[this.curScrollViewName].mescroll.triggerDownScroll();
+    },
     search(page) {
       /* 搜索 */
       return this.salesService.getReportEhubProductGroupPage({
@@ -362,7 +390,7 @@ export default {
         gjTime: this.curSearchDate,
         // 直销员产品线编码 todo 接口取
         productLineCode: 'AA',
-        productCode: ''
+        productCode: this.searchVal
       }).then(({ code, data }) => {
         const sroviewObj = {};
         if (code === 1) {
@@ -378,7 +406,17 @@ export default {
             type: v.product,
             count: v.dataCount,
             product: v.product,
-            detail: []
+            detail: [
+              {
+                hmcId: v.hmcId,
+                id: `${v.id}`,
+                buyName: v.yhName,
+                time: v.gjTime,
+                orderName: v.hmcName,
+                errorReason: v.ehubMsg,
+                errorType: v.ehubExceptionType
+              }
+            ]
           }));
           if (page.num === 1) {
             this[this.curScrollViewName].list = listTemp;
@@ -389,12 +427,14 @@ export default {
         return sroviewObj;
       });
     },
-    barCodeDeclare() {
+    barCodeDeclare(detail) {
       /* 销量申报 */
       this.qrCodeDialog.open = true;
       // 重置code
       this.qrCodeForm.code = '';
       this.qrCodeDialog.error = false;
+      this.qrCodeForm.id = detail.id;
+      this.qrCodeForm.hmcId = detail.hmcId;
     },
     showDetail({ item, isShowDetail, index }) {
       /* 显示详情后隐藏其他 */
@@ -408,11 +448,14 @@ export default {
       }).then(({ code, data }) => {
         if (code === 1) {
           item.detail = data.map(v => ({
-            buyName: '张子强',
+            hmcId: v.hmcId,
+            id: `${v.id}`,
+            buyName: v.yhName,
             time: v.gjTime,
-            orderName: '王强',
-            errorReason: '谁知道是怎么回事'
+            orderName: v.hmcName,
+            errorReason: v.ehubMsg
           }));
+          debugger
         }
       });
       if (isShowDetail) {
@@ -426,6 +469,24 @@ export default {
       if (!this.qrCodeForm.code) {
         this.qrCodeDialog.errorText = '请输入条码';
         this.qrCodeDialog.error = true;
+      } else {
+        if (this.qrCodeForm.code.length == 20 || this.qrCodeForm.code.length == 22) {
+          this.qrCodeDialog.open = false;
+          this.salesService.saveEhubBarCode({
+            hmcId: 'A00123',
+            id: this.qrCodeForm.id,
+            barCode: this.qrCodeForm.code
+          }).then((res) => {
+            if (res.code === 1) {
+              Toast.succeed(res.msg);
+            } else {
+              Toast.failed(res.msg);
+            }
+          });
+        } else {
+          this.qrCodeDialog.errorText = '条码编码不正确，请重新录入';
+          this.qrCodeDialog.error = true;
+        }
       }
     },
     getFailureOrder(itemInfo) {
@@ -438,6 +499,19 @@ export default {
         name: 'Sales.SalesChooseOrder',
         params: {
           ...argsObj
+        }
+      });
+    },
+    reCommit(item, index) {
+      this.salesService.reportEhubAgain({
+        hmcId: 'A00123',
+        id: item.detail[0].id,
+        ehubExceptionType: item.detail[0].errorType
+      }).then((res) => {
+        if (res.code === 1) {
+          this[this.curScrollViewName].list.splice(index, 1);
+        } else {
+          item.detail[0].errorReason = res.data;
         }
       });
     },
