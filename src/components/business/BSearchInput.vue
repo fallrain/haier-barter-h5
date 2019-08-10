@@ -1,12 +1,16 @@
 <template>
   <div class="bSearchInput-par">
     <div class="bSearchInput-wrap">
-      <input
-        class="bSearchInput"
-        type="text"
-        :placeholder="placeholder"
-        v-model="searchVal"
-      >
+      <form :target="iframeId" class="bSearchInput-form" action="#">
+        <input
+          class="bSearchInput"
+          type="search"
+          :placeholder="placeholder"
+          v-model="searchVal"
+          @keyup.enter="searchClick"
+        >
+        <iframe :name="iframeId" style="display: none;"></iframe>
+      </form>
       <i
         class="iconfont icon-fangdajing"
         @click="searchClick"
@@ -30,6 +34,11 @@ export default {
       type: String,
       default: '请输入'
     }
+  },
+  data() {
+    return {
+      iframeId: `BSearchInput${new Date().getTime()}`
+    };
   },
   computed: {
     searchVal: {
@@ -88,5 +97,9 @@ export default {
   .bSearchInput-right {
     margin-left: 16px;
     flex-shrink: 0;
+  }
+
+  .bSearchInput-form {
+    width: 100%;
   }
 </style>
