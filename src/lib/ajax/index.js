@@ -51,7 +51,7 @@ ax.interceptors.response.use((response) => {
   Toast.failed('请求失败');
   error.response.data = {
     data: {
-      status: -1
+      code: -1
     }
   };
   return error.response.data;
