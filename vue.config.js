@@ -10,6 +10,14 @@ module.exports = {
     port: 8094,
     compress: true,
     proxy: {
+      '/api/test': {
+        target: 'https://hzy.haier.com/',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api/test': ''
+        },
+        secure: false
+      },
       '/api': {
         target: 'https://hzytest.haier.com/',
         changeOrigin: true,

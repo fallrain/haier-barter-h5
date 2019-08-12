@@ -2,6 +2,9 @@ import Vue from 'vue';
 import store from '@/store';
 import Router from 'vue-router';
 import routerData from '@/router/routerData';
+import {
+  axPost
+} from '@/lib/ajax';
 
 Vue.use(Router);
 const router = new Router({
@@ -24,7 +27,16 @@ router.beforeEach((to, from, next) => {
   } else {
     store.commit('delAliveExclude', 'SuggestionList');
   }
-
+  const timestamp = new Date().getTime();
+  axPost(
+    '/test/vipWeChat/jsSdk/getJsSign',
+    {
+      appId: 'wx2409ae17ef4a9f34',
+      noncestr: timestamp,
+      timestamp,
+      url: window.location.href
+    }
+  ).then();
   next();
 });
 export default router;
