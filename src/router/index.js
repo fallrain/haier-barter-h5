@@ -36,7 +36,17 @@ router.beforeEach((to, from, next) => {
       timestamp,
       url: window.location.href
     }
-  ).then();
+  ).then(response => {
+    debugger
+    wx.config({
+      debug: true,
+      appId: 'wx2409ae17ef4a9f34',
+      timestamp: timestamp,
+      nonceStr: timestamp,
+      signature: response.data.jsSignature,
+      jsApiList: ['scanQRCode']
+    });
+  });
   next();
 });
 export default router;

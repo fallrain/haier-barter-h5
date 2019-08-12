@@ -184,6 +184,8 @@ export default {
               this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(curList);
             }
           }
+        } else {
+          this[this.curScrollViewName].mescroll.endErr();
         }
         return sroviewObj;
       });

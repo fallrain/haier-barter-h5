@@ -168,7 +168,8 @@
           <div
             class="salesVerification-qrcode-icon-wrap"
           >
-            <i class="iconfont icon-saomiao"></i>
+            <i class="iconfont icon-saomiao"
+               @click="salesScanQRCode"></i>
           </div>
         </div>
         <p class="common-error mt16" v-show="qrCodeDialog.error">{{qrCodeDialog.errorText}}</p>
@@ -423,6 +424,8 @@ export default {
           } else {
             this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(listTemp);
           }
+        } else {
+          this[this.curScrollViewName].mescroll.endErr();
         }
         return sroviewObj;
       });
@@ -513,6 +516,17 @@ export default {
         } else {
           item.detail[0].errorReason = res.data;
         }
+      });
+    },
+    salesScanQRCode() {
+      wx.ready(function () {
+        wx.scanQRCode({
+          needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+          scanType: ["qrCode", "barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+          success: function (res) {
+            var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+          }
+        });
       });
     },
   }
