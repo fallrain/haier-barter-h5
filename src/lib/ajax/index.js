@@ -39,7 +39,7 @@ ax.interceptors.response.use((response) => {
     });
   }
   if (!(response.config.params && response.config.params.requestNoToast)) {
-    if (response.data.code !== 1) {
+    if (response.data.code !== 1 && !response.data.isSuccess) {
       Toast.failed(msg || '请求失败');
     }
   }

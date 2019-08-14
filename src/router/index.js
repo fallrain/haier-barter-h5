@@ -37,14 +37,16 @@ router.beforeEach((to, from, next) => {
       url: window.location.href
     }
   ).then((response) => {
-    wx.config({
-      debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-      appId: 'wx2409ae17ef4a9f34', // "wx1514378cc449f87d", // 必填，公众号的唯一标识
-      timestamp, // 必填，生成签名的时间戳
-      nonceStr: timestamp, // 必填，生成签名的随机串
-      signature: response.data.jsSignature, // 必填，签名，见附录1
-      jsApiList: ['scanQRCode'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
-    });
+    if (response.isSuccess) {
+      wx.config({
+        debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+        appId: 'wx2409ae17ef4a9f34', // "wx1514378cc449f87d", // 必填，公众号的唯一标识
+        timestamp, // 必填，生成签名的时间戳
+        nonceStr: timestamp, // 必填，生成签名的随机串
+        signature: response.data.jsSignature, // 必填，签名，见附录1
+        jsApiList: ['scanQRCode'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+      });
+    }
   });
   next();
 });

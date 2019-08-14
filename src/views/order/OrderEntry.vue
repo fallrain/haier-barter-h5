@@ -149,10 +149,12 @@
       :list="returnReasonList"
       v-model="returnReasonVal"
     ></b-pop-check-list>
-    <b-pop-address-list
-      :show.sync="addressPopShow"
-      :list="addressList"
-    ></b-pop-address-list>
+    <div class="orderentry-address">
+      <b-pop-address-list
+        :show.sync="addressPopShow"
+        :list="addressList"
+      ></b-pop-address-list>
+    </div>
     <b-pop
       :show.sync="multBuyPopShow"
     >
@@ -520,6 +522,12 @@ export default {
     color: #1969C6;
     font-size: 24px;
     text-align: center;
+  }
+
+  .orderentry-address {
+    .md-popup-mask {
+      top: 0;
+    }
   }
 
 </style>
