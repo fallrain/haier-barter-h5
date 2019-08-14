@@ -1,5 +1,5 @@
 <template>
-  <div class="b-pop-checkList">
+  <div class="b-pop-checkList1">
     <md-popup
       v-model="popupShow"
       position="top"
@@ -8,7 +8,7 @@
         <ul>
           <div style="background-color:white;height: 50px;">
         <p
-          class="b-pop-checkList-item"
+          class="b-pop-checkList-item1"
            :class="[checkIds.some(v=>v===item.id) && 'active']"
             v-for="(item,index) in list"
             :key="index"
@@ -72,19 +72,9 @@ export default {
   methods: {
     checkboxClick({ id }) {
       debugger
-      // const i = this.checkIds.findIndex(v => id === v);
-      // if (this.type === 'radio') {
-      //   this.checkIds = [id];
-      //   return;
-      // }
-      // if (i === -1) {
-      //   this.checkIds.push(id);
-      // } else {
-      //   this.checkIds.splice(i, 1);
-      // }
       this.checkIds = [];
       this.checkIds.push(id)
-      this.$emit('input', this.checkIds);
+      this.$emit('popButtonClicked', this.checkIds);
       this.popupShow = false;
 
     },
@@ -101,7 +91,7 @@ export default {
 </script>
 
 <style lang="scss">
-  .b-pop-checkList {
+  .b-pop-checkList1 {
     .md-popup-title-bar {
       height: 80px;
 
@@ -122,6 +112,10 @@ export default {
         color: #1969C6;
       }
     }
+     .md-popup-mask{
+    height: 1160px;
+    top: 180px;
+  }
   }
 
   .b-pop-checkList-cnt {
@@ -129,7 +123,7 @@ export default {
     padding-bottom: 24px;
   }
 
-  .b-pop-checkList-item {
+  .b-pop-checkList-item1 {
     padding-left: 24px;
   padding-right: 24px;
   height: 60px;
@@ -175,11 +169,5 @@ export default {
   .md-popup-box{
     margin-top: 170px !important;
   }
-  .md-popup-mask{
-    height: 1160px;
-    top: 180px;
-  }
-  .orderFollowButtonRow {
 
-}
 </style>
