@@ -2,7 +2,7 @@
   <div class="h100vh">
     <b-search-input
       v-model="searchVal"
-      @search="search"
+      @search="searchByCondition"
       placeholder="搜索用户姓名、电话或产品"
     >
       <div class="salesVerification-search-right">
@@ -168,7 +168,8 @@
           <div
             class="salesVerification-qrcode-icon-wrap"
           >
-            <i class="iconfont icon-saomiao"></i>
+            <i class="iconfont icon-saomiao"
+               @click="salesScanQRCode"></i>
           </div>
         </div>
         <p class="common-error mt16" v-show="qrCodeDialog.error">{{qrCodeDialog.errorText}}</p>
@@ -192,7 +193,8 @@ import {
 
 import {
   Dialog,
-  TabBar
+  TabBar,
+  Toast
 } from 'mand-mobile';
 
 export default {
@@ -313,7 +315,9 @@ export default {
         ],
       },
       qrCodeForm: {
-        code: ''
+        code: '',
+        id: '',
+        hmcId: ''
       }
     };
   },
@@ -371,6 +375,9 @@ export default {
         });
       });
     },
+    searchByCondition() {
+      this[this.curScrollViewName].mescroll.triggerDownScroll();
+    },
     search(page) {
       /* 搜索 */
       return this.salesService.getReportEhubProductGroupPage({
@@ -384,7 +391,7 @@ export default {
         gjTime: this.curSearchDate,
         // 直销员产品线编码 todo 接口取
         productLineCode: 'AA',
-        productCode: ''
+        productCode: this.searchVal
       }).then(({ code, data }) => {
         const sroviewObj = {};
         if (code === 1) {
@@ -408,26 +415,30 @@ export default {
                 time: v.gjTime,
                 orderName: v.hmcName,
                 errorReason: v.ehubMsg,
-                errorType: v.ehubExceptionType
+                errorType: v.ehubExceptionType,
+                tip: v.showMsg
               }
             ]
           }));
-          console.log(listTemp);
           if (page.num === 1) {
             this[this.curScrollViewName].list = listTemp;
           } else {
             this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(listTemp);
           }
+        } else {
+          this[this.curScrollViewName].mescroll.endErr();
         }
         return sroviewObj;
       });
     },
-    barCodeDeclare() {
+    barCodeDeclare(detail) {
       /* 销量申报 */
       this.qrCodeDialog.open = true;
       // 重置code
       this.qrCodeForm.code = '';
       this.qrCodeDialog.error = false;
+      this.qrCodeForm.id = detail.id;
+      this.qrCodeForm.hmcId = detail.hmcId;
     },
     showDetail({ item, isShowDetail, index }) {
       /* 显示详情后隐藏其他 */
@@ -441,6 +452,8 @@ export default {
       }).then(({ code, data }) => {
         if (code === 1) {
           item.detail = data.map(v => ({
+            hmcId: v.hmcId,
+            id: `${v.id}`,
             buyName: v.yhName,
             time: v.gjTime,
             orderName: v.hmcName,
@@ -459,6 +472,24 @@ export default {
       if (!this.qrCodeForm.code) {
         this.qrCodeDialog.errorText = '请输入条码';
         this.qrCodeDialog.error = true;
+      } else {
+        if (this.qrCodeForm.code.length == 20 || this.qrCodeForm.code.length == 22) {
+          this.qrCodeDialog.open = false;
+          this.salesService.saveEhubBarCode({
+            hmcId: 'A00123',
+            id: this.qrCodeForm.id,
+            barCode: this.qrCodeForm.code
+          }).then((res) => {
+            if (res.code === 1) {
+              Toast.succeed(res.msg);
+            } else {
+              Toast.failed(res.msg);
+            }
+          });
+        } else {
+          this.qrCodeDialog.errorText = '条码编码不正确，请重新录入';
+          this.qrCodeDialog.error = true;
+        }
       }
     },
     getFailureOrder(itemInfo) {
@@ -475,7 +506,6 @@ export default {
       });
     },
     reCommit(item, index) {
-      console.log(item);
       this.salesService.reportEhubAgain({
         hmcId: 'A00123',
         id: item.detail[0].id,
@@ -486,6 +516,18 @@ export default {
         } else {
           item.detail[0].errorReason = res.data;
         }
+      });
+    },
+    salesScanQRCode() {
+      wx.ready(() => {
+        wx.scanQRCode({
+          needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+          scanType: ['qrCode', 'barCode'], // 可以指定扫二维码还是一维码，默认二者都有
+          success(res) {
+            const result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+            this.qrCodeForm.code = result;
+          }
+        });
       });
     },
   }

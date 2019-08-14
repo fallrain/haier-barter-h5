@@ -21,6 +21,7 @@
         slot="right"
         class="reportInstallDetail-right-text"
         catchtap='newAddress'
+        @click="shwAddressList"
       >
         {{addressList.length?'修改地址':'新增地址'}}
       </span>
@@ -99,6 +100,12 @@
       >提交报装信息
       </button>
     </div>
+    <div class="report-install-address">
+      <b-pop-address-list
+        :show.sync="addressPopShow"
+        :list="addressList"
+      ></b-pop-address-list>
+    </div>
   </div>
 </template>
 <script>
@@ -107,7 +114,8 @@ import {
 } from '@/components/business';
 
 import {
-  BRadioItem
+  BRadioItem,
+  BPopAddressList
 } from '@/components/form';
 import {
   Dialog
@@ -119,6 +127,7 @@ export default {
   components: {
     BDatePicker,
     BRadioItem,
+    BPopAddressList,
     BReportInstallDetailHead
   },
   data() {
@@ -143,13 +152,51 @@ export default {
       isReport: 1, // 是否代报装
       notAllSend: true, // 没有全发送
       productList: [],
-      addressList: [{}],
+      addressList: [{
+        name: '张三',
+        phone: '15000000000',
+        address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
+        tagName: '自己家'
+      },
+        {
+          name: '李四',
+          phone: '15000000000',
+          address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
+          tagName: '办公室'
+        },
+        {
+          name: '王二',
+          phone: '15000000000',
+          address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
+          tagName: '父母家'
+        },
+        {
+          name: '尼古拉斯赵四',
+          phone: '15000000000',
+          address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
+          tagName: '其他'
+        },
+        {
+          name: '莱桑尼丝铁柱',
+          phone: '15000000000',
+          address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
+          tagName: '其他'
+        },
+        {
+          name: '罗伯特英子',
+          phone: '15000000000',
+          address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
+          tagName: '其他'
+        }],
       orderNo: '',
       productListTemp: [],
       flowStatus: '', // 待报装、已报装。。。。
       canUpdateAddress: false, // 是否可修改地址
       itemIndex: undefined, // 待修改的列表序号
-      addStatus: ''// 是否是手动录单，此参数与录单员参数名保持一致
+      addStatus: '',// 是否是手动录单，此参数与录单员参数名保持一致
+      // 选择收货人列表pop show
+      addressPopShow: false,
+      // 收货人地址pop列表
     };
   },
   created() {
@@ -177,9 +224,9 @@ export default {
       // 已经报装 报装异常不可修改地址
       this.canUpdateAddress = !!(option.flowStatus !== '1' && option.flowStatus !== '2');
       this.parentPage = option.parentPage;
-      this.addressList = [{
-        mobile: userInfo.mobile
-      }];
+      // this.addressList = [{
+      //   mobile: userInfo.mobile
+      // }];
     },
     getProductList() {
       /* 获取产品列表 */
@@ -306,11 +353,15 @@ export default {
       } else {
         this.jump();
       }
-    }
+    },
+    shwAddressList() {
+      /* 展示选择用户pop */
+      this.addressPopShow = true;
+    },
   }
 };
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 
   .reportInstallDetail-head {
     padding: 24px;
@@ -441,6 +492,12 @@ export default {
 
   .reportInstallDetail-product-item-disabled {
     color: #999;
+  }
+
+  .report-install-address {
+    .md-popup-mask {
+      top: 0;
+    }
   }
 
 </style>

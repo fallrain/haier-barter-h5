@@ -42,9 +42,10 @@
             v-if="type==='normal'"
             type="button"
             class="common-btn-primary"
-            @click="barCodeClick(data.detail)"
+            @click="barCodeClick(detail)"
           >条码申报
           </button>
+          <p class="mt16" v-if="detail.tip"><span>温馨提示：</span>{{detail.tip}}</p>
         </li>
       </ul>
     </div>

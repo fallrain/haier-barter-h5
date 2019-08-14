@@ -314,6 +314,8 @@ export default {
 
           }
           // this.dataList = res.data.result;
+        } else {
+          this[this.curScrollViewName].mescroll.endErr();
         }
         return sroviewObj;
 
