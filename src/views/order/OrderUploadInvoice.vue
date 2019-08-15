@@ -1,11 +1,11 @@
 <template>
   <div class="orderUploadInvoice">
     <div class="orderUploadInvoice-head">上传产品购机凭证</div>
-    <b-radio-item
+    <!-- <b-radio-item
       :inline="true"
       :list="uploadTypes"
       v-model="uploadType"
-    ></b-radio-item>
+    ></b-radio-item> -->
     <div class="orderUploadInvoice-cnt">
       <b-product-mult-upload
         :products="products"

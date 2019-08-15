@@ -12,7 +12,7 @@
           @click="headSwitch(index)"
         >{{item.name}}
         <i class="iconfont icon-jiantou9" v-show="!item.isActive"></i>
-        <i class="iconfont icon-xialaactive-copy" v-show="item.isActive"></i>
+        <i class="iconfont2 icon-xialaactive-copy" v-show="item.isActive"></i>
         </p>
       </div>
     </div>
@@ -426,8 +426,13 @@ export default {
   .iconfont{
     color: #666666
   }
-  iconfont icon-xialaactive-copy{
-    color: #1969c6 !important
+  .iconfont2{
+    color: #1969c6 ;
+   font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   }
 
 }

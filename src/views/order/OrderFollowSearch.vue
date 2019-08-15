@@ -1,16 +1,12 @@
 <template>
   <div class="page-class">
-    <div
-      class="notice-class"
-      v-show="noticeShow"
+    <div class="md-example-child md-example-child-notice-bar md-example-child-notice-bar-4">
+    <md-notice-bar
+      mode="closable"
+      :time="6000"
     >
-      <p class="notice-p">您有三笔超过24小时未处理的订单，请及时跟进</p>
-      <img
-        src="@/assets/images/orderFollow-up/close@3x.png"
-        alt=""
-        class="notice-image"
-        @click="noticeClose"
-      >
+      您有三笔超过24小时未处理的订单，请及时跟进
+    </md-notice-bar>
     </div>
     <div class="uni-form-item uni-column search-view">
       <input
@@ -104,7 +100,7 @@ import {
   ScrollView,
   ScrollViewRefresh,
   ScrollViewMore,
-  Toast
+  Toast,NoticeBar
 } from "mand-mobile";
 import {BPopSortType,BPopButton} from '@/components/form';
 import {BOrderFollowItem} from '@/components/orderFollow'
@@ -118,13 +114,12 @@ export default {
     [ScrollViewRefresh.name]: ScrollViewRefresh,
     [ScrollViewMore.name]: ScrollViewMore,
     [Toast.name]: Toast,
+    [NoticeBar.name]: NoticeBar,
     BPopSortType,BPopButton,BOrderFollowItem
   },
   data() {
     return {
-      noticeShow: false,
       pageNum:1,
-      // detailShow: false,
       searchWord: "",
       show: false,
       isFinished:true,
@@ -266,9 +261,7 @@ export default {
       this.checkedButtonId = val;
       this.searchData({ num: 0,size: 10})
     },
-    noticeClose() {
-      this.noticeShow = false;
-    },
+
     searchData(page) {
       return this.orderService
         .queryOrderFollowlList(
@@ -451,26 +444,6 @@ export default {
   right: 20px;
   top: 10px;
 }
-.notice-class {
-  height: 64px;
-  background-color: #fdf0ce;
-  color: #e89748;
-  font-size: 24px;
-}
-
-.notice-p {
-  line-height: 64px;
-  margin-left: 24px;
-}
-
-.notice-image {
-  width: 32px;
-  height: 32px;
-  position: absolute;
-  right: 24px;
-  top: 18px;
-}
-
 .search-image {
   width: 32px;
   height: 32px;
@@ -517,6 +490,10 @@ export default {
 .page-class {
   background-color: #f5f5f5;
   height: 1330px;
+  .md-notice-bar{
+    color:#E89748 ;
+    background-color: #FDF0CE ;
+  }
 }
 .md-example-child-tab-bar-4 {
   position: fixed;
@@ -532,11 +509,9 @@ export default {
     height: 100%;
     // flex: 1;
   }
-
   .text {
     font-size: 20px;
   }
-
   .md-tab-bar-inner {
     width: 750px !important;
   }
@@ -546,8 +521,8 @@ export default {
   }
 }
 .iconfont1{
-  font-family: "iconfont" !important;
-   font-size: 45px;
+ font-family: "iconfont" !important;
+  font-size: 45px;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
