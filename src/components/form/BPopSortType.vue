@@ -1,5 +1,5 @@
 <template>
-  <div class="b-pop-checkList">
+  <div class="b-pop-checkList1">
     <md-popup
       v-model="popupShow"
       position="top"
@@ -14,7 +14,7 @@
       <div class="b-pop-checkList-cnt">
         <ul>
           <li
-            class="b-pop-checkList-item1"
+            class="b-pop-checkList-item2"
             :class="[checkIds.some(v=>v===item.id) && 'active']"
             v-for="(item,index) in list"
             :key="index"
@@ -82,36 +82,19 @@ export default {
   },
   methods: {
     checkboxClick({ id }) {
-      // const i = this.checkIds.findIndex(v => id === v);
-      // if (this.type === 'radio') {
-      //   this.checkIds = [id];
-      //   return;
-      // }
-      // if (i === -1) {
-      //   this.checkIds.push(id);
-      // } else {
-      //   this.checkIds.splice(i, 1);
-      // }
       this.checkIds = [];
       this.checkIds.push(id)
-      this.$emit('input', this.checkIds);
+      debugger
+      this.$emit('checkClick', this.checkIds);
       this.popupShow = false;
 
     },
-    chooseGiftClick(item) {
-      this.$emit('chooseGift', item);
-    },
-    confirm() {
-      /* 确定 */
-      this.$emit('input', this.checkIds);
-      this.popupShow = false;
-    }
   }
 };
 </script>
 
 <style lang="scss">
-  .b-pop-checkList {
+  .b-pop-checkList1 {
     .md-popup-title-bar {
       height: 80px;
 
@@ -132,6 +115,10 @@ export default {
         color: #1969C6;
       }
     }
+     .md-popup-mask{
+    height: 1160px;
+    top: 180px;
+  }
   }
 
   .b-pop-checkList-cnt {
@@ -139,7 +126,7 @@ export default {
     padding-bottom: 24px;
   }
 
-  .b-pop-checkList-item1 {
+  .b-pop-checkList-item2 {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -177,8 +164,5 @@ export default {
   .md-popup-box{
     margin-top: 170px !important;
   }
-  .md-popup-mask{
-    height: 1160px;
-    top: 180px;
-  }
+
 </style>

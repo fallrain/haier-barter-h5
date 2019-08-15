@@ -3,12 +3,12 @@
     class="b-order-product-item"
   >
     <div class="b-order-product-item-head">
-      <span class="b-order-product-item-head-name">{{data.name}}</span>
+      <span class="b-order-product-item-head-name">{{data.productBrandCN}}/{{data.productCategoryName}}，{{data.productModel}}</span>
       <div>
         <input
           class="b-order-product-item-price"
           type="text"
-          v-model="data.price"
+          v-model="data.productPrice"
         ><span class="b-order-product-item-price-unit">元</span>
       </div>
 

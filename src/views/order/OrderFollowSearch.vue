@@ -1,16 +1,12 @@
 <template>
   <div class="page-class">
-    <div
-      class="notice-class"
-      v-show="noticeShow"
+    <div class="md-example-child md-example-child-notice-bar md-example-child-notice-bar-4">
+    <md-notice-bar
+      mode="closable"
+      :time="4000"
     >
-      <p class="notice-p">您有三笔超过24小时未处理的订单，请及时跟进</p>
-      <img
-        src="@/assets/images/orderFollow-up/close@3x.png"
-        alt=""
-        class="notice-image"
-        @click="noticeClose"
-      >
+      您有三笔超过24小时未处理的订单，请及时跟进
+    </md-notice-bar>
     </div>
     <div class="uni-form-item uni-column search-view">
       <input
@@ -27,29 +23,6 @@
       >
       <p class="orderFollowButton">手动录单</p>
     </div>
-
-    <!-- <div class="bar-v">
-      <div
-        class="bar-class"
-        v-for="(item,index) in headList"
-        :key="index"
-      >
-        <p class="order-span" v-bind:class="{active:item.isActive}" @click="headSwitch(index)">{{item.name}}</p>
-        <img
-          v-bind:src="item.activeIcon"
-          class="xialaimage"
-        >
-      </div>
-    </div> -->
-    <!-- <b-pop-sort-type
-    :show.sync="sortShow"
-      :list="sortList"
-      >
-    </b-pop-sort-type>
-    <b-pop-button
-    :show.sync="scenarioShow"
-    :list="scenarioList"
-    ></b-pop-button> -->
    <div
         id="scrollView"
         ref="scrollView"
@@ -58,6 +31,9 @@
       >
       <b-order-follow-item
             :list="scrollView.list"
+            @checkClick="checkClicked"
+            @popButtonClicked="buttonClicked"
+            @updateOrderType="updateOrderType"
       ></b-order-follow-item>
    </div>
    <div
@@ -68,6 +44,7 @@
       >
       <b-order-follow-item
             :list="scrollView.list"
+
       ></b-order-follow-item>
    </div>
    <div
@@ -78,6 +55,7 @@
       >
       <b-order-follow-item
             :list="scrollView.list"
+
       ></b-order-follow-item>
    </div>
    <div
@@ -88,92 +66,9 @@
       >
       <b-order-follow-item
             :list="scrollView.list"
+
       ></b-order-follow-item>
    </div>
-        <!-- <div
-          class="label-class"
-          v-for="(data,index) in scrollView.list"
-          :key="index"
-        > -->
-
-          <!-- <img
-            src="@/assets/images/orderFollow-up/yizhanzhujia@3x.png"
-            class="labelImage"
-          >
-          <div class="row-class">
-            <span class="label-span">{{data.userName}}</span>
-            <span
-              class="sex-class"
-              v-show="data.userSex == '1'"
-            >先生</span>
-            <span
-              class="sex-class"
-              v-show="data.userSex == '2'"
-            >女士</span>
-            <span class="sex-class">
-              <img
-                src="@/assets/images/orderFollow-up/tel@3x.png"
-                class="telImage"
-              >
-            </span>
-            <span class="sex-class">{{data.userMobile}}</span>
-          </div>
-          <div class="row-class">
-            <img
-              src="@/assets/images/orderFollow-up/Haier@3x.png"
-              class="brandImage"
-              v-show="data.recordMode =='Haie'"
-            >
-            <img
-              src="@/assets/images/orderFollow-up/Casarte@3x.png"
-              class="brandImage"
-              v-show="data.recordMode =='Casarte'"
-            >
-            <span class="hand-class">{{data.userS}}</span>
-            <span class="handred-class">{{data.tardinessS}}</span>
-            <span class="handgray-class">{{data.flowS}}</span>
-          </div>
-          <div class="row-class">
-            <img
-              src="@/assets/images/orderFollow-up/time@3x.png"
-              class="timeImage"
-            >
-            <span class="time-label">{{data.updatedTime}}</span>
-            <span class="information-class">详细信息</span>
-            <img
-              src="@/assets/images/orderFollow-up/xialablue@3x.png"
-              class="information-xiala"
-              @click="detailHide(index)"
-            >
-          </div>
-          <div
-            class="information-p"
-            v-show="data.detailShow"
-          >
-            <p>意向产品：bingxiang</p>
-            <p>海尔/8年</p>
-          </div>
-          <div class="bottom-class">
-            <img
-              src="@/assets/images/orderFollow-up/dian@3x.png"
-              class="dian-Class"
-              @click="showMore(index)"
-            >
-            <div
-              v-show="data.show"
-              class="show-class"
-            >
-              <p
-                v-for="(item,index) in data.showList"
-                :key="index"
-                @click="updateOrderType(item.id)"
-                class="show-p"
-              >{{item.name}}</p>
-            </div>
-            <p class="bottom-button">成交录单</p>
-            <p class="bottom-button">发券</p>
-          </div>
-        </div> -->
   <div style="height:60px"></div>
   <div class="md-example-child md-example-child-tabs md-example-child-tab-bar-4">
     <md-tab-bar
@@ -184,7 +79,10 @@
        <template slot="item" slot-scope="{ item }">
         <div class="custom-item">
           <div class="icon">
-            <md-icon :name="item.icon" />
+            <i class="iconfont1 icon-picGrid" v-show="item.name == 0"></i>
+            <i class="iconfont1 icon-picGrid1" v-show="item.name == 1"></i>
+            <i class="iconfont1 icon-picGrid2" v-show="item.name == 2"></i>
+            <i class="iconfont1 icon-picGrid3" v-show="item.name == 3"></i>
           </div>
           <div class="text">
             <span v-text="item.label"></span>
@@ -202,7 +100,7 @@ import {
   ScrollView,
   ScrollViewRefresh,
   ScrollViewMore,
-  Toast
+  Toast,NoticeBar
 } from "mand-mobile";
 import {BPopSortType,BPopButton} from '@/components/form';
 import {BOrderFollowItem} from '@/components/orderFollow'
@@ -216,42 +114,44 @@ export default {
     [ScrollViewRefresh.name]: ScrollViewRefresh,
     [ScrollViewMore.name]: ScrollViewMore,
     [Toast.name]: Toast,
+    [NoticeBar.name]: NoticeBar,
     BPopSortType,BPopButton,BOrderFollowItem
   },
   data() {
     return {
-      noticeShow: false,
       pageNum:1,
-      // detailShow: false,
       searchWord: "",
       show: false,
       isFinished:true,
       curTab: 0,
+      handleList:[],
       items: [
         {
           name: 0,
           label: "全部",
-          icon: "home"
+          icon: "quanbu"
         },
         {
           name: 1,
           label: "跟进中",
-          icon: "user"
+          icon: "genjin"
         },
         {
           name: 2,
           label: "异常",
-          icon: "user"
+          icon: "yichang"
         },
         {
           name: 3,
           label: "已成交",
-          icon: "user"
+          icon: "chengjiao"
         }
       ],
       preIndex:'',
       currentScrollView:{},
       currentList:[],
+      checkedsortId: "",
+      checkedButtonId: "",
        // 订单跟进全部
       scrollView: {
         mescroll: null,
@@ -353,20 +253,15 @@ export default {
       });
     },
 
-
-    preparation() {},
-
-    scenarioClick(item) {
-      this.scenarioType = item.id;
-      this.scenarioBlueShow = false;
-      this.maskerHidden();
-      this.searchData();
+    checkClicked(val){
+      this.checkedsortId = val;
+      this.searchData({ num: 0,size: 10})
+    },
+    buttonClicked(val){
+      this.checkedButtonId = val;
+      this.searchData({ num: 0,size: 10})
     },
 
-
-    noticeClose() {
-      this.noticeShow = false;
-    },
     searchData(page) {
       return this.orderService
         .queryOrderFollowlList(
@@ -393,7 +288,6 @@ export default {
         .then(res => {
           const sroviewObj = {};
         if (res.code === 1) {
-
           const {
             result,
             pages
@@ -423,15 +317,58 @@ export default {
     anylizeData(curList) {
       curList.forEach(item => {
         item.showList = [];
-        this.$set(item, "detailShow", false);
+         this.$set(item, "detailShow", false);
         this.$set(item, "show", false);
-        if (item.userStatus === 1) {
+        if(this.curTab === 0){
+         if (item.userStatus === 1) {
           item.userS = "高潜";
-          item.showList.push({ id: "2", name: "取消高潜" });
+          item.showList.push({ id: "2", name: "取消高潜" },{id:'3',name:'暂不跟进'});
         } else {
           item.userS = "";
-          item.showList.push({ id: "6", name: "设为高潜" });
+          item.showList.push({ id: "6", name: "设为高潜" },{id:'3',name:'暂不跟进'});
         }
+      }else if(this.curTab === 1){
+        if (item.userStatus === 1) {
+          item.userS = "高潜";
+          item.showList.push({ id: "2", name: "取消高潜" },{id:'3',name:'暂不跟进'});
+        } else {
+          item.userS = "";
+          item.showList.push({ id: "6", name: "设为高潜" },{id:'3',name:'暂不跟进'});
+        }
+      }else if(this.curTab === 3){
+          item.showList.push({ id: "", name: "重新录单" },{id:'',name:'直接取消'});
+      }else{
+
+      }
+
+      if(item.orderNo !=''){
+         item.showDetail = true
+        if(item.flowStatus != 2){
+          item.productList = []
+         this.orderService.queryOrderInfoByOrderNo({},{orderNo:item.orderNo}).then(response =>{
+              if(response.code === 1){
+                  const resData  = response.data
+                  if(resData.orderDetailDtoList.length !== 0){
+                    item.productList = resData.orderDetailDtoList
+                    item.productList.forEach(val =>{
+                      if(val.productBrand == 'haier'){
+                        val.productBrandCN = '海尔'
+                      }else{
+                        val.productBrandCN ='卡萨帝'
+                      }
+                    })
+                  }
+              }
+          })
+        }else{
+          if(item.add1 == ''){
+            item.showDetail = false
+          }
+        }
+      }else{
+        item.showDetail = false
+      }
+
         if (item.tardinessStatus === 1) {
           item.tardinessS = "已拖期";
         } else {
@@ -449,7 +386,8 @@ export default {
 
     },
     fuzzySearch() {
-
+      const page = { num: 0,
+          size: 10}
       this.orderService
         .fuzzySearchOrderFollowList(
           {},
@@ -461,30 +399,29 @@ export default {
           }
         )
         .then(res => {
-          console.log("tag", "res");
-          this.dataList = res.data.result;
-          this.anylizeData();
-          debugger;
+           const sroviewObj = {};
+        if (res.code === 1) {
+          const {
+            result,
+            pages
+          } = res.data;
+          sroviewObj.pages = pages;
+          sroviewObj.result = result;
+          if (result && result.length > 0) {
+           const curList = result
+           this.anylizeData(curList)
+           if (page.num === 1) {
+              this[this.curScrollViewName].list = this.currentList;
+            } else {
+              this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(this.currentList);
+            }
+          }
+        }
+        return sroviewObj;
         });
     },
     updateOrderType(type) {
-      this.orderService
-        .updateOrderFollowByType(
-          {},
-          {
-            orderFollowId: this.ID,
-            type: type,
-            remark: ""
-          }
-        )
-        .then(res => {
-          if (res.code === 1) {
-            Toast.succeed(res.msg);
-            this.searchData();
-          } else {
-            Toast.failed(res.msg);
-          }
-        });
+        this.searchData({ num: 0,size: 10})
     },
 
   },
@@ -492,26 +429,21 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.notice-class {
-  height: 64px;
-  background-color: #fdf0ce;
-  color: #e89748;
-  font-size: 24px;
-}
-
-.notice-p {
-  line-height: 64px;
-  margin-left: 24px;
-}
-
-.notice-image {
-  width: 32px;
-  height: 32px;
+.orderFollowButton {
+  padding-left: 24px;
+  padding-right: 24px;
+  height: 60px;
+  line-height: 60px;
+  text-align: center;
+  color: #1969c6;
+  border: 1px #1969c6 solid;
+  font-size: 28px;
+  width: 180px;
+  border-radius: 30px;
   position: absolute;
-  right: 24px;
-  top: 18px;
+  right: 20px;
+  top: 10px;
 }
-
 .search-image {
   width: 32px;
   height: 32px;
@@ -537,110 +469,6 @@ export default {
   font-size: 28px;
   padding-right: 50px !important;
 }
-
-.orderFollowButton {
-  padding-left: 24px;
-  padding-right: 24px;
-  height: 60px;
-  line-height: 60px;
-  text-align: center;
-  color: #1969c6;
-  border: 1px #1969c6 solid;
-  font-size: 28px;
-  width: 180px;
-  border-radius: 30px;
-  position: absolute;
-  right: 20px;
-  top: 10px;
-}
-
-.orderFollowButtonRow {
-  padding-left: 24px;
-  padding-right: 24px;
-  height: 60px;
-  line-height: 60px;
-  text-align: center;
-  color: #666666;
-  border: 1px #cccccc solid;
-  font-size: 24px;
-  // width: 180px;
-  border-radius: 30px;
-  float: left;
-  margin-top: 10px;
-  margin-left: 24px;
-}
-
-.bottom-button {
-  padding-left: 24px;
-  padding-right: 24px;
-  height: 60px;
-  line-height: 60px;
-  text-align: center;
-  color: #1969c6;
-  border: 1px #1969c6 solid;
-  font-size: 24px;
-  // width: 180px;
-  border-radius: 30px;
-  float: right;
-  margin-top: 5px;
-  margin-left: 10px;
-}
-.bar-class .order-span.active{
-  color:#1969c6
-}
-.order-span {
-  display: inline-block;
-  color: #666666;
-  font-size: 28px;
-  padding-left: 56px;
-  line-height: 72px;
-}
-.order-span-blue {
-  display: inline-block;
-  color: #1969c6;
-  font-size: 28px;
-  padding-left: 56px;
-  line-height: 72px;
-}
-
-.xialaimage {
-  width: 36px;
-  height: 36px;
-  margin-top: 20px;
-  position: absolute;
-  margin-left: 14px;
-}
-
-.brandImage {
-  height: 36px;
-  width: 90px;
-}
-.telImage {
-  height: 32px;
-  width: 32px;
-  margin-left: 10px;
-  padding-bottom: 2px;
-  top: 0;
-}
-.labelImage {
-  height: 72px;
-  width: 56px;
-  float: right;
-  right: 24px;
-}
-.timeImage {
-  width: 32px;
-  height: 32px;
-  position: absolute;
-  margin-top: 5px;
-}
-
-.time-label {
-  color: #bbbbbb;
-  font-size: 28px;
-  margin-left: 40px;
-}
-
 .bar-class {
   height: 72px;
   width: 250px;
@@ -653,120 +481,20 @@ export default {
   height: 72px;
   margin-top: 15px;
 }
-
-.masker {
-  width: 100%;
-  background-color: #9999;
-  height: 1200px;
-  z-index: 10;
-  position: absolute;
-  opacity: 50%;
-}
-
-.sort-class {
-  color: #333333;
-  font-size: 28px;
-  background-color: white;
-  height: 80px;
-  line-height: 80px;
-  padding-left: 24px;
-  border-bottom: 1px solid #eeeeee;
-}
-
-.select-sort {
-  color: #1969c6;
-  font-size: 28px;
-  background-color: white;
-  height: 80px;
-  line-height: 80px;
-  padding-left: 24px;
-  border-bottom: 1px solid #eeeeee;
-}
-
-.label-class {
-  margin-top: 16px;
-  // height: 290px;
-  background-color: white;
-  padding: 24px;
-}
-
-.label-span {
-  // display: inline;
-  color: #333333;
-  font-size: 36px;
-}
-
-.sex-class {
-  color: #999999;
-  font-size: 28px;
-  margin-left: 10px;
-}
-
-.hand-class {
-  color: #f5a623;
-  font-size: 24px;
-  margin-left: 16px;
-}
-.handred-class {
-  color: #ff001f;
-  font-size: 24px;
-  margin-left: 16px;
-}
-.handgray-class {
-  color: #cccccc;
-  font-size: 24px;
-  margin-left: 16px;
-}
-
-.information-class {
-  color: #1969c6;
-  font-size: 28px;
-  margin-left: 230px;
-}
-.label-class{
-  position: relative;
-}
-.information-xiala {
-  width: 36px;
-  height: 36px;
-  margin-top: 5px;
-  position: absolute;
-  margin-left: 14px;
-}
-
-.information-p {
-  color: #666666;
-  font-size: 28px;
-  margin-top: 10px;
-  // line-height: 40px;
-  p {
-    line-height: 50px;
-    height: 50px;
-  }
-}
-
 .bottom-class {
   margin-top: 20px;
   padding-top: 15px;
   height: 80px;
   border-top: 1px solid #eeeeee;
 }
-
-.dian-Class {
-  width: 36px;
-  height: 6px;
-  margin-top: 30px;
-}
-
 .page-class {
   background-color: #f5f5f5;
   height: 1330px;
+  .md-notice-bar{
+    color:#E89748 ;
+    background-color: #FDF0CE ;
+  }
 }
-
-.app-container {
-  background-color: red !important;
-}
-
 .md-example-child-tab-bar-4 {
   position: fixed;
   bottom: 0;
@@ -781,11 +509,9 @@ export default {
     height: 100%;
     // flex: 1;
   }
-
   .text {
     font-size: 20px;
   }
-
   .md-tab-bar-inner {
     width: 750px !important;
   }
@@ -794,17 +520,11 @@ export default {
     padding: 0 !important;
   }
 }
-.row-class {
-  margin-bottom: 10px;
-}
-.show-class {
-  position: absolute;
-  height: 140px;
-  width: 240px;
-}
-.show-p {
-  color: #666666;
-  font-size: 28px;
-  text-align: center;
+.iconfont1{
+ font-family: "iconfont" !important;
+  font-size: 45px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 </style>

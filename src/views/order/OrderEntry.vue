@@ -22,8 +22,7 @@
             </button>
           </div>
           <p class="orderEntry-user-address">
-            默认地址：山东省青岛市市南区劲松七路左岸风
-            度小区12号楼2单元602
+            {{consignee.address}}
           </p>
         </div>
         <div v-else>
@@ -149,10 +148,12 @@
       :list="returnReasonList"
       v-model="returnReasonVal"
     ></b-pop-check-list>
-    <b-pop-address-list
-      :show.sync="addressPopShow"
-      :list="addressList"
-    ></b-pop-address-list>
+    <div class="orderentry-address">
+      <b-pop-address-list
+        :show.sync="addressPopShow"
+        :list="addressList"
+      ></b-pop-address-list>
+    </div>
     <b-pop
       :show.sync="multBuyPopShow"
     >
@@ -192,6 +193,7 @@ import {
 import {
   BMultbuyCheck
 } from '@/components/business';
+import { Toast } from 'mand-mobile';
 
 export default {
   name: 'OrderEntry',
@@ -399,16 +401,53 @@ export default {
         }
       ],
       // 参与人选中id
-      multBuyParticipantCheckIds: []
+      multBuyParticipantCheckIds: [],
+      orderNo:''
     };
   },
   computed: {
-    haveConsignee() {
-      /* 存在收货人信息 */
-      return this.consignee && JSON.stringify(this.consignee) !== '{}';
-    }
+
+  },
+  created(){
+    debugger
+    this.orderService.generateOrderNo({},{recordModel:'Haier'}).then(res =>{
+        if(res.code === 1){
+          this.orderNo = res.data
+          this.orderNo = 'Z15645424968056668'
+          this.orderService.queryOrderInfoByOrderNo({},{orderNo:this.orderNo}).then(response =>{
+              if(response.code === 1){
+                  const resData  = response.data
+                  this.shopName = resData.storeName
+                  this.consignee.name = resData.userName
+                  this.consignee.phone = resData.userPhone
+                  this.consignee.sex = resData.userSex
+                  this.consignee.address = resData.dispatchProvince + resData.dispatchCity + resData.dispatchArea + resData.dispatchAdd
+                  this.buyDate = resData.buyTime
+                  this.orderType = resData.orderType
+                  this.haveConsignee()
+                  if(resData.orderDetailDtoList.length !== 0){
+                    this.productList = resData.orderDetailDtoList
+                    this.productList.forEach(item =>{
+                      if(item.productBrand == 'haier'){
+                        item.productBrandCN = '海尔'
+                      }else{
+                        item.productBrandCN ='卡萨帝'
+                      }
+                    })
+                  }
+              }
+          })
+        }else{
+         Toast.failed(res.msg);
+        }
+
+    })
   },
   methods: {
+     haveConsignee() {
+      /* 存在收货人信息 */
+      return this.consignee && JSON.stringify(this.consignee) !== '{}';
+    },
     chooseGift() {
       /* 选择礼品 */
       this.chooseGiftPopShow = true;
@@ -428,6 +467,9 @@ export default {
         // 展示套购发起人
         this.multBuyPopShow = true;
       }
+    },
+    saveOrder(){
+
     }
   }
 };
@@ -520,6 +562,12 @@ export default {
     color: #1969C6;
     font-size: 24px;
     text-align: center;
+  }
+
+  .orderentry-address {
+    .md-popup-mask {
+      top: 0;
+    }
   }
 
 </style>

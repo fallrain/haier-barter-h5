@@ -415,7 +415,8 @@ export default {
                 time: v.gjTime,
                 orderName: v.hmcName,
                 errorReason: v.ehubMsg,
-                errorType: v.ehubExceptionType
+                errorType: v.ehubExceptionType,
+                tip: v.showMsg
               }
             ]
           }));
@@ -458,7 +459,6 @@ export default {
             orderName: v.hmcName,
             errorReason: v.ehubMsg
           }));
-          debugger;
         }
       });
       if (isShowDetail) {
@@ -525,6 +525,7 @@ export default {
           scanType: ['qrCode', 'barCode'], // 可以指定扫二维码还是一维码，默认二者都有
           success(res) {
             const result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+            this.qrCodeForm.code = result;
           }
         });
       });

@@ -10,21 +10,22 @@
           class="order-span"
           v-bind:class="{active:item.isActive}"
           @click="headSwitch(index)"
-        >{{item.name}}</p>
-        <img
-          v-bind:src="item.activeIcon"
-          class="xialaimage"
-        >
+        >{{item.name}}
+        <i class="iconfont icon-jiantou9" v-show="!item.isActive"></i>
+        <i class="iconfont2 icon-xialaactive-copy" v-show="item.isActive"></i>
+        </p>
       </div>
     </div>
     <b-pop-sort-type
       :show.sync="sortShow"
       :list="sortList"
+      @checkClick="checkClicked"
     >
     </b-pop-sort-type>
     <b-pop-button
       :show.sync="scenarioShow"
       :list="scenarioList"
+      @popButtonClicked="buttonClicked"
     ></b-pop-button>
     <div
       class="label-class"
@@ -52,9 +53,7 @@
             class="telImage"
           >
         </span>
-        <span class="sex-class-tel"> <a
-            :href="'tel:' + followItem.userMobile"
-          >{{followItem.userMobile}}</a></span>
+        <span class="sex-class-tel"> <a :href="'tel:' + followItem.userMobile">{{followItem.userMobile}}</a></span>
       </div>
       <div class="row-class">
         <img
@@ -77,19 +76,31 @@
           class="timeImage"
         >
         <span class="time-label">{{followItem.updatedTime}}</span>
-        <span class="information-class">详细信息</span>
-        <img
-          src="@/assets/images/orderFollow-up/xialablue@3x.png"
-          class="information-xiala"
-          @click="detailHide(index)"
-        >
+        <span v-show="followItem.showDetail">
+          <span class="information-class">详细信息</span>
+          <img
+            src="@/assets/images/orderFollow-up/xialablue@3x.png"
+            class="information-xiala"
+            @click="detailHide(index)"
+          ></span>
+
+      </div>
+      <div
+        v-show="followItem.detailShow && followItem.showDetail"
+        v-for="(item,index) in followItem.productList"
+        :key="index"
+      >
+        <p>
+          <span class="orderFollowItem-span">{{item.productBrandCN}}/{{item.productCategoryName}}，{{item.productModel}}</span>
+          <span class="orderFollowItem-span-blue">￥19999.00</span>
+        </p>
       </div>
       <div
         class="information-p"
-        v-show="followItem.detailShow"
+        v-show="followItem.detailShow && (followItem.add1 != '')"
       >
-        <p>意向产品：bingxiang</p>
-        <p>海尔/8年</p>
+        <p>意向产品：{{followItem.add1}}</p>
+        <p>{{followItem.add2}}</p>
       </div>
       <div class="bottom-class">
         <img
@@ -99,13 +110,16 @@
         >
         <p class="bottom-button">成交录单</p>
         <p class="bottom-button">发券</p>
-        <div class="demo" v-show="followItem.show">
+        <div
+          class="demo"
+          v-show="followItem.show"
+        >
           <div class="out"></div>
           <div class="in"></div>
-           <p
+          <p
             v-for="(item,index) in followItem.showList"
             :key="index"
-            @click="updateOrderType(item.id)"
+            @click="updateOrderType(item.id,followItem)"
             class="show-p"
           >{{item.name}}</p>
         </div>
@@ -138,6 +152,10 @@ export default {
       type: Array,
       require: true
     }
+    // handleList:{
+    //   type: Array,
+    //   require: true
+    // }
   },
   data() {
     return {
@@ -149,6 +167,8 @@ export default {
       scenarioType: "",
       show: false,
       showList: [],
+      checkedsortId: "",
+      checkedButtonId: "",
       ID: "",
       headList: [
         {
@@ -242,16 +262,30 @@ export default {
       }
     },
     preparation() {},
+    checkClicked(val){
+      debugger
+      this.checkedsortId = val[0];
+      for (var i = 0; i < this.headList.length; i++) {
+          this.headList[i].isActive = false;
+      }
+      this.$emit('checkClick', this.checkedsortId);
+    },
+    buttonClicked(val){
+      this.checkedButtonId = val[0];
+      for (var i = 0; i < this.headList.length; i++) {
+          this.headList[i].isActive = false;
+      }
+      this.$emit('popButtonClicked', this.checkedButtonId);
+    },
     showMore(index) {
       console.log("currentList", this.list);
-      debugger;
       this.ID = this.list[index].id;
       this.$set(this.list[index], "show", !this.list[index].show);
     },
     detailHide(index) {
       this.$set(this.list[index], "detailShow", !this.list[index].detailShow);
     },
-    updateOrderType(type) {
+    updateOrderType(type, item) {
       this.orderService
         .updateOrderFollowByType(
           {},
@@ -263,8 +297,14 @@ export default {
         )
         .then(res => {
           if (res.code === 1) {
+            console.log("this.list", this.list);
+            for (var i = 0; i < this.list.length; i++) {
+              if (item === this.list[i]) {
+                this.$set(this.list[i], "show", false);
+              }
+            }
             Toast.succeed(res.msg);
-            this.searchData();
+            this.$emit('updateOrderType',type)
           } else {
             Toast.failed(res.msg);
           }
@@ -383,6 +423,18 @@ export default {
   width: 250px;
   float: left;
   position: relative;
+  .iconfont{
+    color: #666666
+  }
+  .iconfont2{
+    color: #1969c6 ;
+   font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  }
+
 }
 
 .bar-v {
@@ -413,7 +465,7 @@ export default {
   color: #999999;
   font-size: 28px;
   margin-left: 10px;
-  a{
+  a {
     color: #999999;
   }
 }
@@ -525,9 +577,8 @@ export default {
   height: 80px;
   line-height: 80px;
   white-space: 200px;
-  border-bottom: 1px solid #999999
+  border-bottom: 1px solid #999999;
 }
-
 
 .demo {
   width: 200px;
@@ -556,5 +607,14 @@ export default {
   border-bottom-color: #fff; /*这里的颜色一定要跟demo背景颜色一样*/
   top: -35px;
   left: 21%;
+}
+.orderFollowItem-span-blue {
+  color: #1969c6;
+  font-size: 28px;
+  float: right;
+}
+.orderFollowItem-span {
+  color: #666666;
+  font-size: 28px;
 }
 </style>
