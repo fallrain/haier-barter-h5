@@ -3,7 +3,7 @@
     <div class="md-example-child md-example-child-notice-bar md-example-child-notice-bar-4">
     <md-notice-bar
       mode="closable"
-      :time="6000"
+      :time="4000"
     >
       您有三笔超过24小时未处理的订单，请及时跟进
     </md-notice-bar>
