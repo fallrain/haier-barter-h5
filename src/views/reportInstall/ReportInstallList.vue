@@ -8,25 +8,6 @@
       :hasInk="false"
     ></md-tab-bar>
     <div
-      v-show="curScrollViewName==='scrollView'"
-      class="reportInstallList-view mt24"
-    >
-      <div
-        id="scrollView"
-        ref="scrollView"
-        class="mescroll"
-      >
-        <div>
-          <b-report-install-item
-            v-for="(orderItem,orderIndex) in scrollView.list"
-            :key="orderIndex"
-            :orderItem="orderItem"
-            @click.native="jump(orderItem,orderIndex)"
-          ></b-report-install-item>
-        </div>
-      </div>
-    </div>
-    <div
       v-show="curScrollViewName==='scrollViewFinished'"
       class="reportInstallList-view mt24"
     >
@@ -88,23 +69,13 @@ export default {
       tabs: [
         {
           name: 0,
-          label: '待报装'
-        },
-        {
-          name: 1,
           label: '已报装'
         },
         {
-          name: 2,
+          name: 1,
           label: '报装异常'
         }
       ],
-      // 代报装
-      scrollView: {
-        mescroll: null,
-        list: [],
-        isListInit: false
-      },
       // 已包装
       scrollViewFinished: {
         mescroll: null,
@@ -123,18 +94,16 @@ export default {
     curScrollViewName() {
       // 当前tab下的scrollView的ref名字
       return {
-        0: 'scrollView',
-        1: 'scrollViewFinished',
-        2: 'scrollViewOdd'
+        0: 'scrollViewFinished',
+        1: 'scrollViewOdd'
       }[this.curTab];
     }
   },
   watch: {
     curTab(val) {
       const obj = {
-        0: 'scrollView',
-        1: 'scrollViewFinished',
-        2: 'scrollViewOdd'
+        0: 'scrollViewFinished',
+        1: 'scrollViewOdd'
       };
       const viewName = obj[val];
       // tab切换后，创建新MeScroll对象（若无创建过），没有加载过则加载
