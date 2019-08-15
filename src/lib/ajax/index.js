@@ -28,6 +28,7 @@ ax.interceptors.request.use((config) => {
   return config;
 });
 ax.interceptors.response.use((response) => {
+  const customOptions = response.config.customOptions;
   // 关闭遮罩
   if (!response.config.params.noLoading) {
     Toast.hide();
@@ -43,7 +44,9 @@ ax.interceptors.response.use((response) => {
       Toast.failed(msg || '请求失败');
     }
   }
-
+  if (customOptions.returnResponse) {
+    return response.data;
+  }
   return response.data;
 }, (error) => {
   Toast.hide();
@@ -56,13 +59,18 @@ ax.interceptors.response.use((response) => {
   };
   return error.response.data;
 });
-const axGet = function (url, params) {
-  return ax.get(url, {
+const axGet = function (url, params, options) {
+  return ax({
+    method: 'get',
+    url,
     params,
+    customOptions: {
+      ...options
+    },
   });
 };
 
-const axPost = function (url, data, params) {
+const axPost = function (url, data, params, options) {
   return ax({
     headers: {
       'content-type': 'application/x-www-form-urlencoded'
@@ -71,15 +79,21 @@ const axPost = function (url, data, params) {
     url,
     data: qs.stringify(data),
     params,
+    customOptions: {
+      ...options
+    },
   });
 };
 
-const axPostJson = function (url, data, params) {
+const axPostJson = function (url, data, params, options) {
   return ax({
     method: 'post',
     url,
     data,
-    params
+    params,
+    customOptions: {
+      ...options
+    },
   });
 };
 export default ax;
