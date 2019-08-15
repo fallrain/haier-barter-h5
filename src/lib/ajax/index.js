@@ -45,7 +45,7 @@ ax.interceptors.response.use((response) => {
     }
   }
   if (customOptions.returnResponse) {
-    return response.data;
+    return response;
   }
   return response.data;
 }, (error) => {
@@ -59,7 +59,7 @@ ax.interceptors.response.use((response) => {
   };
   return error.response.data;
 });
-const axGet = function (url, params, options) {
+const axGet = function (url, params, options={}) {
   return ax({
     method: 'get',
     url,
@@ -70,7 +70,7 @@ const axGet = function (url, params, options) {
   });
 };
 
-const axPost = function (url, data, params, options) {
+const axPost = function (url, data, params, options={}) {
   return ax({
     headers: {
       'content-type': 'application/x-www-form-urlencoded'
@@ -85,7 +85,7 @@ const axPost = function (url, data, params, options) {
   });
 };
 
-const axPostJson = function (url, data, params, options) {
+const axPostJson = function (url, data, params, options={}) {
   return ax({
     method: 'post',
     url,
