@@ -118,10 +118,10 @@ export default {
     upCallback(page) {
       // 下载过就设置已经初始化
       this[this.curScrollViewName].isListInit = true;
-      this.search(page).then(({ result, pages }) => {
+      this.search(page).then(({result, pages, total}) => {
         this.$nextTick(() => {
-          // 通过当前页的数据条数，和总页数来判断是否加载完
-          this[this.curScrollViewName].mescroll.endByPage(result.length, pages);
+          // 通过当前页的数据条数，和总数据量来判断是否加载完
+          this[this.curScrollViewName].mescroll.endBySize(result.length, total);
         });
       });
     },
@@ -134,13 +134,15 @@ export default {
       };
       return this.reportInstallService.queryReportInstallList(formData).then((res) => {
         const sroviewObj = {};
-        if (res.code === 1) {
+        if (res.data.code === 1) {
           const {
             result,
-            pages
-          } = res.data;
+            pages,
+            total
+          } = res.data.data;
           sroviewObj.pages = pages;
           sroviewObj.result = result;
+          sroviewObj.total = total;
           if (result && result.length > 0) {
             const curList = result.map(item => ({
               ...item,
