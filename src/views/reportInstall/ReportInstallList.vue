@@ -1,15 +1,16 @@
 <!-- message.wxml -->
 <template>
-  <div class="reportInstallList-container">
+  <div>
+    <div class="reportInstallList-tab">
     <md-tab-bar
-      class="common-fix-tabs"
       v-model="curTab"
       :items="tabs"
       :hasInk="false"
     ></md-tab-bar>
+    </div>
     <div
       v-show="curScrollViewName==='scrollViewFinished'"
-      class="reportInstallList-view mt24"
+      class="reportInstallList-view reportInstallList-container"
     >
       <div
         id="scrollViewFinished"
@@ -17,18 +18,19 @@
         class="mescroll"
       >
         <div>
-          <b-report-install-item
+          <b-report-install-item-new
             v-for="(orderItem,orderIndex) in scrollViewFinished.list"
             :key="orderIndex"
             :orderItem="orderItem"
+            :isShow="true"
             @click.native="jump(orderItem,orderIndex)"
-          ></b-report-install-item>
+          ></b-report-install-item-new>
         </div>
       </div>
     </div>
     <div
       v-show="curScrollViewName==='scrollViewOdd'"
-      class="reportInstallList-view mt24"
+      class="reportInstallList-view reportInstallList-container"
     >
       <div
         id="scrollViewOdd"
@@ -36,12 +38,13 @@
         class="mescroll"
       >
         <div>
-          <b-report-install-item
+          <b-report-install-item-new
             v-for="(orderItem,orderIndex) in scrollViewOdd.list"
             :key="orderIndex"
             :orderItem="orderItem"
+            :isShow="false"
             @click.native="jump(orderItem,orderIndex)"
-          ></b-report-install-item>
+          ></b-report-install-item-new>
         </div>
       </div>
     </div>
@@ -52,27 +55,27 @@ import {
   TabBar
 } from 'mand-mobile';
 import {
-  BReportInstallItem
+  BReportInstallItemNew
 } from '@/components/business';
 
 export default {
   name: 'ReportInstallList',
   components: {
-    BReportInstallItem,
+    BReportInstallItemNew,
     'md-tab-bar': TabBar
   },
   data() {
     return {
       // 当前选中tab
-      curTab: 0,
+      curTab: 1,
       // tabs
       tabs: [
         {
-          name: 0,
+          name: 1,
           label: '已报装'
         },
         {
-          name: 1,
+          name: 2,
           label: '报装异常'
         }
       ],
@@ -94,16 +97,16 @@ export default {
     curScrollViewName() {
       // 当前tab下的scrollView的ref名字
       return {
-        0: 'scrollViewFinished',
-        1: 'scrollViewOdd'
+        1: 'scrollViewFinished',
+        2: 'scrollViewOdd'
       }[this.curTab];
     }
   },
   watch: {
     curTab(val) {
       const obj = {
-        0: 'scrollViewFinished',
-        1: 'scrollViewOdd'
+        1: 'scrollViewFinished',
+        2: 'scrollViewOdd'
       };
       const viewName = obj[val];
       // tab切换后，创建新MeScroll对象（若无创建过），没有加载过则加载
@@ -184,9 +187,27 @@ export default {
 };
 </script>
 <style lang="scss">
+
+  .reportInstallList-tab {
+    .md-tab-bar {
+      background-color: #fff;
+      border-bottom: 2px solid #EEE;
+    }
+
+    .md-tab-bar-item {
+      min-height: 72px;
+      color: #666;
+      font-size: 28px;
+
+      &.is-active {
+        color: #1969C6;
+      }
+    }
+  }
+
   .reportInstallList-container {
     height: 100vh;
-    padding: 24px 24px 0 24px;
+    background: #FBFBFB;
   }
 
   .reportInstallList-view {
@@ -253,22 +274,6 @@ export default {
     font-size: 28px;
     line-height: 48px;
     color: #fff;
-  }
-
-  .reportInstallList-orderItem-card-mark-0 {
-    background: #4a90e2;
-  }
-
-  .reportInstallList-orderItem-card-mark-1 {
-    background: #4a90e2;
-  }
-
-  .reportInstallList-orderItem-card-mark-2 {
-    background: #f5a623;
-  }
-
-  .reportInstallList-orderItem-card-mark-3 {
-    background: #29ab91;
   }
 
 </style>
