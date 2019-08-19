@@ -29,7 +29,7 @@
           <button
             type="button"
             class="common-btn-primary w100per"
-            @click="addAddress()"
+            @click="shwAddressList"
           >添加或选择用户信息
           </button>
         </div>
@@ -90,37 +90,37 @@
         <button
           type="button"
           class="common-btn-primary w100per"
-          @click="addProduct()"
         >+新增产品
         </button>
       </div>
     </b-fieldset>
-    <!-- <b-fieldset
+    <b-fieldset
       class="mt16 orderEntry-rights-fieldset"
-      title="选择可用的购机权益活动"
+      title="购机权益活动"
       :headBtmLine="true"
     >
       <template
         v-slot:headRight=""
       >
         刷新查看剩余量
-      </template> -->
-
-      <!-- <div> -->
-        <!-- <b-activity-list
+      </template>
+      <div>
+        <b-activity-list
           :isDetail="isDetail"
           :data="activityList"
           v-model="choosedActivitys"
           @chooseGift="chooseGift"
         ></b-activity-list>
-        <div class="orderEntry-rights-fieldset-more">查看全部活动></div> -->
-      <!-- </div> -->
-    <!-- </b-fieldset> -->
+        <div class="orderEntry-rights-fieldset-more">查看全部活动></div>
+      </div>
+    </b-fieldset>
     <b-item
+      v-if="isDetail"
       class="mt16"
-      title="选择可用的购机权益活动"
+      title="修改原因"
+      value="退货"
       :arrow="true"
-      @rightClick="selectActivity()"
+      @rightClick="updateReasonClick"
     >
     </b-item>
     <div class="orderEntry-btns-par">
@@ -196,7 +196,7 @@ import {
 import { Toast } from 'mand-mobile';
 
 export default {
-  name: 'OrderEntry',
+  name: 'OrderModify',
   components: {
     BActivityList,
     BDatePicker,
@@ -214,7 +214,7 @@ export default {
       // 是否详情模式
       isDetail: true,
       // 门店名称
-      shopName: '',
+      shopName: '新华百货老大楼',
       // 收货人信息
       consignee: {
         /* name: '',
@@ -237,7 +237,22 @@ export default {
       // 购机时间
       buyDate: '',
       // 产品列表
-      productList: [],
+      productList: [
+        {
+          name: '海尔/空调，KFR-35G',
+          price: '',
+          isReport: true
+        },
+        {
+          name: '海尔/空调，KFR-35G',
+          price: '',
+        },
+        {
+          name: '海尔/空调，KFR-35G',
+          price: '',
+          isReport: true
+        }
+      ],
       // 活动列表
       activityList: [
         {
@@ -387,42 +402,60 @@ export default {
       ],
       // 参与人选中id
       multBuyParticipantCheckIds: [],
-      orderNo:'',
-      haveConsignee:false
+      orderNo:''
     };
   },
   computed: {
 
   },
   created(){
+    debugger
+    this.orderService.generateOrderNo({},{recordModel:'Haier'}).then(res =>{
+        if(res.code === 1){
+          this.orderNo = res.data
+          this.orderNo = 'Z15645424968056668'
+          this.orderService.queryOrderInfoByOrderNo({},{orderNo:this.orderNo}).then(response =>{
+              if(response.code === 1){
+                  const resData  = response.data
+                  this.shopName = resData.storeName
+                  this.consignee.name = resData.userName
+                  this.consignee.phone = resData.userPhone
+                  this.consignee.sex = resData.userSex
+                  this.consignee.address = resData.dispatchProvince + resData.dispatchCity + resData.dispatchArea + resData.dispatchAdd
+                  this.buyDate = resData.buyTime
+                  this.orderType = resData.orderType
+                  this.haveConsignee()
+                  if(resData.orderDetailDtoList.length !== 0){
+                    this.productList = resData.orderDetailDtoList
+                    this.productList.forEach(item =>{
+                      if(item.productBrand == 'haier'){
+                        item.productBrandCN = '海尔'
+                      }else{
+                        item.productBrandCN ='卡萨帝'
+                      }
+                    })
+                  }
+              }
+          })
+        }else{
+         Toast.failed(res.msg);
+        }
+
+    })
   },
   methods: {
-    //  haveConsignee() {
-    //   /* 存在收货人信息 */
-    //   return this.consignee && JSON.stringify(this.consignee) !== '{}';
-    // },
-    // chooseGift() {
-    //   /* 选择礼品 */
-    //   this.chooseGiftPopShow = true;
-    // },
-    addProduct(){
-        /*添加产品*/
-      this.$router.push({
-  name: 'Order.searchProduct',
-});
+     haveConsignee() {
+      /* 存在收货人信息 */
+      return this.consignee && JSON.stringify(this.consignee) !== '{}';
     },
-    selectActivity() {
-     /*选择活动*/
-      this.$router.push({
-  name: 'Order.OrderFollowActivity',
-});
+    chooseGift() {
+      /* 选择礼品 */
+      this.chooseGiftPopShow = true;
     },
-        addAddress(){
-          /*添加用户信息*/
-     this.$router.push({
-  name: 'Order.OrderFollowActivity',
-});
-        },
+    updateReasonClick() {
+      /* 选择退换货原因 */
+      this.returnReasonPopShow = true;
+    },
     shwAddressList() {
       /* 展示选择用户pop */
       this.addressPopShow = true;
