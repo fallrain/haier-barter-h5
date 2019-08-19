@@ -497,10 +497,21 @@
   display: flex;
   flex-wrap: nowrap;
   padding: 24px;
-
+  bottom: 0;
   .common-submit-btn-primary {
     margin-right: 24px;
   }
 }
-
+.common-bottom-button{
+  position: absolute;
+  width: calc(100% - 48px);
+  height: 84px;
+  bottom: 40px;
+  right: 24px;
+  left: 24px;
+  border-radius: 8px;
+  background: #1969C6;
+  color: #fff;
+  font-size: 34px;
+}
 /*订单end*/

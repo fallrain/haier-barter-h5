@@ -96,13 +96,13 @@
     </b-fieldset>
     <b-fieldset
       class="mt16 orderEntry-rights-fieldset"
-      title="购机权益活动"
+      title="已选择的权益"
       :headBtmLine="true"
     >
       <template
         v-slot:headRight=""
       >
-        刷新查看剩余量
+       <p class="orderEntry-rights-change">修改</p>
       </template>
       <div>
         <b-activity-list
@@ -548,7 +548,7 @@ export default {
   .orderEntry-rights-fieldset {
     .b-fieldset-legend-left {
       font-size: 28px;
-      color: #EE534F;
+      color: #333;
     }
 
     .b-fieldset-legend-right {
@@ -568,6 +568,12 @@ export default {
     .md-popup-mask {
       top: 0;
     }
+  }
+  .orderEntry-rights-change{
+    padding: 10px;
+    border: 1px solid #1969C6;
+    border-radius: 24px;
+
   }
 
 </style>

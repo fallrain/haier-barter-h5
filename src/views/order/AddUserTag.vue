@@ -36,13 +36,10 @@
 </template>
 
 <script>
-import {
-  BPopCheckList,
-  BItem
-} from '@/components/form';
+import { BPopCheckList, BItem } from "@/components/form";
 
 export default {
-  name: 'AddUserTag',
+  name: "AddUserTag",
   components: {
     BPopCheckList,
     BItem
@@ -56,19 +53,19 @@ export default {
       tagList: [
         {
           id: 1,
-          name: '行为性格'
+          name: "行为性格"
         },
         {
           id: 2,
-          name: '家庭结构'
+          name: "家庭结构"
         },
         {
           id: 3,
-          name: '年龄层次'
+          name: "年龄层次"
         },
         {
           id: 4,
-          name: '其他'
+          name: "其他"
         }
       ]
     };
@@ -80,7 +77,7 @@ export default {
       if (tagObj) {
         name = tagObj.name;
       } else {
-        name = '';
+        name = "";
       }
       return name;
     }
@@ -95,62 +92,60 @@ export default {
 </script>
 
 <style scoped>
-
-  .addUserTag-form {
-    background: #fff;
-    padding-bottom: 4px;
-
-    .bItem-item {
-      padding-left: 0;
-      padding-right: 0;
-    }
-
-    .bItem-item-right-val,
-    .bItem-item-title {
-      font-size: 28px;
-      color: #666;
-    }
+.addUserTag-form {
+  background: #fff;
+  padding-bottom: 4px;
+  .bItem-item {
+    padding-left: 0;
+    padding-right: 0;
   }
 
-  .addUserTag-form-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 80px;
-    border-bottom: 1px solid #F5F5F5;
+  .bItem-item-right-val,
+  .bItem-item-title {
     font-size: 28px;
     color: #666;
   }
+}
 
-  .addUserTag-form-item-name {
-    margin-left: 24px;
-  }
+.addUserTag-form-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 80px;
+  border-bottom: 1px solid #f5f5f5;
+  font-size: 28px;
+  color: #666;
+}
 
-  .addUserTag-form-item-UserTag {
-    .icon-dingwei {
-      color: #1969C6;
-      font-size: 40px;
-    }
-  }
+.addUserTag-form-item-name {
+  margin-left: 24px;
+}
 
-  .addUserTag-form-item-ipt {
-    width: 380px;
-    border: 0;
-    background: transparent;
-    text-align: right;
-    margin-right: 28px;
+.addUserTag-form-item-UserTag {
+  .icon-dingwei {
+    color: #1969c6;
+    font-size: 40px;
   }
+}
 
-  .addUserTag-save {
-    position: absolute;
-    width: calc(100% - 48px);
-    height: 84px;
-    bottom: 40px;
-    right: 24px;
-    left: 24px;
-    border-radius: 8px;
-    background: #1969C6;
-    color: #fff;
-    font-size: 34px;
-  }
+.addUserTag-form-item-ipt {
+  width: 380px;
+  border: 0;
+  background: transparent;
+  text-align: right;
+  margin-right: 28px;
+}
+
+.addUserTag-save {
+  position: absolute;
+  width: calc(100% - 48px);
+  height: 84px;
+  bottom: 40px;
+  right: 24px;
+  left: 24px;
+  border-radius: 8px;
+  background: #1969c6;
+  color: #fff;
+  font-size: 34px;
+}
 </style>

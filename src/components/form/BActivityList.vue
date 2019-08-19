@@ -6,31 +6,13 @@
         v-for="(item,i) in data"
         :key="item.id"
       >
-        <i
-          v-if="!isDetail"
-          class="bCheckbox-icon iconfont"
-          :class="[value.some(v=>v===i)?'icon-duoxuankuang1':'icon-duoxuankuang']"
-          @click="checkboxClick(i)"
-        ></i>
-        <div :class="[isDetail && 'bCheckbox-item-detail-cnt']">
+        <div class="bCheckbox-item-detail-cnt">
           <p class="bActivityList-activity-name">{{item.activityName}}</p>
-          <div class="bActivityList-activity-description">
-            <span class="bActivityList-activity-description-inf">{{item.inf}}</span>
-            <span v-if="!isDetail">或</span>
-            <button
-              v-if="!isDetail"
-              type="button"
-              class="common-btn-del"
-              @click="chooseGiftClick(item)"
-            >选择礼品
-            </button>
-          </div>
         </div>
         <div
-          v-if="!isDetail"
           class="bActivityList-activity-num-par"
         >
-          剩余<span class="bActivityList-activity-num">{{item.num}}</span>份
+          数量：<span class="bActivityList-activity-num">{{item.num}}</span>
         </div>
       </li>
     </ol>
@@ -89,6 +71,10 @@ export default {
     line-height: 1;
     color: #333;
     margin-bottom: 10px;
+    width: 560px;
+    p{
+      line-height: 80px;
+    }
   }
 
   .bCheckbox-list {
@@ -97,30 +83,10 @@ export default {
   .bCheckbox-item {
     display: flex;
     align-items: center;
-    min-height: 120px;
+    height: 80px;
     border-bottom: 1px dashed #D0D0D0;
   }
 
-  .bActivityList-activity-description {
-    display: flex;
-    align-items: center;
-    color: #333;
-    font-size: 24px;
-
-    .common-btn-del {
-      margin-left: 15px;
-      height: 44px;
-      line-height: 44px;
-      padding-top: 0;
-      padding-bottom: 0;
-    }
-  }
-
-  .bActivityList-activity-description-inf {
-    margin-right: 20px;
-    color: #EF5A4B;
-    font-size: 24px;
-  }
 
   .bActivityList-activity-num-par {
     margin-left: auto;
@@ -128,13 +94,10 @@ export default {
     color: #666;
   }
 
-  .bActivityList-activity-num {
-    font-size: 24px;
-    color: #EF5A4B;
-  }
-
   .bCheckbox-item-detail-cnt {
-    border-left: 6px solid #EF5A4B;
+    border-left: 6px solid #1969C6;
     padding-left: 25px;
+    padding-top: 10px;
+
   }
 </style>

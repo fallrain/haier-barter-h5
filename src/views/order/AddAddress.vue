@@ -85,6 +85,7 @@
       v-model="addressPopShow"
       @change="addressChange"
     ></md-tab-picker>
+      <button class="common-bottom-button" @click="confirm()">确认</button>
   </div>
 </template>
 
@@ -187,8 +188,23 @@ export default {
       /* 地址change */
       const addressAy = address.options.map(v => v.label);
       this.addressName = addressAy.join('/');
+    },
+    confirm(){
+      // window.location.href=encodeURI('/order/orderEntry?'+'address='+ '111111')
+      debugger
+      this.$router.go(-1);
+
     }
-  }
+  },
+  beforeRouteLeave (to, from, next) {
+    debugger
+      if (to.name === 'Order.OrderEntry') {
+        to.query.temp = '这里是参数，选中后的地址'
+      }
+      console.log(to)
+      console.log(from)
+    next()//必须要有这个，否则无法跳转
+  },
 };
 </script>
 

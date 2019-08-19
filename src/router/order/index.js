@@ -7,6 +7,8 @@ const SearchProduct = () => import(/* webpackChunkName: "SearchProduct" */ '@/vi
 const AddUserTag = () => import('@/views/order/AddUserTag');
 const OrderFollowActivity = () => import('@/views/order/OrderFollowActivity');
 const OrderModify = () => import(/* webpackChunkName: "OrderEntry" */ '@/views/order/OrderModify');// 订单录入
+const OrderConfirm= () => import(/* webpackChunkName: "OrderConfirm" */ '@/views/order/OrderConfirm');// 订单录入
+
 const prefix = '/order';
 const module = 'Order';
 const data = [
@@ -24,7 +26,7 @@ const data = [
     component: OrderEntry,
     meta: {
       title: '订单录入'
-    }
+    },
   },
   {
     path: `${prefix}/orderModify`,
@@ -32,6 +34,14 @@ const data = [
     component: OrderModify,
     meta: {
       title: '订单修改'
+    }
+  },
+  {
+    path: `${prefix}/OrderConfirm`,
+    name: `${module}.OrderConfirm`,
+    component: OrderConfirm,
+    meta: {
+      title: '订单确认'
     }
   },
   {

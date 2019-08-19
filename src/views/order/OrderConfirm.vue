@@ -1,68 +1,37 @@
 <template xmlns:v-slot="">
   <div>
+    <div class="orderConfirm-no">
+  <span class="orderConfirm-p">订单号：</span><p class="orderConfirm-s">2019-06-18</p>
+</div>
     <div class="orderEntry-header">
       <span class="orderEntry-header-name">门店：{{shopName}}</span>
-      <i class="iconfont icon-icon-question orderEntry-header-icon"></i>
     </div>
-    <b-fieldset
-      class="mt16"
-      title="用户信息："
-    >
+
       <div class="orderEntry-user">
-        <div v-if="haveConsignee">
+        <div>
           <div class="orderEntry-user-head">
             <span class="name mr16">收货人：{{consignee.name}}</span>
             <span class="sex mr16">{{consignee.sex}}</span>
             <i class="iconfont icon-dianhua mr16"></i>
             <span class="phone mr16">{{consignee.phone}}</span>
-            <button
-              type="button"
-              class="common-btn-waring"
-            >更改地址
-            </button>
+
           </div>
           <p class="orderEntry-user-address">
             {{consignee.address}}
           </p>
         </div>
-        <div v-else>
-          <button
-            type="button"
-            class="common-btn-primary w100per"
-            @click="addAddress()"
-          >添加或选择用户信息
-          </button>
-        </div>
       </div>
-    </b-fieldset>
     <b-item
       class="mt16"
       title="购买日期："
+      value="2019-05-31"
     >
-      <template
-        v-slot:right=""
-      >
-        <b-date-picker
-          class="orderEntry-date"
-          slot="right"
-          type="date"
-          title="请选择日期"
-          :defaultDate="buyDate"
-          v-model="buyDate"
-        ></b-date-picker>
-      </template>
     </b-item>
     <b-item
       class="mt16"
       title="订单类型："
+      value="单品"
     >
-      <template v-slot:right="">
-        <b-radio-item
-          :inline="true"
-          :list="orderTypes"
-          v-model="orderType"
-        ></b-radio-item>
-      </template>
     </b-item>
     <b-fieldset
       class="mt16"
@@ -70,7 +39,7 @@
     >
       <div>
         <ul>
-          <b-order-product
+          <b-order-product-confirm
             class="mb20"
             v-for="(item,index) in productList"
             :key="index"
@@ -85,74 +54,37 @@
                 该产品需代报装,请选择安装时间
               </p>
             </template>
-          </b-order-product>
+          </b-order-product-confirm>
         </ul>
-        <button
-          type="button"
-          class="common-btn-primary w100per"
-          @click="addProduct()"
-        >+新增产品
-        </button>
       </div>
     </b-fieldset>
-    <b-item
-      class="mt16"
-      title="选择可用的购机权益活动"
-      :arrow="true"
-      @rightClick="selectActivity()"
+    <b-fieldset
+      class="mt16 orderEntry-rights-fieldset"
+      title="已选择的权益"
+      :headBtmLine="true"
     >
-    </b-item>
+      <div>
+        <b-activity-list
+          :isDetail="isDetail"
+          :data="activityList"
+          v-model="choosedActivitys"
+          @chooseGift="chooseGift"
+        ></b-activity-list>
+      </div>
+    </b-fieldset>
     <div class="orderEntry-btns-par">
       <button
         type="button"
         class="common-submit-btn-primary"
-      >暂存草稿
+      >返回修改草稿
       </button>
       <button
         type="button"
         class="common-submit-btn-default"
         @click="next"
-      >下一步
+      >确认订单
       </button>
     </div>
-    <b-pop-check-list
-      :show.sync="chooseGiftPopShow"
-      title="选择礼品"
-      :list="giftList"
-    ></b-pop-check-list>
-    <b-pop-check-list
-      type="radio"
-      :show.sync="returnReasonPopShow"
-      title="选择修改订单原因"
-      :list="returnReasonList"
-      v-model="returnReasonVal"
-    ></b-pop-check-list>
-    <div class="orderentry-address">
-      <b-pop-address-list
-        :show.sync="addressPopShow"
-        :list="addressList"
-      ></b-pop-address-list>
-    </div>
-    <b-pop
-      :show.sync="multBuyPopShow"
-    >
-      <b-multbuy-check
-        type="radio"
-        title="请选择套购发起人"
-        :persons="multBuySponsor"
-        v-model="multBuySponsorCheckedIds"
-        tips="套购发起人发起套购，并且统一录入用户销售订单"
-      ></b-multbuy-check>
-      <b-multbuy-check
-        class="mt25"
-        title="请选择套购参与人"
-        :persons="multBuyParticipant"
-        v-model="multBuyParticipantCheckIds"
-        tips="套购参秘人可查看套头订单不需要录入订单,但是需确定确单信息正确后自主申报销量。"
-        :checkAll="true"
-        type="checkbox"
-      ></b-multbuy-check>
-    </b-pop>
   </div>
 </template>
 
@@ -166,7 +98,7 @@ import {
   BPop,
   BPopAddressList,
   BPopCheckList,
-  BRadioItem
+  BRadioItem,BOrderProductConfirm
 } from '@/components/form';
 
 import {
@@ -175,7 +107,7 @@ import {
 import { Toast } from 'mand-mobile';
 
 export default {
-  name: 'OrderEntry',
+  name: 'OrderModify',
   components: {
     BActivityList,
     BDatePicker,
@@ -186,14 +118,14 @@ export default {
     BPop,
     BPopAddressList,
     BPopCheckList,
-    BRadioItem
+    BRadioItem,BOrderProductConfirm
   },
   data() {
     return {
       // 是否详情模式
       isDetail: true,
       // 门店名称
-      shopName: '',
+      shopName: '新华百货老大楼',
       // 收货人信息
       consignee: {
         /* name: '',
@@ -216,7 +148,22 @@ export default {
       // 购机时间
       buyDate: '',
       // 产品列表
-      productList: [],
+      productList: [
+        {
+          name: '海尔/空调，KFR-35G',
+          price: '',
+          isReport: true
+        },
+        {
+          name: '海尔/空调，KFR-35G',
+          price: '',
+        },
+        {
+          name: '海尔/空调，KFR-35G',
+          price: '',
+          isReport: true
+        }
+      ],
       // 活动列表
       activityList: [
         {
@@ -366,59 +313,59 @@ export default {
       ],
       // 参与人选中id
       multBuyParticipantCheckIds: [],
-      orderNo:'',
-      haveConsignee:false
+      orderNo:''
     };
   },
   computed: {
 
   },
-  mounted(){
-  //    debugger
-  //    if(this.$route.query){
-  // const address = this.$route.query.temp
-  //   console.log('tag', address)
-  //    }
-  },
-  activated(){
-       debugger
-     if(this.$route.query){
-  const address = this.$route.query.temp
-  this.consignee.address = address
-  this.haveConsignee = true
-    console.log('tag', address)
-     }
-  },
   created(){
-    // debugger
+    this.orderService.generateOrderNo({},{recordModel:'Haier'}).then(res =>{
+        if(res.code === 1){
+          this.orderNo = res.data
+          this.orderNo = 'Z15645424968056668'
+          this.orderService.queryOrderInfoByOrderNo({},{orderNo:this.orderNo}).then(response =>{
+              if(response.code === 1){
+                  const resData  = response.data
+                  this.shopName = resData.storeName
+                  this.consignee.name = resData.userName
+                  this.consignee.phone = resData.userPhone
+                  this.consignee.sex = resData.userSex
+                  this.consignee.address = resData.dispatchProvince + resData.dispatchCity + resData.dispatchArea + resData.dispatchAdd
+                  this.buyDate = resData.buyTime
+                  this.orderType = resData.orderType
+                  this.haveConsignee()
+                  if(resData.orderDetailDtoList.length !== 0){
+                    this.productList = resData.orderDetailDtoList
+                    this.productList.forEach(item =>{
+                      if(item.productBrand == 'haier'){
+                        item.productBrandCN = '海尔'
+                      }else{
+                        item.productBrandCN ='卡萨帝'
+                      }
+                    })
+                  }
+              }
+          })
+        }else{
+         Toast.failed(res.msg);
+        }
+
+    })
   },
   methods: {
-    //  haveConsignee() {
-    //   /* 存在收货人信息 */
-    //   return this.consignee && JSON.stringify(this.consignee) !== '{}';
-    // },
-    // chooseGift() {
-    //   /* 选择礼品 */
-    //   this.chooseGiftPopShow = true;
-    // },
-    addProduct(){
-        /*添加产品*/
-      this.$router.push({
-  name: 'Order.SearchProduct',
-});
+     haveConsignee() {
+      /* 存在收货人信息 */
+      return this.consignee && JSON.stringify(this.consignee) !== '{}';
     },
-    selectActivity() {
-     /*选择活动*/
-      this.$router.push({
-  name: 'Order.OrderFollowActivity',
-});
+    chooseGift() {
+      /* 选择礼品 */
+      this.chooseGiftPopShow = true;
     },
-        addAddress(){
-          /*添加用户信息*/
-     this.$router.push({
-  name: 'Order.AddAddress',
-});
-        },
+    updateReasonClick() {
+      /* 选择退换货原因 */
+      this.returnReasonPopShow = true;
+    },
     shwAddressList() {
       /* 展示选择用户pop */
       this.addressPopShow = true;
@@ -461,6 +408,8 @@ export default {
 
   .orderEntry-user {
     background: #fff;
+    padding: 24px;
+    margin-top: 16px;
   }
 
   .orderEntry-user-head {
@@ -511,7 +460,7 @@ export default {
   .orderEntry-rights-fieldset {
     .b-fieldset-legend-left {
       font-size: 28px;
-      color: #EE534F;
+      color: #333;
     }
 
     .b-fieldset-legend-right {
@@ -526,11 +475,26 @@ export default {
     font-size: 24px;
     text-align: center;
   }
-
   .orderentry-address {
     .md-popup-mask {
       top: 0;
     }
   }
-
+.orderConfirm-no{
+  color: #1969C6;
+  font-size: 28px;
+  height: 80px;
+  display: flex;
+  .orderConfirm-p{
+    height: 80px;
+    line-height: 80px;
+    padding-left: 25px;
+    width: 580px;
+     flex-shrink: 0;
+  }
+  .orderConfirm-s{
+    height: 80px;
+    line-height: 80px;
+  }
+}
 </style>
