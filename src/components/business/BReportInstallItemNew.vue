@@ -22,7 +22,10 @@
       <span class="report-box4-exception">异常原因：{{orderItem.failReason}}</span>
     </div>
 
-    <Button class="report-btn" v-if="isShow">修改</Button>
+    <Button class="report-btn"
+            v-if="isShow"
+            @click="reportBtn">修改
+    </Button>
 
   </div>
 </template>
@@ -36,6 +39,34 @@
         require: true
       },
       isShow: true,
+    },
+    methods: {
+      reportBtn() {
+        const formData = {
+          installId: this.orderItem.installId
+        };
+        return this.reportInstallService.checkRequireServiceDate(formData).then((res) => {
+          if (res.code === 1) {
+            /* 跳转报装详情 */
+            const argsObj = {
+              userId: undefined,
+              userName: this.orderItem.customerName,
+              mobile: this.orderItem.phoneNumber,
+              orderNo: this.orderItem.orderNo,
+              workFlowId: this.orderItem.orderId,
+              parentPage: 'list', // 从何处跳过去的，此处代表列表
+              flowStatus: this.curTab, // 判断待报装、非待报装
+              // itemIndex: orderIndex
+            };
+            this.$router.push({
+              name: 'ReportInstall.ReportInstallDetail',
+              query: {
+                ...argsObj
+              }
+            });
+          }
+        });
+      }
     }
   }
 </script>

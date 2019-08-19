@@ -23,7 +23,6 @@
             :key="orderIndex"
             :orderItem="orderItem"
             :isShow="true"
-            @click.native="jump(orderItem,orderIndex)"
           ></b-report-install-item-new>
         </div>
       </div>
@@ -43,7 +42,6 @@
             :key="orderIndex"
             :orderItem="orderItem"
             :isShow="false"
-            @click.native="jump(orderItem,orderIndex)"
           ></b-report-install-item-new>
         </div>
       </div>
@@ -137,12 +135,12 @@ export default {
       };
       return this.reportInstallService.queryReportInstallList(formData).then((res) => {
         const sroviewObj = {};
-        if (res.data.code === 1) {
+        if (res.code === 1) {
           const {
             result,
             pages,
             total
-          } = res.data.data;
+          } = res.data;
           sroviewObj.pages = pages;
           sroviewObj.result = result;
           sroviewObj.total = total;
@@ -162,25 +160,6 @@ export default {
           this[this.curScrollViewName].mescroll.endErr();
         }
         return sroviewObj;
-      });
-    },
-    jump(orderItem, orderIndex) {
-      /* 跳转报装详情 */
-      const argsObj = {
-        userId: undefined,
-        userName: orderItem.customerName,
-        mobile: orderItem.phoneNumber,
-        orderNo: orderItem.orderNo,
-        workFlowId: orderItem.orderId,
-        parentPage: 'list', // 从何处跳过去的，此处代表列表
-        flowStatus: this.curTab, // 判断待报装、非待报装
-        itemIndex: orderIndex
-      };
-      this.$router.push({
-        name: 'ReportInstall.ReportInstallDetail',
-        query: {
-          ...argsObj
-        }
       });
     },
   }
