@@ -3,6 +3,7 @@ import BMultbuyCheck from './BMultbuyCheck';
 import BProductMultUpload from './BProductMultUpload';
 import BReportInstallDetailHead from './BReportInstallDetailHead';
 import BReportInstallItem from './BReportInstallItem';
+import BReportInstallItemNew from './BReportInstallItemNew';
 import BScaleItem from './BScaleItem';
 import BSearchInput from './BSearchInput';
 
@@ -13,5 +14,6 @@ export {
   BReportInstallDetailHead,
   BReportInstallItem,
   BScaleItem,
-  BSearchInput
+  BSearchInput,
+  BReportInstallItemNew
 };

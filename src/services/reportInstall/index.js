@@ -7,7 +7,7 @@ import {
 export default {
   queryReportInstallList(data) {
     /* 查询代报装列表 */
-    return axPost(urls.queryReportInstallList, data);
+    return axPost(urls.queryReportInstallList, data, { returnResponse: true });
   },
   queryReportInstallByOrderNo(data) {
     /* 查询代报装详情 */

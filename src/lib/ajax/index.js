@@ -28,6 +28,7 @@ ax.interceptors.request.use((config) => {
   return config;
 });
 ax.interceptors.response.use((response) => {
+  const customOptions = response.config.params;
   // 关闭遮罩
   if (!response.config.params.noLoading) {
     Toast.hide();
@@ -43,7 +44,9 @@ ax.interceptors.response.use((response) => {
       Toast.failed(msg || '请求失败');
     }
   }
-
+  if (customOptions && customOptions.returnResponse) {
+    return response;
+  }
   return response.data;
 }, (error) => {
   Toast.hide();
@@ -57,7 +60,9 @@ ax.interceptors.response.use((response) => {
   return error.response.data;
 });
 const axGet = function (url, params) {
-  return ax.get(url, {
+  return ax({
+    method: 'get',
+    url,
     params,
   });
 };
@@ -79,7 +84,7 @@ const axPostJson = function (url, data, params) {
     method: 'post',
     url,
     data,
-    params
+    params,
   });
 };
 export default ax;
