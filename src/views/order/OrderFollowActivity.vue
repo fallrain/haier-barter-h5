@@ -8,42 +8,46 @@
         />
     </div>
 
-    <md-scroll-view
-      class="salesVerification-view"
-      ref="scrollView"
-      :scrolling-x="false"
-      @refreshing="onRefresh"
-      @end-reached="onEndReached"
-      :end-reached-threshold="100"
-      :immediate-check-end-reaching="scrollView.autoCheck"
-      :auto-reflow="true"
+    <div
+      v-show="curScrollViewName==='scrollViewActivity'">
+      <div
+        id="scrollViewActivity"
+        ref="scrollViewActivity"
+        class="mescroll"
+
       >
-      <b-activity-item
-        v-for="(item,index) in dataList"
-        :key="index"
-        :getData.sync="item"
-      ></b-activity-item>
-        <md-scroll-view-refresh
-          slot="refresh"
-          slot-scope="{ scrollTop, isRefreshActive, isRefreshing }"
-          :scroll-top="scrollTop"
-          :is-refreshing="isRefreshing"
-          :is-refresh-active="isRefreshActive"
-        ></md-scroll-view-refresh>
-        <md-scroll-view-more
-          slot="more"
-          :is-finished="isFinished"
-        >
-        </md-scroll-view-more>
-      </md-scroll-view>
+        <div>
+          <b-activity-item
+            v-for="(item,index) in scrollViewActivity.list"
+            :key="index"
+            :getData.sync="item"
+            :isFinish="false"
+          ></b-activity-item>
+        </div>
+      </div>
+    </div>
+    <div v-show="curScrollViewName==='scrollViewFinish'">
+      <div
+        id="scrollViewFinish"
+        ref="scrollViewFinish"
+        class="mescroll"
+
+      >
+        <div>
+          <b-activity-item
+            v-for="(item,index) in scrollViewFinish.list"
+            :key="index"
+            :getData.sync="item"
+            :isFinish="true"
+          ></b-activity-item>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import {
-  ScrollView,
-  ScrollViewMore,
-  ScrollViewRefresh,
   TabBar,
 } from 'mand-mobile';
 
@@ -55,96 +59,112 @@ export default {
   name: 'OrderFollowActivity',
   components: {
     [TabBar.name]: TabBar,
-    [ScrollView.name]: ScrollView,
-    [ScrollViewRefresh.name]: ScrollViewRefresh,
-    [ScrollViewMore.name]: ScrollViewMore,
     BActivityItem,
   },
   data() {
     return {
-      current: 1,
+      current: 0,
       items: [{
-        name: 1,
+        name: 0,
         label: '可参与活动'
       }, {
-        name: 2,
+        name: 1,
         label: '不可参与活动'
       }],
       isFinished: false,
-      dataList: [
-        {
-          title: '6月场景套权益昆明小微',
-          reason: '套餐价格不符合',
-          brand: '海尔，卡萨帝',
-          scope: '所有产品',
-          data: '2019-07-30至2019-08-02',
-          data2: '2019-08-30至2019-09-02',
-          type: '海贝积分',
-          product: [{
-            name: 'KFR-35GW/A4RCA21AU1套机空调 + 50T82电视',
-            gift: '7500积分',
-            count: '666',
-            remain: '222',
+      scrollViewActivity: {
+        mescroll: null,
+        list: [
+          {
+            title: '6月场景套权益昆明小微',
+            reason: '套餐价格不符合',
+            brand: '海尔，卡萨帝',
+            scope: '所有产品',
+            data: '2019-07-30至2019-08-02',
+            data2: '2019-08-30至2019-09-02',
+            type: '海贝积分',
+            product: [{
+              name: 'KFR-35GW/A4RCA21AU1套机空调 + 50T82电视',
+              gift: '7500积分',
+              count: '666',
+              remain: '222',
+            }, {
+              name: '50T82电视',
+              gift: '500积分233222222222222333vvervevrdfvsrftbrthytnjuykuikiuktgteegtgythh235456',
+              count: '6',
+              remain: '2',
+            }
+            ]
           }, {
-            name: '50T82电视',
-            gift: '500积分233222222222222333vvervevrdfvsrftbrthytnjuykuikiuktgteegtgythh235456',
-            count: '6',
-            remain: '2',
+            title: '6月场景套权益昆明小微',
+            reasn: '',
+            brand: '海尔，卡萨帝',
+            scope: '所有产品',
+            data: '2019-07-30至2019-08-02',
+            data2: '2019-08-30至2019-09-02',
+            type: '海贝积分',
           }
-          ]
-        }, {
-          title: '6月场景套权益昆明小微',
-          reasn: '',
-          brand: '海尔，卡萨帝',
-          scope: '所有产品',
-          data: '2019-07-30至2019-08-02',
-          data2: '2019-08-30至2019-09-02',
-          type: '海贝积分',
-        }
-      ],
+        ],
+        isListInit: false
+      },
+      scrollViewFinish: {
+        mescroll: null,
+        list: [
+          {
+            title: '666666',
+            reason: '套餐价格不符合',
+          },
+        ],
+        isListInit: false
+      },
     };
+  },
+  computed: {
+    curScrollViewName() {
+      // 当前tab下的scrollView的ref名字
+      return {
+        0: 'scrollViewActivity',
+        1: 'scrollViewFinish'
+      }[this.current];
+    }
+  },
+  watch: {
+    current(val) {
+      const obj = {
+        0: 'scrollViewActivity',
+        1: 'scrollViewFinish'
+      };
+      const viewName = obj[val];
+      // tab切换后，创建新MeScroll对象（若无创建过），没有加载过则加载
+      this.bUtil.scroviewTabChange(viewName, this);
+    }
   },
   mounted() {
-    window.ScrollViewTrigger1 = () => {
-      this.$refs.scrollView.triggerRefresh();
-    };
+    this.bUtil.scroviewTabChange(this.curScrollViewName, this);
   },
   methods: {
-    onRefresh() {
-      // async data
-      this.pageCfg.page.pageNum = 1;
-      const data = {
-      };
-      setTimeout(() => {
-        this.query(data);
-        this.$refs.scrollView.finishRefresh();
-      }, 2000);
+    upCallback(page) {
+      // 下载过就设置已经初始化
+      this[this.curScrollViewName].isListInit = true;
+      this.search(page).then(({result, pages, total}) => {
+        this.$nextTick(() => {
+          // 通过当前页的数据条数，和总数据量来判断是否加载完
+          this[this.curScrollViewName].mescroll.endBySize(result.length, total);
+        });
+      });
     },
-    onEndReached() {
-      if (this.isFinished) {
-        return;
-      }
-      // async data
-      setTimeout(() => {
-        const dataListitem = {
-          title: '111',
-          brand: '卡萨帝',
-        };
-        this.dataList.push(dataListitem);
-        if (this.dataList.length >= 5) {
-          this.isFinished = true;
-        }
-        this.$refs.scrollView.finishLoadMore();
-      }, 1000);
-    },
-    query(data) {
+    search(page) {
       // todo
       const formData = {
-        pageNum: this.pageCfg.page.pageNum,
-        pageSize: this.pageCfg.page.pageSize,
-        ...data
+        pageNum: page.num,
+        pageSize: page.size,
       };
-      console.log(formData);
+      const sroviewObj = {};
+      sroviewObj.pages = 1;
+      sroviewObj.result = this[this.curScrollViewName].list;
+      sroviewObj.total = 1;
+      this[this.curScrollViewName].mescroll.endErr();
+      return sroviewObj;
     }
   },
 };

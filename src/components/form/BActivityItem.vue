@@ -4,7 +4,7 @@
       <i class="iconfont icon-liwu activity-gift-img"/>
       <span class="activity-gift-title">{{getData.title}}</span>
     </div>
-    <div class="activity-common-line activity-common-text activity-reason-text" v-if="getData.reason">
+    <div class="activity-common-line activity-common-text activity-reason-text" v-if="getData.reason && isFinish">
       不可参与原因：{{getData.reason}}
     </div>
     <div class="activity-common-line activity-common-text">活动品牌：{{getData.brand}}</div>
@@ -52,8 +52,8 @@
       <div class="activity-common-line activity-common-text">3、奥V给弄额</div>
       <div class="activity-common-line activity-common-text">4、奥V给弄额</div>
     </div>
-    <img class="activity-img" v-if="false" src="../../assets/images/orderFollow-up/activity-img.png"/>
-    <div class="activity-number">
+    <img class="activity-img" v-if="isFinish" src="../../assets/images/orderFollow-up/activity-img.png"/>
+    <div class="activity-number" v-if="!isFinish">
       <span class="activity-number-minus activity-number-common" @click="minusCount">-</span>
       <span class="activity-number-count">{{this.count}}</span>
       <span class="activity-number-add activity-number-common" @click="addCount">+</span>
@@ -89,6 +89,7 @@ export default {
         }]
       }
     },
+    isFinish: false,
   },
   methods: {
     setShowLimit() {
