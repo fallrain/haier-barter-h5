@@ -9,6 +9,7 @@
     </div>
 
     <div
+      class="reportInstallList-view"
       v-show="curScrollViewName==='scrollViewActivity'">
       <div
         id="scrollViewActivity"
@@ -26,7 +27,8 @@
         </div>
       </div>
     </div>
-    <div v-show="curScrollViewName==='scrollViewFinish'">
+    <div class="reportInstallList-view"
+         v-show="curScrollViewName==='scrollViewFinish'">
       <div
         id="scrollViewFinish"
         ref="scrollViewFinish"
@@ -172,6 +174,9 @@ export default {
 
 <style lang="scss">
 
+  .reportInstallList-view {
+    height: calc(100vh - 108px);
+  }
   .activity-tab-bg {
     .md-tab-bar {
       padding-left: 24px;
