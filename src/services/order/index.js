@@ -1,6 +1,6 @@
 import urls from '../url/order.url';
 import {
-  axPostJson
+  axPostJson,axPost,axGet,
 } from '@/lib/ajax';
 
 export default {
@@ -34,6 +34,9 @@ export default {
   },
   createNewOrder(data, param){
     return axPostJson(urls.createNewOrder, data, param);
+  },
+  queryOverTwentyFourHourOrder(){
+    return axPost(urls.queryOverTwentyFourHourOrder);
   }
 
 };

@@ -5,7 +5,7 @@
       mode="closable"
       :time="4000"
     >
-      您有三笔超过24小时未处理的订单，请及时跟进
+      您有{{noticeNum}}笔超过24小时未处理的订单，请及时跟进
     </md-notice-bar>
     </div>
     <div class="uni-form-item uni-column search-view">
@@ -125,6 +125,7 @@ export default {
       isFinished:true,
       curTab: 0,
       handleList:[],
+      noticeNum:'',
       items: [
         {
           name: 0,
@@ -180,6 +181,7 @@ export default {
   },
   created() {
     // this.searchData();
+this.getNoticeData();
   },
    computed: {
     curScrollViewName() {
@@ -211,6 +213,14 @@ export default {
     this.bUtil.scroviewTabChange(this.curScrollViewName, this);
   },
   methods: {
+    getNoticeData(){
+      this.orderService
+        .queryOverTwentyFourHourOrder().then(res => {
+            if(res.code === 1){
+              this.noticeNum = res.data
+            }
+        })
+    },
     change(item, index, prevIndex){
       debugger
       this.curTab = index

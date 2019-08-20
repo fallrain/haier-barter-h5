@@ -11,6 +11,7 @@ const urls = {
   createOrderSubmit:'e/orderManage/createOrderSubmit',//新建订单提交
   supplementOrderSubmit:'orderManage/supplementOrderSubmit',//补录订单提交
   createNewOrder:'/orderManage/createNewOrder',//录新订单,生成一条新的待办
+  queryOverTwentyFourHourOrder:'/orderFollow/queryOverTwentyFourHourOrder',//超过二十四小时订单
 };
 
 Object.entries(urls).forEach(([key, value]) => {
