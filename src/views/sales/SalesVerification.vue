@@ -242,18 +242,18 @@ export default {
         mescroll: null,
         list: [
           /* {
-             name: '热水器',
-             type: 'CEH-80V物联网',
-             count: 12,
-             detail: [
-               {
-                 buyName: '张子强',
-                 time: '2019-06-03',
-                 orderName: '王强',
-                 errorReason: '谁知道是怎么回事',
-               }
-             ]
-           } */
+               name: '热水器',
+               type: 'CEH-80V物联网',
+               count: 12,
+               detail: [
+                 {
+                   buyName: '张子强',
+                   time: '2019-06-03',
+                   orderName: '王强',
+                   errorReason: '谁知道是怎么回事',
+                 }
+               ]
+             } */
         ],
         // 是否已经刷新过
         isListInit: false,

@@ -109,7 +109,6 @@
           type="date"
           title="请选择送货日期"
           :defaultDate="sendDate"
-
           v-model="sendDate"
         ></b-date-picker>
       </template>

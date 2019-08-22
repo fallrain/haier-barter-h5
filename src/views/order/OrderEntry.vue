@@ -173,7 +173,6 @@ import {
 import {
   BMultbuyCheck
 } from '@/components/business';
-import { Toast } from 'mand-mobile';
 
 export default {
   name: 'OrderEntry',
@@ -198,8 +197,8 @@ export default {
       // 收货人信息
       consignee: {
         /* name: '',
-            sex: '男士',
-            phone: '15067543689' */
+              sex: '男士',
+              phone: '15067543689' */
       },
       // 订单类型单选
       orderTypes: [
@@ -367,19 +366,17 @@ export default {
       ],
       // 参与人选中id
       multBuyParticipantCheckIds: [],
-      orderNo:'',
-      haveConsignee:false
+      orderNo: '',
+      haveConsignee: false
     };
   },
-  computed: {
-
-  },
-  mounted(){
-  //    debugger
-  //    if(this.$route.query){
-  // const address = this.$route.query.temp
-  //   console.log('tag', address)
-  //    }
+  computed: {},
+  mounted() {
+    //    debugger
+    //    if(this.$route.query){
+    // const address = this.$route.query.temp
+    //   console.log('tag', address)
+    //    }
   },
   activated(){
        debugger
@@ -390,7 +387,7 @@ export default {
     console.log('tag', address)
      }
   },
-  created(){
+  created() {
     // debugger
   },
   methods: {
@@ -402,24 +399,24 @@ export default {
     //   /* 选择礼品 */
     //   this.chooseGiftPopShow = true;
     // },
-    addProduct(){
-        /*添加产品*/
+    addProduct() {
+      /* 添加产品 */
       this.$router.push({
-  name: 'Order.SearchProduct',
-});
+        name: 'Order.SearchProduct',
+      });
     },
     selectActivity() {
-     /*选择活动*/
+      /* 选择活动 */
       this.$router.push({
-  name: 'Order.OrderFollowActivity',
-});
+        name: 'Order.OrderFollowActivity',
+      });
     },
-        addAddress(){
-          /*添加用户信息*/
-     this.$router.push({
-  name: 'Order.AddAddress',
-});
-        },
+    addAddress() {
+      /* 添加用户信息 */
+      this.$router.push({
+        name: 'Order.AddAddress',
+      });
+    },
     shwAddressList() {
       /* 展示选择用户pop */
       this.addressPopShow = true;
@@ -432,7 +429,7 @@ export default {
         this.multBuyPopShow = true;
       }
     },
-    saveOrder(){
+    saveOrder() {
 
     }
   }

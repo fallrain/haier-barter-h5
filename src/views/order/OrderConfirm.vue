@@ -1,26 +1,27 @@
 <template xmlns:v-slot="">
   <div>
     <div class="orderConfirm-no">
-  <span class="orderConfirm-p">订单号：</span><p class="orderConfirm-s">2019-06-18</p>
-</div>
+      <span class="orderConfirm-p">订单号：</span>
+      <p class="orderConfirm-s">2019-06-18</p>
+    </div>
     <div class="orderEntry-header">
       <span class="orderEntry-header-name">门店：{{shopName}}</span>
     </div>
 
-      <div class="orderEntry-user">
-        <div>
-          <div class="orderEntry-user-head">
-            <span class="name mr16">收货人：{{consignee.name}}</span>
-            <span class="sex mr16">{{consignee.sex}}</span>
-            <i class="iconfont icon-dianhua mr16"></i>
-            <span class="phone mr16">{{consignee.phone}}</span>
+    <div class="orderEntry-user">
+      <div>
+        <div class="orderEntry-user-head">
+          <span class="name mr16">收货人：{{consignee.name}}</span>
+          <span class="sex mr16">{{consignee.sex}}</span>
+          <i class="iconfont icon-dianhua mr16"></i>
+          <span class="phone mr16">{{consignee.phone}}</span>
 
-          </div>
-          <p class="orderEntry-user-address">
-            {{consignee.address}}
-          </p>
         </div>
+        <p class="orderEntry-user-address">
+          {{consignee.address}}
+        </p>
       </div>
+    </div>
     <b-item
       class="mt16"
       title="购买日期："
@@ -95,16 +96,19 @@ import {
   BFieldset,
   BItem,
   BOrderProduct,
+  BOrderProductConfirm,
   BPop,
   BPopAddressList,
   BPopCheckList,
-  BRadioItem,BOrderProductConfirm
+  BRadioItem
 } from '@/components/form';
 
 import {
   BMultbuyCheck
 } from '@/components/business';
-import { Toast } from 'mand-mobile';
+import {
+  Toast
+} from 'mand-mobile';
 
 export default {
   name: 'OrderModify',
@@ -118,7 +122,8 @@ export default {
     BPop,
     BPopAddressList,
     BPopCheckList,
-    BRadioItem,BOrderProductConfirm
+    BRadioItem,
+    BOrderProductConfirm
   },
   data() {
     return {
@@ -129,8 +134,8 @@ export default {
       // 收货人信息
       consignee: {
         /* name: '',
-            sex: '男士',
-            phone: '15067543689' */
+              sex: '男士',
+              phone: '15067543689' */
       },
       // 订单类型单选
       orderTypes: [
@@ -313,48 +318,45 @@ export default {
       ],
       // 参与人选中id
       multBuyParticipantCheckIds: [],
-      orderNo:''
+      orderNo: ''
     };
   },
-  computed: {
-
-  },
-  created(){
-    this.orderService.generateOrderNo({},{recordModel:'Haier'}).then(res =>{
-        if(res.code === 1){
-          this.orderNo = res.data
-          this.orderNo = 'Z15645424968056668'
-          this.orderService.queryOrderInfoByOrderNo({},{orderNo:this.orderNo}).then(response =>{
-              if(response.code === 1){
-                  const resData  = response.data
-                  this.shopName = resData.storeName
-                  this.consignee.name = resData.userName
-                  this.consignee.phone = resData.userPhone
-                  this.consignee.sex = resData.userSex
-                  this.consignee.address = resData.dispatchProvince + resData.dispatchCity + resData.dispatchArea + resData.dispatchAdd
-                  this.buyDate = resData.buyTime
-                  this.orderType = resData.orderType
-                  this.haveConsignee()
-                  if(resData.orderDetailDtoList.length !== 0){
-                    this.productList = resData.orderDetailDtoList
-                    this.productList.forEach(item =>{
-                      if(item.productBrand == 'haier'){
-                        item.productBrandCN = '海尔'
-                      }else{
-                        item.productBrandCN ='卡萨帝'
-                      }
-                    })
-                  }
-              }
-          })
-        }else{
-         Toast.failed(res.msg);
-        }
-
-    })
+  computed: {},
+  created() {
+    this.orderService.generateOrderNo({}, { recordModel: 'Haier' }).then((res) => {
+      if (res.code === 1) {
+        this.orderNo = res.data;
+        this.orderNo = 'Z15645424968056668';
+        this.orderService.queryOrderInfoByOrderNo({}, { orderNo: this.orderNo }).then((response) => {
+          if (response.code === 1) {
+            const resData = response.data;
+            this.shopName = resData.storeName;
+            this.consignee.name = resData.userName;
+            this.consignee.phone = resData.userPhone;
+            this.consignee.sex = resData.userSex;
+            this.consignee.address = resData.dispatchProvince + resData.dispatchCity + resData.dispatchArea + resData.dispatchAdd;
+            this.buyDate = resData.buyTime;
+            this.orderType = resData.orderType;
+            this.haveConsignee();
+            if (resData.orderDetailDtoList.length !== 0) {
+              this.productList = resData.orderDetailDtoList;
+              this.productList.forEach((item) => {
+                if (item.productBrand == 'haier') {
+                  item.productBrandCN = '海尔';
+                } else {
+                  item.productBrandCN = '卡萨帝';
+                }
+              });
+            }
+          }
+        });
+      } else {
+        Toast.failed(res.msg);
+      }
+    });
   },
   methods: {
-     haveConsignee() {
+    haveConsignee() {
       /* 存在收货人信息 */
       return this.consignee && JSON.stringify(this.consignee) !== '{}';
     },
@@ -378,7 +380,7 @@ export default {
         this.multBuyPopShow = true;
       }
     },
-    saveOrder(){
+    saveOrder() {
 
     }
   }
@@ -475,26 +477,30 @@ export default {
     font-size: 24px;
     text-align: center;
   }
+
   .orderentry-address {
     .md-popup-mask {
       top: 0;
     }
   }
-.orderConfirm-no{
-  color: #1969C6;
-  font-size: 28px;
-  height: 80px;
-  display: flex;
-  .orderConfirm-p{
+
+  .orderConfirm-no {
+    color: #1969C6;
+    font-size: 28px;
     height: 80px;
-    line-height: 80px;
-    padding-left: 25px;
-    width: 580px;
-     flex-shrink: 0;
+    display: flex;
+
+    .orderConfirm-p {
+      height: 80px;
+      line-height: 80px;
+      padding-left: 25px;
+      width: 580px;
+      flex-shrink: 0;
+    }
+
+    .orderConfirm-s {
+      height: 80px;
+      line-height: 80px;
+    }
   }
-  .orderConfirm-s{
-    height: 80px;
-    line-height: 80px;
-  }
-}
 </style>

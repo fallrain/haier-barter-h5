@@ -95,6 +95,7 @@ export default {
     height: 100%;
     background: #fff;
   }
+
   .title {
     font-size: 30px;
     color: #333;

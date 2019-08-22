@@ -2,11 +2,11 @@
 <template>
   <div>
     <div class="reportInstallList-tab">
-    <md-tab-bar
-      v-model="curTab"
-      :items="tabs"
-      :hasInk="false"
-    ></md-tab-bar>
+      <md-tab-bar
+        v-model="curTab"
+        :items="tabs"
+        :hasInk="false"
+      ></md-tab-bar>
     </div>
     <div
       v-show="curScrollViewName==='scrollViewFinished'"
@@ -119,7 +119,7 @@ export default {
     upCallback(page) {
       // 下载过就设置已经初始化
       this[this.curScrollViewName].isListInit = true;
-      this.search(page).then(({result, pages, total}) => {
+      this.search(page).then(({ result, pages, total }) => {
         this.$nextTick(() => {
           // 通过当前页的数据条数，和总数据量来判断是否加载完
           this[this.curScrollViewName].mescroll.endBySize(result.length, total);
