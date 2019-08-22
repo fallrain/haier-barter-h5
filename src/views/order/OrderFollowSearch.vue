@@ -392,9 +392,9 @@ export default {
 
         }
 
-        if (item.orderNo != '') {
+        if (item.orderNo !== '') {
           item.showDetail = true;
-          if (item.flowStatus != 2) {
+          if (item.flowStatus !== 2) {
             item.productList = [];
             this.orderService.queryOrderInfoByOrderNo({}, { orderNo: item.orderNo }).then((response) => {
               if (response.code === 1) {
@@ -402,7 +402,7 @@ export default {
                 if (resData.orderDetailDtoList.length !== 0) {
                   item.productList = resData.orderDetailDtoList;
                   item.productList.forEach((val) => {
-                    if (val.productBrand == 'haier') {
+                    if (val.productBrand === 'haier') {
                       val.productBrandCN = '海尔';
                     } else {
                       val.productBrandCN = '卡萨帝';

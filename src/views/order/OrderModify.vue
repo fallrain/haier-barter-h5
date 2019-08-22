@@ -198,6 +198,12 @@
 
 <script>
 import {
+  Toast
+} from 'mand-mobile';
+import {
+  debuglog
+} from 'util';
+import {
   BActivityList,
   BDatePicker,
   BFieldset,
@@ -212,8 +218,6 @@ import {
 import {
   BMultbuyCheck
 } from '@/components/business';
-import { Toast } from 'mand-mobile';
-import { debuglog } from 'util';
 
 export default {
   name: 'OrderModify',
@@ -256,9 +260,9 @@ export default {
       orderType: 2,
       // 购机时间
       buyDate: '',
-      //送货时间
-      sendDate:'',
-      minSelectDate:new Date('2019-05-09'),
+      // 送货时间
+      sendDate: '',
+      minSelectDate: new Date('2019-05-09'),
       // 产品列表
       productList: [
         {
@@ -425,53 +429,52 @@ export default {
       ],
       // 参与人选中id
       multBuyParticipantCheckIds: [],
-      orderNo:''
+      orderNo: ''
     };
   },
   computed: {
 
   },
-  created(){
-    debugger
-    this.orderService.generateOrderNo({recordModel:'Haier'},{Authorization:'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAyNzE1MyIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2NTg1MzY1NSwiZXhwIjoxNTY2NzE3NjU1fQ.0OxV0VeoPOs_0GmMjSqZxmac8QyPplz3yFUZFKbj8O0'}).then(res =>{
-      debugger
-        if(res.code === 1){
-          this.orderNo = res.data
-          this.orderNo = 'Z15645424968056668'
-          this.orderService.queryOrderInfoByOrderNo({},{orderNo:this.orderNo}).then(response =>{
-              if(response.code === 1){
-                  const resData  = response.data
-                  this.shopName = resData.storeName
-                  this.consignee.name = resData.userName
-                  this.consignee.phone = resData.userPhone
-                  this.consignee.sex = resData.userSex
-                  this.consignee.address = resData.dispatchProvince + resData.dispatchCity + resData.dispatchArea + resData.dispatchAdd
-                  this.buyDate = resData.buyTime
-                  this.orderType = resData.orderType
-                  this.haveConsignee()
-                  if(resData.orderDetailDtoList.length !== 0){
-                    this.productList = resData.orderDetailDtoList
-                    this.productList.forEach(item =>{
-                      if(item.productBrand == 'haier'){
-                        item.productBrandCN = '海尔'
-                      }else{
-                        item.productBrandCN ='卡萨帝'
-                      }
-                    })
-                  }
-              }
-          })
-        }else{
-         Toast.failed(res.msg);
-        }
-
-    })
+  created() {
+    debugger;
+    this.orderService.generateOrderNo({ recordModel: 'Haier' }, { Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAyNzE1MyIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2NTg1MzY1NSwiZXhwIjoxNTY2NzE3NjU1fQ.0OxV0VeoPOs_0GmMjSqZxmac8QyPplz3yFUZFKbj8O0' }).then((res) => {
+      debugger;
+      if (res.code === 1) {
+        this.orderNo = res.data;
+        this.orderNo = 'Z15645424968056668';
+        this.orderService.queryOrderInfoByOrderNo({}, { orderNo: this.orderNo }).then((response) => {
+          if (response.code === 1) {
+            const resData = response.data;
+            this.shopName = resData.storeName;
+            this.consignee.name = resData.userName;
+            this.consignee.phone = resData.userPhone;
+            this.consignee.sex = resData.userSex;
+            this.consignee.address = resData.dispatchProvince + resData.dispatchCity + resData.dispatchArea + resData.dispatchAdd;
+            this.buyDate = resData.buyTime;
+            this.orderType = resData.orderType;
+            this.haveConsignee();
+            if (resData.orderDetailDtoList.length !== 0) {
+              this.productList = resData.orderDetailDtoList;
+              this.productList.forEach((item) => {
+                if (item.productBrand === 'haier') {
+                  item.productBrandCN = '海尔';
+                } else {
+                  item.productBrandCN = '卡萨帝';
+                }
+              });
+            }
+          }
+        });
+      } else {
+        Toast.failed(res.msg);
+      }
+    });
   },
   methods: {
-    addressModify(){
-      this.addressPopShow = true
+    addressModify() {
+      this.addressPopShow = true;
     },
-     haveConsignee() {
+    haveConsignee() {
       /* 存在收货人信息 */
       return this.consignee && JSON.stringify(this.consignee) !== '{}';
     },
@@ -487,10 +490,10 @@ export default {
       /* 展示选择用户pop */
       this.addressPopShow = true;
     },
-    addNewAddress(){
-           this.$router.push({
-  name: 'Order.AddAddress',
-           })
+    addNewAddress() {
+      this.$router.push({
+        name: 'Order.AddAddress',
+      });
     },
     next() {
       /* 下一步 */
@@ -500,7 +503,7 @@ export default {
         this.multBuyPopShow = true;
       }
     },
-    saveOrder(){
+    saveOrder() {
 
     }
   }
