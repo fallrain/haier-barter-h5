@@ -18,6 +18,7 @@
             <button
               type="button"
               class="common-btn-waring"
+              @click="addressModify()"
             >更改地址
             </button>
           </div>
@@ -30,6 +31,7 @@
             type="button"
             class="common-btn-primary w100per"
             @click="shwAddressList"
+            @addNew="addNewAddress()"
           >添加或选择用户信息
           </button>
         </div>
@@ -94,6 +96,24 @@
         </button>
       </div>
     </b-fieldset>
+    <b-item
+      class="mt16"
+      title="送货日期"
+    >
+      <template
+        v-slot:right=""
+      >
+        <b-date-picker
+          class="orderEntry-date"
+          slot="right"
+          type="date"
+          title="请选择送货日期"
+          :defaultDate="sendDate"
+
+          v-model="sendDate"
+        ></b-date-picker>
+      </template>
+    </b-item>
     <b-fieldset
       class="mt16 orderEntry-rights-fieldset"
       title="已选择的权益"
@@ -194,6 +214,7 @@ import {
   BMultbuyCheck
 } from '@/components/business';
 import { Toast } from 'mand-mobile';
+import { debuglog } from 'util';
 
 export default {
   name: 'OrderModify',
@@ -236,6 +257,9 @@ export default {
       orderType: 2,
       // 购机时间
       buyDate: '',
+      //送货时间
+      sendDate:'',
+      minSelectDate:new Date('2019-05-09'),
       // 产品列表
       productList: [
         {
@@ -410,7 +434,8 @@ export default {
   },
   created(){
     debugger
-    this.orderService.generateOrderNo({},{recordModel:'Haier'}).then(res =>{
+    this.orderService.generateOrderNo({recordModel:'Haier'},{Authorization:'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAyNzE1MyIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2NTg1MzY1NSwiZXhwIjoxNTY2NzE3NjU1fQ.0OxV0VeoPOs_0GmMjSqZxmac8QyPplz3yFUZFKbj8O0'}).then(res =>{
+      debugger
         if(res.code === 1){
           this.orderNo = res.data
           this.orderNo = 'Z15645424968056668'
@@ -444,6 +469,9 @@ export default {
     })
   },
   methods: {
+    addressModify(){
+      this.addressPopShow = true
+    },
      haveConsignee() {
       /* 存在收货人信息 */
       return this.consignee && JSON.stringify(this.consignee) !== '{}';
@@ -459,6 +487,11 @@ export default {
     shwAddressList() {
       /* 展示选择用户pop */
       this.addressPopShow = true;
+    },
+    addNewAddress(){
+           this.$router.push({
+  name: 'Order.AddAddress',
+           })
     },
     next() {
       /* 下一步 */

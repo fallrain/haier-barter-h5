@@ -1,4 +1,4 @@
-const baseURL = 'barter-manage';
+const baseURL = 'manage';
 const urls = {
   // 代报装列表
   queryReportInstallList: '/reportInstall/queryReportInstallList',

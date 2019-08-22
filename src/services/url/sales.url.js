@@ -1,4 +1,4 @@
-const baseURL = 'barter-manage';
+const baseURL = 'manage';
 const urls = {
   // 销量一级展示列表
   getReportEhubProductGroupPage: '/reportEhub/getReportEhubProductGroupPage',

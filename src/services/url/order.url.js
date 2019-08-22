@@ -1,4 +1,4 @@
-const baseURL = 'barter-manage';
+const baseURL = 'manage';
 const urls = {
   // 订单列表
   queryOrderFollowlList: '/orderFollow/queryOrderFollowlList',//订单跟进列表

@@ -37,6 +37,10 @@ export default {
     defaultDate: {
       default: new Date()
     },
+    // //最小选择时间
+    // minDate: {
+    //   default: new Date()
+    // },
     // 格式化
     pattern: {
       type: String,
@@ -51,6 +55,7 @@ export default {
   data() {
     return {
       defaultVal: this.defaultDate ? new Date(this.defaultDate) : new Date(),
+      // minVal:new Date(this.minDate),
       isDatePickerShow: false
     };
   },

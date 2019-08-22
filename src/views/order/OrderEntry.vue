@@ -18,6 +18,7 @@
             <button
               type="button"
               class="common-btn-waring"
+              @click="addAddress()"
             >更改地址
             </button>
           </div>
@@ -382,7 +383,7 @@ export default {
   },
   activated(){
        debugger
-     if(this.$route.query){
+     if(this.$route.query.temp){
   const address = this.$route.query.temp
   this.consignee.address = address
   this.haveConsignee = true
