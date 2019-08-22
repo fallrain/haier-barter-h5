@@ -2,10 +2,10 @@
   <div>
     <div class="activity-tab-bg activity-tab">
       <md-tab-bar
-          v-model="current"
-          :items="items"
-          :hasInk="false"
-        />
+        v-model="current"
+        :items="items"
+        :hasInk="false"
+      />
     </div>
 
     <div
@@ -148,7 +148,7 @@ export default {
     upCallback(page) {
       // 下载过就设置已经初始化
       this[this.curScrollViewName].isListInit = true;
-      this.search(page).then(({result, pages, total}) => {
+      this.search(page).then(({ result, pages, total }) => {
         this.$nextTick(() => {
           // 通过当前页的数据条数，和总数据量来判断是否加载完
           this[this.curScrollViewName].mescroll.endBySize(result.length, total);
@@ -177,6 +177,7 @@ export default {
   .reportInstallList-view {
     height: calc(100vh - 108px);
   }
+
   .activity-tab-bg {
     .md-tab-bar {
       padding-left: 24px;

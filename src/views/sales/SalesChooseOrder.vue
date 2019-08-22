@@ -37,9 +37,10 @@
 </template>
 
 <script>
-  import {
-    BOrderDialog
-  } from '@/components/form';
+import {
+  BOrderDialog
+} from '@/components/form';
+
 export default {
   name: 'SalesChooseOrder',
   components: {
@@ -52,16 +53,16 @@ export default {
         productCode: '',
         gjTime: ''
       },
-      //联网获取的数据
+      // 联网获取的数据
       list: [
         {
-          //购买人
+          // 购买人
           yhName: '',
-          //录单人
+          // 录单人
           hmcName: '',
-          //购机时间
+          // 购机时间
           gjTime: '',
-          //订单金额
+          // 订单金额
           orderTotalPrice: '',
         }
       ],
@@ -77,15 +78,15 @@ export default {
         rightColor: ''
       },
       isOpen: false,
-      //暂存点击的item信息
+      // 暂存点击的item信息
       itemInfo: {
-        //购买人
+        // 购买人
         yhName: '',
-        //录单人
+        // 录单人
         hmcName: '',
-        //购机时间
+        // 购机时间
         gjTime: '',
-        //订单金额
+        // 订单金额
         orderTotalPrice: '',
       },
     };
@@ -109,10 +110,10 @@ export default {
     itemClick(itemInfo, index) {
       this.clickNo = index;
       this.itemInfo = itemInfo;
-      this.dialogContent.content = "请联系录单人" + itemInfo.hmcName + "处理";
+      this.dialogContent.content = `请联系录单人${itemInfo.hmcName}处理`;
     },
     confirm() {
-      //TODO 添加是否录单人的判断
+      // TODO 添加是否录单人的判断
       if (false) {
         this.isOpen = !this.isOpen;
       } else {

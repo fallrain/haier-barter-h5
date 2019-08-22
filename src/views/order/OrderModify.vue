@@ -102,7 +102,7 @@
       <template
         v-slot:headRight=""
       >
-       <p class="orderEntry-rights-change">修改</p>
+        <p class="orderEntry-rights-change">修改</p>
       </template>
       <div>
         <b-activity-list
@@ -193,7 +193,9 @@ import {
 import {
   BMultbuyCheck
 } from '@/components/business';
-import { Toast } from 'mand-mobile';
+import {
+  Toast
+} from 'mand-mobile';
 
 export default {
   name: 'OrderModify',
@@ -218,8 +220,8 @@ export default {
       // 收货人信息
       consignee: {
         /* name: '',
-            sex: '男士',
-            phone: '15067543689' */
+              sex: '男士',
+              phone: '15067543689' */
       },
       // 订单类型单选
       orderTypes: [
@@ -402,49 +404,46 @@ export default {
       ],
       // 参与人选中id
       multBuyParticipantCheckIds: [],
-      orderNo:''
+      orderNo: ''
     };
   },
-  computed: {
-
-  },
-  created(){
-    debugger
-    this.orderService.generateOrderNo({},{recordModel:'Haier'}).then(res =>{
-        if(res.code === 1){
-          this.orderNo = res.data
-          this.orderNo = 'Z15645424968056668'
-          this.orderService.queryOrderInfoByOrderNo({},{orderNo:this.orderNo}).then(response =>{
-              if(response.code === 1){
-                  const resData  = response.data
-                  this.shopName = resData.storeName
-                  this.consignee.name = resData.userName
-                  this.consignee.phone = resData.userPhone
-                  this.consignee.sex = resData.userSex
-                  this.consignee.address = resData.dispatchProvince + resData.dispatchCity + resData.dispatchArea + resData.dispatchAdd
-                  this.buyDate = resData.buyTime
-                  this.orderType = resData.orderType
-                  this.haveConsignee()
-                  if(resData.orderDetailDtoList.length !== 0){
-                    this.productList = resData.orderDetailDtoList
-                    this.productList.forEach(item =>{
-                      if(item.productBrand == 'haier'){
-                        item.productBrandCN = '海尔'
-                      }else{
-                        item.productBrandCN ='卡萨帝'
-                      }
-                    })
-                  }
-              }
-          })
-        }else{
-         Toast.failed(res.msg);
-        }
-
-    })
+  computed: {},
+  created() {
+    debugger;
+    this.orderService.generateOrderNo({}, { recordModel: 'Haier' }).then((res) => {
+      if (res.code === 1) {
+        this.orderNo = res.data;
+        this.orderNo = 'Z15645424968056668';
+        this.orderService.queryOrderInfoByOrderNo({}, { orderNo: this.orderNo }).then((response) => {
+          if (response.code === 1) {
+            const resData = response.data;
+            this.shopName = resData.storeName;
+            this.consignee.name = resData.userName;
+            this.consignee.phone = resData.userPhone;
+            this.consignee.sex = resData.userSex;
+            this.consignee.address = resData.dispatchProvince + resData.dispatchCity + resData.dispatchArea + resData.dispatchAdd;
+            this.buyDate = resData.buyTime;
+            this.orderType = resData.orderType;
+            this.haveConsignee();
+            if (resData.orderDetailDtoList.length !== 0) {
+              this.productList = resData.orderDetailDtoList;
+              this.productList.forEach((item) => {
+                if (item.productBrand == 'haier') {
+                  item.productBrandCN = '海尔';
+                } else {
+                  item.productBrandCN = '卡萨帝';
+                }
+              });
+            }
+          }
+        });
+      } else {
+        Toast.failed(res.msg);
+      }
+    });
   },
   methods: {
-     haveConsignee() {
+    haveConsignee() {
       /* 存在收货人信息 */
       return this.consignee && JSON.stringify(this.consignee) !== '{}';
     },
@@ -468,7 +467,7 @@ export default {
         this.multBuyPopShow = true;
       }
     },
-    saveOrder(){
+    saveOrder() {
 
     }
   }
@@ -569,7 +568,8 @@ export default {
       top: 0;
     }
   }
-  .orderEntry-rights-change{
+
+  .orderEntry-rights-change {
     padding: 10px;
     border: 1px solid #1969C6;
     border-radius: 24px;

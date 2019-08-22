@@ -72,7 +72,7 @@
                   :min-date="new Date(product.startDateTime)"
                   v-model="product.requireServiceDate"
                 ></b-date-picker>
-            </div>
+              </div>
             </div>
           </div>
         </div>
@@ -114,8 +114,8 @@ import {
 } from '@/components/business';
 
 import {
-  BRadioItem,
-  BPopAddressList
+  BPopAddressList,
+  BRadioItem
 } from '@/components/form';
 import {
   Dialog
@@ -158,42 +158,42 @@ export default {
         address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
         tagName: '自己家'
       },
-        {
-          name: '李四',
-          phone: '15000000000',
-          address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-          tagName: '办公室'
-        },
-        {
-          name: '王二',
-          phone: '15000000000',
-          address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-          tagName: '父母家'
-        },
-        {
-          name: '尼古拉斯赵四',
-          phone: '15000000000',
-          address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-          tagName: '其他'
-        },
-        {
-          name: '莱桑尼丝铁柱',
-          phone: '15000000000',
-          address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-          tagName: '其他'
-        },
-        {
-          name: '罗伯特英子',
-          phone: '15000000000',
-          address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-          tagName: '其他'
-        }],
+      {
+        name: '李四',
+        phone: '15000000000',
+        address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
+        tagName: '办公室'
+      },
+      {
+        name: '王二',
+        phone: '15000000000',
+        address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
+        tagName: '父母家'
+      },
+      {
+        name: '尼古拉斯赵四',
+        phone: '15000000000',
+        address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
+        tagName: '其他'
+      },
+      {
+        name: '莱桑尼丝铁柱',
+        phone: '15000000000',
+        address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
+        tagName: '其他'
+      },
+      {
+        name: '罗伯特英子',
+        phone: '15000000000',
+        address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
+        tagName: '其他'
+      }],
       orderNo: '',
       productListTemp: [],
       flowStatus: '', // 待报装、已报装。。。。
       canUpdateAddress: false, // 是否可修改地址
       itemIndex: undefined, // 待修改的列表序号
-      addStatus: '',// 是否是手动录单，此参数与录单员参数名保持一致
+      addStatus: '', // 是否是手动录单，此参数与录单员参数名保持一致
       // 选择收货人列表pop show
       addressPopShow: false,
       // 收货人地址pop列表
