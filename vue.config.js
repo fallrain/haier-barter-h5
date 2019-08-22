@@ -19,7 +19,7 @@ module.exports = {
         secure: false
       },
       '/api': {
-        target: 'https://hzytest.haier.com/',
+        target: 'http://testdb.haier.net/',
         changeOrigin: true,
         pathRewrite: {
           '^/api': ''
