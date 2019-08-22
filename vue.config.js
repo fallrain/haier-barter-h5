@@ -24,7 +24,7 @@ module.exports = {
         pathRewrite: {
           '^/api': ''
         },
-        secure: true
+        secure: false
       }
     }
   },
