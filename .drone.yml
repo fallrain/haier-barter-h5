@@ -4,6 +4,7 @@ pipeline:
     environment:
       - AUTO_GENERATE=yes
     commands:
+      - n stable
       - node -v
       - echo -e "FROM registry.haier.net/library/nginx:1.13.8-alpine \nCOPY nginx.conf /etc/nginx/conf.d \nCOPY dist/ /usr/share/nginx/html" >> ./context_Dockerfile
     volumes:
