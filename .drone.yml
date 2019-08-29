@@ -4,7 +4,7 @@ pipeline:
     environment:
       - AUTO_GENERATE=yes
     commands:
-      - yarn add  -g n
+      - npm install  -g n
       - echo -e "FROM registry.haier.net/library/nginx:1.13.8-alpine \nCOPY nginx.conf /etc/nginx/conf.d \nCOPY dist/ /usr/share/nginx/html" >> ./context_Dockerfile
     volumes:
       - /data/npm/:/root/.npm
