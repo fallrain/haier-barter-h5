@@ -4,6 +4,9 @@ pipeline:
     environment:
       - AUTO_GENERATE=yes
     commands:
+      - npm config set registry http://10.138.16.188:4873
+      - npm install -g n
+      - n stable
       - node -v
       - yarn config set registry http://10.138.16.188:4873
       - yarn
