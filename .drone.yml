@@ -1,0 +1,39 @@
+pipeline:
+  build:
+    image: registry.haier.net/library/maven:3.5.2-jdk-8-alpine-haier
+    environment:
+      - AUTO_GENERATE=yes
+    commands:
+      - echo -e "\x23 !!重要!! 参考下面格式, 自定义 应用的dockerFile \nFROM  nginx \nCOPY dist/ /usr/share/nginx/html" >> ./context_Dockerfile
+    when:
+      event: tag
+      ref: refs/tags/v*[0-9].*[0-9].[0-9]*
+  
+
+  publish:
+    image: plugins/docker
+    registry: registry.haier.net
+    repo: registry.haier.net/duibei_gitlab/haier-barter-h5
+    secrets: [ docker_username, docker_password ]
+    dockerfile: ./context_Dockerfile
+    context: .
+    tags:
+      - ${DRONE_TAG}
+    force_tag: true
+    when:
+      event: tag
+      ref: refs/tags/v*[0-9].*[0-9].[0-9]*
+
+
+  notify:
+    name: notify
+    image: registry.haier.net/library/drone-notify:v0.0.33
+    project: duibei
+    pipelinegit: https://git.haier.net/hlht-duibei/haier-barter-h5.git
+    receiver: haier-barter-h5
+    when:
+      status: [success, failure]
+      event: tag
+      ref: refs/tags/v*[0-9].*[0-9].[0-9]*
+
+
