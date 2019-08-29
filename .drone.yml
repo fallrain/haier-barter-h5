@@ -4,7 +4,9 @@ pipeline:
     environment:
       - AUTO_GENERATE=yes
     commands:
-      - node --version
+      - npm  config set registry http://10.138.16.188:4873
+      - npm install -g n
+      - n stable
       - echo -e "FROM registry.haier.net/library/nginx:1.13.8-alpine \nCOPY nginx.conf /etc/nginx/conf.d \nCOPY dist/ /usr/share/nginx/html" >> ./context_Dockerfile
     volumes:
       - /data/npm/:/root/.npm
