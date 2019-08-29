@@ -4,6 +4,7 @@ pipeline:
     environment:
       - AUTO_GENERATE=yes
     commands:
+      - npm config set registry http://10.138.16.188:4873
       - npm i -g n
       - n stable
       - node -v
