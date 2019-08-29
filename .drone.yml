@@ -11,7 +11,7 @@ pipeline:
       - yarn config set registry http://10.138.16.188:4873
       - yarn
       - yarn sit
-      - echo -e "FROM  nginx \nCOPY dist/ /usr/share/nginx/html" >> ./context_Dockerfile
+      - cp ./Dockerfile ./context_Dockerfile
     volumes:
       - /data/npm/:/root/.npm
     when:
