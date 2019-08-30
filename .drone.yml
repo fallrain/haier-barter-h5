@@ -1,0 +1,48 @@
+pipeline:
+  build:
+    image: registry.haier.net/library/node:8.9.0-slim
+    environment:
+      - AUTO_GENERATE=yes
+    commands:
+      - npm config set registry http://10.138.16.188:4873
+      - npm install -g n
+      - n stable
+      - node -v
+      - yarn config set registry http://10.138.16.188:4873
+      - yarn
+      - yarn sit
+      - cp ./Dockerfile ./context_Dockerfile
+    volumes:
+      - /data/npm/:/root/.npm
+    when:
+      event: tag
+      ref: refs/tags/v*[0-9].*[0-9].[0-9]*
+  
+
+  publish:
+    image: plugins/docker
+    registry: registry.haier.net
+    repo: registry.haier.net/duibei_gitlab/haier-barter-h5
+    secrets: [ docker_username, docker_password ]
+    dockerfile: ./context_Dockerfile
+    context: .
+    tags:
+      - ${DRONE_TAG}
+    force_tag: true
+    when:
+      event: tag
+      ref: refs/tags/v*[0-9].*[0-9].[0-9]*
+
+
+  notify:
+    name: notify
+    image: registry.haier.net/library/drone-notify:v0.0.33
+    project: duibei
+    pipelinegit: https://git.haier.net/hlht-duibei/haier-barter-h5.git
+    receiver: haier-barter-h5
+    when:
+      status: [success, failure]
+      event: tag
+      ref: refs/tags/v*[0-9].*[0-9].[0-9]*
+
+
