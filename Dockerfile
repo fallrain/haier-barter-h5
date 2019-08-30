@@ -4,3 +4,5 @@ COPY l9QWuMfmPy.txt /usr/share/nginx
 COPY EkXH2GdkPn.txt /usr/share/nginx
 COPY nginx.conf /etc/nginx/conf.d
 COPY dist/ /usr/share/nginx/html
+EXPOSE 80
+EXPOSE 443
