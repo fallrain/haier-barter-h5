@@ -191,8 +191,8 @@ export default {
   created() {
     // this.searchData();
     this.getNoticeData();
-    // this.userinfo.token = this.getQueryString('userinfo').token;
-    this.userinfo.token = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAyNzE1MyIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2NzA3MTk0NSwiZXhwIjoxNTY3OTM1OTQ1fQ.yvaX4fqXqOhZWwjNkA2EJ0XNpgqmhPloSJzsns61czg';
+    this.userinfo.token = this.getQueryString('userinfo').token;
+    // this.userinfo.token = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAyNzE1MyIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2NzE2MTEwMiwiZXhwIjoxNTY4MDI1MTAyfQ.667Lu_NrJEuz-iGzDHrSNs89qz4MUx97fGYozqv203A';
     localStorage.setItem('userinfo', this.userinfo);
     localStorage.setItem('acces_token', this.userinfo.token);
   },

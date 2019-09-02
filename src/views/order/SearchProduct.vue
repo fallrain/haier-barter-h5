@@ -95,15 +95,14 @@ export default {
   methods: {
     search(val) {
       /* 搜索产品 */
-      this.orderService.list({
+      debugger;
+      this.productService.list({
         keyWords: this.searchVal,
         pageNo: 1,
         pageSize: 10
       }).then((res) => {
         debugger;
-        if (res.code === 1) {
-
-        }
+        if (res.code === 1) { }
       });
       console.log(val);
     }
