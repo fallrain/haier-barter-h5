@@ -1,11 +1,11 @@
 import Vue from 'vue';
 import axios from 'axios';
 import qs from 'qs';
-import router from '@/router';
-import store from '@/store';
 import {
   Toast
 } from 'mand-mobile';
+import router from '@/router';
+import store from '@/store';
 
 const ax = axios.create();
 ax.defaults = Object.assign(
@@ -69,9 +69,7 @@ const axGet = function (url, params) {
 
 const axPost = function (url, data, params) {
   return ax({
-    headers: {
-      'content-type': 'application/x-www-form-urlencoded'
-    },
+    headers: {'content-type': 'application/x-www-form-urlencoded', },
     method: 'post',
     url,
     data: qs.stringify(data),

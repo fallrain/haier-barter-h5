@@ -131,6 +131,7 @@ export default {
       searchWord: '',
       show: false,
       isFinished: true,
+      userinfo: {},
       curTab: 0,
       handleList: [],
       noticeNum: '',
@@ -190,6 +191,10 @@ export default {
   created() {
     // this.searchData();
     this.getNoticeData();
+    this.userinfo.token = this.getQueryString('userinfo').token;
+    // this.userinfo.token = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAyNzE1MyIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2NzE2MTEwMiwiZXhwIjoxNTY4MDI1MTAyfQ.667Lu_NrJEuz-iGzDHrSNs89qz4MUx97fGYozqv203A';
+    localStorage.setItem('userinfo', this.userinfo);
+    localStorage.setItem('acces_token', this.userinfo.token);
   },
   computed: {
     curScrollViewName() {
@@ -305,7 +310,7 @@ export default {
           },
           {
             pageNum: page.num,
-            pageSize: page.size
+            pageSize: page.size,
           }
         )
         .then((res) => {

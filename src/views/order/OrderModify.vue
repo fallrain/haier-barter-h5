@@ -437,7 +437,7 @@ export default {
   },
   created() {
     debugger;
-    this.orderService.generateOrderNo({ recordModel: 'Haier' }, { Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAyNzE1MyIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2NTg1MzY1NSwiZXhwIjoxNTY2NzE3NjU1fQ.0OxV0VeoPOs_0GmMjSqZxmac8QyPplz3yFUZFKbj8O0' }).then((res) => {
+    this.orderService.generateOrderNo({ recordModel: 'Haier', }, { }).then((res) => {
       debugger;
       if (res.code === 1) {
         this.orderNo = res.data;
