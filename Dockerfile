@@ -2,6 +2,7 @@
 FROM registry.haier.net/library/nginx:1.13.8-alpine
 COPY l9QWuMfmPy.txt /usr/share/nginx
 COPY EkXH2GdkPn.txt /usr/share/nginx
+RUN /bin/sh  -c "rm -rf /etc/nginx/conf.d/default.conf"
 COPY nginx.conf /etc/nginx/conf.d
 COPY dist/ /usr/share/nginx/html
 EXPOSE 80
