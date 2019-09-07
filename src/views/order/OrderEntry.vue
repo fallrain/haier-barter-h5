@@ -18,10 +18,10 @@
       <div class="orderEntry-user">
         <div v-if="haveConsignee">
           <div class="orderEntry-user-head">
-            <span class="name mr16">收货人：{{consignee.name}}</span>
-            <span class="sex mr16">{{consignee.sex}}</span>
+            <span class="name mr16">收货人：{{customerInfo.username}}</span>
+            <span class="sex mr16">{{customerInfo.sex}}</span>
             <i class="iconfont icon-dianhua mr16"></i>
-            <span class="phone mr16">{{consignee.phone}}</span>
+            <span class="phone mr16">{{customerInfo.mobile}}</span>
             <button
               type="button"
               class="common-btn-waring"
@@ -30,7 +30,7 @@
             </button>
           </div>
           <p class="orderEntry-user-address">
-            {{consignee.address}}
+            {{customerInfo.address}}
           </p>
         </div>
         <div v-else>
@@ -159,7 +159,8 @@
         :show.sync="addressPopShow"
         :list="addressList"
         @addNew="addAddress"
-        @editAddress="editAddress()"
+        @editAddress="editAddress"
+        @clickAddress="selectAddress"
       ></b-pop-address-list>
     </div>
     <b-pop
@@ -484,6 +485,7 @@ export default {
         username: 'string'
       };
       this.addressList.push(a);
+      this.customerInfo = this.addressList[0];
       this.productService.deafaultCustomerAddress(this.mobile).then((res) => {
         if (res.code === 1) {
           if (res.data !== null) {
@@ -528,6 +530,10 @@ export default {
       this.$router.push({
         name: 'Order.OrderFollowActivity',
       });
+    },
+    selectAddress(item) {
+      debugger;
+      this.customerInfo = item;
     },
     addAddress() {
       /* 添加用户信息 */

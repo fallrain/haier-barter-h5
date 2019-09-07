@@ -17,7 +17,7 @@
             class="b-address-checkList-item"
             v-for="(item,index) in list"
             :key="index"
-            @click="addressClick"
+            @click="addressClick(item)"
           >
             <div class="b-address-checkList-item-portrait">{{item.familyItemCode}}</div>
             <div class="b-address-checkList-item-cnt">
@@ -27,7 +27,7 @@
               <p class="b-address-checkList-item-cnt-ads">{{item.address}}</p>
             </div>
             <div class="b-address-checkList-opr">
-              <button type="button" class="b-address-checkList-opr-btn" @click="editAddress">编辑</button>
+              <button type="button" class="b-address-checkList-opr-btn" @click="editAddress(item)">编辑</button>
             </div>
           </li>
         </ul>
@@ -81,8 +81,10 @@ export default {
   methods: {
     addressClick(item) {
       /* 地址条目click */
+
+      debugger;
+      this.$emit('clickAddress', item);
       this.popupShow = false;
-      this.$emit('click', item);
     },
     addNewClick(item) {
       /* 添加新地址click */

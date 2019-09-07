@@ -194,10 +194,11 @@ export default {
     this.addressData = addressData;
     if (this.$route.params) {
       this.region = this.$route.params.region;
-      if (this.region == 'add') {
+      if (this.region === 'add') {
         this.confirmShow = true;
       } else {
         this.confirmShow = false;
+        this.customerInfo = this.$route.params.info;
       }
     }
     // this.getFamilyItem();
