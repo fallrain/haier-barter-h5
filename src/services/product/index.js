@@ -8,8 +8,8 @@ export default {
     /* 查询订单列表 */
     return axGet(urls.list, param);
   },
-  customerAddressList(param) {
-    return axGet(urls.customerAddressList, param);
+  customerAddressList(mobile) {
+    return axGet(urls.customerAddressList(mobile));
   },
   updateCustomerAddress(data, param) {
     return axPostJson(urls.updateCustomerAddress, data, param);
@@ -17,14 +17,14 @@ export default {
   addcustomerAddress(data, param) {
     return axPostJson(urls.addcustomerAddress, data, param);
   },
-  deafaultCustomerAddress(param) {
-    return axGet(urls.deafaultCustomerAddress, param);
+  deafaultCustomerAddress(mobile) {
+    return axGet(urls.deafaultCustomerAddress(mobile));
   },
   commonTypeQuery(param) {
     return axGet(urls.commonTypeQuery, param);
   },
-  storeInfo(param) {
-    return axGet(urls.storeInfo, param);
+  storeInfo(shopId) {
+    return axGet(urls.storeInfo(shopId));
   }
 
 };

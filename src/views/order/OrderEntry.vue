@@ -417,20 +417,22 @@ export default {
     if (this.$route.query.temp) {
       const obj = JSON.parse(this.$route.query.temp);
       if (obj.tel) {
-        this.mobile = this.$route.query.temp;
+        this.mobile = obj.tel;
         this.queryCustomerDefault();
       }
     }
   },
   created() {
-    // debugger
+    debugger;
     if (localStorage.getItem('userinfo')) {
       this.userParam = localStorage.getItem('userinfo');
+      this.shopId = this.userParam.shopId;
       this.mobile = this.userParam.mobile;
     }
     this.getUserStore();
     this.genarateOrderNum();
     this.queryCustomerDefault();
+    this.getAddressList();
   },
   methods: {
     //  haveConsignee() {
@@ -443,7 +445,8 @@ export default {
     // },
     // 获取门店信息
     getUserStore() {
-      this.productService.storeInfo(this.userParam.shopId).then((res) => {
+      this.shopId = '999999999';
+      this.productService.storeInfo(this.shopId).then((res) => {
         if (res.code === 1) {
           this.shopName = '';
         }
@@ -451,23 +454,23 @@ export default {
     },
     // 查询默认地址
     getDeafultAddress() {
-      this.productService.deafaultCustomerAddress({ mobile: this.mobile }).then((res) => {
+      this.productService.deafaultCustomerAddress(this.mobile).then((res) => {
 
       });
     },
     // 查询地址列表ß
     getAddressList() {
+      this.customerid = '11111';
       this.productService.customerAddressList(this.customerid).then((res) => {
 
       });
     },
     // 生成订单号
     genarateOrderNum() {
-      this.orderService.generateOrderNo({ recordModel: 'Haier', }, { }).then((res) => {
+      this.orderService.generateOrderNo({}, { recordMode: 'Haier' },).then((res) => {
         debugger;
         if (res.code === 1) {
           this.orderNo = res.data;
-          this.orderNo = 'Z15645424968056668';
         } else {
           Toast.failed(res.msg);
         }
