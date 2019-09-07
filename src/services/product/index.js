@@ -11,11 +11,11 @@ export default {
   customerAddressList(param) {
     return axGet(urls.customerAddressList, param);
   },
-  updateCustomerAddress(param) {
-    return axPost(urls.updateCustomerAddress, param);
+  updateCustomerAddress(data, param) {
+    return axPostJson(urls.updateCustomerAddress, data, param);
   },
-  addcustomerAddress(param) {
-    return axPostJson(urls.addcustomerAddress, param);
+  addcustomerAddress(data, param) {
+    return axPostJson(urls.addcustomerAddress, data, param);
   },
   deafaultCustomerAddress(param) {
     return axGet(urls.deafaultCustomerAddress, param);

@@ -415,19 +415,18 @@ export default {
   activated() {
     debugger;
     if (this.$route.query.temp) {
-      const address = this.$route.query.temp;
-      this.consignee.address = address;
-      this.haveConsignee = true;
-      console.log('tag', address);
+      const obj = JSON.parse(this.$route.query.temp);
+      if (obj.tel) {
+        this.mobile = this.$route.query.temp;
+        this.queryCustomerDefault();
+      }
     }
   },
   created() {
     // debugger
     if (localStorage.getItem('userinfo')) {
       this.userParam = localStorage.getItem('userinfo');
-    }
-    if (this.$route.query.userInfo) {
-      this.haveCustomer = true;
+      this.mobile = this.userParam.mobile;
     }
     this.getUserStore();
     this.genarateOrderNum();
@@ -475,10 +474,12 @@ export default {
       });
     },
     queryCustomerDefault() {
+      this.tel = '18213312';
       this.productService.deafaultCustomerAddress(this.tel).then((res) => {
         if (res.code === 1) {
           if (res.data !== []) {
             this.haveConsignee = true;
+            this.haveCustomer = true;
             this.customerInfo = res.data;
             this.consignee.address = res.data.province + res.data.city + res.data.district + res.data.address;
             this.consignee.phone = res.data.mobile;
@@ -522,6 +523,7 @@ export default {
       /* 添加用户信息 */
       if (this.addressList.length === 0) {
         this.region = 'add';
+
         this.$router.push({
           name: 'Order.AddAddress',
           params: { region: this.region, info: '' }

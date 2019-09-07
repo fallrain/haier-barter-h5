@@ -142,13 +142,13 @@ export default {
         mobile: '',
         province: '',
         sex: 0,
-        userId: '',
+        userId: '123',
+        source: '',
         username: '',
         tag: []
       },
       searchEnd: false,
       // 订单类型单选
-      familyItemCode: '',
       sexTypes: [
         {
           key: 1,
@@ -164,6 +164,7 @@ export default {
       region: '',
       // 地址标签列表
       // tagList: [],
+      tag: [],
       tagList: [
         {
           id: 1,
@@ -191,8 +192,8 @@ export default {
   created() {
     // 不加入双向绑定
     this.addressData = addressData;
-    if (this.$route.params.name) {
-      this.region = this.$route.params;
+    if (this.$route.params) {
+      this.region = this.$route.params.region;
       if (this.region == 'add') {
         this.confirmShow = true;
       } else {
@@ -233,7 +234,6 @@ export default {
       });
     },
     addressChange(address) {
-      debugger;
       /* 地址change */
       const addressA = address.options.map(v => v.label);
       const addressAy = address.values;
@@ -243,30 +243,27 @@ export default {
       this.addressName = addressA.join('/');
     },
     confirm() {
-      const tagObj = this.tagList.find(v => v.id === this.form.tag[0]);
+      const tagObj = this.tagList.find(v => v.id === this.customerInfo.tag[0]);
       if (tagObj) {
         this.customerInfo.familyItemCode = tagObj.id;
       } else {
         this.customerInfo.familyItemCode = '';
       }
+      delete this.customerInfo.tag;
       if (this.confirmShow) {
-        this.productService.addcustomerAddress({ customerInfo: this.customerInfo }).then((res) => {
-          debugger;
+        this.productService.addcustomerAddress(this.customerInfo, {}).then((res) => {
           if (res.code === 1) {
-
+            Toast.succeed('地址添加保存成功');
+            this.$router.go(-1);
           }
         });
       } else {
-        this.productService.updateCustomerAddress(this.customerInfo).then((res) => {
-          debugger;
+        this.productService.updateCustomerAddress(this.customerInfo, {}).then((res) => {
           if (res.code === 1) {
 
           }
         });
       }
-
-      debugger;
-      // this.$router.go(-1);
     },
     // 修改地址
     updateAddress() {
@@ -295,11 +292,11 @@ export default {
   },
   beforeRouteLeave(to, from, next) {
     debugger;
+    const obj = { tel: this.customerInfo.phone };
+
     if (to.name === 'Order.OrderEntry') {
-      to.query.temp = this.customerInfo.phone;
+      to.query.temp = JSON.stringify(obj);
     }
-    console.log(to);
-    console.log(from);
     next();// 必须要有这个，否则无法跳转
   },
 };
