@@ -133,7 +133,7 @@ export default {
       customerInfo: {
         address: '',
         city: '',
-        customerId: 0,
+        customerId: '0',
         isDefault: true,
         district: '',
         familyId: 0,
@@ -292,7 +292,7 @@ export default {
   },
   beforeRouteLeave(to, from, next) {
     debugger;
-    const obj = { tel: this.customerInfo.phone };
+    const obj = { tel: this.customerInfo.mobile };
 
     if (to.name === 'Order.OrderEntry') {
       to.query.temp = JSON.stringify(obj);

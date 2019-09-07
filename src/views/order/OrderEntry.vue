@@ -115,8 +115,8 @@
           slot="right"
           type="date"
           title="请选择日期"
-          :defaultDate="buyDate"
-          v-model="buyDate"
+          :defaultDate="deliveryTime"
+          v-model="deliveryTime"
         ></b-date-picker>
       </template>
     </b-item>
@@ -246,6 +246,8 @@ export default {
       orderType: 2,
       // 购机时间
       buyDate: '',
+      // /送货时间
+      deliveryTime: '',
       // 产品列表
       productList: [],
       // 活动列表
@@ -406,16 +408,16 @@ export default {
   },
   computed: {},
   mounted() {
-    //    debugger
+    //
     //    if(this.$route.query){
     // const address = this.$route.query.temp
     //   console.log('tag', address)
     //    }
   },
   activated() {
-    debugger;
     if (this.$route.query.temp) {
       const obj = JSON.parse(this.$route.query.temp);
+
       if (obj.tel) {
         this.mobile = obj.tel;
         this.queryCustomerDefault();
@@ -423,16 +425,15 @@ export default {
     }
   },
   created() {
-    debugger;
     if (localStorage.getItem('userinfo')) {
       this.userParam = localStorage.getItem('userinfo');
       this.shopId = this.userParam.shopId;
       this.mobile = this.userParam.mobile;
+      this.queryCustomerDefault();
+      this.queryCustomerAddressList();
+      this.getUserStore();
     }
-    this.getUserStore();
     this.genarateOrderNum();
-    this.queryCustomerDefault();
-    this.getAddressList();
   },
   methods: {
     //  haveConsignee() {
@@ -452,23 +453,10 @@ export default {
         }
       });
     },
-    // 查询默认地址
-    getDeafultAddress() {
-      this.productService.deafaultCustomerAddress(this.mobile).then((res) => {
 
-      });
-    },
-    // 查询地址列表ß
-    getAddressList() {
-      this.customerid = '11111';
-      this.productService.customerAddressList(this.customerid).then((res) => {
-
-      });
-    },
     // 生成订单号
     genarateOrderNum() {
       this.orderService.generateOrderNo({}, { recordMode: 'Haier' },).then((res) => {
-        debugger;
         if (res.code === 1) {
           this.orderNo = res.data;
         } else {
@@ -476,11 +464,26 @@ export default {
         }
       });
     },
+    // 查询客户信息及默认地址
     queryCustomerDefault() {
-      this.tel = '18213312';
-      this.productService.deafaultCustomerAddress(this.tel).then((res) => {
+      const a = {
+        address: 'string',
+        city: 'string',
+        customerId: 0,
+        district: 'string',
+        familyItemCode: 'string',
+        groupCompositionCode: 'string',
+        id: 0,
+        isDefault: true,
+        mobile: 'string',
+        province: 'string',
+        userId: 'string',
+        username: 'string'
+      };
+      this.addressList.push(a);
+      this.productService.deafaultCustomerAddress(this.mobile).then((res) => {
         if (res.code === 1) {
-          if (res.data !== []) {
+          if (res.data !== null) {
             this.haveConsignee = true;
             this.haveCustomer = true;
             this.customerInfo = res.data;
@@ -493,6 +496,7 @@ export default {
         }
       });
     },
+    // 查询客户地址列表
     queryCustomerAddressList() {
       this.productService.customerAddressList(this.consignee.customerId).then((res) => {
         if (res.code === 1) {
@@ -538,7 +542,7 @@ export default {
     editAddress(item) {
       this.region = 'edit';
       this.$router.push({
-        name: 'Order.AddAddress?region',
+        name: 'Order.AddAddress',
         params: { region: this.region, info: item }
       });
     },
