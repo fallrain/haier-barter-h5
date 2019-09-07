@@ -3,12 +3,12 @@
     class="b-order-product-item"
   >
     <div class="b-order-product-item-head">
-      <span class="b-order-product-item-head-name">{{data.productBrandCN}}/{{data.productCategoryName}}，{{data.productModel}}</span>
+      <span class="b-order-product-item-head-name">{{data.productGroupName}}/{{data.productBrandName}}，{{data.productModel}}</span>
       <div>
         <input
           class="b-order-product-item-price"
           type="text"
-          v-model="data.productPrice"
+          v-model="data.price"
         ><span class="b-order-product-item-price-unit">元</span>
       </div>
 
@@ -47,7 +47,7 @@ export default {
   methods: {
     onDel() {
       /* 删除 */
-      this.$emit('onDel', this.data);
+      this.$emit('onDel', this.index);
     }
   }
 };
