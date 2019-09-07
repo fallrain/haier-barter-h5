@@ -420,16 +420,16 @@ export default {
     }
   },
   created() {
-    // debugger
+    debugger;
     if (localStorage.getItem('userinfo')) {
       this.userParam = localStorage.getItem('userinfo');
-    }
-    if (this.$route.query.userInfo) {
-      this.haveCustomer = true;
+      this.shopId = this.userParam.shopId;
+      this.mobile = this.userParam.mobile;
     }
     this.getUserStore();
     this.genarateOrderNum();
     this.queryCustomerDefault();
+    this.getAddressList();
   },
   methods: {
     //  haveConsignee() {
@@ -442,7 +442,8 @@ export default {
     // },
     // 获取门店信息
     getUserStore() {
-      this.productService.storeInfo(this.userParam.shopId).then((res) => {
+      this.shopId = '999999999';
+      this.productService.storeInfo(this.shopId).then((res) => {
         if (res.code === 1) {
           this.shopName = '';
         }
@@ -450,33 +451,35 @@ export default {
     },
     // 查询默认地址
     getDeafultAddress() {
-      this.productService.deafaultCustomerAddress({ mobile: this.mobile }).then((res) => {
+      this.productService.deafaultCustomerAddress(this.mobile).then((res) => {
 
       });
     },
     // 查询地址列表ß
     getAddressList() {
+      this.customerid = '11111';
       this.productService.customerAddressList(this.customerid).then((res) => {
 
       });
     },
     // 生成订单号
     genarateOrderNum() {
-      this.orderService.generateOrderNo({ recordModel: 'Haier', }, { }).then((res) => {
+      this.orderService.generateOrderNo({}, { recordMode: 'Haier' },).then((res) => {
         debugger;
         if (res.code === 1) {
           this.orderNo = res.data;
-          this.orderNo = 'Z15645424968056668';
         } else {
           Toast.failed(res.msg);
         }
       });
     },
     queryCustomerDefault() {
+      this.tel = '18213312';
       this.productService.deafaultCustomerAddress(this.tel).then((res) => {
         if (res.code === 1) {
           if (res.data !== []) {
             this.haveConsignee = true;
+            this.haveCustomer = true;
             this.customerInfo = res.data;
             this.consignee.address = res.data.province + res.data.city + res.data.district + res.data.address;
             this.consignee.phone = res.data.mobile;
@@ -520,6 +523,7 @@ export default {
       /* 添加用户信息 */
       if (this.addressList.length === 0) {
         this.region = 'add';
+
         this.$router.push({
           name: 'Order.AddAddress',
           params: { region: this.region, info: '' }
