@@ -191,9 +191,10 @@ export default {
   created() {
     // this.searchData();
     this.getNoticeData();
-    // this.userinfo.token = this.getQueryString('userinfo').token;
-    // localStorage.setItem('userinfo', this.userinfo);
-    // localStorage.setItem('acces_token', this.userinfo.token);
+    this.userinfo.token = this.getQueryString('userinfo').token;
+    this.userinfo.token = 'Bearer  eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAyNzE1MyIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2NzgyNDk0MSwiZXhwIjoxNTY4Njg4OTQxfQ.SmzdQ3x7P9usMeB2lD7wwvjkmOfOZB4dJ6nx56c_wDw';
+    localStorage.setItem('userinfo', this.userinfo);
+    localStorage.setItem('acces_token', this.userinfo.token);
   },
   computed: {
     curScrollViewName() {

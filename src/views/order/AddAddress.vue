@@ -138,7 +138,7 @@ export default {
         district: '',
         familyId: 0,
         familyItemCode: '',
-        hmcId: '',
+        hmcId: 'a0008949',
         mobile: '',
         province: '',
         sex: 0,
@@ -250,7 +250,7 @@ export default {
         this.customerInfo.familyItemCode = '';
       }
       if (this.confirmShow) {
-        this.productService.addcustomerAddress(this.customerInfo).then((res) => {
+        this.productService.addcustomerAddress({ customerInfo: this.customerInfo }).then((res) => {
           debugger;
           if (res.code === 1) {
 
@@ -293,15 +293,15 @@ export default {
     }
 
   },
-  // beforeRouteLeave(to, from, next) {
-  //   debugger;
-  //   if (to.name === 'Order.OrderEntry') {
-  //     to.query.temp = '这里是参数，选中后的地址';
-  //   }
-  //   console.log(to);
-  //   console.log(from);
-  //   next();// 必须要有这个，否则无法跳转
-  // },
+  beforeRouteLeave(to, from, next) {
+    debugger;
+    if (to.name === 'Order.OrderEntry') {
+      to.query.temp = this.customerInfo.phone;
+    }
+    console.log(to);
+    console.log(from);
+    next();// 必须要有这个，否则无法跳转
+  },
 };
 </script>
 
