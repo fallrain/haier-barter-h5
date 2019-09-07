@@ -8,10 +8,11 @@
             type="text"
             class="addAddress-form-item-ipt"
             placeholder="请输入手机号"
-            v-model="form.phone"
+            v-model="customerInfo.mobile"
           >
         </div>
       </li>
+      <div v-show="searchEnd">
       <li>
         <div class="addAddress-form-item">
           <label class="addAddress-form-item-name">姓名</label>
@@ -19,7 +20,7 @@
             type="text"
             class="addAddress-form-item-ipt"
             placeholder="请输入姓名"
-            v-model="form.name"
+            v-model="customerInfo.username"
           >
         </div>
       </li>
@@ -29,7 +30,7 @@
           <b-radio-item
             :inline="true"
             :list="sexTypes"
-            v-model="form.sex"
+            v-model="customerInfo.sex"
           ></b-radio-item>
         </div>
       </li>
@@ -50,7 +51,7 @@
             type="text"
             class="addAddress-form-item-ipt"
             placeholder="省道 门牌、楼层房间号等信息"
-            v-model="form.addressDetail"
+            v-model="customerInfo.address"
           >
         </div>
       </li>
@@ -66,16 +67,18 @@
         <div class="addAddress-form-item">
           <label class="addAddress-form-item-name">设为默认地址</label>
           <md-switch
-            v-model="form.isDefault"
+            v-model="customerInfo.default"
           ></md-switch>
         </div>
       </li>
+      </div>
     </ul>
+
     <b-pop-check-list
       type="radio"
       :show.sync="tagPopShow"
       :list="tagList"
-      v-model="form.tag"
+      v-model="customerInfo.tag"
     ></b-pop-check-list>
     <md-tab-picker
       title="请选择"
@@ -85,14 +88,16 @@
       v-model="addressPopShow"
       @change="addressChange"
     ></md-tab-picker>
-    <button class="common-bottom-button" @click="confirm()">确认</button>
+    <button class="common-bottom-button" @click="confirm()" v-show="searchEnd">确认</button>
+    <button class="common-bottom-button" @click="search()" v-show="!searchEnd">搜索</button>
   </div>
 </template>
 
 <script>
 import {
   Switch,
-  TabPicker
+  TabPicker,
+  Toast
 } from 'mand-mobile';
 
 import {
@@ -103,6 +108,7 @@ import {
 
 import addressData from '@/lib/address';
 
+
 export default {
   name: 'AddAddress',
   components: {
@@ -110,8 +116,10 @@ export default {
     'md-tab-picker': TabPicker,
     BPopCheckList,
     BItem,
-    BRadioItem
+    BRadioItem,
+    Toast
   },
+
   data() {
     return {
       form: {
@@ -122,7 +130,25 @@ export default {
         isDefault: false,
         tag: []
       },
+      customerInfo: {
+        address: '',
+        city: '',
+        customerId: 0,
+        isDefault: true,
+        district: '',
+        familyId: 0,
+        familyItemCode: '',
+        hmcId: '',
+        mobile: '',
+        province: '',
+        sex: 0,
+        userId: '',
+        username: '',
+        tag: []
+      },
+      searchEnd: false,
       // 订单类型单选
+      familyItemCode: '',
       sexTypes: [
         {
           key: 1,
@@ -135,7 +161,9 @@ export default {
       ],
       // 地址标签pop show
       tagPopShow: false,
+      region: '',
       // 地址标签列表
+      // tagList: [],
       tagList: [
         {
           id: 1,
@@ -156,16 +184,26 @@ export default {
       ],
       // 地址pop显示隐藏
       addressPopShow: false,
-      addressName: ''
+      addressName: '',
+      confirmShow: false
     };
   },
   created() {
     // 不加入双向绑定
     this.addressData = addressData;
+    if (this.$route.params.name) {
+      this.region = this.$route.params;
+      if (this.region == 'add') {
+        this.confirmShow = true;
+      } else {
+        this.confirmShow = false;
+      }
+    }
+    // this.getFamilyItem();
   },
   computed: {
     tagName() {
-      const tagObj = this.tagList.find(v => v.id === this.form.tag[0]);
+      const tagObj = this.tagList.find(v => v.id === this.customerInfo.tag[0]);
       let name;
       if (tagObj) {
         name = tagObj.name;
@@ -173,7 +211,7 @@ export default {
         name = '';
       }
       return name;
-    }
+    },
   },
   methods: {
     showTags() {
@@ -184,26 +222,86 @@ export default {
       /* 展示地址pop */
       this.addressPopShow = true;
     },
+    search() {
+      this.searchEnd = true;
+      this.productService.deafaultCustomerAddress({ mobile: this.customerInfo.mobile }).then((res) => {
+        if (res.code === 1) {
+
+        } else {
+          Toast.failed('暂无信息请输入');
+        }
+      });
+    },
     addressChange(address) {
+      debugger;
       /* 地址change */
-      const addressAy = address.options.map(v => v.label);
-      this.addressName = addressAy.join('/');
+      const addressA = address.options.map(v => v.label);
+      const addressAy = address.values;
+      this.customerInfo.city = addressAy[1];
+      this.customerInfo.province = addressAy[0];
+      this.customerInfo.district = addressAy[2];
+      this.addressName = addressA.join('/');
     },
     confirm() {
-      // window.location.href=encodeURI('/order/orderEntry?'+'address='+ '111111')
+      const tagObj = this.tagList.find(v => v.id === this.form.tag[0]);
+      if (tagObj) {
+        this.customerInfo.familyItemCode = tagObj.id;
+      } else {
+        this.customerInfo.familyItemCode = '';
+      }
+      if (this.confirmShow) {
+        this.productService.addcustomerAddress(this.customerInfo).then((res) => {
+          debugger;
+          if (res.code === 1) {
+
+          }
+        });
+      } else {
+        this.productService.updateCustomerAddress(this.customerInfo).then((res) => {
+          debugger;
+          if (res.code === 1) {
+
+          }
+        });
+      }
+
       debugger;
-      this.$router.go(-1);
+      // this.$router.go(-1);
+    },
+    // 修改地址
+    updateAddress() {
+      this.productService.updateCustomerAddress(this.customerInfo).then((res) => {
+        debugger;
+        if (res.code === 1) {
+
+        }
+      });
+    },
+    // 查询家庭关系数据字典
+    getFamilyItem() {
+      this.productService.commonTypeQuery({ type: 'FAMILY-ITEM' }).then((res) => {
+        debugger;
+        if (res.code === 1) {
+          res.data.forEach((val) => {
+            const a = {};
+            a.name = val.itemName;
+            a.id = val.id;
+            this.tagList.push(a);
+          });
+        }
+      });
     }
+
   },
-  beforeRouteLeave(to, from, next) {
-    debugger;
-    if (to.name === 'Order.OrderEntry') {
-      to.query.temp = '这里是参数，选中后的地址';
-    }
-    console.log(to);
-    console.log(from);
-    next();// 必须要有这个，否则无法跳转
-  },
+  // beforeRouteLeave(to, from, next) {
+  //   debugger;
+  //   if (to.name === 'Order.OrderEntry') {
+  //     to.query.temp = '这里是参数，选中后的地址';
+  //   }
+  //   console.log(to);
+  //   console.log(from);
+  //   next();// 必须要有这个，否则无法跳转
+  // },
 };
 </script>
 

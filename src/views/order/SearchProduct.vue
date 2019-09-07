@@ -97,9 +97,7 @@ export default {
       /* 搜索产品 */
       debugger;
       this.productService.list({
-        keyWords: this.searchVal,
-        pageNo: 1,
-        pageSize: 10
+        subProductCode: this.searchVal,
       }).then((res) => {
         debugger;
         if (res.code === 1) { }

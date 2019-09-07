@@ -1,6 +1,7 @@
 <template>
   <div class="orderFollowItemClass">
     <div class="bar-v">
+
       <div
         class="bar-class"
         v-for="(item,index) in headList"
@@ -32,10 +33,20 @@
       v-for="(followItem,index) in list"
       :key="index"
     >
-
       <img
         src="@/assets/images/orderFollow-up/yizhanzhujia@3x.png"
         class="labelImage"
+        v-show="followItem.businessScenarios =='YZZJ'"
+      >
+       <img
+        src="@/assets/images/orderFollow-up/yijiuhuanxin@3x.png"
+        class="labelImage"
+        v-show="followItem.businessScenarios =='YJHX'"
+      >
+      <img
+        src="@/assets/images/orderFollow-up/aidaojia@3x.png"
+        class="labelImage"
+        v-show="followItem.businessScenarios =='ADJ'"
       >
       <div class="row-class">
         <span class="label-span">{{followItem.userName}}</span>
@@ -59,7 +70,7 @@
         <img
           src="@/assets/images/orderFollow-up/Haier@3x.png"
           class="brandImage"
-          v-show="followItem.recordMode =='Haie'"
+          v-show="followItem.recordMode =='Haier'"
         >
         <img
           src="@/assets/images/orderFollow-up/Casarte@3x.png"
@@ -92,7 +103,7 @@
       >
         <p>
           <span class="orderFollowItem-span">{{item.productBrandCN}}/{{item.productCategoryName}}，{{item.productModel}}</span>
-          <span class="orderFollowItem-span-blue">￥19999.00</span>
+          <span class="orderFollowItem-span-blue">￥{{item.bccPrice}}</span>
         </p>
       </div>
       <div
@@ -108,8 +119,11 @@
           class="dian-Class"
           @click="showMore(index)"
         >
-        <p class="bottom-button">成交录单</p>
-        <p class="bottom-button">发券</p>
+
+        <p class="bottom-button" v-for="(button,index) in followItem.buttonList">{{button.name}}</p>
+
+
+        <!-- <p class="bottom-button">发券</p> -->
         <div
           class="demo"
           v-show="followItem.show"
@@ -131,12 +145,16 @@
 </template>
 
 
-
 <script>
-import { Icon, Toast } from "mand-mobile";
-import { BPopSortType, BPopButton } from "@/components/form";
+import {
+  Icon, Toast
+} from 'mand-mobile';
+import {
+  BPopSortType, BPopButton
+} from '@/components/form';
+
 export default {
-  name: "",
+  name: '',
   components: {
     [Icon.name]: Icon,
     [Toast.name]: Toast,
@@ -161,88 +179,88 @@ export default {
     return {
       sortShow: false,
       scenarioShow: false,
+      buttonList: [],
       pageNum: 1,
       dataList: [],
-      sortType: "1",
-      scenarioType: "",
+      sortType: '1',
+      scenarioType: '',
       show: false,
       showList: [],
-      checkedsortId: "",
-      checkedButtonId: "",
-      ID: "",
+      checkedsortId: '',
+      checkedButtonId: '',
+      ID: '',
       headList: [
         {
-          name: "智能排序",
+          name: '智能排序',
           isActive: false,
-          icon: "@/assets/images/orderFollow-up/xiala@3x.png",
-          activeIcon: "@/assets/images/orderFollow-up/shangla@3x.png"
+          icon: '@/assets/images/orderFollow-up/xiala@3x.png',
+          activeIcon: '@/assets/images/orderFollow-up/shangla@3x.png'
         },
         {
-          name: "业务场景",
+          name: '业务场景',
           isActive: false,
-          icon: "@/assets/images/orderFollow-up/xiala@3x.png",
-          activeIcon: "@/assets/images/orderFollow-up/shangla@3x.png"
+          icon: '@/assets/images/orderFollow-up/xiala@3x.png',
+          activeIcon: '@/assets/images/orderFollow-up/shangla@3x.png'
         },
         {
-          name: "筛选",
+          name: '筛选',
           isActive: false,
-          icon: "@/assets/images/orderFollow-up/shaixuan@3x.png",
-          activeIcon: "@/assets/images/orderFollow-up/shaixuan@3x.png"
+          icon: '@/assets/images/orderFollow-up/shaixuan@3x.png',
+          activeIcon: '@/assets/images/orderFollow-up/shaixuan@3x.png'
         }
       ],
       sortList: [
         {
-          id: "1",
-          name: "智能排序"
+          id: '1',
+          name: '智能排序'
         },
         {
-          id: "2",
-          name: "按时间倒序"
+          id: '2',
+          name: '按时间倒序'
         },
         {
-          id: "3",
-          name: "按品牌"
+          id: '3',
+          name: '按品牌'
         },
         {
-          id: "4",
-          name: "按成交可能性"
+          id: '4',
+          name: '按成交可能性'
         }
       ],
       scenarioList: [
         {
-          id: "1",
-          name: "以旧换新"
+          id: '1',
+          name: '以旧换新'
         },
         {
-          id: "2",
-          name: "一站筑家"
+          id: '2',
+          name: '一站筑家'
         },
         {
-          id: "3",
-          name: "认筹"
+          id: '3',
+          name: '认筹'
         },
         {
-          id: "4",
-          name: "爱到家"
+          id: '4',
+          name: '爱到家'
         }
       ],
-      preIndex: "",
+      preIndex: '',
       currentList: this.list
     };
   },
   created() {
-    console.log("this.list", this.list);
   },
   methods: {
     headSwitch(index) {
       if (index === this.preIndex) {
         this.headList[index].isActive = false;
-        this.preIndex = "";
+        this.preIndex = '';
         this.sortShow = false;
         this.scenarioShow = false;
         return;
       }
-      for (var i = 0; i < this.headList.length; i++) {
+      for (let i = 0; i < this.headList.length; i++) {
         if (i === index) {
           this.preIndex = index;
           this.headList[i].isActive = true;
@@ -262,28 +280,28 @@ export default {
       }
     },
     preparation() {},
-    checkClicked(val){
-      debugger
+    checkClicked(val) {
+      debugger;
       this.checkedsortId = val[0];
-      for (var i = 0; i < this.headList.length; i++) {
-          this.headList[i].isActive = false;
+      for (let i = 0; i < this.headList.length; i++) {
+        this.headList[i].isActive = false;
       }
       this.$emit('checkClick', this.checkedsortId);
     },
-    buttonClicked(val){
+    buttonClicked(val) {
       this.checkedButtonId = val[0];
-      for (var i = 0; i < this.headList.length; i++) {
-          this.headList[i].isActive = false;
+      for (let i = 0; i < this.headList.length; i++) {
+        this.headList[i].isActive = false;
       }
       this.$emit('popButtonClicked', this.checkedButtonId);
     },
     showMore(index) {
-      console.log("currentList", this.list);
+      console.log('currentList', this.list);
       this.ID = this.list[index].id;
-      this.$set(this.list[index], "show", !this.list[index].show);
+      this.$set(this.list[index], 'show', !this.list[index].show);
     },
     detailHide(index) {
-      this.$set(this.list[index], "detailShow", !this.list[index].detailShow);
+      this.$set(this.list[index], 'detailShow', !this.list[index].detailShow);
     },
     updateOrderType(type, item) {
       this.orderService
@@ -291,20 +309,20 @@ export default {
           {},
           {
             orderFollowId: this.ID,
-            type: type,
-            remark: ""
+            type,
+            remark: ''
           }
         )
-        .then(res => {
+        .then((res) => {
           if (res.code === 1) {
-            console.log("this.list", this.list);
-            for (var i = 0; i < this.list.length; i++) {
+            console.log('this.list', this.list);
+            for (let i = 0; i < this.list.length; i++) {
               if (item === this.list[i]) {
-                this.$set(this.list[i], "show", false);
+                this.$set(this.list[i], 'show', false);
               }
             }
             Toast.succeed(res.msg);
-            this.$emit('updateOrderType',type)
+            this.$emit('updateOrderType', type);
           } else {
             Toast.failed(res.msg);
           }

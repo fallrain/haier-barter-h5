@@ -61,6 +61,7 @@ ax.interceptors.response.use((response) => {
 });
 const axGet = function (url, params) {
   return ax({
+    headers: { 'content-type': 'application/x-www-form-urlencoded,charset=UTF-8', },
     method: 'get',
     url,
     params,
@@ -69,7 +70,7 @@ const axGet = function (url, params) {
 
 const axPost = function (url, data, params) {
   return ax({
-    headers: {'content-type': 'application/x-www-form-urlencoded', },
+    headers: { 'content-type': 'application/x-www-form-urlencoded', },
     method: 'post',
     url,
     data: qs.stringify(data),

@@ -2,11 +2,23 @@
   <div>
     <div class="orderConfirm-no">
       <span class="orderConfirm-p">订单号：</span>
-      <p class="orderConfirm-s">2019-06-18</p>
+      <p class="orderConfirm-s">{{orderNo}}</p>
     </div>
-    <div class="orderEntry-header">
+    <!-- <div class="orderEntry-header">
       <span class="orderEntry-header-name">门店：{{shopName}}</span>
-    </div>
+    </div> -->
+        <b-item
+      class="mt16"
+      title="门店："
+      value="shopName"
+    >
+    </b-item>
+        <b-item
+      class="mt16"
+      title="顾客信息："
+      value=""
+    >
+    </b-item>
 
     <div class="orderEntry-user">
       <div>
@@ -59,6 +71,12 @@
         </ul>
       </div>
     </b-fieldset>
+    <b-item
+      class="mt16"
+      title="送货时间："
+      value=""
+    >
+    </b-item>
     <b-fieldset
       class="mt16 orderEntry-rights-fieldset"
       title="已选择的权益"
@@ -91,6 +109,9 @@
 
 <script>
 import {
+  Toast
+} from 'mand-mobile';
+import {
   BActivityList,
   BDatePicker,
   BFieldset,
@@ -106,9 +127,6 @@ import {
 import {
   BMultbuyCheck
 } from '@/components/business';
-import {
-  Toast
-} from 'mand-mobile';
 
 export default {
   name: 'OrderModify',
@@ -153,22 +171,7 @@ export default {
       // 购机时间
       buyDate: '',
       // 产品列表
-      productList: [
-        {
-          name: '海尔/空调，KFR-35G',
-          price: '',
-          isReport: true
-        },
-        {
-          name: '海尔/空调，KFR-35G',
-          price: '',
-        },
-        {
-          name: '海尔/空调，KFR-35G',
-          price: '',
-          isReport: true
-        }
-      ],
+      productList: [],
       // 活动列表
       activityList: [
         {
@@ -190,168 +193,39 @@ export default {
       chooseGiftPopShow: false,
       // pop礼品列表
       giftList: [
-        {
-          id: 1,
-          name: '1.双立人厨房六件套（价值 7000积分）',
-          checkedIds: []
-        },
-        {
-          id: 2,
-          name: '2.婴儿料理机（价值 6000积分）',
-          checkedIds: []
-        }
       ],
-      // 退货原因pop show
-      returnReasonPopShow: false,
-      // pop 退货原因
-      returnReasonList: [
-        {
-          id: 1,
-          name: '换货'
-        },
-        {
-          id: 2,
-          name: '录单错误'
-        },
-        {
-          id: 3,
-          name: '信息填写错误'
-        },
-        {
-          id: 4,
-          name: '其他原因',
-          reason: '',
-          placeholder: '请输入您的订单修改原因'
-        }
-      ],
-      // 选中的原因id 数组
-      returnReasonVal: [],
-      // 选择收货人列表pop show
-      addressPopShow: false,
-      // 收货人地址pop列表
-      addressList: [
-        {
-          name: '张三',
-          phone: '15000000000',
-          address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-          tagName: '自己家'
-        },
-        {
-          name: '李四',
-          phone: '15000000000',
-          address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-          tagName: '办公室'
-        },
-        {
-          name: '王二',
-          phone: '15000000000',
-          address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-          tagName: '父母家'
-        },
-        {
-          name: '尼古拉斯赵四',
-          phone: '15000000000',
-          address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-          tagName: '其他'
-        },
-        {
-          name: '莱桑尼丝铁柱',
-          phone: '15000000000',
-          address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-          tagName: '其他'
-        },
-        {
-          name: '罗伯特英子',
-          phone: '15000000000',
-          address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-          tagName: '其他'
-        }
-      ],
-      // 套购pop show
-      multBuyPopShow: false,
-      // 套购发起人
-      multBuySponsor: [
-        {
-          id: 1,
-          name: '陆梦飞',
-          industry: '冰箱'
-        },
-        {
-          id: 2,
-          name: '大飞哥',
-          industry: '彩电'
-        },
-        {
-          id: 3,
-          name: '贾老板',
-          industry: '打怪兽'
-        },
-        {
-          id: 4,
-          name: '蟹老板',
-          industry: '蟹黄包'
-        }
-      ],
-      multBuySponsorCheckedIds: [],
-      // 套购参与人
-      multBuyParticipant: [
-        {
-          id: 1,
-          name: '陆梦飞',
-          industry: '冰箱'
-        },
-        {
-          id: 2,
-          name: '大飞哥',
-          industry: '彩电'
-        },
-        {
-          id: 3,
-          name: '贾老板',
-          industry: '打怪兽'
-        },
-        {
-          id: 4,
-          name: '蟹老板',
-          industry: '蟹黄包'
-        }
-      ],
-      // 参与人选中id
-      multBuyParticipantCheckIds: [],
-      orderNo: ''
+      orderNo: '',
+      createdTime: '',
+      deliveryTime: '',
     };
   },
   computed: {},
   created() {
-    this.orderService.generateOrderNo({}, { recordModel: 'Haier' }).then((res) => {
-      if (res.code === 1) {
-        this.orderNo = res.data;
-        this.orderNo = 'Z15645424968056668';
-        this.orderService.queryOrderInfoByOrderNo({}, { orderNo: this.orderNo }).then((response) => {
-          if (response.code === 1) {
-            const resData = response.data;
-            this.shopName = resData.storeName;
-            this.consignee.name = resData.userName;
-            this.consignee.phone = resData.userPhone;
-            this.consignee.sex = resData.userSex;
-            this.consignee.address = resData.dispatchProvince + resData.dispatchCity + resData.dispatchArea + resData.dispatchAdd;
-            this.buyDate = resData.buyTime;
-            this.orderType = resData.orderType;
-            this.haveConsignee();
-            if (resData.orderDetailDtoList.length !== 0) {
-              this.productList = resData.orderDetailDtoList;
-              this.productList.forEach((item) => {
-                if (item.productBrand == 'haier') {
-                  item.productBrandCN = '海尔';
-                } else {
-                  item.productBrandCN = '卡萨帝';
-                }
-              });
+    this.orderNo = 'Z15645424968056668';
+    this.orderService.queryOrderInfoByOrderNo({}, { orderNo: this.orderNo }).then((response) => {
+      if (response.code === 1) {
+        const resData = response.data;
+        this.shopName = resData.storeName;
+        this.consignee.name = resData.userName;
+        this.consignee.phone = resData.userPhone;
+        this.consignee.sex = resData.userSex;
+        this.consignee.address = resData.dispatchProvince + resData.dispatchCity + resData.dispatchArea + resData.dispatchAdd;
+        this.buyDate = resData.buyTime;
+        this.orderType = resData.orderType;
+        this.deliveryTime = resData.deliveryTime;
+        this.createdTime = resData.createdTime;
+        this.orderNo = resData.orderNo;
+        this.haveConsignee();
+        if (resData.orderDetailDtoList.length !== 0) {
+          this.productList = resData.orderDetailDtoList;
+          this.productList.forEach((item) => {
+            if (item.productBrand == 'haier') {
+              item.productBrandCN = '海尔';
+            } else {
+              item.productBrandCN = '卡萨帝';
             }
-          }
-        });
-      } else {
-        Toast.failed(res.msg);
+          });
+        }
       }
     });
   },

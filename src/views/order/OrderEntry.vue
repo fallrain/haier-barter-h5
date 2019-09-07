@@ -4,9 +4,16 @@
       <span class="orderEntry-header-name">门店：{{shopName}}</span>
       <i class="iconfont icon-icon-question orderEntry-header-icon"></i>
     </div>
+    <b-item
+      class="mt16"
+      title="顾客信息："
+      value=""
+      v-show="haveCustomer"
+    >
+    </b-item>
     <b-fieldset
       class="mt16"
-      title="用户信息："
+      title="顾客信息："
     >
       <div class="orderEntry-user">
         <div v-if="haveConsignee">
@@ -18,7 +25,7 @@
             <button
               type="button"
               class="common-btn-waring"
-              @click="addAddress()"
+              @click="editAddress(customerInfo)"
             >更改地址
             </button>
           </div>
@@ -98,6 +105,23 @@
     </b-fieldset>
     <b-item
       class="mt16"
+      title="选择送货时间："
+    >
+      <template
+        v-slot:right=""
+      >
+        <b-date-picker
+          class="orderEntry-date"
+          slot="right"
+          type="date"
+          title="请选择日期"
+          :defaultDate="buyDate"
+          v-model="buyDate"
+        ></b-date-picker>
+      </template>
+    </b-item>
+    <b-item
+      class="mt16"
       title="选择可用的购机权益活动"
       :arrow="true"
       @rightClick="selectActivity()"
@@ -107,6 +131,7 @@
       <button
         type="button"
         class="common-submit-btn-primary"
+        @click="saveTemporary()"
       >暂存草稿
       </button>
       <button
@@ -132,6 +157,8 @@
       <b-pop-address-list
         :show.sync="addressPopShow"
         :list="addressList"
+        @addNew="addAddress"
+        @editAddress="editAddress()"
       ></b-pop-address-list>
     </div>
     <b-pop
@@ -159,6 +186,9 @@
 
 <script>
 import {
+  Toast
+} from 'mand-mobile';
+import {
   BActivityList,
   BDatePicker,
   BFieldset,
@@ -169,7 +199,6 @@ import {
   BPopCheckList,
   BRadioItem
 } from '@/components/form';
-
 import {
   BMultbuyCheck
 } from '@/components/business';
@@ -177,6 +206,7 @@ import {
 export default {
   name: 'OrderEntry',
   components: {
+    Toast,
     BActivityList,
     BDatePicker,
     BFieldset,
@@ -194,6 +224,7 @@ export default {
       isDetail: true,
       // 门店名称
       shopName: '',
+      haveCustomer: false,
       // 收货人信息
       consignee: {
         /* name: '',
@@ -278,42 +309,42 @@ export default {
       addressPopShow: false,
       // 收货人地址pop列表
       addressList: [
-        {
-          name: '张三',
-          phone: '15000000000',
-          address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-          tagName: '自己家'
-        },
-        {
-          name: '李四',
-          phone: '15000000000',
-          address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-          tagName: '办公室'
-        },
-        {
-          name: '王二',
-          phone: '15000000000',
-          address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-          tagName: '父母家'
-        },
-        {
-          name: '尼古拉斯赵四',
-          phone: '15000000000',
-          address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-          tagName: '其他'
-        },
-        {
-          name: '莱桑尼丝铁柱',
-          phone: '15000000000',
-          address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-          tagName: '其他'
-        },
-        {
-          name: '罗伯特英子',
-          phone: '15000000000',
-          address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-          tagName: '其他'
-        }
+        // {
+        //   name: '张三',
+        //   phone: '15000000000',
+        //   address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
+        //   tagName: '自己家'
+        // },
+        // {
+        //   name: '李四',
+        //   phone: '15000000000',
+        //   address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
+        //   tagName: '办公室'
+        // },
+        // {
+        //   name: '王二',
+        //   phone: '15000000000',
+        //   address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
+        //   tagName: '父母家'
+        // },
+        // {
+        //   name: '尼古拉斯赵四',
+        //   phone: '15000000000',
+        //   address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
+        //   tagName: '其他'
+        // },
+        // {
+        //   name: '莱桑尼丝铁柱',
+        //   phone: '15000000000',
+        //   address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
+        //   tagName: '其他'
+        // },
+        // {
+        //   name: '罗伯特英子',
+        //   phone: '15000000000',
+        //   address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
+        //   tagName: '其他'
+        // }
       ],
       // 套购pop show
       multBuyPopShow: false,
@@ -367,7 +398,10 @@ export default {
       // 参与人选中id
       multBuyParticipantCheckIds: [],
       orderNo: '',
-      haveConsignee: false
+      haveConsignee: false,
+      mobile: '',
+      region: '',
+      userParam: {}
     };
   },
   computed: {},
@@ -378,17 +412,26 @@ export default {
     //   console.log('tag', address)
     //    }
   },
-  activated(){
-       debugger
-     if(this.$route.query.temp){
-  const address = this.$route.query.temp
-  this.consignee.address = address
-  this.haveConsignee = true
-    console.log('tag', address)
-     }
+  activated() {
+    debugger;
+    if (this.$route.query.temp) {
+      const address = this.$route.query.temp;
+      this.consignee.address = address;
+      this.haveConsignee = true;
+      console.log('tag', address);
+    }
   },
   created() {
     // debugger
+    if (localStorage.getItem('userinfo')) {
+      this.userParam = localStorage.getItem('userinfo');
+    }
+    if (this.$route.query.userInfo) {
+      this.haveCustomer = true;
+    }
+    this.getUserStore();
+    this.genarateOrderNum();
+    this.queryCustomerDefault();
   },
   methods: {
     //  haveConsignee() {
@@ -399,6 +442,70 @@ export default {
     //   /* 选择礼品 */
     //   this.chooseGiftPopShow = true;
     // },
+    // 获取门店信息
+    getUserStore() {
+      this.productService.storeInfo(this.userParam.shopId).then((res) => {
+        if (res.code === 1) {
+          this.shopName = '';
+        }
+      });
+    },
+    // 查询默认地址
+    getDeafultAddress() {
+      this.productService.deafaultCustomerAddress({ mobile: this.mobile }).then((res) => {
+
+      });
+    },
+    // 查询地址列表ß
+    getAddressList() {
+      this.productService.customerAddressList(this.customerid).then((res) => {
+
+      });
+    },
+    // 生成订单号
+    genarateOrderNum() {
+      this.orderService.generateOrderNo({ recordModel: 'Haier', }, { }).then((res) => {
+        debugger;
+        if (res.code === 1) {
+          this.orderNo = res.data;
+          this.orderNo = 'Z15645424968056668';
+        } else {
+          Toast.failed(res.msg);
+        }
+      });
+    },
+    queryCustomerDefault() {
+      this.productService.deafaultCustomerAddress(this.tel).then((res) => {
+        if (res.code === 1) {
+          if (res.data !== []) {
+            this.haveConsignee = true;
+            this.customerInfo = res.data;
+            this.consignee.address = res.data.province + res.data.city + res.data.district + res.data.address;
+            this.consignee.phone = res.data.mobile;
+            this.consignee.name = res.data.username;
+            this.consignee.sex = res.data.sex;
+            this.consignee.customerId = res.data.customerId;
+          }
+        }
+      });
+    },
+    queryCustomerAddressList() {
+      this.productService.customerAddressList(this.consignee.customerId).then((res) => {
+        if (res.code === 1) {
+          this.addressList = res.data;
+        }
+      });
+    },
+    // 暂存
+    saveTemporary() {
+      if (this.orderNo !== '') {
+        this.orderService.createOrder().then((res) => {
+
+
+        });
+      }
+    },
+    // 添加产品
     addProduct() {
       /* 添加产品 */
       this.$router.push({
@@ -413,11 +520,24 @@ export default {
     },
     addAddress() {
       /* 添加用户信息 */
+      if (this.addressList.length === 0) {
+        this.region = 'add';
+        this.$router.push({
+          name: 'Order.AddAddress',
+          params: { region: this.region, info: '' }
+        });
+      } else {
+        this.showAddressList();
+      }
+    },
+    editAddress(item) {
+      this.region = 'edit';
       this.$router.push({
-        name: 'Order.AddAddress',
+        name: 'Order.AddAddress?region',
+        params: { region: this.region, info: item }
       });
     },
-    shwAddressList() {
+    showAddressList() {
       /* 展示选择用户pop */
       this.addressPopShow = true;
     },

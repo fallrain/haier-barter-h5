@@ -19,15 +19,15 @@
             :key="index"
             @click="addressClick"
           >
-            <div class="b-address-checkList-item-portrait">{{item.tagName}}</div>
+            <div class="b-address-checkList-item-portrait">{{item.familyItemCode}}</div>
             <div class="b-address-checkList-item-cnt">
               <div class="b-address-checkList-item-cnt-name">
-                <span class="mr26">{{item.name}}</span><span>{{item.phone}}</span>
+                <span class="mr26">{{item.userName}}</span><span>{{item.mobile}}</span>
               </div>
               <p class="b-address-checkList-item-cnt-ads">{{item.address}}</p>
             </div>
             <div class="b-address-checkList-opr">
-              <button type="button" class="b-address-checkList-opr-btn">编辑</button>
+              <button type="button" class="b-address-checkList-opr-btn" @click="editAddress">编辑</button>
             </div>
           </li>
         </ul>
@@ -87,6 +87,10 @@ export default {
     addNewClick(item) {
       /* 添加新地址click */
       this.$emit('addNew', item);
+    },
+    editAddress(item) {
+      // 编辑地址
+      this.$emit('editAddress', item);
     },
     emptyFn() {}
   }

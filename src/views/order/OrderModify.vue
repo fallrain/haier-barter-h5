@@ -30,8 +30,7 @@
           <button
             type="button"
             class="common-btn-primary w100per"
-            @click="shwAddressList"
-            @addNew="addNewAddress()"
+            @click="showAddressList"
           >添加或选择用户信息
           </button>
         </div>
@@ -171,6 +170,8 @@
       <b-pop-address-list
         :show.sync="addressPopShow"
         :list="addressList"
+        @addNew="addAddress"
+        @editAddress="editAddress"
       ></b-pop-address-list>
     </div>
     <b-pop
@@ -490,7 +491,7 @@ export default {
       /* 展示选择用户pop */
       this.addressPopShow = true;
     },
-    addNewAddress() {
+    addAddress() {
       this.$router.push({
         name: 'Order.AddAddress',
       });

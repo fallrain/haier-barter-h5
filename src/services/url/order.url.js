@@ -1,7 +1,7 @@
 const baseURL = 'manage';
 const urls = {
   // 订单列表
-  queryOrderFollowlList: '/orderFollow/queryOrderFollowlList', // 订单跟进列表
+  queryOrderFollowlList: '/orderFollow/queryOrderFollowList', // 订单跟进列表
   fuzzySearchOrderFollowList: '/orderFollow/fuzzySearchOrderFollowList', // 模糊搜索列表
   updateOrderFollowByType: '/orderFollow/updateOrderFollowByType', // 修改状态
   generateOrderNo: '/orderManage/generateOrderNo', // 生成订单编号
