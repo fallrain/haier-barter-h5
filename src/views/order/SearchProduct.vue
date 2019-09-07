@@ -22,7 +22,8 @@
         class="searchProduct-history-item"
         v-for="(item,index) in searchHistory"
         :key="index"
-      >{{item.name}}
+        @click="onItemClick(item)"
+      >{{item.productGroupName}}
       </li>
     </ul>
     <div class="searchProduct-secret">
@@ -79,15 +80,21 @@ export default {
       noticeShow: true,
       // search value
       searchVal: '',
+      // 点击的数据
+      currentClickItemData: {},
       // 搜索历史
       searchHistory: [
         {
-          id: 1,
-          name: 'KF-50DLW/E套机'
-        },
-        {
-          id: 2,
-          name: 'KF-50DLW/E套机'
+          "industryCode": '',
+          "industryName": '',
+          "price": 0,
+          "productBrandCode": '',
+          "productBrandName": '',
+          "productCode": "string",
+          "productGroup": '',
+          "productGroupName": '1111',
+          "productModel": '',
+          "productPicture": ''
         }
       ]
     };
@@ -95,16 +102,27 @@ export default {
   methods: {
     search(val) {
       /* 搜索产品 */
-      debugger;
-      this.productService.list({
-        subProductCode: this.searchVal,
-      }).then((res) => {
-        debugger;
-        if (res.code === 1) { }
+      this.productService.list(this.searchVal).then((res) => {
+        // debugger;
+        if (res.code === 1) {
+          this.searchHistory = res.data;
+        }
       });
-      console.log(val);
+    },
+    onItemClick(item) {
+      this.currentClickItemData = item;
+      this.$router.go(-1);
+    },
+
+  },
+  beforeRouteLeave(to, from, next) {
+    debugger;
+    const obj = { ...this.currentClickItemData};
+    if (to.name === 'Order.OrderEntry') {
+      to.query.temp = JSON.stringify(obj);
     }
-  }
+    next();// 必须要有这个，否则无法跳转
+  },
 };
 </script>
 
