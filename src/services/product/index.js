@@ -1,12 +1,12 @@
 import urls from '../url/product.url';
 import {
-  axPostJson, axPost, axGet,
+  axPostJson, axPost, axGet, axGetUrl,
 } from '@/lib/ajax';
 
 export default {
-  list(param) {
+  list(appendUrl) {
     /* 查询订单列表 */
-    return axGet(urls.list, param);
+    return axGetUrl(urls.list, appendUrl);
   },
   customerAddressList(param) {
     return axGet(urls.customerAddressList, param);

@@ -68,6 +68,14 @@ const axGet = function (url, params) {
   });
 };
 
+const axGetUrl = function (url, appendUrl) {
+  return ax({
+    headers: {'content-type': 'application/x-www-form-urlencoded,charset=UTF-8',},
+    method: 'get',
+    url: url + '/' + appendUrl,
+  });
+};
+
 const axPost = function (url, data, params) {
   return ax({
     headers: { 'content-type': 'application/x-www-form-urlencoded,charset=UTF-8' },
@@ -88,4 +96,4 @@ const axPostJson = function (url, data, params) {
 };
 export default ax;
 
-export { axGet, axPost, axPostJson };
+export {axGet, axPost, axPostJson, axGetUrl};
