@@ -23,7 +23,7 @@
         v-for="(item,index) in searchHistory"
         :key="index"
         @click="onItemClick(item)"
-      >{{item.productGroupName}}
+      >{{item.industryName}}
       </li>
     </ul>
     <div class="searchProduct-secret">
@@ -85,16 +85,16 @@ export default {
       // 搜索历史
       searchHistory: [
         {
-          "industryCode": '',
-          "industryName": '',
-          "price": 0,
-          "productBrandCode": '',
-          "productBrandName": '',
-          "productCode": "string",
-          "productGroup": '',
-          "productGroupName": '1111',
-          "productModel": '',
-          "productPicture": ''
+          industryCode: 'Code',
+          industryName: 'Name',
+          price: 10,
+          productBrandCode: 'BrandCode',
+          productBrandName: 'Brand',
+          productCode: 'Code',
+          productGroup: 'Group',
+          productGroupName: 'Group',
+          productModel: 'Model',
+          productPicture: 'Picture'
         }
       ]
     };
@@ -116,9 +116,8 @@ export default {
 
   },
   beforeRouteLeave(to, from, next) {
-    debugger;
-    const obj = { ...this.currentClickItemData};
     if (to.name === 'Order.OrderEntry') {
+      const obj = { product: this.currentClickItemData };
       to.query.temp = JSON.stringify(obj);
     }
     next();// 必须要有这个，否则无法跳转

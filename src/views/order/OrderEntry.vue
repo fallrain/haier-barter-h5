@@ -85,6 +85,7 @@
             :data="item"
             :index="index"
             :content="item.isReport"
+            @onDel="onDelete"
           >
             <template
               v-slot:default
@@ -417,10 +418,12 @@ export default {
   activated() {
     if (this.$route.query.temp) {
       const obj = JSON.parse(this.$route.query.temp);
-
       if (obj.tel) {
         this.mobile = obj.tel;
         this.queryCustomerDefault();
+      }
+      if (obj.product) {
+        this.productList.push(obj.product);
       }
     }
   },
@@ -560,6 +563,9 @@ export default {
     },
     saveOrder() {
 
+    },
+    onDelete(index) {
+      this.productList.splice(index, 1);
     }
   }
 };
