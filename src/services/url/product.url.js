@@ -1,7 +1,9 @@
 const baseURL = 'basic';
 const urls = {
-  // 根据子产品代码查询套机产品信息
-  list: '/product',
+  // 小程序端，根据关键字（产品编码、产品型号、产品组、产品品牌）查询产品信息
+  list(keyWords, pageNo, pageSize) {
+    return `/product/list/${keyWords}/${pageNo}/${pageSize}`;
+  },
   // 查询顾客地址列表
   customerAddressList(mobile) {
     return `/customer/address/list/${mobile}`;
@@ -19,6 +21,9 @@ const urls = {
   // 根据storeid查询门店
   storeInfo(shopId) {
     return `/store/info/${shopId}`;
+  },
+  userList(storeId) {
+    return `/user/list/${storeId}`;
   }
 
 };

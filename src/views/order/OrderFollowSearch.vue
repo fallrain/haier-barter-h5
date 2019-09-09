@@ -34,6 +34,7 @@
         @checkClick="checkClicked"
         @popButtonClicked="buttonClicked"
         @updateOrderType="updateOrderType"
+        @followButtonClick="followButtonClicked"
       ></b-order-follow-item>
     </div>
     <div
@@ -43,8 +44,11 @@
       v-show="curScrollViewName==='scrollViewFinished'"
     >
       <b-order-follow-item
-        :list="scrollView.list"
-
+        :list="scrollViewFinished.list"
+        @checkClick="checkClicked"
+        @popButtonClicked="buttonClicked"
+        @updateOrderType="updateOrderType"
+        @followButtonClick="followButtonClicked"
       ></b-order-follow-item>
     </div>
     <div
@@ -54,8 +58,11 @@
       v-show="curScrollViewName==='scrollViewOdd'"
     >
       <b-order-follow-item
-        :list="scrollView.list"
-
+        :list="scrollViewOdd.list"
+        @checkClick="checkClicked"
+        @popButtonClicked="buttonClicked"
+        @updateOrderType="updateOrderType"
+        @followButtonClick="followButtonClicked"
       ></b-order-follow-item>
     </div>
     <div
@@ -65,8 +72,11 @@
       v-show="curScrollViewName==='scrollViewProgress'"
     >
       <b-order-follow-item
-        :list="scrollView.list"
-
+        :list="scrollViewProgress.list"
+        @checkClick="checkClicked"
+        @popButtonClicked="buttonClicked"
+        @updateOrderType="updateOrderType"
+        @followButtonClick="followButtonClicked"
       ></b-order-follow-item>
     </div>
     <div style="height:60px"></div>
@@ -190,11 +200,15 @@ export default {
   },
   created() {
     // this.searchData();
-    this.getNoticeData();
+    this.userinfo = this.getQueryString('userinfo');
     this.userinfo.token = this.getQueryString('userinfo').token;
-    this.userinfo.token = 'Bearer  eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAyNzE1MyIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2NzgyNDk0MSwiZXhwIjoxNTY4Njg4OTQxfQ.SmzdQ3x7P9usMeB2lD7wwvjkmOfOZB4dJ6nx56c_wDw';
+    this.userinfo.token = 'Bearer  eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAyNzE1MyIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2ODAyODcwMiwiZXhwIjoxNTY4ODkyNzAyfQ.TmrL7uplpyLuehQRgQa1_1HyaHlyR_qIRZshUtXlw48';
+      debugger
     localStorage.setItem('userinfo', this.userinfo);
     localStorage.setItem('acces_token', this.userinfo.token);
+     this.getNoticeData();
+    debugger
+
   },
   computed: {
     curScrollViewName() {
@@ -234,7 +248,6 @@ export default {
         });
     },
     change(item, index, prevIndex) {
-      debugger;
       this.curTab = index;
     },
     handEntry() {
@@ -294,6 +307,16 @@ export default {
         num: 0,
         size: 10
       });
+    },
+    followButtonClicked(val, info) {
+      debugger;
+      if (val.name === '录新订单') {
+        this.orderService.createNewOrder({}, { orderNo: info.orderNo }).then((res) => {
+          if (res.code === 1) {
+            Toast.succeed(res.msg);
+          }
+        });
+      }
     },
 
     searchData(page) {
@@ -457,7 +480,6 @@ export default {
         }
       });
       this.currentList = curList;
-      debugger;
     },
     fuzzySearch() {
       const page = {

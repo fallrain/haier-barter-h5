@@ -120,7 +120,7 @@
           @click="showMore(index)"
         >
 
-        <p class="bottom-button" v-for="(button,index) in followItem.buttonList">{{button.name}}</p>
+        <p class="bottom-button" v-for="(button,index) in followItem.buttonList" @click="followButtonClick(button,followItem)">{{button.name}}</p>
 
 
         <!-- <p class="bottom-button">发券</p> -->
@@ -294,6 +294,10 @@ export default {
         this.headList[i].isActive = false;
       }
       this.$emit('popButtonClicked', this.checkedButtonId);
+    },
+    followButtonClick(button, item) {
+      debugger;
+      this.$emit('followButtonClick', button, item);
     },
     showMore(index) {
       console.log('currentList', this.list);

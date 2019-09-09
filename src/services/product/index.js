@@ -4,9 +4,10 @@ import {
 } from '@/lib/ajax';
 
 export default {
-  list(appendUrl) {
+  list(keyWords, pageNo, pageSize) {
     /* 查询订单列表 */
-    return axGetUrl(urls.list, appendUrl);
+    // return axGetUrl(urls.list, appendUrl);
+    return axGet(urls.list(keyWords, pageNo, pageSize));
   },
   customerAddressList(mobile) {
     return axGet(urls.customerAddressList(mobile));
@@ -25,6 +26,9 @@ export default {
   },
   storeInfo(shopId) {
     return axGet(urls.storeInfo(shopId));
+  },
+  userList(storeId) {
+    return axGet(urls.userList(storeId));
   }
 
 };

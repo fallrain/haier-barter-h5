@@ -13,12 +13,12 @@
         </li>
         <li
           class="b-multbuy-check-item"
-          :class="[value.some(v=>v===person.id) && 'active']"
+          :class="[value.some(v=>v===person.hmcId) && 'active']"
           v-for="(person,index) in persons"
           :key="index"
           @click="checkClick(person)"
         >
-          <span>{{person.name}}</span>
+          <span>{{person.username}}</span>
           <span class="b-multbuy-check-item-industry">{{person.industry}}</span>
         </li>
       </ul>
@@ -82,22 +82,22 @@ export default {
       /* 选中全部 */
       let checkIds;
       if (!this.checkdAll) {
-        checkIds = this.persons.map(v => v.id);
+        checkIds = this.persons.map(v => v.hmcId);
       } else {
         checkIds = [];
       }
       this.$emit('input', checkIds);
     },
-    checkClick({ id }) {
+    checkClick({ hmcId }) {
       /* 选中 */
-      const i = this.value.findIndex(v => id === v);
+      const i = this.value.findIndex(v => hmcId === v);
       if (this.type === 'radio') {
-        this.$emit('input', [id]);
+        this.$emit('input', [hmcId]);
         return;
       }
       const checkIds = [...this.value];
       if (i === -1) {
-        checkIds.push(id);
+        checkIds.push(hmcId);
       } else {
         checkIds.splice(i, 1);
       }

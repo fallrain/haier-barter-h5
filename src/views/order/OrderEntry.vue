@@ -4,16 +4,19 @@
       <span class="orderEntry-header-name">门店：{{shopName}}</span>
       <i class="iconfont icon-icon-question orderEntry-header-icon"></i>
     </div>
-    <b-item
+    <!-- <b-item
       class="mt16"
       title="顾客信息："
-      value=""
+      :value="customerString"
       v-show="haveCustomer"
-    >
-    </b-item>
+    > -->
+    <div class="orderEntry-header-cus"  v-show="haveCustomer">
+            <span class="name mr16">顾客信息:{{customerInfo.username}}</span>
+            <span class="name mr16">{{customerInfo.mobile}}</span>
+    </div>
     <b-fieldset
       class="mt16"
-      title="顾客信息："
+      :title="title"
     >
       <div class="orderEntry-user">
         <div v-if="haveConsignee">
@@ -25,7 +28,7 @@
             <button
               type="button"
               class="common-btn-waring"
-              @click="editAddress(customerInfo)"
+              @click="changeAddress(customerInfo)"
             >更改地址
             </button>
           </div>
@@ -114,9 +117,11 @@
         <b-date-picker
           class="orderEntry-date"
           slot="right"
-          type="date"
+          type="datetime"
           title="请选择日期"
+          :pattern="pattern"
           :defaultDate="deliveryTime"
+          :min-date="currentDate"
           v-model="deliveryTime"
         ></b-date-picker>
       </template>
@@ -158,7 +163,7 @@
       <b-pop-address-list
         :show.sync="addressPopShow"
         :list="addressList"
-        @addNew="addAddress"
+        @addNew="addNew"
         @editAddress="editAddress"
         @clickAddress="selectAddress"
       ></b-pop-address-list>
@@ -171,6 +176,7 @@
         title="请选择套购发起人"
         :persons="multBuySponsor"
         v-model="multBuySponsorCheckedIds"
+        @radioCheck="sponsorCheck"
         tips="套购发起人发起套购，并且统一录入用户销售订单"
       ></b-multbuy-check>
       <b-multbuy-check
@@ -178,6 +184,8 @@
         title="请选择套购参与人"
         :persons="multBuyParticipant"
         v-model="multBuyParticipantCheckIds"
+        @allCheck="particpantAll"
+        @multiCheck="particpantClick"
         tips="套购参秘人可查看套头订单不需要录入订单,但是需确定确单信息正确后自主申报销量。"
         :checkAll="true"
         type="checkbox"
@@ -227,20 +235,24 @@ export default {
       // 门店名称
       shopName: '',
       haveCustomer: false,
+      currentDate: new Date(),
+      pattern: 'yyyy-MM-dd hh:mm',
+      customerString: '',
       // 收货人信息
       consignee: {
         /* name: '',
               sex: '男士',
               phone: '15067543689' */
       },
+      customerInfo: {},
       // 订单类型单选
       orderTypes: [
         {
-          key: 1,
+          key: 0,
           value: '单品'
         },
         {
-          key: 2,
+          key: 1,
           value: '套购'
         }
       ],
@@ -248,6 +260,7 @@ export default {
       orderType: 2,
       // 购机时间
       buyDate: '',
+      subInfo: {},
       // /送货时间
       deliveryTime: '',
       // 产品列表
@@ -403,6 +416,7 @@ export default {
       multBuyParticipantCheckIds: [],
       orderNo: '',
       haveConsignee: false,
+      title: '顾客信息：',
       mobile: '',
       region: '',
       userParam: {}
@@ -424,6 +438,13 @@ export default {
         this.queryCustomerDefault();
       }
       if (obj.product) {
+        this.orderService.qenerateOrderDetailId().then((res) => {
+          if (res.code === 1) {
+            obj.product.id = res.data;
+          } else {
+            Toast.failed(res.msg);
+          }
+        });
         this.productList.push(obj.product);
       }
     }
@@ -433,11 +454,13 @@ export default {
       this.userParam = localStorage.getItem('userinfo');
       this.shopId = this.userParam.shopId;
       this.mobile = this.userParam.mobile;
+      this.mobile = '18653226149';
+      this.queryUserList();
       this.queryCustomerDefault();
-      this.queryCustomerAddressList();
       this.getUserStore();
     }
-    this.genarateOrderNum();
+
+    // this.queryCustomerDefault();
   },
   methods: {
     //  haveConsignee() {
@@ -449,11 +472,20 @@ export default {
     //   this.chooseGiftPopShow = true;
     // },
     // 获取门店信息
+    sponsorCheck(checkid) {
+      debugger;
+    },
+    particpantAll(checkedIds) {
+
+    },
+    particpantClick(checkids) {
+
+    },
     getUserStore() {
-      this.shopId = '999999999';
+      this.shopId = '9999999999';
       this.productService.storeInfo(this.shopId).then((res) => {
         if (res.code === 1) {
-          this.shopName = '';
+          this.shopName = res.data.storeName;
         }
       });
     },
@@ -470,40 +502,28 @@ export default {
     },
     // 查询客户信息及默认地址
     queryCustomerDefault() {
-      const a = {
-        address: 'string',
-        city: 'string',
-        customerId: 0,
-        district: 'string',
-        familyItemCode: 'string',
-        groupCompositionCode: 'string',
-        id: 0,
-        isDefault: true,
-        mobile: 'string',
-        province: 'string',
-        userId: 'string',
-        username: 'string'
-      };
-      this.addressList.push(a);
-      this.customerInfo = this.addressList[0];
       this.productService.deafaultCustomerAddress(this.mobile).then((res) => {
         if (res.code === 1) {
           if (res.data !== null) {
             this.haveConsignee = true;
             this.haveCustomer = true;
+            this.title = '收件人信息：';
             this.customerInfo = res.data;
+            this.customerString = this.customerInfo.username + this.customerInfo.mobile;
             this.consignee.address = res.data.province + res.data.city + res.data.district + res.data.address;
             this.consignee.phone = res.data.mobile;
             this.consignee.name = res.data.username;
             this.consignee.sex = res.data.sex;
             this.consignee.customerId = res.data.customerId;
+            this.queryCustomerAddressList();
+            this.genarateOrderNum();
           }
         }
       });
     },
     // 查询客户地址列表
     queryCustomerAddressList() {
-      this.productService.customerAddressList(this.consignee.customerId).then((res) => {
+      this.productService.customerAddressList(this.customerInfo.customerId).then((res) => {
         if (res.code === 1) {
           this.addressList = res.data;
         }
@@ -511,10 +531,64 @@ export default {
     },
     // 暂存
     saveTemporary() {
+      const subInfo = {};
+      // multBuyParticipantCheckIds
+      if (this.multBuySponsorCheckedIds.length) {
+        subInfo.coupleSponsor = this.multBuySponsorCheckedIds[0];
+      }else{
+        subInfo.coupleSponsor = ''
+      }
+
+      if(this.multBuySponsor.length){
+      //  subInfo.coupleSponsorName = this.multBuySponsor.find(v => v.hmcId === this.multBuySponsorCheckedIds[0]).username;
+      }else{
+        subInfo.coupleSponsorName = ''
+      }
+       subInfo.coupleSponsorName = ''
+      if(this.multBuyParticipantCheckIds.length){
+        subInfo.mayEditCoupleOrderId = this.multBuyParticipantCheckIds.join(',');
+      }else{
+        subInfo.mayEditCoupleOrderId = '';
+      }
+      subInfo.mayEditCoupleOrderName = ''
+      subInfo.orderNo = this.orderNo
+      subInfo.recordMode = 'Haier'
+      subInfo.hmcId = 'a0008949'
+      subInfo.storeId = this.shopId
+      subInfo.storeName = this.shopName
+      subInfo.userId = '123456789', // this.userParam.userId;
+      subInfo.userName = '张三', // this.customerInfo.username;
+      subInfo.userPhone = '18675647364', // this.userParam.phone;
+      subInfo.dispatchProvinceId = this.customerInfo.province
+      subInfo.dispatchProvince = ''
+      subInfo.dispatchCityId = this.customerInfo.city
+      subInfo.dispatchCity = ''
+      subInfo.dispatchAreaId = this.customerInfo.area
+      subInfo.dispatchArea = ''
+      subInfo.dispatchAdd = this.customerInfo.Address
+      subInfo.buyTime = this.buyDate
+      subInfo.deliveryTime = this.deliveryTime
+      subInfo.orderType = this.orderType
+      // subInfo.coupleSponsor = '',
+      // subInfo.coupleSponsorName = '',
+      // subInfo.mayEditCoupleOrderId = '',
+      // subInfo.mayEditCoupleOrderName = '',
+      subInfo.rightId = ''
+      subInfo.rightName = ''
+      subInfo.giftId = ''
+      subInfo.giftName = ''
+      subInfo.orderStatus = 0
+      subInfo.orderFlag = 0// 订单标示，0-正常 1-换货 2-退货 订单来源，
+      subInfo.orderSource = 'SGLD' // 1-扫码录单 2-手动录单 3-智慧触点认筹录单
+      subInfo.sourceSn = '' // 来源编码，记录来源ID
+      subInfo.remark = '' // 备注，记录订单创建、订单修改原因等信息
+      subInfo.rightsUserJson = ''
+      subInfo.orderDetailDtoList = this.productList;
+      this.subInfo = subInfo;
+
       if (this.orderNo !== '') {
-        this.orderService.createOrder().then((res) => {
-
-
+        this.orderService.createOrder(subInfo, { orderFollowId: '' }).then((res) => {
+          Toast.succeed(res.msg);
         });
       }
     },
@@ -533,13 +607,13 @@ export default {
     },
     selectAddress(item) {
       debugger;
+      console.log('11111111111', item);
       this.customerInfo = item;
     },
     addAddress() {
       /* 添加用户信息 */
       if (this.addressList.length === 0) {
         this.region = 'add';
-
         this.$router.push({
           name: 'Order.AddAddress',
           params: { region: this.region, info: '' }
@@ -548,24 +622,57 @@ export default {
         this.showAddressList();
       }
     },
-    editAddress(item) {
+    addNew(item) {
+      this.region = 'userAdd';
+      this.$router.push({
+        name: 'Order.AddAddress',
+        params: { region: this.region, info: JSON.stringify(item) }
+      });
+    },
+    changeAddress(item) {
+      this.region = 'edit';
+      if (this.addressList.length <= 1) {
+        this.$router.push({
+          name: 'Order.AddAddress',
+          params: { region: this.region, info: JSON.stringify(item) }
+        });
+      } else {
+        this.showAddressList();
+      }
+    },
+    editAddress(info) {
       this.region = 'edit';
       this.$router.push({
         name: 'Order.AddAddress',
-        params: { region: this.region, info: item }
+        params: { region: this.region, info: JSON.stringify(info) }
       });
     },
     showAddressList() {
       /* 展示选择用户pop */
       this.addressPopShow = true;
     },
+    queryUserList() {
+      this.productGroup = '111';
+      this.shopId = '9999999999';
+      this.productService.userList(this.shopId).then((res) => {
+        if (res.code === 1) {
+          this.multBuySponsor = res.data;
+          this.multBuyParticipant = this.multBuySponsor;
+        }
+      });
+    },
     next() {
       /* 下一步 */
       // todo 单品、套购值待定
-      if (this.orderType === 2) {
+      if (this.orderType === 1) {
         // 展示套购发起人
         this.multBuyPopShow = true;
       }
+      this.saveTemporary();
+      this.$router.push({
+        name: 'Order.OrderUploadInvoice',
+        params: { orderNo: this.orderNo }
+      });
     },
     saveOrder() {
 
@@ -588,6 +695,18 @@ export default {
     padding-left: 27px;
     padding-right: 25px;
     color: #1969C6;
+  }
+   .orderEntry-header-cus{
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    height: 80px;
+    background: #fff;
+    padding-left: 27px;
+    padding-right: 25px;
+  color: #333;
+    margin-top: 20px;
   }
 
   .orderEntry-header-name {

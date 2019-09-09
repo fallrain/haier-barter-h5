@@ -8,14 +8,23 @@ const urls = {
   queryOrderInfoByOrderNo: '/orderManage/queryOrderInfoByOrderNo', // 根据订单编号获取订单信息和订单产品信息
   queryOrderInvoiceByOrderNo: '/orderManage/queryOrderInvoiceByOrderNo', // 根据订单编号获取订单凭证
   createOrder: '/orderManage/createOrder', // 新建或修改存草稿订单
-  createOrderSubmit: 'e/orderManage/createOrderSubmit', // 新建订单提交
+  createOrderSubmit: '/orderManage/createOrderSubmit', // 新建订单提交
   supplementOrderSubmit: 'orderManage/supplementOrderSubmit', // 补录订单提交
-  createNewOrder: '/orderManage/createNewOrder', // 录新订单,生成一条新的待办
+  createNewOrder: '/orderManage/createNewOrderFollow', // 录新订单,生成一条新的待办
   queryOverTwentyFourHourOrder: '/orderFollow/queryOverTwentyFourHourOrder', // 超过二十四小时订单
+  qenerateOrderDetailId: '/orderManage/qenerateOrderDetailId', // 生成订单明细主键ID
+  uploadInvoice: '/orderManage/hmcUploadInvoice', // 上传发票
+  queryOrderDetailAndInvoice: '/orderManage/queryOrderDetailAndInvoice', // 根据订单ID查询发票信息
+  checkInvoice: '/orderManage/checkInvoice', // 校验发票
+  simpleUpload: '/file/simpleUpload'// 上传图片
 };
 
 Object.entries(urls).forEach(([key, value]) => {
-  urls[key] = baseURL + value;
+  if (value === '/file/simpleUpload') {
+    urls[key] = value;
+  } else {
+    urls[key] = baseURL + value;
+  }
 });
 
 export default urls;

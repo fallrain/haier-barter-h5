@@ -21,6 +21,7 @@ ax.interceptors.request.use((config) => {
   }
   if (config.headers) {
     config.headers.Authorization = localStorage.getItem('acces_token');
+    config.headers.Authorization = 'Bearer  eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAyNzE1MyIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2ODAyODcwMiwiZXhwIjoxNTY4ODkyNzAyfQ.TmrL7uplpyLuehQRgQa1_1HyaHlyR_qIRZshUtXlw48';
   }
   if (!config.params.noLoading) {
     Toast.loading('加载中...');

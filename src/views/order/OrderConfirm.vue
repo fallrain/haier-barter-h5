@@ -10,15 +10,13 @@
         <b-item
       class="mt16"
       title="门店："
-      value="shopName"
+      :value="shopName"
     >
     </b-item>
-        <b-item
-      class="mt16"
-      title="顾客信息："
-      value=""
-    >
-    </b-item>
+     <div class="orderEntry-header-cus">
+            <span class="name mr16">顾客信息:{{username}}</span>
+            <span class="name mr16">{{phone}}</span>
+    </div>
 
     <div class="orderEntry-user">
       <div>
@@ -37,7 +35,7 @@
     <b-item
       class="mt16"
       title="购买日期："
-      value="2019-05-31"
+      :value="buyDate"
     >
     </b-item>
     <b-item
@@ -74,7 +72,7 @@
     <b-item
       class="mt16"
       title="送货时间："
-      value=""
+      :value="deliveryTime"
     >
     </b-item>
     <b-fieldset
@@ -87,7 +85,6 @@
           :isDetail="isDetail"
           :data="activityList"
           v-model="choosedActivitys"
-          @chooseGift="chooseGift"
         ></b-activity-list>
       </div>
     </b-fieldset>
@@ -149,6 +146,7 @@ export default {
       isDetail: true,
       // 门店名称
       shopName: '新华百货老大楼',
+
       // 收货人信息
       consignee: {
         /* name: '',
@@ -174,18 +172,7 @@ export default {
       productList: [],
       // 活动列表
       activityList: [
-        {
-          id: 1,
-          activityName: '6月场景套权益昆明小微',
-          inf: '满10000元送7500积分',
-          num: 33
-        },
-        {
-          id: 2,
-          activityName: '6月场景套权益昆明小微',
-          inf: '满10000元送7500积分',
-          num: 21
-        }
+
       ],
       // 选中的活动id
       choosedActivitys: [],
@@ -197,62 +184,63 @@ export default {
       orderNo: '',
       createdTime: '',
       deliveryTime: '',
+      customerString: '',
+      username: '',
+      phone: ''
     };
   },
   computed: {},
   created() {
+    this.orderNo = this.$route.params.orderNo;
     this.orderNo = 'Z15645424968056668';
-    this.orderService.queryOrderInfoByOrderNo({}, { orderNo: this.orderNo }).then((response) => {
-      if (response.code === 1) {
-        const resData = response.data;
-        this.shopName = resData.storeName;
-        this.consignee.name = resData.userName;
-        this.consignee.phone = resData.userPhone;
-        this.consignee.sex = resData.userSex;
-        this.consignee.address = resData.dispatchProvince + resData.dispatchCity + resData.dispatchArea + resData.dispatchAdd;
-        this.buyDate = resData.buyTime;
-        this.orderType = resData.orderType;
-        this.deliveryTime = resData.deliveryTime;
-        this.createdTime = resData.createdTime;
-        this.orderNo = resData.orderNo;
-        this.haveConsignee();
-        if (resData.orderDetailDtoList.length !== 0) {
-          this.productList = resData.orderDetailDtoList;
-          this.productList.forEach((item) => {
-            if (item.productBrand == 'haier') {
-              item.productBrandCN = '海尔';
-            } else {
-              item.productBrandCN = '卡萨帝';
-            }
-          });
-        }
-      }
-    });
+    this.getData();
   },
   methods: {
-    haveConsignee() {
-      /* 存在收货人信息 */
-      return this.consignee && JSON.stringify(this.consignee) !== '{}';
+    getData() {
+      this.orderService.queryOrderInfoByOrderNo({}, { orderNo: this.orderNo }).then((response) => {
+        if (response.code === 1) {
+          const resData = response.data;
+          this.shopName = resData.storeName;
+          this.consignee.name = resData.consigneeName;
+          this.username = resData.userName;
+          this.phone = resData.userPhone;
+          this.consignee.phone = resData.consigneePhone;
+          this.consignee.sex = resData.userSex;
+          this.consignee.address = resData.dispatchProvince + resData.dispatchCity + resData.dispatchArea + resData.dispatchAdd;
+          this.buyDate = resData.buyTime;
+          this.orderType = resData.orderType;
+          this.deliveryTime = resData.deliveryTime;
+          this.createdTime = resData.createdTime;
+          this.orderNo = resData.orderNo;
+          if (resData.rightsUserJson) {
+            this.activityList = JSON.parse(resData.rightsUserJson).rightsUserInterestsDetailsDTO;
+          }
+          if (resData.orderDetailDtoList.length !== 0) {
+            this.productList = resData.orderDetailDtoList;
+            this.productList.forEach((item) => {
+              if (item.productBrand == 'haier') {
+                item.productBrandCN = '海尔';
+              } else {
+                item.productBrandCN = '卡萨帝';
+              }
+            });
+          }
+        }
+      });
     },
-    chooseGift() {
-      /* 选择礼品 */
-      this.chooseGiftPopShow = true;
-    },
-    updateReasonClick() {
-      /* 选择退换货原因 */
-      this.returnReasonPopShow = true;
-    },
-    shwAddressList() {
-      /* 展示选择用户pop */
-      this.addressPopShow = true;
-    },
+
+
     next() {
       /* 下一步 */
-      // todo 单品、套购值待定
-      if (this.orderType === 2) {
-        // 展示套购发起人
-        this.multBuyPopShow = true;
-      }
+      this.orderService.createOrderSubmit({}, { orderNo: this.orderNo }).then((res) => {
+        if (res.code === 1) {
+          Toast.succeed(res.msg);
+        }
+      });
+      this.$router.push({
+        name: 'Order.OrderFollowCommitResult',
+
+      });
     },
     saveOrder() {
 
@@ -376,5 +364,17 @@ export default {
       height: 80px;
       line-height: 80px;
     }
+  }
+  .orderEntry-header-cus{
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    height: 80px;
+    background: #fff;
+    padding-left: 27px;
+    padding-right: 25px;
+  color: #333;
+    margin-top: 20px;
   }
 </style>

@@ -9,6 +9,7 @@
             class="addAddress-form-item-ipt"
             placeholder="请输入手机号"
             v-model="customerInfo.mobile"
+
           >
         </div>
       </li>
@@ -122,6 +123,7 @@ export default {
 
   data() {
     return {
+      // disabled: false,
       form: {
         name: '',
         phone: '',
@@ -133,16 +135,16 @@ export default {
       customerInfo: {
         address: '',
         city: '',
-        customerId: '0',
-        isDefault: true,
+        // customerId: '',
+        isDefault: false,
         district: '',
-        familyId: 0,
+        // familyId: '',
         familyItemCode: '',
         hmcId: 'a0008949',
         mobile: '',
         province: '',
         sex: 0,
-        userId: '123',
+        userId: '',
         source: '',
         username: '',
         tag: []
@@ -196,9 +198,15 @@ export default {
       this.region = this.$route.params.region;
       if (this.region === 'add') {
         this.confirmShow = true;
+      } else if (this.region === 'userAdd') {
+        this.confirmShow = true;
+        this.searchEnd = true;
       } else {
-        this.confirmShow = false;
-        this.customerInfo = this.$route.params.info;
+        this.disabled = true;
+        // this.confirmShow = false;
+        this.searchEnd = true;
+        this.customerInfo = JSON.parse(this.$route.params.info);
+        this.customerInfo.tag = [];
       }
     }
     // this.getFamilyItem();
@@ -226,6 +234,11 @@ export default {
     },
     search() {
       this.searchEnd = true;
+      if (!(/^1[34578]\d{9}$/.test(this.customerInfo.mobile))) {
+        Toast.failed('手机格式错误');
+        this.customerInfo.mobile = '';
+        return;
+      }
       this.productService.deafaultCustomerAddress({ mobile: this.customerInfo.mobile }).then((res) => {
         if (res.code === 1) {
 
@@ -244,6 +257,32 @@ export default {
       this.addressName = addressA.join('/');
     },
     confirm() {
+      if (!(/^1[34578]\d{9}$/.test(this.customerInfo.mobile))) {
+        Toast.failed('手机格式错误');
+        this.customerInfo.mobile = '';
+        return;
+      }
+      if (this.customerInfo.username === '') {
+        Toast.failed('姓名不能为空');
+        return;
+      }
+      if (this.customerInfo.province === '') {
+        Toast.failed('省份不能为空');
+        return;
+      }
+      if (this.customerInfo.city === '') {
+        Toast.failed('城市不能为空');
+        return;
+      }
+      if (this.customerInfo.district === '') {
+        Toast.failed('地区不能为空');
+        return;
+      }
+      if (this.customerInfo.address === '') {
+        Toast.failed('地址不能为空');
+        return;
+      }
+
       const tagObj = this.tagList.find(v => v.id === this.customerInfo.tag[0]);
       if (tagObj) {
         this.customerInfo.familyItemCode = tagObj.id;
@@ -254,14 +293,15 @@ export default {
       if (this.confirmShow) {
         this.productService.addcustomerAddress(this.customerInfo, {}).then((res) => {
           if (res.code === 1) {
-            Toast.succeed('地址添加保存成功');
+            Toast.succeed('地址添加成功');
             this.$router.go(-1);
           }
         });
       } else {
         this.productService.updateCustomerAddress(this.customerInfo, {}).then((res) => {
           if (res.code === 1) {
-
+            Toast.succeed('地址修改成功');
+            this.$router.go(-1);
           }
         });
       }

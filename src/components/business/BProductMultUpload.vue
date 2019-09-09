@@ -9,7 +9,7 @@
         :key="index"
       >
         <div class="bProductMultUpload-item-head">
-          <span>{{index+1}}.{{product.name}}</span>
+          <span>{{index+1}}.{{product.productBrandName}}/{{product.productCode}}</span>
           <span>{{product.price}}元</span>
         </div>
         <div
@@ -24,6 +24,7 @@
             :max-file-size="1024*1024*20"
             :maxWidth="1280"
             :compress="70"
+            :headers="headers"
             extensions="png,jpg,jpeg"
             inputAccept="image/jpg,image/jpeg,image/png"
             :url="uploadUrl"
@@ -31,6 +32,7 @@
             @errorhandle="uploadError"
             :imgs="value"
             :delFun="delImg"
+            :data="dataObj"
           ></b-upload>
           <p class="bProductMultUpload-item-inf">上传购机凭证,包括:发票、购机小票</p>
         </div>
@@ -55,6 +57,7 @@
         @errorhandle="uploadError"
         :imgs="value"
         :delFun="delImg"
+        :data="dataObj"
       ></b-upload>
       <div class="bProductMultUpload-merge-inf">
         <p> 多个产品合并(<span class="active"> 可上传多张图片</span>）</p>
@@ -80,6 +83,10 @@ export default {
       type: Array,
       default: () => []
     },
+    fileData:{
+      type:Object,
+      default: () => {}
+    },
     // 产品列表
     products: {
       type: Array,
@@ -95,16 +102,24 @@ export default {
   },
   data() {
     return {
+      dataObj:{recordMode:'Haier'},
       // 上传的地址
-      uploadUrl: ''
+      uploadUrl: '/api/manage/orderManage/checkInvoice',
+      headers:{
+        Authorization:'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAyNzE1MyIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2ODAyMTAzMCwiZXhwIjoxNTY4ODg1MDMwfQ.2hXagKhr_Ie5MMpwf27tpjYJbsDdXxjO7g8l0a_BmFU'
+      }
     };
   },
   methods: {
-    imageUploaded({ code, data }) {
+    imageUploaded({ code, data,msg}) {
+      debugger
       /* 上传成功 */
       // todo 返回值待定
       if (code === 1) {
-        this.$emit('input', data.url);
+          debugger
+        this.$emit('uploadSuccess', data);
+      }else{
+        this.$emit('uploadErr', msg);
       }
     },
     uploadError(res) {

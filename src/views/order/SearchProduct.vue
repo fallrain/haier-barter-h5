@@ -20,10 +20,10 @@
     >
       <li
         class="searchProduct-history-item"
-        v-for="(item,index) in searchHistory"
+        v-for="(item,index) in searchList"
         :key="index"
         @click="onItemClick(item)"
-      >{{item.industryName}}
+      >{{item.productCode}}{{item.productBrandName}}
       </li>
     </ul>
     <div class="searchProduct-secret">
@@ -61,6 +61,9 @@
 
 <script>
 import {
+  Toast
+} from 'mand-mobile';
+import {
   BNoticeBar
 } from '@/components/form';
 
@@ -72,7 +75,13 @@ export default {
   name: 'SearchProduct',
   components: {
     BNoticeBar,
-    BSearchInput
+    BSearchInput,
+    Toast
+  },
+  created() {
+    if (localStorage.getItem('productSearchHistory')) {
+      this.searchHistory = JSON.parse(localStorage.getItem('productSearchHistory'));
+    }
   },
   data() {
     return {
@@ -82,35 +91,28 @@ export default {
       searchVal: '',
       // 点击的数据
       currentClickItemData: {},
+      searchList: [],
       // 搜索历史
-      searchHistory: [
-        {
-          industryCode: 'Code',
-          industryName: 'Name',
-          price: 10,
-          productBrandCode: 'BrandCode',
-          productBrandName: 'Brand',
-          productCode: 'Code',
-          productGroup: 'Group',
-          productGroupName: 'Group',
-          productModel: 'Model',
-          productPicture: 'Picture'
-        }
-      ]
+      searchHistory: []
     };
   },
   methods: {
     search(val) {
       /* 搜索产品 */
-      this.productService.list(this.searchVal).then((res) => {
+      this.productService.list(this.searchVal, '1', '30').then((res) => {
         // debugger;
         if (res.code === 1) {
-          this.searchHistory = res.data;
+          this.searchList = res.data;
+          if (res.data === null) {
+            Toast.failed('暂无信息，请重新搜索');
+            this.searchVal = '';
+          }
         }
       });
     },
     onItemClick(item) {
       this.currentClickItemData = item;
+      this.searchHistory.push(this.currentClickItemData);
       this.$router.go(-1);
     },
 
@@ -120,6 +122,7 @@ export default {
       const obj = { product: this.currentClickItemData };
       to.query.temp = JSON.stringify(obj);
     }
+    localStorage.setItem('productSearchHistory', JSON.stringify(this.searchHistory));
     next();// 必须要有这个，否则无法跳转
   },
 };
