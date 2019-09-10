@@ -201,13 +201,14 @@ export default {
   },
   created() {
     // this.searchData();
-    this.userinfo = this.$route.params.userinfo;
-    this.userinfo.token = this.$route.params.userinfo.token;
+
+    const userinfostr =  this.getQueryString('userinfo')
+    this.userinfo = JSON.parse(userinfostr)
+    this.userinfo.token = userinfo.token;
     // this.userinfo.token = 'Bearer  eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAyNzE1MyIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2ODAyODcwMiwiZXhwIjoxNTY4ODkyNzAyfQ.TmrL7uplpyLuehQRgQa1_1HyaHlyR_qIRZshUtXlw48';
     localStorage.setItem('userinfo', this.userinfo);
     localStorage.setItem('acces_token', this.userinfo.token);
     this.getNoticeData();
-    debugger
 
   },
   computed: {
@@ -239,6 +240,12 @@ export default {
     this.bUtil.scroviewTabChange(this.curScrollViewName, this);
   },
   methods: {
+    getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+    },
     getNoticeData() {
       this.orderService
         .queryOverTwentyFourHourOrder().then((res) => {
