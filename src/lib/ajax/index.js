@@ -20,7 +20,8 @@ ax.interceptors.request.use((config) => {
     config.params = {};
   }
   if (config.headers) {
-    config.headers.Authorization = localStorage.getItem('acces_token');
+    config.headers.Authorization = 'Bearer  ' + localStorage.getItem('acces_token');
+    debugger
     // config.headers.Authorization = 'Bearer  eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAwODk0OSIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2ODA4NjQwMCwiZXhwIjoxNTY4OTUwNDAwfQ.4mGl5CY__qD78-0YDeyONp-rUlR5opdqxpjzFI6G2ZQ';
   }
   if (!config.params.noLoading) {

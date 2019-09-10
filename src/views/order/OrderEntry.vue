@@ -447,7 +447,7 @@ export default {
               debugger
            pro. deliveryTime= this.deliveryTime
             // pro.hmcId= "A0008949"
-            pro.hmcId = this.userParam.hmcId
+            pro.hmcId = this.userParam.hmcid
             pro.installTime='1564650104445'
             pro.orderFlag = 0
             pro.orderNo=this.orderNo
@@ -595,7 +595,7 @@ export default {
       subInfo.orderNo = this.orderNo
       subInfo.recordMode = 'Haier'
       // subInfo.hmcId = 'A0008949'
-      subInfo.hmcId = this.userParam.hmcId
+      subInfo.hmcId = this.userParam.hmcid
       subInfo.storeId = this.shopId
       subInfo.storeName = this.shopName
       subInfo.userId = this.customerInfo.userId

@@ -200,11 +200,11 @@ export default {
     };
   },
   created() {
-    // this.searchData();
-
+    // this.searchData()
     const userinfostr =  this.getQueryString('userinfo')
+    debugger
     this.userinfo = JSON.parse(userinfostr)
-    this.userinfo.token = userinfo.token;
+    this.userinfo.token = this.userinfo.token;
     // this.userinfo.token = 'Bearer  eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAyNzE1MyIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2ODAyODcwMiwiZXhwIjoxNTY4ODkyNzAyfQ.TmrL7uplpyLuehQRgQa1_1HyaHlyR_qIRZshUtXlw48';
     localStorage.setItem('userinfo', this.userinfo);
     localStorage.setItem('acces_token', this.userinfo.token);
@@ -339,7 +339,7 @@ export default {
         .queryOrderFollowlList(
           {
             // hmcId: 'A0008949',
-            hmcId: this.userinfo.hmcId,
+            hmcId: this.userinfo.hmcid,
             queryType: this.curTab,
             sortType: this.sortType,
             recordMode: '',
@@ -509,7 +509,7 @@ export default {
             pageNum: 1,
             pageSize: 10,
             // hmcId: 'A0008949',
-            hmcId: this.userinfo.hmcId,
+            hmcId: this.userinfo.hmcid,
             keyword: this.searchWord
           }
         )
