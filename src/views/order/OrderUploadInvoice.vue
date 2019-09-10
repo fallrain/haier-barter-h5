@@ -167,7 +167,7 @@ this.splice(index, 1);
       this.orderService.queryOrderDetailAndInvoice({}, { orderNo: this.orderNo }).then((res) => {
         debugger
         if (res.code === 1) {
-          // this.products = res.data
+          this.products = res.data
         }
       });
     },
