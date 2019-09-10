@@ -48,6 +48,16 @@
         class="labelImage"
         v-show="followItem.businessScenarios =='ADJ'"
       >
+      <img
+        src="@/assets/images/orderFollow-up/saomaludan.png"
+        class="labelImage"
+        v-show="followItem.businessScenarios =='SMLD'"
+      >
+      <img
+        src="@/assets/images/orderFollow-up/renchou@3x.png"
+        class="labelImage"
+        v-show="followItem.businessScenarios =='RC'"
+      >
       <div class="row-class">
         <span class="label-span">{{followItem.userName}}</span>
         <span
@@ -308,6 +318,14 @@ export default {
       this.$set(this.list[index], 'detailShow', !this.list[index].detailShow);
     },
     updateOrderType(type, item) {
+      if(type === '10'){
+        this.$emit('againEntry',item)
+        return
+      }
+      if(type === '11'){
+        this.$emit('cancleOrder',item)
+        return
+      }
       this.orderService
         .updateOrderFollowByType(
           {},

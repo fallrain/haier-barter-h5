@@ -20,7 +20,7 @@
             v-show="value.length < 1"
             :crop="false"
             inputOfFile="file"
-            @imageuploaded="imageUploaded"
+            @imageuploaded="imageuploaded"
             :max-file-size="1024*1024*20"
             :maxWidth="1280"
             :compress="70"
@@ -42,7 +42,7 @@
       v-if="merge"
       class="bProductMultUpload-merge-cnt"
     >
-      <b-upload
+      <!-- <b-upload
         v-show="value.length < 1"
         :crop="false"
         inputOfFile="file"
@@ -58,11 +58,11 @@
         :imgs="value"
         :delFun="delImg"
         :data="dataObj"
-      ></b-upload>
-      <div class="bProductMultUpload-merge-inf">
+      ></b-upload> -->
+      <!-- <div class="bProductMultUpload-merge-inf">
         <p> 多个产品合并(<span class="active"> 可上传多张图片</span>）</p>
         <p>开一张发票上传购机凭证,包括:发票、购机小票</p>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -110,11 +110,20 @@ export default {
       }
     };
   },
+  created(){
+    debugger
+    // this.imageUploaded1()
+  },
   methods: {
-    imageUploaded({ code, data,msg}) {
+    imageChanged(res){
+      debugger
+    },
+    imageuploaded(data) {
       debugger
       /* 上传成功 */
       // todo 返回值待定
+      this.value = []
+      this.value.push(data.invoiceUrl)
       if (code === 1) {
           debugger
         this.$emit('uploadSuccess', data);
@@ -136,7 +145,7 @@ export default {
       Toast.failed('上传失败');
     },
     delImg() {
-      this.$emit('input', []);
+      this.$emit('delImg', []);
     }
   }
 };

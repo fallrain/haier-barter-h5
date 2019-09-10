@@ -140,7 +140,7 @@ export default {
         district: '',
         // familyId: '',
         familyItemCode: '',
-        hmcId: 'a0008949',
+        hmcId: 'A0008949',
         mobile: '',
         province: '',
         sex: 0,

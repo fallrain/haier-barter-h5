@@ -35,6 +35,7 @@
         @popButtonClicked="buttonClicked"
         @updateOrderType="updateOrderType"
         @followButtonClick="followButtonClicked"
+        @againEntry="againEntry"
       ></b-order-follow-item>
     </div>
     <div
@@ -256,6 +257,14 @@ export default {
         params: { userInfo: {} }
       });
     },
+    againEntry(item){
+        this.orderService.createNewOrder({}, { orderNo: item.orderNo }).then((res) => {
+          if (res.code === 1) {
+            Toast.succeed(res.msg);
+          }
+        });
+
+    },
     headSwitch(index) {
       if (index === this.preIndex) {
         this.headList[index].isActive = false;
@@ -429,10 +438,10 @@ export default {
         } else if (this.curTab === 3) {
           item.showList = [];
           item.showList.push({
-            id: '',
+            id: '10',
             name: '重新录单'
           }, {
-            id: '',
+            id: '11',
             name: '直接取消'
           });
         } else {

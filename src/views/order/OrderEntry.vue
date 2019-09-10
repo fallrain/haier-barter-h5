@@ -432,6 +432,7 @@ export default {
   },
   activated() {
     if (this.$route.query.temp) {
+      var ID = ''
       const obj = JSON.parse(this.$route.query.temp);
       if (obj.tel) {
         this.mobile = obj.tel;
@@ -440,20 +441,50 @@ export default {
       if (obj.product) {
         this.orderService.qenerateOrderDetailId().then((res) => {
           if (res.code === 1) {
-            obj.product.id = res.data;
+            ID = res.data;
+            var pro = {}
+              pro.id = ID
+              debugger
+           pro. deliveryTime= this.deliveryTime
+            pro.hmcId= "A0008949"
+            pro.installTime='1564650104445'
+            pro.orderFlag = 0
+            pro.orderNo=this.orderNo
+            pro.productCategoryName =  obj.product.productGroupName
+            pro.productCategoryCode = obj.product.productBrandCode
+            pro.productCode = obj.product.productCode
+            pro.productModel = obj.product.productModel
+            pro.bccPrice = obj.product.price
+            pro.productPrice = obj.product.price
+            pro.remark = "备注，记录订单创建、订单修改原因等信息"
+            pro.rightId =  "111111"
+            pro.rightName= "八月套购权益"
+            pro.storeId = this.shopId
+            pro.storeName =  this.shopName
+    		pro.invoiceStatus =  0
+            pro.userId = '123456789'
+          debugger
+        this.productList.push(pro);
+            debugger
           } else {
             Toast.failed(res.msg);
           }
         });
-        this.productList.push(obj.product);
+
       }
     }
   },
   created() {
     if (localStorage.getItem('userinfo')) {
+      debugger
       this.userParam = localStorage.getItem('userinfo');
       this.shopId = this.userParam.shopId;
       this.mobile = this.userParam.mobile;
+      this.mobile = '18653226149';
+      this.queryUserList();
+      this.queryCustomerDefault();
+      this.getUserStore();
+    }else{
       this.mobile = '18653226149';
       this.queryUserList();
       this.queryCustomerDefault();
@@ -482,7 +513,7 @@ export default {
 
     },
     getUserStore() {
-      this.shopId = '9999999999';
+      this.shopId = '8800332156';
       this.productService.storeInfo(this.shopId).then((res) => {
         if (res.code === 1) {
           this.shopName = res.data.storeName;
@@ -535,25 +566,33 @@ export default {
       // multBuyParticipantCheckIds
       if (this.multBuySponsorCheckedIds.length) {
         subInfo.coupleSponsor = this.multBuySponsorCheckedIds[0];
+         const obj = this.multBuySponsor.find(v => v.hmcId === this.multBuySponsorCheckedIds[0])
+       subInfo.coupleSponsorName = obj.username;
       }else{
         subInfo.coupleSponsor = ''
-      }
-
-      if(this.multBuySponsor.length){
-      //  subInfo.coupleSponsorName = this.multBuySponsor.find(v => v.hmcId === this.multBuySponsorCheckedIds[0]).username;
-      }else{
-        subInfo.coupleSponsorName = ''
-      }
-       subInfo.coupleSponsorName = ''
-      if(this.multBuyParticipantCheckIds.length){
-        subInfo.mayEditCoupleOrderId = this.multBuyParticipantCheckIds.join(',');
-      }else{
         subInfo.mayEditCoupleOrderId = '';
       }
-      subInfo.mayEditCoupleOrderName = ''
+
+      var part = []
+      if(this.multBuyParticipantCheckIds.length){
+        subInfo.mayEditCoupleOrderId = this.multBuyParticipantCheckIds.join(',');
+        this.multBuyParticipantCheckIds.forEach(val => {
+          const obj = this.multBuyParticipant.find(v => v.hmcId === val)
+          if(obj){
+             part.push(obj.username)
+          }
+          subInfo.mayEditCoupleOrderName = part.join(',')
+        });
+      }else{
+        subInfo.mayEditCoupleOrderName = ''
+        subInfo.mayEditCoupleOrderId= ''
+      }
+
+
+
       subInfo.orderNo = this.orderNo
       subInfo.recordMode = 'Haier'
-      subInfo.hmcId = 'a0008949'
+      subInfo.hmcId = 'A0008949'
       subInfo.storeId = this.shopId
       subInfo.storeName = this.shopName
       subInfo.userId = '123456789', // this.userParam.userId;
@@ -653,7 +692,7 @@ export default {
     },
     queryUserList() {
       this.productGroup = '111';
-      this.shopId = '9999999999';
+      this.shopId = '8800332156';
       this.productService.userList(this.shopId).then((res) => {
         if (res.code === 1) {
           this.multBuySponsor = res.data;
@@ -669,10 +708,12 @@ export default {
         this.multBuyPopShow = true;
       }
       this.saveTemporary();
+      debugger
       this.$router.push({
         name: 'Order.OrderUploadInvoice',
         params: { orderNo: this.orderNo }
       });
+
     },
     saveOrder() {
 

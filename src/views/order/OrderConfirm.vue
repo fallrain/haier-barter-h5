@@ -92,6 +92,7 @@
       <button
         type="button"
         class="common-submit-btn-primary"
+        @click="changeOrder"
       >返回修改草稿
       </button>
       <button
@@ -192,7 +193,7 @@ export default {
   computed: {},
   created() {
     this.orderNo = this.$route.params.orderNo;
-    this.orderNo = 'Z15645424968056668';
+    // this.orderNo = 'Z15645424968056668';
     this.getData();
   },
   methods: {
@@ -240,6 +241,12 @@ export default {
       this.$router.push({
         name: 'Order.OrderFollowCommitResult',
 
+      });
+    },
+    changeOrder(){
+      this.$router.push({
+        name: 'Order.OrderModify',
+        param:{orderNo:this.orderNo}
       });
     },
     saveOrder() {

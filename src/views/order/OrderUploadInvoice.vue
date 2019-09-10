@@ -13,6 +13,7 @@
         v-model="invoiceImg"
         @uploadSuccess="uploadSuccess"
         @uploadErr="uploadErr"
+        @delImg="delImg"
       ></b-product-mult-upload>
     </div>
     <div class="orderUploadInvoice-tips mt16">
@@ -115,9 +116,9 @@ export default {
     };
   },
   created() {
-    console.log('tag', this.$route.params);
-    debugger;
+    console.log('tag', this.$route.params)
     this.orderNo = this.$route.params.orderNo;
+    debugger
     this.getData();
   },
   methods: {
@@ -136,18 +137,37 @@ export default {
       this.invoiceList.push(data)
     },
     uploadErr(){},
+    indexOf(val) {
+for (var i = 0; i < this.length; i++) {
+if (this[i] == val) return i;
+}
+return -1;
+},
+remove (val) {
+var index = this.indexOf(val);
+if (index > -1) {
+this.splice(index, 1);
+}
+},
+    delImg(data){
+      this.invoice.remove(data)
+    },
     updateSubmit(){
-      this.orderService.uploadInvoice(this.invoiceList,{orderNo:this,orderNo}).then(res => {
+      this.orderService.uploadInvoice(this.invoiceList,{orderNo:this.orderNo}).then(res => {
         if(res.code === 1){
           Toast.succed(res.msg)
         }
       })
+      this.$router.push({
+        name: 'Order.OrderConfirm',
+        params: { orderNo: this.orderNo }
+      });
     },
     getData() {
       this.orderService.queryOrderDetailAndInvoice({}, { orderNo: this.orderNo }).then((res) => {
+        debugger
         if (res.code === 1) {
           // this.products = res.data
-          this.genFileMap();
         }
       });
     },
