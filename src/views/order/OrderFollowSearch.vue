@@ -201,12 +201,12 @@ export default {
   },
   created() {
     // this.searchData();
-    this.userinfo = this.getQueryString('userinfo');
-    this.userinfo.token = this.getQueryString('userinfo').token;
+    this.userinfo = this.$route.params.userinfo;
+    this.userinfo.token = this.$route.params.userinfo.token;
     // this.userinfo.token = 'Bearer  eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAyNzE1MyIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2ODAyODcwMiwiZXhwIjoxNTY4ODkyNzAyfQ.TmrL7uplpyLuehQRgQa1_1HyaHlyR_qIRZshUtXlw48';
     localStorage.setItem('userinfo', this.userinfo);
     localStorage.setItem('acces_token', this.userinfo.token);
-     this.getNoticeData();
+    this.getNoticeData();
     debugger
 
   },
