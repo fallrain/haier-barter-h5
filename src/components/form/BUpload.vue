@@ -37,8 +37,12 @@ export default {
     },
     delFun: {
       type: Function
+    },
+    imgObj:{
+      type:Object,
+      default:() => {}
     }
-  }
+  },
 };
 </script>
 <style lang="scss">

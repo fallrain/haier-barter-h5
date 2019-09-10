@@ -7,7 +7,7 @@ const SearchProduct = () => import(/* webpackChunkName: "SearchProduct" */ '@/vi
 const AddUserTag = () => import('@/views/order/AddUserTag');
 const OrderFollowActivity = () => import('@/views/order/OrderFollowActivity');
 const OrderModify = () => import(/* webpackChunkName: "OrderEntry" */ '@/views/order/OrderModify');// 订单录入
-const OrderConfirm= () => import(/* webpackChunkName: "OrderConfirm" */ '@/views/order/OrderConfirm');// 订单录入
+const OrderConfirm = () => import(/* webpackChunkName: "OrderConfirm" */ '@/views/order/OrderConfirm');// 订单录入
 
 const prefix = '/order';
 const module = 'Order';

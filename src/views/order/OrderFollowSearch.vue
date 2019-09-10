@@ -21,7 +21,7 @@
         class="search-image"
         @click="fuzzySearch()"
       >
-      <p class="orderFollowButton">手动录单</p>
+      <p class="orderFollowButton" @click="handEntry()">手动录单</p>
     </div>
     <div
       id="scrollView"
@@ -34,6 +34,8 @@
         @checkClick="checkClicked"
         @popButtonClicked="buttonClicked"
         @updateOrderType="updateOrderType"
+        @followButtonClick="followButtonClicked"
+        @againEntry="againEntry"
       ></b-order-follow-item>
     </div>
     <div
@@ -43,8 +45,11 @@
       v-show="curScrollViewName==='scrollViewFinished'"
     >
       <b-order-follow-item
-        :list="scrollView.list"
-
+        :list="scrollViewFinished.list"
+        @checkClick="checkClicked"
+        @popButtonClicked="buttonClicked"
+        @updateOrderType="updateOrderType"
+        @followButtonClick="followButtonClicked"
       ></b-order-follow-item>
     </div>
     <div
@@ -54,8 +59,11 @@
       v-show="curScrollViewName==='scrollViewOdd'"
     >
       <b-order-follow-item
-        :list="scrollView.list"
-
+        :list="scrollViewOdd.list"
+        @checkClick="checkClicked"
+        @popButtonClicked="buttonClicked"
+        @updateOrderType="updateOrderType"
+        @followButtonClick="followButtonClicked"
       ></b-order-follow-item>
     </div>
     <div
@@ -65,8 +73,11 @@
       v-show="curScrollViewName==='scrollViewProgress'"
     >
       <b-order-follow-item
-        :list="scrollView.list"
-
+        :list="scrollViewProgress.list"
+        @checkClick="checkClicked"
+        @popButtonClicked="buttonClicked"
+        @updateOrderType="updateOrderType"
+        @followButtonClick="followButtonClicked"
       ></b-order-follow-item>
     </div>
     <div style="height:60px"></div>
@@ -190,11 +201,14 @@ export default {
   },
   created() {
     // this.searchData();
-    this.getNoticeData();
+    this.userinfo = this.getQueryString('userinfo');
     this.userinfo.token = this.getQueryString('userinfo').token;
-    // this.userinfo.token = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAyNzE1MyIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2NzE2MTEwMiwiZXhwIjoxNTY4MDI1MTAyfQ.667Lu_NrJEuz-iGzDHrSNs89qz4MUx97fGYozqv203A';
+    // this.userinfo.token = 'Bearer  eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAyNzE1MyIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2ODAyODcwMiwiZXhwIjoxNTY4ODkyNzAyfQ.TmrL7uplpyLuehQRgQa1_1HyaHlyR_qIRZshUtXlw48';
     localStorage.setItem('userinfo', this.userinfo);
     localStorage.setItem('acces_token', this.userinfo.token);
+     this.getNoticeData();
+    debugger
+
   },
   computed: {
     curScrollViewName() {
@@ -234,8 +248,21 @@ export default {
         });
     },
     change(item, index, prevIndex) {
-      debugger;
       this.curTab = index;
+    },
+    handEntry() {
+      this.$router.push({
+        name: 'Order.OrderEntry',
+        params: { userInfo: {} }
+      });
+    },
+    againEntry(item){
+        this.orderService.createNewOrder({}, { orderNo: item.orderNo }).then((res) => {
+          if (res.code === 1) {
+            Toast.succeed(res.msg);
+          }
+        });
+
     },
     headSwitch(index) {
       if (index === this.preIndex) {
@@ -289,12 +316,23 @@ export default {
         size: 10
       });
     },
+    followButtonClicked(val, info) {
+      debugger;
+      if (val.name === '录新订单') {
+        this.orderService.createNewOrder({}, { orderNo: info.orderNo }).then((res) => {
+          if (res.code === 1) {
+            Toast.succeed(res.msg);
+          }
+        });
+      }
+    },
 
     searchData(page) {
       return this.orderService
         .queryOrderFollowlList(
           {
-            hmcId: 'A0008949',
+            // hmcId: 'A0008949',
+            hmcId: this.userinfo.hmcId,
             queryType: this.curTab,
             sortType: this.sortType,
             recordMode: '',
@@ -342,6 +380,15 @@ export default {
     },
     anylizeData(curList) {
       curList.forEach((item) => {
+        if (item.flowStatus === 1) {
+          item.buttonList = [{ name: '录新订单' }, { name: '退货' }, { name: '换货' }];// 已完成
+        } else if (item.flowStatus === 2) {
+          item.buttonList = [{ name: '成交录单' }, { name: '发放卡券' }];
+        } else if (item.flowStatus === 5) {
+          item.buttonList = [{ name: '刷新' }, { name: '修改订单' }, { name: '录新订单' }];
+        } else {
+          item.buttonList = [];
+        }
         item.showList = [];
         this.$set(item, 'detailShow', false);
         this.$set(item, 'show', false);
@@ -357,6 +404,7 @@ export default {
             });
           } else {
             item.userS = '';
+            item.showList = [];
             item.showList.push({
               id: '6',
               name: '设为高潜'
@@ -368,6 +416,7 @@ export default {
         } else if (this.curTab === 1) {
           if (item.userStatus === 1) {
             item.userS = '高潜';
+            item.showList = [];
             item.showList.push({
               id: '2',
               name: '取消高潜'
@@ -377,6 +426,7 @@ export default {
             });
           } else {
             item.userS = '';
+            item.showList = [];
             item.showList.push({
               id: '6',
               name: '设为高潜'
@@ -386,17 +436,17 @@ export default {
             });
           }
         } else if (this.curTab === 3) {
+          item.showList = [];
           item.showList.push({
-            id: '',
+            id: '10',
             name: '重新录单'
           }, {
-            id: '',
+            id: '11',
             name: '直接取消'
           });
         } else {
 
         }
-
         if (item.orderNo !== '') {
           item.showDetail = true;
           if (item.flowStatus !== 2) {

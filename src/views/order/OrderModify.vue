@@ -4,39 +4,32 @@
       <span class="orderEntry-header-name">门店：{{shopName}}</span>
       <i class="iconfont icon-icon-question orderEntry-header-icon"></i>
     </div>
+    <!-- <div class="orderEntry-header-cus"  v-show="haveCustomer">
+            <span class="name mr16">顾客信息:{{customerInfo.username}}</span>
+            <span class="name mr16">{{customerInfo.mobile}}</span>
+    </div> -->
     <b-fieldset
       class="mt16"
-      title="用户信息："
+      :title="title"
     >
       <div class="orderEntry-user">
-        <div v-if="haveConsignee">
           <div class="orderEntry-user-head">
-            <span class="name mr16">收货人：{{consignee.name}}</span>
+            <span class="name mr16">收货人：{{consignee.username}}</span>
             <span class="sex mr16">{{consignee.sex}}</span>
             <i class="iconfont icon-dianhua mr16"></i>
             <span class="phone mr16">{{consignee.phone}}</span>
             <button
               type="button"
               class="common-btn-waring"
-              @click="addressModify()"
+              @click="changeAddress(customerInfo)"
             >更改地址
             </button>
           </div>
           <p class="orderEntry-user-address">
-            {{consignee.address}}
+            {{customerInfo.address}}
           </p>
         </div>
-        <div v-else>
-          <button
-            type="button"
-            class="common-btn-primary w100per"
-            @click="shwAddressList"
-            @addNew="addNewAddress()"
-          >添加或选择用户信息
-          </button>
-        </div>
-      </div>
-    </b-fieldset>
+        </b-fieldset>
     <b-item
       class="mt16"
       title="购买日期："
@@ -79,6 +72,7 @@
             :data="item"
             :index="index"
             :content="item.isReport"
+            @onDel="onDelete"
           >
             <template
               v-slot:default
@@ -92,13 +86,14 @@
         <button
           type="button"
           class="common-btn-primary w100per"
+          @click="addProduct()"
         >+新增产品
         </button>
       </div>
     </b-fieldset>
     <b-item
       class="mt16"
-      title="送货日期"
+      title="选择送货时间："
     >
       <template
         v-slot:right=""
@@ -106,46 +101,27 @@
         <b-date-picker
           class="orderEntry-date"
           slot="right"
-          type="date"
-          title="请选择送货日期"
-          :defaultDate="sendDate"
-          v-model="sendDate"
+          type="datetime"
+          title="请选择日期"
+          :pattern="pattern"
+          :defaultDate="deliveryTime"
+          :min-date="currentDate"
+          v-model="deliveryTime"
         ></b-date-picker>
       </template>
     </b-item>
-    <b-fieldset
-      class="mt16 orderEntry-rights-fieldset"
-      title="已选择的权益"
-      :headBtmLine="true"
-    >
-      <template
-        v-slot:headRight=""
-      >
-       <p class="orderEntry-rights-change">修改</p>
-      </template>
-      <div>
-        <b-activity-list
-          :isDetail="isDetail"
-          :data="activityList"
-          v-model="choosedActivitys"
-          @chooseGift="chooseGift"
-        ></b-activity-list>
-        <div class="orderEntry-rights-fieldset-more">查看全部活动></div>
-      </div>
-    </b-fieldset>
     <b-item
-      v-if="isDetail"
       class="mt16"
-      title="修改原因"
-      value="退货"
+      title="选择可用的购机权益活动"
       :arrow="true"
-      @rightClick="updateReasonClick"
+      @rightClick="selectActivity()"
     >
     </b-item>
     <div class="orderEntry-btns-par">
       <button
         type="button"
         class="common-submit-btn-primary"
+        @click="saveTemporary()"
       >暂存草稿
       </button>
       <button
@@ -171,6 +147,9 @@
       <b-pop-address-list
         :show.sync="addressPopShow"
         :list="addressList"
+        @addNew="addNew"
+        @editAddress="editAddress"
+        @clickAddress="selectAddress"
       ></b-pop-address-list>
     </div>
     <b-pop
@@ -181,6 +160,7 @@
         title="请选择套购发起人"
         :persons="multBuySponsor"
         v-model="multBuySponsorCheckedIds"
+        @radioCheck="sponsorCheck"
         tips="套购发起人发起套购，并且统一录入用户销售订单"
       ></b-multbuy-check>
       <b-multbuy-check
@@ -188,6 +168,8 @@
         title="请选择套购参与人"
         :persons="multBuyParticipant"
         v-model="multBuyParticipantCheckIds"
+        @allCheck="particpantAll"
+        @multiCheck="particpantClick"
         tips="套购参秘人可查看套头订单不需要录入订单,但是需确定确单信息正确后自主申报销量。"
         :checkAll="true"
         type="checkbox"
@@ -201,9 +183,6 @@ import {
   Toast
 } from 'mand-mobile';
 import {
-  debuglog
-} from 'util';
-import {
   BActivityList,
   BDatePicker,
   BFieldset,
@@ -214,14 +193,14 @@ import {
   BPopCheckList,
   BRadioItem
 } from '@/components/form';
-
 import {
   BMultbuyCheck
 } from '@/components/business';
 
 export default {
-  name: 'OrderModify',
+  name: 'OrderEntry',
   components: {
+    Toast,
     BActivityList,
     BDatePicker,
     BFieldset,
@@ -238,21 +217,26 @@ export default {
       // 是否详情模式
       isDetail: true,
       // 门店名称
-      shopName: '新华百货老大楼',
+      shopName: '',
+      haveCustomer: false,
+      currentDate: new Date(),
+      pattern: 'yyyy-MM-dd hh:mm',
+      customerString: '',
       // 收货人信息
       consignee: {
         /* name: '',
-            sex: '男士',
-            phone: '15067543689' */
+              sex: '男士',
+              phone: '15067543689' */
       },
+      customerInfo: {},
       // 订单类型单选
       orderTypes: [
         {
-          key: 1,
+          key: 0,
           value: '单品'
         },
         {
-          key: 2,
+          key: 1,
           value: '套购'
         }
       ],
@@ -260,26 +244,11 @@ export default {
       orderType: 2,
       // 购机时间
       buyDate: '',
-      // 送货时间
-      sendDate: '',
-      minSelectDate: new Date('2019-05-09'),
+      subInfo: {},
+      // /送货时间
+      deliveryTime: '',
       // 产品列表
-      productList: [
-        {
-          name: '海尔/空调，KFR-35G',
-          price: '',
-          isReport: true
-        },
-        {
-          name: '海尔/空调，KFR-35G',
-          price: '',
-        },
-        {
-          name: '海尔/空调，KFR-35G',
-          price: '',
-          isReport: true
-        }
-      ],
+      productList: [],
       // 活动列表
       activityList: [
         {
@@ -341,42 +310,42 @@ export default {
       addressPopShow: false,
       // 收货人地址pop列表
       addressList: [
-        {
-          name: '张三',
-          phone: '15000000000',
-          address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-          tagName: '自己家'
-        },
-        {
-          name: '李四',
-          phone: '15000000000',
-          address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-          tagName: '办公室'
-        },
-        {
-          name: '王二',
-          phone: '15000000000',
-          address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-          tagName: '父母家'
-        },
-        {
-          name: '尼古拉斯赵四',
-          phone: '15000000000',
-          address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-          tagName: '其他'
-        },
-        {
-          name: '莱桑尼丝铁柱',
-          phone: '15000000000',
-          address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-          tagName: '其他'
-        },
-        {
-          name: '罗伯特英子',
-          phone: '15000000000',
-          address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-          tagName: '其他'
-        }
+        // {
+        //   name: '张三',
+        //   phone: '15000000000',
+        //   address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
+        //   tagName: '自己家'
+        // },
+        // {
+        //   name: '李四',
+        //   phone: '15000000000',
+        //   address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
+        //   tagName: '办公室'
+        // },
+        // {
+        //   name: '王二',
+        //   phone: '15000000000',
+        //   address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
+        //   tagName: '父母家'
+        // },
+        // {
+        //   name: '尼古拉斯赵四',
+        //   phone: '15000000000',
+        //   address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
+        //   tagName: '其他'
+        // },
+        // {
+        //   name: '莱桑尼丝铁柱',
+        //   phone: '15000000000',
+        //   address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
+        //   tagName: '其他'
+        // },
+        // {
+        //   name: '罗伯特英子',
+        //   phone: '15000000000',
+        //   address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
+        //   tagName: '其他'
+        // }
       ],
       // 套购pop show
       multBuyPopShow: false,
@@ -429,82 +398,346 @@ export default {
       ],
       // 参与人选中id
       multBuyParticipantCheckIds: [],
-      orderNo: ''
+      orderNo: '',
+      haveConsignee: false,
+      title: '顾客信息：',
+      mobile: '',
+      region: '',
+      hmcId:'',
     };
   },
-  computed: {
-
+  computed: {},
+  mounted() {
+    //
+    //    if(this.$route.query){
+    // const address = this.$route.query.temp
+    //   console.log('tag', address)
+    //    }
   },
-  created() {
-    debugger;
-    this.orderService.generateOrderNo({ recordModel: 'Haier', }, { }).then((res) => {
-      debugger;
-      if (res.code === 1) {
-        this.orderNo = res.data;
-        this.orderNo = 'Z15645424968056668';
-        this.orderService.queryOrderInfoByOrderNo({}, { orderNo: this.orderNo }).then((response) => {
-          if (response.code === 1) {
-            const resData = response.data;
-            this.shopName = resData.storeName;
-            this.consignee.name = resData.userName;
-            this.consignee.phone = resData.userPhone;
-            this.consignee.sex = resData.userSex;
-            this.consignee.address = resData.dispatchProvince + resData.dispatchCity + resData.dispatchArea + resData.dispatchAdd;
-            this.buyDate = resData.buyTime;
-            this.orderType = resData.orderType;
-            this.haveConsignee();
-            if (resData.orderDetailDtoList.length !== 0) {
-              this.productList = resData.orderDetailDtoList;
-              this.productList.forEach((item) => {
-                if (item.productBrand === 'haier') {
-                  item.productBrandCN = '海尔';
-                } else {
-                  item.productBrandCN = '卡萨帝';
-                }
-              });
-            }
+  activated() {
+    if (this.$route.query.temp) {
+      var ID = ''
+      const obj = JSON.parse(this.$route.query.temp);
+      if (obj.tel) {
+        this.mobile = obj.tel;
+        this.queryCustomerDefault();
+      }
+      if (obj.product) {
+        this.orderService.qenerateOrderDetailId().then((res) => {
+          if (res.code === 1) {
+            ID = res.data;
+            var pro = {}
+              pro.id = ID
+              debugger
+           pro. deliveryTime= this.deliveryTime
+            // pro.hmcId= "A0008949"
+            pro.hmcId = this.userParam.hmcId
+            pro.installTime='1564650104445'
+            pro.orderFlag = 0
+            pro.orderNo=this.orderNo
+            pro.productCategoryName =  obj.product.productGroupName
+            pro.productCategoryCode = obj.product.productBrandCode
+            pro.productCode = obj.product.productCode
+            pro.productModel = obj.product.productModel
+            pro.bccPrice = obj.product.price
+            pro.productPrice = obj.product.price
+            pro.remark = "备注，记录订单创建、订单修改原因等信息"
+            pro.rightId =  "111111"
+            pro.rightName= "八月套购权益"
+            pro.storeId = this.shopId
+            pro.storeName =  this.shopName
+    		pro.invoiceStatus =  0
+            pro.userId = this.userParam.userId
+          debugger
+        this.productList.push(pro);
+            debugger
+          } else {
+            Toast.failed(res.msg);
           }
         });
-      } else {
-        Toast.failed(res.msg);
+
       }
-    });
+    }
+  },
+  created() {
+    this.orderNo = this.$route.params.orderNo;
+    if (localStorage.getItem('userinfo')) {
+      this.userParam = localStorage.getItem('userinfo');
+      }
+    // this.orderNo = 'Z15645424968056668';
+    this.getData();
+
+    // this.queryCustomerDefault();
   },
   methods: {
-    addressModify() {
-      this.addressPopShow = true;
+    //  haveConsignee() {
+    //   /* 存在收货人信息 */
+    //   return this.consignee && JSON.stringify(this.consignee) !== '{}';
+    // },
+    // chooseGift() {
+    //   /* 选择礼品 */
+    //   this.chooseGiftPopShow = true;
+    // },
+    getData() {
+      this.orderService.queryOrderInfoByOrderNo({}, { orderNo: this.orderNo }).then((response) => {
+        if (response.code === 1) {
+          const resData = response.data;
+          this.shopName = resData.storeName;
+          this.consignee.name = resData.consigneeName;
+          this.username = resData.userName;
+          this.phone = resData.userPhone;
+          this.hmcId = resData.hmcId;
+          this.consignee.phone = resData.consigneePhone;
+          this.consignee.sex = resData.userSex;
+          this.consignee.address = resData.dispatchProvince + resData.dispatchCity + resData.dispatchArea + resData.dispatchAdd;
+          this.buyDate = resData.buyTime;
+          this.orderType = resData.orderType;
+          this.deliveryTime = resData.deliveryTime;
+          this.createdTime = resData.createdTime;
+          this.orderNo = resData.orderNo;
+          this.shopId = resData.shopId
+           this.queryUserList();
+          if (resData.rightsUserJson) {
+            this.activityList = JSON.parse(resData.rightsUserJson).rightsUserInterestsDetailsDTO;
+          }
+          if (resData.orderDetailDtoList.length !== 0) {
+            this.productList = resData.orderDetailDtoList;
+            this.productList.forEach((item) => {
+              if (item.productBrand == 'haier') {
+                item.productBrandCN = '海尔';
+              } else {
+                item.productBrandCN = '卡萨帝';
+              }
+            });
+          }
+        }
+
+
+      })
     },
-    haveConsignee() {
-      /* 存在收货人信息 */
-      return this.consignee && JSON.stringify(this.consignee) !== '{}';
+    // 获取门店信息
+    sponsorCheck(checkid) {
+      debugger;
     },
-    chooseGift() {
-      /* 选择礼品 */
-      this.chooseGiftPopShow = true;
+    particpantAll(checkedIds) {
+
     },
-    updateReasonClick() {
-      /* 选择退换货原因 */
-      this.returnReasonPopShow = true;
+    particpantClick(checkids) {
+
     },
-    shwAddressList() {
+    getUserStore() {
+      // this.shopId = '8800332156';
+      this.shopId = this.userParam.shopId
+      this.productService.storeInfo(this.shopId).then((res) => {
+        if (res.code === 1) {
+          this.shopName = res.data.storeName;
+        }
+      });
+    },
+
+    // 生成订单号
+    genarateOrderNum() {
+      this.orderService.generateOrderNo({}, { recordMode: 'Haier' },).then((res) => {
+        if (res.code === 1) {
+          this.orderNo = res.data;
+        } else {
+          Toast.failed(res.msg);
+        }
+      });
+    },
+    // 查询客户信息及默认地址
+    queryCustomerDefault() {
+      this.productService.deafaultCustomerAddress(this.mobile).then((res) => {
+        if (res.code === 1) {
+          if (res.data !== null) {
+            this.haveConsignee = true;
+            this.haveCustomer = true;
+            this.title = '收件人信息：';
+            this.customerInfo = res.data;
+            this.customerString = this.customerInfo.username + this.customerInfo.mobile;
+            this.consignee.address = res.data.province + res.data.city + res.data.district + res.data.address;
+            this.consignee.phone = res.data.mobile;
+            this.consignee.name = res.data.username;
+            this.consignee.sex = res.data.sex;
+            this.consignee.customerId = res.data.customerId;
+            this.queryCustomerAddressList();
+            this.genarateOrderNum();
+          }
+        }
+      });
+    },
+    // 查询客户地址列表
+    queryCustomerAddressList() {
+      this.productService.customerAddressList(this.customerInfo.customerId).then((res) => {
+        if (res.code === 1) {
+          this.addressList = res.data;
+        }
+      });
+    },
+    // 暂存
+    saveTemporary() {
+      const subInfo = {};
+      // multBuyParticipantCheckIds
+      if (this.multBuySponsorCheckedIds.length) {
+        subInfo.coupleSponsor = this.multBuySponsorCheckedIds[0];
+         const obj = this.multBuySponsor.find(v => v.hmcId === this.multBuySponsorCheckedIds[0])
+       subInfo.coupleSponsorName = obj.username;
+      }else{
+        subInfo.coupleSponsor = ''
+        subInfo.mayEditCoupleOrderId = '';
+      }
+
+      var part = []
+      if(this.multBuyParticipantCheckIds.length){
+        subInfo.mayEditCoupleOrderId = this.multBuyParticipantCheckIds.join(',');
+        this.multBuyParticipantCheckIds.forEach(val => {
+          const obj = this.multBuyParticipant.find(v => v.hmcId === val)
+          if(obj){
+             part.push(obj.username)
+          }
+          subInfo.mayEditCoupleOrderName = part.join(',')
+        });
+      }else{
+        subInfo.mayEditCoupleOrderName = ''
+        subInfo.mayEditCoupleOrderId= ''
+      }
+
+
+
+      subInfo.orderNo = this.orderNo
+      subInfo.recordMode = 'Haier'
+      // subInfo.hmcId = 'A0008949'
+      subInfo.hmcId = this.userParam.hmcId
+      subInfo.storeId = this.shopId
+      subInfo.storeName = this.shopName
+      // subInfo.userId = '123456789',
+      subInfo.userId = this.customerInfo.userId;
+      // subInfo.userName = '张三',
+       subInfo.userName = this.customerInfo.username;
+      // subInfo.userPhone = '18675647364',
+       subInfo.userPhone  = this.userParam.phone;
+      subInfo.dispatchProvinceId = this.customerInfo.province
+      subInfo.dispatchProvince = ''
+      subInfo.dispatchCityId = this.customerInfo.city
+      subInfo.dispatchCity = ''
+      subInfo.dispatchAreaId = this.customerInfo.area
+      subInfo.dispatchArea = ''
+      subInfo.dispatchAdd = this.customerInfo.Address
+      subInfo.buyTime = this.buyDate
+      subInfo.deliveryTime = this.deliveryTime
+      subInfo.orderType = this.orderType
+      // subInfo.coupleSponsor = '',
+      // subInfo.coupleSponsorName = '',
+      // subInfo.mayEditCoupleOrderId = '',
+      // subInfo.mayEditCoupleOrderName = '',
+      subInfo.rightId = ''
+      subInfo.rightName = ''
+      subInfo.giftId = ''
+      subInfo.giftName = ''
+      subInfo.orderStatus = 0
+      subInfo.orderFlag = 0// 订单标示，0-正常 1-换货 2-退货 订单来源，
+      subInfo.orderSource = 'SGLD' // 1-扫码录单 2-手动录单 3-智慧触点认筹录单
+      subInfo.sourceSn = '' // 来源编码，记录来源ID
+      subInfo.remark = '' // 备注，记录订单创建、订单修改原因等信息
+      subInfo.rightsUserJson = ''
+      subInfo.orderDetailDtoList = this.productList;
+      this.subInfo = subInfo;
+
+      if (this.orderNo !== '') {
+        this.orderService.createOrder(subInfo, { orderFollowId: '' }).then((res) => {
+          Toast.succeed(res.msg);
+        });
+      }
+    },
+    // 添加产品
+    addProduct() {
+      /* 添加产品 */
+      this.$router.push({
+        name: 'Order.SearchProduct',
+      });
+    },
+    selectActivity() {
+      /* 选择活动 */
+      this.$router.push({
+        name: 'Order.OrderFollowActivity',
+      });
+    },
+    selectAddress(item) {
+      debugger;
+      console.log('11111111111', item);
+      this.customerInfo = item;
+    },
+    addAddress() {
+      /* 添加用户信息 */
+      if (this.addressList.length === 0) {
+        this.region = 'add';
+        this.$router.push({
+          name: 'Order.AddAddress',
+          params: { region: this.region, info: '' }
+        });
+      } else {
+        this.showAddressList();
+      }
+    },
+    addNew(item) {
+      this.region = 'userAdd';
+      this.$router.push({
+        name: 'Order.AddAddress',
+        params: { region: this.region, info: JSON.stringify(item) }
+      });
+    },
+    changeAddress(item) {
+      this.region = 'edit';
+      if (this.addressList.length <= 1) {
+        this.$router.push({
+          name: 'Order.AddAddress',
+          params: { region: this.region, info: JSON.stringify(item) }
+        });
+      } else {
+        this.showAddressList();
+      }
+    },
+    editAddress(info) {
+      this.region = 'edit';
+      this.$router.push({
+        name: 'Order.AddAddress',
+        params: { region: this.region, info: JSON.stringify(info) }
+      });
+    },
+    showAddressList() {
       /* 展示选择用户pop */
       this.addressPopShow = true;
     },
-    addNewAddress() {
-      this.$router.push({
-        name: 'Order.AddAddress',
+    queryUserList() {
+      this.productGroup = '111';
+      this.shopId = '8800332156';
+      this.productService.userList(this.shopId).then((res) => {
+        if (res.code === 1) {
+          this.multBuySponsor = res.data;
+          this.multBuyParticipant = this.multBuySponsor;
+        }
       });
     },
     next() {
       /* 下一步 */
       // todo 单品、套购值待定
-      if (this.orderType === 2) {
+      if (this.orderType === 1) {
         // 展示套购发起人
         this.multBuyPopShow = true;
       }
+      this.saveTemporary();
+      debugger
+      this.$router.push({
+        name: 'Order.OrderUploadInvoice',
+        params: { orderNo: this.orderNo }
+      });
+
     },
     saveOrder() {
 
+    },
+    onDelete(index) {
+      this.productList.splice(index, 1);
     }
   }
 };
@@ -521,6 +754,18 @@ export default {
     padding-left: 27px;
     padding-right: 25px;
     color: #1969C6;
+  }
+   .orderEntry-header-cus{
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    height: 80px;
+    background: #fff;
+    padding-left: 27px;
+    padding-right: 25px;
+  color: #333;
+    margin-top: 20px;
   }
 
   .orderEntry-header-name {
@@ -583,7 +828,7 @@ export default {
   .orderEntry-rights-fieldset {
     .b-fieldset-legend-left {
       font-size: 28px;
-      color: #333;
+      color: #EE534F;
     }
 
     .b-fieldset-legend-right {
@@ -603,12 +848,6 @@ export default {
     .md-popup-mask {
       top: 0;
     }
-  }
-  .orderEntry-rights-change{
-    padding: 10px;
-    border: 1px solid #1969C6;
-    border-radius: 24px;
-
   }
 
 </style>

@@ -37,6 +37,20 @@ export default {
   },
   queryOverTwentyFourHourOrder() {
     return axPost(urls.queryOverTwentyFourHourOrder);
+  },
+  qenerateOrderDetailId() {
+    return axPost(urls.qenerateOrderDetailId);
+  },
+  uploadInvoice(data, param) {
+    return axPostJson(urls.createNewOrder, data, param);
+  },
+  queryOrderDetailAndInvoice(data, param) {
+    return axPostJson(urls.queryOrderDetailAndInvoice, data, param);
+  },
+  checkInvoice(data, param) {
+    return axPostJson(urls.checkInvoice, data, param);
+  },
+  simpleUpload() {
+    return axPost(urls.simpleUpload);
   }
-
 };

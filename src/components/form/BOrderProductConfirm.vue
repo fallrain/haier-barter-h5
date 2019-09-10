@@ -3,11 +3,11 @@
     class="b-order-product-item"
   >
     <div class="b-order-product-item-head">
-      <span class="b-order-product-item-head-name-confirm">{{data.productBrandCN}}/{{data.productCategoryName}}，{{data.productModel}}</span>
+      <span class="b-order-product-item-head-name-confirm">{{data.productGroupName}}/{{data.productBrandName}}，{{data.productModel}}</span>
       <div class="b-order-product-confirm">
         <p
           class="b-order-product-item-price-confirm"
-        >{{data.productPrice}}<span class="b-order-product-item-price-unit">元</span></p>
+        >{{data.price}}<span class="b-order-product-item-price-unit">元</span></p>
       </div>
     </div>
     <div

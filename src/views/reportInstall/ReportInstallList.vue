@@ -130,7 +130,7 @@ export default {
       const formData = {
         pageNum: page.num,
         pageSize: page.size,
-        hmcId: 'a0008949',
+        hmcId: 'A0008949',
         type: this.curTab
       };
       return this.reportInstallService.queryReportInstallList(formData).then((res) => {

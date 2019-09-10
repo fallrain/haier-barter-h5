@@ -11,6 +11,9 @@
         :products="products"
         :merge="uploadType===1"
         v-model="invoiceImg"
+        @uploadSuccess="uploadSuccess"
+        @uploadErr="uploadErr"
+        @delImg="delImg"
       ></b-product-mult-upload>
     </div>
     <div class="orderUploadInvoice-tips mt16">
@@ -46,11 +49,13 @@
       <button
         type="button"
         class="common-submit-btn-primary"
-      >返回上一步
+        @click="skipUpload"
+      >跳过
       </button>
       <button
         type="button"
         class="common-submit-btn-default"
+        @click="updateSubmit"
       >上传凭证
       </button>
     </div>
@@ -58,6 +63,10 @@
 </template>
 
 <script>
+import {
+  Toast
+} from 'mand-mobile';
+
 import {
   BRadioItem
 } from '@/components/form';
@@ -74,6 +83,7 @@ export default {
   },
   data() {
     return {
+      invoiceList:[],
       // 上传类型类型单选
       uploadTypes: [
         {
@@ -101,9 +111,67 @@ export default {
         }
       ],
       // 发票图片地址
-      invoiceImg: []
+      invoiceImg: [],
+      orderNo: ''
     };
-  }
+  },
+  created() {
+    console.log('tag', this.$route.params)
+    this.orderNo = this.$route.params.orderNo;
+    debugger
+    this.getData();
+  },
+  methods: {
+    skipUpload() {
+      this.$router.push({
+        name: 'Order.OrderConfirm',
+        params: { orderNo: this.orderNo }
+      });
+    },
+    uploadSuccess(data){
+      var invoice = {}
+      invoice.invoiceUrl = data.invoiceUrl
+      invoice.invoiceCode = data.invoiceCode
+      invoice.orderNo = data.orderNo
+      invoice.orderDetailId = data.orderDetailId
+      this.invoiceList.push(data)
+    },
+    uploadErr(){},
+    indexOf(val) {
+for (var i = 0; i < this.length; i++) {
+if (this[i] == val) return i;
+}
+return -1;
+},
+remove (val) {
+var index = this.indexOf(val);
+if (index > -1) {
+this.splice(index, 1);
+}
+},
+    delImg(data){
+      this.invoice.remove(data)
+    },
+    updateSubmit(){
+      this.orderService.uploadInvoice(this.invoiceList,{orderNo:this.orderNo}).then(res => {
+        if(res.code === 1){
+          Toast.succed(res.msg)
+        }
+      })
+      this.$router.push({
+        name: 'Order.OrderConfirm',
+        params: { orderNo: this.orderNo }
+      });
+    },
+    getData() {
+      this.orderService.queryOrderDetailAndInvoice({}, { orderNo: this.orderNo }).then((res) => {
+        debugger
+        if (res.code === 1) {
+          // this.products = res.data
+        }
+      });
+    },
+  },
 };
 </script>
 
