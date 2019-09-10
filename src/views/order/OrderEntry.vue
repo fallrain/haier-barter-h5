@@ -446,7 +446,8 @@ export default {
               pro.id = ID
               debugger
            pro. deliveryTime= this.deliveryTime
-            pro.hmcId= "A0008949"
+            // pro.hmcId= "A0008949"
+            pro.hmcId = this.userParam.hmcId
             pro.installTime='1564650104445'
             pro.orderFlag = 0
             pro.orderNo=this.orderNo
@@ -461,8 +462,9 @@ export default {
             pro.rightName= "八月套购权益"
             pro.storeId = this.shopId
             pro.storeName =  this.shopName
-    		pro.invoiceStatus =  0
-            pro.userId = '123456789'
+    	    	pro.invoiceStatus =  0
+            // pro.userId = '123456789'
+             pro.userId = this.customerInfo.userId
           debugger
         this.productList.push(pro);
             debugger
@@ -480,12 +482,12 @@ export default {
       this.userParam = localStorage.getItem('userinfo');
       this.shopId = this.userParam.shopId;
       this.mobile = this.userParam.mobile;
-      this.mobile = '18653226149';
+      // this.mobile = '18653226149';
       this.queryUserList();
       this.queryCustomerDefault();
       this.getUserStore();
     }else{
-      this.mobile = '18653226149';
+      // this.mobile = '18653226149';
       this.queryUserList();
       this.queryCustomerDefault();
       this.getUserStore();
@@ -592,12 +594,17 @@ export default {
 
       subInfo.orderNo = this.orderNo
       subInfo.recordMode = 'Haier'
-      subInfo.hmcId = 'A0008949'
+      // subInfo.hmcId = 'A0008949'
+      subInfo.hmcId = this.userParam.hmcId
       subInfo.storeId = this.shopId
       subInfo.storeName = this.shopName
-      subInfo.userId = '123456789', // this.userParam.userId;
-      subInfo.userName = '张三', // this.customerInfo.username;
-      subInfo.userPhone = '18675647364', // this.userParam.phone;
+      subInfo.userId = this.customerInfo.userId
+      // subInfo.userId = '123456789',
+      // this.userParam.userId;
+      // subInfo.userName = '张三',
+      // this.customerInfo.username;
+      // subInfo.userPhone = '18675647364',
+       // this.userParam.phone;
       subInfo.dispatchProvinceId = this.customerInfo.province
       subInfo.dispatchProvince = ''
       subInfo.dispatchCityId = this.customerInfo.city

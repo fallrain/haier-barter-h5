@@ -403,7 +403,7 @@ export default {
       title: '顾客信息：',
       mobile: '',
       region: '',
-      userParam: {}
+      hmcId:'',
     };
   },
   computed: {},
@@ -430,7 +430,8 @@ export default {
               pro.id = ID
               debugger
            pro. deliveryTime= this.deliveryTime
-            pro.hmcId= "A0008949"
+            // pro.hmcId= "A0008949"
+            pro.hmcId = this.userParam.hmcId
             pro.installTime='1564650104445'
             pro.orderFlag = 0
             pro.orderNo=this.orderNo
@@ -446,7 +447,7 @@ export default {
             pro.storeId = this.shopId
             pro.storeName =  this.shopName
     		pro.invoiceStatus =  0
-            pro.userId = '123456789'
+            pro.userId = this.userParam.userId
           debugger
         this.productList.push(pro);
             debugger
@@ -460,6 +461,9 @@ export default {
   },
   created() {
     this.orderNo = this.$route.params.orderNo;
+    if (localStorage.getItem('userinfo')) {
+      this.userParam = localStorage.getItem('userinfo');
+      }
     // this.orderNo = 'Z15645424968056668';
     this.getData();
 
@@ -482,6 +486,7 @@ export default {
           this.consignee.name = resData.consigneeName;
           this.username = resData.userName;
           this.phone = resData.userPhone;
+          this.hmcId = resData.hmcId;
           this.consignee.phone = resData.consigneePhone;
           this.consignee.sex = resData.userSex;
           this.consignee.address = resData.dispatchProvince + resData.dispatchCity + resData.dispatchArea + resData.dispatchAdd;
@@ -521,7 +526,8 @@ export default {
 
     },
     getUserStore() {
-      this.shopId = '8800332156';
+      // this.shopId = '8800332156';
+      this.shopId = this.userParam.shopId
       this.productService.storeInfo(this.shopId).then((res) => {
         if (res.code === 1) {
           this.shopName = res.data.storeName;
@@ -600,12 +606,16 @@ export default {
 
       subInfo.orderNo = this.orderNo
       subInfo.recordMode = 'Haier'
-      subInfo.hmcId = 'A0008949'
+      // subInfo.hmcId = 'A0008949'
+      subInfo.hmcId = this.userParam.hmcId
       subInfo.storeId = this.shopId
       subInfo.storeName = this.shopName
-      subInfo.userId = '123456789', // this.userParam.userId;
-      subInfo.userName = '张三', // this.customerInfo.username;
-      subInfo.userPhone = '18675647364', // this.userParam.phone;
+      // subInfo.userId = '123456789',
+      subInfo.userId = this.customerInfo.userId;
+      // subInfo.userName = '张三',
+       subInfo.userName = this.customerInfo.username;
+      // subInfo.userPhone = '18675647364',
+       subInfo.userPhone  = this.userParam.phone;
       subInfo.dispatchProvinceId = this.customerInfo.province
       subInfo.dispatchProvince = ''
       subInfo.dispatchCityId = this.customerInfo.city

@@ -203,8 +203,7 @@ export default {
     // this.searchData();
     this.userinfo = this.getQueryString('userinfo');
     this.userinfo.token = this.getQueryString('userinfo').token;
-    this.userinfo.token = 'Bearer  eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAyNzE1MyIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2ODAyODcwMiwiZXhwIjoxNTY4ODkyNzAyfQ.TmrL7uplpyLuehQRgQa1_1HyaHlyR_qIRZshUtXlw48';
-      debugger
+    // this.userinfo.token = 'Bearer  eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAyNzE1MyIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2ODAyODcwMiwiZXhwIjoxNTY4ODkyNzAyfQ.TmrL7uplpyLuehQRgQa1_1HyaHlyR_qIRZshUtXlw48';
     localStorage.setItem('userinfo', this.userinfo);
     localStorage.setItem('acces_token', this.userinfo.token);
      this.getNoticeData();
@@ -332,7 +331,8 @@ export default {
       return this.orderService
         .queryOrderFollowlList(
           {
-            hmcId: 'A0008949',
+            // hmcId: 'A0008949',
+            hmcId: this.userinfo.hmcId,
             queryType: this.curTab,
             sortType: this.sortType,
             recordMode: '',
