@@ -501,7 +501,8 @@ export default {
           {
             pageNum: 1,
             pageSize: 10,
-            hmcId: 'A0008949',
+            // hmcId: 'A0008949',
+            hmcId: this.userinfo.hmcId,
             keyword: this.searchWord
           }
         )
