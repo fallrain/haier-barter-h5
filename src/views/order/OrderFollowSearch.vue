@@ -202,7 +202,6 @@ export default {
   created() {
     // this.searchData()
     const userinfostr =  this.getQueryString('userinfo')
-    debugger
     this.userinfo = JSON.parse(userinfostr)
     this.userinfo.token = this.userinfo.token;
     // this.userinfo.token = 'Bearer  eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAyNzE1MyIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2ODAyODcwMiwiZXhwIjoxNTY4ODkyNzAyfQ.TmrL7uplpyLuehQRgQa1_1HyaHlyR_qIRZshUtXlw48';

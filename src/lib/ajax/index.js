@@ -21,7 +21,6 @@ ax.interceptors.request.use((config) => {
   }
   if (config.headers) {
     config.headers.Authorization = 'Bearer  ' + localStorage.getItem('acces_token');
-    debugger
     // config.headers.Authorization = 'Bearer  eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAwODk0OSIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2ODA4NjQwMCwiZXhwIjoxNTY4OTUwNDAwfQ.4mGl5CY__qD78-0YDeyONp-rUlR5opdqxpjzFI6G2ZQ';
   }
   if (!config.params.noLoading) {
@@ -44,6 +43,7 @@ ax.interceptors.response.use((response) => {
   if (!(response.config.params && response.config.params.requestNoToast)) {
     if (response.data.code !== 1 && !response.data.isSuccess) {
       Toast.failed(msg || '请求失败');
+      debugger
     }
   }
   if (customOptions && customOptions.returnResponse) {
@@ -53,6 +53,7 @@ ax.interceptors.response.use((response) => {
 }, (error) => {
   Toast.hide();
   // return Promise.reject(error);
+  debugger
   Toast.failed('请求失败');
   error.response.data = {
     data: {

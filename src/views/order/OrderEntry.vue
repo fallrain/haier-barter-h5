@@ -443,9 +443,9 @@ export default {
           if (res.code === 1) {
             ID = res.data;
             var pro = {}
-              pro.id = ID
+            pro.id = ID
               debugger
-           pro. deliveryTime= this.deliveryTime
+            pro.deliveryTime = this.deliveryTime
             // pro.hmcId= "A0008949"
             pro.hmcId = this.userParam.hmcid
             pro.installTime='1564650104445'
@@ -459,7 +459,7 @@ export default {
             pro.productPrice = obj.product.price
             pro.remark = "备注，记录订单创建、订单修改原因等信息"
             pro.rightId =  "111111"
-            pro.rightName= "八月套购权益"
+            pro.rightName=  "八月套购权益"
             pro.storeId = this.shopId
             pro.storeName =  this.shopName
     	    	pro.invoiceStatus =  0

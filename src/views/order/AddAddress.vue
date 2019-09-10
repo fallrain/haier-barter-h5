@@ -207,6 +207,7 @@ export default {
         // this.confirmShow = false;
         this.searchEnd = true;
         this.customerInfo = JSON.parse(this.$route.params.info);
+        this.customerInfo.hmcId = localStorage.getItem('userinfo').hmcid
         this.customerInfo.tag = [];
       }
     }

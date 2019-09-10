@@ -345,8 +345,6 @@ export default {
             }
             Toast.succeed(res.msg);
             this.$emit('updateOrderType', type);
-          } else {
-            Toast.failed(res.msg);
           }
         });
     }
