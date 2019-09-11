@@ -602,6 +602,13 @@ export default {
       // this.userParam.userId;
       // subInfo.userName = '张三',
       subInfo.userName = this.customerInfo.username;
+      subInfo.consigneeName = this.consignee.name
+      subInfo.consigneePhone = this.consignee.phone
+      subInfo.consigneeId = this.consignee.customerId
+      subInfo.microCode = this.customerInfo.microCode
+      subInfo.microName = this.customerInfo.microName
+      subInfo.channel = this.customerInfo.channel
+      subInfo.channelName = this.customerInfo.channelName
       // subInfo.userPhone = '18675647364',
       subInfo.userPhone = this.customerInfo.mobile;
       subInfo.dispatchProvinceId = this.customerInfo.province
