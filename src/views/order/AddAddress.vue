@@ -195,7 +195,7 @@ export default {
   created() {
     // 不加入双向绑定
     this.addressData = addressData;
-    this.customerInfo.hmcId = localStorage.getItem('userinfo').hmcid
+    this.customerInfo.hmcId = JSON.parse(localStorage.getItem('userinfo')).hmcid
     if (this.$route.params) {
       this.region = this.$route.params.region;
       if (this.region === 'add') {
@@ -208,8 +208,11 @@ export default {
         // this.confirmShow = false;
         this.searchEnd = true;
         this.customerInfo = JSON.parse(this.$route.params.info);
+        if(this.customerInfo.familyItemCode){
+          this.customerInfo.tag = [];
+          this.customerInfo.tag.push(this.customerInfo.familyItemCode)
+        }
 
-        this.customerInfo.tag = [];
       }
     }
     // this.getFamilyItem();

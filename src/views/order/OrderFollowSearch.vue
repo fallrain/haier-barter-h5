@@ -203,9 +203,16 @@ export default {
     // this.searchData()
     const userinfostr =  this.getQueryString('userinfo')
     this.userinfo = JSON.parse(userinfostr)
+    debugger
+    // this.userinfo = {
+    //   hmcid:'A0027153',
+    //   mobile:'18678611903',
+    //   shopId:'8800332156',
+    //   token:'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAyNzE1MyIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2ODExNDc3NiwiZXhwIjoxNTY4OTc4Nzc2fQ.-rzFESGZ9akHghFV-giivaS2ewSvqKUCRM_xmorKEMM'
+    // }
     this.userinfo.token = this.userinfo.token;
-    // this.userinfo.token = 'Bearer  eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAyNzE1MyIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2ODAyODcwMiwiZXhwIjoxNTY4ODkyNzAyfQ.TmrL7uplpyLuehQRgQa1_1HyaHlyR_qIRZshUtXlw48';
-    localStorage.setItem('userinfo', this.userinfo);
+    const Str = JSON.stringify(this.userinfo)
+    localStorage.setItem('userinfo', Str);
     localStorage.setItem('acces_token', this.userinfo.token);
     this.getNoticeData();
 

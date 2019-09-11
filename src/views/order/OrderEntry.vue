@@ -479,20 +479,15 @@ export default {
   created() {
     if (localStorage.getItem('userinfo')) {
       debugger
-      this.userParam = localStorage.getItem('userinfo');
+      this.userParam = JSON.parse(localStorage.getItem('userinfo'));
+      debugger
       this.shopId = this.userParam.shopId;
       this.mobile = this.userParam.mobile;
       // this.mobile = '18653226149';
       this.queryUserList();
       this.queryCustomerDefault();
       this.getUserStore();
-    }else{
-      // this.mobile = '18653226149';
-      this.queryUserList();
-      this.queryCustomerDefault();
-      this.getUserStore();
     }
-
     // this.queryCustomerDefault();
   },
   methods: {
@@ -515,7 +510,7 @@ export default {
 
     },
     getUserStore() {
-      this.shopId = '8800332156';
+      // this.shopId = '8800332156';
       this.productService.storeInfo(this.shopId).then((res) => {
         if (res.code === 1) {
           this.shopName = res.data.storeName;
@@ -535,8 +530,11 @@ export default {
     },
     // 查询客户信息及默认地址
     queryCustomerDefault() {
+      console.log('lllllllllll',this.mobile)
+      debugger
       this.productService.deafaultCustomerAddress(this.mobile).then((res) => {
         if (res.code === 1) {
+          debugger
           if (res.data !== null) {
             this.haveConsignee = true;
             this.haveCustomer = true;
@@ -559,6 +557,7 @@ export default {
       this.productService.customerAddressList(this.customerInfo.customerId).then((res) => {
         if (res.code === 1) {
           this.addressList = res.data;
+
         }
       });
     },
@@ -602,16 +601,16 @@ export default {
       // subInfo.userId = '123456789',
       // this.userParam.userId;
       // subInfo.userName = '张三',
-      // this.customerInfo.username;
+      subInfo.userName = this.customerInfo.username;
       // subInfo.userPhone = '18675647364',
-       // this.userParam.phone;
+      subInfo.userPhone = this.customerInfo.mobile;
       subInfo.dispatchProvinceId = this.customerInfo.province
       subInfo.dispatchProvince = ''
       subInfo.dispatchCityId = this.customerInfo.city
       subInfo.dispatchCity = ''
       subInfo.dispatchAreaId = this.customerInfo.area
       subInfo.dispatchArea = ''
-      subInfo.dispatchAdd = this.customerInfo.Address
+      subInfo.dispatchAdd = this.customerInfo.address
       subInfo.buyTime = this.buyDate
       subInfo.deliveryTime = this.deliveryTime
       subInfo.orderType = this.orderType
@@ -699,7 +698,7 @@ export default {
     },
     queryUserList() {
       this.productGroup = '111';
-      this.shopId = '8800332156';
+      // this.shopId = '8800332156';
       this.productService.userList(this.shopId).then((res) => {
         if (res.code === 1) {
           this.multBuySponsor = res.data;

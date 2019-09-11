@@ -462,7 +462,7 @@ export default {
   created() {
     this.orderNo = this.$route.params.orderNo;
     if (localStorage.getItem('userinfo')) {
-      this.userParam = localStorage.getItem('userinfo');
+      this.userParam = JSON.parse(localStorage.getItem('userinfo'));
       }
     // this.orderNo = 'Z15645424968056668';
     this.getData();
