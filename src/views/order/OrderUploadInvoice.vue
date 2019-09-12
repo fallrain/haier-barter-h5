@@ -123,7 +123,7 @@ export default {
     console.log('tag', this.$route.params)
     this.orderNo = this.$route.params.orderNo;
     debugger
-    // this.getData();
+    this.getData();
   },
   methods: {
     skipUpload() {

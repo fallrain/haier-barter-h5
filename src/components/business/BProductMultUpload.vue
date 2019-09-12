@@ -112,12 +112,13 @@ export default {
       // 上传的地址
       uploadUrl: '/api/manage/orderManage/checkInvoice',
       headers:{
-        Authorization:'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAyNzE1MyIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2ODAyMTAzMCwiZXhwIjoxNTY4ODg1MDMwfQ.2hXagKhr_Ie5MMpwf27tpjYJbsDdXxjO7g8l0a_BmFU'
+        Authorization:''
       }
     };
   },
   created(){
     debugger
+    this.headers.Authorization = 'Bearer  ' + localStorage.getItem('acces_token')
     this.genFileMap()
   },
   methods: {
@@ -161,17 +162,16 @@ export default {
       }
       Toast.failed('上传失败');
     },
-    delImg(fileList) {
-      debugger
+    delImg(index,fileList) {
+      // debugger
       // for (var key in fileMap) {
-      //   var item = dic[key];
-      //
-      //   console.log(item); //AA,BB,CC,DD
+      //   var item = fileMap[key];
       //
       // }debugger
-
-      fileList = []
-      this.$emit('delImg',fileList[0])
+      //
+      // fileList = []
+      fileList.splice(index,1)
+      // this.$emit('delImg',fileList[0])
     }
   }
 };

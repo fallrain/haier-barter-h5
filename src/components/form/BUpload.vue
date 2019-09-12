@@ -51,9 +51,9 @@ export default {
       this.$emit('imageuploaded',data,this.imgs)
       Toast.succeed('上传成功')
     },
-    delFun(){
+    delFun(index){
       debugger
-      this.$emit('delFun',this.imgs)
+      this.$emit('delFun',index,this.imgs)
     },
     imageuploading(){
       Toast.loading('上传中')
