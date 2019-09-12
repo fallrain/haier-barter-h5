@@ -81,8 +81,6 @@ export default {
   methods: {
     addressClick(item) {
       /* 地址条目click */
-
-      debugger;
       this.$emit('clickAddress', item);
       this.popupShow = false;
     },
@@ -92,6 +90,7 @@ export default {
     },
     editAddress(item) {
       // 编辑地址
+      debugger
       this.$emit('editAddress', item);
     },
     emptyFn() {}

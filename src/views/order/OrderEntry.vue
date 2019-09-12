@@ -677,7 +677,7 @@ export default {
     },
     changeAddress(item) {
       this.region = 'edit';
-      if (this.addressList.length <= 1) {
+      if (this.addressList.length < 1) {
         this.$router.push({
           name: 'Order.AddAddress',
           params: { region: this.region, info: JSON.stringify(item) }
@@ -688,6 +688,7 @@ export default {
     },
     editAddress(info) {
       this.region = 'edit';
+      debugger
       this.$router.push({
         name: 'Order.AddAddress',
         params: { region: this.region, info: JSON.stringify(info) }

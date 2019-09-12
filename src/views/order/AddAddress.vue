@@ -195,9 +195,11 @@ export default {
   created() {
     // 不加入双向绑定
     this.addressData = addressData;
+    // this.getFamilyItem()
     this.customerInfo.hmcId = JSON.parse(localStorage.getItem('userinfo')).hmcid
     if (this.$route.params) {
       this.region = this.$route.params.region;
+      debugger
       if (this.region === 'add') {
         this.confirmShow = true;
       } else if (this.region === 'userAdd') {
@@ -208,6 +210,8 @@ export default {
         // this.confirmShow = false;
         this.searchEnd = true;
         this.customerInfo = JSON.parse(this.$route.params.info);
+        // this.customerInfo.tag = [];
+        // debugger
         if(this.customerInfo.familyItemCode){
           this.customerInfo.tag = [];
           this.customerInfo.tag.push(this.customerInfo.familyItemCode)
@@ -288,14 +292,17 @@ export default {
         Toast.failed('地址不能为空');
         return;
       }
-
-      const tagObj = this.tagList.find(v => v.id === this.customerInfo.tag[0]);
-      if (tagObj) {
-        this.customerInfo.familyItemCode = tagObj.id;
-      } else {
-        this.customerInfo.familyItemCode = '';
+        debugger
+      if(this.customerInfo.tag){
+        const tagObj = this.tagList.find(v => v.id === this.customerInfo.tag[0]);
+        if (tagObj) {
+          this.customerInfo.familyItemCode = tagObj.id;
+        } else {
+          this.customerInfo.familyItemCode = '';
+        }
+        delete this.customerInfo.tag;
       }
-      delete this.customerInfo.tag;
+
       if (this.confirmShow) {
         this.productService.addcustomerAddress(this.customerInfo, {}).then((res) => {
           if (res.code === 1) {
