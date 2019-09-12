@@ -210,12 +210,12 @@ export default {
     const userinfostr =  this.getQueryString('userinfo')
     debugger
     this.userinfo = JSON.parse(userinfostr)
-    this.userinfo = {
-      hmcid:'01467897',
-      mobile:'18678611903',
-      shopId:'8800332156',
-      token:'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAyNzE1MyIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2ODExNDc3NiwiZXhwIjoxNTY4OTc4Nzc2fQ.-rzFESGZ9akHghFV-giivaS2ewSvqKUCRM_xmorKEMM'
-    }
+    // this.userinfo = {
+    //   hmcid:'01467897',
+    //   mobile:'18678611903',
+    //   shopId:'8800332156',
+    //   token:'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAyNzE1MyIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2ODExNDc3NiwiZXhwIjoxNTY4OTc4Nzc2fQ.-rzFESGZ9akHghFV-giivaS2ewSvqKUCRM_xmorKEMM'
+    // }
     this.userinfo.token = this.userinfo.token;
     const Str = JSON.stringify(this.userinfo)
     localStorage.setItem('userinfo', Str);
