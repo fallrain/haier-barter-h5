@@ -66,6 +66,7 @@ export default {
     btmConfirmClick() {
       /* 确定 */
       this.popupShow = false;
+      this.$emit('consporConfirm','1')
     }
   }
 };

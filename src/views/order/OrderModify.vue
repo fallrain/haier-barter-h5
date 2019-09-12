@@ -14,7 +14,7 @@
     >
       <div class="orderEntry-user">
           <div class="orderEntry-user-head">
-            <span class="name mr16">收货人：{{consignee.username}}</span>
+            <span class="name mr16">收货人：{{consignee.name}}</span>
             <span class="sex mr16">{{consignee.sex}}</span>
             <i class="iconfont icon-dianhua mr16"></i>
             <span class="phone mr16">{{consignee.phone}}</span>
@@ -423,6 +423,10 @@ export default {
         this.queryCustomerDefault();
       }
       if (obj.product) {
+        debugger
+        if(!obj.product.productGroupName){
+          return
+        }
         this.orderService.qenerateOrderDetailId().then((res) => {
           if (res.code === 1) {
             ID = res.data;
@@ -449,6 +453,7 @@ export default {
     		pro.invoiceStatus =  0
             pro.userId = this.userParam.userId
           debugger
+
         this.productList.push(pro);
             debugger
           } else {
@@ -460,14 +465,15 @@ export default {
     }
   },
   created() {
-    this.orderNo = this.$route.params.orderNo;
-    if (localStorage.getItem('userinfo')) {
-      this.userParam = JSON.parse(localStorage.getItem('userinfo'));
-      }
-    // this.orderNo = 'Z15645424968056668';
-    this.getData();
-
-    // this.queryCustomerDefault();
+    debugger
+    this.userParam = this.$route.params.userInfo;
+    this.shopId = this.userParam.shopId;
+    this.mobile = this.userParam.mobile;
+    // this.mobile = '18653226149'
+    debugger
+    this.queryUserList()
+    this.queryCustomerDefault();
+    this.getUserStore();
   },
   methods: {
     //  haveConsignee() {
@@ -547,6 +553,7 @@ export default {
     },
     // 查询客户信息及默认地址
     queryCustomerDefault() {
+      debugger
       this.productService.deafaultCustomerAddress(this.mobile).then((res) => {
         if (res.code === 1) {
           if (res.data !== null) {
@@ -562,6 +569,7 @@ export default {
             this.consignee.customerId = res.data.customerId;
             this.queryCustomerAddressList();
             this.genarateOrderNum();
+            // this.queryOrderInfo();
           }
         }
       });
@@ -574,6 +582,23 @@ export default {
         }
       });
     },
+    // qureryOrderInfo(){
+    //   this.orderService.queryOrderInfoByOrderNo({}, { orderNo: this.userParam.orderNo }).then((response) => {
+    //     if (response.code === 1) {
+    //       const resData = response.data;
+    //       if (resData.orderDetailDtoList.length !== 0) {
+    //         item.productList = resData.orderDetailDtoList;
+    //         item.productList.forEach((val) => {
+    //           if (val.productBrand === 'haier') {
+    //             val.productBrandCN = '海尔';
+    //           } else {
+    //             val.productBrandCN = '卡萨帝';
+    //           }
+    //         });
+    //       }
+    //     }
+    //   });
+    // },
     // 暂存
     saveTemporary() {
       const subInfo = {};

@@ -92,7 +92,7 @@ export default {
       /* 选中 */
       const i = this.value.findIndex(v => hmcId === v);
       if (this.type === 'radio') {
-        this.$emit('input', [hmcId]);
+        this.$emit('radioCheck', [hmcId]);
         return;
       }
       const checkIds = [...this.value];

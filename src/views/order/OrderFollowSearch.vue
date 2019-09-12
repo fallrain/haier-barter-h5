@@ -36,6 +36,7 @@
         @updateOrderType="updateOrderType"
         @followButtonClick="followButtonClicked"
         @againEntry="againEntry"
+        @itemClick="itemClick"
       ></b-order-follow-item>
     </div>
     <div
@@ -50,6 +51,9 @@
         @popButtonClicked="buttonClicked"
         @updateOrderType="updateOrderType"
         @followButtonClick="followButtonClicked"
+        @searchProduct="searchProduct"
+        @againEntry="againEntry"
+        @itemClick="itemClick"
       ></b-order-follow-item>
     </div>
     <div
@@ -64,6 +68,7 @@
         @popButtonClicked="buttonClicked"
         @updateOrderType="updateOrderType"
         @followButtonClick="followButtonClicked"
+        @itemClick="itemClick()"
       ></b-order-follow-item>
     </div>
     <div
@@ -78,6 +83,7 @@
         @popButtonClicked="buttonClicked"
         @updateOrderType="updateOrderType"
         @followButtonClick="followButtonClicked"
+        @itemClick="itemClick()"
       ></b-order-follow-item>
     </div>
     <div style="height:60px"></div>
@@ -202,14 +208,14 @@ export default {
   created() {
     // this.searchData()
     const userinfostr =  this.getQueryString('userinfo')
-    this.userinfo = JSON.parse(userinfostr)
     debugger
-    // this.userinfo = {
-    //   hmcid:'01467897',
-    //   mobile:'18678611903',
-    //   shopId:'8800332156',
-    //   token:'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAyNzE1MyIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2ODExNDc3NiwiZXhwIjoxNTY4OTc4Nzc2fQ.-rzFESGZ9akHghFV-giivaS2ewSvqKUCRM_xmorKEMM'
-    // }
+    this.userinfo = JSON.parse(userinfostr)
+    this.userinfo = {
+      hmcid:'01467897',
+      mobile:'18678611903',
+      shopId:'8800332156',
+      token:'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAyNzE1MyIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2ODExNDc3NiwiZXhwIjoxNTY4OTc4Nzc2fQ.-rzFESGZ9akHghFV-giivaS2ewSvqKUCRM_xmorKEMM'
+    }
     this.userinfo.token = this.userinfo.token;
     const Str = JSON.stringify(this.userinfo)
     localStorage.setItem('userinfo', Str);
@@ -269,12 +275,33 @@ export default {
         params: { userInfo: {} }
       });
     },
+    itemClick(index) {
+      debugger
+      this.$router.push({
+        name: 'Order.OrderDetail',
+        params: { orderNo: this.currentList[index].orderNo}
+      });
+    },
     againEntry(item){
-        this.orderService.createNewOrder({}, { orderNo: item.orderNo }).then((res) => {
-          if (res.code === 1) {
-            Toast.succeed(res.msg);
-          }
-        });
+      debugger
+        // this.orderService.createNewOrder({}, { orderNo: item.orderNo }).then((res) => {
+        //   if (res.code === 1) {
+        //     Toast.succeed(res.msg);
+        //   }
+        // });
+      this.$router.push({
+        name: 'Order.OrderModify',
+        params: { userInfo: {
+            hmcid: item.hmcId,
+            mobile: item.userMobile,
+            shopId: item.storeId,
+            orderNo: item.orderNo
+          } }
+      });
+
+
+    },
+    searchProduct(item){
 
     },
     headSwitch(index) {
@@ -307,6 +334,7 @@ export default {
     upCallback(page) {
       // 下载过就设置已经初始化
       this[this.curScrollViewName].isListInit = true;
+      debugger
       this.searchData(page).then(({ result, pages }) => {
         this.$nextTick(() => {
           // 通过当前页的数据条数，和总页数来判断是否加载完
@@ -332,12 +360,25 @@ export default {
     followButtonClicked(val, info) {
       debugger;
       if (val.name === '录新订单') {
+        debugger
         this.orderService.createNewOrder({}, { orderNo: info.orderNo }).then((res) => {
           if (res.code === 1) {
             Toast.succeed(res.msg);
           }
         });
+
       }
+      this.$router.push({
+        name: 'Order.OrderModify',
+        params: { userInfo: {
+            hmcid: info.hmcId,
+            mobile: info.userMobile,
+            shopId: info.storeId,
+            orderNo: info.orderNo
+          } }
+      });
+      debugger
+
     },
 
     searchData(page) {
@@ -392,9 +433,30 @@ export default {
         });
     },
     anylizeData(curList) {
+      debugger
       curList.forEach((item) => {
+        if(this.curTab === 3){
+          this.orderService.queryOrderInfoByOrderNo({}, { orderNo: item.orderNo }).then((response) => {
+            if (response.code === 1) {
+              const resData = response.data;
+              if (resData.orderDetailDtoList.length !== 0) {
+                item.productList = resData.orderDetailDtoList;
+                item.productList.forEach((val) => {
+                  if (val.productBrand === 'haier') {
+                    val.productBrandCN = '海尔';
+                  } else {
+                    val.productBrandCN = '卡萨帝';
+                  }
+                });
+              }
+            }
+          });
+        }
+
         if (item.flowStatus === 1) {
-          item.buttonList = [{ name: '录新订单' }, { name: '退货' }, { name: '换货' }];// 已完成
+          // item.buttonList = [{ name: '录新订单' }, { name: '退货' }, { name: '换货' }];// 已完成
+          item.buttonList = [{ name: '录新订单' }];// 已完成
+
         } else if (item.flowStatus === 2) {
           item.buttonList = [{ name: '成交录单' }, { name: '发放卡券' }];
         } else if (item.flowStatus === 5) {
@@ -464,21 +526,7 @@ export default {
           item.showDetail = true;
           if (item.flowStatus !== 2) {
             item.productList = [];
-            this.orderService.queryOrderInfoByOrderNo({}, { orderNo: item.orderNo }).then((response) => {
-              if (response.code === 1) {
-                const resData = response.data;
-                if (resData.orderDetailDtoList.length !== 0) {
-                  item.productList = resData.orderDetailDtoList;
-                  item.productList.forEach((val) => {
-                    if (val.productBrand === 'haier') {
-                      val.productBrandCN = '海尔';
-                    } else {
-                      val.productBrandCN = '卡萨帝';
-                    }
-                  });
-                }
-              }
-            });
+
           } else {
             if (item.add1 == '') {
               item.showDetail = false;
@@ -530,10 +578,15 @@ export default {
             sroviewObj.result = result;
             if (result && result.length > 0) {
               const curList = result;
+              this.currentList = []
+              debugger
               this.anylizeData(curList);
+              debugger
               if (page.num === 1) {
                 this[this.curScrollViewName].list = this.currentList;
+                debugger
               } else {
+                debugger
                 this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(this.currentList);
               }
             }

@@ -1,5 +1,5 @@
 <template>
-  <div class="orderFollowItemClass">
+  <div class="orderFollowItemClass" >
     <div class="bar-v">
 
       <div
@@ -32,6 +32,7 @@
       class="label-class"
       v-for="(followItem,index) in list"
       :key="index"
+      @click="itemClick(index)"
     >
       <img
         src="@/assets/images/orderFollow-up/yizhanzhujia@3x.png"
@@ -74,7 +75,7 @@
             class="telImage"
           >
         </span>
-        <span class="sex-class-tel"> <a :href="'tel:' + followItem.userMobile">{{followItem.userMobile}}</a></span>
+        <span class="sex-class-tel"> <a :href="'tel:' + followItem.userMobile" class="telClass" id="manual_bind_click_way">{{followItem.userMobile}}</a></span>
       </div>
       <div class="row-class">
         <img
@@ -97,13 +98,20 @@
           class="timeImage"
         >
         <span class="time-label">{{followItem.updatedTime}}</span>
-        <span v-show="followItem.showDetail">
+        <span v-show="followItem.showDetail" @click="detailHide(index)">
           <span class="information-class">详细信息</span>
           <img
             src="@/assets/images/orderFollow-up/xialablue@3x.png"
             class="information-xiala"
-            @click="detailHide(index)"
-          ></span>
+
+            v-show="!followItem.detailShow"
+          >
+           <img
+             src="@/assets/images/orderFollow-up/shangla@3x.png"
+             class="information-xiala"
+             v-show="followItem.detailShow"
+           >
+          </span>
 
       </div>
       <div
@@ -120,8 +128,8 @@
         class="information-p"
         v-show="followItem.detailShow && (followItem.add1 != '')"
       >
-        <p>意向产品：{{followItem.add1}}</p>
-        <p>{{followItem.add2}}</p>
+        <p>{{followItem.add1}}：{{followItem.add1}}</p>
+        <p>{{followItem.add2}}：{{followItem.add2}}</p>
       </div>
       <div class="bottom-class">
         <img
@@ -150,14 +158,33 @@
 
       </div>
     </div>
-  </div>
+
+    <md-popup
+      v-model="popShow"
+      position="center"
+    >
+
+      <div class="popInput">
+      <p class="pop-p">暂不跟进原因</p>
+        <input
+          class="input-class"
+          placeholder="请输入"
+          placeholder-style="font-size: 28px;color: #BBBBBB;margin-left: 10px;"
+          v-model="remark"
+        />
+        <p class="pop-con" @click="confirmRemark">确认</p>
+      </div>
+
+    </md-popup>
+
+
   </div>
 </template>
 
 
 <script>
 import {
-  Icon, Toast
+  Icon, Toast,Popup,PopupTitleBar, Button
 } from 'mand-mobile';
 import {
   BPopSortType, BPopButton
@@ -168,8 +195,12 @@ export default {
   components: {
     [Icon.name]: Icon,
     [Toast.name]: Toast,
+    BPopButton,
     BPopSortType,
-    BPopButton
+    'md-popup': Popup,
+    [PopupTitleBar.name]: PopupTitleBar,
+    [Button.name]: Button,
+
   },
   props: {
     // followItem: {
@@ -187,6 +218,8 @@ export default {
   },
   data() {
     return {
+      popShow:false,
+      remark:'',
       sortShow: false,
       scenarioShow: false,
       buttonList: [],
@@ -260,8 +293,22 @@ export default {
     };
   },
   created() {
+
+
   },
   methods: {
+    hidePopUp(){
+      this.popShow = false
+    },
+    confirmRemark(){
+
+      this.hidePopUp()
+    },
+    itemClick(index){
+      debugger
+      this.stopProcess()
+      this.$emit('itemClick',index)
+    },
     headSwitch(index) {
       if (index === this.preIndex) {
         this.headList[index].isActive = false;
@@ -298,7 +345,10 @@ export default {
       }
       this.$emit('checkClick', this.checkedsortId);
     },
+
+
     buttonClicked(val) {
+      this.stopProcess()
       this.checkedButtonId = val[0];
       for (let i = 0; i < this.headList.length; i++) {
         this.headList[i].isActive = false;
@@ -306,18 +356,43 @@ export default {
       this.$emit('popButtonClicked', this.checkedButtonId);
     },
     followButtonClick(button, item) {
+      this.stopProcess()
       debugger;
       this.$emit('followButtonClick', button, item);
     },
     showMore(index) {
+      this.stopProcess()
       console.log('currentList', this.list);
       this.ID = this.list[index].id;
+      for (let i = 0; i < this.list.length; i++) {
+        if (index !== i) {
+          this.$set(this.list[i], 'show', false);
+        }
+      }
       this.$set(this.list[index], 'show', !this.list[index].show);
     },
+    stopProcess(){
+      const e = window.event
+      if (e.stopPropagation) {
+        e.stopPropagation();
+       //阻止事件 冒泡传播
+      } else {
+
+        e.cancelBubble = true;   //ie兼容
+      }
+    },
     detailHide(index) {
+      debugger
+      this.stopProcess()
       this.$set(this.list[index], 'detailShow', !this.list[index].detailShow);
+      this.$emit('searchProduct',index)
     },
     updateOrderType(type, item) {
+      this.stopProcess()
+      debugger
+      for (let i = 0; i < this.list.length; i++) {
+        this.$set(this.list[i], 'show', false);
+      }
       if(type === '10'){
         this.$emit('againEntry',item)
         return
@@ -326,23 +401,28 @@ export default {
         this.$emit('cancleOrder',item)
         return
       }
+      if(type === '3'){
+        debugger
+        if(this.remark === ''){
+          debugger
+          Toast.info('请输入暂不跟进原因')
+          this.popShow = true
+          return
+        }
+      }
       this.orderService
         .updateOrderFollowByType(
           {},
           {
             orderFollowId: this.ID,
             type,
-            remark: ''
+            remark: this.remark
           }
         )
         .then((res) => {
+          debugger
           if (res.code === 1) {
             console.log('this.list', this.list);
-            for (let i = 0; i < this.list.length; i++) {
-              if (item === this.list[i]) {
-                this.$set(this.list[i], 'show', false);
-              }
-            }
             Toast.succeed(res.msg);
             this.$emit('updateOrderType', type);
           }
@@ -454,6 +534,8 @@ export default {
   color: #bbbbbb;
   font-size: 28px;
   margin-left: 40px;
+  display: inline-block;
+  width: 270px;
 }
 
 .bar-class {
@@ -655,4 +737,46 @@ export default {
   color: #666666;
   font-size: 28px;
 }
+  .telClass{
+    z-index: 100;
+  }
+
+.popInput{
+  width: 600px;
+  height: 300px;
+  background-color: white;
+  text-align: center;
+  .pop-con{
+    margin-top: 30px;
+    text-align: center;
+    color: white;
+    width: 200px;
+    padding: 20px;
+    background-color: #1969C6;
+    border-radius: 20px;
+    margin-left: 200px;
+  }
+}
+.pop-p{
+  text-align: center;
+  padding: 20px;
+  width: 100%;
+  color: #333333;
+}
+  .input-class {
+    width: 550px;
+    background-color: white;
+    border-radius: 20px;
+    /*border: 1px !important;*/
+    /*border-color: #6d6dfe;*/
+    height: 60px;
+    margin-left: 24px;
+    margin-top: 14px;
+    padding-left: 30px !important;
+    color: #666666;
+    font-size: 28px;
+    padding-right: 50px !important;
+  }
+
+
 </style>

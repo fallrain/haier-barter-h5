@@ -170,6 +170,7 @@
     </div>
     <b-pop
       :show.sync="multBuyPopShow"
+      @consporConfirm="consporConfirm"
     >
       <b-multbuy-check
         type="radio"
@@ -232,6 +233,7 @@ export default {
     return {
       // 是否详情模式
       isDetail: true,
+
       // 门店名称
       shopName: '',
       haveCustomer: false,
@@ -367,51 +369,14 @@ export default {
       multBuyPopShow: false,
       // 套购发起人
       multBuySponsor: [
-        {
-          id: 1,
-          name: '陆梦飞',
-          industry: '冰箱'
-        },
-        {
-          id: 2,
-          name: '大飞哥',
-          industry: '彩电'
-        },
-        {
-          id: 3,
-          name: '贾老板',
-          industry: '打怪兽'
-        },
-        {
-          id: 4,
-          name: '蟹老板',
-          industry: '蟹黄包'
-        }
+
       ],
       multBuySponsorCheckedIds: [],
       // 套购参与人
       multBuyParticipant: [
-        {
-          id: 1,
-          name: '陆梦飞',
-          industry: '冰箱'
-        },
-        {
-          id: 2,
-          name: '大飞哥',
-          industry: '彩电'
-        },
-        {
-          id: 3,
-          name: '贾老板',
-          industry: '打怪兽'
-        },
-        {
-          id: 4,
-          name: '蟹老板',
-          industry: '蟹黄包'
-        }
+
       ],
+      buyerList:[],
       // 参与人选中id
       multBuyParticipantCheckIds: [],
       orderNo: '',
@@ -439,12 +404,16 @@ export default {
         this.queryCustomerDefault();
       }
       if (obj.product) {
+        debugger
+        if(!obj.product.productBrandName){
+          return
+        }
         this.orderService.qenerateOrderDetailId().then((res) => {
           if (res.code === 1) {
             ID = res.data;
             var pro = {}
             pro.id = ID
-              debugger
+              // debugger
             pro.deliveryTime = this.deliveryTime
             // pro.hmcId= "A0008949"
             pro.hmcId = this.userParam.hmcid
@@ -465,9 +434,9 @@ export default {
     	    	pro.invoiceStatus =  0
             // pro.userId = '123456789'
              pro.userId = this.customerInfo.userId
-          debugger
+          // debugger
         this.productList.push(pro);
-            debugger
+            // debugger
           } else {
             Toast.failed(res.msg);
           }
@@ -478,13 +447,13 @@ export default {
   },
   created() {
     if (localStorage.getItem('userinfo')) {
-      debugger
+      // debugger
       this.userParam = JSON.parse(localStorage.getItem('userinfo'));
-      debugger
+      // debugger
       this.shopId = this.userParam.shopId;
       this.mobile = this.userParam.mobile;
-      // this.mobile = '18653226149';
-      this.queryUserList();
+      // this.mobile = '18653226149'
+      this.queryUserList()
       this.queryCustomerDefault();
       this.getUserStore();
     }
@@ -499,9 +468,30 @@ export default {
     //   /* 选择礼品 */
     //   this.chooseGiftPopShow = true;
     // },
+    indexOf (val) {
+      for (var i = 0; i < this.length; i++) {
+        if (this[i] == val) return i;
+      }
+      return -1;
+    },
+    remove (val) {
+      var index = this.indexOf(val);
+      if (index > -1) {
+        this.splice(index, 1);
+      }
+    },
     // 获取门店信息
     sponsorCheck(checkid) {
       debugger;
+      this.multBuyParticipant = this.buyerList
+      var temp = this.buyerList
+      temp.forEach(v => {
+        if(v.hmcid === checkid){
+            this.multBuyParticipant.remove(v)
+        }
+
+      })
+
     },
     particpantAll(checkedIds) {
 
@@ -531,10 +521,10 @@ export default {
     // 查询客户信息及默认地址
     queryCustomerDefault() {
       console.log('lllllllllll',this.mobile)
-      debugger
+
       this.productService.deafaultCustomerAddress(this.mobile).then((res) => {
         if (res.code === 1) {
-          debugger
+
           if (res.data !== null) {
             this.haveConsignee = true;
             this.haveCustomer = true;
@@ -641,6 +631,10 @@ export default {
       if (this.orderNo !== '') {
         this.orderService.createOrder(subInfo, { orderFollowId: '' }).then((res) => {
           Toast.succeed(res.msg);
+          this.$router.push({
+            name: 'Order.OrderUploadInvoice',
+            params: { orderNo: this.orderNo }
+          });
         });
       }
     },
@@ -658,7 +652,7 @@ export default {
       });
     },
     selectAddress(item) {
-      debugger;
+      // debugger;
       console.log('11111111111', item);
       this.customerInfo = item;
     },
@@ -710,8 +704,12 @@ export default {
         if (res.code === 1) {
           this.multBuySponsor = res.data;
           this.multBuyParticipant = this.multBuySponsor;
+          this.buyerList = res.data
         }
       });
+    },
+    consporConfirm(){
+      this.saveTemporary();
     },
     next() {
       /* 下一步 */
@@ -719,14 +717,12 @@ export default {
       if (this.orderType === 1) {
         // 展示套购发起人
         this.multBuyPopShow = true;
+      }else {
+        this.$router.push({
+          name: 'Order.OrderUploadInvoice',
+          params: { orderNo: this.orderNo }
+        });
       }
-      this.saveTemporary();
-      debugger
-      this.$router.push({
-        name: 'Order.OrderUploadInvoice',
-        params: { orderNo: this.orderNo }
-      });
-
     },
     saveOrder() {
 

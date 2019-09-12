@@ -96,6 +96,9 @@ export default {
       searchHistory: []
     };
   },
+  created(){
+    this.currentClickItemData = {}
+  },
   methods: {
     search(val) {
       /* 搜索产品 */
@@ -113,15 +116,22 @@ export default {
     onItemClick(item) {
       this.currentClickItemData = item;
       this.searchHistory.push(this.currentClickItemData);
+      debugger
       this.$router.go(-1);
     },
 
   },
   beforeRouteLeave(to, from, next) {
+    debugger
     if (to.name === 'Order.OrderEntry') {
       const obj = { product: this.currentClickItemData };
       to.query.temp = JSON.stringify(obj);
     }
+    if (to.name === 'Order.OrderModify') {
+      const obj = { product: this.currentClickItemData };
+      to.query.temp = JSON.stringify(obj);
+    }
+
     localStorage.setItem('productSearchHistory', JSON.stringify(this.searchHistory));
     next();// 必须要有这个，否则无法跳转
   },

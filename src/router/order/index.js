@@ -8,7 +8,7 @@ const AddUserTag = () => import('@/views/order/AddUserTag');
 const OrderFollowActivity = () => import('@/views/order/OrderFollowActivity');
 const OrderModify = () => import(/* webpackChunkName: "OrderEntry" */ '@/views/order/OrderModify');// 订单录入
 const OrderConfirm = () => import(/* webpackChunkName: "OrderConfirm" */ '@/views/order/OrderConfirm');// 订单录入
-
+const OrderDetail = () => import(/* webpackChunkName: "OrderDetail" */ '@/views/order/OrderDetail');// 订单详情
 const prefix = '/order';
 const module = 'Order';
 const data = [
@@ -75,6 +75,14 @@ const data = [
     component: OrderFollowCommitResult,
     meta: {
       title: '订单提交'
+    }
+  },
+  {
+    path: `${prefix}/OrderDetail`,
+    name: `${module}.OrderDetail`,
+    component: OrderDetail,
+    meta: {
+      title: '订单详情'
     }
   },
 
