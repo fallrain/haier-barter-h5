@@ -252,6 +252,7 @@ export default {
     this.bUtil.scroviewTabChange(this.curScrollViewName, this);
   },
   methods: {
+
     getQueryString(name) {
         var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
         var r = window.location.search.substr(1).match(reg);
@@ -373,7 +374,7 @@ export default {
         params: { userInfo: {
             hmcid: info.hmcId,
             mobile: info.userMobile,
-            shopId: info.storeId,
+            shopId: this.userinfo.shopId,
             orderNo: info.orderNo
           } }
       });

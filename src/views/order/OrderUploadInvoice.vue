@@ -14,6 +14,7 @@
         @uploadSuccess="uploadSuccess"
         @uploadErr="uploadErr"
         @delImg="delImg"
+
       ></b-product-mult-upload>
     </div>
     <div class="orderUploadInvoice-tips mt16">
@@ -84,6 +85,7 @@ export default {
   data() {
     return {
       invoiceList:[],
+      fileMap:{},
       // 上传类型类型单选
       uploadTypes: [
         {
@@ -100,11 +102,13 @@ export default {
       // 产品
       products: [
         {
+          productCode:1,
           id: 1,
           name: '海尔/空调，KFR-35G',
           price: 2299
         },
         {
+          productCode:2,
           id: 2,
           name: '海尔/空调，KFR-35G',
           price: 9999
@@ -119,7 +123,7 @@ export default {
     console.log('tag', this.$route.params)
     this.orderNo = this.$route.params.orderNo;
     debugger
-    this.getData();
+    // this.getData();
   },
   methods: {
     skipUpload() {
@@ -136,6 +140,13 @@ export default {
       invoice.orderDetailId = data.orderDetailId
       this.invoiceList.push(data)
     },
+    delImg(invoiceUrl){
+      this.invoiceList.forEach(val => {
+        if(invoiceUrl === val.invoiceUrl){
+          this.invoiceList.remove(val)
+        }
+      })
+    },
     uploadErr(){},
     indexOf(val) {
 for (var i = 0; i < this.length; i++) {
@@ -149,9 +160,7 @@ if (index > -1) {
 this.splice(index, 1);
 }
 },
-    delImg(data){
-      this.invoice.remove(data)
-    },
+
     updateSubmit(){
       this.orderService.uploadInvoice(this.invoiceList,{orderNo:this.orderNo}).then(res => {
         if(res.code === 1){

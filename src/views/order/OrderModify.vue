@@ -535,6 +535,7 @@ export default {
       // this.shopId = '8800332156';
       this.shopId = this.userParam.shopId
       this.productService.storeInfo(this.shopId).then((res) => {
+        debugger
         if (res.code === 1) {
           this.shopName = res.data.storeName;
         }

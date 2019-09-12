@@ -17,23 +17,23 @@
           class="bProductMultUpload-item-cnt"
         >
           <b-upload
-            v-show="value.length < 1"
             :crop="false"
             inputOfFile="file"
-            @imageuploaded="imageuploaded"
             :max-file-size="1024*1024*20"
             :maxWidth="1280"
             :compress="70"
             :headers="headers"
+            @imageuploaded="imageuploaded"
             extensions="png,jpg,jpeg"
             inputAccept="image/jpg,image/jpeg,image/png"
             :url="uploadUrl"
             :multiple-size="1"
-            @errorhandle="uploadError"
-            :imgs="value"
-            :delFun="delImg"
+            :imgs="fileMap[products.productCode]"
+            @delFun="delImg"
             :data="dataObj"
-          ></b-upload>
+
+          >
+          </b-upload>
           <p class="bProductMultUpload-item-inf">上传购机凭证,包括:发票、购机小票</p>
         </div>
       </li>
@@ -79,10 +79,14 @@ import {
 export default {
   name: 'BProductMultUpload',
   props: {
-    value: {
-      type: Array,
-      default: () => []
-    },
+    // fileMap:{
+    //   type:Object,
+    //   default: () => {}
+    // },
+    // fileList: {
+    //   type: Array,
+    //   default: () => []
+    // },
     fileData:{
       type:Object,
       default: () => {}
@@ -102,6 +106,8 @@ export default {
   },
   data() {
     return {
+      fileMap:{},
+      fileList:[],
       dataObj:{recordMode:'Haier'},
       // 上传的地址
       uploadUrl: '/api/manage/orderManage/checkInvoice',
@@ -112,21 +118,32 @@ export default {
   },
   created(){
     debugger
-    // this.imageUploaded1()
+    this.genFileMap()
   },
   methods: {
+    genFileMap() {
+      debugger
+      setTimeout(() => {
+        this.products.forEach(v => {
+          debugger
+          this.$set(this.fileMap, v.productCode, []);
+        });
+      });
+    },
     imageChanged(res){
       debugger
     },
-    imageuploaded(data) {
+    imageuploaded(data,fileList) {
       debugger
       /* 上传成功 */
       // todo 返回值待定
-      this.value = []
-      this.value.push(data.invoiceUrl)
-      if (code === 1) {
+     fileList.push(data.data.invoiceUrl)
+
+      debugger
+      if (data.code === 1) {
           debugger
-        this.$emit('uploadSuccess', data);
+        this.$emit('uploadSuccess', data.data);
+
       }else{
         this.$emit('uploadErr', msg);
       }
@@ -144,8 +161,17 @@ export default {
       }
       Toast.failed('上传失败');
     },
-    delImg() {
-      this.$emit('delImg', []);
+    delImg(fileList) {
+      debugger
+      // for (var key in fileMap) {
+      //   var item = dic[key];
+      //
+      //   console.log(item); //AA,BB,CC,DD
+      //
+      // }debugger
+
+      fileList = []
+      this.$emit('delImg',fileList[0])
     }
   }
 };

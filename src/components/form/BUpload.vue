@@ -11,14 +11,17 @@
       >
         <i class="iconfont del icon-shanchu" @click="delFun(index)"></i>
         <img
-          :src="item"
+          :src="item" class="images"
         >
       </div>
     </div>
     <vue-core-image-upload
       v-bind="$attrs"
+      @imageuploaded="imageuploaded"
+      @imageuploading="imageuploading"
+      @errorhandle="errorhandle"
     >
-      <div class="bUpload">
+      <div class="bUpload" v-show="imgs.length < 1">
         <i class="iconfont icon-jiahao bUpload-icon"></i>
       </div>
     </vue-core-image-upload>
@@ -26,23 +29,40 @@
 </template>
 <script>
 import VueCoreImageUpload from 'vue-core-image-upload';
+import {
 
+  Toast
+} from 'mand-mobile';
 export default {
   name: 'BUpload',
-  components: { VueCoreImageUpload },
+  components: { VueCoreImageUpload ,Toast},
   props: {
     imgs: {
       type: Array,
       default: () => []
-    },
-    delFun: {
-      type: Function
     },
     imgObj:{
       type:Object,
       default:() => {}
     }
   },
+  methods:{
+    imageuploaded(data){
+      this.$emit('imageuploaded',data,this.imgs)
+      Toast.succeed('上传成功')
+    },
+    delFun(){
+      debugger
+      this.$emit('delFun',this.imgs)
+    },
+    imageuploading(){
+      Toast.loading('上传中')
+    },
+    errorhandle(){
+      Toast.failed('上传失败')
+    }
+
+  }
 };
 </script>
 <style lang="scss">
@@ -56,7 +76,11 @@ export default {
     text-align: center;
     border-radius: 6px;
   }
-
+  /*.images{*/
+    /*background: #000;*/
+    /*width: 200px;*/
+    /*height: 200px;*/
+  /*}*/
   .bUpload-icon {
     color: #D0D0D0;
     font-size: 70px;
@@ -73,8 +97,8 @@ export default {
 
   .bUpload-preshow {
     position: relative;
-    width: 56px;
-    height: 56px;
+    width: 200px;
+    height: 200px;
     margin-right: 20px;
     justify-content: space-between;
 
