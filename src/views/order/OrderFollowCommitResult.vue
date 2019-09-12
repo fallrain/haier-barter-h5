@@ -19,20 +19,20 @@
       >查看订单跟进
       </button>
     </div>
-    <div class="order-commit-tip">
-      <span class="order-commit-tip-text">记录用户特征,方便精准服务及二次购买</span>
-      <i class="iconfont icon-wenhao order-commit-tip-img"></i>
-    </div>
-    <b-user-tag
-      v-for="(item,index) in dataList"
-      :key="index"
-      :getData.sync="item"
-      :unusefulCount.sync="unusefulCount"
-      :usefulCount.sync="usefulCount"></b-user-tag>
-    <router-link :to="routerData[9].path">
-      <button class="order-commit-add-tag">+新建用户标签</button>
-    </router-link>
-    <button class="order-commit-save-tag">保存用户标签</button>
+    <!--<div class="order-commit-tip">-->
+      <!--<span class="order-commit-tip-text">记录用户特征,方便精准服务及二次购买</span>-->
+      <!--<i class="iconfont icon-wenhao order-commit-tip-img"></i>-->
+    <!--</div>-->
+    <!--<b-user-tag-->
+      <!--v-for="(item,index) in dataList"-->
+      <!--:key="index"-->
+      <!--:getData.sync="item"-->
+      <!--:unusefulCount.sync="unusefulCount"-->
+      <!--:usefulCount.sync="usefulCount"></b-user-tag>-->
+    <!--<router-link :to="routerData[9].path">-->
+      <!--<button class="order-commit-add-tag">+新建用户标签</button>-->
+    <!--</router-link>-->
+    <!--<button class="order-commit-save-tag">保存用户标签</button>-->
   </div>
 </template>
 
@@ -90,15 +90,13 @@ export default {
   },
   methods: {
     orderFollow() {
-      this.$router.push({
-        name: 'Order.OrderFollowSearch'
-      })
+      this.$router.replace('/')
+      // this.$router.push({
+      //   name: 'Order.OrderFollowSearch'
+      // })
     }
   },
   beforeRouteLeave(to, from, next) {
-    debugger;
-    const obj = { tel: this.customerInfo.mobile };
-
     if (to.name === 'Order.OrderConfirm') {
         this.orderFollow()
     }
