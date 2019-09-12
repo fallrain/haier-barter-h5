@@ -718,6 +718,7 @@ export default {
         // 展示套购发起人
         this.multBuyPopShow = true;
       }else {
+        this.saveTemporary()
         this.$router.push({
           name: 'Order.OrderUploadInvoice',
           params: { orderNo: this.orderNo }

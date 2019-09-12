@@ -4,8 +4,8 @@
       <i class="iconfont icon-duihao1  order-commit-status-img"></i>
       <span class="order-commit-status-text">订单提交成功</span>
     </div>
-    <div class="order-commit-id">订单编号：T20190612000128</div>
-    <div class="order-commit-id">创建时间：T20190612000128</div>
+    <div class="order-commit-id">订单编号：</div>
+    <div class="order-commit-id">创建时间：</div>
     <div class="orderEntry-btns-par">
       <button
         type="button"
@@ -15,6 +15,7 @@
       <button
         type="button"
         class="common-submit-btn-default"
+        @click="orderFollow()"
       >查看订单跟进
       </button>
     </div>
@@ -86,6 +87,22 @@ export default {
       },
       routerData: routerData.data
     };
+  },
+  methods: {
+    orderFollow() {
+      this.$router.push({
+        name: 'Order.OrderFollowSearch'
+      })
+    }
+  },
+  beforeRouteLeave(to, from, next) {
+    debugger;
+    const obj = { tel: this.customerInfo.mobile };
+
+    if (to.name === 'Order.OrderConfirm') {
+        this.orderFollow()
+    }
+    next();// 必须要有这个，否则无法跳转
   }
 };
 </script>
