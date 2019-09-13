@@ -19,7 +19,7 @@
       <img
         src="@/assets/images/orderFollow-up/search@3x.png"
         class="search-image"
-        @click="fuzzySearch()"
+        @click="fuzzySearch"
       >
       <p class="orderFollowButton" @click="handEntry()">手动录单</p>
     </div>
@@ -179,6 +179,7 @@ export default {
       currentList: [],
       checkedsortId: '',
       checkedButtonId: '',
+      fuzzysearch:false,
       // 订单跟进全部
       scrollView: {
         mescroll: null,
@@ -206,9 +207,7 @@ export default {
     };
   },
   created() {
-    // this.searchData()
     const userinfostr =  this.getQueryString('userinfo')
-    debugger
     this.userinfo = JSON.parse(userinfostr)
     // this.userinfo = {
     //   hmcid:'01467897',
@@ -273,7 +272,7 @@ export default {
     handEntry() {
       this.$router.push({
         name: 'Order.OrderEntry',
-        params: { userInfo: {} }
+        params: { customerConsigneeInfo: {},region:'hand'}
       });
     },
     itemClick(index) {
@@ -291,13 +290,11 @@ export default {
         //   }
         // });
       this.$router.push({
-        name: 'Order.OrderModify',
-        params: { userInfo: {
-            hmcid: item.hmcId,
-            mobile: item.userMobile,
-            shopId: item.storeId,
-            orderNo: item.orderNo
-          } }
+        name: 'Order.OrderEntry',
+        params: { customerConsigneeInfo: {
+            name:item.userName,
+            mobile:item.userMobile,
+          },region:'new'}
       });
 
 
@@ -309,8 +306,6 @@ export default {
       if (index === this.preIndex) {
         this.headList[index].isActive = false;
         this.preIndex = '';
-        this.sortShow = false;
-        this.scenarioShow = false;
         return;
       }
       for (let i = 0; i < this.headList.length; i++) {
@@ -320,16 +315,6 @@ export default {
         } else {
           this.headList[i].isActive = false;
         }
-      }
-      if (index === 0) {
-        this.sortShow = true;
-        this.scenarioShow = false;
-      } else if (index === 1) {
-        this.sortShow = false;
-        this.scenarioShow = true;
-      } else {
-        this.sortShow = false;
-        this.scenarioShow = false;
       }
     },
     upCallback(page) {
@@ -359,79 +344,76 @@ export default {
       });
     },
     followButtonClicked(val, info) {
-      debugger;
       if (val.name === '录新订单') {
-        debugger
-        this.orderService.createNewOrder({}, { orderNo: info.orderNo }).then((res) => {
-          if (res.code === 1) {
-            Toast.succeed(res.msg);
-          }
+
+        this.$router.push({
+          name: 'Order.OrderEntry',
+          params: { customerConsigneeInfo: {
+              name:info.userName,
+              mobile:info.userMobile,
+            },region:'new'}
         });
 
       }
-      this.$router.push({
-        name: 'Order.OrderModify',
-        params: { userInfo: {
-            hmcid: info.hmcId,
-            mobile: info.userMobile,
-            shopId: this.userinfo.shopId,
-            orderNo: info.orderNo
-          } }
-      });
-      debugger
 
     },
 
     searchData(page) {
-      return this.orderService
-        .queryOrderFollowlList(
-          {
-            // hmcId: 'A0008949',
-            hmcId: this.userinfo.hmcid,
-            queryType: this.curTab,
-            sortType: this.sortType,
-            recordMode: '',
-            userStatus: '',
-            orderFollowStatus: '',
-            flowType: '',
-            flowStatus: '',
-            orderFollowSource: '',
-            businessScenarios: this.scenarioType,
-            sourceSystem: '',
-            orderFollowStartDate: '',
-            orderFollowEndDate: ''
-          },
-          {
-            pageNum: page.num,
-            pageSize: page.size,
-          }
-        )
-        .then((res) => {
-          const sroviewObj = {};
-          if (res.code === 1) {
-            const {
-              result,
-              pages
-            } = res.data;
-            sroviewObj.pages = pages;
-            sroviewObj.result = result;
-            if (result && result.length > 0) {
-              const curList = result;
-              this.anylizeData(curList);
-              // this.$nextTick(() => {
-              if (page.num === 1) {
-                this[this.curScrollViewName].list = this.currentList;
-              } else {
-                this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(this.currentList);
-              }
-              // });
+      console.log('keyword',this.searchWord)
+        debugger
+        return this.orderService
+          .queryOrderFollowlList(
+            {
+              hmcId: this.userinfo.hmcid,
+              queryType: this.curTab,
+              sortType: this.sortType,
+              recordMode: '',
+              userStatus: '',
+              orderFollowStatus: '',
+              flowType: '',
+              flowStatus: '',
+              orderFollowSource: '',
+              businessScenarios: this.scenarioType,
+              sourceSystem: '',
+              orderFollowStartDate: '',
+              orderFollowEndDate: '',
+              keyWord:this.searchWord
+            },
+            {
+              pageNum: page.num,
+              pageSize: page.size,
             }
-            // this.dataList = res.data.result;
-          } else {
-            this[this.curScrollViewName].mescroll.endErr();
-          }
-          return sroviewObj;
-        });
+          )
+          .then((res) => {
+            const sroviewObj = {};
+            if (res.code === 1) {
+              const {
+                result,
+                pages
+              } = res.data;
+              sroviewObj.pages = pages;
+              sroviewObj.result = result;
+              if (result && result.length > 0) {
+                const curList = result;
+                 this.anylizeData(curList);
+
+                // this.$nextTick(() => {
+                if (page.num === 1) {
+                  this[this.curScrollViewName].list = []
+                  debugger
+                  this[this.curScrollViewName].list = this.currentList;
+                } else {
+                  this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(this.currentList);
+                }
+                // });
+              }
+              // this.dataList = res.data.result;
+            } else {
+              this[this.curScrollViewName].mescroll.endErr();
+            }
+            return sroviewObj;
+          });
+
     },
     anylizeData(curList) {
       debugger
@@ -453,7 +435,6 @@ export default {
             }
           });
         }
-
         if (item.flowStatus === 1) {
           // item.buttonList = [{ name: '录新订单' }, { name: '退货' }, { name: '换货' }];// 已完成
           item.buttonList = [{ name: '录新订单' }];// 已完成
@@ -554,46 +535,11 @@ export default {
     },
     fuzzySearch() {
       const page = {
-        num: 0,
+        num: 1,
         size: 10
       };
-      this.orderService
-        .fuzzySearchOrderFollowList(
-          {},
-          {
-            pageNum: 1,
-            pageSize: 10,
-            // hmcId: 'A0008949',
-            hmcId: this.userinfo.hmcid,
-            keyword: this.searchWord
-          }
-        )
-        .then((res) => {
-          const sroviewObj = {};
-          if (res.code === 1) {
-            const {
-              result,
-              pages
-            } = res.data;
-            sroviewObj.pages = pages;
-            sroviewObj.result = result;
-            if (result && result.length > 0) {
-              const curList = result;
-              this.currentList = []
-              debugger
-              this.anylizeData(curList);
-              debugger
-              if (page.num === 1) {
-                this[this.curScrollViewName].list = this.currentList;
-                debugger
-              } else {
-                debugger
-                this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(this.currentList);
-              }
-            }
-          }
-          return sroviewObj;
-        });
+      this.searchData(page)
+
     },
     updateOrderType(type) {
       this.searchData({

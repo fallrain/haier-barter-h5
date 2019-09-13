@@ -21,10 +21,10 @@
       <div class="orderEntry-user">
         <div v-if="haveConsignee">
           <div class="orderEntry-user-head">
-            <span class="name mr16">收货人：{{customerInfo.username}}</span>
-            <span class="sex mr16">{{customerInfo.sex}}</span>
+            <span class="name mr16">收货人：{{consignee.name}}</span>
+            <span class="sex mr16">{{consignee.sex}}</span>
             <i class="iconfont icon-dianhua mr16"></i>
-            <span class="phone mr16">{{customerInfo.mobile}}</span>
+            <span class="phone mr16">{{consignee.phone}}</span>
             <button
               type="button"
               class="common-btn-waring"
@@ -328,42 +328,6 @@ export default {
       addressPopShow: false,
       // 收货人地址pop列表
       addressList: [
-        // {
-        //   name: '张三',
-        //   phone: '15000000000',
-        //   address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-        //   tagName: '自己家'
-        // },
-        // {
-        //   name: '李四',
-        //   phone: '15000000000',
-        //   address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-        //   tagName: '办公室'
-        // },
-        // {
-        //   name: '王二',
-        //   phone: '15000000000',
-        //   address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-        //   tagName: '父母家'
-        // },
-        // {
-        //   name: '尼古拉斯赵四',
-        //   phone: '15000000000',
-        //   address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-        //   tagName: '其他'
-        // },
-        // {
-        //   name: '莱桑尼丝铁柱',
-        //   phone: '15000000000',
-        //   address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-        //   tagName: '其他'
-        // },
-        // {
-        //   name: '罗伯特英子',
-        //   phone: '15000000000',
-        //   address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-        //   tagName: '其他'
-        // }
       ],
       // 套购pop show
       multBuyPopShow: false,
@@ -446,18 +410,22 @@ export default {
     }
   },
   created() {
-    if (localStorage.getItem('userinfo')) {
-      // debugger
-      this.userParam = JSON.parse(localStorage.getItem('userinfo'));
-      // debugger
-      this.shopId = this.userParam.shopId;
-      this.mobile = this.userParam.mobile;
-      // this.mobile = '18653226149'
+    this.userParam = JSON.parse(localStorage.getItem('userinfo'));
+    this.shopId = this.userParam.shopId;
+    this.getUserStore()
+    if(this.$route.params.region === 'hand'){
+      this.haveConsignee = false
+      this.haveCustomer = false
+      return
+    }
+    debugger
+      this.customerInfo.username = this.$route.params.customerConsigneeInfo.userName
+      this.customerInfo.mobile = this.$route.params.customerConsigneeInfo.mobile
+      this.mobile = this.customerInfo.mobile
       this.queryUserList()
       this.queryCustomerDefault();
       this.getUserStore();
-    }
-    // this.queryCustomerDefault();
+
   },
   methods: {
     //  haveConsignee() {
@@ -520,17 +488,16 @@ export default {
     },
     // 查询客户信息及默认地址
     queryCustomerDefault() {
-      console.log('lllllllllll',this.mobile)
-
       this.productService.deafaultCustomerAddress(this.mobile).then((res) => {
         if (res.code === 1) {
-
           if (res.data !== null) {
             this.haveConsignee = true;
-            this.haveCustomer = true;
+            if( this.haveCustomer){
+            }else {
+              this.haveCustomer = true;
+              this.customerInfo = res.data;
+            }
             this.title = '收件人信息：';
-            this.customerInfo = res.data;
-            this.customerString = this.customerInfo.username + this.customerInfo.mobile;
             this.consignee.address = res.data.province + res.data.city + res.data.district + res.data.address;
             this.consignee.phone = res.data.mobile;
             this.consignee.name = res.data.username;
@@ -547,7 +514,6 @@ export default {
       this.productService.customerAddressList(this.customerInfo.customerId).then((res) => {
         if (res.code === 1) {
           this.addressList = res.data;
-
         }
       });
     },
@@ -700,7 +666,6 @@ export default {
     },
     queryUserList() {
       this.productGroup = '111';
-      // this.shopId = '8800332156';
       this.productService.userList(this.shopId).then((res) => {
         if (res.code === 1) {
           this.multBuySponsor = res.data;

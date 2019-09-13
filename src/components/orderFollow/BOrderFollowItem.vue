@@ -535,7 +535,7 @@ export default {
   font-size: 28px;
   margin-left: 40px;
   display: inline-block;
-  width: 270px;
+  width: 300px;
 }
 
 .bar-class {
@@ -609,7 +609,7 @@ export default {
 .information-class {
   color: #1969c6;
   font-size: 28px;
-  margin-left: 230px;
+  margin-left: 200px;
 }
 .label-class {
   position: relative;
