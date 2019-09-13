@@ -21,7 +21,7 @@ const data = [
     }
   },
   {
-    path: `${prefix}/orderEntry`,
+    path: `${prefix}/orderEntry/:customerConsigneeInfo/:region`,
     name: `${module}.OrderEntry`,
     component: OrderEntry,
     meta: {
