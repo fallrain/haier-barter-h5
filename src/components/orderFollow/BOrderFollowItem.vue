@@ -98,7 +98,7 @@
           class="timeImage"
         >
         <span class="time-label">{{followItem.updatedTime}}</span>
-        <span v-show="followItem.showDetail" @click="detailHide(index)">
+        <span v-show="followItem.showDetail" @click="detailHide(index,followItem)">
           <span class="information-class">详细信息</span>
           <img
             src="@/assets/images/orderFollow-up/xialablue@3x.png"
@@ -381,11 +381,13 @@ export default {
         e.cancelBubble = true;   //ie兼容
       }
     },
-    detailHide(index) {
+    detailHide(index,item) {
       debugger
       this.stopProcess()
       this.$set(this.list[index], 'detailShow', !this.list[index].detailShow);
-      this.$emit('searchProduct',index)
+      if(this.list[index].detailShow){
+        this.$emit('searchProduct',item)
+      }
     },
     updateOrderType(type, item) {
       this.stopProcess()

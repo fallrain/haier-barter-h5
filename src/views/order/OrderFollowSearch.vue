@@ -211,8 +211,8 @@ export default {
     debugger
     this.userinfo = JSON.parse(userinfostr)
     // this.userinfo = {
-    //   hmcid:'01467897',
-    //   mobile:'18678611903',
+    //   hmcid:'a0008949',
+    //   mobile:'"18561715460"',
     //   shopId:'8800332156',
     //   token:'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAyNzE1MyIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2ODExNDc3NiwiZXhwIjoxNTY4OTc4Nzc2fQ.-rzFESGZ9akHghFV-giivaS2ewSvqKUCRM_xmorKEMM'
     // }
@@ -301,6 +301,21 @@ export default {
 
     },
     searchProduct(item){
+      this.orderService.queryOrderInfoByOrderNo({}, { orderNo: item.orderNo }).then((response) => {
+        if (response.code === 1) {
+          const resData = response.data;
+          if (resData.orderDetailDtoList.length !== 0) {
+            item.productList = resData.orderDetailDtoList;
+            item.productList.forEach((val) => {
+              if (val.productBrand === 'haier') {
+                val.productBrandCN = '海尔';
+              } else {
+                val.productBrandCN = '卡萨帝';
+              }
+            });
+          }
+        }
+      });
 
     },
     headSwitch(index) {
@@ -419,23 +434,6 @@ export default {
     anylizeData(curList) {
       debugger
       curList.forEach((item) => {
-        if(this.curTab === 3){
-          this.orderService.queryOrderInfoByOrderNo({}, { orderNo: item.orderNo }).then((response) => {
-            if (response.code === 1) {
-              const resData = response.data;
-              if (resData.orderDetailDtoList.length !== 0) {
-                item.productList = resData.orderDetailDtoList;
-                item.productList.forEach((val) => {
-                  if (val.productBrand === 'haier') {
-                    val.productBrandCN = '海尔';
-                  } else {
-                    val.productBrandCN = '卡萨帝';
-                  }
-                });
-              }
-            }
-          });
-        }
         if (item.flowStatus === 1) {
           // item.buttonList = [{ name: '录新订单' }, { name: '退货' }, { name: '换货' }];// 已完成
           item.buttonList = [{ name: '录新订单' }];// 已完成
