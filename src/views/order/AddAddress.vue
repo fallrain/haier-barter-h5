@@ -13,6 +13,9 @@
           >
         </div>
       </li>
+      <p class="searchResultClass" v-show="searchResultShow">
+        <span class="searchTextClass">搜索暂无结果,</span><span class="searchBtnClass" @click="creatCustomer">创建信息</span>
+      </p>
       <div v-show="searchEnd">
       <li>
         <div class="addAddress-form-item">
@@ -68,7 +71,7 @@
         <div class="addAddress-form-item">
           <label class="addAddress-form-item-name">设为默认地址</label>
           <md-switch
-            v-model="customerInfo.default"
+            v-model="customerInfo.isDefault"
           ></md-switch>
         </div>
       </li>
@@ -124,6 +127,7 @@ export default {
   data() {
     return {
       // disabled: false,
+      searchResultShow:false,
       form: {
         name: '',
         phone: '',
@@ -229,7 +233,7 @@ export default {
       this.addressPopShow = true;
     },
     search() {
-      this.searchEnd = true;
+      // this.searchEnd = true;
       if (!(/^1[34578]\d{9}$/.test(this.customerInfo.mobile))) {
         Toast.failed('手机格式错误');
         this.customerInfo.mobile = '';
@@ -239,9 +243,14 @@ export default {
         if (res.code === 1) {
 
         } else {
-          Toast.failed('暂无信息请输入');
+          this.searchResultShow = true
+
         }
       });
+    },
+    creatCustomer(){
+      this.searchEnd = true
+      this.searchResultShow = false
     },
     addressChange(address) {
       /* 地址change */
@@ -305,14 +314,6 @@ export default {
       }
     },
     // 修改地址
-    updateAddress() {
-      this.productService.updateCustomerAddress(this.customerInfo).then((res) => {
-        debugger;
-        if (res.code === 1) {
-
-        }
-      });
-    },
     // 查询家庭关系数据字典
     getFamilyItem() {
       this.productService.commonTypeQuery('FAMILY-ITEM').then((res) => {
@@ -389,4 +390,15 @@ export default {
       font-size: 40px;
     }
   }
+  .searchResultClass {
+    text-align: center;
+    height: 100px;
+    font-size: 32px;
+    color: #666666;
+    padding: 30px;
+    .searchBtnClass {
+      color: #1969C6;
+    }
+  }
+
 </style>
