@@ -542,17 +542,19 @@ export default {
     },
 
     // 生成订单号
-    genarateOrderNum() {
-      debugger
-      this.orderService.generateOrderNo({}, { recordMode: 'Haier' },).then((res) => {
-        if (res.code === 1) {
-          debugger
-          this.orderNo = res.data;
-        } else {
-          Toast.failed(res.msg);
-        }
-      });
-    },
+    // genarateOrderNum() {
+    //   if(this.recordMode == ''){
+    //     this.recordMode = 'Haier'
+    //   }
+    //   this.orderService.generateOrderNo({}, { recordMode: 'Haier' },).then((res) => {
+    //     if (res.code === 1) {
+    //       debugger
+    //       this.orderNo = res.data;
+    //     } else {
+    //       Toast.failed(res.msg);
+    //     }
+    //   });
+    // },
     // 查询客户信息及默认地址
     // 查询客户地址列表
     queryCustomerAddressList() {
@@ -630,7 +632,7 @@ export default {
       subInfo.sourceSn = '' // 来源编码，记录来源ID
       subInfo.remark = '' // 备注，记录订单创建、订单修改原因等信息
       subInfo.rightsUserJson = ''
-      subInfo.orderDetailDtoList = this.productList;
+      subInfo.orderDetailSaveQoList = this.productList;
       this.subInfo = subInfo;
 
       if (this.orderNo !== '') {

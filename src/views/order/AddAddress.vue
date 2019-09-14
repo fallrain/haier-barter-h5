@@ -169,22 +169,6 @@ export default {
       // tagList: [],
       tag: [],
       tagList: [
-        {
-          id: 1,
-          name: '自己家'
-        },
-        {
-          id: 2,
-          name: '办公室'
-        },
-        {
-          id: 3,
-          name: '父母家'
-        },
-        {
-          id: 4,
-          name: '其他'
-        }
       ],
       // 地址pop显示隐藏
       addressPopShow: false,
@@ -195,7 +179,7 @@ export default {
   created() {
     // 不加入双向绑定
     this.addressData = addressData;
-    // this.getFamilyItem()
+     this.getFamilyItem()
     this.customerInfo.hmcId = JSON.parse(localStorage.getItem('userinfo')).hmcid
     this.customerInfo.tag = []
     if (this.$route.params) {
@@ -215,7 +199,6 @@ export default {
 
       }
     }
-    // this.getFamilyItem();
   },
   computed: {
     tagName() {
@@ -332,7 +315,7 @@ export default {
     },
     // 查询家庭关系数据字典
     getFamilyItem() {
-      this.productService.commonTypeQuery({ type: 'FAMILY-ITEM' }).then((res) => {
+      this.productService.commonTypeQuery('FAMILY-ITEM').then((res) => {
         debugger;
         if (res.code === 1) {
           res.data.forEach((val) => {

@@ -21,8 +21,8 @@ export default {
   deafaultCustomerAddress(mobile) {
     return axGet(urls.deafaultCustomerAddress(mobile));
   },
-  commonTypeQuery(param) {
-    return axGet(urls.commonTypeQuery, param);
+  commonTypeQuery(type) {
+    return axGet(urls.commonTypeQuery(type));
   },
   storeInfo(shopId) {
     return axGet(urls.storeInfo(shopId));

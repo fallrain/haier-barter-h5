@@ -208,6 +208,7 @@ export default {
   },
   created() {
     const userinfostr =  this.getQueryString('userinfo')
+    debugger
     this.userinfo = JSON.parse(userinfostr)
     // this.userinfo = {
     //   hmcid:'01467897',
@@ -293,6 +294,7 @@ export default {
         params: { customerConsigneeInfo: {
             name:item.userName,
             mobile:item.userMobile,
+            recordMode:item.recordMode
           },region:'new'}
       });
 
@@ -343,12 +345,13 @@ export default {
       });
     },
     followButtonClicked(val, info) {
-      if (val.name === '录新订单') {
+      if (val.name === '录新订单' || val.name === '成交录单') {
         this.$router.push({
           name: 'Order.OrderEntry',
           params: { customerConsigneeInfo: {
               name:info.userName,
               mobile:info.userMobile,
+              recordMode:info.recordMode
             },region:'new'}
         });
 
@@ -438,7 +441,8 @@ export default {
           item.buttonList = [{ name: '录新订单' }];// 已完成
 
         } else if (item.flowStatus === 2) {
-          item.buttonList = [{ name: '成交录单' }, { name: '发放卡券' }];
+          // item.buttonList = [{ name: '成交录单' }, { name: '发放卡券' }];
+          item.buttonList = [{ name: '成交录单' }];
         } else if (item.flowStatus === 5) {
           item.buttonList = [{ name: '刷新' }, { name: '修改订单' }, { name: '录新订单' }];
         } else {

@@ -236,6 +236,7 @@ export default {
 
       // 门店名称
       shopName: '',
+      recordMode:'',
       haveCustomer: false,
       currentDate: new Date(),
       pattern: 'yyyy-MM-dd hh:mm',
@@ -413,14 +414,17 @@ export default {
     this.userParam = JSON.parse(localStorage.getItem('userinfo'));
     this.shopId = this.userParam.shopId;
     this.getUserStore()
+    debugger
     if(this.$route.params.region === 'hand'){
       this.haveConsignee = false
       this.haveCustomer = false
+      debugger
       return
     }
     debugger
       this.customerInfo.username = this.$route.params.customerConsigneeInfo.userName
       this.customerInfo.mobile = this.$route.params.customerConsigneeInfo.mobile
+      this.recordMode = this.$route.params.customerConsigneeInfo.recordMode
       this.mobile = this.customerInfo.mobile
       this.queryUserList()
       this.queryCustomerDefault();
@@ -478,7 +482,10 @@ export default {
 
     // 生成订单号
     genarateOrderNum() {
-      this.orderService.generateOrderNo({}, { recordMode: 'Haier' },).then((res) => {
+      if(this.recordMode == ''){
+        this.recordMode = 'Haier'
+      }
+      this.orderService.generateOrderNo({}, { recordMode: this.recordMode },).then((res) => {
         if (res.code === 1) {
           this.orderNo = res.data;
         } else {
@@ -488,6 +495,7 @@ export default {
     },
     // 查询客户信息及默认地址
     queryCustomerDefault() {
+      debugger
       this.productService.deafaultCustomerAddress(this.mobile).then((res) => {
         if (res.code === 1) {
           if (res.data !== null) {
@@ -548,7 +556,7 @@ export default {
 
 
       subInfo.orderNo = this.orderNo
-      subInfo.recordMode = 'Haier'
+      subInfo.recordMode = this.recordMode
       // subInfo.hmcId = 'A0008949'
       subInfo.hmcId = this.userParam.hmcid
       subInfo.storeId = this.shopId
@@ -591,7 +599,7 @@ export default {
       subInfo.sourceSn = '' // 来源编码，记录来源ID
       subInfo.remark = '' // 备注，记录订单创建、订单修改原因等信息
       subInfo.rightsUserJson = ''
-      subInfo.orderDetailDtoList = this.productList;
+      subInfo.orderDetailSaveQoList = this.productList;
       this.subInfo = subInfo;
 
       if (this.orderNo !== '') {

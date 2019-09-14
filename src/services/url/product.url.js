@@ -17,7 +17,9 @@ const urls = {
     return `/customer/address/default/${mobile}`;
   },
   // 查询数据字典
-  commonTypeQuery: '/common/dictionary/list/',
+  commonTypeQuery(type){
+    return  `/common/dictionary/list/${type}`
+  },
   // 根据storeid查询门店
   storeInfo(shopId) {
     return `/store/info/${shopId}`;
