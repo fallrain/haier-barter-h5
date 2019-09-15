@@ -22,7 +22,7 @@
         <div v-if="haveConsignee">
           <div class="orderEntry-user-head">
             <span class="name mr16">收货人：{{consignee.name}}</span>
-            <span class="sex mr16">{{consignee.sex}}</span>
+            <span class="sex mr16">{{consignee.sexCn}}</span>
             <i class="iconfont icon-dianhua mr16"></i>
             <span class="phone mr16">{{consignee.phone}}</span>
             <button
@@ -386,6 +386,7 @@ export default {
             pro.orderFlag = 0
             pro.orderNo=this.orderNo
             pro.productCategoryName =  obj.product.productGroupName
+            pro.productBrandName = obj.product.productBrandName
             pro.productCategoryCode = obj.product.productBrandCode
             pro.productCode = obj.product.productCode
             pro.productModel = obj.product.productModel
@@ -505,10 +506,15 @@ export default {
               this.haveCustomer = true;
               this.customerInfo = res.data;
             }
-            this.title = '收件人信息：';
+            this.title = '收件人信息';
             this.consignee.address = res.data.province + res.data.city + res.data.district + res.data.address;
             this.consignee.phone = res.data.mobile;
             this.consignee.name = res.data.username;
+            if(res.data.sex === 1){
+              this.consignee.sexCn = '男士'
+            }else {
+              this.consignee.sexCn  = '女士'
+            }
             this.consignee.sex = res.data.sex;
             this.consignee.customerId = res.data.customerId;
             this.queryCustomerAddressList();
@@ -527,12 +533,31 @@ export default {
     },
     // 暂存
     saveTemporary() {
+      this.genarateSubInfo(2)
+      if (this.orderNo !== '') {
+        this.orderService.createOrder(this.subInfo, { orderFollowId: '' }).then((res) => {
+          Toast.succeed(res.msg);
+          this.$router.push({
+            name: 'Order.OrderUploadInvoice',
+            params: { orderNo: this.orderNo }
+          });
+        });
+      }
+    },
+    // 添加产品
+    addProduct() {
+      /* 添加产品 */
+      this.$router.push({
+        name: 'Order.SearchProduct',
+      });
+    },
+    genarateSubInfo(code){
       const subInfo = {};
       // multBuyParticipantCheckIds
       if (this.multBuySponsorCheckedIds.length) {
         subInfo.coupleSponsor = this.multBuySponsorCheckedIds[0];
-         const obj = this.multBuySponsor.find(v => v.hmcId === this.multBuySponsorCheckedIds[0])
-       subInfo.coupleSponsorName = obj.username;
+        const obj = this.multBuySponsor.find(v => v.hmcId === this.multBuySponsorCheckedIds[0])
+        subInfo.coupleSponsorName = obj.username;
       }else{
         subInfo.coupleSponsor = ''
         subInfo.mayEditCoupleOrderId = '';
@@ -544,7 +569,7 @@ export default {
         this.multBuyParticipantCheckIds.forEach(val => {
           const obj = this.multBuyParticipant.find(v => v.hmcId === val)
           if(obj){
-             part.push(obj.username)
+            part.push(obj.username)
           }
           subInfo.mayEditCoupleOrderName = part.join(',')
         });
@@ -557,7 +582,6 @@ export default {
 
       subInfo.orderNo = this.orderNo
       subInfo.recordMode = this.recordMode
-      // subInfo.hmcId = 'A0008949'
       subInfo.hmcId = this.userParam.hmcid
       subInfo.storeId = this.shopId
       subInfo.storeName = this.shopName
@@ -599,30 +623,21 @@ export default {
       subInfo.sourceSn = '' // 来源编码，记录来源ID
       subInfo.remark = '' // 备注，记录订单创建、订单修改原因等信息
       subInfo.rightsUserJson = ''
-      subInfo.orderDetailSaveQoList = this.productList;
-      this.subInfo = subInfo;
-
-      if (this.orderNo !== '') {
-        this.orderService.createOrder(subInfo, { orderFollowId: '' }).then((res) => {
-          Toast.succeed(res.msg);
-          this.$router.push({
-            name: 'Order.OrderUploadInvoice',
-            params: { orderNo: this.orderNo }
-          });
-        });
+      if(code === 1){
+        subInfo.orderDetailDtoList = this.productList
+      }else {
+        subInfo.orderDetailSaveQoList = this.productList;
       }
-    },
-    // 添加产品
-    addProduct() {
-      /* 添加产品 */
-      this.$router.push({
-        name: 'Order.SearchProduct',
-      });
+
+      this.subInfo = subInfo;
     },
     selectActivity() {
+      this.genarateSubInfo(1)
+      const info = JSON.stringify(this.subInfo)
       /* 选择活动 */
       this.$router.push({
         name: 'Order.OrderFollowActivity',
+        params:{orderInfo:info}
       });
     },
     selectAddress(item) {
@@ -749,6 +764,7 @@ export default {
   .orderEntry-user-head {
     display: flex;
     align-items: center;
+    padding-top: 10px;
 
     .name {
       color: #333;
@@ -772,6 +788,7 @@ export default {
 
     .common-btn-waring {
       margin-left: auto;
+      margin-top: 5px;
     }
   }
 

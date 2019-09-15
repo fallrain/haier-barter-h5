@@ -65,6 +65,7 @@ export default {
   },
   data() {
     return {
+      subInfo:{},
       current: 0,
       items: [{
         name: 0,
@@ -144,23 +145,49 @@ export default {
   mounted() {
     this.bUtil.scroviewTabChange(this.curScrollViewName, this);
   },
+  created(){
+
+
+  },
   methods: {
     upCallback(page) {
       // 下载过就设置已经初始化
       this[this.curScrollViewName].isListInit = true;
-      this.search(page).then(({ result, pages, total }) => {
+      this.search(page).then(({ result, pages }) => {
         this.$nextTick(() => {
           // 通过当前页的数据条数，和总数据量来判断是否加载完
-          this[this.curScrollViewName].mescroll.endBySize(result.length, total);
+          this[this.curScrollViewName].mescroll.endBySize(result.length, pages);
         });
       });
     },
     search(page) {
       // todo
+      this.subInfo = this.$route.params.orderInfo
       const formData = {
         pageNum: page.num,
         pageSize: page.size,
       };
+      if(this.current === 0){
+        this.rightsService.queryOrderOptionalRights(JSON.parse(this.subInfo),{}).then(res =>{
+          debugger
+          if(res.code === 1){
+            debugger
+          }
+        })
+      }else{
+
+        this.rightsService.queryOrderNotOptionalRights(JSON.parse(this.subInfo),{}).then(res =>{
+          debugger
+          if(res.code === 1){
+            debugger
+          }
+
+        })
+      }
+
+
+
+
       const sroviewObj = {};
       sroviewObj.pages = 1;
       sroviewObj.result = this[this.curScrollViewName].list;

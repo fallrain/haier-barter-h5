@@ -122,9 +122,10 @@ export default {
     background: #fff;
     padding-top: 30px;
     padding-right: 24px;
-    padding-bottom: 16px;
+    padding-bottom: 20px;
     padding-left: 24px;
-    border-radius: 10px;
+    border-radius: 15px;
+    margin-bottom: 40px;
   }
 
   .activity-gift {

@@ -369,9 +369,7 @@ export default {
               recordMode:info.recordMode
             },region:'new'}
         });
-
       }
-
     },
 
     searchData(page) {
@@ -423,7 +421,6 @@ export default {
                 }
                 // });
               }
-              // this.dataList = res.data.result;
             } else {
               this[this.curScrollViewName].mescroll.endErr();
             }

@@ -1,6 +1,6 @@
 <template>
   <div class="b-fieldset">
-    <div
+    <div v-show="title === '顾客信息：'"
       class="b-fieldset-legend"
       :class="[
         headBtmLine && 'headBtmLine'
