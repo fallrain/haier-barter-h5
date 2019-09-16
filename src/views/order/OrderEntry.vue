@@ -714,7 +714,7 @@ export default {
     next() {
       /* 下一步 */
       // todo 单品、套购值待定
-      if (this.orderType === 1) {
+      if (this.orderType === 'sets') {
         // 展示套购发起人
         this.multBuyPopShow = true;
       }else {
