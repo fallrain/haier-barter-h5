@@ -9,14 +9,14 @@ pipeline:
       - n stable
       - yarn config set registry http://10.138.16.188:4873
       - yarn
-      - yarn build
-      - echo "FROM registry.haier.net/library/nginx:1.13.8-alpine \nCOPY l9QWuMfmPy.txt /usr/share/nginx \nCOPY nginx.conf /etc/nginx/conf.d \nCOPY dist/ /usr/share/nginx/html" >> ./context_Dockerfile
+      - yarn prod
+
     volumes:
       - /data/npm/:/root/.npm
     when:
       event: tag
       ref: refs/tags/v*[0-9].*[0-9].[0-9]*
-  
+
 
   publish:
     image: plugins/docker

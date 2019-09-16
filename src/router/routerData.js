@@ -1,6 +1,8 @@
 import Nav from '@/views/Nav';
 import Test from '@/views/home/Test';
-
+import orderRoutes from '@/router/order';
+import salesRoutes from '@/router/sales';
+import reportInstallRoutes from '@/router/reportInstall';
 
 const data = [
   {
@@ -10,7 +12,10 @@ const data = [
     meta: {
       title: '测试'
     }
-  }
+  },
+  ...orderRoutes,
+  ...salesRoutes,
+  ...reportInstallRoutes
 ];
 if (process.env.NODE_ENV !== 'production') {
   data.unshift({

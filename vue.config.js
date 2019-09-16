@@ -11,14 +11,25 @@ module.exports = {
     compress: true,
     proxy: {
       '/api': {
-        target: 'http://39.108.61.78:8080/',
-        changeOrigin: true
+        target: 'https://barter.haier.net/',
+        changeOrigin: true,
+        // pathRewrite: {
+        //   '^/api/test': ''
+        // },
+        secure: false
+      },
+      '/api': {
+        target: 'https://testdb.haier.net/',
+        changeOrigin: true,
+        // pathRewrite: {
+        //   '^/api': ''
+        // },
+        secure: false
       }
     }
   },
   configureWebpack: (config) => {
-    const cfg = {
-    };
+    const cfg = {};
     if (env !== 'dev') {
       return smp.wrap(cfg);
     }

@@ -1,4 +1,6 @@
-import { mapState } from 'vuex';
+import {
+  mapState
+} from 'vuex';
 
 export default {
   async beforeRouteEnter(to, from, next) {
@@ -9,8 +11,11 @@ export default {
       pageCfg: {
         page: {
           pageSize: 10,
-          page: 1
+          pageNum: 1
         }
+      },
+      scrollView: {
+        isFinished: false
       }
     };
   },
@@ -20,13 +25,41 @@ export default {
     })
   },
   methods: {
+    scrollViewOnEndReached(search, scrollView = 'scrollView') {
+      /* 加载更多 */
+      debugger
+      if (this[scrollView].isFinished) {
+        return;
+      }
+      this[scrollView].page.pageNum++;
+      if (search) {
+        search({ more: true }).then(({ isFinished }) => {
+          this[scrollView].isFinished = isFinished;
+          this.$refs[scrollView].finishLoadMore();
+          this.$refs[scrollView].reflowScroller();
+        });
+      }
+    },
+    scrollViewOnRefresh(search, scrollView = 'scrollView') {
+      /* 下拉刷新 */
+      debugger
+      this[scrollView].page.pageNum = 1;
+      this[scrollView].isFinished = false;
+      if (search) {
+        search().then(() => {
+          this.$refs[scrollView].finishRefresh();
+          this.$refs[scrollView].finishLoadMore();
+          this.$refs[scrollView].reflowScroller();
+        });
+      }
+    },
     back() {
       /* 返回上一页 */
       this.$router.back();
     },
     copy(selector, text) {
       /* 复制功能 */
-      const copyIns = this.wUtil.clipboardCopy(selector, text);
+      const copyIns = this.bUtil.clipboardCopy(selector, text);
       copyIns.on('success', () => {
         this.$toast('复制成功');
       });

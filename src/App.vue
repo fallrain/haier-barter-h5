@@ -4,14 +4,18 @@
       <keep-alive
         :exclude="aliveExclude"
       >
-        <router-view></router-view>
+        <router-view>
+
+        </router-view>
       </keep-alive>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import {
+  mapState
+} from 'vuex';
 
 export default {
   name: 'App',
@@ -26,6 +30,7 @@ export default {
 <style>
   @import 'assets/font/iconfont.css';
 </style>
+
 <style lang="scss">
   @import 'assets/css/common';
 </style>

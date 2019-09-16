@@ -22,7 +22,7 @@ module.exports = {
     'max-len': [1, 150],//最大行
     'eqeqeq': 1,
     'prefer-destructuring': ['warn', {
-      'object': true,
+      'object': false,
       'array': false
     }],//只对象推荐解构
     'no-param-reassign': 0,//vuex不兼容
@@ -36,9 +36,19 @@ module.exports = {
     'no-restricted-syntax': 0,
     'no-lonely-if': 0,
     'consistent-return': 0,
-    'no-restricted-properties': 0
+    'no-restricted-properties': 0,
+    'object-curly-newline': [
+      1,
+      {
+        'ImportDeclaration': 'always'
+      }
+    ],
+    'no-continue': 0
   },
   parserOptions: {
     parser: 'babel-eslint',
+  },
+  globals: {
+    wx: 'readonly'
   },
 };
