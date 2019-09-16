@@ -10,12 +10,12 @@ module.exports = {
     port: 8094,
     compress: true,
     proxy: {
-      '/api': {
-        target: 'https://barter.haier.net/',
+      '/api/test': {
+        target: 'https://hzy.haier.com/',
         changeOrigin: true,
-        // pathRewrite: {
-        //   '^/api/test': ''
-        // },
+        pathRewrite: {
+          '^/api/test': ''
+        },
         secure: false
       },
       '/api': {
