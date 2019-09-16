@@ -1,8 +1,12 @@
 <template>
-  <div class="activity-item-bg">
+  <div class="activity-item-bg" >
+    <div v-show="!hasData">
+      <p>暂无权益活动可选</p>
+    </div>
+    <div v-show="hasData">
     <div class="activity-gift">
       <i class="iconfont icon-liwu activity-gift-img"/>
-      <span class="activity-gift-title">{{getData.title}}</span>
+      <span class="activity-gift-title">{{getData.rightsName}}</span>
     </div>
     <div class="activity-common-line activity-common-text activity-reason-text" v-if="getData.reason && isFinish">
       不可参与原因：{{getData.reason}}
@@ -55,10 +59,15 @@
     <img class="activity-img" v-if="isFinish" src="../../assets/images/orderFollow-up/activity-img.png"/>
     <div class="activity-number" v-if="!isFinish">
       <span class="activity-number-minus activity-number-common" @click="minusCount">-</span>
-      <span class="activity-number-count">{{this.count}}</span>
+      <span class="activity-number-minus activity-number-common-no">-</span>
+
+      <span class="activity-number-count">{{getData.count}}</span>
       <span class="activity-number-add activity-number-common" @click="addCount">+</span>
+      <span class="activity-number-add activity-number-common-no">+</span>
+    </div>
     </div>
   </div>
+
 </template>
 
 <script>
@@ -67,7 +76,7 @@ export default {
   data() {
     return {
       isShowLimit: true,
-      count: 1,
+
     };
   },
   props: {
@@ -79,6 +88,10 @@ export default {
       data: '',
       data2: '',
       type: '',
+      count:{
+        type:Number,
+        default: () => 0
+      },
       product: {
         type: Array,
         default: () => [{
@@ -90,6 +103,10 @@ export default {
       }
     },
     isFinish: false,
+    hasData:{
+      type:Boolean,
+      default : () => true
+    }
   },
   methods: {
     setShowLimit() {
@@ -100,9 +117,11 @@ export default {
       if (this.count < 1) {
         this.count = 1;
       }
+      this.$emit('minusCount',this.getData,this.count)
     },
     addCount() {
       this.count++;
+      this.$emit('addCount',this.getData)
     },
   },
   watch: {
@@ -247,6 +266,16 @@ export default {
     border: 1px solid #BBB;
     font-size: 28px;
     color: #333;
+    width: 48px;
+    height: 48px;
+    text-align: center;
+  }
+  .activity-number-common-no {
+    width: 48px;
+    height: 48px;
+    border: 1px solid #BBB;
+    font-size: 28px;
+    color: #bbb;
     width: 48px;
     height: 48px;
     text-align: center;

@@ -363,13 +363,15 @@ export default {
       height: 80px;
       line-height: 80px;
       padding-left: 25px;
-      width: 580px;
+      /*width: 520px;*/
       flex-shrink: 0;
     }
 
     .orderConfirm-s {
       height: 80px;
       line-height: 80px;
+     position: absolute;
+      right: 24px;
     }
   }
   .orderEntry-header-cus{

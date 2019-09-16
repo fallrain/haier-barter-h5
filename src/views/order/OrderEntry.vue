@@ -623,11 +623,7 @@ export default {
       subInfo.sourceSn = '' // 来源编码，记录来源ID
       subInfo.remark = '' // 备注，记录订单创建、订单修改原因等信息
       subInfo.rightsUserJson = ''
-      if(code === 1){
-        subInfo.orderDetailDtoList = this.productList
-      }else {
-        subInfo.orderDetailSaveQoList = this.productList;
-      }
+      subInfo.orderDetailSaveQoList = this.productList;
 
       this.subInfo = subInfo;
     },

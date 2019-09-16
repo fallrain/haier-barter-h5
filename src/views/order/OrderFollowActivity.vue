@@ -23,6 +23,9 @@
             :key="index"
             :getData.sync="item"
             :isFinish="false"
+            @minusCount="minusCount"
+            @addCount="addCount"
+            :hasData="false"
           ></b-activity-item>
         </div>
       </div>
@@ -41,6 +44,7 @@
             :key="index"
             :getData.sync="item"
             :isFinish="true"
+            :hasData="false"
           ></b-activity-item>
         </div>
       </div>
@@ -65,8 +69,10 @@ export default {
   },
   data() {
     return {
+      currentList:[],
       subInfo:{},
       current: 0,
+      orderNo:'',
       items: [{
         name: 0,
         label: '可参与活动'
@@ -160,9 +166,28 @@ export default {
         });
       });
     },
+    minusCount(item,count){
+      this.rightsService.uncheckedOrderRights().then(res => {
+        if(res.code === 1){
+
+
+        }
+      })
+
+    },
+    addCount(item){
+      this.rightsService.checkedOrderRights().then(res => {
+        if(res.code === 1){
+          if(res.isOptional == 1){
+
+          }
+        }
+      })
+    },
     search(page) {
       // todo
       this.subInfo = this.$route.params.orderInfo
+      this.orderNo = this.subInfo.orderNo
       const formData = {
         pageNum: page.num,
         pageSize: page.size,
@@ -170,30 +195,59 @@ export default {
       if(this.current === 0){
         this.rightsService.queryOrderOptionalRights(JSON.parse(this.subInfo),{}).then(res =>{
           debugger
+          const sroviewObj = {};
           if(res.code === 1){
-            debugger
+
+            const {
+              result,
+              pages
+            } = res.data;
+            sroviewObj.pages = pages;
+            sroviewObj.result = result;
+            if(result && result.length > 0){
+              const list = result
+              this.anylizeData(list)
+            }
+            this[this.curScrollViewName].list = this.currentList
+          }else {
+            this[this.curScrollViewName].mescroll.endErr();
           }
+          return sroviewObj;
         })
       }else{
-
         this.rightsService.queryOrderNotOptionalRights(JSON.parse(this.subInfo),{}).then(res =>{
           debugger
+          const sroviewObj = {};
           if(res.code === 1){
             debugger
-          }
+            const {
+              result,
+              pages
+            } = res.data;
+            sroviewObj.pages = pages;
+            sroviewObj.result = result;
+            if(result && result.length > 0){
+              const list = result
+              this.anylizeData(list)
+            }
+            this[this.curScrollViewName].list = this.currentList
 
+          }else {
+            this[this.curScrollViewName].mescroll.endErr();
+          }
+          return sroviewObj;
         })
       }
 
 
-
-
-      const sroviewObj = {};
-      sroviewObj.pages = 1;
-      sroviewObj.result = this[this.curScrollViewName].list;
-      sroviewObj.total = 1;
-      this[this.curScrollViewName].mescroll.endErr();
-      return sroviewObj;
+    },
+    anylizeData(curlist){
+        curlist.forEach(item => {
+            item.count = 0
+            this.$set(item,'minesGray',true)
+            this.$set(item,'addGray',false)
+        })
+      this.currentList = curlist
     }
   },
 };

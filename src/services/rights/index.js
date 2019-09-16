@@ -14,6 +14,15 @@ export default {
   },
   queryOrderNotOptionalRights(data,param){
     return axPostJson(urls.queryOrderNotOptionalRights,data,param)
+  },
+  checkedOrderRights(data,param) {
+    return axPostJson(urls.checkedOrderRights,data,param)
+  },
+  uncheckedOrderRights(data,param) {
+    return axPostJson(urls.uncheckedOrderRights,data,param)
+  },
+  queryRightsResidue(){
+    return axGet(urls.queryRightsResidue)
   }
 
 
