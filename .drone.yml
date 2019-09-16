@@ -10,13 +10,13 @@ pipeline:
       - yarn config set registry http://10.138.16.188:4873
       - yarn
       - yarn prod
-
+      - cp ./Dockerfile ./context_Dockerfile
     volumes:
       - /data/npm/:/root/.npm
     when:
       event: tag
       ref: refs/tags/v*[0-9].*[0-9].[0-9]*
-
+  
 
   publish:
     image: plugins/docker
