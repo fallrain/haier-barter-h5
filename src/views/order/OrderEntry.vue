@@ -133,6 +133,10 @@
       @rightClick="selectActivity()"
     >
     </b-item>
+      <b-activity-list
+        :data="rightsList"
+        :isDetail="isDetail"
+      ></b-activity-list>
     <div class="orderEntry-btns-par">
       <button
         type="button"
@@ -232,8 +236,9 @@ export default {
   data() {
     return {
       // 是否详情模式
-      isDetail: true,
-
+      isDetail: false,
+      rightsList:[],
+      rightsJson:'',
       // 门店名称
       shopName: '',
       recordMode:'',
@@ -409,6 +414,16 @@ export default {
         });
 
       }
+      if(obj.rightsJson){
+        const right = JSON.parse(obj.rightsJson)
+        this.rightJson = right
+        if(!right.rightsName){
+          return
+        }
+        this.isDetail = true
+        this.rightsList = right.rightsName.replace(/(.)(?=[^$])/g,"$1,").split(",")
+
+      }
     }
   },
   created() {
@@ -537,10 +552,10 @@ export default {
       if (this.orderNo !== '') {
         this.orderService.createOrder(this.subInfo, { orderFollowId: '' }).then((res) => {
           Toast.succeed(res.msg);
-          this.$router.push({
-            name: 'Order.OrderUploadInvoice',
-            params: { orderNo: this.orderNo }
-          });
+          // this.$router.push({
+          //   name: 'Order.OrderUploadInvoice',
+          //   params: { orderNo: this.orderNo }
+          // });
         });
       }
     },
@@ -622,7 +637,7 @@ export default {
       subInfo.orderSource = 'SGLD' // 1-扫码录单 2-手动录单 3-智慧触点认筹录单
       subInfo.sourceSn = '' // 来源编码，记录来源ID
       subInfo.remark = '' // 备注，记录订单创建、订单修改原因等信息
-      subInfo.rightsUserJson = ''
+      subInfo.rightsUserJson = this.rightsJson
       subInfo.orderDetailSaveQoList = this.productList;
 
       this.subInfo = subInfo;

@@ -7,12 +7,12 @@
         :key="item.id"
       >
         <div class="bCheckbox-item-detail-cnt">
-          <p class="bActivityList-activity-name">{{item.productCode}}</p>
+          <p class="bActivityList-activity-name">{{item}}</p>
         </div>
         <div
           class="bActivityList-activity-num-par"
         >
-          数量：<span class="bActivityList-activity-num">{{item.id}}</span>
+          数量：<span class="bActivityList-activity-num">1</span>
         </div>
       </li>
     </ol>

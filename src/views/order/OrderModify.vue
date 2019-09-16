@@ -117,6 +117,10 @@
       @rightClick="selectActivity()"
     >
     </b-item>
+    <b-activity-list
+      :data="rightsList"
+      :isDetail="isDetail"
+    ></b-activity-list>
     <div class="orderEntry-btns-par">
       <button
         type="button"
@@ -215,7 +219,7 @@ export default {
   data() {
     return {
       // 是否详情模式
-      isDetail: true,
+      isDetail: false,
       // 门店名称
       shopName: '',
       haveCustomer: false,
@@ -403,6 +407,9 @@ export default {
       mobile: '',
       region: '',
       hmcId:'',
+      rightsList:[],
+      subInfo:{},
+      rightsJson:''
     };
   },
   computed: {},
@@ -459,6 +466,14 @@ export default {
             Toast.failed(res.msg);
           }
         });
+        if(obj.rightsJson){
+          const right = JSON.parse(obj.rightsJson)
+          if(!right.rightsName){
+            return
+          }
+          this.isDetail = true
+          this.rightsList = right.rightsName.replace(/(.)(?=[^$])/g,"$1,").split(",")
+        }
 
       }
     }
@@ -568,12 +583,41 @@ export default {
     },
     // 暂存
     saveTemporary() {
+      this.genarateSubInfo(2)
+      if (this.orderNo !== '') {
+        this.orderService.createOrder(this.subInfo, { orderFollowId: '' }).then((res) => {
+          Toast.succeed(res.msg);
+          // this.$router.push({
+          //   name: 'Order.OrderUploadInvoice',
+          //   params: { orderNo: this.orderNo }
+          // });
+        });
+      }
+    },
+    // 添加产品
+    addProduct() {
+      /* 添加产品 */
+      this.$router.push({
+        name: 'Order.SearchProduct',
+      });
+    },
+    selectActivity() {
+      /* 选择活动 */
+      this.genarateSubInfo(1)
+      const info = JSON.stringify(this.subInfo)
+      /* 选择活动 */
+      this.$router.push({
+        name: 'Order.OrderFollowActivity',
+        params:{orderInfo:info}
+      });
+    },
+    genarateSubInfo(code){
       const subInfo = {};
       // multBuyParticipantCheckIds
       if (this.multBuySponsorCheckedIds.length) {
         subInfo.coupleSponsor = this.multBuySponsorCheckedIds[0];
-         const obj = this.multBuySponsor.find(v => v.hmcId === this.multBuySponsorCheckedIds[0])
-       subInfo.coupleSponsorName = obj.username;
+        const obj = this.multBuySponsor.find(v => v.hmcId === this.multBuySponsorCheckedIds[0])
+        subInfo.coupleSponsorName = obj.username;
       }else{
         subInfo.coupleSponsor = ''
         subInfo.mayEditCoupleOrderId = '';
@@ -585,7 +629,7 @@ export default {
         this.multBuyParticipantCheckIds.forEach(val => {
           const obj = this.multBuyParticipant.find(v => v.hmcId === val)
           if(obj){
-             part.push(obj.username)
+            part.push(obj.username)
           }
           subInfo.mayEditCoupleOrderName = part.join(',')
         });
@@ -597,24 +641,31 @@ export default {
 
 
       subInfo.orderNo = this.orderNo
-      subInfo.recordMode = 'Haier'
-      // subInfo.hmcId = 'A0008949'
-      subInfo.hmcId = this.userParam.hmcId
+      subInfo.recordMode = this.recordMode
+      subInfo.hmcId = this.userParam.hmcid
       subInfo.storeId = this.shopId
       subInfo.storeName = this.shopName
+      subInfo.userId = this.customerInfo.userId
       // subInfo.userId = '123456789',
-      subInfo.userId = this.customerInfo.userId;
+      // this.userParam.userId;
       // subInfo.userName = '张三',
-       subInfo.userName = this.customerInfo.username;
+      subInfo.userName = this.customerInfo.username;
+      subInfo.consigneeName = this.consignee.name
+      subInfo.consigneePhone = this.consignee.phone
+      subInfo.consigneeId = this.consignee.customerId
+      subInfo.microCode = this.customerInfo.microCode
+      subInfo.microName = this.customerInfo.microName
+      subInfo.channel = this.customerInfo.channel
+      subInfo.channelName = this.customerInfo.channelName
       // subInfo.userPhone = '18675647364',
-       subInfo.userPhone  = this.userParam.phone;
+      subInfo.userPhone = this.customerInfo.mobile;
       subInfo.dispatchProvinceId = this.customerInfo.province
       subInfo.dispatchProvince = ''
       subInfo.dispatchCityId = this.customerInfo.city
       subInfo.dispatchCity = ''
       subInfo.dispatchAreaId = this.customerInfo.area
       subInfo.dispatchArea = ''
-      subInfo.dispatchAdd = this.customerInfo.Address
+      subInfo.dispatchAdd = this.customerInfo.address
       subInfo.buyTime = this.buyDate
       subInfo.deliveryTime = this.deliveryTime
       subInfo.orderType = this.orderType
@@ -631,28 +682,10 @@ export default {
       subInfo.orderSource = 'SGLD' // 1-扫码录单 2-手动录单 3-智慧触点认筹录单
       subInfo.sourceSn = '' // 来源编码，记录来源ID
       subInfo.remark = '' // 备注，记录订单创建、订单修改原因等信息
-      subInfo.rightsUserJson = ''
+      subInfo.rightsUserJson = this.rightsJson
       subInfo.orderDetailSaveQoList = this.productList;
-      this.subInfo = subInfo;
 
-      if (this.orderNo !== '') {
-        this.orderService.createOrder(subInfo, { orderFollowId: '' }).then((res) => {
-          Toast.succeed(res.msg);
-        });
-      }
-    },
-    // 添加产品
-    addProduct() {
-      /* 添加产品 */
-      this.$router.push({
-        name: 'Order.SearchProduct',
-      });
-    },
-    selectActivity() {
-      /* 选择活动 */
-      this.$router.push({
-        name: 'Order.OrderFollowActivity',
-      });
+      this.subInfo = subInfo;
     },
     selectAddress(item) {
       debugger;

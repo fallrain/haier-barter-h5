@@ -55,7 +55,7 @@
       <!--<div class="activity-common-line activity-common-text">3、奥V给弄额</div>-->
       <!--<div class="activity-common-line activity-common-text">4、奥V给弄额</div>-->
     </div>
-    <img class="activity-img" v-if="isFinish" src="../../assets/images/orderFollow-up/activity-img.png"/>
+    <img class="activity-img" v-if="isFinish && !hasData" src="../../assets/images/orderFollow-up/activity-img.png"/>
     <div class="activity-number" v-if="!isFinish">
       <span class="activity-number-minus activity-number-common" @click="minusCount" v-show="!getData.minesGray">-</span>
       <span class="activity-number-minus activity-number-common-no" v-show="getData.minesGray">-</span>
@@ -102,10 +102,7 @@ export default {
       }
     },
     isFinish: false,
-    hasData:{
-      type:Boolean,
-      default : () => true
-    }
+    hasData:false
   },
   methods: {
     setShowLimit() {

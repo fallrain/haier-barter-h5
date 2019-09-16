@@ -236,7 +236,6 @@ export default {
           if(res.code === 1){
               this.rightsJson = res.data
           }
-
       })
 
     },
@@ -309,6 +308,14 @@ export default {
         })
       this.currentList = curlist
     }
+  },
+  beforeRouteLeave(to, from, next) {
+    const obj = { rightsJson: this.rightsJson };
+
+    if (to.name === 'Order.OrderEntry' || 'Order.OrderModify') {
+      to.query.temp = JSON.stringify(obj);
+    }
+    next();// 必须要有这个，否则无法跳转
   },
 };
 </script>

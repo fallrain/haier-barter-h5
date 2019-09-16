@@ -9,6 +9,7 @@ const OrderFollowActivity = () => import('@/views/order/OrderFollowActivity');
 const OrderModify = () => import(/* webpackChunkName: "OrderEntry" */ '@/views/order/OrderModify');// 订单录入
 const OrderConfirm = () => import(/* webpackChunkName: "OrderConfirm" */ '@/views/order/OrderConfirm');// 订单录入
 const OrderDetail = () => import(/* webpackChunkName: "OrderDetail" */ '@/views/order/OrderDetail');// 订单详情
+const ResidueGift = () => import(/* webpackChunkName: "OrderDetail" */ '@/views/order/ResidueGift');//查询权益剩余量
 const prefix = '/order';
 const module = 'Order';
 const data = [
@@ -99,6 +100,14 @@ const data = [
     path: `${prefix}/orderFollowActivity`,
     name: `${module}.OrderFollowActivity`,
     component: OrderFollowActivity,
+    meta: {
+      title: '订单录入'
+    }
+  },
+  {
+    path: `${prefix}/residueGift`,
+    name: `${module}.ResidueGift`,
+    component: ResidueGift,
     meta: {
       title: '订单录入'
     }

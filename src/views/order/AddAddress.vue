@@ -333,8 +333,7 @@ export default {
   beforeRouteLeave(to, from, next) {
     debugger;
     const obj = { tel: this.customerInfo.mobile };
-
-    if (to.name === 'Order.OrderEntry') {
+    if (to.name === 'Order.OrderEntry' || 'Order.OrderModify') {
       to.query.temp = JSON.stringify(obj);
     }
     next();// 必须要有这个，否则无法跳转
