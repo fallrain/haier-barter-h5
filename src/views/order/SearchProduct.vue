@@ -23,7 +23,7 @@
         v-for="(item,index) in searchList"
         :key="index"
         @click="onItemClick(item)"
-      >{{item.productCode}}{{item.productBrandName}}
+      >{{item.productModel}}{{item.productBrandName}}
       </li>
     </ul>
     <div class="searchProduct-secret">
@@ -102,7 +102,8 @@ export default {
   methods: {
     search(val) {
       /* 搜索产品 */
-      this.productService.list(this.searchVal, '1', '30').then((res) => {
+
+      this.productService.list(this.searchVal.toUpperCase(), '1', '30').then((res) => {
         // debugger;
         if (res.code === 1) {
           this.searchList = res.data;
