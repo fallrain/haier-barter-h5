@@ -10,6 +10,10 @@ const urls = {
   checkedOrderRights:'/rightsManage/checkedOrderRights',//jia
   uncheckedOrderRights: '/rightsManage/uncheckedOrderRights',//jian
 
+queryRightsSingleConfigList:'/rightsSingleConfig/queryRightsSingleConfigList',//根据权益编码查询权益活动单品配置信息列表
+  queryRightsSetsByRightsNo:'/rightsSetsConfig/queryRightsSetsByRightsNo',//根据权益编码查询权益活动套购组合配置信息
+queryRightsLimitConfigList:'/rightsLimitConfig/queryRightsLimitConfigList',//查询限制信息
+confirmSelectedOrderRights:'/rightsManage/confirmSelectedOrderRights',//确认选择订单权益
 };
 
 Object.entries(urls).forEach(([key, value]) => {

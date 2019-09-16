@@ -1,9 +1,9 @@
 <template>
   <div class="activity-item-bg" >
-    <div v-show="!hasData">
-      <p>暂无权益活动可选</p>
-    </div>
-    <div v-show="hasData">
+    <!--<div v-show="!hasData">-->
+      <!--<p>暂无权益活动可选</p>-->
+    <!--</div>-->
+    <div >
     <div class="activity-gift">
       <i class="iconfont icon-liwu activity-gift-img"/>
       <span class="activity-gift-title">{{getData.rightsName}}</span>
@@ -11,33 +11,38 @@
     <div class="activity-common-line activity-common-text activity-reason-text" v-if="getData.reason && isFinish">
       不可参与原因：{{getData.reason}}
     </div>
-    <div class="activity-common-line activity-common-text">活动品牌：{{getData.brand}}</div>
-    <div class="activity-common-line activity-common-text">试用范围：{{getData.scope}}</div>
+    <div class="activity-common-line activity-common-text">活动品牌：{{getData.rightsBrand}}</div>
+    <div class="activity-common-line activity-common-text">试用范围：{{getData.rightsProductCategory}}</div>
     <div class="activity-common-line activity-common-text">
-      活动日期：<span class="activity-data-text">{{getData.data}}</span>
+      活动日期：<span class="activity-data-text">{{getData.activityStartDate}}至{{getData.activityEndDate}}</span>
     </div>
-    <div v-for="(item,index) in getData.product"
-         :key="index">
+      <div class="activity-common-line activity-item activity-common-top activity-common-border" @click="setShowConfig">
+        <span class="activity-tip-text activity-count-remain">查看礼品</span>
+        <span class="icon iconfont icon-jiantou9 activity-tip-img activity-count-remain"
+              :class="{'activity-tip-img-transform': isShowConfig}"></span>
+      </div>
+    <div v-for="(item,index) in getData.configList"
+         :key="index" v-show="isShowConfig">
       <div class="activity-common-line activity-common-border activity-common-top activity-item">
         <div class="activity-item">
-          <span class="activity-name-icon">购</span>
+          <span class="activity-name-icon">满</span>
           <span class="activity-common-text activity-common-left activity-common-product">{{item.name}}</span>
         </div>
         <span class="activity-common-text activity-common-left">共<span
           class="activity-type-text">{{item.count}}</span>份，剩余<span class="activity-count-remain">{{item.remain}}</span>份</span>
       </div>
       <div class="activity-common-line activity-item activity-item-gift">
-        <span class="activity-name-icon">送</span>
+        <span class="activity-name-icon">赠</span>
         <span class="activity-common-text activity-common-left activity-item-gift-desc">{{item.gift}}</span>
-        <span class="activity-common-text activity-common-left activity-data-text activity-check-gift">查看推荐礼品</span>
+        <!--<span class="activity-common-text activity-common-left activity-data-text activity-check-gift">查看推荐礼品</span>-->
       </div>
-      <div>
-        <div class="activity-recommend-gift">
-          <div class="activity-recommend-gift-pop"/>
-          <div class="activity-recommend-gift-text">111111111</div>
-          <div class="activity-recommend-gift-text">2222222</div>
-        </div>
-      </div>
+      <!--<div>-->
+        <!--<div class="activity-recommend-gift">-->
+          <!--<div class="activity-recommend-gift-pop"/>-->
+          <!--<div class="activity-recommend-gift-text">111111111</div>-->
+          <!--<div class="activity-recommend-gift-text">2222222</div>-->
+        <!--</div>-->
+      <!--</div>-->
     </div>
     <div class="activity-common-line activity-item activity-common-top activity-common-border" @click="setShowLimit">
       <span class="activity-tip-text activity-count-remain">其他限制</span>
@@ -45,25 +50,19 @@
             :class="{'activity-tip-img-transform': isShowLimit}"></span>
     </div>
     <div v-if="isShowLimit">
-      <div class="activity-common-line activity-common-text">
-        用户可兑换日期：<span class="activity-data-text">{{getData.data2}}</span>
-      </div>
-      <div class="activity-common-line activity-common-text">
-        礼品类型：<span class="activity-type-text">{{getData.type}}</span>
-      </div>
-      <div class="activity-common-line activity-common-text">1、奥V给弄额</div>
-      <div class="activity-common-line activity-common-text">2、奥V给弄额</div>
-      <div class="activity-common-line activity-common-text">3、奥V给弄额</div>
-      <div class="activity-common-line activity-common-text">4、奥V给弄额</div>
+      <div class="activity-common-line activity-common-text" v-for="(limit,index) in getData.limitList">{{index}}{{limit.msg}}</div>
+      <!--<div class="activity-common-line activity-common-text">2、奥V给弄额</div>-->
+      <!--<div class="activity-common-line activity-common-text">3、奥V给弄额</div>-->
+      <!--<div class="activity-common-line activity-common-text">4、奥V给弄额</div>-->
     </div>
     <img class="activity-img" v-if="isFinish" src="../../assets/images/orderFollow-up/activity-img.png"/>
     <div class="activity-number" v-if="!isFinish">
-      <span class="activity-number-minus activity-number-common" @click="minusCount">-</span>
-      <span class="activity-number-minus activity-number-common-no">-</span>
+      <span class="activity-number-minus activity-number-common" @click="minusCount" v-show="!getData.minesGray">-</span>
+      <span class="activity-number-minus activity-number-common-no" v-show="getData.minesGray">-</span>
 
-      <span class="activity-number-count">{{getData.count}}</span>
-      <span class="activity-number-add activity-number-common" @click="addCount">+</span>
-      <span class="activity-number-add activity-number-common-no">+</span>
+      <span class="activity-number-count">{{getData.selectedNum}}</span>
+      <span class="activity-number-add activity-number-common" @click="addCount" v-show="!getData.addGray">+</span>
+      <span class="activity-number-add activity-number-common-no" v-show="getData.addGray">+</span>
     </div>
     </div>
   </div>
@@ -75,8 +74,8 @@ export default {
   name: 'BActivityItem',
   data() {
     return {
-      isShowLimit: true,
-
+      isShowLimit: false,
+      isConfig:false
     };
   },
   props: {
@@ -111,16 +110,16 @@ export default {
   methods: {
     setShowLimit() {
       this.isShowLimit = !this.isShowLimit;
+      this.$emit('showLimit',this.getData)
+    },
+    setShowConfig() {
+      this.isShowConfig = !this.isShowConfig
+      this.$emit('showConfig',this.getData)
     },
     minusCount() {
-      this.count--;
-      if (this.count < 1) {
-        this.count = 1;
-      }
-      this.$emit('minusCount',this.getData,this.count)
+      this.$emit('minusCount',this.getData)
     },
     addCount() {
-      this.count++;
       this.$emit('addCount',this.getData)
     },
   },

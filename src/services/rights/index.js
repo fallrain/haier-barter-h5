@@ -23,7 +23,19 @@ export default {
   },
   queryRightsResidue(){
     return axGet(urls.queryRightsResidue)
-  }
+  },
+  queryRightsSingleConfigList(data,param){
+    return axPostJson(urls.queryRightsSingleConfigList,data,param)
+  },
+  queryRightsSetsByRightsNo(data,param){
+    return axPostJson(urls.queryRightsSetsByRightsNo,data,param)
+  },
+  queryRightsLimitConfigList(data,param){
+    return axPostJson(urls.queryRightsLimitConfigList,data,param)
+  },
+  confirmSelectedOrderRights(data,param){
+    return axPostJson(urls.confirmSelectedOrderRights,data,param)
+  },
 
 
 

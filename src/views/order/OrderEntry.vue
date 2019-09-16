@@ -251,16 +251,16 @@ export default {
       // 订单类型单选
       orderTypes: [
         {
-          key: 0,
+          key: 'single',
           value: '单品'
         },
         {
-          key: 1,
+          key: 'sets',
           value: '套购'
         }
       ],
       // 订单类型
-      orderType: 2,
+      orderType: 'single',
       // 购机时间
       buyDate: '',
       subInfo: {},

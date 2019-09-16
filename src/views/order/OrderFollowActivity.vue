@@ -26,6 +26,8 @@
             @minusCount="minusCount"
             @addCount="addCount"
             :hasData="false"
+            @showLimit="showLimit"
+            @showConfig="showConfig"
           ></b-activity-item>
         </div>
       </div>
@@ -45,10 +47,17 @@
             :getData.sync="item"
             :isFinish="true"
             :hasData="false"
+            @showLimit="showLimit"
+            @showConfig="showConfig"
           ></b-activity-item>
         </div>
       </div>
     </div>
+    <button
+      type="button"
+      class="common-submit-btn-default mt23"
+      @click="btmConfirmClick"
+    >确定</button>
   </div>
 </template>
 
@@ -116,6 +125,7 @@ export default {
         ],
         isListInit: false
       },
+      rightsJson:'',
       scrollViewFinish: {
         mescroll: null,
         list: [
@@ -167,24 +177,70 @@ export default {
       });
     },
     minusCount(item,count){
-      this.rightsService.uncheckedOrderRights().then(res => {
+      this.rightsService.uncheckedOrderRights({orderNo:this.OrderNo,rightsNo:item.rightsNo},{}).then(res => {
         if(res.code === 1){
-
+          // if(res.isOptional == 1){
+          //   this.$set(item,'minesGray',false)
+          // }else {
+          //   this.$set(item,'minesGray',true)
+          // }
+          if(res.selectedNum === 0){
+            this.$set(item,'minesGray',true)
+          }else {
+            this.$set(item,'minesGray',false)
+          }
 
         }
       })
 
     },
     addCount(item){
-      this.rightsService.checkedOrderRights().then(res => {
+      this.rightsService.checkedOrderRights({orderNo:this.OrderNo,rightsNo:item.rightsNo},{}).then(res => {
         if(res.code === 1){
           if(res.isOptional == 1){
-
+            this.$set(item,'addGray',false)
+          }else {
+            this.$set(item,'addGray',true)
           }
         }
       })
     },
-    search(page) {
+    showConfig(item){
+      if(this.subInfo.orderType === 'single'){
+        this.rightsService.queryRightsSingleConfigList({rightsNo:item.rightsNo},{}).then(res => {
+            if(res.code === 1){
+              item.configList = res.data
+            }
+        })
+      }else {
+        this.rightsService.queryRightsSetsByRightsNo({rightsNo:item.rightsNo},{}).then(res => {
+          if(res.code === 1){
+            item.configList = res.data
+          }
+        })
+      }
+
+    },
+    showLimit(item){
+    this.rightsService.queryRightsLimitConfigList({limitType:'model',rightsNo:item.rightsNo},{}).then(res => {
+      if(res.code === 1){
+          item.limitList = res.data
+      }
+
+    })
+
+
+    },
+    btmConfirmClick(){
+      this.rightsService.confirmSelectedOrderRights({orderNo:this.orderNo},{}).then(res => {
+          if(res.code === 1){
+              this.rightsJson = res.data
+          }
+
+      })
+
+    },
+      search(page) {
       // todo
       this.subInfo = this.$route.params.orderInfo
       this.orderNo = this.subInfo.orderNo
@@ -243,9 +299,13 @@ export default {
     },
     anylizeData(curlist){
         curlist.forEach(item => {
-            item.count = 0
             this.$set(item,'minesGray',true)
+          if(item.isOptional === 1 ){
             this.$set(item,'addGray',false)
+          }else {
+            this.$set(item,'addGray',true)
+          }
+
         })
       this.currentList = curlist
     }
@@ -316,5 +376,13 @@ export default {
 
   .salesVerification-view {
     height: calc(100vh - 84px);
+  }
+  .common-submit-btn-default{
+    /*position: fixed;*/
+    width: 90%;
+    margin-left: 5%;
+    /*margin-bottom: 20px;*/
+    position: absolute;
+    bottom: 20px;
   }
 </style>
