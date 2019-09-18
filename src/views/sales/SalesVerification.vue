@@ -318,11 +318,16 @@ export default {
         code: '',
         id: '',
         hmcId: ''
-      }
+      },
+      userinfo: {},
     };
   },
   created() {
-
+    const userinfostr =  this.getQueryString('userinfo')
+    this.userinfo = JSON.parse(userinfostr)
+    const Str = JSON.stringify(this.userinfo)
+    localStorage.setItem('userinfo', Str);
+    localStorage.setItem('acces_token', this.userinfo.token);
   },
   computed: {
     curScrollViewName() {
@@ -386,11 +391,11 @@ export default {
         // 状态
         dbDataStatus: this.curTab,
         // todo 门店id需从接口取
-        mdId: '1',
+        mdId: this.userinfo.shopId,
         // 购机时间
         gjTime: this.curSearchDate,
         // 直销员产品线编码 todo 接口取
-        productLineCode: 'AA',
+        productLineCode: this.userinfo.productGroups,
         productCode: this.searchVal
       }).then(({ code, data }) => {
         const sroviewObj = {};
@@ -445,8 +450,7 @@ export default {
       // 查询二级详情
       this.salesService.getReportEhubByProductList({
         dbDataStatus: this.curTab,
-        // todo
-        mdId: '1',
+        mdId: this.userinfo.shopId,
         gjTime: this.curSearchDate,
         productCode: item.product
       }).then(({ code, data }) => {
@@ -476,7 +480,7 @@ export default {
         if (this.qrCodeForm.code.length == 20 || this.qrCodeForm.code.length == 22) {
           this.qrCodeDialog.open = false;
           this.salesService.saveEhubBarCode({
-            hmcId: 'A00123',
+            hmcId: this.userinfo.hmcid,
             id: this.qrCodeForm.id,
             barCode: this.qrCodeForm.code
           }).then((res) => {
@@ -494,7 +498,7 @@ export default {
     },
     getFailureOrder(itemInfo) {
       const argsObj = {
-        mdId: 1,
+        mdId: this.userinfo.shopId,
         productCode: itemInfo.product,
         gjTime: this.curSearchDate
       };
@@ -507,7 +511,7 @@ export default {
     },
     reCommit(item, index) {
       this.salesService.reportEhubAgain({
-        hmcId: 'A00123',
+        hmcId: this.userinfo.hmcid,
         id: item.detail[0].id,
         ehubExceptionType: item.detail[0].errorType
       }).then((res) => {
