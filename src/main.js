@@ -37,3 +37,11 @@ new Vue({
   store,
   render: h => h(App),
 }).$mount('#app');
+
+function getuserInfo() {
+  debugger
+  const userinfostr =  vm.getQueryString('userinfo')
+  const userinfo = JSON.parse(userinfostr)
+  localStorage.setItem('userinfo', userinfostr);
+  localStorage.setItem('acces_token', userinfo.token);
+}

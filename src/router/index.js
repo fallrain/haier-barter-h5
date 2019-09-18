@@ -22,6 +22,7 @@ const router = new Router({
   }
 });
 router.beforeEach((to, from, next) => {
+ // debugger
   if (to.name === 'SuggestionList' && from.name === 'SuggestionForm') {
     store.commit('addAliveExclude', 'SuggestionList');
   } else {

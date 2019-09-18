@@ -206,16 +206,20 @@ export default {
       }
     };
   },
+  activated(){
+    // window.location.reload()
+  },
   created() {
     const userinfostr =  this.getQueryString('userinfo')
-    debugger
     this.userinfo = JSON.parse(userinfostr)
-    // this.userinfo = {
-    //   hmcid:'a0008949',
-    //   mobile:'"18561715460"',
-    //   shopId:'8800332156',
-    //   token:'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAyNzE1MyIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2ODExNDc3NiwiZXhwIjoxNTY4OTc4Nzc2fQ.-rzFESGZ9akHghFV-giivaS2ewSvqKUCRM_xmorKEMM'
-    // }
+    this.userinfo = {
+      // hmcid:'a0008949',
+      hmcid:'01467897',
+      mobile:'"18561715460"',
+      shopId:'8800332156',
+       // token:'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAwODk0OSIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2ODcxNzc2OCwiZXhwIjoxNTY5NTgxNzY4fQ.pLNFaidqOYIZABIbxlOxxqc5-oi26obOix4CAxkSShU'
+      token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX0FQUCIsIlJPTEVfU0VMTEVSIiwiUk9MRV9BUFAiXSwic3ViIjoiMDE0Njc4OTciLCJraW5kIjoxMCwicG9pbnQiOjEsImlhdCI6MTU2ODc3MjY1MywiZXhwIjoxNTY5NjM2NjUzfQ.shGqUkZmSdmXwKBYOmfQ3K2o2QgDIQT4vyUn0_DfM-g'
+    }
     const Str = JSON.stringify(this.userinfo)
     localStorage.setItem('userinfo', Str);
     localStorage.setItem('acces_token', this.userinfo.token);
@@ -247,11 +251,11 @@ export default {
     }
   },
   mounted() {
+
     // 创建当前tab的MeScroll对象，并下拉刷新
     this.bUtil.scroviewTabChange(this.curScrollViewName, this);
   },
   methods: {
-
     getQueryString(name) {
         var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
         var r = window.location.search.substr(1).match(reg);
@@ -373,8 +377,8 @@ export default {
     },
 
     searchData(page) {
+
       console.log('keyword',this.searchWord)
-        debugger
         return this.orderService
           .queryOrderFollowlList(
             {
@@ -546,6 +550,14 @@ export default {
     },
 
   },
+  // beforeRouteEnter(to, from, next) {
+  //   debugger
+  //   if (to.path === '/') {
+  //     debugger
+  //     vm.$router.replace('/')
+  //   }
+  //   next();// 必须要有这个，否则无法跳转
+  // },
 };
 </script>
 

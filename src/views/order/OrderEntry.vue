@@ -60,6 +60,7 @@
           title="请选择日期"
           :defaultDate="buyDate"
           v-model="buyDate"
+          :max-date="currentDate"
         ></b-date-picker>
       </template>
     </b-item>
@@ -256,16 +257,16 @@ export default {
       // 订单类型单选
       orderTypes: [
         {
-          key: 'single',
+          key: '0',
           value: '单品'
         },
         {
-          key: 'sets',
+          key: '1',
           value: '套购'
         }
       ],
       // 订单类型
-      orderType: 'single',
+      orderType: '0',
       // 购机时间
       buyDate: '',
       subInfo: {},
@@ -359,11 +360,7 @@ export default {
   },
   computed: {},
   mounted() {
-    //
-    //    if(this.$route.query){
-    // const address = this.$route.query.temp
-    //   console.log('tag', address)
-    //    }
+
   },
   activated() {
     if (this.$route.query.temp) {
@@ -378,12 +375,12 @@ export default {
         if(!obj.product.productBrandName){
           return
         }
-        this.orderService.qenerateOrderDetailId().then((res) => {
+        this.orderService.generateOrderDetailId().then((res) => {
           if (res.code === 1) {
             ID = res.data;
             var pro = {}
             pro.id = ID
-              // debugger
+            // debugger
             pro.deliveryTime = this.deliveryTime
             // pro.hmcId= "A0008949"
             pro.hmcId = this.userParam.hmcid
@@ -402,14 +399,14 @@ export default {
             pro.rightName=  "八月套购权益"
             pro.storeId = this.shopId
             pro.storeName =  this.shopName
-    	    	pro.invoiceStatus =  0
+            pro.invoiceStatus =  0
             // pro.userId = '123456789'
-             pro.userId = this.customerInfo.userId
-          // debugger
-        this.productList.push(pro);
+            pro.userId = this.customerInfo.userId
+            // debugger
+            this.productList.push(pro);
             // debugger
           } else {
-            Toast.failed(res.msg);
+            Toast.failed(res.message);
           }
         });
 
@@ -427,9 +424,11 @@ export default {
     }
   },
   created() {
+    debugger
     this.userParam = JSON.parse(localStorage.getItem('userinfo'));
     this.shopId = this.userParam.shopId;
     this.getUserStore()
+
     debugger
     if(this.$route.params.region === 'hand'){
       this.haveConsignee = false
@@ -445,7 +444,6 @@ export default {
       this.queryUserList()
       this.queryCustomerDefault();
       this.getUserStore();
-
   },
   methods: {
     //  haveConsignee() {
@@ -714,11 +712,12 @@ export default {
     next() {
       /* 下一步 */
       // todo 单品、套购值待定
-      if (this.orderType === 'sets') {
+      if (this.orderType === '1') {
         // 展示套购发起人
         this.multBuyPopShow = true;
       }else {
         this.saveTemporary()
+        debugger
         this.$router.push({
           name: 'Order.OrderUploadInvoice',
           params: { orderNo: this.orderNo }
@@ -731,7 +730,16 @@ export default {
     onDelete(index) {
       this.productList.splice(index, 1);
     }
-  }
+  },
+  beforeRouteLeave(to,from,next){
+    debugger
+    if(to.path === '/'){
+      this.$router.go(-1)
+    }
+    next()
+
+  },
+
 };
 </script>
 

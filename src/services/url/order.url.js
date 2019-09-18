@@ -12,7 +12,7 @@ const urls = {
   supplementOrderSubmit: 'orderManage/supplementOrderSubmit', // 补录订单提交
   createNewOrder: '/orderManage/createNewOrderFollow', // 录新订单,生成一条新的待办
   queryOverTwentyFourHourOrder: '/orderFollow/queryOverTwentyFourHourOrder', // 超过二十四小时订单
-  qenerateOrderDetailId: '/orderManage/qenerateOrderDetailId', // 生成订单明细主键ID
+  generateOrderDetailId: '/orderManage/generateOrderDetailId', // 生成订单明细主键ID
   uploadInvoice: '/orderManage/hmcUploadInvoice', // 上传发票
   queryOrderDetailAndInvoice: '/orderManage/queryOrderDetailAndInvoice', // 根据订单ID查询发票信息
   checkInvoice: '/orderManage/checkInvoice', // 校验发票

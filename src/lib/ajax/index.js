@@ -52,9 +52,9 @@ ax.interceptors.response.use((response) => {
   return response.data;
 }, (error) => {
   Toast.hide();
-  // return Promise.reject(error);
-  // debugger
-  // Toast.failed('请求失败');
+  return Promise.reject(error);
+  debugger
+  Toast.failed('请求失败');
   error.response.data = {
     data: {
       code: -1

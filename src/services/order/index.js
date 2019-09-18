@@ -38,8 +38,8 @@ export default {
   queryOverTwentyFourHourOrder() {
     return axPost(urls.queryOverTwentyFourHourOrder);
   },
-  qenerateOrderDetailId() {
-    return axPost(urls.qenerateOrderDetailId);
+  generateOrderDetailId() {
+    return axPost(urls.generateOrderDetailId);
   },
   uploadInvoice(data, param) {
     return axPostJson(urls.createNewOrder, data, param);

@@ -197,6 +197,7 @@ export default {
         // this.confirmShow = false;
         this.searchEnd = true;
         this.customerInfo = JSON.parse(this.$route.params.info);
+        debugger
         if(this.customerInfo.familyItemCode){
           this.customerInfo.tag.push(this.customerInfo.familyItemCode)
         }
@@ -239,9 +240,12 @@ export default {
         this.customerInfo.mobile = '';
         return;
       }
-      this.productService.deafaultCustomerAddress({ mobile: this.customerInfo.mobile }).then((res) => {
+      this.productService.deafaultCustomerAddress(this.customerInfo.mobile).then((res) => {
         if (res.code === 1) {
-
+          this.searchEnd = true
+          this.customerInfo.username = res.data.username
+          this.customerInfo.sex = res.data.sex;
+          this.customerInfo.customerId = res.data.customerId;
         } else {
           this.searchResultShow = true
 
@@ -297,7 +301,7 @@ export default {
         }
         delete this.customerInfo.tag;
       }
-      if (this.confirmShow) {
+      if (this.region === 'add' || this.region ==='userAdd') {
         this.productService.addcustomerAddress(this.customerInfo, {}).then((res) => {
           if (res.code === 1) {
             Toast.succeed('地址添加成功');
@@ -330,8 +334,10 @@ export default {
     }
 
   },
+
   beforeRouteLeave(to, from, next) {
     debugger;
+
     const obj = { tel: this.customerInfo.mobile };
     if (to.name === 'Order.OrderEntry' || 'Order.OrderModify') {
       to.query.temp = JSON.stringify(obj);
