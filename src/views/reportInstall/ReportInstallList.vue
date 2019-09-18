@@ -88,8 +88,16 @@ export default {
         mescroll: null,
         list: [],
         isListInit: false
-      }
+      },
+      userinfo: {},
     };
+  },
+  created() {
+    const userinfostr =  this.getQueryString('userinfo')
+    this.userinfo = JSON.parse(userinfostr)
+    const Str = JSON.stringify(this.userinfo)
+    localStorage.setItem('userinfo', Str);
+    localStorage.setItem('acces_token', this.userinfo.token);
   },
   computed: {
     curScrollViewName() {
@@ -130,7 +138,7 @@ export default {
       const formData = {
         pageNum: page.num,
         pageSize: page.size,
-        hmcId: 'a0008949',
+        hmcId: this.userinfo.hmcid,
         type: this.curTab
       };
       return this.reportInstallService.queryReportInstallList(formData).then((res) => {
