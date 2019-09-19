@@ -174,6 +174,7 @@ export default {
           icon: 'chengjiao'
         }
       ],
+      sortType:"",
       preIndex: '',
       currentScrollView: {},
       currentList: [],
@@ -213,12 +214,12 @@ export default {
     const userinfostr =  this.getQueryString('userinfo')
     this.userinfo = JSON.parse(userinfostr)
     // this.userinfo = {
-    //   // hmcid:'a0008949',
-    //   hmcid:'01467897',
+    //   hmcid:'a0008949',
+    //   // hmcid:'01467897',
     //   mobile:'"18561715460"',
-    //   shopId:'8800332156',
-    //    // token:'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAwODk0OSIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2ODcxNzc2OCwiZXhwIjoxNTY5NTgxNzY4fQ.pLNFaidqOYIZABIbxlOxxqc5-oi26obOix4CAxkSShU'
-    //   token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX0FQUCIsIlJPTEVfU0VMTEVSIiwiUk9MRV9BUFAiXSwic3ViIjoiMDE0Njc4OTciLCJraW5kIjoxMCwicG9pbnQiOjEsImlhdCI6MTU2ODc3MjY1MywiZXhwIjoxNTY5NjM2NjUzfQ.shGqUkZmSdmXwKBYOmfQ3K2o2QgDIQT4vyUn0_DfM-g'
+    //   shopId:'8800136445',
+    //    token:'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAwODk0OSIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2ODcxNzc2OCwiZXhwIjoxNTY5NTgxNzY4fQ.pLNFaidqOYIZABIbxlOxxqc5-oi26obOix4CAxkSShU'
+    //   // token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX0FQUCIsIlJPTEVfU0VMTEVSIiwiUk9MRV9BUFAiXSwic3ViIjoiMDE0Njc4OTciLCJraW5kIjoxMCwicG9pbnQiOjEsImlhdCI6MTU2ODc3MjY1MywiZXhwIjoxNTY5NjM2NjUzfQ.shGqUkZmSdmXwKBYOmfQ3K2o2QgDIQT4vyUn0_DfM-g'
     // }
     const Str = JSON.stringify(this.userinfo)
     localStorage.setItem('userinfo', Str);
@@ -350,7 +351,7 @@ export default {
     },
 
     checkClicked(val) {
-      this.checkedsortId = val;
+      this.sortType = val;
       this.searchData({
         num: 0,
         size: 10
@@ -435,11 +436,11 @@ export default {
     anylizeData(curList) {
       debugger
       curList.forEach((item) => {
-        if (item.flowStatus === 1) {
+        if (item.flowStatus === 1 ) {
           // item.buttonList = [{ name: '录新订单' }, { name: '退货' }, { name: '换货' }];// 已完成
           item.buttonList = [{ name: '录新订单' }];// 已完成
 
-        } else if (item.flowStatus === 2) {
+        } else if (item.flowStatus === 2 || item.businessScenarios === 'YJHX') {
           // item.buttonList = [{ name: '成交录单' }, { name: '发放卡券' }];
           item.buttonList = [{ name: '成交录单' }];
         } else if (item.flowStatus === 5) {
@@ -447,6 +448,7 @@ export default {
         } else {
           item.buttonList = [];
         }
+
         item.showList = [];
         this.$set(item, 'detailShow', false);
         this.$set(item, 'show', false);

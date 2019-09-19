@@ -9,6 +9,7 @@
       v-model="searchVal"
       @search="search"
       placeholder="点击搜索型号"
+      v-on:input="inputFunction()"
     >
       <div class="searchProduct-scan-wrap">
         <i class="iconfont icon-saomiao"></i>
@@ -85,7 +86,6 @@ export default {
       if(this.searchHistory.length > 30){
         this.searchHistory.splice(0,29)
       }
-      this.searchList = this.searchHistory
     }
     this.currentClickItemData = {}
   },
@@ -103,6 +103,14 @@ export default {
     };
   },
   methods: {
+    inputFunction(){
+      debugger
+      this.searchList = this.searchHistory
+      if(this.searchVal === ''){
+        this.searchList = []
+      }
+    },
+
     search(val) {
       /* 搜索产品 */
 

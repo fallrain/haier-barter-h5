@@ -64,6 +64,7 @@
 <script>
 import {
   TabBar,
+  Toast
 } from 'mand-mobile';
 
 import {
@@ -74,7 +75,7 @@ export default {
   name: 'OrderFollowActivity',
   components: {
     [TabBar.name]: TabBar,
-    BActivityItem,
+    BActivityItem,Toast
   },
   data() {
     return {
@@ -93,35 +94,35 @@ export default {
       scrollViewActivity: {
         mescroll: null,
         list: [
-          {
-            title: '6月场景套权益昆明小微',
-            reason: '套餐价格不符合',
-            brand: '海尔，卡萨帝',
-            scope: '所有产品',
-            data: '2019-07-30至2019-08-02',
-            data2: '2019-08-30至2019-09-02',
-            type: '海贝积分',
-            product: [{
-              name: 'KFR-35GW/A4RCA21AU1套机空调 + 50T82电视',
-              gift: '7500积分',
-              count: '666',
-              remain: '222',
-            }, {
-              name: '50T82电视',
-              gift: '500积分233222222222222333vvervevrdfvsrftbrthytnjuykuikiuktgteegtgythh235456',
-              count: '6',
-              remain: '2',
-            }
-            ]
-          }, {
-            title: '6月场景套权益昆明小微',
-            reasn: '',
-            brand: '海尔，卡萨帝',
-            scope: '所有产品',
-            data: '2019-07-30至2019-08-02',
-            data2: '2019-08-30至2019-09-02',
-            type: '海贝积分',
-          }
+          // {
+          //   title: '6月场景套权益昆明小微',
+          //   reason: '套餐价格不符合',
+          //   brand: '海尔，卡萨帝',
+          //   scope: '所有产品',
+          //   data: '2019-07-30至2019-08-02',
+          //   data2: '2019-08-30至2019-09-02',
+          //   type: '海贝积分',
+          //   product: [{
+          //     name: 'KFR-35GW/A4RCA21AU1套机空调 + 50T82电视',
+          //     gift: '7500积分',
+          //     count: '666',
+          //     remain: '222',
+          //   }, {
+          //     name: '50T82电视',
+          //     gift: '500积分233222222222222333vvervevrdfvsrftbrthytnjuykuikiuktgteegtgythh235456',
+          //     count: '6',
+          //     remain: '2',
+          //   }
+          //   ]
+          // }, {
+          //   title: '6月场景套权益昆明小微',
+          //   reasn: '',
+          //   brand: '海尔，卡萨帝',
+          //   scope: '所有产品',
+          //   data: '2019-07-30至2019-08-02',
+          //   data2: '2019-08-30至2019-09-02',
+          //   type: '海贝积分',
+          // }
         ],
         isListInit: false
       },
@@ -129,10 +130,10 @@ export default {
       scrollViewFinish: {
         mescroll: null,
         list: [
-          {
-            title: '666666',
-            reason: '套餐价格不符合',
-          },
+          // {
+          //   title: '666666',
+          //   reason: '套餐价格不符合',
+          // },
         ],
         isListInit: false
       },
@@ -154,6 +155,7 @@ export default {
         1: 'scrollViewFinish'
       };
       const viewName = obj[val];
+      debugger
       // tab切换后，创建新MeScroll对象（若无创建过），没有加载过则加载
       this.bUtil.scroviewTabChange(viewName, this);
     }
@@ -241,23 +243,18 @@ export default {
     },
       search(page) {
       // todo
-      this.subInfo = this.$route.params.orderInfo
-        if(this.subInfo.orderType === 0){
-          this.subInfo.orderType === 'single'
-        }else {
-          this.subInfo.orderType ==='sets'
-        }
+      this.subInfo = JSON.parse(this.$route.params.orderInfo)
       this.orderNo = this.subInfo.orderNo
+        debugger
       const formData = {
         pageNum: page.num,
         pageSize: page.size,
       };
       if(this.current === 0){
-        this.rightsService.queryOrderOptionalRights(JSON.parse(this.subInfo),{}).then(res =>{
+        this.rightsService.queryOrderOptionalRights(this.subInfo,{}).then(res =>{
           debugger
           const sroviewObj = {};
           if(res.code === 1){
-
             const {
               result,
               pages
@@ -270,12 +267,13 @@ export default {
             }
             this[this.curScrollViewName].list = this.currentList
           }else {
+            Toast.failed(res.msg)
             this[this.curScrollViewName].mescroll.endErr();
           }
           return sroviewObj;
         })
       }else{
-        this.rightsService.queryOrderNotOptionalRights(JSON.parse(this.subInfo),{}).then(res =>{
+        this.rightsService.queryOrderNotOptionalRights(this.subInfo,{}).then(res =>{
           debugger
           const sroviewObj = {};
           if(res.code === 1){
@@ -293,6 +291,7 @@ export default {
             this[this.curScrollViewName].list = this.currentList
 
           }else {
+            Toast.failed(res.msg)
             this[this.curScrollViewName].mescroll.endErr();
           }
           return sroviewObj;

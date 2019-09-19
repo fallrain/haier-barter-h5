@@ -138,6 +138,9 @@ export default {
       invoice.invoiceCode = data.invoiceCode
       invoice.orderNo = data.orderNo
       invoice.orderDetailId = data.orderDetailId
+      invoice.invoiceUpload = 1
+
+      data.invoiceUpload = 1
       this.invoiceList.push(data)
     },
     delImg(invoiceUrl){
@@ -162,15 +165,17 @@ this.splice(index, 1);
 },
 
     updateSubmit(){
+      debugger
       this.orderService.uploadInvoice(this.invoiceList,{orderNo:this.orderNo}).then(res => {
         if(res.code === 1){
           Toast.succed(res.msg)
+          this.$router.push({
+            name: 'Order.OrderConfirm',
+            params: { orderNo: this.orderNo }
+          });
         }
       })
-      this.$router.push({
-        name: 'Order.OrderConfirm',
-        params: { orderNo: this.orderNo }
-      });
+
     },
     getData() {
       this.orderService.queryOrderDetailAndInvoice({}, { orderNo: this.orderNo }).then((res) => {
@@ -181,6 +186,38 @@ this.splice(index, 1);
       });
     },
   },
+  beforeRouteLeave:function(to, from, next){
+    if (to.name === 'OrderEntry')
+    {//此处判断是如果返回上一层，你可以根据自己的业务更改此处的判断逻辑，酌情决定是否摧毁本层缓存。
+      if (this.$vnode && this.$vnode.data.keepAlive)
+      {
+        if (this.$vnode.parent && this.$vnode.parent.componentInstance && this.$vnode.parent.componentInstance.cache)
+        {
+          if (this.$vnode.componentOptions)
+          {
+            var key = this.$vnode.key == null
+              ? this.$vnode.componentOptions.Ctor.cid + (this.$vnode.componentOptions.tag ? `::${this.$vnode.componentOptions.tag}` : '')
+              : this.$vnode.key;
+            var cache = this.$vnode.parent.componentInstance.cache;
+            var keys  = this.$vnode.parent.componentInstance.keys;
+            if (cache[key])
+            {
+              if (keys.length) {
+                var index = keys.indexOf(key);
+                if (index > -1) {
+                  keys.splice(index, 1);
+                }
+              }
+              delete cache[key];
+            }
+          }
+        }
+      }
+      this.$destroy();
+    }
+    next();
+  },
+
 };
 </script>
 

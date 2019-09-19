@@ -9,7 +9,7 @@
         :key="index"
       >
         <div class="bProductMultUpload-item-head">
-          <span>{{index+1}}.{{product.productBrandName}}/{{product.productCode}}</span>
+          <span>{{index+1}}.{{product.productCode}}</span>
           <span>{{product.price}}元</span>
         </div>
         <div

@@ -12,10 +12,10 @@
       class="mt16"
       :title="title"
     >
-      <div class="orderEntry-user">
+      <div class="orderEntry-user1">
           <div class="orderEntry-user-head">
             <span class="name mr16">收货人：{{consignee.name}}</span>
-            <span class="sex mr16">{{consignee.sex}}</span>
+            <span class="sex mr16">{{consignee.sexCn}}</span>
             <i class="iconfont icon-dianhua mr16"></i>
             <span class="phone mr16">{{consignee.phone}}</span>
             <button
@@ -28,8 +28,8 @@
           <p class="orderEntry-user-address">
             {{customerInfo.address}}
           </p>
-        </div>
-        </b-fieldset>
+      </div>
+    </b-fieldset>
     <b-item
       class="mt16"
       title="购买日期："
@@ -479,6 +479,7 @@ export default {
     }
   },
   created() {
+    debugger
     this.orderNo = this.$route.params.orderNo;
     //
     // this.getUserStore();
@@ -800,8 +801,9 @@ export default {
     font-size: 32px;
   }
 
-  .orderEntry-user {
+  .orderEntry-user1 {
     background: #fff;
+    padding: 0;
   }
 
   .orderEntry-user-head {

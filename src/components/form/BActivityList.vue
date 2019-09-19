@@ -7,7 +7,7 @@
         :key="item.id"
       >
         <div class="bCheckbox-item-detail-cnt">
-          <p class="bActivityList-activity-name">{{item}}</p>
+          <p class="bActivityList-activity-name">{{item.productCode}}</p>
         </div>
         <div
           class="bActivityList-activity-num-par"

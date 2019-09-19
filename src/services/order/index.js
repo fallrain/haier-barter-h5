@@ -42,7 +42,7 @@ export default {
     return axPost(urls.generateOrderDetailId);
   },
   uploadInvoice(data, param) {
-    return axPostJson(urls.createNewOrder, data, param);
+    return axPostJson(urls.uploadInvoice, data, param);
   },
   queryOrderDetailAndInvoice(data, param) {
     return axPostJson(urls.queryOrderDetailAndInvoice, data, param);

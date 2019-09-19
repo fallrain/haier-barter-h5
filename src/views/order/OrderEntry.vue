@@ -18,7 +18,7 @@
       class="mt16"
       :title="title"
     >
-      <div class="orderEntry-user">
+      <div class="orderEntry-user1">
         <div v-if="haveConsignee">
           <div class="orderEntry-user-head">
             <span class="name mr16">收货人：{{consignee.name}}</span>
@@ -369,6 +369,7 @@ export default {
       if (obj.tel) {
         this.mobile = obj.tel;
         this.queryCustomerDefault();
+        this.queryCustomerAddressList();
       }
       if (obj.product) {
         debugger
@@ -496,9 +497,11 @@ export default {
 
     // 生成订单号
     genarateOrderNum() {
-      if(this.recordMode == ''){
+      if(this.recordMode == '' || !this.recordMode){
+        debugger
         this.recordMode = 'Haier'
       }
+
       this.orderService.generateOrderNo({}, { recordMode: this.recordMode },).then((res) => {
         if (res.code === 1) {
           this.orderNo = res.data;
@@ -545,11 +548,14 @@ export default {
       });
     },
     // 暂存
-    saveTemporary() {
+    saveTemporary(type) {
       this.genarateSubInfo(2)
       if (this.orderNo !== '') {
         this.orderService.createOrder(this.subInfo, { orderFollowId: '' }).then((res) => {
-          Toast.succeed(res.msg);
+          if(type === 1){
+            Toast.succeed('订单暂存成功');
+          }
+
           // this.$router.push({
           //   name: 'Order.OrderUploadInvoice',
           //   params: { orderNo: this.orderNo }
@@ -707,7 +713,7 @@ export default {
       });
     },
     consporConfirm(){
-      this.saveTemporary();
+      this.saveTemporary(1);
     },
     next() {
       /* 下一步 */
@@ -716,7 +722,7 @@ export default {
         // 展示套购发起人
         this.multBuyPopShow = true;
       }else {
-        this.saveTemporary()
+        this.saveTemporary(2)
         debugger
         this.$router.push({
           name: 'Order.OrderUploadInvoice',
@@ -806,8 +812,9 @@ export default {
     font-size: 32px;
   }
 
-  .orderEntry-user {
+  .orderEntry-user1 {
     background: #fff;
+    padding: 0;
   }
 
   .orderEntry-user-head {

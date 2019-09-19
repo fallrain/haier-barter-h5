@@ -246,7 +246,7 @@ export default {
     changeOrder(){
       this.$router.push({
         name: 'Order.OrderModify',
-        param:{orderNo:this.orderNo}
+        params:{orderNo:this.orderNo}
       });
     },
     saveOrder() {

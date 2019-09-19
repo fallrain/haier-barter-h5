@@ -15,7 +15,7 @@ const module = 'Order';
 const data = [
   {
     path: '/',
-    name: `${module}.orderFollowSearch`,
+    name: `${module}.OrderFollowSearch`,
     component: OrderFollowSearch,
     meta: {
       title: '订单跟进',

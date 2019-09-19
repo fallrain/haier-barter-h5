@@ -235,7 +235,7 @@ export default {
       ID: '',
       headList: [
         {
-          name: '智能排序',
+          name: '排序',
           isActive: false,
           icon: '@/assets/images/orderFollow-up/xiala@3x.png',
           activeIcon: '@/assets/images/orderFollow-up/shangla@3x.png'
