@@ -339,7 +339,7 @@ export default {
         4: 'scrollViewFail',
         5: 'scrollViewSuc'
       }[this.curTab];
-    }
+    },
   },
   watch: {
     curTab(val) {
@@ -360,6 +360,12 @@ export default {
     this.bUtil.scroviewTabChange(this.curScrollViewName, this);
   },
   methods: {
+    getQueryString(name) {
+      var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+      var r = window.location.search.substr(1).match(reg);
+      if (r != null) return unescape(r[2]);
+      return null;
+    },
     confirmDate(dates) {
       /* 确认时间 */
       debugger;
