@@ -4,7 +4,7 @@
   >
     <div class="b-order-product-item-head">
       <!--<span class="b-order-product-item-head-name">{{data.productGroupName}}/{{data.productBrandName}}，{{data.productModel}}</span>-->
-      <span class="b-order-product-item-head-name">{{data.productBrandName}}/{{data.productCode}}，{{data.productModel}}</span>
+      <span class="b-order-product-item-head-name">{{data.productModel}}</span>
 
       <div>
         <input

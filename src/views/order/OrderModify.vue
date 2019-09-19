@@ -433,7 +433,7 @@ export default {
         if(!obj.product.productGroupName){
           return
         }
-        this.orderService.qenerateOrderDetailId().then((res) => {
+        this.orderService.generateOrderDetailId().then((res) => {
           if (res.code === 1) {
             ID = res.data;
             var pro = {}

@@ -18,7 +18,7 @@ const data = [
     name: `${module}.orderFollowSearch`,
     component: OrderFollowSearch,
     meta: {
-      title: '订单跟进'
+      title: '订单跟进',
     }
   },
   {
@@ -26,7 +26,7 @@ const data = [
     name: `${module}.OrderEntry`,
     component: OrderEntry,
     meta: {
-      title: '订单录入'
+      title: '订单录入',
     },
   },
   {
@@ -67,7 +67,7 @@ const data = [
     name: `${module}.SearchProduct`,
     component: SearchProduct,
     meta: {
-      title: '选择产品'
+      title: '选择产品',
     }
   },
   {

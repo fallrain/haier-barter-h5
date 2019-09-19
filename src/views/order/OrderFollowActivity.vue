@@ -206,7 +206,7 @@ export default {
       })
     },
     showConfig(item){
-      if(this.subInfo.orderType === 'single'){
+      if(this.subInfo.orderType === '0'){
         this.rightsService.queryRightsSingleConfigList({rightsNo:item.rightsNo},{}).then(res => {
             if(res.code === 1){
               item.configList = res.data

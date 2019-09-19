@@ -79,9 +79,15 @@ export default {
     Toast
   },
   created() {
+    debugger
     if (localStorage.getItem('productSearchHistory')) {
       this.searchHistory = JSON.parse(localStorage.getItem('productSearchHistory'));
+      if(this.searchHistory.length > 30){
+        this.searchHistory.splice(0,29)
+      }
+      this.searchList = this.searchHistory
     }
+    this.currentClickItemData = {}
   },
   data() {
     return {
@@ -95,9 +101,6 @@ export default {
       // 搜索历史
       searchHistory: []
     };
-  },
-  created(){
-    this.currentClickItemData = {}
   },
   methods: {
     search(val) {
@@ -117,6 +120,7 @@ export default {
     onItemClick(item) {
       this.currentClickItemData = item;
       this.searchHistory.push(this.currentClickItemData);
+      this.searchVal = ''
       debugger
       this.$router.go(-1);
     },
@@ -132,7 +136,6 @@ export default {
       const obj = { product: this.currentClickItemData };
       to.query.temp = JSON.stringify(obj);
     }
-
     localStorage.setItem('productSearchHistory', JSON.stringify(this.searchHistory));
     next();// 必须要有这个，否则无法跳转
   },

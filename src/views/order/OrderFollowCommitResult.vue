@@ -90,10 +90,11 @@ export default {
   },
   methods: {
     orderFollow() {
-      this.$router.replace('/')
-      // this.$router.push({
-      //   name: 'Order.OrderFollowSearch'
-      // })
+      // this.$router.replace('/')
+      this.$router.push({
+        path: '/',
+        params:{region:'result'}
+      })
     }
   },
   beforeRouteLeave(to, from, next) {

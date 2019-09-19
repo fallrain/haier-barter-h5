@@ -13,7 +13,9 @@ export default new Vuex.Store({
   state: {
     aliveExclude: [
       'Nav',
-      'ReportInstallDetail'
+      'ReportInstallDetail',
+      // 'OrderEntry',
+      'SearchProduct'
     ],
     loadingShow: false, // loading 显示隐藏
     areaCode: '86'
