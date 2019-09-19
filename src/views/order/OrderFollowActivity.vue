@@ -55,7 +55,7 @@
     </div>
     <button
       type="button"
-      class="common-submit-btn-default mt23"
+      class="common-submit-btn-default1 mt23"
       @click="btmConfirmClick"
     >确定</button>
   </div>
@@ -242,6 +242,11 @@ export default {
       search(page) {
       // todo
       this.subInfo = this.$route.params.orderInfo
+        if(this.subInfo.orderType === 0){
+          this.subInfo.orderType === 'single'
+        }else {
+          this.subInfo.orderType ==='sets'
+        }
       this.orderNo = this.subInfo.orderNo
       const formData = {
         pageNum: page.num,
@@ -314,8 +319,38 @@ export default {
 
     if (to.name === 'Order.OrderEntry' || 'Order.OrderModify') {
       to.query.temp = JSON.stringify(obj);
-    }
+   //此处判断是如果返回上一层，你可以根据自己的业务更改此处的判断逻辑，酌情决定是否摧毁本层缓存。
+        if (this.$vnode && this.$vnode.data.keepAlive)
+        {
+          if (this.$vnode.parent && this.$vnode.parent.componentInstance && this.$vnode.parent.componentInstance.cache)
+          {
+            if (this.$vnode.componentOptions)
+            {
+              var key = this.$vnode.key == null
+                ? this.$vnode.componentOptions.Ctor.cid + (this.$vnode.componentOptions.tag ? `::${this.$vnode.componentOptions.tag}` : '')
+                : this.$vnode.key;
+              var cache = this.$vnode.parent.componentInstance.cache;
+              var keys  = this.$vnode.parent.componentInstance.keys;
+              if (cache[key])
+              {
+                if (keys.length) {
+                  var index = keys.indexOf(key);
+                  if (index > -1) {
+                    keys.splice(index, 1);
+                  }
+                }
+                delete cache[key];
+              }
+            }
+          }
+        }
+        this.$destroy();
+      }
+
+
+
     next();// 必须要有这个，否则无法跳转
+
   },
 };
 </script>
@@ -384,7 +419,16 @@ export default {
   .salesVerification-view {
     height: calc(100vh - 84px);
   }
-  .common-submit-btn-default{
+  @mixin mix-submit-btn {
+    width: 100%;
+    height: 84px;
+    font-size: 34px;
+    border-radius: 8px;
+  }
+  .common-submit-btn-default1{
+    @include mix-submit-btn;
+    color: #fff;
+    background: #1969C6;
     /*position: fixed;*/
     width: 90%;
     margin-left: 5%;

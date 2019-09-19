@@ -128,14 +128,15 @@
         class="information-p"
         v-show="followItem.detailShow && (followItem.add1 != '')"
       >
-        <p>{{followItem.add1}}：{{followItem.add1}}</p>
-        <p>{{followItem.add2}}：{{followItem.add2}}</p>
+        <!--<p>{{followItem.add1}}：{{followItem.add1}}</p>-->
+        <!--<p>{{followItem.add2}}：{{followItem.add2}}</p>-->
       </div>
       <div class="bottom-class">
         <img
           src="@/assets/images/orderFollow-up/dian@3x.png"
           class="dian-Class"
           @click="showMore(index)"
+          v-show="followItem.flowStatus != '1'"
         >
 
         <p class="bottom-button" v-for="(button,index) in followItem.buttonList" @click="followButtonClick(button,followItem)">{{button.name}}</p>

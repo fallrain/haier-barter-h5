@@ -495,13 +495,13 @@ export default {
           }
         } else if (this.curTab === 3) {
           item.showList = [];
-          item.showList.push({
-            id: '10',
-            name: '重新录单'
-          }, {
-            id: '11',
-            name: '直接取消'
-          });
+          // item.showList.push({
+          //   id: '10',
+          //   name: '重新录单'
+          // }, {
+          //   id: '11',
+          //   name: '直接取消'
+          // });
         } else {
 
         }
