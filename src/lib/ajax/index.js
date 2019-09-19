@@ -26,6 +26,10 @@ ax.interceptors.request.use((config) => {
   if (!config.params.noLoading) {
     Toast.loading('加载中...');
   }
+  setTimeout(() => {
+    debugger
+    Toast.hide()
+  }, 3000)
   return config;
 });
 ax.interceptors.response.use((response) => {

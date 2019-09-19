@@ -9,6 +9,11 @@ export default {
     // return axGetUrl(urls.list, appendUrl);
     return axGet(urls.list(keyWords, pageNo, pageSize));
   },
+  price(productCode,productGroup ) {
+    /* 查询订单列表 */
+    // return axGetUrl(urls.list, appendUrl);
+    return axGet(urls.price(productCode,productGroup ));
+  },
   customerAddressList(mobile) {
     return axGet(urls.customerAddressList(mobile));
   },
