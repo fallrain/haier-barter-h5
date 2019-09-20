@@ -84,8 +84,8 @@ export default {
   },
   data() {
     return {
-      invoiceList:[],
-      fileMap:{},
+      invoiceList: [],
+      fileMap: {},
       // 上传类型类型单选
       uploadTypes: [
         {
@@ -102,13 +102,13 @@ export default {
       // 产品
       products: [
         {
-          productCode:1,
+          productCode: 1,
           id: 1,
           name: '海尔/空调，KFR-35G',
           price: 2299
         },
         {
-          productCode:2,
+          productCode: 2,
           id: 2,
           name: '海尔/空调，KFR-35G',
           price: 9999
@@ -120,9 +120,9 @@ export default {
     };
   },
   created() {
-    console.log('tag', this.$route.params)
+    console.log('tag', this.$route.params);
     this.orderNo = this.$route.params.orderNo;
-    debugger
+    debugger;
     this.getData();
   },
   methods: {
@@ -132,78 +132,76 @@ export default {
         params: { orderNo: this.orderNo }
       });
     },
-    uploadSuccess(data){
-      var invoice = {}
-      invoice.invoiceUrl = data.invoiceUrl
-      invoice.invoiceCode = data.invoiceCode
-      invoice.orderNo = data.orderNo
-      invoice.orderDetailId = data.orderDetailId
-      invoice.invoiceUpload = 1
-
-      data.invoiceUpload = 1
-      this.invoiceList.push(data)
+    uploadSuccess(data) {
+      const invoice = {};
+      invoice.invoiceUrl = data.invoiceUrl;
+      invoice.invoiceCode = data.invoiceCode;
+      invoice.orderNo = data.orderNo;
+      invoice.orderDetailId = data.orderDetailId;
+      invoice.invoiceUpload = 1;
+      data.invoiceUpload = 1;
+      this.invoiceList.push(data);
     },
-    delImg(invoiceUrl){
-      this.invoiceList.forEach(val => {
-        if(invoiceUrl === val.invoiceUrl){
-          this.invoiceList.remove(val)
+    uploadErr(msg) {
+      debugger;
+      Toast.failed(msg);
+    },
+    delImg(invoiceUrl) {
+      this.invoiceList.forEach((val) => {
+        if (invoiceUrl === val.invoiceUrl) {
+          this.invoiceList.remove(val);
         }
-      })
+      });
     },
-    uploadErr(){},
-    indexOf(val) {
-for (var i = 0; i < this.length; i++) {
-if (this[i] == val) return i;
-}
-return -1;
-},
-remove (val) {
-var index = this.indexOf(val);
-if (index > -1) {
-this.splice(index, 1);
-}
-},
 
-    updateSubmit(){
-      debugger
-      this.orderService.uploadInvoice(this.invoiceList,{orderNo:this.orderNo}).then(res => {
-        if(res.code === 1){
-          Toast.succed(res.msg)
+    indexOf(val) {
+      for (let i = 0; i < this.length; i++) {
+        if (this[i] == val) return i;
+      }
+      return -1;
+    },
+    remove(val) {
+      const index = this.indexOf(val);
+      if (index > -1) {
+        this.splice(index, 1);
+      }
+    },
+
+    updateSubmit() {
+      debugger;
+      this.orderService.uploadInvoice(this.invoiceList, { orderNo: this.orderNo }).then((res) => {
+        if (res.code === 1) {
+          debugger
+          // Toast.succed(res.msg);
           this.$router.push({
             name: 'Order.OrderConfirm',
             params: { orderNo: this.orderNo }
           });
         }
-      })
-
+      });
     },
     getData() {
       this.orderService.queryOrderDetailAndInvoice({}, { orderNo: this.orderNo }).then((res) => {
-        debugger
+        debugger;
         if (res.code === 1) {
-          this.products = res.data
+          this.products = res.data;
         }
       });
     },
   },
-  beforeRouteLeave:function(to, from, next){
-    if (to.name === 'OrderEntry')
-    {//此处判断是如果返回上一层，你可以根据自己的业务更改此处的判断逻辑，酌情决定是否摧毁本层缓存。
-      if (this.$vnode && this.$vnode.data.keepAlive)
-      {
-        if (this.$vnode.parent && this.$vnode.parent.componentInstance && this.$vnode.parent.componentInstance.cache)
-        {
-          if (this.$vnode.componentOptions)
-          {
-            var key = this.$vnode.key == null
+  beforeRouteLeave(to, from, next) {
+    if (to.name === 'OrderEntry') { // 此处判断是如果返回上一层，你可以根据自己的业务更改此处的判断逻辑，酌情决定是否摧毁本层缓存。
+      if (this.$vnode && this.$vnode.data.keepAlive) {
+        if (this.$vnode.parent && this.$vnode.parent.componentInstance && this.$vnode.parent.componentInstance.cache) {
+          if (this.$vnode.componentOptions) {
+            const key = this.$vnode.key == null
               ? this.$vnode.componentOptions.Ctor.cid + (this.$vnode.componentOptions.tag ? `::${this.$vnode.componentOptions.tag}` : '')
               : this.$vnode.key;
-            var cache = this.$vnode.parent.componentInstance.cache;
-            var keys  = this.$vnode.parent.componentInstance.keys;
-            if (cache[key])
-            {
+            const cache = this.$vnode.parent.componentInstance.cache;
+            const keys = this.$vnode.parent.componentInstance.keys;
+            if (cache[key]) {
               if (keys.length) {
-                var index = keys.indexOf(key);
+                const index = keys.indexOf(key);
                 if (index > -1) {
                   keys.splice(index, 1);
                 }

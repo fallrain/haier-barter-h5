@@ -9,8 +9,8 @@
         :key="index"
       >
         <div class="bProductMultUpload-item-head">
-          <span>{{index+1}}.{{product.productCode}}</span>
-          <span>{{product.price}}元</span>
+          <span>{{index+1}}.{{product.productModel}}</span>
+          <span>{{product.productPrice}}元</span>
         </div>
         <div
           v-if="!merge"
@@ -87,8 +87,8 @@ export default {
     //   type: Array,
     //   default: () => []
     // },
-    fileData:{
-      type:Object,
+    fileData: {
+      type: Object,
       default: () => {}
     },
     // 产品列表
@@ -106,63 +106,63 @@ export default {
   },
   data() {
     return {
-      fileMap:{},
-      fileList:[],
-      dataObj:{recordMode:'Haier'},
+      fileMap: {},
+      fileList: [],
+      dataObj: { recordMode: 'Haier' },
       // 上传的地址
       uploadUrl: '/api/manage/orderManage/checkInvoice',
-      headers:{
-        Authorization:''
+      headers: {
+        Authorization: ''
       }
     };
   },
-  created(){
-    debugger
-    this.headers.Authorization = 'Bearer  ' + localStorage.getItem('acces_token')
-    this.genFileMap()
+  created() {
+    debugger;
+    this.headers.Authorization = `Bearer  ${localStorage.getItem('acces_token')}`;
+    this.genFileMap();
   },
   methods: {
     genFileMap() {
-      debugger
+      debugger;
       setTimeout(() => {
-        this.products.forEach(v => {
-          debugger
+        this.products.forEach((v) => {
+          debugger;
           this.$set(this.fileMap, v.productCode, []);
         });
       });
     },
-    imageChanged(res){
-      debugger
+    imageChanged(res) {
+      debugger;
     },
-    imageuploaded(data,fileList) {
-      debugger
+    imageuploaded(data, fileList) {
+      debugger;
       /* 上传成功 */
       // todo 返回值待定
-     fileList.push(data.data.invoiceUrl)
+      fileList.push(data.data.invoiceUrl);
 
-      debugger
+      debugger;
       if (data.code === 1) {
-          debugger
+        debugger;
         this.$emit('uploadSuccess', data.data);
-
-      }else{
-        this.$emit('uploadErr', msg);
+      } else {
+        debugger;
+        this.$emit('uploadErr', data.msg);
       }
     },
     uploadError(res) {
       /* 上传错误 */
-      const errorObj = {
-        'FILE IS TOO LARGER MAX FILE IS': '图片最大不能超过20M'
-      };
-      for (const p in errorObj) {
-        if (new RegExp(p).test(res)) {
-          Toast.failed(errorObj[p]);
-          return;
-        }
-      }
-      Toast.failed('上传失败');
+      // const errorObj = {
+      //   'FILE IS TOO LARGER MAX FILE IS': '图片最大不能超过20M'
+      // };
+      // for (const p in errorObj) {
+      //   if (new RegExp(p).test(res)) {
+      //     Toast.failed(errorObj[p]);
+      //     return;
+      //   }
+      // }
+      Toast.failed(res.msg);
     },
-    delImg(index,fileList) {
+    delImg(index, fileList) {
       // debugger
       // for (var key in fileMap) {
       //   var item = fileMap[key];
@@ -170,7 +170,7 @@ export default {
       // }debugger
       //
       // fileList = []
-      fileList.splice(index,1)
+      fileList.splice(index, 1);
       // this.$emit('delImg',fileList[0])
     }
   }

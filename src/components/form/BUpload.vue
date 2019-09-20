@@ -49,7 +49,6 @@ export default {
   methods:{
     imageuploaded(data){
       this.$emit('imageuploaded',data,this.imgs)
-      Toast.succeed('上传成功')
     },
     delFun(index){
       debugger

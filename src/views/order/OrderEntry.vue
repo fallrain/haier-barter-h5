@@ -540,11 +540,13 @@ export default {
           if (type === 1) {
             Toast.succeed('订单暂存成功');
           }
+            if(type === 2){
+              this.$router.push({
+                name: 'Order.OrderUploadInvoice',
+                params: { orderNo: this.orderNo }
+              });
+            }
 
-          // this.$router.push({
-          //   name: 'Order.OrderUploadInvoice',
-          //   params: { orderNo: this.orderNo }
-          // });
         });
       }
     },
@@ -708,11 +710,10 @@ export default {
         this.multBuyPopShow = true;
       } else {
         this.saveTemporary(2);
-        debugger;
-        this.$router.push({
-          name: 'Order.OrderUploadInvoice',
-          params: { orderNo: this.orderNo }
-        });
+        // this.$router.push({
+        //   name: 'Order.OrderUploadInvoice',
+        //   params: { orderNo: this.orderNo }
+        // });
       }
     },
     saveOrder() {
