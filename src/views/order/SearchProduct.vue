@@ -11,7 +11,7 @@
       placeholder="点击搜索型号"
       v-on:input="inputFunction()"
     >
-      <div class="searchProduct-scan-wrap">
+      <div class="searchProduct-scan-wrap" @click="scanQRCode()">
         <i class="iconfont icon-saomiao"></i>
         <span class="searchProduct-scan-inf">扫描</span>
       </div>
@@ -80,14 +80,14 @@ export default {
     Toast
   },
   created() {
-    debugger
+    debugger;
     if (localStorage.getItem('productSearchHistory')) {
       this.searchHistory = JSON.parse(localStorage.getItem('productSearchHistory'));
-      if(this.searchHistory.length > 30){
-        this.searchHistory.splice(0,29)
+      if (this.searchHistory.length > 30) {
+        this.searchHistory.splice(0, 29);
       }
     }
-    this.currentClickItemData = {}
+    this.currentClickItemData = {};
   },
   data() {
     return {
@@ -103,17 +103,16 @@ export default {
     };
   },
   methods: {
-    inputFunction(){
-      debugger
-      this.searchList = this.searchHistory
-      if(this.searchVal === ''){
-        this.searchList = []
+    inputFunction() {
+      debugger;
+      this.searchList = this.searchHistory;
+      if (this.searchVal === '') {
+        this.searchList = [];
       }
     },
 
-    search(val) {
+    search() {
       /* 搜索产品 */
-
       this.productService.list(this.searchVal.toUpperCase(), '1', '30').then((res) => {
         // debugger;
         if (res.code === 1) {
@@ -126,7 +125,7 @@ export default {
       });
     },
     indexOf(val) {
-      for (var i = 0; i < this.length; i++) {
+      for (let i = 0; i < this.length; i++) {
         if (this[i] == val) return i;
       }
       return -1;
@@ -137,29 +136,49 @@ export default {
     //     this.splice(index, 1);
     //   }
     // },
+    scanQRCode() {
+      wx.ready(() => {
+        wx.scanQRCode({
+          needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+          scanType: ['qrCode', 'barCode'], // 可以指定扫二维码还是一维码，默认二者都有
+          success(res) {
+            const result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+            // this.qrCodeForm.code = result;
+            this.searchVal = result
+            this.search();
+          }
+        });
+      });
+    },
     onItemClick(item) {
       this.currentClickItemData = item;
-     if(!this.searchHistory.indexOf(item)){
-       this.searchHistory.push(this.currentClickItemData);
-     }
-      this.searchVal = ''
-      this.productService.price(item.productCode,item.productGroup).then(res => {
-        debugger
-        if(res.code === 1){
-          this.currentClickItemData.price = res.data.price
-          this.currentClickItemData.industryCode = res.data.industryCode
-          this.currentClickItemData.industryName = res.data.industryName
+      if (!this.searchHistory.indexOf(item)) {
+        this.searchHistory.push(this.currentClickItemData);
+      }
+      this.searchVal = '';
+      this.productService.price(item.productCode, item.productGroup).then((res) => {
+        debugger;
+        if (res.code === 1) {
+          this.currentClickItemData.price = res.data.price;
+          this.currentClickItemData.industryCode = res.data.industryCode;
+          this.currentClickItemData.industryName = res.data.industryName;
+          this.currentClickItemData.productBrandCode = res.data.productBrandCode
+          this.currentClickItemData.productBrandName = res.data.productBrandName
+          this.currentClickItemData.productCode = res.data.productCode
+          this.currentClickItemData.productGroup = res.data.productGroup
+          this.currentClickItemData.productGroupName = res.data.productGroupName
+          this.currentClickItemData.productModel = res.data.productModel
           this.$router.go(-1);
         }
-      })
-
+      });
     },
 
   },
   beforeRouteLeave(to, from, next) {
-    debugger
+    debugger;
     if (to.name === 'Order.OrderEntry') {
       const obj = { product: this.currentClickItemData };
+      debugger
       to.query.temp = JSON.stringify(obj);
     }
     if (to.name === 'Order.OrderModify') {

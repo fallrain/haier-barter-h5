@@ -96,9 +96,9 @@
         <template slot="item" slot-scope="{ item }">
           <div class="custom-item">
             <div class="icon">
-              <i class="iconfont1 icon-picGrid" v-show="item.name == 0"></i>
               <i class="iconfont1 icon-picGrid1" v-show="item.name == 1"></i>
               <i class="iconfont1 icon-picGrid2" v-show="item.name == 2"></i>
+              <i class="iconfont1 icon-picGrid" v-show="item.name == 4"></i>
               <i class="iconfont1 icon-picGrid3" v-show="item.name == 3"></i>
             </div>
             <div class="text">
@@ -149,15 +149,10 @@ export default {
       show: false,
       isFinished: true,
       userinfo: {},
-      curTab: 0,
+      curTab: 1,
       handleList: [],
       noticeNum: '',
       items: [
-        {
-          name: 0,
-          label: '全部',
-          icon: 'quanbu'
-        },
         {
           name: 1,
           label: '跟进中',
@@ -169,8 +164,13 @@ export default {
           icon: 'yichang'
         },
         {
+          name: 4,
+          label: '草稿',
+          icon: 'quanbu'
+        },
+        {
           name: 3,
-          label: '已成交',
+          label: '订单',
           icon: 'chengjiao'
         }
       ],
@@ -221,7 +221,6 @@ export default {
     //   token: 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAwODk0OSIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2ODcxNzc2OCwiZXhwIjoxNTY5NTgxNzY4fQ.pLNFaidqOYIZABIbxlOxxqc5-oi26obOix4CAxkSShU'
     //   // token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX0FQUCIsIlJPTEVfU0VMTEVSIiwiUk9MRV9BUFAiXSwic3ViIjoiMDE0Njc4OTciLCJraW5kIjoxMCwicG9pbnQiOjEsImlhdCI6MTU2ODc3MjY1MywiZXhwIjoxNTY5NjM2NjUzfQ.shGqUkZmSdmXwKBYOmfQ3K2o2QgDIQT4vyUn0_DfM-g'
     // };
-    debugger;
     const Str = JSON.stringify(this.userinfo);
     localStorage.setItem('userinfo', Str);
     localStorage.setItem('acces_token', this.userinfo.token);
@@ -231,7 +230,7 @@ export default {
     curScrollViewName() {
       // 当前tab下的scrollView的ref名字
       return {
-        0: 'scrollView',
+        4: 'scrollView',
         1: 'scrollViewProgress',
         2: 'scrollViewOdd',
         3: 'scrollViewFinished',
@@ -241,7 +240,7 @@ export default {
   watch: {
     curTab(val) {
       const obj = {
-        0: 'scrollView',
+        4: 'scrollView',
         1: 'scrollViewProgress',
         2: 'scrollViewOdd',
         3: 'scrollViewFinished',
@@ -362,7 +361,7 @@ export default {
       });
     },
     followButtonClicked(val, info) {
-      if (val.name === '录新订单' || val.name === '成交录单') {
+      if (val.name === '录新订单' || val.name === '成交录单' || val.name ==='继续录单') {
         this.$router.push({
           name: 'Order.OrderEntry',
           params: { customerConsigneeInfo: {
@@ -433,15 +432,20 @@ export default {
     anylizeData(curList) {
       debugger;
       curList.forEach((item) => {
+        /*
+        0-跟进中  1-已完成  2-草稿  3-暂不跟进 4-取消 5-异常
+        */
         if (item.flowStatus === 1) {
           // item.buttonList = [{ name: '录新订单' }, { name: '退货' }, { name: '换货' }];// 已完成
           item.buttonList = [{ name: '录新订单' }];// 已完成
-        } else if (item.flowStatus === 2 || item.businessScenarios === 'YJHX') {
+        } else if ( item.flowStatus === 0) {
           // item.buttonList = [{ name: '成交录单' }, { name: '发放卡券' }];
           item.buttonList = [{ name: '成交录单' }];
         } else if (item.flowStatus === 5) {
           item.buttonList = [{ name: '刷新' }, { name: '修改订单' }, { name: '录新订单' }];
-        } else {
+        } else if(item.flowStatus === 2 ){
+          item.buttonList = [{ name: '继续录单' }];
+        }else {
           item.buttonList = [];
         }
 

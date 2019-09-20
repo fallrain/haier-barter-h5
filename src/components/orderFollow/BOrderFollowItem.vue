@@ -32,7 +32,7 @@
       class="label-class"
       v-for="(followItem,index) in list"
       :key="index"
-      @click="itemClick(index)"
+
     >
       <img
         src="@/assets/images/orderFollow-up/yizhanzhujia@3x.png"
@@ -98,7 +98,7 @@
           class="timeImage"
         >
         <span class="time-label">{{followItem.createdTime}}</span>
-        <span v-show="followItem.showDetail" @click="detailHide(index,followItem)">
+        <span v-show="followItem.flowStatus !== 1" @click="detailHide(index,followItem)">
           <span class="information-class">详细信息</span>
           <img
             src="@/assets/images/orderFollow-up/xialablue@3x.png"
@@ -111,6 +111,20 @@
              class="information-xiala"
              v-show="followItem.detailShow"
            >
+          </span>
+        <span v-show="followItem.flowStatus === 1"  @click="itemClick(index)">
+          <span class="information-class-de">查看详情</span>
+          <!--<img-->
+            <!--src="@/assets/images/orderFollow-up/xialablue@3x.png"-->
+            <!--class="information-xiala"-->
+
+            <!--v-show="!followItem.detailShow"-->
+          <!--&gt;-->
+           <!--<img-->
+             <!--src="@/assets/images/orderFollow-up/shangla@3x.png"-->
+             <!--class="information-xiala"-->
+             <!--v-show="followItem.detailShow"-->
+           <!--&gt;-->
           </span>
 
       </div>
@@ -185,7 +199,7 @@
 
 <script>
 import {
-  Icon, Toast,Popup,PopupTitleBar, Button
+  Icon, Toast, Popup, PopupTitleBar, Button
 } from 'mand-mobile';
 import {
   BPopSortType, BPopButton
@@ -219,8 +233,8 @@ export default {
   },
   data() {
     return {
-      popShow:false,
-      remark:'',
+      popShow: false,
+      remark: '',
       sortShow: false,
       scenarioShow: false,
       buttonList: [],
@@ -298,17 +312,16 @@ export default {
 
   },
   methods: {
-    hidePopUp(){
-      this.popShow = false
+    hidePopUp() {
+      this.popShow = false;
     },
-    confirmRemark(){
-
-      this.hidePopUp()
+    confirmRemark() {
+      this.hidePopUp();
     },
-    itemClick(index){
-      debugger
-      this.stopProcess()
-      this.$emit('itemClick',index)
+    itemClick(index) {
+      debugger;
+      this.stopProcess();
+      this.$emit('itemClick', index);
     },
     headSwitch(index) {
       if (index === this.preIndex) {
@@ -349,7 +362,7 @@ export default {
 
 
     buttonClicked(val) {
-      this.stopProcess()
+      this.stopProcess();
       this.checkedButtonId = val[0];
       for (let i = 0; i < this.headList.length; i++) {
         this.headList[i].isActive = false;
@@ -357,12 +370,12 @@ export default {
       this.$emit('popButtonClicked', this.checkedButtonId);
     },
     followButtonClick(button, item) {
-      this.stopProcess()
+      this.stopProcess();
       debugger;
-      this.$emit('followButtonClick', button, item);
+      this.$emit('followButtonClicked', button, item);
     },
     showMore(index) {
-      this.stopProcess()
+      this.stopProcess();
       console.log('currentList', this.list);
       this.ID = this.list[index].id;
       for (let i = 0; i < this.list.length; i++) {
@@ -372,45 +385,44 @@ export default {
       }
       this.$set(this.list[index], 'show', !this.list[index].show);
     },
-    stopProcess(){
-      const e = window.event
+    stopProcess() {
+      const e = window.event;
       if (e.stopPropagation) {
         e.stopPropagation();
-       //阻止事件 冒泡传播
+        // 阻止事件 冒泡传播
       } else {
-
-        e.cancelBubble = true;   //ie兼容
+        e.cancelBubble = true; // ie兼容
       }
     },
-    detailHide(index,item) {
-      debugger
-      this.stopProcess()
+    detailHide(index, item) {
+      debugger;
+      this.stopProcess();
       this.$set(this.list[index], 'detailShow', !this.list[index].detailShow);
-      if(this.list[index].detailShow){
-        this.$emit('searchProduct',item)
+      if (this.list[index].detailShow) {
+        this.$emit('searchProduct', item);
       }
     },
     updateOrderType(type, item) {
-      this.stopProcess()
-      debugger
+      this.stopProcess();
+      debugger;
       for (let i = 0; i < this.list.length; i++) {
         this.$set(this.list[i], 'show', false);
       }
-      if(type === '10'){
-        this.$emit('againEntry',item)
-        return
+      if (type === '10') {
+        this.$emit('againEntry', item);
+        return;
       }
-      if(type === '11'){
-        this.$emit('cancleOrder',item)
-        return
+      if (type === '11') {
+        this.$emit('cancleOrder', item);
+        return;
       }
-      if(type === '3'){
-        debugger
-        if(this.remark === ''){
-          debugger
-          Toast.info('请输入暂不跟进原因')
-          this.popShow = true
-          return
+      if (type === '3') {
+        debugger;
+        if (this.remark === '') {
+          debugger;
+          Toast.info('请输入暂不跟进原因');
+          this.popShow = true;
+          return;
         }
       }
       this.orderService
@@ -423,7 +435,7 @@ export default {
           }
         )
         .then((res) => {
-          debugger
+          debugger;
           if (res.code === 1) {
             console.log('this.list', this.list);
             Toast.succeed(res.msg);
@@ -613,6 +625,11 @@ export default {
   color: #1969c6;
   font-size: 28px;
   margin-left: 200px;
+}
+.information-class-de{
+  color: #1969c6;
+  font-size: 28px;
+  margin-left: 230px;
 }
 .label-class {
   position: relative;

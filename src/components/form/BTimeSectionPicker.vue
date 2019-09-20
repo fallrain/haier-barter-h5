@@ -25,54 +25,71 @@
 </template>
 
 <script>
-  import {Picker} from 'mand-mobile'
+import {
+  Picker
+} from 'mand-mobile';
 
-  export default {
-    name: 'BTimeSectionPicker',
-    components: {
-      [Picker.name]: Picker,
+export default {
+  name: 'BTimeSectionPicker',
+  components: {
+    [Picker.name]: Picker,
+  },
+  props: {
+    value: {},
+    // 默认值
+    defaultDate: {
+      default: new Date()
     },
-    props: {
-      value: {},
-      // 默认值
-      defaultDate: {
-        default: new Date()
-      },
-      pattern: {
-        type: String,
-        default: 'yyyy-MM-dd'
-      },
-      // 禁用
-      disabled: {
-        type: Boolean,
-        default: false
-      }
-    },
-    data() {
-      return {
-        // defaultVal: this.defaultDate ? new Date(this.defaultDate) : new Date(),
-        pickerData: [],
-        pickerDefaultIndex: [],
-        pickerDefaultValue: [],
-        pickerValue: '',
-      };
-    },
-    methods: {
-      datePickerConfirm() {
-        /* 点了确定按钮 */
-        const date = this.$refs.datePicker.getFormatDate(this.pattern);
-        this.$emit('confirm', date);
-        this.$emit('input', date);
-      },
-      showPicker() {
-        /* 显示时间选择器 */
-        if (this.disabled) {
-          return;
-        }
-        this.isDatePickerShow = true;
-      }
+    // 禁用
+    disabled: {
+      type: Boolean,
+      default: false
     }
-  };
+  },
+
+  data() {
+    return {
+      // defaultVal: this.defaultDate ? new Date(this.defaultDate) : new Date(),
+      pickerData: [],
+      pickerDefaultIndex: [],
+      pickerDefaultValue: [],
+      pickerValue: '',
+    };
+  },
+  mounted() {
+    // this.pickerData = district
+    this.pickerDefaultIndex = [0, 0]
+
+    // window.PickerTrigger3 = () => {
+    //   this.getColumnValue('picker', 0)
+    // }
+    // window.PickerTrigger4 = () => {
+    //   this.getColumnIndex('picker', 0)
+    // }
+    // window.PickerTrigger5 = () => {
+    //   this.pickerDefaultIndex = []
+    //   this.pickerDefaultValue = ['110000', '110100', '110101']
+    //   setTimeout(() => {
+    //     this.$refs.picker.refresh()
+    //   }, 0)
+    // }
+  },
+  methods: {
+    datePickerConfirm() {
+      /* 点了确定按钮 */
+      const date = this.$refs.datePicker.getFormatDate(this.pattern);
+      this.$emit('confirm', date);
+      this.$emit('input', date);
+    },
+    showPicker() {
+      /* 显示时间选择器 */
+      if (this.disabled) {
+        return;
+      }
+      this.isDatePickerShow = true;
+    }
+  }
+};
 </script>
 
 <style lang="scss">
