@@ -132,13 +132,13 @@ export default {
       this.productService.price(item.productCode,item.productGroup).then(res => {
         debugger
         if(res.code === 1){
-          this.currentClickItemData.price = res.price
-          this.currentClickItemData.industryCode = res.industryCode
-          this.currentClickItemData.industryName = res.industryName
+          this.currentClickItemData.price = res.data.price
+          this.currentClickItemData.industryCode = res.data.industryCode
+          this.currentClickItemData.industryName = res.data.industryName
+          this.$router.go(-1);
         }
       })
-      debugger
-      this.$router.go(-1);
+
     },
 
   },
