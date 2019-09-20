@@ -372,7 +372,7 @@ export default {
     followButtonClick(button, item) {
       this.stopProcess();
       debugger;
-      this.$emit('followButtonClicked', button, item);
+      this.$emit('followButtonClick', button, item);
     },
     showMore(index) {
       this.stopProcess();
