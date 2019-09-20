@@ -125,9 +125,23 @@ export default {
         }
       });
     },
+    indexOf(val) {
+      for (var i = 0; i < this.length; i++) {
+        if (this[i] == val) return i;
+      }
+      return -1;
+    },
+    // remove (val) {
+    //   var index = this.indexOf(val);
+    //   if (index > -1) {
+    //     this.splice(index, 1);
+    //   }
+    // },
     onItemClick(item) {
       this.currentClickItemData = item;
-      this.searchHistory.push(this.currentClickItemData);
+     if(!this.searchHistory.indexOf(item)){
+       this.searchHistory.push(this.currentClickItemData);
+     }
       this.searchVal = ''
       this.productService.price(item.productCode,item.productGroup).then(res => {
         debugger

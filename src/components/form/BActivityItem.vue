@@ -75,7 +75,7 @@ export default {
   data() {
     return {
       isShowLimit: false,
-      isConfig:false
+      isShowConfig: false
     };
   },
   props: {
@@ -87,8 +87,8 @@ export default {
       data: '',
       data2: '',
       type: '',
-      count:{
-        type:Number,
+      count: {
+        type: Number,
         default: () => 0
       },
       product: {
@@ -102,22 +102,27 @@ export default {
       }
     },
     isFinish: false,
-    hasData:false
+    hasData: false,
+
   },
   methods: {
     setShowLimit() {
       this.isShowLimit = !this.isShowLimit;
-      this.$emit('showLimit',this.getData)
+      if (this.isShowLimit) {
+        this.$emit('showLimit', this.getData);
+      }
     },
     setShowConfig() {
-      this.isShowConfig = !this.isShowConfig
-      this.$emit('showConfig',this.getData)
+      this.isShowConfig = !this.isShowConfig;
+      if (this.isShowConfig) {
+        this.$emit('showConfig', this.getData);
+      }
     },
     minusCount() {
-      this.$emit('minusCount',this.getData)
+      this.$emit('minusCount', this.getData);
     },
     addCount() {
-      this.$emit('addCount',this.getData)
+      this.$emit('addCount', this.getData);
     },
   },
   watch: {

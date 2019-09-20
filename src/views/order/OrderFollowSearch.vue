@@ -174,13 +174,13 @@ export default {
           icon: 'chengjiao'
         }
       ],
-      sortType:"",
+      sortType: '',
       preIndex: '',
       currentScrollView: {},
       currentList: [],
       checkedsortId: '',
       checkedButtonId: '',
-      fuzzysearch:false,
+      fuzzysearch: false,
       // 订单跟进全部
       scrollView: {
         mescroll: null,
@@ -207,26 +207,25 @@ export default {
       }
     };
   },
-  activated(){
+  activated() {
     // window.location.reload()
   },
   created() {
-    const userinfostr =  this.getQueryString('userinfo')
-    this.userinfo = JSON.parse(userinfostr)
+    const userinfostr = this.getQueryString('userinfo');
+    this.userinfo = JSON.parse(userinfostr);
     // this.userinfo = {
-    //   hmcid:'a0008949',
+    //   hmcid: 'a0008949',
     //   // hmcid:'01467897',
-    //   mobile:'"18561715460"',
-    //   shopId:'8800136445',
-    //    token:'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAwODk0OSIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2ODcxNzc2OCwiZXhwIjoxNTY5NTgxNzY4fQ.pLNFaidqOYIZABIbxlOxxqc5-oi26obOix4CAxkSShU'
+    //   mobile: '"18561715460"',
+    //   shopId: '8800136445',
+    //   token: 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAwODk0OSIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2ODcxNzc2OCwiZXhwIjoxNTY5NTgxNzY4fQ.pLNFaidqOYIZABIbxlOxxqc5-oi26obOix4CAxkSShU'
     //   // token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX0FQUCIsIlJPTEVfU0VMTEVSIiwiUk9MRV9BUFAiXSwic3ViIjoiMDE0Njc4OTciLCJraW5kIjoxMCwicG9pbnQiOjEsImlhdCI6MTU2ODc3MjY1MywiZXhwIjoxNTY5NjM2NjUzfQ.shGqUkZmSdmXwKBYOmfQ3K2o2QgDIQT4vyUn0_DfM-g'
-    // }
-    debugger
-    const Str = JSON.stringify(this.userinfo)
+    // };
+    debugger;
+    const Str = JSON.stringify(this.userinfo);
     localStorage.setItem('userinfo', Str);
     localStorage.setItem('acces_token', this.userinfo.token);
     this.getNoticeData();
-
   },
   computed: {
     curScrollViewName() {
@@ -253,16 +252,15 @@ export default {
     }
   },
   mounted() {
-
     // 创建当前tab的MeScroll对象，并下拉刷新
     this.bUtil.scroviewTabChange(this.curScrollViewName, this);
   },
   methods: {
     getQueryString(name) {
-        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
-        var r = window.location.search.substr(1).match(reg);
-        if (r != null) return unescape(r[2]);
-        return null;
+      const reg = new RegExp(`(^|&)${name}=([^&]*)(&|$)`, 'i');
+      const r = window.location.search.substr(1).match(reg);
+      if (r != null) return unescape(r[2]);
+      return null;
     },
     getNoticeData() {
       this.orderService
@@ -278,35 +276,34 @@ export default {
     handEntry() {
       this.$router.push({
         name: 'Order.OrderEntry',
-        params: { customerConsigneeInfo: {},region:'hand'}
+        params: { customerConsigneeInfo: {}, region: 'hand' }
       });
     },
     itemClick(index) {
-      debugger
+      debugger;
       this.$router.push({
         name: 'Order.OrderDetail',
-        params: { orderNo: this.currentList[index].orderNo}
+        params: { orderNo: this.currentList[index].orderNo }
       });
     },
-    againEntry(item){
-      debugger
-        // this.orderService.createNewOrder({}, { orderNo: item.orderNo }).then((res) => {
-        //   if (res.code === 1) {
-        //     Toast.succeed(res.msg);
-        //   }
-        // });
+    againEntry(item) {
+      debugger;
+      // this.orderService.createNewOrder({}, { orderNo: item.orderNo }).then((res) => {
+      //   if (res.code === 1) {
+      //     Toast.succeed(res.msg);
+      //   }
+      // });
       this.$router.push({
         name: 'Order.OrderEntry',
         params: { customerConsigneeInfo: {
-            name:item.userName,
-            mobile:item.userMobile,
-            recordMode:item.recordMode
-          },region:'new'}
+          name: item.userName,
+          mobile: item.userMobile,
+          recordMode: item.recordMode
+        },
+        region: 'new' }
       });
-
-
     },
-    searchProduct(item){
+    searchProduct(item) {
       this.orderService.queryOrderInfoByOrderNo({}, { orderNo: item.orderNo }).then((response) => {
         if (response.code === 1) {
           const resData = response.data;
@@ -322,7 +319,6 @@ export default {
           }
         }
       });
-
     },
     headSwitch(index) {
       if (index === this.preIndex) {
@@ -342,7 +338,7 @@ export default {
     upCallback(page) {
       // 下载过就设置已经初始化
       this[this.curScrollViewName].isListInit = true;
-      debugger
+      debugger;
       this.searchData(page).then(({ result, pages }) => {
         this.$nextTick(() => {
           // 通过当前页的数据条数，和总页数来判断是否加载完
@@ -370,78 +366,76 @@ export default {
         this.$router.push({
           name: 'Order.OrderEntry',
           params: { customerConsigneeInfo: {
-              name:info.userName,
-              mobile:info.userMobile,
-              recordMode:info.recordMode
-            },region:'new'}
+            name: info.userName,
+            mobile: info.userMobile,
+            recordMode: info.recordMode
+          },
+          region: 'new' }
         });
       }
     },
 
     searchData(page) {
+      console.log('keyword', this.searchWord);
+      return this.orderService
+        .queryOrderFollowlList(
+          {
+            hmcId: this.userinfo.hmcid,
+            storeId: this.userinfo.shopId,
+            queryType: this.curTab,
+            sortType: this.sortType,
+            recordMode: '',
+            userStatus: '',
+            orderFollowStatus: '',
+            flowType: '',
+            flowStatus: '',
+            orderFollowSource: '',
+            businessScenarios: this.scenarioType,
+            sourceSystem: '',
+            orderFollowStartDate: '',
+            orderFollowEndDate: '',
+            keyWord: this.searchWord
+          },
+          {
+            pageNum: page.num,
+            pageSize: page.size,
+          }
+        )
+        .then((res) => {
+          const sroviewObj = {};
+          if (res.code === 1) {
+            const {
+              result,
+              pages
+            } = res.data;
+            sroviewObj.pages = pages;
+            sroviewObj.result = result;
+            if (result && result.length > 0) {
+              const curList = result;
+              this.anylizeData(curList);
 
-      console.log('keyword',this.searchWord)
-        return this.orderService
-          .queryOrderFollowlList(
-            {
-              hmcId: this.userinfo.hmcid,
-              storeId:this.userinfo.shopId,
-              queryType: this.curTab,
-              sortType: this.sortType,
-              recordMode: '',
-              userStatus: '',
-              orderFollowStatus: '',
-              flowType: '',
-              flowStatus: '',
-              orderFollowSource: '',
-              businessScenarios: this.scenarioType,
-              sourceSystem: '',
-              orderFollowStartDate: '',
-              orderFollowEndDate: '',
-              keyWord:this.searchWord
-            },
-            {
-              pageNum: page.num,
-              pageSize: page.size,
-            }
-          )
-          .then((res) => {
-            const sroviewObj = {};
-            if (res.code === 1) {
-              const {
-                result,
-                pages
-              } = res.data;
-              sroviewObj.pages = pages;
-              sroviewObj.result = result;
-              if (result && result.length > 0) {
-                const curList = result;
-                 this.anylizeData(curList);
-
-                // this.$nextTick(() => {
-                if (page.num === 1) {
-                  this[this.curScrollViewName].list = []
-                  debugger
-                  this[this.curScrollViewName].list = this.currentList;
-                } else {
-                  this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(this.currentList);
-                }
-                // });
+              // this.$nextTick(() => {
+              if (page.num === 1) {
+                this[this.curScrollViewName].list = [];
+                debugger;
+                this[this.curScrollViewName].list = this.currentList;
+              } else {
+                this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(this.currentList);
               }
-            } else {
-              this[this.curScrollViewName].mescroll.endErr();
+              // });
             }
-            return sroviewObj;
-          });
-
+          } else {
+            this[this.curScrollViewName].mescroll.endErr();
+          }
+          return sroviewObj;
+        });
     },
     anylizeData(curList) {
-      debugger
+      debugger;
       curList.forEach((item) => {
-        if (item.flowStatus === 1 ) {
+        if (item.flowStatus === 1) {
           // item.buttonList = [{ name: '录新订单' }, { name: '退货' }, { name: '换货' }];// 已完成
           item.buttonList = [{ name: '录新订单' }];// 已完成
-
         } else if (item.flowStatus === 2 || item.businessScenarios === 'YJHX') {
           // item.buttonList = [{ name: '成交录单' }, { name: '发放卡券' }];
           item.buttonList = [{ name: '成交录单' }];
@@ -513,7 +507,6 @@ export default {
           item.showDetail = true;
           if (item.flowStatus !== 2) {
             item.productList = [];
-
           } else {
             if (item.add1 == '') {
               item.showDetail = false;
@@ -543,8 +536,7 @@ export default {
         num: 1,
         size: 10
       };
-      this.searchData(page)
-
+      this.searchData(page);
     },
     updateOrderType(type) {
       this.searchData({
@@ -555,13 +547,12 @@ export default {
 
   },
   beforeRouteLeave(to, from, next) {
-    debugger
-    if (to.name === 'Order.OrderFollowCommitResult' ||to.name === 'Order.OrderConfirm' ) {
-      next(false)
-    }else {
+    debugger;
+    if (to.name === 'Order.OrderFollowCommitResult' || to.name === 'Order.OrderConfirm') {
+      next(false);
+    } else {
       next();// 必须要有这个，否则无法跳转
     }
-
   },
 };
 </script>

@@ -75,14 +75,15 @@ export default {
   name: 'OrderFollowActivity',
   components: {
     [TabBar.name]: TabBar,
-    BActivityItem,Toast
+    BActivityItem,
+    Toast
   },
   data() {
     return {
-      currentList:[],
-      subInfo:{},
+      currentList: [],
+      subInfo: {},
       current: 0,
-      orderNo:'',
+      orderNo: '',
       items: [{
         name: 0,
         label: '可参与活动'
@@ -126,7 +127,7 @@ export default {
         ],
         isListInit: false
       },
-      rightsJson:'',
+      rightsJson: '',
       scrollViewFinish: {
         mescroll: null,
         list: [
@@ -155,7 +156,7 @@ export default {
         1: 'scrollViewFinish'
       };
       const viewName = obj[val];
-      debugger
+      debugger;
       // tab切换后，创建新MeScroll对象（若无创建过），没有加载过则加载
       this.bUtil.scroviewTabChange(viewName, this);
     }
@@ -163,7 +164,7 @@ export default {
   mounted() {
     this.bUtil.scroviewTabChange(this.curScrollViewName, this);
   },
-  created(){
+  created() {
 
 
   },
@@ -178,139 +179,130 @@ export default {
         });
       });
     },
-    minusCount(item,count){
-      this.rightsService.uncheckedOrderRights({orderNo:this.OrderNo,rightsNo:item.rightsNo},{}).then(res => {
-        if(res.code === 1){
+    minusCount(item, count) {
+      this.rightsService.uncheckedOrderRights({ orderNo: this.OrderNo, rightsNo: item.rightsNo }, {}).then((res) => {
+        if (res.code === 1) {
           // if(res.isOptional == 1){
           //   this.$set(item,'minesGray',false)
           // }else {
           //   this.$set(item,'minesGray',true)
           // }
-          if(res.selectedNum === 0){
-            this.$set(item,'minesGray',true)
-          }else {
-            this.$set(item,'minesGray',false)
-          }
-
-        }
-      })
-
-    },
-    addCount(item){
-      this.rightsService.checkedOrderRights({orderNo:this.OrderNo,rightsNo:item.rightsNo},{}).then(res => {
-        if(res.code === 1){
-          if(res.isOptional == 1){
-            this.$set(item,'addGray',false)
-          }else {
-            this.$set(item,'addGray',true)
+          if (res.selectedNum === 0) {
+            this.$set(item, 'minesGray', true);
+          } else {
+            this.$set(item, 'minesGray', false);
           }
         }
-      })
+      });
     },
-    showConfig(item){
-      if(this.subInfo.orderType === '0'){
-        this.rightsService.queryRightsSingleConfigList({rightsNo:item.rightsNo},{}).then(res => {
-            if(res.code === 1){
-              item.configList = res.data
+    addCount(item) {
+      this.rightsService.checkedOrderRights({ orderNo: this.OrderNo, rightsNo: item.rightsNo }, {}).then((res) => {
+        if (res.code === 1) {
+          if (res.isOptional == 1) {
+            this.$set(item, 'addGray', false);
+          } else {
+            this.$set(item, 'addGray', true);
+          }
+        }
+      });
+    },
+    showConfig(item) {
+      if (this.subInfo.orderType === '0') {
+        this.rightsService.queryRightsSingleConfigList({}, { rightsNo: item.rightsNo },).then((res) => {
+          if (res.code === 1) {
+            if (res.data.rightsProductDtoList.length > 0) {
+              item.configList = res.data;
+            } else {
+              item.configList = [];
             }
-        })
-      }else {
-        this.rightsService.queryRightsSetsByRightsNo({rightsNo:item.rightsNo},{}).then(res => {
-          if(res.code === 1){
-            item.configList = res.data
           }
-        })
-      }
-
-    },
-    showLimit(item){
-    this.rightsService.queryRightsLimitConfigList({limitType:'model',rightsNo:item.rightsNo},{}).then(res => {
-      if(res.code === 1){
-          item.limitList = res.data
-      }
-
-    })
-
-
-    },
-    btmConfirmClick(){
-      this.rightsService.confirmSelectedOrderRights({orderNo:this.orderNo},{}).then(res => {
-          if(res.code === 1){
-              this.rightsJson = res.data
+        });
+      } else {
+        this.rightsService.queryRightsSetsByRightsNo({}, { rightsNo: item.rightsNo }).then((res) => {
+          if (res.code === 1) {
+            item.configList = res.data;
           }
-      })
-
+        });
+      }
     },
-      search(page) {
+    showLimit(item) {
+      this.rightsService.queryRightsLimitConfigList({}, { limitType: 'model', rightsNo: item.rightsNo }).then((res) => {
+        if (res.code === 1) {
+          item.limitList = res.data;
+        }
+      });
+    },
+    btmConfirmClick() {
+      this.rightsService.confirmSelectedOrderRights({ orderNo: this.orderNo }, {}).then((res) => {
+        if (res.code === 1) {
+          this.rightsJson = res.data;
+        }
+      });
+    },
+    search(page) {
       // todo
-      this.subInfo = JSON.parse(this.$route.params.orderInfo)
-      this.orderNo = this.subInfo.orderNo
-        debugger
+      this.subInfo = JSON.parse(this.$route.params.orderInfo);
+      this.orderNo = this.subInfo.orderNo;
+      debugger;
       const formData = {
         pageNum: page.num,
         pageSize: page.size,
       };
-      if(this.current === 0){
-        this.rightsService.queryOrderOptionalRights(this.subInfo,{}).then(res =>{
-          debugger
+      if (this.current === 0) {
+        return this.rightsService.queryOrderOptionalRights(this.subInfo, {}).then((res) => {
+          debugger;
           const sroviewObj = {};
-          if(res.code === 1){
-            const {
-              result,
-              pages
-            } = res.data;
+          if (res.code === 1) {
+            const result = res.data;
+            const pages = 1;
             sroviewObj.pages = pages;
             sroviewObj.result = result;
-            if(result && result.length > 0){
-              const list = result
-              this.anylizeData(list)
+            if (result && result.length > 0) {
+              const list = result;
+              this.anylizeData(list);
             }
-            this[this.curScrollViewName].list = this.currentList
-          }else {
-            Toast.failed(res.msg)
+            this[this.curScrollViewName].list = this.currentList;
+            debugger;
+          } else {
+            Toast.failed(res.msg);
             this[this.curScrollViewName].mescroll.endErr();
           }
           return sroviewObj;
-        })
-      }else{
-        this.rightsService.queryOrderNotOptionalRights(this.subInfo,{}).then(res =>{
-          debugger
-          const sroviewObj = {};
-          if(res.code === 1){
-            debugger
-            const {
-              result,
-              pages
-            } = res.data;
-            sroviewObj.pages = pages;
-            sroviewObj.result = result;
-            if(result && result.length > 0){
-              const list = result
-              this.anylizeData(list)
-            }
-            this[this.curScrollViewName].list = this.currentList
-
-          }else {
-            Toast.failed(res.msg)
-            this[this.curScrollViewName].mescroll.endErr();
-          }
-          return sroviewObj;
-        })
+        });
       }
-
-
-    },
-    anylizeData(curlist){
-        curlist.forEach(item => {
-            this.$set(item,'minesGray',true)
-          if(item.isOptional === 1 ){
-            this.$set(item,'addGray',false)
-          }else {
-            this.$set(item,'addGray',true)
+      return this.rightsService.queryOrderNotOptionalRights(this.subInfo, {}).then((res) => {
+        debugger;
+        const sroviewObj = {};
+        if (res.code === 1) {
+          debugger;
+          const result = res.data;
+          const pages = 1;
+          sroviewObj.pages = pages;
+          sroviewObj.result = result;
+          if (result && result.length > 0) {
+            this.currentList = result;
+            this[this.curScrollViewName].list = this.currentList;
+          } else {
+            Toast.info('暂无数据');
           }
-
-        })
-      this.currentList = curlist
+        } else {
+          Toast.failed(res.msg);
+          this[this.curScrollViewName].mescroll.endErr();
+        }
+        return sroviewObj;
+      });
+    },
+    anylizeData(curlist) {
+      curlist.forEach((item) => {
+        this.$set(item, 'minesGray', true);
+        if (item.isOptional === 1) {
+          debugger;
+          this.$set(item, 'addGray', false);
+        } else {
+          this.$set(item, 'addGray', true);
+        }
+      });
+      this.currentList = curlist;
     }
   },
   beforeRouteLeave(to, from, next) {
@@ -318,38 +310,32 @@ export default {
 
     if (to.name === 'Order.OrderEntry' || 'Order.OrderModify') {
       to.query.temp = JSON.stringify(obj);
-   //此处判断是如果返回上一层，你可以根据自己的业务更改此处的判断逻辑，酌情决定是否摧毁本层缓存。
-        if (this.$vnode && this.$vnode.data.keepAlive)
-        {
-          if (this.$vnode.parent && this.$vnode.parent.componentInstance && this.$vnode.parent.componentInstance.cache)
-          {
-            if (this.$vnode.componentOptions)
-            {
-              var key = this.$vnode.key == null
-                ? this.$vnode.componentOptions.Ctor.cid + (this.$vnode.componentOptions.tag ? `::${this.$vnode.componentOptions.tag}` : '')
-                : this.$vnode.key;
-              var cache = this.$vnode.parent.componentInstance.cache;
-              var keys  = this.$vnode.parent.componentInstance.keys;
-              if (cache[key])
-              {
-                if (keys.length) {
-                  var index = keys.indexOf(key);
-                  if (index > -1) {
-                    keys.splice(index, 1);
-                  }
+      // 此处判断是如果返回上一层，你可以根据自己的业务更改此处的判断逻辑，酌情决定是否摧毁本层缓存。
+      if (this.$vnode && this.$vnode.data.keepAlive) {
+        if (this.$vnode.parent && this.$vnode.parent.componentInstance && this.$vnode.parent.componentInstance.cache) {
+          if (this.$vnode.componentOptions) {
+            const key = this.$vnode.key == null
+              ? this.$vnode.componentOptions.Ctor.cid + (this.$vnode.componentOptions.tag ? `::${this.$vnode.componentOptions.tag}` : '')
+              : this.$vnode.key;
+            const cache = this.$vnode.parent.componentInstance.cache;
+            const keys = this.$vnode.parent.componentInstance.keys;
+            if (cache[key]) {
+              if (keys.length) {
+                const index = keys.indexOf(key);
+                if (index > -1) {
+                  keys.splice(index, 1);
                 }
-                delete cache[key];
               }
+              delete cache[key];
             }
           }
         }
-        this.$destroy();
       }
-
+      this.$destroy();
+    }
 
 
     next();// 必须要有这个，否则无法跳转
-
   },
 };
 </script>
