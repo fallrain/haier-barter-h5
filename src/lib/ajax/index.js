@@ -24,12 +24,14 @@ ax.interceptors.request.use((config) => {
     // config.headers.Authorization = 'Bearer  eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAwODk0OSIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2ODA4NjQwMCwiZXhwIjoxNTY4OTUwNDAwfQ.4mGl5CY__qD78-0YDeyONp-rUlR5opdqxpjzFI6G2ZQ';
   }
   if (!config.params.noLoading) {
-    Toast.loading('加载中...');
-  }
-  setTimeout(() => {
     debugger
+    Toast.loading('加载中...');
     Toast.hide()
-  }, 3000)
+  }
+  // setTimeout(() => {
+  //   debugger
+  //   Toast.hide()
+  // }, 3000)
   return config;
 });
 ax.interceptors.response.use((response) => {

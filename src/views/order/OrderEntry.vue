@@ -142,7 +142,7 @@
       <button
         type="button"
         class="common-submit-btn-primary"
-        @click="saveTemporary()"
+        @click="saveTemporary(1)"
       >暂存草稿
       </button>
       <button
@@ -444,7 +444,6 @@ export default {
       this.mobile = this.customerInfo.mobile
       this.queryUserList()
       this.queryCustomerDefault();
-      this.getUserStore();
   },
   methods: {
     //  haveConsignee() {
@@ -570,7 +569,7 @@ export default {
         name: 'Order.SearchProduct',
       });
     },
-    genarateSubInfo(code){
+    genarateSubInfo(){
       const subInfo = {};
       // multBuyParticipantCheckIds
       if (this.multBuySponsorCheckedIds.length) {
@@ -757,6 +756,7 @@ export default {
               ? this.$vnode.componentOptions.Ctor.cid + (this.$vnode.componentOptions.tag ? `::${this.$vnode.componentOptions.tag}` : '')
               : this.$vnode.key;
             var cache = this.$vnode.parent.componentInstance.cache;
+            debugger
             var keys  = this.$vnode.parent.componentInstance.keys;
             if (cache[key])
             {

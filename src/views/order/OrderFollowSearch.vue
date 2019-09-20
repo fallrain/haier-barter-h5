@@ -552,14 +552,15 @@ export default {
     },
 
   },
-  // beforeRouteEnter(to, from, next) {
-  //   debugger
-  //   if (to.path === '/') {
-  //     debugger
-  //     vm.$router.replace('/')
-  //   }
-  //   next();// 必须要有这个，否则无法跳转
-  // },
+  beforeRouteLeave(to, from, next) {
+    debugger
+    if (to.name === 'Order.OrderFollowCommitResult' ||to.name === 'Order.OrderConfirm' ) {
+      next(false)
+    }else {
+      next();// 必须要有这个，否则无法跳转
+    }
+
+  },
 };
 </script>
 

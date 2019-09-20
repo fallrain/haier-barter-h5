@@ -125,7 +125,7 @@
       <button
         type="button"
         class="common-submit-btn-primary"
-        @click="saveTemporary()"
+        @click="saveTemporary(1)"
       >暂存草稿
       </button>
       <button
@@ -583,11 +583,14 @@ export default {
       });
     },
     // 暂存
-    saveTemporary() {
-      this.genarateSubInfo(2)
+    saveTemporary(type) {
+      this.genarateSubInfo()
       if (this.orderNo !== '') {
         this.orderService.createOrder(this.subInfo, { orderFollowId: '' }).then((res) => {
-          Toast.succeed(res.msg);
+          if(type === 1){
+            Toast.succeed('订单暂存成功');
+          }
+          // Toast.succeed(res.msg);
           // this.$router.push({
           //   name: 'Order.OrderUploadInvoice',
           //   params: { orderNo: this.orderNo }
@@ -612,7 +615,7 @@ export default {
         params:{orderInfo:info}
       });
     },
-    genarateSubInfo(code){
+    genarateSubInfo(){
       const subInfo = {};
       // multBuyParticipantCheckIds
       if (this.multBuySponsorCheckedIds.length) {
