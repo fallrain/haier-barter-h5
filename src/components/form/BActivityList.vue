@@ -71,7 +71,7 @@ export default {
     line-height: 1;
     color: #333;
     margin-bottom: 10px;
-    width: 560px;
+    width: 500px;
     p{
       line-height: 80px;
     }

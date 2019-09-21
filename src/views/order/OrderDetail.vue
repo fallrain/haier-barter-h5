@@ -206,7 +206,9 @@
             this.createdTime = resData.createdTime;
             this.orderNo = resData.orderNo;
             if (resData.rightsUserJson) {
-              this.activityList = JSON.parse(resData.rightsUserJson).rightsUserInterestsDetailsDTO;
+              const str = JSON.parse(resData.rightsUserJson);
+              debugger
+              this.activityList = str.rightsUserInterestsDTO;
             }
             if (resData.orderDetailDtoList.length !== 0) {
               this.productList = resData.orderDetailDtoList;
@@ -245,7 +247,32 @@
       saveOrder() {
 
       }
-    }
+    },
+    beforeRouteLeave(to, from, next) {
+      if (this.$vnode && this.$vnode.data.keepAlive) {
+        if (this.$vnode.parent && this.$vnode.parent.componentInstance && this.$vnode.parent.componentInstance.cache) {
+          if (this.$vnode.componentOptions) {
+            const key = this.$vnode.key == null
+              ? this.$vnode.componentOptions.Ctor.cid + (this.$vnode.componentOptions.tag ? `::${this.$vnode.componentOptions.tag}` : '')
+              : this.$vnode.key;
+            const cache = this.$vnode.parent.componentInstance.cache;
+            debugger;
+            const keys = this.$vnode.parent.componentInstance.keys;
+            if (cache[key]) {
+              if (keys.length) {
+                const index = keys.indexOf(key);
+                if (index > -1) {
+                  keys.splice(index, 1);
+                }
+              }
+              delete cache[key];
+            }
+          }
+        }
+      }
+      this.$destroy();
+      next();
+    },
   };
 </script>
 

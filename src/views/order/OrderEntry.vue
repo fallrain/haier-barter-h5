@@ -544,10 +544,12 @@ export default {
     saveTemporary(type) {
       this.genarateSubInfo(2);
       if (this.orderNo !== '') {
+        Toast.info('保存中...')
         this.orderService.createOrder(this.subInfo, { orderFollowId: '' }).then((res) => {
           if (type === 1) {
             Toast.succeed('订单暂存成功');
           }
+          Toast.hide()
             if(type === 2){
               this.$router.push({
                 name: 'Order.OrderUploadInvoice',

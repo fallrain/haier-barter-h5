@@ -206,12 +206,6 @@ export default {
           this.deliveryTime = resData.deliveryTime;
           this.createdTime = resData.createdTime;
           this.orderNo = resData.orderNo;
-          if (resData.rightsUserJson) {
-            this.activityList = JSON.parse(resData.rightsUserJson).rightsUserInterestsDetailsDTO;
-            this.activityList.forEach((val) => {
-              val.rightsName = val.rightName;
-            });
-          }
           if (resData.orderDetailDtoList.length !== 0) {
             this.productList = resData.orderDetailDtoList;
             this.productList.forEach((item) => {
@@ -221,6 +215,12 @@ export default {
                 item.productBrandCN = '卡萨帝';
               }
             });
+          }
+          debugger;
+          if (resData.rightsUserJson) {
+            const str = JSON.parse(resData.rightsUserJson);
+            debugger;
+            this.activityList = str.rightsUserInterestsDTO;
           }
         }
       });
@@ -232,12 +232,13 @@ export default {
       this.orderService.createOrderSubmit({}, { orderNo: this.orderNo }).then((res) => {
         if (res.code === 1) {
           Toast.succeed(res.msg);
+          this.$router.push({
+            name: 'Order.OrderFollowCommitResult',
+            params:{orderInfo:res.data}
+          });
         }
       });
-      this.$router.push({
-        name: 'Order.OrderFollowCommitResult',
 
-      });
     },
     changeOrder() {
       this.$router.push({
@@ -248,7 +249,34 @@ export default {
     saveOrder() {
 
     }
-  }
+  },
+  beforeRouteLeave(to, from, next) {
+    if (this.$vnode && this.$vnode.data.keepAlive) {
+      if (this.$vnode.parent && this.$vnode.parent.componentInstance && this.$vnode.parent.componentInstance.cache) {
+        if (this.$vnode.componentOptions) {
+          const key = this.$vnode.key == null
+            ? this.$vnode.componentOptions.Ctor.cid + (this.$vnode.componentOptions.tag ? `::${this.$vnode.componentOptions.tag}` : '')
+            : this.$vnode.key;
+          const cache = this.$vnode.parent.componentInstance.cache;
+          debugger;
+          const keys = this.$vnode.parent.componentInstance.keys;
+          if (cache[key]) {
+            if (keys.length) {
+              const index = keys.indexOf(key);
+              if (index > -1) {
+                keys.splice(index, 1);
+              }
+            }
+            delete cache[key];
+          }
+        }
+      }
+    }
+    this.$destroy();
+
+    next();
+  },
+
 };
 </script>
 

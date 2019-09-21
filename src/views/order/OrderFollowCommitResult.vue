@@ -4,8 +4,8 @@
       <i class="iconfont icon-duihao1  order-commit-status-img"></i>
       <span class="order-commit-status-text">订单提交成功</span>
     </div>
-    <div class="order-commit-id">订单编号：</div>
-    <div class="order-commit-id">创建时间：</div>
+    <div class="order-commit-id">订单编号：{{orderNo}}</div>
+    <!--<div class="order-commit-id">创建时间：</div>-->
     <div class="orderEntry-btns-par">
       <button
         type="button"
@@ -50,6 +50,7 @@ export default {
   },
   data() {
     return {
+      orderNo:'',
       dataList: [
         {
           title: '年龄层次',
@@ -87,6 +88,9 @@ export default {
       },
       routerData: routerData.data
     };
+  },
+  created(){
+    this.orderNo = this.$route.params.orderInfo
   },
   methods: {
     orderFollow() {
