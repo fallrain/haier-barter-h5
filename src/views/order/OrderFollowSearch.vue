@@ -282,7 +282,7 @@ export default {
       debugger;
       this.$router.push({
         name: 'Order.OrderDetail',
-        params: { orderNo: this.currentList[index].orderNo }
+        params: { orderNo: this.currentList[index - 10].orderNo }
       });
     },
     againEntry(item) {
