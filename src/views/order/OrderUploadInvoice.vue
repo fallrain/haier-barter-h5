@@ -120,20 +120,10 @@ export default {
         params: { orderNo: this.orderNo }
       });
     },
-    uploadSuccess(data, fileMap) {
+    uploadSuccess(data, fileMap,product) {
       debugger;
       data.orderNo = this.orderNo;
-      for (const key in fileMap) {
-        debugger
-        if (data.invoiceUrl == fileMap[key]) {
-          this.products.forEach((val) => {
-            if (val.productCode === key) {
-              debugger
-              data.id = val.id;
-            }
-          });
-        }
-      }
+      data.orderDetailId = product.id
       data.invoiceUpload = 1;
       this.invoiceList.push(data);
     },

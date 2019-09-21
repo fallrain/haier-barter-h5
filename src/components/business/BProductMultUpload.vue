@@ -23,7 +23,7 @@
             :maxWidth="1280"
             :compress="70"
             :headers="headers"
-            @imageuploaded="imageuploaded"
+            @imageuploaded="(data, fileList)=>imageuploaded(data, fileList,product)"
             extensions="png,jpg,jpeg"
             inputAccept="image/jpg,image/jpeg,image/png"
             :url="uploadUrl"
@@ -134,7 +134,7 @@ export default {
     imageChanged(res) {
       debugger;
     },
-    imageuploaded(data, fileList) {
+    imageuploaded(data, fileList,product) {
       debugger;
       /* 上传成功 */
       // todo 返回值待定
@@ -143,7 +143,7 @@ export default {
       debugger;
       if (data.code === 1) {
         debugger;
-        this.$emit('uploadSuccess', data.data,this.fileMap);
+        this.$emit('uploadSuccess', data.data,this.fileMap,product);
       } else {
         debugger;
         this.$emit('uploadErr', data.msg);
