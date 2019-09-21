@@ -125,6 +125,7 @@ export default {
       data.orderNo = this.orderNo;
       data.orderDetailId = product.id
       data.invoiceUpload = 1;
+      delete data.id
       this.invoiceList.push(data);
     },
     uploadErr(msg) {
