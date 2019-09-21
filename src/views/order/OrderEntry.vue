@@ -33,7 +33,7 @@
             </button>
           </div>
           <p class="orderEntry-user-address">
-            {{customerInfo.address}}
+            {{customerInfo.provinceName}}{{customerInfo.cityName}}{{customerInfo.districtName}}{{customerInfo.address}}
           </p>
         </div>
         <div v-else>
@@ -402,13 +402,15 @@ export default {
         });
       }
       if (obj.rightsJson) {
-        const right = JSON.parse(obj.rightsJson);
+        const right = JSON.parse(obj.rightsJson).rightsUserInterestsDTO;
+        debugger
         this.rightJson = right;
-        if (!right.rightsName) {
+        if (!right.length) {
           return;
         }
         this.isDetail = true;
-        this.rightsList = right.rightsName.replace(/(.)(?=[^$])/g, '$1,').split(',');
+        this.rightsList = right
+        debugger
       }
     }
   },
@@ -605,11 +607,11 @@ export default {
       // subInfo.userPhone = '18675647364',
       subInfo.userPhone = this.customerInfo.mobile;
       subInfo.dispatchProvinceId = this.customerInfo.province;
-      subInfo.dispatchProvince = '';
+      subInfo.dispatchProvince = this.customerInfo.provinceName;
       subInfo.dispatchCityId = this.customerInfo.city;
-      subInfo.dispatchCity = '';
-      subInfo.dispatchAreaId = this.customerInfo.area;
-      subInfo.dispatchArea = '';
+      subInfo.dispatchCity =  this.customerInfo.cityName;
+      subInfo.dispatchAreaId = this.customerInfo.district;
+      subInfo.dispatchArea =  this.customerInfo.districtName;
       subInfo.dispatchAdd = this.customerInfo.address;
       subInfo.buyTime = this.buyDate;
       subInfo.deliveryTime = this.deliveryTime;
@@ -634,6 +636,12 @@ export default {
       this.subInfo = subInfo;
     },
     selectActivity() {
+      if(this.productList.length === 0){
+        Toast.info('请选择产品')
+        return
+      }
+
+
       this.genarateSubInfo(1);
       const info = JSON.stringify(this.subInfo);
       /* 选择活动 */
@@ -704,6 +712,10 @@ export default {
     },
     next() {
       /* 下一步 */
+      if(this.productList.length === 0){
+        Toast.info('请选择产品')
+        return
+      }
       // todo 单品、套购值待定
       if (this.orderType === '1') {
         // 展示套购发起人

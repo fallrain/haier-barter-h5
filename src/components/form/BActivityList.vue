@@ -7,7 +7,7 @@
         :key="item.id"
       >
         <div class="bCheckbox-item-detail-cnt">
-          <p class="bActivityList-activity-name">{{item.productCode}}</p>
+          <p class="bActivityList-activity-name">{{item.rightsName}}</p>
         </div>
         <div
           class="bActivityList-activity-num-par"
@@ -92,6 +92,7 @@ export default {
     margin-left: auto;
     font-size: 24px;
     color: #666;
+    margin-right: 30px;
   }
 
   .bCheckbox-item-detail-cnt {

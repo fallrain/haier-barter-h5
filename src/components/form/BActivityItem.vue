@@ -26,14 +26,14 @@
       <div class="activity-common-line activity-common-border activity-common-top activity-item">
         <div class="activity-item">
           <span class="activity-name-icon">满</span>
-          <span class="activity-common-text activity-common-left activity-common-product">{{item.name}}</span>
+          <span class="activity-common-text activity-common-left activity-common-product">{{item.giftName}}</span>
         </div>
         <span class="activity-common-text activity-common-left">共<span
-          class="activity-type-text">{{item.count}}</span>份，剩余<span class="activity-count-remain">{{item.remain}}</span>份</span>
+          class="activity-type-text">{{item.rightsGiftTotal}}</span>份，剩余<span class="activity-count-remain">{{item.rightsGiftSurplus}}</span>份</span>
       </div>
       <div class="activity-common-line activity-item activity-item-gift">
         <span class="activity-name-icon">赠</span>
-        <span class="activity-common-text activity-common-left activity-item-gift-desc">{{item.gift}}</span>
+        <span class="activity-common-text activity-common-left activity-item-gift-desc">{{item.giftName}}</span>
         <!--<span class="activity-common-text activity-common-left activity-data-text activity-check-gift">查看推荐礼品</span>-->
       </div>
       <!--<div>-->
@@ -105,6 +105,7 @@ export default {
     hasData: false,
 
   },
+
   methods: {
     setShowLimit() {
       this.isShowLimit = !this.isShowLimit;
@@ -166,6 +167,8 @@ export default {
   }
 
   .activity-common-text {
+    word-break:break-all;
+    width: 600px;
     font-size: 24px;
     color: #666;
   }

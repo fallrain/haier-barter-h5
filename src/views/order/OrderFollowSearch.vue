@@ -473,7 +473,7 @@ export default {
               name: '暂不跟进'
             });
           }
-        } else if (this.curTab === 1) {
+        } else if (this.curTab === 1 || this.curTab === 4) {
           if (item.userStatus === 1) {
             item.userS = '高潜';
             item.showList = [];
@@ -505,7 +505,6 @@ export default {
           //   name: '直接取消'
           // });
         } else {
-
         }
         if (item.orderNo !== '') {
           item.showDetail = true;

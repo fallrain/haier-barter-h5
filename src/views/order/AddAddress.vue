@@ -91,6 +91,7 @@
       :data="addressData"
       v-model="addressPopShow"
       @change="addressChange"
+      :default-value="defaultA"
     ></md-tab-picker>
     <button class="common-bottom-button" @click="confirm()" v-show="searchEnd">确认</button>
     <button class="common-bottom-button" @click="search()" v-show="!searchEnd">搜索</button>
@@ -127,7 +128,7 @@ export default {
   data() {
     return {
       // disabled: false,
-      searchResultShow:false,
+      searchResultShow: false,
       form: {
         name: '',
         phone: '',
@@ -136,6 +137,7 @@ export default {
         isDefault: false,
         tag: []
       },
+      defaultA: [],
       customerInfo: {
         address: '',
         city: '',
@@ -154,6 +156,7 @@ export default {
         username: '',
         tag: []
       },
+      subCustomerInfo: {},
       searchEnd: false,
       // 订单类型单选
       sexTypes: [
@@ -183,9 +186,9 @@ export default {
   created() {
     // 不加入双向绑定
     this.addressData = addressData;
-     this.getFamilyItem()
-    this.customerInfo.hmcId = JSON.parse(localStorage.getItem('userinfo')).hmcid
-    this.customerInfo.tag = []
+    this.getFamilyItem();
+    this.customerInfo.hmcId = JSON.parse(localStorage.getItem('userinfo')).hmcid;
+    this.customerInfo.tag = [];
     if (this.$route.params) {
       this.region = this.$route.params.region;
       if (this.region === 'add') {
@@ -197,31 +200,31 @@ export default {
         // this.confirmShow = false;
         this.searchEnd = true;
         this.customerInfo = JSON.parse(this.$route.params.info);
-        debugger
-        if(this.customerInfo.familyItemCode){
-          this.customerInfo.tag.push(this.customerInfo.familyItemCode)
+        this.defaultA.push(this.customerInfo.province);
+        this.defaultA.push(this.customerInfo.city);
+        this.defaultA.push(this.customerInfo.district);
+        debugger;
+        if (this.customerInfo.familyItemCode) {
+          this.customerInfo.tag.push(this.customerInfo.familyItemCode);
         }
-
       }
     }
   },
   computed: {
     tagName() {
-      debugger
-     if(this.customerInfo.tag){
-       const tagObj = this.tagList.find(v => v.id === this.customerInfo.tag[0]);
+      debugger;
+      if (this.customerInfo.tag) {
+        const tagObj = this.tagList.find(v => v.id === this.customerInfo.tag[0]);
 
-       let name;
-       if (tagObj) {
-         name = tagObj.name;
-       } else {
-         name = '';
-       }
-       return name;
-     }else {
-       return ''
-     }
-
+        let name;
+        if (tagObj) {
+          name = tagObj.name;
+        } else {
+          name = '';
+        }
+        return name;
+      }
+      return '';
     },
   },
   methods: {
@@ -242,27 +245,33 @@ export default {
       }
       this.productService.deafaultCustomerAddress(this.customerInfo.mobile).then((res) => {
         if (res.code === 1) {
-          this.searchEnd = true
-          this.customerInfo.username = res.data.username
+          this.searchEnd = true;
+          this.customerInfo.username = res.data.username;
           this.customerInfo.sex = res.data.sex;
           this.customerInfo.customerId = res.data.customerId;
+          this.defaultA.push(res.data.province);
+          this.defaultA.push(res.data.city);
+          this.defaultA.push(res.data.district);
         } else {
-          this.searchResultShow = true
-
+          this.searchResultShow = true;
         }
       });
     },
-    creatCustomer(){
-      this.searchEnd = true
-      this.searchResultShow = false
+    creatCustomer() {
+      this.searchEnd = true;
+      this.searchResultShow = false;
     },
     addressChange(address) {
       /* 地址change */
+      debugger;
       const addressA = address.options.map(v => v.label);
       const addressAy = address.values;
       this.customerInfo.city = addressAy[1];
       this.customerInfo.province = addressAy[0];
       this.customerInfo.district = addressAy[2];
+      this.customerInfo.provinceName = addressA[0];
+      this.customerInfo.cityName = addressA[1];
+      this.customerInfo.districtName = addressA[2];
       this.addressName = addressA.join('/');
     },
     confirm() {
@@ -291,8 +300,7 @@ export default {
         Toast.failed('地址不能为空');
         return;
       }
-
-      if(this.customerInfo.tag){
+      if (this.customerInfo.tag) {
         const tagObj = this.tagList.find(v => v.id === this.customerInfo.tag);
         if (tagObj) {
           this.customerInfo.familyItemCode = tagObj.id;
@@ -301,7 +309,11 @@ export default {
         }
         delete this.customerInfo.tag;
       }
-      if (this.region === 'add' || this.region ==='userAdd') {
+      this.subCustomerInfo = this.customerInfo;
+      delete this.customerInfo.provinceName;
+      delete this.customerInfo.cityName;
+      delete this.customerInfo.districtName;
+      if (this.region === 'add' || this.region === 'userAdd') {
         this.productService.addcustomerAddress(this.customerInfo, {}).then((res) => {
           if (res.code === 1) {
             Toast.succeed('地址添加成功');
@@ -336,11 +348,31 @@ export default {
   },
 
   beforeRouteLeave(to, from, next) {
-    debugger;
-
     const obj = { tel: this.customerInfo.mobile };
     if (to.name === 'Order.OrderEntry' || 'Order.OrderModify') {
       to.query.temp = JSON.stringify(obj);
+      if (this.$vnode && this.$vnode.data.keepAlive) {
+        if (this.$vnode.parent && this.$vnode.parent.componentInstance && this.$vnode.parent.componentInstance.cache) {
+          if (this.$vnode.componentOptions) {
+            const key = this.$vnode.key == null
+              ? this.$vnode.componentOptions.Ctor.cid + (this.$vnode.componentOptions.tag ? `::${this.$vnode.componentOptions.tag}` : '')
+              : this.$vnode.key;
+            const cache = this.$vnode.parent.componentInstance.cache;
+            debugger;
+            const keys = this.$vnode.parent.componentInstance.keys;
+            if (cache[key]) {
+              if (keys.length) {
+                const index = keys.indexOf(key);
+                if (index > -1) {
+                  keys.splice(index, 1);
+                }
+              }
+              delete cache[key];
+            }
+          }
+        }
+      }
+      this.$destroy();
     }
     next();// 必须要有这个，否则无法跳转
   },

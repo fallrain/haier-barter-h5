@@ -180,13 +180,14 @@ export default {
       });
     },
     minusCount(item, count) {
-      this.rightsService.uncheckedOrderRights({ orderNo: this.OrderNo, rightsNo: item.rightsNo }, {}).then((res) => {
+      this.rightsService.uncheckedOrderRights({}, { orderNo: this.orderNo, rightsNo: item.rightsNo }).then((res) => {
         if (res.code === 1) {
-          // if(res.isOptional == 1){
-          //   this.$set(item,'minesGray',false)
-          // }else {
-          //   this.$set(item,'minesGray',true)
-          // }
+          const result = res.data;
+          if (result && result.length > 0) {
+            const list = result;
+            this.anylizeData(list);
+          }
+          this[this.curScrollViewName].list = this.currentList;
           if (res.selectedNum === 0) {
             this.$set(item, 'minesGray', true);
           } else {
@@ -196,8 +197,17 @@ export default {
       });
     },
     addCount(item) {
-      this.rightsService.checkedOrderRights({ orderNo: this.OrderNo, rightsNo: item.rightsNo }, {}).then((res) => {
+      debugger;
+      this.rightsService.checkedOrderRights({}, { orderNo: this.orderNo, rightsNo: item.rightsNo }).then((res) => {
         if (res.code === 1) {
+          const result = res.data;
+          if (result && result.length > 0) {
+            const list = result;
+            console.log('currentList', list);
+            debugger;
+            this.anylizeData(list);
+          }
+          this[this.curScrollViewName].list = this.currentList;
           if (res.isOptional == 1) {
             this.$set(item, 'addGray', false);
           } else {
@@ -211,6 +221,7 @@ export default {
         this.rightsService.queryRightsSingleConfigList({}, { rightsNo: item.rightsNo },).then((res) => {
           if (res.code === 1) {
             if (res.data.rightsProductDtoList.length > 0) {
+              item.isShowConfig = true;
               item.configList = res.data;
             } else {
               item.configList = [];
@@ -220,7 +231,12 @@ export default {
       } else {
         this.rightsService.queryRightsSetsByRightsNo({}, { rightsNo: item.rightsNo }).then((res) => {
           if (res.code === 1) {
-            item.configList = res.data;
+            if (res.data.rightsProductDtoList.length > 0) {
+              item.isShowConfig = true;
+              item.configList = res.data;
+            } else {
+              item.configList = [];
+            }
           }
         });
       }
@@ -233,9 +249,10 @@ export default {
       });
     },
     btmConfirmClick() {
-      this.rightsService.confirmSelectedOrderRights({ orderNo: this.orderNo }, {}).then((res) => {
+      this.rightsService.confirmSelectedOrderRights({}, { orderNo: this.orderNo }).then((res) => {
         if (res.code === 1) {
-          this.rightsJson = res.data;
+          this.rightsJson = JSON.stringify(res.data);
+          this.$router.go(-1)
         }
       });
     },
@@ -243,7 +260,6 @@ export default {
       // todo
       this.subInfo = JSON.parse(this.$route.params.orderInfo);
       this.orderNo = this.subInfo.orderNo;
-      debugger;
       const formData = {
         pageNum: page.num,
         pageSize: page.size,
@@ -259,6 +275,8 @@ export default {
             sroviewObj.result = result;
             if (result && result.length > 0) {
               const list = result;
+              console.log('currentList', list);
+              debugger;
               this.anylizeData(list);
             }
             this[this.curScrollViewName].list = this.currentList;
@@ -271,7 +289,6 @@ export default {
         });
       }
       return this.rightsService.queryOrderNotOptionalRights(this.subInfo, {}).then((res) => {
-        debugger;
         const sroviewObj = {};
         if (res.code === 1) {
           debugger;
@@ -293,13 +310,28 @@ export default {
       });
     },
     anylizeData(curlist) {
+      console.log('curlist', curlist);
+      debugger;
       curlist.forEach((item) => {
+        // if (item.rightsBrand = '000') {
+        //   debugger;
+        //   item.rightsBrandC = '海尔';
+        // } else if (item.rightsBrand = '051') {
+        //   debugger;
+        //   item.rightsBrandC = '卡萨帝';
+        // } else {
+        //   item.rightsBrandC = '统帅';
+        // }
         this.$set(item, 'minesGray', true);
         if (item.isOptional === 1) {
           debugger;
           this.$set(item, 'addGray', false);
         } else {
           this.$set(item, 'addGray', true);
+        }
+        if (item.selectedNum !== 0) {
+          debugger
+          this.$set(item, 'minesGray', false);
         }
       });
       this.currentList = curlist;
