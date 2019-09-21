@@ -48,6 +48,7 @@ export default {
   },
   methods:{
     imageuploaded(data){
+      debugger
       this.$emit('imageuploaded',data,this.imgs)
     },
     delFun(index){

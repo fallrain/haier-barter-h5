@@ -7,7 +7,7 @@
       <div class="b-order-product-confirm">
         <p
           class="b-order-product-item-price-confirm"
-        >{{data.price}}<span class="b-order-product-item-price-unit">元</span></p>
+        >{{data.productPrice}}<span class="b-order-product-item-price-unit">元</span></p>
       </div>
     </div>
     <div

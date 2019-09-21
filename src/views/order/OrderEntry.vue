@@ -355,7 +355,9 @@ export default {
       title: '顾客信息：',
       mobile: '',
       region: '',
-      userParam: {}
+      userParam: {},
+      rightName:'',
+      rightId:''
     };
   },
   computed: {},
@@ -402,14 +404,18 @@ export default {
         });
       }
       if (obj.rightsJson) {
-        const right = JSON.parse(obj.rightsJson).rightsUserInterestsDTO;
+        this.rightsJson = obj.rightsJson;
+
+        const right = JSON.parse(obj.rightsJson);
         debugger
-        this.rightJson = right;
-        if (!right.length) {
+        this.rightName = right.rightName
+        this.rightId = right.rightId
+        const rightsPro = JSON.parse(obj.rightsJson).rightsUserInterestsDTO;
+        if (!rightsPro.length) {
           return;
         }
         this.isDetail = true;
-        this.rightsList = right
+        this.rightsList = rightsPro
         debugger
       }
     }
@@ -620,8 +626,8 @@ export default {
       // subInfo.coupleSponsorName = '',
       // subInfo.mayEditCoupleOrderId = '',
       // subInfo.mayEditCoupleOrderName = '',
-      subInfo.rightId = '';
-      subInfo.rightName = '';
+      subInfo.rightId = this.rightId;
+      subInfo.rightName = this.rightName;
       subInfo.giftId = '';
       subInfo.giftName = '';
       subInfo.orderStatus = 0;

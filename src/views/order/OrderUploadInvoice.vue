@@ -101,22 +101,10 @@ export default {
       uploadType: 2,
       // 产品
       products: [
-        {
-          productCode: 1,
-          id: 1,
-          name: '海尔/空调，KFR-35G',
-          price: 2299
-        },
-        {
-          productCode: 2,
-          id: 2,
-          name: '海尔/空调，KFR-35G',
-          price: 9999
-        }
       ],
       // 发票图片地址
       invoiceImg: [],
-      orderNo: ''
+      orderNo: '',
     };
   },
   created() {
@@ -132,13 +120,20 @@ export default {
         params: { orderNo: this.orderNo }
       });
     },
-    uploadSuccess(data) {
-      const invoice = {};
-      invoice.invoiceUrl = data.invoiceUrl;
-      invoice.invoiceCode = data.invoiceCode;
-      invoice.orderNo = data.orderNo;
-      invoice.orderDetailId = data.orderDetailId;
-      invoice.invoiceUpload = 1;
+    uploadSuccess(data, fileMap) {
+      debugger;
+      data.orderNo = this.orderNo;
+      for (const key in fileMap) {
+        debugger
+        if (data.invoiceUrl == fileMap[key]) {
+          this.products.forEach((val) => {
+            if (val.productCode === key) {
+              debugger
+              data.id = val.id;
+            }
+          });
+        }
+      }
       data.invoiceUpload = 1;
       this.invoiceList.push(data);
     },
@@ -146,10 +141,10 @@ export default {
       debugger;
       Toast.failed(msg);
     },
-    delImg(invoiceUrl) {
+    delImg(fileList) {
       this.invoiceList.forEach((val) => {
-        if (invoiceUrl === val.invoiceUrl) {
-          this.invoiceList.remove(val);
+        if (fileList === val) {
+          this.invoiceList.remove(fileList);
         }
       });
     },
@@ -171,7 +166,7 @@ export default {
       debugger;
       this.orderService.uploadInvoice(this.invoiceList, { orderNo: this.orderNo }).then((res) => {
         if (res.code === 1) {
-          debugger
+          debugger;
           // Toast.succed(res.msg);
           this.$router.push({
             name: 'Order.OrderConfirm',

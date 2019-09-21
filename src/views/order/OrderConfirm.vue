@@ -58,13 +58,6 @@
             :index="index"
             :content="item.isReport"
           >
-            <template
-              v-slot:default
-            >
-              <p class="orderEntry-reportInf">
-                该产品需代报装,请选择安装时间
-              </p>
-            </template>
           </b-order-product-confirm>
         </ul>
       </div>
@@ -215,6 +208,9 @@ export default {
           this.orderNo = resData.orderNo;
           if (resData.rightsUserJson) {
             this.activityList = JSON.parse(resData.rightsUserJson).rightsUserInterestsDetailsDTO;
+            this.activityList.forEach((val) => {
+              val.rightsName = val.rightName;
+            });
           }
           if (resData.orderDetailDtoList.length !== 0) {
             this.productList = resData.orderDetailDtoList;
@@ -243,10 +239,10 @@ export default {
 
       });
     },
-    changeOrder(){
+    changeOrder() {
       this.$router.push({
         name: 'Order.OrderModify',
-        params:{orderNo:this.orderNo}
+        params: { orderNo: this.orderNo }
       });
     },
     saveOrder() {

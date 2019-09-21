@@ -139,11 +139,11 @@ export default {
       /* 上传成功 */
       // todo 返回值待定
       fileList.push(data.data.invoiceUrl);
-
+      Toast.hide()
       debugger;
       if (data.code === 1) {
         debugger;
-        this.$emit('uploadSuccess', data.data);
+        this.$emit('uploadSuccess', data.data,this.fileMap);
       } else {
         debugger;
         this.$emit('uploadErr', data.msg);
@@ -163,15 +163,8 @@ export default {
       Toast.failed(res.msg);
     },
     delImg(index, fileList) {
-      // debugger
-      // for (var key in fileMap) {
-      //   var item = fileMap[key];
-      //
-      // }debugger
-      //
-      // fileList = []
+      this.$emit('delImg',fileList)
       fileList.splice(index, 1);
-      // this.$emit('delImg',fileList[0])
     }
   }
 };
