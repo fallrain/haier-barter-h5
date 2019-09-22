@@ -10,9 +10,9 @@
     </div>
     <b-fieldset
       class="mt16"
-      :title="title"
     >
       <div class="orderEntry-user1">
+        <div>
           <div class="orderEntry-user-head">
             <span class="name mr16">收货人：{{consignee.name}}</span>
             <span class="sex mr16">{{consignee.sexCn}}</span>
@@ -26,8 +26,9 @@
             </button>
           </div>
           <p class="orderEntry-user-address">
-            {{customerInfo.address}}
+            {{customerInfo.provinceName}}{{customerInfo.cityName}}{{customerInfo.districtName}}{{customerInfo.address}}
           </p>
+        </div>
       </div>
     </b-fieldset>
     <b-item
@@ -98,6 +99,7 @@
       <template
         v-slot:right=""
       >
+
         <b-date-picker
           class="orderEntry-date"
           slot="right"
@@ -409,7 +411,8 @@ export default {
       hmcId:'',
       rightsList:[],
       subInfo:{},
-      rightsJson:''
+      rightsJson:'',
+      userParam:{},
     };
   },
   computed: {},
@@ -481,6 +484,7 @@ export default {
   created() {
     debugger
     this.orderNo = this.$route.params.orderNo;
+    this.userParam = JSON.parse(localStorage.getItem('userinfo'));
     //
     // this.getUserStore();
     // this.queryCustomerDefault();
@@ -584,17 +588,21 @@ export default {
     },
     // 暂存
     saveTemporary(type) {
-      this.genarateSubInfo()
+      this.genarateSubInfo(2);
       if (this.orderNo !== '') {
+        Toast.info('保存中...')
         this.orderService.createOrder(this.subInfo, { orderFollowId: '' }).then((res) => {
-          if(type === 1){
+          if (type === 1) {
             Toast.succeed('订单暂存成功');
           }
-          // Toast.succeed(res.msg);
-          // this.$router.push({
-          //   name: 'Order.OrderUploadInvoice',
-          //   params: { orderNo: this.orderNo }
-          // });
+          Toast.hide()
+          if(type === 2){
+            this.$router.push({
+              name: 'Order.OrderUploadInvoice',
+              params: { orderNo: this.orderNo }
+            });
+          }
+
         });
       }
     },
@@ -753,7 +761,7 @@ export default {
         // 展示套购发起人
         this.multBuyPopShow = true;
       }
-      this.saveTemporary();
+      this.saveTemporary(2);
       debugger
       this.$router.push({
         name: 'Order.OrderUploadInvoice',
@@ -878,5 +886,11 @@ export default {
       top: 0;
     }
   }
-
+  .orderEntry-user1 {
+    background: #fff;
+    padding: 0;
+  }
+  .orderEntry-date {
+    width: 340px;
+  }
 </style>

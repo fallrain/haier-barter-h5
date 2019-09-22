@@ -282,7 +282,7 @@ export default {
       debugger;
       this.$router.push({
         name: 'Order.OrderDetail',
-        params: { orderNo: this.currentList[index - 10].orderNo }
+        params: { orderNo: this.currentList[index % 10].orderNo }
       });
     },
     againEntry(item) {
@@ -375,6 +375,7 @@ export default {
     },
 
     searchData(page) {
+      debugger
       console.log('keyword', this.searchWord);
       return this.orderService
         .queryOrderFollowlList(
@@ -542,6 +543,7 @@ export default {
       this.searchData(page);
     },
     updateOrderType(type) {
+      debugger
       this.searchData({
         num: 0,
         size: 10

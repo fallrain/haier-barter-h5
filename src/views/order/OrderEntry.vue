@@ -356,8 +356,8 @@ export default {
       mobile: '',
       region: '',
       userParam: {},
-      rightName:'',
-      rightId:''
+      rightName: '',
+      rightId: ''
     };
   },
   computed: {},
@@ -385,19 +385,19 @@ export default {
             pro.id = ID;
             pro.bccPrice = obj.product.price;
             pro.industryName = obj.product.industryName;
-            pro.industryCode = obj.product.industryCode
+            pro.industryCode = obj.product.industryCode;
             pro.productBrand = obj.product.productBrandCode;
             pro.productCategoryCode = obj.product.productGroup;
             pro.productCategoryName = obj.product.productGroupName;
-            pro.productCode = obj.product.productCode
+            pro.productCode = obj.product.productCode;
             pro.productModel = obj.product.productModel;
             // pro.productGroup = obj.product.productGroup
-            pro.installTime = ''
-            pro.bccPrice = obj.product.price
+            pro.installTime = '';
+            pro.bccPrice = obj.product.price;
             pro.productPrice = '';
-            pro.invoiceStatus = 0
+            pro.invoiceStatus = 0;
             this.productList.push(pro);
-            debugger
+            debugger;
           } else {
             Toast.failed(res.message);
           }
@@ -407,16 +407,16 @@ export default {
         this.rightsJson = obj.rightsJson;
 
         const right = JSON.parse(obj.rightsJson);
-        debugger
-        this.rightName = right.rightName
-        this.rightId = right.rightId
+        debugger;
+        this.rightName = right.rightName;
+        this.rightId = right.rightId;
         const rightsPro = JSON.parse(obj.rightsJson).rightsUserInterestsDTO;
         if (!rightsPro.length) {
           return;
         }
         this.isDetail = true;
-        this.rightsList = rightsPro
-        debugger
+        this.rightsList = rightsPro;
+        debugger;
       }
     }
   },
@@ -424,6 +424,7 @@ export default {
     debugger;
     this.userParam = JSON.parse(localStorage.getItem('userinfo'));
     this.shopId = this.userParam.shopId;
+    debugger;
     this.getUserStore();
 
     debugger;
@@ -544,19 +545,18 @@ export default {
     saveTemporary(type) {
       this.genarateSubInfo(2);
       if (this.orderNo !== '') {
-        Toast.info('保存中...')
+        Toast.info('保存中...');
         this.orderService.createOrder(this.subInfo, { orderFollowId: '' }).then((res) => {
           if (type === 1) {
             Toast.succeed('订单暂存成功');
           }
-          Toast.hide()
-            if(type === 2){
-              this.$router.push({
-                name: 'Order.OrderUploadInvoice',
-                params: { orderNo: this.orderNo }
-              });
-            }
-
+          Toast.hide();
+          if (type === 2) {
+            this.$router.push({
+              name: 'Order.OrderUploadInvoice',
+              params: { orderNo: this.orderNo }
+            });
+          }
         });
       }
     },
@@ -593,8 +593,15 @@ export default {
         subInfo.mayEditCoupleOrderName = '';
         subInfo.mayEditCoupleOrderId = '';
       }
+      if (this.buyTime === '') {
+        Toast.failed('请选择购买时间');
+        return;
+      }
 
-
+      if (this.deliveryTime === '') {
+        Toast.failed('请选择送达时间');
+        return;
+      }
       subInfo.orderNo = this.orderNo;
       subInfo.recordMode = this.recordMode;
       subInfo.hmcId = this.userParam.hmcid;
@@ -617,12 +624,13 @@ export default {
       subInfo.dispatchProvinceId = this.customerInfo.province;
       subInfo.dispatchProvince = this.customerInfo.provinceName;
       subInfo.dispatchCityId = this.customerInfo.city;
-      subInfo.dispatchCity =  this.customerInfo.cityName;
+      subInfo.dispatchCity = this.customerInfo.cityName;
       subInfo.dispatchAreaId = this.customerInfo.district;
-      subInfo.dispatchArea =  this.customerInfo.districtName;
+      subInfo.dispatchArea = this.customerInfo.districtName;
       subInfo.dispatchAdd = this.customerInfo.address;
       subInfo.buyTime = this.buyDate;
       subInfo.deliveryTime = this.deliveryTime;
+
       subInfo.orderType = this.orderType;
       // subInfo.coupleSponsor = '',
       // subInfo.coupleSponsorName = '',
@@ -639,17 +647,25 @@ export default {
       subInfo.remark = ''; // 备注，记录订单创建、订单修改原因等信息
       subInfo.rightsUserJson = this.rightsJson;
       subInfo.orderDetailSaveQoList = this.productList;
-      debugger
+      debugger;
 
       this.subInfo = subInfo;
     },
     selectActivity() {
-      if(this.productList.length === 0){
-        Toast.info('请选择产品')
-        return
+      if (this.productList.length === 0) {
+        Toast.info('请选择产品');
+        return;
+      }
+      debugger;
+      for(var i = 0;i < this.productList.length; i++){
+        if (this.productList[i].productPrice === "") {
+          Toast.failed('请输入产品价格');
+          return
+          debugger
+        }
       }
 
-
+      debugger;
       this.genarateSubInfo(1);
       const info = JSON.stringify(this.subInfo);
       /* 选择活动 */
@@ -720,9 +736,9 @@ export default {
     },
     next() {
       /* 下一步 */
-      if(this.productList.length === 0){
-        Toast.info('请选择产品')
-        return
+      if (this.productList.length === 0) {
+        Toast.info('请选择产品');
+        return;
       }
       // todo 单品、套购值待定
       if (this.orderType === '1') {
