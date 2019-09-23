@@ -197,13 +197,21 @@
         type="checkbox"
       ></b-multbuy-check>
     </b-pop>
+    <md-popup v-model="addUserShow" :mask-closable="false">
+      <div class="popUserAdd">
+        请完善用户信息
+        <p @click="addUserClick()" class="popConfirm">确定</p>
+      </div>
+
+    </md-popup>
   </div>
 </template>
 
 <script>
 import {
-  Toast
+  Toast, Popup, PopupTitleBar, Button, Icon
 } from 'mand-mobile';
+
 import {
   BActivityList,
   BDatePicker,
@@ -213,7 +221,7 @@ import {
   BPop,
   BPopAddressList,
   BPopCheckList,
-  BRadioItem
+  BRadioItem,
 } from '@/components/form';
 import {
   BMultbuyCheck
@@ -232,7 +240,11 @@ export default {
     BPop,
     BPopAddressList,
     BPopCheckList,
-    BRadioItem
+    BRadioItem,
+    [Popup.name]: Popup,
+    [PopupTitleBar.name]: PopupTitleBar,
+    [Button.name]: Button,
+    [Icon.name]: Icon,
   },
   data() {
     return {
@@ -357,7 +369,8 @@ export default {
       region: '',
       userParam: {},
       rightName: '',
-      rightId: ''
+      rightId: '',
+      addUserShow: false
     };
   },
   computed: {},
@@ -436,7 +449,7 @@ export default {
     }
     this.customerInfo.username = this.$route.params.customerConsigneeInfo.userName;
     this.customerInfo.mobile = this.$route.params.customerConsigneeInfo.mobile;
-    this.customerInfo.userId = this.$route.params.customerConsigneeInfo.userId
+    this.customerInfo.userId = this.$route.params.customerConsigneeInfo.userId;
     this.recordMode = this.$route.params.customerConsigneeInfo.recordMode;
     this.mobile = this.customerInfo.mobile;
     this.queryCustomerDefault();
@@ -451,6 +464,14 @@ export default {
     //   /* 选择礼品 */
     //   this.chooseGiftPopShow = true;
     // },
+    addUserClick() {
+      this.addUserShow = false;
+      debugger;
+      if (this.$route.params.region === 'new') {
+        this.addUserShow = true;
+        this.addNew(this.customerInfo);
+      }
+    },
     indexOf(val) {
       for (let i = 0; i < this.length; i++) {
         if (this[i] == val) return i;
@@ -518,7 +539,7 @@ export default {
             }
             this.title = '收件人信息';
             this.consignee.address = res.data.province + res.data.city + res.data.district + res.data.address;
-            debugger
+            debugger;
             this.consignee.phone = res.data.mobile;
             this.consignee.name = res.data.username;
             if (res.data.sex === 1) {
@@ -531,10 +552,11 @@ export default {
             this.queryCustomerAddressList();
             this.genarateOrderNum();
           } else {
-            if (this.$route.params.region === 'new') {
-              Toast.info('当前用户暂无地址请创建')
-              this.addNew(this.customerInfo);
-            }
+            this.addUserShow = true;
+            // if (this.$route.params.region === 'new') {
+
+            //   this.addNew(this.customerInfo);
+            // }
           }
         }
       });
@@ -690,7 +712,7 @@ export default {
         this.region = 'add';
         this.$router.push({
           name: 'Order.AddAddress',
-          params: { region: this.region, info: JSON.stringify(this.customerInfo)}
+          params: { region: this.region, info: JSON.stringify(this.customerInfo) }
         });
       } else {
         this.showAddressList();
@@ -910,6 +932,25 @@ export default {
     .md-popup-mask {
       top: 0;
     }
+  }
+  .popUserAdd{
+    text-align: center;
+    font-size: 34px;
+    color: #1969C6;
+    width: 400px;
+    height: 220px;
+    background-color: white;
+    border-radius: 20px;
+    padding-top: 50px;
+  }
+  .popConfirm{
+    color: #333333;
+    margin-top: 50px;
+    text-align: center;
+    height: 70px;
+    /*background-color: red;*/
+    line-height: 70px;
+    border-top: 1px solid lightgray;
   }
 
 </style>
