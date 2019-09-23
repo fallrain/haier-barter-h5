@@ -465,10 +465,8 @@ export default {
     //   this.chooseGiftPopShow = true;
     // },
     addUserClick() {
-      this.addUserShow = false;
-      debugger;
       if (this.$route.params.region === 'new') {
-        this.addUserShow = true;
+        this.addUserShow = false;
         this.addNew(this.customerInfo);
       }
     },
