@@ -26,7 +26,7 @@
             </button>
           </div>
           <p class="orderEntry-user-address">
-            {{customerInfo.provinceName}}{{customerInfo.cityName}}{{customerInfo.districtName}}{{customerInfo.address}}
+            {{consignee.address}}
           </p>
         </div>
       </div>
@@ -316,91 +316,18 @@ export default {
       addressPopShow: false,
       // 收货人地址pop列表
       addressList: [
-        // {
-        //   name: '张三',
-        //   phone: '15000000000',
-        //   address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-        //   tagName: '自己家'
-        // },
-        // {
-        //   name: '李四',
-        //   phone: '15000000000',
-        //   address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-        //   tagName: '办公室'
-        // },
-        // {
-        //   name: '王二',
-        //   phone: '15000000000',
-        //   address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-        //   tagName: '父母家'
-        // },
-        // {
-        //   name: '尼古拉斯赵四',
-        //   phone: '15000000000',
-        //   address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-        //   tagName: '其他'
-        // },
-        // {
-        //   name: '莱桑尼丝铁柱',
-        //   phone: '15000000000',
-        //   address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-        //   tagName: '其他'
-        // },
-        // {
-        //   name: '罗伯特英子',
-        //   phone: '15000000000',
-        //   address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-        //   tagName: '其他'
-        // }
+
       ],
       // 套购pop show
       multBuyPopShow: false,
       // 套购发起人
       multBuySponsor: [
-        {
-          id: 1,
-          name: '陆梦飞',
-          industry: '冰箱'
-        },
-        {
-          id: 2,
-          name: '大飞哥',
-          industry: '彩电'
-        },
-        {
-          id: 3,
-          name: '贾老板',
-          industry: '打怪兽'
-        },
-        {
-          id: 4,
-          name: '蟹老板',
-          industry: '蟹黄包'
-        }
+
       ],
       multBuySponsorCheckedIds: [],
       // 套购参与人
       multBuyParticipant: [
-        {
-          id: 1,
-          name: '陆梦飞',
-          industry: '冰箱'
-        },
-        {
-          id: 2,
-          name: '大飞哥',
-          industry: '彩电'
-        },
-        {
-          id: 3,
-          name: '贾老板',
-          industry: '打怪兽'
-        },
-        {
-          id: 4,
-          name: '蟹老板',
-          industry: '蟹黄包'
-        }
+
       ],
       // 参与人选中id
       multBuyParticipantCheckIds: [],
@@ -588,7 +515,7 @@ export default {
     },
     // 暂存
     saveTemporary(type) {
-      this.genarateSubInfo(2);
+      this.genarateSubInfo(1);
       if (this.orderNo !== '') {
         Toast.info('保存中...')
         this.orderService.createOrder(this.subInfo, { orderFollowId: '' }).then((res) => {
@@ -614,16 +541,22 @@ export default {
       });
     },
     selectActivity() {
+      if (this.productList.length === 0) {
+        Toast.info('请选择产品');
+        return;
+      }
+      debugger;
+      for(var i = 0;i < this.productList.length; i++){
+        if (this.productList[i].productPrice === "") {
+          Toast.failed('请输入产品价格');
+          return
+          debugger
+        }
+      }
       /* 选择活动 */
-      this.genarateSubInfo(1)
-      const info = JSON.stringify(this.subInfo)
-      /* 选择活动 */
-      this.$router.push({
-        name: 'Order.OrderFollowActivity',
-        params:{orderInfo:info}
-      });
+      this.genarateSubInfo(2)
     },
-    genarateSubInfo(){
+    genarateSubInfo(type){
       const subInfo = {};
       // multBuyParticipantCheckIds
       if (this.multBuySponsorCheckedIds.length) {
@@ -649,8 +582,6 @@ export default {
         subInfo.mayEditCoupleOrderName = ''
         subInfo.mayEditCoupleOrderId= ''
       }
-
-
 
       subInfo.orderNo = this.orderNo
       subInfo.recordMode = this.recordMode
@@ -696,8 +627,17 @@ export default {
       subInfo.remark = '' // 备注，记录订单创建、订单修改原因等信息
       subInfo.rightsUserJson = this.rightsJson
       subInfo.orderDetailSaveQoList = this.productList;
-
       this.subInfo = subInfo;
+      if(type === 2){
+        const info = JSON.stringify(this.subInfo);
+        /* 选择活动 */
+        this.$router.push({
+          name: 'Order.OrderFollowActivity',
+          params: { orderInfo: info }
+        });
+      }
+
+
     },
     selectAddress(item) {
       debugger;

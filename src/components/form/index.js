@@ -20,7 +20,8 @@ import BActivityItem from './BActivityItem';
 import BOrderDialog from './BOrderDialog';
 import BPopSortType from './BPopSortType';
 import BPopButton from './BPopButton';
-import BOrderProductConfirm from './BOrderProductConfirm'
+import BOrderProductConfirm from './BOrderProductConfirm';
+import BTimeSectionPicker from './BTimeSectionPicker';
 /* eslint-disable import/prefer-default-export */
 export {
   BActivityList,
@@ -45,5 +46,6 @@ export {
   BOrderDialog,
   BPopSortType,
   BPopButton,
-  BOrderProductConfirm
+  BOrderProductConfirm,
+  BTimeSectionPicker
 };

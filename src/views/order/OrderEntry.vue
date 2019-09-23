@@ -33,14 +33,14 @@
             </button>
           </div>
           <p class="orderEntry-user-address">
-            {{customerInfo.provinceName}}{{customerInfo.cityName}}{{customerInfo.districtName}}{{customerInfo.address}}
+               {{consignee.address}}
           </p>
         </div>
         <div v-else>
           <button
             type="button"
             class="common-btn-primary w100per"
-            @click="addAddress()"
+            @click="addNew()"
           >添加或选择用户信息
           </button>
         </div>
@@ -168,7 +168,7 @@
       <b-pop-address-list
         :show.sync="addressPopShow"
         :list="addressList"
-        @addNew="addNew"
+        @addNew="addAddress"
         @editAddress="editAddress"
         @clickAddress="selectAddress"
       ></b-pop-address-list>
@@ -434,13 +434,13 @@ export default {
       debugger;
       return;
     }
-    debugger;
     this.customerInfo.username = this.$route.params.customerConsigneeInfo.userName;
     this.customerInfo.mobile = this.$route.params.customerConsigneeInfo.mobile;
+    this.customerInfo.userId = this.$route.params.customerConsigneeInfo.userId
     this.recordMode = this.$route.params.customerConsigneeInfo.recordMode;
     this.mobile = this.customerInfo.mobile;
-    this.queryUserList();
     this.queryCustomerDefault();
+    this.queryUserList();
   },
   methods: {
     //  haveConsignee() {
@@ -518,6 +518,7 @@ export default {
             }
             this.title = '收件人信息';
             this.consignee.address = res.data.province + res.data.city + res.data.district + res.data.address;
+            debugger
             this.consignee.phone = res.data.mobile;
             this.consignee.name = res.data.username;
             if (res.data.sex === 1) {
@@ -529,6 +530,11 @@ export default {
             this.consignee.customerId = res.data.customerId;
             this.queryCustomerAddressList();
             this.genarateOrderNum();
+          } else {
+            if (this.$route.params.region === 'new') {
+              Toast.info('当前用户暂无地址请创建')
+              this.addNew(this.customerInfo);
+            }
           }
         }
       });
@@ -543,7 +549,7 @@ export default {
     },
     // 暂存
     saveTemporary(type) {
-      this.genarateSubInfo(2);
+      this.genarateSubInfo(1);
       if (this.orderNo !== '') {
         Toast.info('保存中...');
         this.orderService.createOrder(this.subInfo, { orderFollowId: '' }).then((res) => {
@@ -567,7 +573,7 @@ export default {
         name: 'Order.SearchProduct',
       });
     },
-    genarateSubInfo() {
+    genarateSubInfo(type) {
       const subInfo = {};
       // multBuyParticipantCheckIds
       if (this.multBuySponsorCheckedIds.length) {
@@ -648,8 +654,15 @@ export default {
       subInfo.rightsUserJson = this.rightsJson;
       subInfo.orderDetailSaveQoList = this.productList;
       debugger;
-
       this.subInfo = subInfo;
+      if (type === 2) {
+        const info = JSON.stringify(this.subInfo);
+        /* 选择活动 */
+        this.$router.push({
+          name: 'Order.OrderFollowActivity',
+          params: { orderInfo: info }
+        });
+      }
     },
     selectActivity() {
       if (this.productList.length === 0) {
@@ -657,41 +670,33 @@ export default {
         return;
       }
       debugger;
-      for(var i = 0;i < this.productList.length; i++){
-        if (this.productList[i].productPrice === "") {
+      for (let i = 0; i < this.productList.length; i++) {
+        if (this.productList[i].productPrice === '') {
           Toast.failed('请输入产品价格');
-          return
-          debugger
+          return;
+          debugger;
         }
       }
-
-      debugger;
-      this.genarateSubInfo(1);
-      const info = JSON.stringify(this.subInfo);
-      /* 选择活动 */
-      this.$router.push({
-        name: 'Order.OrderFollowActivity',
-        params: { orderInfo: info }
-      });
+      this.genarateSubInfo(2);
     },
     selectAddress(item) {
       // debugger;
       console.log('11111111111', item);
       this.customerInfo = item;
     },
-    addAddress() {
+    addNew() {
       /* 添加用户信息 */
       if (this.addressList.length === 0) {
         this.region = 'add';
         this.$router.push({
           name: 'Order.AddAddress',
-          params: { region: this.region, info: '' }
+          params: { region: this.region, info: JSON.stringify(this.customerInfo)}
         });
       } else {
         this.showAddressList();
       }
     },
-    addNew(item) {
+    addAddress(item) {
       this.region = 'userAdd';
       this.$router.push({
         name: 'Order.AddAddress',

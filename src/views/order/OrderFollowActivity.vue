@@ -179,28 +179,24 @@ export default {
         });
       });
     },
-    minusCount(item, count) {
-      this.rightsService.uncheckedOrderRights({}, { orderNo: this.orderNo, rightsNo: item.rightsNo }).then((res) => {
+    minusCount(item) {
+      this.rightsService.uncheckedOrderRights({}, { orderNo: this.orderNo, rightsNo: item.rightsNo, pageNum: 1, pageSize: 10  }).then((res) => {
         if (res.code === 1) {
-          const result = res.data;
+          const result = res.data.result;
           if (result && result.length > 0) {
             const list = result;
             this.anylizeData(list);
           }
           this[this.curScrollViewName].list = this.currentList;
-          if (res.selectedNum === 0) {
-            this.$set(item, 'minesGray', true);
-          } else {
-            this.$set(item, 'minesGray', false);
-          }
         }
       });
     },
+
     addCount(item) {
       debugger;
-      this.rightsService.checkedOrderRights({}, { orderNo: this.orderNo, rightsNo: item.rightsNo }).then((res) => {
+      this.rightsService.checkedOrderRights({}, { orderNo: this.orderNo, rightsNo: item.rightsNo, pageNum: 1, pageSize: 10 }).then((res) => {
         if (res.code === 1) {
-          const result = res.data;
+          const result = res.data.result;
           if (result && result.length > 0) {
             const list = result;
             console.log('currentList', list);
@@ -208,11 +204,6 @@ export default {
             this.anylizeData(list);
           }
           this[this.curScrollViewName].list = this.currentList;
-          if (res.isOptional == 1) {
-            this.$set(item, 'addGray', false);
-          } else {
-            this.$set(item, 'addGray', true);
-          }
         }
       });
     },
@@ -252,25 +243,29 @@ export default {
       this.rightsService.confirmSelectedOrderRights({}, { orderNo: this.orderNo }).then((res) => {
         if (res.code === 1) {
           this.rightsJson = JSON.stringify(res.data);
-          this.$router.go(-1)
+          this.$router.go(-1);
         }
       });
     },
     search(page) {
       // todo
       this.subInfo = JSON.parse(this.$route.params.orderInfo);
+      debugger;
       this.orderNo = this.subInfo.orderNo;
-      const formData = {
-        pageNum: page.num,
-        pageSize: page.size,
-      };
       if (this.current === 0) {
-        return this.rightsService.queryOrderOptionalRights(this.subInfo, {}).then((res) => {
+        return this.rightsService.queryOrderOptionalRights(this.subInfo, {
+          pageNum: page.num,
+          pageSize: page.size,
+        }).then((res) => {
           debugger;
           const sroviewObj = {};
           if (res.code === 1) {
-            const result = res.data;
-            const pages = 1;
+            const {
+              result,
+              pages
+            } = res.data;
+            // const result = res.data;
+            // const pages = 1;
             sroviewObj.pages = pages;
             sroviewObj.result = result;
             if (result && result.length > 0) {
@@ -279,7 +274,12 @@ export default {
               debugger;
               this.anylizeData(list);
             }
-            this[this.curScrollViewName].list = this.currentList;
+            if (page.num === 1) {
+              this[this.curScrollViewName].list = [];
+              this[this.curScrollViewName].list = this.currentList;
+            } else {
+              this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(this.currentList);
+            }
             debugger;
           } else {
             Toast.failed(res.msg);
@@ -330,7 +330,7 @@ export default {
           this.$set(item, 'addGray', true);
         }
         if (item.selectedNum !== 0) {
-          debugger
+          debugger;
           this.$set(item, 'minesGray', false);
         }
       });

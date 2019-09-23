@@ -144,6 +144,7 @@ export default {
   },
   data() {
     return {
+      updateList: false,
       pageNum: 1,
       searchWord: '',
       show: false,
@@ -295,7 +296,7 @@ export default {
       this.$router.push({
         name: 'Order.OrderEntry',
         params: { customerConsigneeInfo: {
-          name: item.userName,
+          userName: item.userName,
           mobile: item.userMobile,
           recordMode: item.recordMode
         },
@@ -347,6 +348,7 @@ export default {
     },
 
     checkClicked(val) {
+      this.updateList = true;
       this.sortType = val;
       this.searchData({
         num: 0,
@@ -354,6 +356,7 @@ export default {
       });
     },
     buttonClicked(val) {
+      this.updateList = true;
       this.checkedButtonId = val;
       this.searchData({
         num: 0,
@@ -361,12 +364,14 @@ export default {
       });
     },
     followButtonClicked(val, info) {
-      if (val.name === '录新订单' || val.name === '成交录单' || val.name ==='继续录单') {
+      debugger
+      if (val.name === '录新订单' || val.name === '成交录单' || val.name === '继续录单') {
         this.$router.push({
           name: 'Order.OrderEntry',
           params: { customerConsigneeInfo: {
-            name: info.userName,
+            userName: info.userName,
             mobile: info.userMobile,
+            userId: info.userId,
             recordMode: info.recordMode
           },
           region: 'new' }
@@ -375,7 +380,7 @@ export default {
     },
 
     searchData(page) {
-      debugger
+      debugger;
       console.log('keyword', this.searchWord);
       return this.orderService
         .queryOrderFollowlList(
@@ -414,14 +419,20 @@ export default {
               const curList = result;
               this.anylizeData(curList);
 
-              // this.$nextTick(() => {
-              if (page.num === 1) {
-                this[this.curScrollViewName].list = [];
-                debugger;
-                this[this.curScrollViewName].list = this.currentList;
+              if (!this.updateList) {
+                if (page.num === 1) {
+                  this[this.curScrollViewName].list = [];
+                  debugger;
+                  this[this.curScrollViewName].list = this.currentList;
+                } else {
+                  this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(this.currentList);
+                }
               } else {
-                this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(this.currentList);
+                this[this.curScrollViewName].list = [];
+                this[this.curScrollViewName].list = this.currentList;
+                // this.updateList = false
               }
+
               // });
             }
           } else {
@@ -439,14 +450,14 @@ export default {
         if (item.flowStatus === 1) {
           // item.buttonList = [{ name: '录新订单' }, { name: '退货' }, { name: '换货' }];// 已完成
           item.buttonList = [{ name: '录新订单' }];// 已完成
-        } else if ( item.flowStatus === 0) {
+        } else if (item.flowStatus === 0) {
           // item.buttonList = [{ name: '成交录单' }, { name: '发放卡券' }];
           item.buttonList = [{ name: '成交录单' }];
         } else if (item.flowStatus === 5) {
           item.buttonList = [{ name: '刷新' }, { name: '修改订单' }, { name: '录新订单' }];
-        } else if(item.flowStatus === 2 ){
+        } else if (item.flowStatus === 2) {
           item.buttonList = [{ name: '继续录单' }];
-        }else {
+        } else {
           item.buttonList = [];
         }
 
@@ -457,7 +468,7 @@ export default {
           if (item.userStatus === 1) {
             item.userS = '高潜';
             item.showList.push({
-              id: '2',
+              id: '7',
               name: '取消高潜'
             }, {
               id: '3',
@@ -479,7 +490,7 @@ export default {
             item.userS = '高潜';
             item.showList = [];
             item.showList.push({
-              id: '2',
+              id: '7',
               name: '取消高潜'
             }, {
               id: '3',
@@ -536,6 +547,7 @@ export default {
       this.currentList = curList;
     },
     fuzzySearch() {
+      this.updateList = true;
       const page = {
         num: 1,
         size: 10
@@ -543,7 +555,8 @@ export default {
       this.searchData(page);
     },
     updateOrderType(type) {
-      debugger
+      this.updateList = true;
+      debugger;
       this.searchData({
         num: 0,
         size: 10

@@ -5,7 +5,7 @@
         <div class="addAddress-form-item">
           <label class="addAddress-form-item-name">手机号</label>
           <input
-            type="text"
+            type="number"
             class="addAddress-form-item-ipt"
             placeholder="请输入手机号"
             v-model="customerInfo.mobile"
@@ -129,6 +129,7 @@ export default {
     return {
       // disabled: false,
       searchResultShow: false,
+      confirmClicked: false,
       form: {
         name: '',
         phone: '',
@@ -180,7 +181,8 @@ export default {
       // 地址pop显示隐藏
       addressPopShow: false,
       addressName: '',
-      confirmShow: false
+      confirmShow: false,
+      smld: false
     };
   },
   created() {
@@ -188,18 +190,30 @@ export default {
     this.addressData = addressData;
     this.getFamilyItem();
     this.customerInfo.hmcId = JSON.parse(localStorage.getItem('userinfo')).hmcid;
+    debugger;
     this.customerInfo.tag = [];
     if (this.$route.params) {
       this.region = this.$route.params.region;
-      if (this.region === 'add') {
+      debugger;
+      if (this.region === 'add' && this.$route.params.info === '{}') {
         this.confirmShow = true;
+        debugger;
       } else if (this.region === 'userAdd') {
         this.confirmShow = true;
         this.searchEnd = true;
       } else {
         // this.confirmShow = false;
+        debugger;
         this.searchEnd = true;
-        this.customerInfo = JSON.parse(this.$route.params.info);
+        if (this.region === 'add' && !JSON.parse(this.$route.params.info).address) {
+          debugger;
+          this.customerInfo.username = JSON.parse(this.$route.params.info).username;
+          this.customerInfo.mobile = JSON.parse(this.$route.params.info).mobile;
+          this.customerInfo.userId = JSON.parse(this.$route.params.info).userId;
+          this.smld = true;
+        } else {
+          this.customerInfo = JSON.parse(this.$route.params.info);
+        }
         this.defaultA.push(this.customerInfo.province);
         this.defaultA.push(this.customerInfo.city);
         this.defaultA.push(this.customerInfo.district);
@@ -245,15 +259,21 @@ export default {
       }
       this.productService.deafaultCustomerAddress(this.customerInfo.mobile).then((res) => {
         if (res.code === 1) {
-          this.searchEnd = true;
-          this.customerInfo.username = res.data.username;
-          this.customerInfo.sex = res.data.sex;
-          this.customerInfo.customerId = res.data.customerId;
-          this.defaultA.push(res.data.province);
-          this.defaultA.push(res.data.city);
-          this.defaultA.push(res.data.district);
+          if (res.data) {
+            this.searchEnd = true;
+            this.customerInfo.username = res.data.username;
+            this.customerInfo.sex = res.data.sex;
+            this.customerInfo.customerId = res.data.customerId;
+            this.defaultA.push(res.data.province);
+            this.defaultA.push(res.data.city);
+            this.defaultA.push(res.data.district);
+          } else {
+            debugger;
+            this.searchResultShow = true;
+          }
         } else {
-          this.searchResultShow = true;
+          // this.searchResultShow = true;
+          Toast.failed(res.msg);
         }
       });
     },
@@ -275,6 +295,7 @@ export default {
       this.addressName = addressA.join('/');
     },
     confirm() {
+      this.confirmClicked = true;
       if (!(/^1[34578]\d{9}$/.test(this.customerInfo.mobile))) {
         Toast.failed('手机格式错误');
         this.customerInfo.mobile = '';
@@ -374,7 +395,15 @@ export default {
       }
       this.$destroy();
     }
-    next();// 必须要有这个，否则无法跳转
+    if (this.smld) {
+      if (this.confirmShow) {
+        next();// 必须要有这个，否则无法跳转
+      } else {
+        Toast.failed('请添加用户信息');
+      }
+    } else {
+      next();
+    }
   },
 };
 </script>

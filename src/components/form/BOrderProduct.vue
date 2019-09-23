@@ -9,7 +9,7 @@
       <div>
         <input
           class="b-order-product-item-price"
-          type="text"
+          type="number"
           v-model="data.productPrice"
         ><span class="b-order-product-item-price-unit">元</span>
       </div>

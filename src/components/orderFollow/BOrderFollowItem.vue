@@ -97,7 +97,7 @@
           src="@/assets/images/orderFollow-up/time@3x.png"
           class="timeImage"
         >
-        <span class="time-label">{{followItem.createdTime}}</span>
+        <span class="time-label">{{followItem.updatedTime}}</span>
         <span v-show="followItem.flowStatus !== 1" @click="detailHide(index,followItem)">
           <span class="information-class">详细信息</span>
           <img

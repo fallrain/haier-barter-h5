@@ -56,6 +56,92 @@ export default {
       pickerValue: '',
     };
   },
+  created(){
+    const d = new Date();
+    const dayList = []
+    const timeSectionArray = [
+      {
+        id:0,
+        value:'8:00-9:00'
+      },
+      {
+        id:0,
+        value:'9:00-10:00'
+      },
+      {
+        id:0,
+        value:'10:00-11:00'
+      },{
+        id:0,
+        value:'11:00-12:00'
+      },{
+        id:0,
+        value:'13:00-14:00'
+      },{
+        id:0,
+        value:'14:00-15:00'
+      },{
+        id:0,
+        value:'15:00-16:00'
+      },{
+        id:0,
+        value:'16:00-17:00'
+      },{
+        id:0,
+        value:'17:00-18:00'
+      }
+
+
+
+    ]
+    for (let i = 0; i < 365; i++) {
+      const day = this.GetDateStr(i);
+      debugger;
+      const dayV = {
+        id: i,
+        value: day
+      };
+      dayList.push(dayV)
+    }
+
+    // var dataA = [
+    //   [
+    //     {
+    //       // 选项展示文案
+    //       "text": {
+    //         id:'1',
+    //         value:''
+    //       },
+    //       // 第二列对应数据
+    //       "children": [
+    //         {
+    //           id:'1',
+    //           value:''
+    //         },
+    //         // ...
+    //       ]
+    //       // 以下自定义字段
+    //       "value": ""
+    //     },
+    //     {
+    //       // 选项展示文案
+    //       "text": "",
+    //       // 第二列对应数据
+    //       "children": [
+    //         {
+    //
+    //         },
+    //         // ...
+    //       ]
+    //       // 以下自定义字段
+    //       "value": ""
+    //     },
+    //     // ...
+    //   ]
+    // ]
+
+
+  },
   mounted() {
     // this.pickerData = district
     this.pickerDefaultIndex = [0, 0]
@@ -75,6 +161,15 @@ export default {
     // }
   },
   methods: {
+    GetDateStr(AddDayCount) {
+      const dd = new Date();
+      dd.setDate(dd.getDate() + AddDayCount);// 获取AddDayCount天后的日期
+      const y = dd.getFullYear();
+      const m = (dd.getMonth() + 1) < 10 ? `0${dd.getMonth() + 1}` : (dd.getMonth() + 1);// 获取当前月份的日期，不足10补0
+      const d = dd.getDate() < 10 ? `0${dd.getDate()}` : dd.getDate();// 获取当前几号，不足10补0
+      return `${y}-${m}-${d}`;
+    },
+
     datePickerConfirm() {
       /* 点了确定按钮 */
       const date = this.$refs.datePicker.getFormatDate(this.pattern);
