@@ -295,7 +295,7 @@ export default {
       this.addressName = addressA.join('/');
     },
     confirm() {
-      this.confirmClicked = true;
+
       if (!(/^1[34578]\d{9}$/.test(this.customerInfo.mobile))) {
         Toast.failed('手机格式错误');
         this.customerInfo.mobile = '';
@@ -338,6 +338,7 @@ export default {
         this.productService.addcustomerAddress(this.customerInfo, {}).then((res) => {
           if (res.code === 1) {
             Toast.succeed('地址添加成功');
+            this.confirmClicked = true;
             this.$router.go(-1);
           }
         });
@@ -345,6 +346,7 @@ export default {
         this.productService.updateCustomerAddress(this.customerInfo, {}).then((res) => {
           if (res.code === 1) {
             Toast.succeed('地址修改成功');
+            this.confirmClicked = true;
             this.$router.go(-1);
           }
         });
@@ -396,10 +398,12 @@ export default {
       this.$destroy();
     }
     if (this.smld) {
-      if (this.confirmShow) {
+      if (this.confirmClicked) {
         next();// 必须要有这个，否则无法跳转
+        debugger
       } else {
         Toast.failed('请添加用户信息');
+        debugger
       }
     } else {
       next();

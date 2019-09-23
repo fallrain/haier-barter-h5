@@ -531,6 +531,7 @@ export default {
       this.productService.deafaultCustomerAddress(this.mobile).then((res) => {
         if (res.code === 1) {
           if (res.data !== null) {
+            debugger
             this.haveConsignee = true;
             if (this.haveCustomer) {
             } else {
@@ -538,7 +539,8 @@ export default {
               this.customerInfo = res.data;
             }
             this.title = '收件人信息';
-            this.consignee.address = res.data.province + res.data.city + res.data.district + res.data.address;
+            // this.consignee.address = res.data.province + res.data.city + res.data.district + res.data.address;
+            this.consignee.address = res.data.address;
             debugger;
             this.consignee.phone = res.data.mobile;
             this.consignee.name = res.data.username;
@@ -552,6 +554,7 @@ export default {
             this.queryCustomerAddressList();
             this.genarateOrderNum();
           } else {
+            debugger
             this.addUserShow = true;
             // if (this.$route.params.region === 'new') {
 
