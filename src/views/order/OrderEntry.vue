@@ -199,7 +199,7 @@
     </b-pop>
     <md-popup v-model="addUserShow" :mask-closable="false">
       <div class="popUserAdd">
-        请完善用户信息
+        请完善顾客信息
         <p @click="addUserClick()" class="popConfirm">确定</p>
       </div>
 
