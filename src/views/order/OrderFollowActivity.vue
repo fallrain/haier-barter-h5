@@ -288,7 +288,10 @@ export default {
           return sroviewObj;
         });
       }
-      return this.rightsService.queryOrderNotOptionalRights(this.subInfo, {}).then((res) => {
+      return this.rightsService.queryOrderNotOptionalRights(this.subInfo, {
+        pageNum: page.num,
+        pageSize: page.size,
+      }).then((res) => {
         const sroviewObj = {};
         if (res.code === 1) {
           debugger;
