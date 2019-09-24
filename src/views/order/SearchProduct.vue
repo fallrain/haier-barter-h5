@@ -161,11 +161,7 @@ export default {
       return false;
     },
     onItemClick(item) {
-      this.currentClickItemData = item;
-      if (this.array_contain(this.searchHistory, item)) {
-       debugger
-      }else {
-        debugger
+      if (!this.array_contain(this.searchHistory, item)) {
         this.searchHistory.push(item);
       }
       this.searchVal = '';

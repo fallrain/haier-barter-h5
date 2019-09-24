@@ -220,10 +220,13 @@ export default {
     //   // shopId: '8800136445',
     //   // hmcid:'01467897',
     //   // mobile: '15253269729',
-    //   // shopId: '8700000484',
+    //   shopId: '8700000484',
     //   hmcid: 'a0032188',
     //   mobile: '13905427400',
     //   shopId: '8700048360',
+    //   // hmcid: 'z0188893',
+    //   // mobile: '13176882725',
+    //   // shopId: '8700048360',
     //   token: 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAwODk0OSIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2ODcxNzc2OCwiZXhwIjoxNTY5NTgxNzY4fQ.pLNFaidqOYIZABIbxlOxxqc5-oi26obOix4CAxkSShU'
     //   // token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX0FQUCIsIlJPTEVfU0VMTEVSIiwiUk9MRV9BUFAiXSwic3ViIjoiMDE0Njc4OTciLCJraW5kIjoxMCwicG9pbnQiOjEsImlhdCI6MTU2ODc3MjY1MywiZXhwIjoxNTY5NjM2NjUzfQ.shGqUkZmSdmXwKBYOmfQ3K2o2QgDIQT4vyUn0_DfM-g'
     // };
