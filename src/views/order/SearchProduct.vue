@@ -151,14 +151,7 @@ export default {
       });
     },
     array_contain(array, obj) {
-      for (let i = 0; i < array.length; i++) {
-        if (array[i] === obj) {
-          debugger
-          return true;
-        }
-      }
-      debugger
-      return false;
+      return !!array.find(v => v.productCode === obj.productCode);
     },
     onItemClick(item) {
       if (!this.array_contain(this.searchHistory, item)) {

@@ -34,9 +34,9 @@ ax.interceptors.request.use((config) => {
     config.headers.Authorization = `Bearer  ${localStorage.getItem('acces_token')}`;
   }
   if (!config.params.noLoading) {
-    // loadingAy.push(Toast.loading('加载中...'));
-    Toast.loading('加载中...')
-    Toast.hide()
+    loadingAy.push(Toast.loading('加载中...'));
+    // Toast.loading('加载中...')
+    // Toast.hide()
   }
   return config;
 });
@@ -45,8 +45,8 @@ ax.interceptors.response.use((response) => {
   const customOptions = response.config.params;
   // 关闭遮罩
   if (!response.config.params.noLoading) {
-    // closeLoading();
-    Toast.hide()
+    closeLoading();
+    // Toast.hide()
   }
   const { msg } = response.data;
   if (msg === '用户未登陆') {
@@ -64,8 +64,8 @@ ax.interceptors.response.use((response) => {
   }
   return response.data;
 }, (error) => {
-  // closeLoading();
-  Toast.hide()
+  closeLoading();
+  // Toast.hide()
   return Promise.reject(error);
   Toast.failed('请求失败');
   error.response.data = {

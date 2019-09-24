@@ -220,7 +220,7 @@ export default {
     //   // shopId: '8800136445',
     //   // hmcid:'01467897',
     //   // mobile: '15253269729',
-    //   shopId: '8700000484',
+    //   // shopId: '8700000484',
     //   hmcid: 'a0032188',
     //   mobile: '13905427400',
     //   shopId: '8700048360',
@@ -573,7 +573,6 @@ export default {
     },
     updateOrderType(type) {
       this.updateList = true;
-      ;
       this.searchData({
         num: 0,
         size: 10
