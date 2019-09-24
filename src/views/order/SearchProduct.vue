@@ -124,12 +124,13 @@ export default {
         }
       });
     },
-    indexOf(val) {
-      for (let i = 0; i < this.length; i++) {
-        if (this[i] == val) return i;
-      }
-      return -1;
-    },
+    // indexOf(val) {
+    //   debugger
+    //   for (let i = 0; i < this.searchHistory.length; i++) {
+    //     if (this.searchHistory[i] == val) return i;
+    //   }
+    //   return -1;
+    // },
     // remove (val) {
     //   var index = this.indexOf(val);
     //   if (index > -1) {
@@ -153,6 +154,7 @@ export default {
     onItemClick(item) {
       this.currentClickItemData = item;
       if (!this.searchHistory.indexOf(item)) {
+        debugger
         this.searchHistory.push(this.currentClickItemData);
       }
       this.searchVal = '';

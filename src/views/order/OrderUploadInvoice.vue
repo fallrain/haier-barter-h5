@@ -110,7 +110,7 @@ export default {
   created() {
     console.log('tag', this.$route.params);
     this.orderNo = this.$route.params.orderNo;
-    debugger;
+    ;
     this.getData();
   },
   methods: {
@@ -121,7 +121,7 @@ export default {
       });
     },
     uploadSuccess(data, fileMap,product) {
-      debugger;
+      ;
       data.orderNo = this.orderNo;
       data.orderDetailId = product.id
       data.invoiceUpload = 1;
@@ -129,7 +129,7 @@ export default {
       this.invoiceList.push(data);
     },
     uploadErr(msg) {
-      debugger;
+      ;
       Toast.failed(msg);
     },
     delImg(fileList) {
@@ -154,10 +154,10 @@ export default {
     },
 
     updateSubmit() {
-      debugger;
+      ;
       this.orderService.uploadInvoice(this.invoiceList, { orderNo: this.orderNo }).then((res) => {
         if (res.code === 1) {
-          debugger;
+          ;
           // Toast.succed(res.msg);
           this.$router.push({
             name: 'Order.OrderConfirm',
@@ -167,9 +167,9 @@ export default {
       });
     },
     getData() {
-      debugger
+
       this.orderService.queryOrderDetailAndInvoice({}, { orderNo: this.orderNo }).then((res) => {
-        debugger;
+        ;
         if (res.code === 1) {
           this.products = res.data;
         }
@@ -178,7 +178,7 @@ export default {
   },
   beforeRouteLeave(to, from, next) {
     if (to.name === 'Order.OrderEntry') { // 此处判断是如果返回上一层，你可以根据自己的业务更改此处的判断逻辑，酌情决定是否摧毁本层缓存。
-      debugger
+
       if (this.$vnode && this.$vnode.data.keepAlive) {
         if (this.$vnode.parent && this.$vnode.parent.componentInstance && this.$vnode.parent.componentInstance.cache) {
           if (this.$vnode.componentOptions) {
@@ -186,7 +186,6 @@ export default {
               ? this.$vnode.componentOptions.Ctor.cid + (this.$vnode.componentOptions.tag ? `::${this.$vnode.componentOptions.tag}` : '')
               : this.$vnode.key;
             const cache = this.$vnode.parent.componentInstance.cache;
-            debugger;
             const keys = this.$vnode.parent.componentInstance.keys;
             if (cache[key]) {
               if (keys.length) {

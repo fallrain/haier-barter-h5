@@ -118,35 +118,28 @@ export default {
     };
   },
   created() {
-    debugger;
     this.headers.Authorization = `Bearer  ${localStorage.getItem('acces_token')}`;
     this.genFileMap();
   },
   methods: {
     genFileMap() {
-      debugger;
       setTimeout(() => {
         this.products.forEach((v) => {
-          debugger;
           this.$set(this.fileMap, v.productCode, []);
         });
       });
     },
     imageChanged(res) {
-      debugger;
+
     },
-    imageuploaded(data, fileList,product) {
-      debugger;
+    imageuploaded(data, fileList, product) {
       /* 上传成功 */
       // todo 返回值待定
       fileList.push(data.data.invoiceUrl);
-      Toast.hide()
-      debugger;
+      Toast.hide();
       if (data.code === 1) {
-        debugger;
-        this.$emit('uploadSuccess', data.data,this.fileMap,product);
+        this.$emit('uploadSuccess', data.data, this.fileMap, product);
       } else {
-        debugger;
         this.$emit('uploadErr', data.msg);
       }
     },
@@ -164,7 +157,7 @@ export default {
       Toast.failed(res.msg);
     },
     delImg(index, fileList) {
-      this.$emit('delImg',fileList)
+      this.$emit('delImg', fileList);
       fileList.splice(index, 1);
     }
   }

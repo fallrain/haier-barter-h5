@@ -101,7 +101,7 @@
       >
 
         <b-date-picker
-          class="orderEntry-date"
+          class="orderEntry-date1"
           slot="right"
           type="datetime"
           title="请选择日期"
@@ -335,11 +335,15 @@ export default {
       title: '顾客信息：',
       mobile: '',
       region: '',
-      hmcId:'',
-      rightsList:[],
-      subInfo:{},
-      rightsJson:'',
-      userParam:{},
+      hmcId: '',
+      rightsList: [],
+      subInfo: {},
+      rightsJson: '',
+      userParam: {},
+      orderSource: '',
+      orderFollowId: '',
+      recordMode: '',
+      sourceSn: ''
     };
   },
   computed: {},
@@ -352,70 +356,66 @@ export default {
   },
   activated() {
     if (this.$route.query.temp) {
-      var ID = ''
+      let ID = '';
       const obj = JSON.parse(this.$route.query.temp);
       if (obj.tel) {
         this.mobile = obj.tel;
         this.queryCustomerDefault();
       }
       if (obj.product) {
-        debugger
-        if(!obj.product.productGroupName){
-          return
+        debugger;
+        if (!obj.product.productGroupName) {
+          return;
         }
         this.orderService.generateOrderDetailId().then((res) => {
           if (res.code === 1) {
             ID = res.data;
-            var pro = {}
-              pro.id = ID
-              debugger
-           pro. deliveryTime= this.deliveryTime
+            const pro = {};
+            pro.id = ID;
+            debugger;
+            pro.deliveryTime = this.deliveryTime;
             // pro.hmcId= "A0008949"
-            pro.hmcId = this.userParam.hmcId
-            pro.installTime='1564650104445'
-            pro.orderFlag = 0
-            pro.orderNo=this.orderNo
-            pro.productCategoryName =  obj.product.productGroupName
-            pro.productCategoryCode = obj.product.productBrandCode
-            pro.productCode = obj.product.productCode
-            pro.productModel = obj.product.productModel
-            pro.bccPrice = obj.product.price
-            pro.productPrice = obj.product.price
-            pro.remark = "备注，记录订单创建、订单修改原因等信息"
-            pro.rightId =  "111111"
-            pro.rightName= "八月套购权益"
-            pro.storeId = this.shopId
-            pro.storeName =  this.shopName
-    		pro.invoiceStatus =  0
-            pro.userId = this.userParam.userId
-          debugger
+            pro.hmcId = this.userParam.hmcId;
+            pro.installTime = '1564650104445';
+            pro.orderFlag = 0;
+            pro.orderNo = this.orderNo;
+            pro.productCategoryName = obj.product.productGroupName;
+            pro.productCategoryCode = obj.product.productBrandCode;
+            pro.productCode = obj.product.productCode;
+            pro.productModel = obj.product.productModel;
+            pro.bccPrice = obj.product.price;
+            pro.productPrice = obj.product.price;
+            pro.remark = '备注，记录订单创建、订单修改原因等信息';
+            pro.rightId = '111111';
+            pro.rightName = '八月套购权益';
+            pro.storeId = this.shopId;
+            pro.storeName = this.shopName;
+    		pro.invoiceStatus = 0;
+            pro.userId = this.userParam.userId;
+            debugger;
 
-        this.productList.push(pro);
-            debugger
+            this.productList.push(pro);
+            debugger;
           } else {
             Toast.failed(res.msg);
           }
         });
-        if(obj.rightsJson){
-          const right = JSON.parse(obj.rightsJson)
-          if(!right.rightsName){
-            return
+        if (obj.rightsJson) {
+          const right = JSON.parse(obj.rightsJson);
+          if (!right.rightsName) {
+            return;
           }
-          this.isDetail = true
-          this.rightsList = right.rightsName.replace(/(.)(?=[^$])/g,"$1,").split(",")
+          this.isDetail = true;
+          this.rightsList = right.rightsName.replace(/(.)(?=[^$])/g, '$1,').split(',');
         }
-
       }
     }
   },
   created() {
-    debugger
+    debugger;
     this.orderNo = this.$route.params.orderNo;
     this.userParam = JSON.parse(localStorage.getItem('userinfo'));
-    //
-    // this.getUserStore();
-    // this.queryCustomerDefault();
-    this.queryUserList()
+    this.queryUserList();
     this.getData();
   },
   methods: {
@@ -430,13 +430,13 @@ export default {
     getData() {
       this.orderService.queryOrderInfoByOrderNo({}, { orderNo: this.orderNo }).then((response) => {
         if (response.code === 1) {
-          debugger
+          ;
           const resData = response.data;
           this.shopName = resData.storeName;
           this.consignee.name = resData.consigneeName;
-          this.customerInfo.username = resData.userName
-          this.customerInfo.customerId = resData.userId
-          this.customerInfo.mobile = resData.userPhone
+          this.customerInfo.username = resData.userName;
+          this.customerInfo.customerId = resData.userId;
+          this.customerInfo.mobile = resData.userPhone;
           this.phone = resData.userPhone;
           this.hmcId = resData.hmcId;
           this.consignee.phone = resData.consigneePhone;
@@ -446,8 +446,11 @@ export default {
           this.orderType = resData.orderType;
           this.deliveryTime = resData.deliveryTime;
           this.createdTime = resData.createdTime;
-          this.shopId = resData.shopId
-           this.queryUserList();
+          this.orderSource = resData.orderSource;
+          this.orderFollowId = resData.id;
+          this.sourceSn = resData.sourceSn;
+          this.recordMode = resData.recordMode;
+          this.queryUserList();
           if (resData.rightsUserJson) {
             this.activityList = JSON.parse(resData.rightsUserJson).rightsUserInterestsDetailsDTO;
           }
@@ -462,13 +465,11 @@ export default {
             });
           }
         }
-
-
-      })
+      });
     },
     // 获取门店信息
     sponsorCheck(checkid) {
-      debugger;
+      ;
     },
     particpantAll(checkedIds) {
 
@@ -478,14 +479,14 @@ export default {
     },
     getUserStore() {
       // this.shopId = '8800332156';
-      this.shopId = this.userParam.shopId
+      this.shopId = this.userParam.shopId;
       this.productService.storeInfo(this.shopId).then((res) => {
-        debugger
+        ;
         if (res.code === 1) {
           this.shopName = res.data.storeName;
         }
       });
-      debugger
+      ;
     },
 
     // 生成订单号
@@ -495,7 +496,7 @@ export default {
     //   }
     //   this.orderService.generateOrderNo({}, { recordMode: 'Haier' },).then((res) => {
     //     if (res.code === 1) {
-    //       debugger
+    //
     //       this.orderNo = res.data;
     //     } else {
     //       Toast.failed(res.msg);
@@ -505,11 +506,11 @@ export default {
     // 查询客户信息及默认地址
     // 查询客户地址列表
     queryCustomerAddressList() {
-      debugger
+      ;
       this.productService.customerAddressList(this.customerInfo.customerId).then((res) => {
         if (res.code === 1) {
           this.addressList = res.data;
-          debugger
+          ;
         }
       });
     },
@@ -517,19 +518,18 @@ export default {
     saveTemporary(type) {
       this.genarateSubInfo(1);
       if (this.orderNo !== '') {
-        Toast.info('保存中...')
-        this.orderService.createOrder(this.subInfo, { orderFollowId: '' }).then((res) => {
+        Toast.info('保存中...');
+        this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId }).then((res) => {
           if (type === 1) {
             Toast.succeed('订单暂存成功');
           }
-          Toast.hide()
-          if(type === 2){
+          Toast.hide();
+          if (type === 2) {
             this.$router.push({
               name: 'Order.OrderUploadInvoice',
               params: { orderNo: this.orderNo }
             });
           }
-
         });
       }
     },
@@ -545,90 +545,84 @@ export default {
         Toast.info('请选择产品');
         return;
       }
-      debugger;
-      for(var i = 0;i < this.productList.length; i++){
-        if (this.productList[i].productPrice === "") {
+      ;
+      for (let i = 0; i < this.productList.length; i++) {
+        if (this.productList[i].productPrice === '') {
           Toast.failed('请输入产品价格');
-          return
-          debugger
+          return;
+          ;
         }
       }
       /* 选择活动 */
-      this.genarateSubInfo(2)
+      this.genarateSubInfo(2);
     },
-    genarateSubInfo(type){
+    genarateSubInfo(type) {
       const subInfo = {};
       // multBuyParticipantCheckIds
       if (this.multBuySponsorCheckedIds.length) {
         subInfo.coupleSponsor = this.multBuySponsorCheckedIds[0];
-        const obj = this.multBuySponsor.find(v => v.hmcId === this.multBuySponsorCheckedIds[0])
+        const obj = this.multBuySponsor.find(v => v.hmcId === this.multBuySponsorCheckedIds[0]);
         subInfo.coupleSponsorName = obj.username;
-      }else{
-        subInfo.coupleSponsor = ''
+      } else {
+        subInfo.coupleSponsor = '';
         subInfo.mayEditCoupleOrderId = '';
       }
 
-      var part = []
-      if(this.multBuyParticipantCheckIds.length){
+      const part = [];
+      if (this.multBuyParticipantCheckIds.length) {
         subInfo.mayEditCoupleOrderId = this.multBuyParticipantCheckIds.join(',');
-        this.multBuyParticipantCheckIds.forEach(val => {
-          const obj = this.multBuyParticipant.find(v => v.hmcId === val)
-          if(obj){
-            part.push(obj.username)
+        this.multBuyParticipantCheckIds.forEach((val) => {
+          const obj = this.multBuyParticipant.find(v => v.hmcId === val);
+          if (obj) {
+            part.push(obj.username);
           }
-          subInfo.mayEditCoupleOrderName = part.join(',')
+          subInfo.mayEditCoupleOrderName = part.join(',');
         });
-      }else{
-        subInfo.mayEditCoupleOrderName = ''
-        subInfo.mayEditCoupleOrderId= ''
+      } else {
+        subInfo.mayEditCoupleOrderName = '';
+        subInfo.mayEditCoupleOrderId = '';
       }
 
-      subInfo.orderNo = this.orderNo
-      subInfo.recordMode = this.recordMode
-      subInfo.hmcId = this.userParam.hmcid
-      subInfo.storeId = this.shopId
-      subInfo.storeName = this.shopName
-      subInfo.userId = this.customerInfo.userId
-      // subInfo.userId = '123456789',
-      // this.userParam.userId;
-      // subInfo.userName = '张三',
+      subInfo.orderNo = this.orderNo;
+      subInfo.recordMode = this.recordMode;
+      subInfo.hmcId = this.userParam.hmcid;
+      subInfo.storeId = this.userParam.shopId;
+      subInfo.storeName = this.shopName;
+      subInfo.userId = this.customerInfo.userId;
       subInfo.userName = this.customerInfo.username;
-      subInfo.consigneeName = this.consignee.name
-      subInfo.consigneePhone = this.consignee.phone
-      subInfo.consigneeId = this.consignee.customerId
-      subInfo.microCode = this.customerInfo.microCode
-      subInfo.microName = this.customerInfo.microName
-      subInfo.channel = this.customerInfo.channel
-      subInfo.channelName = this.customerInfo.channelName
+      subInfo.consigneeName = this.consignee.name;
+      subInfo.consigneePhone = this.consignee.phone;
+      subInfo.consigneeId = this.consignee.customerId;
+      subInfo.microCode = this.customerInfo.microCode;
+      subInfo.microName = this.customerInfo.microName;
+      subInfo.channel = this.customerInfo.channel;
+      subInfo.channelName = this.customerInfo.channelName;
       // subInfo.userPhone = '18675647364',
       subInfo.userPhone = this.customerInfo.mobile;
-      subInfo.dispatchProvinceId = this.customerInfo.province
-      subInfo.dispatchProvince = ''
-      subInfo.dispatchCityId = this.customerInfo.city
-      subInfo.dispatchCity = ''
-      subInfo.dispatchAreaId = this.customerInfo.area
-      subInfo.dispatchArea = ''
-      subInfo.dispatchAdd = this.customerInfo.address
-      subInfo.buyTime = this.buyDate
-      subInfo.deliveryTime = this.deliveryTime
-      subInfo.orderType = this.orderType
-      // subInfo.coupleSponsor = '',
-      // subInfo.coupleSponsorName = '',
-      // subInfo.mayEditCoupleOrderId = '',
-      // subInfo.mayEditCoupleOrderName = '',
-      subInfo.rightId = ''
-      subInfo.rightName = ''
-      subInfo.giftId = ''
-      subInfo.giftName = ''
-      subInfo.orderStatus = 0
-      subInfo.orderFlag = 0// 订单标示，0-正常 1-换货 2-退货 订单来源，
-      subInfo.orderSource = 'SGLD' // 1-扫码录单 2-手动录单 3-智慧触点认筹录单
-      subInfo.sourceSn = '' // 来源编码，记录来源ID
-      subInfo.remark = '' // 备注，记录订单创建、订单修改原因等信息
-      subInfo.rightsUserJson = this.rightsJson
+      subInfo.dispatchProvinceId = this.customerInfo.province;
+      subInfo.dispatchProvince = '';
+      subInfo.dispatchCityId = this.customerInfo.city;
+      subInfo.dispatchCity = '';
+      subInfo.dispatchAreaId = this.customerInfo.area;
+      subInfo.dispatchArea = '';
+      subInfo.dispatchAdd = this.customerInfo.address;
+      subInfo.buyTime = this.buyDate;
+      subInfo.deliveryTime = this.deliveryTime;
+      subInfo.orderType = this.orderType;
+      subInfo.rightId = '';
+      subInfo.rightName = '';
+      subInfo.giftId = '';
+      subInfo.giftName = '';
+      subInfo.orderStatus = 0;
+      subInfo.orderFlag = 0;// 订单标示，0-正常 1-换货 2-退货 订单来源，
+      subInfo.orderSource = this.orderSource; // 1-扫码录单 2-手动录单 3-智慧触点认筹录单
+      subInfo.sourceSn = this.sourceSn; // 来源编码，记录来源ID
+      subInfo.remark = ''; // 备注，记录订单创建、订单修改原因等信息
+      subInfo.rightsUserJson = this.rightsJson;
       subInfo.orderDetailSaveQoList = this.productList;
       this.subInfo = subInfo;
-      if(type === 2){
+      ;
+      if (type === 2) {
         const info = JSON.stringify(this.subInfo);
         /* 选择活动 */
         this.$router.push({
@@ -636,11 +630,9 @@ export default {
           params: { orderInfo: info }
         });
       }
-
-
     },
     selectAddress(item) {
-      debugger;
+      ;
       console.log('11111111111', item);
       this.customerInfo = item;
     },
@@ -686,9 +678,9 @@ export default {
       this.addressPopShow = true;
     },
     queryUserList() {
-      this.productService.userList(this.shopId).then((res) => {
+      this.productService.userList(this.userParam.shopId).then((res) => {
         if (res.code === 1) {
-          debugger
+          ;
           this.multBuySponsor = res.data;
           this.multBuyParticipant = this.multBuySponsor;
         }
@@ -702,12 +694,10 @@ export default {
         this.multBuyPopShow = true;
       }
       this.saveTemporary(2);
-      debugger
-      this.$router.push({
-        name: 'Order.OrderUploadInvoice',
-        params: { orderNo: this.orderNo }
-      });
-
+      // this.$router.push({
+      //   name: 'Order.OrderUploadInvoice',
+      //   params: { orderNo: this.orderNo }
+      // });
     },
     saveOrder() {
 
@@ -715,7 +705,34 @@ export default {
     onDelete(index) {
       this.productList.splice(index, 1);
     }
-  }
+  },
+  beforeRouteLeave(to, from, next) {
+    if (to.path === '/') { // 此处判断是如果返回上一层，你可以根据自己的业务更改此处的判断逻辑，酌情决定是否摧毁本层缓存。
+      if (this.$vnode && this.$vnode.data.keepAlive) {
+        if (this.$vnode.parent && this.$vnode.parent.componentInstance && this.$vnode.parent.componentInstance.cache) {
+          if (this.$vnode.componentOptions) {
+            const key = this.$vnode.key == null
+              ? this.$vnode.componentOptions.Ctor.cid + (this.$vnode.componentOptions.tag ? `::${this.$vnode.componentOptions.tag}` : '')
+              : this.$vnode.key;
+            const cache = this.$vnode.parent.componentInstance.cache;
+            const keys = this.$vnode.parent.componentInstance.keys;
+            if (cache[key]) {
+              if (keys.length) {
+                const index = keys.indexOf(key);
+                if (index > -1) {
+                  keys.splice(index, 1);
+                }
+              }
+              delete cache[key];
+            }
+          }
+        }
+      }
+      this.$destroy();
+    }
+    next();
+  },
+
 };
 </script>
 
@@ -793,10 +810,12 @@ export default {
     margin-top: 28px;
   }
 
-  .orderEntry-date {
-    width: 320px;
+  .orderEntry-date1 {
+    width: 380px !important;
   }
-
+  .orderEntry-date {
+    width: 280px;
+  }
   .orderEntry-reportInf {
     color: #3078CC;
     font-size: 24px;
@@ -830,7 +849,5 @@ export default {
     background: #fff;
     padding: 0;
   }
-  .orderEntry-date {
-    width: 340px;
-  }
+
 </style>

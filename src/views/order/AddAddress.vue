@@ -229,7 +229,6 @@ export default {
       debugger;
       if (this.customerInfo.tag) {
         const tagObj = this.tagList.find(v => v.id === this.customerInfo.tag[0]);
-
         let name;
         if (tagObj) {
           name = tagObj.name;

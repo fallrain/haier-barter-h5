@@ -285,14 +285,14 @@ export default {
       });
     },
     itemClick(index) {
-      debugger;
+      ;
       this.$router.push({
         name: 'Order.OrderDetail',
         params: { orderNo: this.currentList[index % 10].orderNo }
       });
     },
     againEntry(item) {
-      debugger;
+      ;
       // this.orderService.createNewOrder({}, { orderNo: item.orderNo }).then((res) => {
       //   if (res.code === 1) {
       //     Toast.succeed(res.msg);
@@ -343,7 +343,7 @@ export default {
     upCallback(page) {
       // 下载过就设置已经初始化
       this[this.curScrollViewName].isListInit = true;
-      debugger;
+      ;
       this.searchData(page).then(({ result, pages }) => {
         this.$nextTick(() => {
           // 通过当前页的数据条数，和总页数来判断是否加载完
@@ -369,7 +369,6 @@ export default {
       });
     },
     followButtonClicked(val, info) {
-      debugger;
       if (val.name === '录新订单' || val.name === '成交录单') {
         this.$router.push({
           name: 'Order.OrderEntry',
@@ -380,14 +379,14 @@ export default {
             recordMode: info.recordMode,
             businessScenarios: info.businessScenarios,
             sourceSn: info.sourceSn,
-            id: info.id
+            id: info.id,
           },
           region: 'new' }
         });
       } else if (val.name === '继续录单') {
         this.$router.push({
           name: 'Order.OrderModify',
-          params: { orderNo: info.orderSource }
+          params: { orderNo: info.orderNo }
         });
       } else {
 
@@ -395,7 +394,7 @@ export default {
     },
 
     searchData(page) {
-      debugger;
+      ;
       console.log('keyword', this.searchWord);
       return this.orderService
         .queryOrderFollowlList(
@@ -437,7 +436,7 @@ export default {
               if (!this.updateList) {
                 if (page.num === 1) {
                   this[this.curScrollViewName].list = [];
-                  debugger;
+                  ;
                   this[this.curScrollViewName].list = this.currentList;
                 } else {
                   this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(this.currentList);
@@ -457,7 +456,7 @@ export default {
         });
     },
     anylizeData(curList) {
-      debugger;
+      ;
       curList.forEach((item) => {
         /*
         0-跟进中  1-已完成  2-草稿  3-暂不跟进 4-取消 5-异常
@@ -571,7 +570,7 @@ export default {
     },
     updateOrderType(type) {
       this.updateList = true;
-      debugger;
+      ;
       this.searchData({
         num: 0,
         size: 10
@@ -580,13 +579,13 @@ export default {
 
   },
   beforeRouteLeave(to, from, next) {
-    debugger;
-    if (to.name === 'Order.OrderFollowCommitResult' || to.name === 'Order.OrderConfirm') {
-      wx.miniProgram.switchTab({ url: 'pages/tool/tool' });
-      next();
-    } else {
-      next();// 必须要有这个，否则无法跳转
-    }
+    wx.miniProgram.switchTab({ url: 'pages/tool/tool' });
+    next();
+    // if (to.name === 'Order.OrderFollowCommitResult' || to.name === 'Order.OrderConfirm') {
+    //
+    // } else {
+    //   next();// 必须要有这个，否则无法跳转
+    // }
   },
 };
 </script>

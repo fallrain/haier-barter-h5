@@ -387,7 +387,6 @@ export default {
       if (obj.tel) {
         this.mobile = obj.tel;
         this.queryCustomerDefault();
-        this.queryCustomerAddressList();
       }
       if (obj.product) {
         debugger;
@@ -592,7 +591,8 @@ export default {
     saveTemporary(type) {
       this.genarateSubInfo(1);
       if (this.orderNo !== '') {
-        Toast.info('保存中...');
+        Toast.loading('保存中...');
+        debugger
         this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId }).then((res) => {
           if (res.code === 1) {
             if (type === 1) {
@@ -656,7 +656,7 @@ export default {
       subInfo.hmcId = this.userParam.hmcid;
       subInfo.storeId = this.shopId;
       subInfo.storeName = this.shopName;
-      subInfo.userId = this.customerInfo.userId;
+      subInfo.userId = this.userId;
       // subInfo.userId = '123456789',
       // this.userParam.userId;
       // subInfo.userName = '张三',
@@ -770,7 +770,6 @@ export default {
       this.addressPopShow = true;
     },
     queryUserList() {
-      this.productGroup = '111';
       this.productService.userList(this.shopId).then((res) => {
         if (res.code === 1) {
           this.multBuySponsor = res.data;
