@@ -408,6 +408,15 @@ export default {
       for (let i = 0; i < this.list.length; i++) {
         this.$set(this.list[i], 'show', false);
       }
+      if (type === '20') {
+        this.$emit('userService', item);
+        return;
+      }
+      if (type === '21') {
+        this.$emit('maybeBuyer', item);
+        return;
+      }
+
       if (type === '10') {
         this.$emit('againEntry', item);
         return;
@@ -722,7 +731,7 @@ export default {
 
 .demo {
   width: 200px;
-  height: 200px;
+  /*height: 200px;*/
   border: 1px solid #999999;
   background-color: white;
   z-index: 10;

@@ -151,7 +151,7 @@ export default {
         hmcId: '',
         mobile: '',
         province: '',
-        sex: 0,
+        sex: 1,
         userId: '',
         source: '',
         username: '',

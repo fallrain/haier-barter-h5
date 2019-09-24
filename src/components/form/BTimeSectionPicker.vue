@@ -18,7 +18,7 @@
       :default-value="pickerDefaultValue"
       is-view
       is-cascade
-      @initialed="onPickerInitialed"
+      v-model="isTimePickerShow"
       @change="onPickerConfirm"
     ></md-picker>
   </div>
@@ -54,11 +54,11 @@ export default {
       pickerDefaultIndex: [],
       pickerDefaultValue: [],
       pickerValue: '',
+      isTimePickerShow:false
     };
   },
   created(){
-    const d = new Date();
-    const dayList = []
+    var dayList = []
     const timeSectionArray = [
       {
         id:0,
@@ -90,19 +90,20 @@ export default {
         id:0,
         value:'17:00-18:00'
       }
-
-
-
     ]
     for (let i = 0; i < 365; i++) {
       const day = this.GetDateStr(i);
-      debugger;
       const dayV = {
         id: i,
-        value: day
+        value: day,
+        children:timeSectionArray
       };
       dayList.push(dayV)
     }
+    var t = []
+    t.push(dayList)
+    this.pickerData = t
+    debugger
 
     // var dataA = [
     //   [
@@ -169,19 +170,30 @@ export default {
       const d = dd.getDate() < 10 ? `0${dd.getDate()}` : dd.getDate();// 获取当前几号，不足10补0
       return `${y}-${m}-${d}`;
     },
+    onPickerInitialed(){},
+    onPickerConfirm(index) {
+      const values = this.$refs[`picker${index}`].getColumnValues()
 
-    datePickerConfirm() {
-      /* 点了确定按钮 */
-      const date = this.$refs.datePicker.getFormatDate(this.pattern);
-      this.$emit('confirm', date);
-      this.$emit('input', date);
+      let res = ''
+      values.forEach(value => {
+        value && (res += `${value.text || value.label} `)
+      })
+      this[`pickerValue${index}`] = res
+      debugger
     },
+
+    // datePickerConfirm() {
+    //   /* 点了确定按钮 */
+    //   // const date = this.$refs.datePicker.getFormatDate(this.pattern);
+    //   // this.$emit('confirm', date);
+    //   // this.$emit('input', date);
+    // },
     showPicker() {
       /* 显示时间选择器 */
       if (this.disabled) {
         return;
       }
-      this.isDatePickerShow = true;
+      this.isTimePickerShow = true;
     }
   }
 };

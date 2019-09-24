@@ -467,6 +467,7 @@ export default {
     this.customerInfo.username = this.$route.params.customerConsigneeInfo.userName;
     this.customerInfo.mobile = this.$route.params.customerConsigneeInfo.mobile;
     this.customerInfo.userId = this.$route.params.customerConsigneeInfo.userId;
+    this.userId = this.$route.params.customerConsigneeInfo.userId;
     this.recordMode = this.$route.params.customerConsigneeInfo.recordMode;
     this.mobile = this.customerInfo.mobile;
     this.queryCustomerDefault();

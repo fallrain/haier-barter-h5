@@ -10,6 +10,7 @@
       <button
         type="button"
         class="common-submit-btn-primary"
+        @click="checkOrder()"
       >查看订单列表
       </button>
       <button
@@ -50,7 +51,7 @@ export default {
   },
   data() {
     return {
-      orderNo:'',
+      orderNo: '',
       dataList: [
         {
           title: '年龄层次',
@@ -89,21 +90,27 @@ export default {
       routerData: routerData.data
     };
   },
-  created(){
-    this.orderNo = this.$route.params.orderInfo
+  created() {
+    this.orderNo = this.$route.params.orderInfo;
   },
   methods: {
     orderFollow() {
-      // this.$router.replace('/')
       this.$router.push({
-        path: '/',
-        params:{region:'result'}
-      })
-    }
+        name: 'Order.OrderFollowSearch',
+      });
+    },
+    checkOrder() {
+      debugger
+      this.$router.push({
+        name: 'Order.OrderFollowSearch',
+      });
+      localStorage.setItem('confirm','list')
+    },
   },
+
   beforeRouteLeave(to, from, next) {
     if (to.name === 'Order.OrderConfirm') {
-        this.orderFollow()
+      this.orderFollow();
     }
     next();// 必须要有这个，否则无法跳转
   }

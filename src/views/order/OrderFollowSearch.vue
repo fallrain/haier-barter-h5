@@ -37,6 +37,8 @@
         @followButtonClick="followButtonClicked"
         @againEntry="againEntry"
         @itemClick="itemClick"
+        @userService="userService"
+        @maybeBuyer="maybeBuyer"
       ></b-order-follow-item>
     </div>
     <div
@@ -212,6 +214,12 @@ export default {
     // window.location.reload()
   },
   created() {
+    if(localStorage.getItem('confirm') === 'list'){
+      debugger
+      this.curTab = 3
+      localStorage.setItem('confirm','')
+    }
+    debugger
     const userinfostr = this.getQueryString('userinfo');
     this.userinfo = JSON.parse(userinfostr);
     // this.userinfo = {
@@ -295,7 +303,6 @@ export default {
       });
     },
     againEntry(item) {
-      ;
       // this.orderService.createNewOrder({}, { orderNo: item.orderNo }).then((res) => {
       //   if (res.code === 1) {
       //     Toast.succeed(res.msg);
@@ -310,6 +317,12 @@ export default {
         },
         region: 'new' }
       });
+    },
+    userService(item){
+      wx.miniProgram.navigateTo({ url: 'pages/userService/userService'});
+    },
+    maybeBuyer(item){
+      wx.miniProgram.navigateTo({ url: 'pages/userService/userService',userId:item.userId})
     },
     searchProduct(item) {
       this.orderService.queryOrderInfoByOrderNo({}, { orderNo: item.orderNo }).then((response) => {
@@ -523,6 +536,16 @@ export default {
               id: '3',
               name: '暂不跟进'
             });
+          }
+          if(item.businessScenarios === 'SMLD'){
+            item.showList.push({
+              id: '20',
+              name: '入户服务'
+              } ,{
+              id: '21',
+                name: '潜在客户'
+            }
+            )
           }
         } else if (this.curTab === 3) {
           item.showList = [];

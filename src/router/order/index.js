@@ -19,6 +19,7 @@ const data = [
     component: OrderFollowSearch,
     meta: {
       title: '订单跟进',
+      params:{}
     }
   },
   {
