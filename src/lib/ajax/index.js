@@ -15,26 +15,36 @@ ax.defaults = Object.assign(
     method: 'post'
   }
 );
+const loadingAy = []
+function closeLoading() {
+  debugger
+// 关闭遮罩
+  if (loadingAy.length === 1) {
+    const loadingIns = loadingAy[0];
+    Vue.nextTick(() => {
+      loadingIns.hide();
+    });
+  }
+  loadingAy.length--;
+}
 ax.interceptors.request.use((config) => {
   if (!config.params) {
     config.params = {};
   }
   if (config.headers) {
     config.headers.Authorization = 'Bearer  ' + localStorage.getItem('acces_token');
-    // config.headers.Authorization = 'Bearer  eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAwODk0OSIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2ODA4NjQwMCwiZXhwIjoxNTY4OTUwNDAwfQ.4mGl5CY__qD78-0YDeyONp-rUlR5opdqxpjzFI6G2ZQ';
   }
   if (!config.params.noLoading) {
-    debugger
-    Toast.loading('加载中...');
-    Toast.hide()
+   loadingAy.push(Toast.loading('加载中...'))
   }
   return config;
 });
+
 ax.interceptors.response.use((response) => {
   const customOptions = response.config.params;
   // 关闭遮罩
   if (!response.config.params.noLoading) {
-    Toast.hide();
+    closeLoading();
   }
   const { msg } = response.data;
   if (msg === '用户未登陆') {
@@ -45,7 +55,6 @@ ax.interceptors.response.use((response) => {
   if (!(response.config.params && response.config.params.requestNoToast)) {
     if (response.data.code !== 1 && !response.data.isSuccess) {
       Toast.failed(msg || '请求失败');
-
     }
   }
   if (customOptions && customOptions.returnResponse) {
@@ -55,7 +64,6 @@ ax.interceptors.response.use((response) => {
 }, (error) => {
   Toast.hide();
   return Promise.reject(error);
-  debugger
   Toast.failed('请求失败');
   error.response.data = {
     data: {
