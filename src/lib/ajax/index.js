@@ -15,7 +15,7 @@ ax.defaults = Object.assign(
     method: 'post'
   }
 );
-const loadingAy = []
+const loadingAy = [];
 function closeLoading() {
 // 关闭遮罩
   if (loadingAy.length === 1) {
@@ -31,10 +31,13 @@ ax.interceptors.request.use((config) => {
     config.params = {};
   }
   if (config.headers) {
-    config.headers.Authorization = 'Bearer  ' + localStorage.getItem('acces_token');
+    config.headers.Authorization = `Bearer  ${localStorage.getItem('acces_token')}`;
   }
   if (!config.params.noLoading) {
-   loadingAy.push(Toast.loading('加载中...'))
+    // loadingAy.push(Toast.loading('加载中...'));
+    Toast.loading('加载中...')
+    Toast.hide()
+
   }
   return config;
 });
@@ -61,7 +64,7 @@ ax.interceptors.response.use((response) => {
   }
   return response.data;
 }, (error) => {
-  Toast.hide();
+  closeLoading();
   return Promise.reject(error);
   Toast.failed('请求失败');
   error.response.data = {
@@ -82,9 +85,9 @@ const axGet = function (url, params) {
 
 const axGetUrl = function (url, appendUrl) {
   return ax({
-    headers: {'content-type': 'application/x-www-form-urlencoded,charset=UTF-8',},
+    headers: { 'content-type': 'application/x-www-form-urlencoded,charset=UTF-8', },
     method: 'get',
-    url: url + '/' + appendUrl,
+    url: `${url}/${appendUrl}`,
   });
 };
 
@@ -107,4 +110,4 @@ const axPostJson = function (url, data, params) {
 };
 export default ax;
 
-export {axGet, axPost, axPostJson, axGetUrl};
+export { axGet, axPost, axPostJson, axGetUrl };

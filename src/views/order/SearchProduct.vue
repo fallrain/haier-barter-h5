@@ -144,17 +144,29 @@ export default {
           success(res) {
             const result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
             // this.qrCodeForm.code = result;
-            this.searchVal = result
+            this.searchVal = result;
             this.search();
           }
         });
       });
     },
+    array_contain(array, obj) {
+      for (let i = 0; i < array.length; i++) {
+        if (array[i] === obj) {
+          debugger
+          return true;
+        }
+      }
+      debugger
+      return false;
+    },
     onItemClick(item) {
       this.currentClickItemData = item;
-      if (this.searchHistory.indexOf(item)) {
+      if (this.array_contain(this.searchHistory, item)) {
+       debugger
+      }else {
         debugger
-        this.searchHistory.push(this.currentClickItemData);
+        this.searchHistory.push(item);
       }
       this.searchVal = '';
       this.productService.price(item.productCode, item.productGroup).then((res) => {
@@ -163,12 +175,12 @@ export default {
           this.currentClickItemData.price = res.data.price;
           this.currentClickItemData.industryCode = res.data.industryCode;
           this.currentClickItemData.industryName = res.data.industryName;
-          this.currentClickItemData.productBrandCode = res.data.productBrandCode
-          this.currentClickItemData.productBrandName = res.data.productBrandName
-          this.currentClickItemData.productCode = res.data.productCode
-          this.currentClickItemData.productGroup = res.data.productGroup
-          this.currentClickItemData.productGroupName = res.data.productGroupName
-          this.currentClickItemData.productModel = res.data.productModel
+          this.currentClickItemData.productBrandCode = res.data.productBrandCode;
+          this.currentClickItemData.productBrandName = res.data.productBrandName;
+          this.currentClickItemData.productCode = res.data.productCode;
+          this.currentClickItemData.productGroup = res.data.productGroup;
+          this.currentClickItemData.productGroupName = res.data.productGroupName;
+          this.currentClickItemData.productModel = res.data.productModel;
           this.$router.go(-1);
         }
       });
@@ -179,7 +191,7 @@ export default {
     debugger;
     if (to.name === 'Order.OrderEntry') {
       const obj = { product: this.currentClickItemData };
-      debugger
+      debugger;
       to.query.temp = JSON.stringify(obj);
     }
     if (to.name === 'Order.OrderModify') {

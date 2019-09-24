@@ -501,14 +501,14 @@ export default {
     },
     // 获取门店信息
     sponsorCheck(checkid) {
-      debugger;
-      this.multBuyParticipant = this.buyerList;
-      const temp = this.buyerList;
-      temp.forEach((v) => {
-        if (v.hmcid === checkid) {
-          this.multBuyParticipant.remove(v);
-        }
-      });
+      // debugger;
+      // this.multBuyParticipant = this.buyerList;
+      // const temp = this.buyerList;
+      // temp.forEach((v) => {
+      //   if (v.hmcid === checkid) {
+      //     this.multBuyParticipant.remove(v);
+      //   }
+      // });
     },
     particpantAll(checkedIds) {
 
@@ -793,10 +793,6 @@ export default {
         this.multBuyPopShow = true;
       } else {
         this.saveTemporary(2);
-        // this.$router.push({
-        //   name: 'Order.OrderUploadInvoice',
-        //   params: { orderNo: this.orderNo }
-        // });
       }
     },
     saveOrder() {

@@ -91,17 +91,21 @@ export default {
     checkClick({ hmcId }) {
       /* 选中 */
       const i = this.value.findIndex(v => hmcId === v);
+      let values = [];
       if (this.type === 'radio') {
-        this.$emit('radioCheck', [hmcId]);
-        return;
-      }
-      const checkIds = [...this.value];
-      if (i === -1) {
-        checkIds.push(hmcId);
+        values = [hmcId];
+        this.$emit('radioCheck', values);
       } else {
-        checkIds.splice(i, 1);
+        const checkIds = [...this.value];
+        if (i === -1) {
+          checkIds.push(hmcId);
+        } else {
+          checkIds.splice(i, 1);
+        }
+        values = checkIds;
       }
-      this.$emit('input', checkIds);
+
+      this.$emit('input', values);
     }
   }
 };
