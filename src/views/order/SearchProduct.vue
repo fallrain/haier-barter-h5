@@ -104,7 +104,6 @@ export default {
   },
   methods: {
     inputFunction() {
-      debugger;
       this.searchList = this.searchHistory;
       if (this.searchVal === '') {
         this.searchList = [];
@@ -153,7 +152,7 @@ export default {
     },
     onItemClick(item) {
       this.currentClickItemData = item;
-      if (!this.searchHistory.indexOf(item)) {
+      if (this.searchHistory.indexOf(item)) {
         debugger
         this.searchHistory.push(this.currentClickItemData);
       }

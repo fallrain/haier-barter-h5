@@ -17,7 +17,6 @@ ax.defaults = Object.assign(
 );
 const loadingAy = []
 function closeLoading() {
-  debugger
 // 关闭遮罩
   if (loadingAy.length === 1) {
     const loadingIns = loadingAy[0];
