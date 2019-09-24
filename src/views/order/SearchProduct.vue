@@ -11,7 +11,7 @@
       placeholder="点击搜索型号"
       v-on:input="inputFunction()"
     >
-      <div class="searchProduct-scan-wrap" @click="scanQRCode()">
+      <div class="searchProduct-scan-wrap" @click="scanQRCodePro()">
         <i class="iconfont icon-saomiao"></i>
         <span class="searchProduct-scan-inf">扫描</span>
       </div>
@@ -136,7 +136,7 @@ export default {
     //     this.splice(index, 1);
     //   }
     // },
-    scanQRCode() {
+    scanQRCodePro() {
       wx.ready(() => {
         wx.scanQRCode({
           needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，

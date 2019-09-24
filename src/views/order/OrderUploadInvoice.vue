@@ -167,6 +167,7 @@ export default {
       });
     },
     getData() {
+      debugger
       this.orderService.queryOrderDetailAndInvoice({}, { orderNo: this.orderNo }).then((res) => {
         debugger;
         if (res.code === 1) {
@@ -176,7 +177,8 @@ export default {
     },
   },
   beforeRouteLeave(to, from, next) {
-    if (to.name === 'OrderEntry') { // 此处判断是如果返回上一层，你可以根据自己的业务更改此处的判断逻辑，酌情决定是否摧毁本层缓存。
+    if (to.name === 'Order.OrderEntry') { // 此处判断是如果返回上一层，你可以根据自己的业务更改此处的判断逻辑，酌情决定是否摧毁本层缓存。
+      debugger
       if (this.$vnode && this.$vnode.data.keepAlive) {
         if (this.$vnode.parent && this.$vnode.parent.componentInstance && this.$vnode.parent.componentInstance.cache) {
           if (this.$vnode.componentOptions) {
@@ -184,6 +186,7 @@ export default {
               ? this.$vnode.componentOptions.Ctor.cid + (this.$vnode.componentOptions.tag ? `::${this.$vnode.componentOptions.tag}` : '')
               : this.$vnode.key;
             const cache = this.$vnode.parent.componentInstance.cache;
+            debugger;
             const keys = this.$vnode.parent.componentInstance.keys;
             if (cache[key]) {
               if (keys.length) {

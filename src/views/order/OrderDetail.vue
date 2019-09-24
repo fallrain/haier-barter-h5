@@ -383,7 +383,7 @@
       height: 80px;
       line-height: 80px;
       padding-left: 25px;
-      width: 580px;
+      width: 450px;
       flex-shrink: 0;
     }
 

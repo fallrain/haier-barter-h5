@@ -102,7 +102,8 @@ export default {
     }
   },
   components: {
-    BUpload
+    BUpload,
+    [Toast.name]: Toast
   },
   data() {
     return {

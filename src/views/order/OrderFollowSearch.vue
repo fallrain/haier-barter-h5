@@ -218,9 +218,12 @@ export default {
     //   // hmcid: 'a0008949',
     //   // mobile: '18561715460',
     //   // shopId: '8800136445',
-    //   hmcid:'01467897',
-    //   mobile: '15253269729',
-    //   shopId: '8700000484',
+    //   // hmcid:'01467897',
+    //   // mobile: '15253269729',
+    //   // shopId: '8700000484',
+    //   hmcid: 'a0032188',
+    //   mobile: '13905427400',
+    //   shopId: '8700048360',
     //   token: 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAwODk0OSIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2ODcxNzc2OCwiZXhwIjoxNTY5NTgxNzY4fQ.pLNFaidqOYIZABIbxlOxxqc5-oi26obOix4CAxkSShU'
     //   // token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX0FQUCIsIlJPTEVfU0VMTEVSIiwiUk9MRV9BUFAiXSwic3ViIjoiMDE0Njc4OTciLCJraW5kIjoxMCwicG9pbnQiOjEsImlhdCI6MTU2ODc3MjY1MywiZXhwIjoxNTY5NjM2NjUzfQ.shGqUkZmSdmXwKBYOmfQ3K2o2QgDIQT4vyUn0_DfM-g'
     // };
@@ -366,18 +369,28 @@ export default {
       });
     },
     followButtonClicked(val, info) {
-      debugger
-      if (val.name === '录新订单' || val.name === '成交录单' || val.name === '继续录单') {
+      debugger;
+      if (val.name === '录新订单' || val.name === '成交录单') {
         this.$router.push({
           name: 'Order.OrderEntry',
           params: { customerConsigneeInfo: {
             userName: info.userName,
             mobile: info.userMobile,
             userId: info.userId,
-            recordMode: info.recordMode
+            recordMode: info.recordMode,
+            businessScenarios: info.businessScenarios,
+            sourceSn: info.sourceSn,
+            id: info.id
           },
           region: 'new' }
         });
+      } else if (val.name === '继续录单') {
+        this.$router.push({
+          name: 'Order.OrderModify',
+          params: { orderNo: info.orderSource }
+        });
+      } else {
+
       }
     },
 
@@ -569,7 +582,8 @@ export default {
   beforeRouteLeave(to, from, next) {
     debugger;
     if (to.name === 'Order.OrderFollowCommitResult' || to.name === 'Order.OrderConfirm') {
-      next(false);
+      wx.miniProgram.switchTab({ url: 'pages/tool/tool' });
+      next();
     } else {
       next();// 必须要有这个，否则无法跳转
     }

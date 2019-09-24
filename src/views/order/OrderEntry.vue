@@ -230,7 +230,7 @@ import {
 export default {
   name: 'OrderEntry',
   components: {
-    Toast,
+    [Toast.name]: Toast,
     BActivityList,
     BDatePicker,
     BFieldset,
@@ -250,6 +250,9 @@ export default {
     return {
       // 是否详情模式
       isDetail: false,
+      orderSource:'',
+      sourceSn:'',
+      orderFollowId:'',
       rightsList: [],
       rightsJson: '',
       // 门店名称
@@ -439,6 +442,21 @@ export default {
     this.shopId = this.userParam.shopId;
     debugger;
     this.getUserStore();
+    if(this.$route.params.customerConsigneeInfo.businessScenarios){
+      this.orderSource = this.$route.params.customerConsigneeInfo.businessScenarios
+    }else {
+      this.orderSource = 'SGLD'
+    }
+    if(this.$route.params.customerConsigneeInfo.sourceSn){
+      this.sourceSn = this.$route.params.customerConsigneeInfo.sourceSn
+    }else {
+      this.sourceSn = ''
+    }
+    if(this.$route.params.customerConsigneeInfo.id){
+      this.orderFollowId = this.$route.params.customerConsigneeInfo.id
+    }else {
+      this.orderFollowId = ''
+    }
 
     debugger;
     if (this.$route.params.region === 'hand') {
@@ -529,7 +547,7 @@ export default {
       this.productService.deafaultCustomerAddress(this.mobile).then((res) => {
         if (res.code === 1) {
           if (res.data !== null) {
-            debugger
+            debugger;
             this.haveConsignee = true;
             if (this.haveCustomer) {
             } else {
@@ -552,7 +570,7 @@ export default {
             this.queryCustomerAddressList();
             this.genarateOrderNum();
           } else {
-            debugger
+            debugger;
             this.addUserShow = true;
             // if (this.$route.params.region === 'new') {
 
@@ -575,16 +593,18 @@ export default {
       this.genarateSubInfo(1);
       if (this.orderNo !== '') {
         Toast.info('保存中...');
-        this.orderService.createOrder(this.subInfo, { orderFollowId: '' }).then((res) => {
-          if (type === 1) {
-            Toast.succeed('订单暂存成功');
-          }
-          Toast.hide();
-          if (type === 2) {
-            this.$router.push({
-              name: 'Order.OrderUploadInvoice',
-              params: { orderNo: this.orderNo }
-            });
+        this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId }).then((res) => {
+          if (res.code === 1) {
+            if (type === 1) {
+              Toast.succeed('订单暂存成功');
+            }
+            Toast.hide();
+            if (type === 2) {
+              this.$router.push({
+                name: 'Order.OrderUploadInvoice',
+                params: { orderNo: this.orderNo }
+              });
+            }
           }
         });
       }
@@ -671,8 +691,8 @@ export default {
       subInfo.giftName = '';
       subInfo.orderStatus = 0;
       subInfo.orderFlag = 0;// 订单标示，0-正常 1-换货 2-退货 订单来源，
-      subInfo.orderSource = 'SGLD'; // 1-扫码录单 2-手动录单 3-智慧触点认筹录单
-      subInfo.sourceSn = ''; // 来源编码，记录来源ID
+      subInfo.orderSource = this.orderSource; // 1-扫码录单 2-手动录单 3-智慧触点认筹录单
+      subInfo.sourceSn = this.sourceSn; // 来源编码，记录来源ID
       subInfo.remark = ''; // 备注，记录订单创建、订单修改原因等信息
       subInfo.rightsUserJson = this.rightsJson;
       subInfo.orderDetailSaveQoList = this.productList;

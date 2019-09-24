@@ -22,7 +22,7 @@ const router = new Router({
   }
 });
 router.beforeEach((to, from, next) => {
- // debugger
+  // debugger
   if (to.name === 'SuggestionList' && from.name === 'SuggestionForm') {
     store.commit('addAliveExclude', 'SuggestionList');
   } else {
@@ -45,7 +45,7 @@ router.beforeEach((to, from, next) => {
         timestamp, // 必填，生成签名的时间戳
         nonceStr: timestamp, // 必填，生成签名的随机串
         signature: response.data.jsSignature, // 必填，签名，见附录1
-        jsApiList: ['scanQRCode'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+        jsApiList: ['scanQRCode', 'miniProgram.switchTab'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
       });
     }
   });
