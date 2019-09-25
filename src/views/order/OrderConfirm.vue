@@ -234,11 +234,12 @@ export default {
           Toast.succeed(res.msg);
           this.$router.push({
             name: 'Order.OrderFollowCommitResult',
-            params:{orderInfo:res.data}
+            params: { orderInfo: res.data }
           });
-        }
+        } else if (res.code === -1) {
+          Toast.info('不能重复提交订单');
+        } else {}
       });
-
     },
     changeOrder() {
       this.$router.push({

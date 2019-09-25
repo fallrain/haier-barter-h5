@@ -73,9 +73,18 @@
           :inline="true"
           :list="orderTypes"
           v-model="orderType"
+          @radioChange="radioChange"
         ></b-radio-item>
       </template>
     </b-item>
+    <div class="orderEntry-header-cus" v-show="orderType == '1'">
+      <button
+        type="button"
+        class="common-btn-primary w100per"
+        @click="selectSetBuyer()"
+      >选择套购发起人
+      </button>
+    </div>
     <b-fieldset
       class="mt16"
       title="用户购买的产品"
@@ -250,9 +259,9 @@ export default {
     return {
       // 是否详情模式
       isDetail: false,
-      orderSource:'',
-      sourceSn:'',
-      orderFollowId:'',
+      orderSource: '',
+      sourceSn: '',
+      orderFollowId: '',
       rightsList: [],
       rightsJson: '',
       // 门店名称
@@ -441,20 +450,20 @@ export default {
     this.shopId = this.userParam.shopId;
     debugger;
     this.getUserStore();
-    if(this.$route.params.customerConsigneeInfo.businessScenarios){
-      this.orderSource = this.$route.params.customerConsigneeInfo.businessScenarios
-    }else {
-      this.orderSource = 'SGLD'
+    if (this.$route.params.customerConsigneeInfo.businessScenarios) {
+      this.orderSource = this.$route.params.customerConsigneeInfo.businessScenarios;
+    } else {
+      this.orderSource = 'SGLD';
     }
-    if(this.$route.params.customerConsigneeInfo.sourceSn){
-      this.sourceSn = this.$route.params.customerConsigneeInfo.sourceSn
-    }else {
-      this.sourceSn = ''
+    if (this.$route.params.customerConsigneeInfo.sourceSn) {
+      this.sourceSn = this.$route.params.customerConsigneeInfo.sourceSn;
+    } else {
+      this.sourceSn = '';
     }
-    if(this.$route.params.customerConsigneeInfo.id){
-      this.orderFollowId = this.$route.params.customerConsigneeInfo.id
-    }else {
-      this.orderFollowId = ''
+    if (this.$route.params.customerConsigneeInfo.id) {
+      this.orderFollowId = this.$route.params.customerConsigneeInfo.id;
+    } else {
+      this.orderFollowId = '';
     }
 
     debugger;
@@ -482,6 +491,15 @@ export default {
     //   /* 选择礼品 */
     //   this.chooseGiftPopShow = true;
     // },
+    radioChange(val) {
+      this.orderType = val;
+    },
+    selectSetBuyer() {
+      this.multBuyPopShow = true;
+    },
+    consporConfirm() {
+      this.multBuyPopShow = false;
+    },
     addUserClick() {
       if (this.$route.params.region === 'new') {
         this.addUserShow = false;
@@ -593,7 +611,7 @@ export default {
       this.genarateSubInfo(1);
       if (this.orderNo !== '') {
         Toast.loading('保存中...');
-        debugger
+        debugger;
         this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId }).then((res) => {
           if (res.code === 1) {
             if (type === 1) {
@@ -779,22 +797,15 @@ export default {
         }
       });
     },
-    consporConfirm() {
-      this.saveTemporary(1);
-    },
+    // consporConfirm() {
+    //   // this.saveTemporary(1);
+    // },
     next() {
       /* 下一步 */
       if (this.productList.length === 0) {
         Toast.info('请选择产品');
-        return;
       }
-      // todo 单品、套购值待定
-      if (this.orderType === '1') {
-        // 展示套购发起人
-        this.multBuyPopShow = true;
-      } else {
-        this.saveTemporary(2);
-      }
+      this.saveTemporary(2);
     },
     saveOrder() {
 

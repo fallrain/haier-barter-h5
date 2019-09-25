@@ -214,12 +214,12 @@ export default {
     // window.location.reload()
   },
   created() {
-    if(localStorage.getItem('confirm') === 'list'){
-      debugger
-      this.curTab = 3
-      localStorage.setItem('confirm','')
+    if (localStorage.getItem('confirm') === 'list') {
+      debugger;
+      this.curTab = 3;
+      localStorage.setItem('confirm', '');
     }
-    debugger
+    debugger;
     const userinfostr = this.getQueryString('userinfo');
     this.userinfo = JSON.parse(userinfostr);
     // this.userinfo = {
@@ -296,7 +296,6 @@ export default {
       });
     },
     itemClick(index) {
-      ;
       this.$router.push({
         name: 'Order.OrderDetail',
         params: { orderNo: this.currentList[index % 10].orderNo }
@@ -318,11 +317,11 @@ export default {
         region: 'new' }
       });
     },
-    userService(item){
-      wx.miniProgram.navigateTo({ url: 'pages/userService/userService'});
+    userService(item) {
+      wx.miniProgram.navigateTo({ url: 'pages/userService/userService' });
     },
-    maybeBuyer(item){
-      wx.miniProgram.navigateTo({ url: 'pages/userService/userService',userId:item.userId})
+    maybeBuyer(item) {
+      wx.miniProgram.navigateTo({ url: 'pages/userService/userService', userId: item.userId });
     },
     searchProduct(item) {
       this.orderService.queryOrderInfoByOrderNo({}, { orderNo: item.orderNo }).then((response) => {
@@ -359,7 +358,7 @@ export default {
     upCallback(page) {
       // 下载过就设置已经初始化
       this[this.curScrollViewName].isListInit = true;
-      ;
+
       this.searchData(page).then(({ result, pages }) => {
         this.$nextTick(() => {
           // 通过当前页的数据条数，和总页数来判断是否加载完
@@ -410,7 +409,6 @@ export default {
     },
 
     searchData(page) {
-      ;
       console.log('keyword', this.searchWord);
       return this.orderService
         .queryOrderFollowlList(
@@ -452,7 +450,7 @@ export default {
               if (!this.updateList) {
                 if (page.num === 1) {
                   this[this.curScrollViewName].list = [];
-                  ;
+
                   this[this.curScrollViewName].list = this.currentList;
                 } else {
                   this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(this.currentList);
@@ -472,7 +470,6 @@ export default {
         });
     },
     anylizeData(curList) {
-      ;
       curList.forEach((item) => {
         /*
         0-跟进中  1-已完成  2-草稿  3-暂不跟进 4-取消 5-异常
@@ -537,15 +534,14 @@ export default {
               name: '暂不跟进'
             });
           }
-          if(item.businessScenarios === 'SMLD'){
+          if (item.businessScenarios === 'SMLD') {
             item.showList.push({
               id: '20',
               name: '入户服务'
-              } ,{
+            }, {
               id: '21',
-                name: '潜在客户'
-            }
-            )
+              name: '潜在客户'
+            });
           }
         } else if (this.curTab === 3) {
           item.showList = [];
@@ -603,14 +599,19 @@ export default {
     },
 
   },
+  beforeRouteEnter(to,from,next){
+    if(from.name === 'Order.OrderFollowCommitResult'){
+      next()
+      window.location.reload()
+      }
+      next()
+    },
   beforeRouteLeave(to, from, next) {
-    wx.miniProgram.switchTab({ url: 'pages/tool/tool' });
-    next();
-    // if (to.name === 'Order.OrderFollowCommitResult' || to.name === 'Order.OrderConfirm') {
-    //
-    // } else {
-    //   next();// 必须要有这个，否则无法跳转
-    // }
+    if (to.name === 'Order.OrderFollowCommitResult' || to.name === 'Order.OrderConfirm') {
+      wx.miniProgram.switchTab({ url: 'pages/tool/tool' });
+      next()
+    }
+    next()
   },
 };
 </script>
