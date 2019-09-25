@@ -223,15 +223,15 @@ export default {
     const userinfostr = this.getQueryString('userinfo');
     this.userinfo = JSON.parse(userinfostr);
     // this.userinfo = {
-    //   // hmcid: 'a0008949',
-    //   // mobile: '18561715460',
-    //   // shopId: '8800136445',
+    //   hmcid: 'a0008949',
+    //   mobile: '18561715460',
+    //   shopId: '8800136445',
     //   // hmcid:'01467897',
     //   // mobile: '15253269729',
     //   // shopId: '8700000484',
-    //   hmcid: 'a0032188',
-    //   mobile: '13905427400',
-    //   shopId: '8700048360',
+    //   // hmcid: 'a0032188',
+    //   // mobile: '13905427400',
+    //   // shopId: '8700048360',
     //   // hmcid: 'z0188893',
     //   // mobile: '13176882725',
     //   // shopId: '8700048360',
@@ -318,10 +318,10 @@ export default {
       });
     },
     userService(item) {
-      wx.miniProgram.navigateTo({ url: 'pages/userService/userService' });
+      wx.miniProgram.navigateTo({ url: '/pages/userService/userService' });
     },
     maybeBuyer(item) {
-      wx.miniProgram.navigateTo({ url: 'pages/userService/userService', userId: item.userId });
+      wx.miniProgram.navigateTo({ url: '/pages/maybeByuser/maybeByuser', userId: item.userId });
     },
     searchProduct(item) {
       this.orderService.queryOrderInfoByOrderNo({}, { orderNo: item.orderNo }).then((response) => {
@@ -643,6 +643,7 @@ export default {
 
   .search-view {
     position: relative;
+    padding-bottom: 10px;
   }
 
   .input-class {

@@ -10,6 +10,7 @@
     </div>
     <b-fieldset
       class="mt16"
+      title="收货人信息"
     >
       <div class="orderEntry-user1">
         <div>
@@ -26,7 +27,7 @@
             </button>
           </div>
           <p class="orderEntry-user-address">
-            {{consignee.address}}
+            <!--{{consignee.address.provinceName}}{{consignee.address.cityName}}{{consignee.address.districtName}}{{consignee.address.street}}-->
           </p>
         </div>
       </div>
@@ -60,6 +61,14 @@
         ></b-radio-item>
       </template>
     </b-item>
+    <div class="orderEntry-header-cus" v-show="orderType == '1'">
+      <button
+        type="button"
+        class="common-btn-primary w100per"
+        @click="selectSetBuyer()"
+      >选择套购发起人
+      </button>
+    </div>
     <b-fieldset
       class="mt16"
       title="用户购买的产品"
@@ -115,8 +124,6 @@
         <!--slot="right"-->
         <!--type="datetime"-->
         <!--title="请选择日期"-->
-        <!--:defaultDate="deliveryTime"-->
-        <!--:min-date="currentDate"-->
         <!--v-model="deliveryTime"-->
       <!--&gt;-->
       <!--</b-time-section-picker>-->
@@ -196,238 +203,239 @@
 
 <script>
 import {
-Toast
+  Toast
 } from 'mand-mobile';
 import {
-BActivityList,
-BDatePicker,
-BFieldset,
-BItem,
-BOrderProduct,
-BPop,
-BPopAddressList,
-BPopCheckList,
-BRadioItem,BTimeSectionPicker
-} from '@/components/form';
-import {
-BMultbuyCheck
-} from '@/components/business';
-
-export default {
-name: 'OrderEntry',
-components: {
-  Toast,
   BActivityList,
   BDatePicker,
   BFieldset,
   BItem,
-  BMultbuyCheck,
   BOrderProduct,
   BPop,
   BPopAddressList,
   BPopCheckList,
-  BRadioItem,BTimeSectionPicker
-},
-data() {
-  return {
+  BRadioItem, BTimeSectionPicker
+} from '@/components/form';
+import {
+  BMultbuyCheck
+} from '@/components/business';
+import addressData from '@/lib/address';
+export default {
+  name: 'OrderEntry',
+  components: {
+    Toast,
+    BActivityList,
+    BDatePicker,
+    BFieldset,
+    BItem,
+    BMultbuyCheck,
+    BOrderProduct,
+    BPop,
+    BPopAddressList,
+    BPopCheckList,
+    BRadioItem,
+    BTimeSectionPicker
+  },
+  data() {
+    return {
     // 是否详情模式
-    isDetail: false,
-    // 门店名称
-    shopName: '',
-    haveCustomer: false,
-    currentDate: new Date(),
-    pattern: 'yyyy-MM-dd hh:mm',
-    customerString: '',
-    // 收货人信息
-    consignee: {
+      isDetail: false,
+      // 门店名称
+      shopName: '',
+      haveCustomer: false,
+      currentDate: new Date(),
+      pattern: 'yyyy-MM-dd hh:mm',
+      customerString: '',
+      // 收货人信息
+      consignee: {
       /* name: '',
             sex: '男士',
             phone: '15067543689' */
-    },
-    customerInfo: {},
-    // 订单类型单选
-    orderTypes: [
-      {
-        key: 0,
-        value: '单品'
       },
-      {
-        key: 1,
-        value: '套购'
-      }
-    ],
-    // 订单类型
-    orderType: 2,
-    // 购机时间
-    buyDate: '',
-    subInfo: {},
-    // /送货时间
-    deliveryTime: '',
-    // 产品列表
-    productList: [],
-    // 活动列表
-    activityList: [
-      {
-        id: 1,
-        activityName: '6月场景套权益昆明小微',
-        inf: '满10000元送7500积分',
-        num: 33
-      },
-      {
-        id: 2,
-        activityName: '6月场景套权益昆明小微',
-        inf: '满10000元送7500积分',
-        num: 21
-      }
-    ],
-    // 选中的活动id
-    choosedActivitys: [],
-    // 选择礼品pop显示隐藏
-    chooseGiftPopShow: false,
-    // pop礼品列表
-    giftList: [
-      {
-        id: 1,
-        name: '1.双立人厨房六件套（价值 7000积分）',
-        checkedIds: []
-      },
-      {
-        id: 2,
-        name: '2.婴儿料理机（价值 6000积分）',
-        checkedIds: []
-      }
-    ],
-    // 退货原因pop show
-    returnReasonPopShow: false,
-    // pop 退货原因
-    returnReasonList: [
-      {
-        id: 1,
-        name: '换货'
-      },
-      {
-        id: 2,
-        name: '录单错误'
-      },
-      {
-        id: 3,
-        name: '信息填写错误'
-      },
-      {
-        id: 4,
-        name: '其他原因',
-        reason: '',
-        placeholder: '请输入您的订单修改原因'
-      }
-    ],
-    // 选中的原因id 数组
-    returnReasonVal: [],
-    // 选择收货人列表pop show
-    addressPopShow: false,
-    // 收货人地址pop列表
-    addressList: [
+      customerInfo: {},
+      // 订单类型单选
+      orderTypes: [
+        {
+          key: '0',
+          value: '单品'
+        },
+        {
+          key: '1',
+          value: '套购'
+        }
+      ],
+      // 订单类型
+      orderType: '0',
+      // 购机时间
+      buyDate: '',
+      subInfo: {},
+      // /送货时间
+      deliveryTime: '',
+      // 产品列表
+      productList: [],
+      // 活动列表
+      activityList: [
+        {
+          id: 1,
+          activityName: '6月场景套权益昆明小微',
+          inf: '满10000元送7500积分',
+          num: 33
+        },
+        {
+          id: 2,
+          activityName: '6月场景套权益昆明小微',
+          inf: '满10000元送7500积分',
+          num: 21
+        }
+      ],
+      // 选中的活动id
+      choosedActivitys: [],
+      // 选择礼品pop显示隐藏
+      chooseGiftPopShow: false,
+      // pop礼品列表
+      giftList: [
+        {
+          id: 1,
+          name: '1.双立人厨房六件套（价值 7000积分）',
+          checkedIds: []
+        },
+        {
+          id: 2,
+          name: '2.婴儿料理机（价值 6000积分）',
+          checkedIds: []
+        }
+      ],
+      // 退货原因pop show
+      returnReasonPopShow: false,
+      // pop 退货原因
+      returnReasonList: [
+        {
+          id: 1,
+          name: '换货'
+        },
+        {
+          id: 2,
+          name: '录单错误'
+        },
+        {
+          id: 3,
+          name: '信息填写错误'
+        },
+        {
+          id: 4,
+          name: '其他原因',
+          reason: '',
+          placeholder: '请输入您的订单修改原因'
+        }
+      ],
+      // 选中的原因id 数组
+      returnReasonVal: [],
+      // 选择收货人列表pop show
+      addressPopShow: false,
+      // 收货人地址pop列表
+      addressList: [
 
-    ],
-    // 套购pop show
-    multBuyPopShow: false,
-    // 套购发起人
-    multBuySponsor: [
+      ],
+      // 套购pop show
+      multBuyPopShow: false,
+      // 套购发起人
+      multBuySponsor: [
 
-    ],
-    multBuySponsorCheckedIds: [],
-    // 套购参与人
-    multBuyParticipant: [
+      ],
+      multBuySponsorCheckedIds: [],
+      // 套购参与人
+      multBuyParticipant: [
 
-    ],
-    // 参与人选中id
-    multBuyParticipantCheckIds: [],
-    orderNo: '',
-    title: '顾客信息：',
-    mobile: '',
-    region: '',
-    hmcId: '',
-    rightsList: [],
-    subInfo: {},
-    rightsJson: '',
-    userParam: {},
-    orderSource: '',
-    orderFollowId: '',
-    recordMode: '',
-    sourceSn: ''
-  };
-},
-computed: {},
-mounted() {
+      ],
+      // 参与人选中id
+      multBuyParticipantCheckIds: [],
+      orderNo: '',
+      title: '顾客信息：',
+      mobile: '',
+      region: '',
+      hmcId: '',
+      rightsList: [],
+      subInfo: {},
+      rightsJson: '',
+      userParam: {},
+      orderSource: '',
+      orderFollowId: '',
+      recordMode: '',
+      sourceSn: ''
+    };
+  },
+  computed: {},
+  mounted() {
   //
   //    if(this.$route.query){
   // const address = this.$route.query.temp
   //   console.log('tag', address)
   //    }
-},
-activated() {
-  if (this.$route.query.temp) {
-    let ID = '';
-    const obj = JSON.parse(this.$route.query.temp);
-    if (obj.tel) {
-      this.mobile = obj.tel;
-      this.queryCustomerDefault();
-    }
-    if (obj.product) {
-      debugger;
-      if (!obj.product.productGroupName) {
-        return;
+  },
+  activated() {
+    if (this.$route.query.temp) {
+      let ID = '';
+      const obj = JSON.parse(this.$route.query.temp);
+      if (obj.tel) {
+        this.mobile = obj.tel;
+        this.queryCustomerDefault();
       }
-      this.orderService.generateOrderDetailId().then((res) => {
-        if (res.code === 1) {
-          ID = res.data;
-          const pro = {};
-          pro.id = ID;
-          debugger;
-          pro.deliveryTime = this.deliveryTime;
-          // pro.hmcId= "A0008949"
-          pro.hmcId = this.userParam.hmcId;
-          pro.installTime = '1564650104445';
-          pro.orderFlag = 0;
-          pro.orderNo = this.orderNo;
-          pro.productCategoryName = obj.product.productGroupName;
-          pro.productCategoryCode = obj.product.productBrandCode;
-          pro.productCode = obj.product.productCode;
-          pro.productModel = obj.product.productModel;
-          pro.bccPrice = obj.product.price;
-          pro.productPrice = obj.product.price;
-          pro.remark = '备注，记录订单创建、订单修改原因等信息';
-          pro.rightId = '111111';
-          pro.rightName = '八月套购权益';
-          pro.storeId = this.shopId;
-          pro.storeName = this.shopName;
-          pro.invoiceStatus = 0;
-          pro.userId = this.userParam.userId;
-          debugger;
-
-          this.productList.push(pro);
-          debugger;
-        } else {
-          Toast.failed(res.msg);
-        }
-      });
-      if (obj.rightsJson) {
-        const right = JSON.parse(obj.rightsJson);
-        if (!right.rightsName) {
+      if (obj.product) {
+        debugger;
+        if (!obj.product.productGroupName) {
           return;
         }
-        this.isDetail = true;
-        this.rightsList = right.rightsName.replace(/(.)(?=[^$])/g, '$1,').split(',');
+        this.orderService.generateOrderDetailId().then((res) => {
+          if (res.code === 1) {
+            ID = res.data;
+            const pro = {};
+            pro.id = ID;
+            debugger;
+            pro.deliveryTime = this.deliveryTime;
+            // pro.hmcId= "A0008949"
+            pro.hmcId = this.userParam.hmcId;
+            pro.installTime = '1564650104445';
+            pro.orderFlag = 0;
+            pro.orderNo = this.orderNo;
+            pro.productCategoryName = obj.product.productGroupName;
+            pro.productCategoryCode = obj.product.productBrandCode;
+            pro.productCode = obj.product.productCode;
+            pro.productModel = obj.product.productModel;
+            pro.bccPrice = obj.product.price;
+            pro.productPrice = obj.product.price;
+            pro.remark = '备注，记录订单创建、订单修改原因等信息';
+            pro.rightId = '111111';
+            pro.rightName = '八月套购权益';
+            pro.storeId = this.shopId;
+            pro.storeName = this.shopName;
+            pro.invoiceStatus = 0;
+            pro.userId = this.userParam.userId;
+            debugger;
+
+            this.productList.push(pro);
+            debugger;
+          } else {
+            Toast.failed(res.msg);
+          }
+        });
+        if (obj.rightsJson) {
+          const right = JSON.parse(obj.rightsJson);
+          if (!right.rightsName) {
+            return;
+          }
+          this.isDetail = true;
+          this.rightsList = right.rightsName.replace(/(.)(?=[^$])/g, '$1,').split(',');
+        }
       }
     }
-  }
-},
-created() {
-  debugger;
-  this.orderNo = this.$route.params.orderNo;
-  this.userParam = JSON.parse(localStorage.getItem('userinfo'));
-  this.getData();
-},
-methods: {
+  },
+  created() {
+    this.addressData = addressData;
+    this.orderNo = this.$route.params.orderNo;
+    this.userParam = JSON.parse(localStorage.getItem('userinfo'));
+    this.getData();
+  },
+  methods: {
   //  haveConsignee() {
   //   /* 存在收货人信息 */
   //   return this.consignee && JSON.stringify(this.consignee) !== '{}';
@@ -436,314 +444,343 @@ methods: {
   //   /* 选择礼品 */
   //   this.chooseGiftPopShow = true;
   // },
-  getData() {
-    this.orderService.queryOrderInfoByOrderNo({}, { orderNo: this.orderNo }).then((response) => {
-      if (response.code === 1) {
-        ;
-        const resData = response.data;
-        this.shopName = resData.storeName;
-        this.consignee.name = resData.consigneeName;
-        this.customerInfo.username = resData.userName;
-        this.customerInfo.customerId = resData.userId;
-        this.customerInfo.mobile = resData.userPhone;
-        this.phone = resData.userPhone;
-        this.hmcId = resData.hmcId;
-        this.consignee.phone = resData.consigneePhone;
-        this.consignee.sex = resData.userSex;
-        // this.consignee.address = resData.dispatchProvince + resData.dispatchCity + resData.dispatchArea + resData.dispatchAdd;
-        this.consignee.address = resData.dispatchAdd;
-        this.buyDate = resData.buyTime;
-        this.orderType = resData.orderType;
-        this.deliveryTime = resData.deliveryTime;
-        this.createdTime = resData.createdTime;
-        this.orderSource = resData.orderSource;
-        this.orderFollowId = resData.id;
-        this.sourceSn = resData.sourceSn;
-        this.recordMode = resData.recordMode;
-        this.queryUserList(resData.storeId);
-        if (resData.rightsUserJson) {
-          this.activityList = JSON.parse(resData.rightsUserJson).rightsUserInterestsDetailsDTO;
+    radioChange(val) {
+      this.orderType = val;
+    },
+    selectSetBuyer() {
+      this.multBuyPopShow = true;
+    },
+    consporConfirm() {
+      this.multBuyPopShow = false;
+    },
+    getData() {
+      this.orderService.queryOrderInfoByOrderNo({}, { orderNo: this.orderNo }).then((response) => {
+        if (response.code === 1) {
+          const resData = response.data;
+          this.shopName = resData.storeName;
+          this.consignee.name = resData.consigneeName;
+          this.customerInfo.username = resData.userName;
+          this.customerInfo.customerId = resData.userId;
+          this.customerInfo.mobile = resData.userPhone;
+          this.phone = resData.userPhone;
+          this.hmcId = resData.hmcId;
+          this.consignee.phone = resData.consigneePhone;
+          this.consignee.sex = resData.userSex;
+          this.consignee.address = {}
+          this.consignee.address.proivinceName = resData.dispatchProvince
+          this.consignee.address.cityName = resData.dispatchCity
+          this.consignee.address.districtName = resData.dispatchArea
+          this.consignee.address.street = resData.dispatchAdd
+          this.buyDate = resData.buyTime;
+          this.orderType = resData.orderType;
+          this.deliveryTime = resData.deliveryTime;
+          this.createdTime = resData.createdTime;
+          this.orderSource = resData.orderSource;
+          this.orderFollowId = resData.id;
+          this.sourceSn = resData.sourceSn;
+          this.recordMode = resData.recordMode;
+          this.queryUserList(resData.storeId);
+          if (resData.rightsUserJson) {
+            this.activityList = JSON.parse(resData.rightsUserJson).rightsUserInterestsDetailsDTO;
+          }
+          if (resData.orderDetailDtoList.length !== 0) {
+            this.productList = resData.orderDetailDtoList;
+            this.productList.forEach((item) => {
+              if (item.productBrand == 'haier') {
+                item.productBrandCN = '海尔';
+              } else {
+                item.productBrandCN = '卡萨帝';
+              }
+            });
+          }
         }
-        if (resData.orderDetailDtoList.length !== 0) {
-          this.productList = resData.orderDetailDtoList;
-          this.productList.forEach((item) => {
-            if (item.productBrand == 'haier') {
-              item.productBrandCN = '海尔';
-            } else {
-              item.productBrandCN = '卡萨帝';
+      });
+    },
+    getAddressName(province, city, district) {
+      this.consignee.address = {};
+      const Data = this.addressData.options;
+      debugger;
+      Data.forEach((p) => {
+        if (province === p.value) {
+          this.consignee.address.provinceName = p.label;
+          p.children.options.forEach((c) => {
+            if (city === c.value) {
+              this.consignee.address.cityName = c.label;
+              c.children.options.forEach((d) => {
+                if (district === d.value) {
+                  this.consignee.address.districtName = d.label;
+                }
+              });
             }
           });
         }
-      }
-    });
-  },
-  // 获取门店信息
-  sponsorCheck(checkid) {
-    ;
-  },
-  particpantAll(checkedIds) {
+      });
+    },
+    // 查询客户信息及默认地址
+    queryCustomerDefault() {
+      debugger;
+      this.productService.deafaultCustomerAddress(this.mobile).then((res) => {
+        if (res.code === 1) {
+          if (res.data !== null) {
+            this.getAddressName(res.data.province, res.data.city, res.data.district);
+            this.consignee.address.street = res.data.address;
+            debugger;
+            this.consignee.phone = res.data.mobile;
+            this.consignee.name = res.data.username;
+            if (res.data.sex === 1) {
+              this.consignee.sexCn = '男士';
+            } else {
+              this.consignee.sexCn = '女士';
+            }
+            this.consignee.sex = res.data.sex;
+            this.consignee.customerId = res.data.customerId;
+            this.queryCustomerAddressList();
+          }
+        }
+      });
+    },
+    // 获取门店信息
+    sponsorCheck(checkid) {
 
-  },
-  particpantClick(checkids) {
+    },
+    particpantAll(checkedIds) {
 
-  },
-  getUserStore() {
+    },
+    particpantClick(checkids) {
+
+    },
+    getUserStore() {
     // this.shopId = '8800332156';
-    this.shopId = this.userParam.shopId;
-    this.productService.storeInfo(this.shopId).then((res) => {
-      ;
-      if (res.code === 1) {
-        this.shopName = res.data.storeName;
-      }
-    });
-    ;
-  },
-
-  // 生成订单号
-  // genarateOrderNum() {
-  //   if(this.recordMode == ''){
-  //     this.recordMode = 'Haier'
-  //   }
-  //   this.orderService.generateOrderNo({}, { recordMode: 'Haier' },).then((res) => {
-  //     if (res.code === 1) {
-  //
-  //       this.orderNo = res.data;
-  //     } else {
-  //       Toast.failed(res.msg);
-  //     }
-  //   });
-  // },
-  // 查询客户信息及默认地址
-  // 查询客户地址列表
-  queryCustomerAddressList() {
-    ;
-    this.productService.customerAddressList(this.customerInfo.customerId).then((res) => {
-      if (res.code === 1) {
-        this.addressList = res.data;
-        ;
-      }
-    });
-  },
-  // 暂存
-  saveTemporary(type) {
-    this.genarateSubInfo(1);
-    if (this.orderNo !== '') {
-      Toast.info('保存中...');
-      this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId }).then((res) => {
-        if (type === 1) {
-          Toast.succeed('订单暂存成功');
-        }
-        Toast.hide();
-        if (type === 2) {
-          this.$router.push({
-            name: 'Order.OrderUploadInvoice',
-            params: { orderNo: this.orderNo }
-          });
+      this.shopId = this.userParam.shopId;
+      this.productService.storeInfo(this.shopId).then((res) => {
+        if (res.code === 1) {
+          this.shopName = res.data.storeName;
         }
       });
-    }
-  },
-  // 添加产品
-  addProduct() {
+    },
+
+    // 查询客户地址列表
+    queryCustomerAddressList() {
+      this.productService.customerAddressList(this.customerInfo.customerId).then((res) => {
+        if (res.code === 1) {
+          this.addressList = res.data;
+        }
+      });
+    },
+    // 暂存
+    saveTemporary(type) {
+      this.genarateSubInfo(1);
+      if (this.orderNo !== '') {
+        Toast.loading('保存中...');
+        debugger;
+        this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId }).then((res) => {
+          if (res.code === 1) {
+            if (type === 1) {
+              Toast.succeed('订单暂存成功');
+            }
+            Toast.hide();
+            if (type === 2) {
+              this.$router.push({
+                name: 'Order.OrderUploadInvoice',
+                params: { orderNo: this.orderNo }
+              });
+            }
+          }
+        });
+      }
+    },
+    // 添加产品
+    addProduct() {
     /* 添加产品 */
-    this.$router.push({
-      name: 'Order.SearchProduct',
-    });
-  },
-  selectActivity() {
-    if (this.productList.length === 0) {
-      Toast.info('请选择产品');
-      return;
-    }
-    ;
-    for (let i = 0; i < this.productList.length; i++) {
-      if (this.productList[i].productPrice === '') {
-        Toast.failed('请输入产品价格');
+      this.$router.push({
+        name: 'Order.SearchProduct',
+      });
+    },
+    selectActivity() {
+      if (this.productList.length === 0) {
+        Toast.info('请选择产品');
         return;
-        ;
       }
-    }
-    /* 选择活动 */
-    this.genarateSubInfo(2);
-  },
-  genarateSubInfo(type) {
-    const subInfo = {};
-    // multBuyParticipantCheckIds
-    if (this.multBuySponsorCheckedIds.length) {
-      subInfo.coupleSponsor = this.multBuySponsorCheckedIds[0];
-      const obj = this.multBuySponsor.find(v => v.hmcId === this.multBuySponsorCheckedIds[0]);
-      subInfo.coupleSponsorName = obj.username;
-    } else {
-      subInfo.coupleSponsor = '';
-      subInfo.mayEditCoupleOrderId = '';
-    }
 
-    const part = [];
-    if (this.multBuyParticipantCheckIds.length) {
-      subInfo.mayEditCoupleOrderId = this.multBuyParticipantCheckIds.join(',');
-      this.multBuyParticipantCheckIds.forEach((val) => {
-        const obj = this.multBuyParticipant.find(v => v.hmcId === val);
-        if (obj) {
-          part.push(obj.username);
+      for (let i = 0; i < this.productList.length; i++) {
+        if (this.productList[i].productPrice === '') {
+          Toast.failed('请输入产品价格');
+          return;
         }
-        subInfo.mayEditCoupleOrderName = part.join(',');
-      });
-    } else {
-      subInfo.mayEditCoupleOrderName = '';
-      subInfo.mayEditCoupleOrderId = '';
-    }
-
-    subInfo.orderNo = this.orderNo;
-    subInfo.recordMode = this.recordMode;
-    subInfo.hmcId = this.userParam.hmcid;
-    // subInfo.hmcId = 'Z0188893'
-    subInfo.storeId = this.userParam.shopId;
-    // subInfo.storeId = '8800117018'
-    subInfo.storeName = this.shopName;
-    subInfo.userId = this.customerInfo.userId;
-    subInfo.userName = this.customerInfo.username;
-    subInfo.consigneeName = this.consignee.name;
-    subInfo.consigneePhone = this.consignee.phone;
-    subInfo.consigneeId = this.consignee.customerId;
-    subInfo.microCode = this.customerInfo.microCode;
-    subInfo.microName = this.customerInfo.microName;
-    subInfo.channel = this.customerInfo.channel;
-    subInfo.channelName = this.customerInfo.channelName;
-    // subInfo.userPhone = '18675647364',
-    subInfo.userPhone = this.customerInfo.mobile;
-    subInfo.dispatchProvinceId = this.customerInfo.province;
-    subInfo.dispatchProvince = '';
-    subInfo.dispatchCityId = this.customerInfo.city;
-    subInfo.dispatchCity = '';
-    subInfo.dispatchAreaId = this.customerInfo.area;
-    subInfo.dispatchArea = '';
-    subInfo.dispatchAdd = this.customerInfo.address;
-    subInfo.buyTime = this.buyDate;
-    subInfo.deliveryTime = this.deliveryTime;
-    subInfo.orderType = this.orderType;
-    subInfo.rightId = '';
-    subInfo.rightName = '';
-    subInfo.giftId = '';
-    subInfo.giftName = '';
-    subInfo.orderStatus = 0;
-    subInfo.orderFlag = 0;// 订单标示，0-正常 1-换货 2-退货 订单来源，
-    subInfo.orderSource = this.orderSource; // 1-扫码录单 2-手动录单 3-智慧触点认筹录单
-    subInfo.sourceSn = this.sourceSn; // 来源编码，记录来源ID
-    subInfo.remark = ''; // 备注，记录订单创建、订单修改原因等信息
-    subInfo.rightsUserJson = this.rightsJson;
-    subInfo.orderDetailSaveQoList = this.productList;
-    this.subInfo = subInfo;
-    ;
-    if (type === 2) {
-      const info = JSON.stringify(this.subInfo);
+      }
       /* 选择活动 */
-      this.$router.push({
-        name: 'Order.OrderFollowActivity',
-        params: { orderInfo: info }
-      });
-    }
-  },
-  selectAddress(item) {
-    ;
-    console.log('11111111111', item);
-    this.customerInfo = item;
-  },
-  addAddress() {
+      this.genarateSubInfo(2);
+    },
+    genarateSubInfo(type) {
+      const subInfo = {};
+      // multBuyParticipantCheckIds
+      if (this.multBuySponsorCheckedIds.length) {
+        subInfo.coupleSponsor = this.multBuySponsorCheckedIds[0];
+        const obj = this.multBuySponsor.find(v => v.hmcId === this.multBuySponsorCheckedIds[0]);
+        subInfo.coupleSponsorName = obj.username;
+      } else {
+        subInfo.coupleSponsor = '';
+        subInfo.mayEditCoupleOrderId = '';
+      }
+
+      const part = [];
+      if (this.multBuyParticipantCheckIds.length) {
+        subInfo.mayEditCoupleOrderId = this.multBuyParticipantCheckIds.join(',');
+        this.multBuyParticipantCheckIds.forEach((val) => {
+          const obj = this.multBuyParticipant.find(v => v.hmcId === val);
+          if (obj) {
+            part.push(obj.username);
+          }
+          subInfo.mayEditCoupleOrderName = part.join(',');
+        });
+      } else {
+        subInfo.mayEditCoupleOrderName = '';
+        subInfo.mayEditCoupleOrderId = '';
+      }
+
+      subInfo.orderNo = this.orderNo;
+      subInfo.recordMode = this.recordMode;
+      subInfo.hmcId = this.userParam.hmcid;
+      // subInfo.hmcId = 'Z0188893'
+      subInfo.storeId = this.userParam.shopId;
+      // subInfo.storeId = '8800117018'
+      subInfo.storeName = this.shopName;
+      subInfo.userId = this.customerInfo.userId;
+      subInfo.userName = this.customerInfo.username;
+      subInfo.consigneeName = this.consignee.name;
+      subInfo.consigneePhone = this.consignee.phone;
+      subInfo.consigneeId = this.consignee.customerId;
+      subInfo.microCode = this.customerInfo.microCode;
+      subInfo.microName = this.customerInfo.microName;
+      subInfo.channel = this.customerInfo.channel;
+      subInfo.channelName = this.customerInfo.channelName;
+      // subInfo.userPhone = '18675647364',
+      subInfo.userPhone = this.customerInfo.mobile;
+      subInfo.dispatchProvinceId = this.customerInfo.province;
+      subInfo.dispatchProvince = this.consignee.address.provinceName;
+      subInfo.dispatchCityId = this.customerInfo.city;
+      subInfo.dispatchCity = this.consignee.address.cityName;
+      subInfo.dispatchAreaId = this.customerInfo.area;
+      subInfo.dispatchArea = this.consignee.address.districtName;
+      subInfo.dispatchAdd = this.customerInfo.address;
+      subInfo.buyTime = this.buyDate;
+      subInfo.deliveryTime = this.deliveryTime;
+      subInfo.orderType = this.orderType;
+      subInfo.rightId = '';
+      subInfo.rightName = '';
+      subInfo.giftId = '';
+      subInfo.giftName = '';
+      subInfo.orderStatus = 0;
+      subInfo.orderFlag = 0;// 订单标示，0-正常 1-换货 2-退货 订单来源，
+      subInfo.orderSource = this.orderSource; // 1-扫码录单 2-手动录单 3-智慧触点认筹录单
+      subInfo.sourceSn = this.sourceSn; // 来源编码，记录来源ID
+      subInfo.remark = ''; // 备注，记录订单创建、订单修改原因等信息
+      subInfo.rightsUserJson = this.rightsJson;
+      subInfo.orderDetailSaveQoList = this.productList;
+      this.subInfo = subInfo;
+
+      if (type === 2) {
+        const info = JSON.stringify(this.subInfo);
+        /* 选择活动 */
+        this.$router.push({
+          name: 'Order.OrderFollowActivity',
+          params: { orderInfo: info }
+        });
+      }
+    },
+    selectAddress(item) {
+      console.log('11111111111', item);
+      this.customerInfo = item;
+    },
+    addAddress() {
     /* 添加用户信息 */
-    if (this.addressList.length === 0) {
-      this.region = 'add';
-      this.$router.push({
-        name: 'Order.AddAddress',
-        params: { region: this.region, info: '' }
-      });
-    } else {
-      this.showAddressList();
-    }
-  },
-  addNew(item) {
-    this.region = 'userAdd';
-    this.$router.push({
-      name: 'Order.AddAddress',
-      params: { region: this.region, info: JSON.stringify(item) }
-    });
-  },
-  changeAddress(item) {
-    this.region = 'edit';
-    if (this.addressList.length < 1) {
+      if (this.addressList.length === 0) {
+        this.region = 'add';
+        this.$router.push({
+          name: 'Order.AddAddress',
+          params: { region: this.region, info: '' }
+        });
+      } else {
+        this.showAddressList();
+      }
+    },
+    addNew(item) {
+      this.region = 'userAdd';
       this.$router.push({
         name: 'Order.AddAddress',
         params: { region: this.region, info: JSON.stringify(item) }
       });
-    } else {
-      this.showAddressList();
-    }
-  },
-  editAddress(info) {
-    this.region = 'edit';
-    this.$router.push({
-      name: 'Order.AddAddress',
-      params: { region: this.region, info: JSON.stringify(info) }
-    });
-  },
-  showAddressList() {
-    /* 展示选择用户pop */
-    this.addressPopShow = true;
-  },
-  queryUserList(storeId) {
-    this.productService.userList(storeId).then((res) => {
-      if (res.code === 1) {
-        ;
-        this.multBuySponsor = res.data;
-        this.multBuyParticipant = this.multBuySponsor;
+    },
+    changeAddress(item) {
+      this.region = 'edit';
+      if (this.addressList.length < 1) {
+        this.$router.push({
+          name: 'Order.AddAddress',
+          params: { region: this.region, info: JSON.stringify(item) }
+        });
+      } else {
+        this.showAddressList();
       }
-    });
-  },
-  next() {
+    },
+    editAddress(info) {
+      this.region = 'edit';
+      this.$router.push({
+        name: 'Order.AddAddress',
+        params: { region: this.region, info: JSON.stringify(info) }
+      });
+    },
+    showAddressList() {
+    /* 展示选择用户pop */
+      this.addressPopShow = true;
+    },
+    queryUserList(storeId) {
+      this.productService.userList(storeId).then((res) => {
+        if (res.code === 1) {
+          this.multBuySponsor = res.data;
+          this.multBuyParticipant = this.multBuySponsor;
+        }
+      });
+    },
+    next() {
     /* 下一步 */
-    // todo 单品、套购值待定
-    if (this.orderType === 1) {
-      // 展示套购发起人
-      this.multBuyPopShow = true;
-    }
-    this.saveTemporary(2);
-    // this.$router.push({
-    //   name: 'Order.OrderUploadInvoice',
-    //   params: { orderNo: this.orderNo }
-    // });
-  },
-  saveOrder() {
+      if (this.productList.length === 0) {
+        Toast.info('请选择产品');
+      }
+      this.saveTemporary(2);
+    },
+    saveOrder() {
 
+    },
+    onDelete(index) {
+      this.productList.splice(index, 1);
+    }
   },
-  onDelete(index) {
-    this.productList.splice(index, 1);
-  }
-},
-beforeRouteLeave(to, from, next) {
-  if (to.path === '/') { // 此处判断是如果返回上一层，你可以根据自己的业务更改此处的判断逻辑，酌情决定是否摧毁本层缓存。
-    if (this.$vnode && this.$vnode.data.keepAlive) {
-      if (this.$vnode.parent && this.$vnode.parent.componentInstance && this.$vnode.parent.componentInstance.cache) {
-        if (this.$vnode.componentOptions) {
-          const key = this.$vnode.key == null
-            ? this.$vnode.componentOptions.Ctor.cid + (this.$vnode.componentOptions.tag ? `::${this.$vnode.componentOptions.tag}` : '')
-            : this.$vnode.key;
-          const cache = this.$vnode.parent.componentInstance.cache;
-          const keys = this.$vnode.parent.componentInstance.keys;
-          if (cache[key]) {
-            if (keys.length) {
-              const index = keys.indexOf(key);
-              if (index > -1) {
-                keys.splice(index, 1);
+  beforeRouteLeave(to, from, next) {
+    if (to.path === '/') { // 此处判断是如果返回上一层，你可以根据自己的业务更改此处的判断逻辑，酌情决定是否摧毁本层缓存。
+      if (this.$vnode && this.$vnode.data.keepAlive) {
+        if (this.$vnode.parent && this.$vnode.parent.componentInstance && this.$vnode.parent.componentInstance.cache) {
+          if (this.$vnode.componentOptions) {
+            const key = this.$vnode.key == null
+              ? this.$vnode.componentOptions.Ctor.cid + (this.$vnode.componentOptions.tag ? `::${this.$vnode.componentOptions.tag}` : '')
+              : this.$vnode.key;
+            const cache = this.$vnode.parent.componentInstance.cache;
+            const keys = this.$vnode.parent.componentInstance.keys;
+            if (cache[key]) {
+              if (keys.length) {
+                const index = keys.indexOf(key);
+                if (index > -1) {
+                  keys.splice(index, 1);
+                }
               }
+              delete cache[key];
             }
-            delete cache[key];
           }
         }
       }
+      this.$destroy();
     }
-    this.$destroy();
-  }
-  next();
-},
+    next();
+  },
 
 };
 </script>

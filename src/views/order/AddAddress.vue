@@ -1,15 +1,23 @@
 <template>
   <div class="addAddress-form">
-    <ul>
+    <ul class="address-back">
       <li>
         <div class="addAddress-form-item">
-          <label class="addAddress-form-item-name">手机号</label>
+          <label class="addAddress-form-item-name">顾客手机号</label>
           <input
             type="number"
             class="addAddress-form-item-ipt"
             placeholder="请输入手机号"
             v-model="customerInfo.mobile"
-
+            v-show="region != 'edit'"
+          >
+          <input
+            type="number"
+            class="addAddress-form-item-ipt"
+            placeholder="请输入手机号"
+            disabled="true"
+            v-show="region == 'edit'"
+            v-model="customerInfo.mobile"
           >
         </div>
       </li>
@@ -19,12 +27,46 @@
       <div v-show="searchEnd">
       <li>
         <div class="addAddress-form-item">
-          <label class="addAddress-form-item-name">姓名</label>
+          <label class="addAddress-form-item-name">顾客姓名</label>
           <input
             type="text"
             class="addAddress-form-item-ipt"
             placeholder="请输入姓名"
+            v-show="region != 'edit'"
             v-model="customerInfo.username"
+          >
+          <input
+            type="text"
+            class="addAddress-form-item-ipt"
+            placeholder="请输入姓名"
+            disabled="true"
+            v-show="region == 'edit'"
+            v-model="customerInfo.username"
+          >
+        </div>
+      </li>
+      </div>
+    </ul>
+    <div class="consignee-class" v-show="searchEnd">
+      <li>
+        <div class="addAddress-form-item">
+          <label class="addAddress-form-item-name">收货人姓名</label>
+          <input
+            type="text"
+            class="addAddress-form-item-ipt"
+            placeholder="请输入姓名"
+            v-model="customerInfo.consigneeUserName"
+          >
+        </div>
+      </li>
+      <li>
+        <div class="addAddress-form-item">
+          <label class="addAddress-form-item-name">收货人手机号</label>
+          <input
+            type="number"
+            class="addAddress-form-item-ipt"
+            placeholder="请输入手机号"
+            v-model="customerInfo.consigneeUserPhone"
           >
         </div>
       </li>
@@ -75,8 +117,7 @@
           ></md-switch>
         </div>
       </li>
-      </div>
-    </ul>
+    </div>
 
     <b-pop-check-list
       type="radio"
@@ -213,11 +254,9 @@ export default {
           this.smld = true;
         } else {
           this.customerInfo = JSON.parse(this.$route.params.info);
+          debugger
         }
-        this.defaultA.push(this.customerInfo.province);
-        this.defaultA.push(this.customerInfo.city);
-        this.defaultA.push(this.customerInfo.district);
-        debugger;
+
         if (this.customerInfo.familyItemCode) {
           this.customerInfo.tag.push(this.customerInfo.familyItemCode);
         }
@@ -263,6 +302,8 @@ export default {
             this.customerInfo.username = res.data.username;
             this.customerInfo.sex = res.data.sex;
             this.customerInfo.customerId = res.data.customerId;
+            this.customerInfo.consigneeUserName = res.data.consigneeUserName
+            this.customerInfo.consigneeUserPhone = res.data.consigneeUserPhone
             this.defaultA.push(res.data.province);
             this.defaultA.push(res.data.city);
             this.defaultA.push(res.data.district);
@@ -283,14 +324,15 @@ export default {
     addressChange(address) {
       /* 地址change */
       debugger;
+      console.log('ssssss',this.defaultA)
       const addressA = address.options.map(v => v.label);
       const addressAy = address.values;
       this.customerInfo.city = addressAy[1];
       this.customerInfo.province = addressAy[0];
       this.customerInfo.district = addressAy[2];
-      this.customerInfo.provinceName = addressA[0];
-      this.customerInfo.cityName = addressA[1];
-      this.customerInfo.districtName = addressA[2];
+      // this.customerInfo.provinceName = addressA[0];
+      // this.customerInfo.cityName = addressA[1];
+      // this.customerInfo.districtName = addressA[2];
       this.addressName = addressA.join('/');
     },
     confirm() {
@@ -329,10 +371,6 @@ export default {
         }
         delete this.customerInfo.tag;
       }
-      this.subCustomerInfo = this.customerInfo;
-      delete this.customerInfo.provinceName;
-      delete this.customerInfo.cityName;
-      delete this.customerInfo.districtName;
       if (this.region === 'add' || this.region === 'userAdd') {
         this.productService.addcustomerAddress(this.customerInfo, {}).then((res) => {
           if (res.code === 1) {
@@ -412,10 +450,19 @@ export default {
 </script>
 
 <style lang="scss">
-  .addAddress-form {
+  .consignee-class{
+    margin-top: 20px;
     background: #fff;
     padding-left: 24px;
     padding-right: 24px;
+  }
+  .address-back{
+    padding-left: 24px;
+    padding-right: 24px;
+    background: #fff;
+  }
+  .addAddress-form {
+
     padding-bottom: 4px;
 
     .bItem-item {

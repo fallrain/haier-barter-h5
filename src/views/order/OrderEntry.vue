@@ -33,7 +33,7 @@
             </button>
           </div>
           <p class="orderEntry-user-address">
-               {{consignee.address}}
+            {{consignee.address.provinceName}}{{consignee.address.cityName}}{{consignee.address.districtName}}{{consignee.address.street}}
           </p>
         </div>
         <div v-else>
@@ -235,6 +235,7 @@ import {
 import {
   BMultbuyCheck
 } from '@/components/business';
+import addressData from '@/lib/address';
 
 export default {
   name: 'OrderEntry',
@@ -445,7 +446,7 @@ export default {
     }
   },
   created() {
-    debugger;
+    this.addressData = addressData;
     this.userParam = JSON.parse(localStorage.getItem('userinfo'));
     this.shopId = this.userParam.shopId;
     debugger;
@@ -559,26 +560,45 @@ export default {
         }
       });
     },
+    getAddressName(province, city, district) {
+      this.consignee.address = {};
+      const Data = this.addressData.options;
+      Data.forEach((p) => {
+        if (province === p.value) {
+          this.consignee.address.provinceName = p.label;
+          p.children.options.forEach((c) => {
+            if (city === c.value) {
+              this.consignee.address.cityName = c.label;
+              c.children.options.forEach((d) => {
+                if (district === d.value) {
+                  this.consignee.address.districtName = d.label;
+                }
+              });
+            }
+          });
+        }
+      });
+    },
     // 查询客户信息及默认地址
     queryCustomerDefault() {
       debugger;
       this.productService.deafaultCustomerAddress(this.mobile).then((res) => {
         if (res.code === 1) {
           if (res.data !== null) {
-            debugger;
             this.haveConsignee = true;
-            if (this.haveCustomer) {
-            } else {
+            // if (this.haveCustomer) {
+            // } else {
               this.haveCustomer = true;
               this.customerInfo = res.data;
-            }
+            // }
             this.title = '收件人信息';
             // this.consignee.address = res.data.province + res.data.city + res.data.district + res.data.address;
-            this.consignee.address = res.data.address;
+            this.getAddressName(res.data.province, res.data.city, res.data.district);
+            this.consignee.address.street = res.data.address;
             debugger;
-            this.consignee.phone = res.data.mobile;
-            this.consignee.name = res.data.username;
-            if (res.data.sex === 1) {
+            this.consignee.phone = res.data.consigneeUserPhone;
+            this.consignee.name = res.data.consigneeUserName;
+            if (res.data.sex === '1') {
               this.consignee.sexCn = '男士';
             } else {
               this.consignee.sexCn = '女士';
@@ -590,10 +610,6 @@ export default {
           } else {
             debugger;
             this.addUserShow = true;
-            // if (this.$route.params.region === 'new') {
-
-            //   this.addNew(this.customerInfo);
-            // }
           }
         }
       });
@@ -690,11 +706,11 @@ export default {
       // subInfo.userPhone = '18675647364',
       subInfo.userPhone = this.customerInfo.mobile;
       subInfo.dispatchProvinceId = this.customerInfo.province;
-      subInfo.dispatchProvince = this.customerInfo.provinceName;
+      subInfo.dispatchProvince = this.consignee.address.provinceName;
       subInfo.dispatchCityId = this.customerInfo.city;
-      subInfo.dispatchCity = this.customerInfo.cityName;
+      subInfo.dispatchCity = this.consignee.address.cityName;
       subInfo.dispatchAreaId = this.customerInfo.district;
-      subInfo.dispatchArea = this.customerInfo.districtName;
+      subInfo.dispatchArea = this.consignee.address.districtName;
       subInfo.dispatchAdd = this.customerInfo.address;
       subInfo.buyTime = this.buyDate;
       subInfo.deliveryTime = this.deliveryTime;

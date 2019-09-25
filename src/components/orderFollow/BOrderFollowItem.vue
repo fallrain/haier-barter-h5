@@ -584,7 +584,6 @@ export default {
 .bar-v {
   background-color: white;
   height: 72px;
-  margin-top: 15px;
 }
 
 .label-class {
@@ -736,7 +735,7 @@ export default {
   background-color: white;
   z-index: 10;
   position: absolute;
-  bottom: -180px;
+  margin-top: 10px;
   border-radius: 10px;
 }
 .out,
