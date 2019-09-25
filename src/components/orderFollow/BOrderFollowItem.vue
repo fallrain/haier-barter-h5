@@ -410,6 +410,7 @@ export default {
       }
       if (type === '20') {
         this.$emit('userService', item);
+        debugger
         return;
       }
       if (type === '21') {

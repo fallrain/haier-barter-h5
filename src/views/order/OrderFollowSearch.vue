@@ -56,6 +56,7 @@
         @searchProduct="searchProduct"
         @againEntry="againEntry"
         @itemClick="itemClick"
+        @userService="userService"
       ></b-order-follow-item>
     </div>
     <div
@@ -85,6 +86,7 @@
         @popButtonClicked="buttonClicked"
         @updateOrderType="updateOrderType"
         @followButtonClick="followButtonClicked"
+        @userService="userService"
         @itemClick="itemClick()"
       ></b-order-follow-item>
     </div>
@@ -318,10 +320,11 @@ export default {
       });
     },
     userService(item) {
+      debugger
       wx.miniProgram.navigateTo({ url: '/pages/userService/userService' });
     },
     maybeBuyer(item) {
-      wx.miniProgram.navigateTo({ url: '/pages/maybeByuser/maybeByuser', userId: item.userId });
+      wx.miniProgram.navigateTo({ url: '/pages/mabyByuser/mabyByuser', userId: item.userId });
     },
     searchProduct(item) {
       this.orderService.queryOrderInfoByOrderNo({}, { orderNo: item.orderNo }).then((response) => {
