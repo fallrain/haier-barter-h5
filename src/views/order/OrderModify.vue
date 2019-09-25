@@ -425,7 +425,6 @@ created() {
   debugger;
   this.orderNo = this.$route.params.orderNo;
   this.userParam = JSON.parse(localStorage.getItem('userinfo'));
-  this.queryUserList();
   this.getData();
 },
 methods: {
@@ -461,7 +460,7 @@ methods: {
         this.orderFollowId = resData.id;
         this.sourceSn = resData.sourceSn;
         this.recordMode = resData.recordMode;
-        this.queryUserList();
+        this.queryUserList(resData.storeId);
         if (resData.rightsUserJson) {
           this.activityList = JSON.parse(resData.rightsUserJson).rightsUserInterestsDetailsDTO;
         }
@@ -597,7 +596,9 @@ methods: {
     subInfo.orderNo = this.orderNo;
     subInfo.recordMode = this.recordMode;
     subInfo.hmcId = this.userParam.hmcid;
+    // subInfo.hmcId = 'Z0188893'
     subInfo.storeId = this.userParam.shopId;
+    // subInfo.storeId = '8800117018'
     subInfo.storeName = this.shopName;
     subInfo.userId = this.customerInfo.userId;
     subInfo.userName = this.customerInfo.username;
@@ -688,8 +689,8 @@ methods: {
     /* 展示选择用户pop */
     this.addressPopShow = true;
   },
-  queryUserList() {
-    this.productService.userList(this.userParam.shopId).then((res) => {
+  queryUserList(storeId) {
+    this.productService.userList(storeId).then((res) => {
       if (res.code === 1) {
         ;
         this.multBuySponsor = res.data;

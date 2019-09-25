@@ -294,9 +294,10 @@ export default {
       }).then((res) => {
         const sroviewObj = {};
         if (res.code === 1) {
-          debugger;
-          const result = res.data;
-          const pages = 1;
+          const {
+            result,
+            pages
+          } = res.data;
           sroviewObj.pages = pages;
           sroviewObj.result = result;
           if (result && result.length > 0) {
