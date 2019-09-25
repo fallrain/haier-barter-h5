@@ -57,6 +57,7 @@
         @againEntry="againEntry"
         @itemClick="itemClick"
         @userService="userService"
+        @maybeBuyer="maybeBuyer"
       ></b-order-follow-item>
     </div>
     <div
@@ -88,6 +89,7 @@
         @followButtonClick="followButtonClicked"
         @userService="userService"
         @itemClick="itemClick()"
+        @maybeBuyer="maybeBuyer"
       ></b-order-follow-item>
     </div>
     <div style="height:60px"></div>
