@@ -774,14 +774,16 @@ export default {
         this.showAddressList();
       }
     },
-    addAddress(item) {
+    addAddress() {
       this.region = 'userAdd';
       this.$router.push({
         name: 'Order.AddAddress',
-        params: { region: this.region, info: JSON.stringify(item) }
+        params: { region: this.region, info: JSON.stringify(this.customerInfo) }
       });
     },
     changeAddress(item) {
+      item.userName = this.customerInfo.username
+      item.mobile = this.customerInfo.mobile
       this.region = 'edit';
       if (this.addressList.length < 1) {
         this.$router.push({
