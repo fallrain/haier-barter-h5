@@ -27,7 +27,7 @@
             </button>
           </div>
           <p class="orderEntry-user-address">
-            <!--{{consignee.address.provinceName}}{{consignee.address.cityName}}{{consignee.address.districtName}}{{consignee.address.street}}-->
+            {{consignee.address.provinceName}}{{consignee.address.cityName}}{{consignee.address.districtName}}{{consignee.address.street}}
           </p>
         </div>
       </div>
@@ -170,7 +170,7 @@
     <b-pop-address-list
       :show.sync="addressPopShow"
       :list="addressList"
-      @addNew="addNew"
+      @addNew="addAddress"
       @editAddress="editAddress"
       @clickAddress="selectAddress"
     ></b-pop-address-list>
@@ -564,6 +564,25 @@ export default {
       this.productService.customerAddressList(this.customerInfo.customerId).then((res) => {
         if (res.code === 1) {
           this.addressList = res.data;
+          const Data = this.addressData.options;
+          this.addressList.forEach(address => {
+            address.consignee = {}
+            Data.forEach((p) => {
+              if (address.province === p.value) {
+                address.consignee.provinceName = p.label;
+                p.children.options.forEach((c) => {
+                  if (address.city === c.value) {
+                    address.consignee.cityName = c.label;
+                    c.children.options.forEach((d) => {
+                      if (address.district === d.value) {
+                        address.consignee.districtName = d.label;
+                      }
+                    });
+                  }
+                });
+              }
+            });
+          })
         }
       });
     },
@@ -693,25 +712,20 @@ export default {
       this.customerInfo = item;
     },
     addAddress() {
-    /* 添加用户信息 */
+    /* 添加新地址 */
       if (this.addressList.length === 0) {
         this.region = 'add';
         this.$router.push({
           name: 'Order.AddAddress',
-          params: { region: this.region, info: '' }
+          params: { region: this.region, info: JSON.stringify(this.customerInfo)}
         });
       } else {
         this.showAddressList();
       }
     },
-    addNew(item) {
-      this.region = 'userAdd';
-      this.$router.push({
-        name: 'Order.AddAddress',
-        params: { region: this.region, info: JSON.stringify(item) }
-      });
-    },
     changeAddress(item) {
+      item.userName = this.customerInfo.username
+      item.mobile = this.customerInfo.mobile
       this.region = 'edit';
       if (this.addressList.length < 1) {
         this.$router.push({

@@ -619,6 +619,25 @@ export default {
       this.productService.customerAddressList(this.customerInfo.customerId).then((res) => {
         if (res.code === 1) {
           this.addressList = res.data;
+          const Data = this.addressData.options;
+          this.addressList.forEach(address => {
+            address.consignee = {}
+            Data.forEach((p) => {
+              if (address.province === p.value) {
+                address.consignee.provinceName = p.label;
+                p.children.options.forEach((c) => {
+                  if (address.city === c.value) {
+                    address.consignee.cityName = c.label;
+                    c.children.options.forEach((d) => {
+                      if (address.district === d.value) {
+                        address.consignee.districtName = d.label;
+                      }
+                    });
+                  }
+                });
+              }
+            });
+          })
         }
       });
     },
@@ -782,8 +801,6 @@ export default {
       });
     },
     changeAddress(item) {
-      item.userName = this.customerInfo.username
-      item.mobile = this.customerInfo.mobile
       this.region = 'edit';
       if (this.addressList.length < 1) {
         this.$router.push({
@@ -795,6 +812,9 @@ export default {
       }
     },
     editAddress(info) {
+      // this.addressPopShow = false;
+      info.username = this.customerInfo.username
+      info.mobile = this.customerInfo.mobile
       this.region = 'edit';
       debugger;
       this.$router.push({
@@ -805,6 +825,7 @@ export default {
     showAddressList() {
       /* 展示选择用户pop */
       this.addressPopShow = true;
+
     },
     queryUserList() {
       this.productService.userList(this.shopId).then((res) => {

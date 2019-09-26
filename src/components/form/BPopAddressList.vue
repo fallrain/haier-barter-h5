@@ -22,9 +22,9 @@
             <div class="b-address-checkList-item-portrait">{{item.familyItemCode}}</div>
             <div class="b-address-checkList-item-cnt">
               <div class="b-address-checkList-item-cnt-name">
-                <span class="mr26">{{item.userName}}</span><span>{{item.mobile}}</span>
+                <span class="mr26">{{item.consigneeUserName}}</span><span>{{item.consigneeUserPhone}}</span>
               </div>
-              <p class="b-address-checkList-item-cnt-ads">{{item.address}}</p>
+              <p class="b-address-checkList-item-cnt-ads">{{item.consignee.provinceName}}{{item.consignee.cityName}}{{item.consignee.districtName}}{{item.address}}</p>
             </div>
             <div class="b-address-checkList-opr">
               <button type="button" class="b-address-checkList-opr-btn" @click="editAddress(item)">编辑</button>
@@ -41,7 +41,7 @@ import {
   Popup,
   PopupTitleBar
 } from 'mand-mobile';
-
+import addressData from '@/lib/address';
 export default {
   name: 'BPopAddressList',
   inheritAttrs: true,
@@ -81,14 +81,17 @@ export default {
   methods: {
     addressClick(item) {
       /* 地址条目click */
+      delete item.consignee
       this.$emit('clickAddress', item);
       this.popupShow = false;
     },
     addNewClick(item) {
+      delete item.consignee
       /* 添加新地址click */
       this.$emit('addNew', item);
     },
     editAddress(item) {
+      delete item.consignee
       // 编辑地址
       debugger
       this.$emit('editAddress', item);
