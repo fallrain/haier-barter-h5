@@ -78,22 +78,23 @@ export default {
       this.$emit('update:show', newVal);
     }
   },
+  created(){
+    debugger
+  },
   methods: {
     addressClick(item) {
-      /* 地址条目click */
-      delete item.consignee
-      this.$emit('clickAddress', item);
       this.popupShow = false;
+      /* 地址条目click */
+      debugger
+      this.$emit('clickAddress', item);
     },
     addNewClick(item) {
-      delete item.consignee
       /* 添加新地址click */
       this.$emit('addNew', item);
     },
     editAddress(item) {
       delete item.consignee
       // 编辑地址
-      debugger
       this.$emit('editAddress', item);
     },
     emptyFn() {}

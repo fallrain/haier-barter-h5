@@ -11,16 +11,16 @@
       <i class="iconfont icon-riqi"></i>
     </div>
     <md-picker
+      v-bind="$attrs"
       ref="picker"
       :data="pickerData"
-      :cols="3"
+      :cols="2"
       :default-index="pickerDefaultIndex"
       :default-value="pickerDefaultValue"
-      is-view
       is-cascade
       v-model="isTimePickerShow"
       @change="onPickerConfirm"
-      @getColumnValue="getColumnValue"
+      @confirm="confirmPicker"
     ></md-picker>
   </div>
 </template>
@@ -52,7 +52,8 @@ export default {
       pickerDefaultIndex: [],
       pickerDefaultValue: [],
       pickerValue: '',
-      isTimePickerShow: true
+      isTimePickerShow: false,
+      cascade :true
     };
   },
   created() {
@@ -89,31 +90,27 @@ export default {
         text: '17:00-18:00'
       }
     ];
-    const data = {
-      text: '请选择日期',
-      value: 'day',
-      children: []
-    };
+    // const data = {
+    //   text: '请选择日期',
+    //   value: 'day',
+    //   children: []
+    // };
 
     for (let i = 0; i < 365; i++) {
       const day = this.GetDateStr(i);
       const dayV = {
         value: i,
         text: day,
-        children: {
-          text: '请选择送达时间',
-          value: 'hour',
-          children: timeSectionArray
-        }
+        children: timeSectionArray
       };
       dayList.push(dayV);
     }
-    data.children = dayList
+    // data.children = dayList
     const y = [];
-    y.push(data);
-    const t = [];
-    t.push(y);
-    this.pickerData = t;
+    y.push(dayList);
+    // const t = [];
+    // t.push(y);
+    this.pickerData = y;
     debugger;
   },
   mounted() {
@@ -131,26 +128,26 @@ export default {
     },
     onPickerInitialed() {},
     onPickerConfirm(index) {
-      const values = this.$refs[`picker${index}`].getColumnValues();
-
-      let res = '';
-      values.forEach((value) => {
-        value && (res += `${value.text || value.text} `);
-      });
-      this[`pickerValue${index}`] = res;
-      debugger;
+      // const values = this.$refs[`picker${index}`].getColumnValues();
+      //
+      // let res = '';
+      // values.forEach((value) => {
+      //   value && (res += `${value.text || value.text} `);
+      // });
+      // this[`pickerValue${index}`] = res;
+      // debugger;
     },
-    getColumnValue(){},
     getColumnValues(columnsValue){
 
       return columnsValue
     },
-    // datePickerConfirm() {
-    //   /* 点了确定按钮 */
-    //   // const date = this.$refs.datePicker.getFormatDate(this.pattern);
-    //   // this.$emit('confirm', date);
-    //   // this.$emit('input', date);
-    // },
+
+    confirmPicker(columnsValue){
+      debugger
+      const data = columnsValue[0].text +'             ' + columnsValue[1].text
+      this.$emit('confirmDeliveryTime',data)
+    },
+
     showPicker() {
       /* 显示时间选择器 */
       if (this.disabled) {

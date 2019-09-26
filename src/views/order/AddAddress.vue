@@ -229,10 +229,10 @@ export default {
   created() {
     // 不加入双向绑定
     this.addressData = addressData;
-    this.getFamilyItem();
     this.customerInfo.hmcId = JSON.parse(localStorage.getItem('userinfo')).hmcid;
-    debugger;
     this.customerInfo.tag = [];
+    this.getFamilyItem();
+    debugger;
     if (this.$route.params) {
       this.region = this.$route.params.region;
       debugger;
@@ -241,7 +241,7 @@ export default {
         debugger;
       } else if (this.region === 'userAdd') {
         this.confirmShow = true;
-        this.searchEnd = true;
+        this.searchEnd = false;
       } else {
         // this.confirmShow = false;
         debugger;
@@ -254,14 +254,18 @@ export default {
           this.smld = true;
         } else {
           this.customerInfo = JSON.parse(this.$route.params.info);
+          this.customerInfo.hmcId = JSON.parse(localStorage.getItem('userinfo')).hmcid;
           debugger
         }
-
         if (this.customerInfo.familyItemCode) {
-          this.customerInfo.tag.push(this.customerInfo.familyItemCode);
+          let a = []
+          a.push(this.customerInfo.familyItemCode)
+          this.customerInfo.tag = a;
         }
       }
+
     }
+
   },
   computed: {
     tagName() {
@@ -330,13 +334,9 @@ export default {
       this.customerInfo.city = addressAy[1];
       this.customerInfo.province = addressAy[0];
       this.customerInfo.district = addressAy[2];
-      // this.customerInfo.provinceName = addressA[0];
-      // this.customerInfo.cityName = addressA[1];
-      // this.customerInfo.districtName = addressA[2];
       this.addressName = addressA.join('/');
     },
     confirm() {
-
       if (!(/^1[34578]\d{9}$/.test(this.customerInfo.mobile))) {
         Toast.failed('手机格式错误');
         this.customerInfo.mobile = '';
@@ -362,8 +362,13 @@ export default {
         Toast.failed('地址不能为空');
         return;
       }
+      if(this.customerInfo.consignee){
+        delete this.customerInfo.consignee
+      }
       if (this.customerInfo.tag) {
-        const tagObj = this.tagList.find(v => v.id === this.customerInfo.tag);
+        debugger
+        const tagObj = this.tagList.find(v => v.id === this.customerInfo.tag[0]);
+        debugger
         if (tagObj) {
           this.customerInfo.familyItemCode = tagObj.id;
         } else {
@@ -380,6 +385,7 @@ export default {
           }
         });
       } else {
+        delete this.customerInfo.hmcId
         this.productService.updateCustomerAddress(this.customerInfo, {}).then((res) => {
           if (res.code === 1) {
             Toast.succeed('地址修改成功');

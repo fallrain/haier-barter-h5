@@ -124,16 +124,15 @@
       <template
         v-slot:right=""
       >
-        <b-date-picker
-          class="orderEntry-date"
+        <b-time-section-picker
+          class="orderEntry-date1"
           slot="right"
           type="datetime"
           title="请选择日期"
-          :pattern="pattern"
-          :defaultDate="deliveryTime"
-          :min-date="currentDate"
           v-model="deliveryTime"
-        ></b-date-picker>
+          @confirmDeliveryTime="confirmDeliveryTime"
+        >
+        </b-time-section-picker>
       </template>
     </b-item>
     <b-item
@@ -231,6 +230,7 @@ import {
   BPopAddressList,
   BPopCheckList,
   BRadioItem,
+  BTimeSectionPicker
 } from '@/components/form';
 import {
   BMultbuyCheck
@@ -255,6 +255,7 @@ export default {
     [PopupTitleBar.name]: PopupTitleBar,
     [Button.name]: Button,
     [Icon.name]: Icon,
+    BTimeSectionPicker
   },
   data() {
     return {
@@ -536,6 +537,9 @@ export default {
     particpantClick(checkids) {
 
     },
+    confirmDeliveryTime(date){
+      this.deliveryTime = date
+    },
     getUserStore() {
       // this.shopId = '8800332156';
       this.productService.storeInfo(this.shopId).then((res) => {
@@ -588,8 +592,8 @@ export default {
             this.haveConsignee = true;
             // if (this.haveCustomer) {
             // } else {
-              this.haveCustomer = true;
-              this.customerInfo = res.data;
+            this.haveCustomer = true;
+            this.customerInfo = res.data;
             // }
             this.title = '收件人信息';
             // this.consignee.address = res.data.province + res.data.city + res.data.district + res.data.address;
@@ -598,7 +602,7 @@ export default {
             debugger;
             this.consignee.phone = res.data.consigneeUserPhone;
             this.consignee.name = res.data.consigneeUserName;
-            if (res.data.sex === '1') {
+            if (res.data.sex === 1) {
               this.consignee.sexCn = '男士';
             } else {
               this.consignee.sexCn = '女士';
@@ -618,10 +622,9 @@ export default {
     queryCustomerAddressList() {
       this.productService.customerAddressList(this.customerInfo.customerId).then((res) => {
         if (res.code === 1) {
-          this.addressList = res.data;
           const Data = this.addressData.options;
-          this.addressList.forEach(address => {
-            address.consignee = {}
+          res.data.forEach((address) => {
+            address.consignee = {};
             Data.forEach((p) => {
               if (address.province === p.value) {
                 address.consignee.provinceName = p.label;
@@ -637,7 +640,8 @@ export default {
                 });
               }
             });
-          })
+          });
+          this.addressList = res.data;
         }
       });
     },
@@ -771,29 +775,36 @@ export default {
         if (this.productList[i].productPrice === '') {
           Toast.failed('请输入产品价格');
           return;
-          debugger;
         }
       }
       this.genarateSubInfo(2);
     },
     selectAddress(item) {
-      // debugger;
-      console.log('11111111111', item);
-      this.customerInfo = item;
-    },
-    addNew() {
-      /* 添加用户信息 */
-      if (this.addressList.length === 0) {
-        this.region = 'add';
-        this.$router.push({
-          name: 'Order.AddAddress',
-          params: { region: this.region, info: JSON.stringify(this.customerInfo) }
-        });
+      this.addressPopShow = false;
+      this.consignee.name = item.consigneeUserName;
+      this.consignee.phone = item.consigneeUserPhone;
+      this.consignee.address = item.consignee
+      this.consignee.address.street = item.address
+      if (item.sex === 1) {
+        this.consignee.sexCn = '男士';
       } else {
-        this.showAddressList();
+        this.consignee.sexCn = '女士';
       }
+      // // this.customerInfo = item;
+      // debugger
+      // // delete this.customerInfo.consignee
     },
     addAddress() {
+      // 添加新地址
+      debugger;
+      this.region = 'add';
+      this.$router.push({
+        name: 'Order.AddAddress',
+        params: { region: this.region, info: JSON.stringify(this.customerInfo) }
+      });
+    },
+    addNew() {
+      /* 添加顾客信息 */
       this.region = 'userAdd';
       this.$router.push({
         name: 'Order.AddAddress',
@@ -812,9 +823,9 @@ export default {
       }
     },
     editAddress(info) {
-      // this.addressPopShow = false;
-      info.username = this.customerInfo.username
-      info.mobile = this.customerInfo.mobile
+      this.addressPopShow = false;
+      info.username = this.customerInfo.username;
+      info.mobile = this.customerInfo.mobile;
       this.region = 'edit';
       debugger;
       this.$router.push({
@@ -825,7 +836,6 @@ export default {
     showAddressList() {
       /* 展示选择用户pop */
       this.addressPopShow = true;
-
     },
     queryUserList() {
       this.productService.userList(this.shopId).then((res) => {
@@ -1018,6 +1028,9 @@ export default {
     /*background-color: red;*/
     line-height: 70px;
     border-top: 1px solid lightgray;
+  }
+  .orderEntry-date1{
+   width: 400px;
   }
 
 </style>

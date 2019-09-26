@@ -108,25 +108,15 @@
       <template
         v-slot:right=""
       >
-
-        <b-date-picker
-          class="orderEntry-date1"
-          slot="right"
-          type="datetime"
-          title="请选择日期"
-          :pattern="pattern"
-          :defaultDate="deliveryTime"
-          :min-date="currentDate"
-          v-model="deliveryTime"
-        ></b-date-picker>
-        <!--<b-time-section-picker-->
-        <!--class="orderEntry-date1"-->
-        <!--slot="right"-->
-        <!--type="datetime"-->
-        <!--title="请选择日期"-->
-        <!--v-model="deliveryTime"-->
-      <!--&gt;-->
-      <!--</b-time-section-picker>-->
+        <b-time-section-picker
+        class="orderEntry-date1"
+        slot="right"
+        type="datetime"
+        title="请选择日期"
+        v-model="deliveryTime"
+        @confirmDeliveryTime="confirmDeliveryTime"
+      >
+      </b-time-section-picker>
     </template>
   </b-item>
   <b-item
@@ -452,6 +442,9 @@ export default {
     },
     consporConfirm() {
       this.multBuyPopShow = false;
+    },
+    confirmDeliveryTime(date){
+      this.deliveryTime = date
     },
     getData() {
       this.orderService.queryOrderInfoByOrderNo({}, { orderNo: this.orderNo }).then((response) => {
@@ -874,10 +867,10 @@ color: #333;
 }
 
 .orderEntry-date1 {
-  width: 380px !important;
+  width: 400px !important;
 }
 .orderEntry-date {
-  width: 280px;
+  width: 260px;
 }
 .orderEntry-reportInf {
   color: #3078CC;
