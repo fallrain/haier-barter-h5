@@ -323,9 +323,9 @@ export default {
     };
   },
   created() {
-    const userinfostr =  this.getQueryString('userinfo')
-    this.userinfo = JSON.parse(userinfostr)
-    const Str = JSON.stringify(this.userinfo)
+    const userinfostr = this.getQueryString('userinfo');
+    this.userinfo = JSON.parse(userinfostr);
+    const Str = JSON.stringify(this.userinfo);
     localStorage.setItem('userinfo', Str);
     localStorage.setItem('acces_token', this.userinfo.token);
   },
@@ -361,14 +361,14 @@ export default {
   },
   methods: {
     getQueryString(name) {
-      var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
-      var r = window.location.search.substr(1).match(reg);
+      const reg = new RegExp(`(^|&)${name}=([^&]*)(&|$)`, 'i');
+      const r = window.location.search.substr(1).match(reg);
       if (r != null) return unescape(r[2]);
       return null;
     },
     confirmDate(dates) {
       /* 确认时间 */
-      debugger;
+
     },
     upCallback(page) {
       // 下载过就设置已经初始化

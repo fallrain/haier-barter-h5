@@ -80,7 +80,6 @@ export default {
     Toast
   },
   created() {
-    debugger;
     if (localStorage.getItem('productSearchHistory')) {
       this.searchHistory = JSON.parse(localStorage.getItem('productSearchHistory'));
       if (this.searchHistory.length > 30) {
@@ -113,7 +112,7 @@ export default {
     search() {
       /* 搜索产品 */
       this.productService.list(this.searchVal.toUpperCase(), '1', '30').then((res) => {
-        // debugger;
+        // ;
         if (res.code === 1) {
           this.searchList = res.data;
           if (res.data === null) {
@@ -124,7 +123,7 @@ export default {
       });
     },
     // indexOf(val) {
-    //   debugger
+    //
     //   for (let i = 0; i < this.searchHistory.length; i++) {
     //     if (this.searchHistory[i] == val) return i;
     //   }
@@ -159,7 +158,6 @@ export default {
       }
       this.searchVal = '';
       this.productService.price(item.productCode, item.productGroup).then((res) => {
-        debugger;
         if (res.code === 1) {
           this.currentClickItemData.price = res.data.price;
           this.currentClickItemData.industryCode = res.data.industryCode;
@@ -177,10 +175,9 @@ export default {
 
   },
   beforeRouteLeave(to, from, next) {
-    debugger;
     if (to.name === 'Order.OrderEntry') {
       const obj = { product: this.currentClickItemData };
-      debugger;
+
       to.query.temp = JSON.stringify(obj);
     }
     if (to.name === 'Order.OrderModify') {

@@ -110,7 +110,7 @@ export default {
   created() {
     console.log('tag', this.$route.params);
     this.orderNo = this.$route.params.orderNo;
-    ;
+
     this.getData();
   },
   methods: {
@@ -120,16 +120,14 @@ export default {
         params: { orderNo: this.orderNo }
       });
     },
-    uploadSuccess(data, fileMap,product) {
-      ;
+    uploadSuccess(data, fileMap, product) {
       data.orderNo = this.orderNo;
-      data.orderDetailId = product.id
+      data.orderDetailId = product.id;
       data.invoiceUpload = 1;
-      delete data.id
+      delete data.id;
       this.invoiceList.push(data);
     },
     uploadErr(msg) {
-      ;
       Toast.failed(msg);
     },
     delImg(fileList) {
@@ -154,10 +152,8 @@ export default {
     },
 
     updateSubmit() {
-      ;
       this.orderService.uploadInvoice(this.invoiceList, { orderNo: this.orderNo }).then((res) => {
         if (res.code === 1) {
-          ;
           // Toast.succed(res.msg);
           this.$router.push({
             name: 'Order.OrderConfirm',
@@ -167,9 +163,7 @@ export default {
       });
     },
     getData() {
-
       this.orderService.queryOrderDetailAndInvoice({}, { orderNo: this.orderNo }).then((res) => {
-        ;
         if (res.code === 1) {
           this.products = res.data;
         }
@@ -178,7 +172,6 @@ export default {
   },
   beforeRouteLeave(to, from, next) {
     if (to.name === 'Order.OrderEntry') { // 此处判断是如果返回上一层，你可以根据自己的业务更改此处的判断逻辑，酌情决定是否摧毁本层缓存。
-
       if (this.$vnode && this.$vnode.data.keepAlive) {
         if (this.$vnode.parent && this.$vnode.parent.componentInstance && this.$vnode.parent.componentInstance.cache) {
           if (this.$vnode.componentOptions) {

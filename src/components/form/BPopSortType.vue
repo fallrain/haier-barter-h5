@@ -84,7 +84,7 @@ export default {
     checkboxClick({ id }) {
       this.checkIds = [];
       this.checkIds.push(id)
-      debugger
+
       this.$emit('checkClick', this.checkIds);
       this.popupShow = false;
 

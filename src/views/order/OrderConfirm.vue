@@ -203,16 +203,16 @@ export default {
           this.consignee.address = resData.dispatchProvince + resData.dispatchCity + resData.dispatchArea + resData.dispatchAdd;
           this.buyDate = resData.buyTime;
           this.orderType = resData.orderType;
-          this.deliveryTime = resData.deliveryTime
-          const dt =  new Date(Date.parse(this.deliveryTime));
-          const y = dt.getFullYear()
-          const m = dt.getMonth() + 1
-          const d = dt.getDate()
-          const h = dt.getHours()
-          const ha = h + 1
-          debugger
-           let time = y+'-'+m+'-'+d+' '+h+':00'+'-'+ha+':00'
-          this.deliveryTime = time
+          this.deliveryTime = resData.deliveryTime;
+          const dt = new Date(Date.parse(this.deliveryTime));
+          const y = dt.getFullYear();
+          const m = dt.getMonth() + 1;
+          const d = dt.getDate();
+          const h = dt.getHours();
+          const ha = h + 1;
+
+          const time = `${y}-${m}-${d} ${h}:00` + `-${ha}:00`;
+          this.deliveryTime = time;
           this.createdTime = resData.createdTime;
           this.orderNo = resData.orderNo;
           if (resData.orderDetailDtoList.length !== 0) {
@@ -225,10 +225,10 @@ export default {
               }
             });
           }
-          debugger;
+
           if (resData.rightsUserJson) {
             const str = JSON.parse(resData.rightsUserJson);
-            debugger;
+
             this.activityList = str.rightsUserInterestsDTO;
           }
         }
@@ -268,7 +268,7 @@ export default {
             ? this.$vnode.componentOptions.Ctor.cid + (this.$vnode.componentOptions.tag ? `::${this.$vnode.componentOptions.tag}` : '')
             : this.$vnode.key;
           const cache = this.$vnode.parent.componentInstance.cache;
-          debugger;
+
           const keys = this.$vnode.parent.componentInstance.keys;
           if (cache[key]) {
             if (keys.length) {

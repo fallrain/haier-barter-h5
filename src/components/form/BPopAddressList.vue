@@ -79,13 +79,13 @@ export default {
     }
   },
   created(){
-    debugger
+
   },
   methods: {
     addressClick(item) {
       this.popupShow = false;
       /* 地址条目click */
-      debugger
+
       this.$emit('clickAddress', item);
     },
     addNewClick(item) {

@@ -219,11 +219,10 @@ export default {
   },
   created() {
     if (localStorage.getItem('confirm') === 'list') {
-      debugger;
       this.curTab = 3;
       localStorage.setItem('confirm', '');
     }
-    debugger;
+
     const userinfostr = this.getQueryString('userinfo');
     this.userinfo = JSON.parse(userinfostr);
     // this.userinfo = {
@@ -322,7 +321,6 @@ export default {
       });
     },
     userService(item) {
-      debugger
       wx.miniProgram.navigateTo({ url: '/pages/userService/userService' });
     },
     maybeBuyer(item) {
@@ -604,19 +602,19 @@ export default {
     },
 
   },
-  beforeRouteEnter(to,from,next){
-    if(from.name === 'Order.OrderFollowCommitResult'){
-      next()
-      window.location.reload()
-      }
-      next()
-    },
+  beforeRouteEnter(to, from, next) {
+    if (from.name === 'Order.OrderFollowCommitResult') {
+      next();
+      window.location.reload();
+    }
+    next();
+  },
   beforeRouteLeave(to, from, next) {
     if (to.name === 'Order.OrderFollowCommitResult' || to.name === 'Order.OrderConfirm') {
       wx.miniProgram.switchTab({ url: 'pages/tool/tool' });
-      next()
+      next();
     }
-    next()
+    next();
   },
 };
 </script>

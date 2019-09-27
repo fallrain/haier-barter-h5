@@ -156,7 +156,7 @@ export default {
         1: 'scrollViewFinish'
       };
       const viewName = obj[val];
-      debugger;
+
       // tab切换后，创建新MeScroll对象（若无创建过），没有加载过则加载
       this.bUtil.scroviewTabChange(viewName, this);
     }
@@ -180,7 +180,7 @@ export default {
       });
     },
     minusCount(item) {
-      this.rightsService.uncheckedOrderRights({}, { orderNo: this.orderNo, rightsNo: item.rightsNo, pageNum: 1, pageSize: 10  }).then((res) => {
+      this.rightsService.uncheckedOrderRights({}, { orderNo: this.orderNo, rightsNo: item.rightsNo, pageNum: 1, pageSize: 10 }).then((res) => {
         if (res.code === 1) {
           const result = res.data.result;
           if (result && result.length > 0) {
@@ -193,14 +193,13 @@ export default {
     },
 
     addCount(item) {
-      debugger;
       this.rightsService.checkedOrderRights({}, { orderNo: this.orderNo, rightsNo: item.rightsNo, pageNum: 1, pageSize: 10 }).then((res) => {
         if (res.code === 1) {
           const result = res.data.result;
           if (result && result.length > 0) {
             const list = result;
             console.log('currentList', list);
-            debugger;
+
             this.anylizeData(list);
           }
           this[this.curScrollViewName].list = this.currentList;
@@ -250,14 +249,13 @@ export default {
     search(page) {
       // todo
       this.subInfo = JSON.parse(this.$route.params.orderInfo);
-      debugger;
+
       this.orderNo = this.subInfo.orderNo;
       if (this.current === 0) {
         return this.rightsService.queryOrderOptionalRights(this.subInfo, {
           pageNum: page.num,
           pageSize: page.size,
         }).then((res) => {
-          debugger;
           const sroviewObj = {};
           if (res.code === 1) {
             const {
@@ -271,7 +269,7 @@ export default {
             if (result && result.length > 0) {
               const list = result;
               console.log('currentList', list);
-              debugger;
+
               this.anylizeData(list);
             }
             if (page.num === 1) {
@@ -280,7 +278,6 @@ export default {
             } else {
               this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(this.currentList);
             }
-            debugger;
           } else {
             Toast.failed(res.msg);
             this[this.curScrollViewName].mescroll.endErr();
@@ -315,26 +312,24 @@ export default {
     },
     anylizeData(curlist) {
       console.log('curlist', curlist);
-      debugger;
+
       curlist.forEach((item) => {
         // if (item.rightsBrand = '000') {
-        //   debugger;
+        //   ;
         //   item.rightsBrandC = '海尔';
         // } else if (item.rightsBrand = '051') {
-        //   debugger;
+        //   ;
         //   item.rightsBrandC = '卡萨帝';
         // } else {
         //   item.rightsBrandC = '统帅';
         // }
         this.$set(item, 'minesGray', true);
         if (item.isOptional === 1) {
-          debugger;
           this.$set(item, 'addGray', false);
         } else {
           this.$set(item, 'addGray', true);
         }
         if (item.selectedNum !== 0) {
-          debugger;
           this.$set(item, 'minesGray', false);
         }
       });

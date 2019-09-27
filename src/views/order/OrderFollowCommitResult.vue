@@ -100,11 +100,10 @@ export default {
       });
     },
     checkOrder() {
-      debugger
       this.$router.push({
         name: 'Order.OrderFollowSearch',
       });
-      localStorage.setItem('confirm','list')
+      localStorage.setItem('confirm', 'list');
     },
   },
 

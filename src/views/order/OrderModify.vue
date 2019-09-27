@@ -210,6 +210,7 @@ import {
   BMultbuyCheck
 } from '@/components/business';
 import addressData from '@/lib/address';
+
 export default {
   name: 'OrderEntry',
   components: {
@@ -367,7 +368,6 @@ export default {
         this.queryCustomerDefault();
       }
       if (obj.product) {
-        debugger;
         if (!obj.product.productGroupName) {
           return;
         }
@@ -376,7 +376,7 @@ export default {
             ID = res.data;
             const pro = {};
             pro.id = ID;
-            debugger;
+
             pro.deliveryTime = this.deliveryTime;
             // pro.hmcId= "A0008949"
             pro.hmcId = this.userParam.hmcId;
@@ -396,10 +396,9 @@ export default {
             pro.storeName = this.shopName;
             pro.invoiceStatus = 0;
             pro.userId = this.userParam.userId;
-            debugger;
+
 
             this.productList.push(pro);
-            debugger;
           } else {
             Toast.failed(res.msg);
           }
@@ -439,8 +438,8 @@ export default {
     consporConfirm() {
       this.multBuyPopShow = false;
     },
-    confirmDeliveryTime(date){
-      this.deliveryTime = date
+    confirmDeliveryTime(date) {
+      this.deliveryTime = date;
     },
     getData() {
       this.orderService.queryOrderInfoByOrderNo({}, { orderNo: this.orderNo }).then((response) => {
@@ -455,13 +454,13 @@ export default {
           this.hmcId = resData.hmcId;
           this.consignee.phone = resData.consigneePhone;
           this.consignee.sex = resData.userSex;
-          this.consignee.address = {}
-          this.consignee.address.provinceName = resData.dispatchProvince
-          console.log('this.consignee.address.proivinceName',this.consignee.address.provinceName)
-          debugger
-          this.consignee.address.cityName = resData.dispatchCity
-          this.consignee.address.districtName = resData.dispatchArea
-          this.consignee.address.street = resData.dispatchAdd
+          this.consignee.address = {};
+          this.consignee.address.provinceName = resData.dispatchProvince;
+          console.log('this.consignee.address.proivinceName', this.consignee.address.provinceName);
+
+          this.consignee.address.cityName = resData.dispatchCity;
+          this.consignee.address.districtName = resData.dispatchArea;
+          this.consignee.address.street = resData.dispatchAdd;
           this.buyDate = resData.buyTime;
           this.orderType = resData.orderType;
           this.deliveryTime = resData.deliveryTime;
@@ -490,7 +489,7 @@ export default {
     getAddressName(province, city, district) {
       this.consignee.address = {};
       const Data = this.addressData.options;
-      debugger;
+
       Data.forEach((p) => {
         if (province === p.value) {
           this.consignee.address.provinceName = p.label;
@@ -509,14 +508,13 @@ export default {
     },
     // 查询客户信息及默认地址
     queryCustomerDefault() {
-      debugger;
       this.productService.deafaultCustomerAddress(this.mobile).then((res) => {
         if (res.code === 1) {
           if (res.data !== null) {
             this.customerInfo = res.data;
             this.getAddressName(res.data.province, res.data.city, res.data.district);
             this.consignee.address.street = res.data.address;
-            debugger;
+
             this.consignee.phone = res.data.mobile;
             this.consignee.name = res.data.username;
             if (res.data.sex === 1) {
@@ -557,8 +555,8 @@ export default {
         if (res.code === 1) {
           this.addressList = res.data;
           const Data = this.addressData.options;
-          this.addressList.forEach(address => {
-            address.consignee = {}
+          this.addressList.forEach((address) => {
+            address.consignee = {};
             Data.forEach((p) => {
               if (address.province === p.value) {
                 address.consignee.provinceName = p.label;
@@ -574,7 +572,7 @@ export default {
                 });
               }
             });
-          })
+          });
         }
       });
     },
@@ -583,7 +581,7 @@ export default {
       this.genarateSubInfo(1);
       if (this.orderNo !== '') {
         Toast.loading('保存中...');
-        debugger;
+
         this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId }).then((res) => {
           if (res.code === 1) {
             if (type === 1) {
@@ -674,18 +672,18 @@ export default {
       subInfo.dispatchAreaId = this.customerInfo.area;
       subInfo.dispatchArea = this.consignee.address.districtName;
       subInfo.dispatchAdd = this.consignee.address.street;
-      debugger
+
       subInfo.buyTime = this.buyDate;
       this.deliveryTime = resData.deliveryTime;
-      const dt =  new Date(Date.parse(this.deliveryTime));
-      const y = dt.getFullYear()
-      const m = dt.getMonth() + 1
-      const d = dt.getDate()
-      const h = dt.getHours()
-      const ha = h + 1
-      debugger
-      let time = y+'-'+m+'-'+d+' '+h+':00'+'-'+ha+':00'
-      this.deliveryTime = time
+      const dt = new Date(Date.parse(this.deliveryTime));
+      const y = dt.getFullYear();
+      const m = dt.getMonth() + 1;
+      const d = dt.getDate();
+      const h = dt.getHours();
+      const ha = h + 1;
+
+      const time = `${y}-${m}-${d} ${h}:00` + `-${ha}:00`;
+      this.deliveryTime = time;
       subInfo.orderType = this.orderType;
       subInfo.rightId = '';
       subInfo.rightName = '';
@@ -719,15 +717,15 @@ export default {
         this.region = 'add';
         this.$router.push({
           name: 'Order.AddAddress',
-          params: { region: this.region, info: JSON.stringify(this.customerInfo)}
+          params: { region: this.region, info: JSON.stringify(this.customerInfo) }
         });
       } else {
         this.showAddressList();
       }
     },
     changeAddress(item) {
-      item.userName = this.customerInfo.username
-      item.mobile = this.customerInfo.mobile
+      item.userName = this.customerInfo.username;
+      item.mobile = this.customerInfo.mobile;
       this.region = 'edit';
       if (this.addressList.length < 1) {
         this.$router.push({

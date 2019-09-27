@@ -341,7 +341,7 @@ export default {
         });
     },
     itemClick(index) {
-      debugger;
+      ;
       this.stopProcess();
       this.$emit('itemClick', index);
     },
@@ -374,7 +374,7 @@ export default {
     },
     preparation() {},
     checkClicked(val) {
-      debugger;
+      ;
       this.checkedsortId = val[0];
       for (let i = 0; i < this.headList.length; i++) {
         this.headList[i].isActive = false;
@@ -393,7 +393,7 @@ export default {
     },
     followButtonClick(button, item) {
       this.stopProcess();
-      debugger;
+      ;
       this.$emit('followButtonClick', button, item);
     },
     showMore(index) {
@@ -417,7 +417,7 @@ export default {
       }
     },
     detailHide(index, item) {
-      debugger;
+      ;
       this.stopProcess();
       this.$set(this.list[index], 'detailShow', !this.list[index].detailShow);
       if (this.list[index].detailShow) {
@@ -426,13 +426,13 @@ export default {
     },
     updateOrderType(type, item) {
       this.stopProcess();
-      debugger;
+      ;
       for (let i = 0; i < this.list.length; i++) {
         this.$set(this.list[i], 'show', false);
       }
       if (type === '20') {
         this.$emit('userService', item);
-        debugger
+
         return;
       }
       if (type === '21') {

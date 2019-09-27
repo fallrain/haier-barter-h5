@@ -99,190 +99,190 @@
 </template>
 
 <script>
-  import {
-    Toast
-  } from 'mand-mobile';
-  import {
+import {
+  Toast
+} from 'mand-mobile';
+import {
+  BActivityList,
+  BDatePicker,
+  BFieldset,
+  BItem,
+  BOrderProduct,
+  BOrderProductConfirm,
+  BPop,
+  BPopAddressList,
+  BPopCheckList,
+  BRadioItem
+} from '@/components/form';
+
+import {
+  BMultbuyCheck
+} from '@/components/business';
+
+export default {
+  name: 'OrderModify',
+  components: {
     BActivityList,
     BDatePicker,
     BFieldset,
     BItem,
+    BMultbuyCheck,
     BOrderProduct,
-    BOrderProductConfirm,
     BPop,
     BPopAddressList,
     BPopCheckList,
-    BRadioItem
-  } from '@/components/form';
+    BRadioItem,
+    BOrderProductConfirm
+  },
+  data() {
+    return {
+      // 是否详情模式
+      isDetail: true,
+      // 门店名称
+      shopName: '新华百货老大楼',
 
-  import {
-    BMultbuyCheck
-  } from '@/components/business';
-
-  export default {
-    name: 'OrderModify',
-    components: {
-      BActivityList,
-      BDatePicker,
-      BFieldset,
-      BItem,
-      BMultbuyCheck,
-      BOrderProduct,
-      BPop,
-      BPopAddressList,
-      BPopCheckList,
-      BRadioItem,
-      BOrderProductConfirm
-    },
-    data() {
-      return {
-        // 是否详情模式
-        isDetail: true,
-        // 门店名称
-        shopName: '新华百货老大楼',
-
-        // 收货人信息
-        consignee: {
-          /* name: '',
+      // 收货人信息
+      consignee: {
+        /* name: '',
                 sex: '男士',
                 phone: '15067543689' */
+      },
+      // 订单类型单选
+      orderTypes: [
+        {
+          key: 1,
+          value: '单品'
         },
-        // 订单类型单选
-        orderTypes: [
-          {
-            key: 1,
-            value: '单品'
-          },
-          {
-            key: 2,
-            value: '套购'
+        {
+          key: 2,
+          value: '套购'
+        }
+      ],
+      // 订单类型
+      orderType: 2,
+      // 购机时间
+      buyDate: '',
+      // 产品列表
+      productList: [],
+      // 活动列表
+      activityList: [
+
+      ],
+      // 选中的活动id
+      choosedActivitys: [],
+      // 选择礼品pop显示隐藏
+      chooseGiftPopShow: false,
+      // pop礼品列表
+      giftList: [
+      ],
+      orderNo: '',
+      createdTime: '',
+      deliveryTime: '',
+      customerString: '',
+      username: '',
+      phone: ''
+    };
+  },
+  computed: {},
+  created() {
+    this.orderNo = this.$route.params.orderNo;
+    this.getData();
+  },
+  methods: {
+    getData() {
+      this.orderService.queryOrderInfoByOrderNo({}, { orderNo: this.orderNo }).then((response) => {
+        if (response.code === 1) {
+          const resData = response.data;
+          this.shopName = resData.storeName;
+          this.consignee.name = resData.consigneeName;
+          this.username = resData.userName;
+          this.phone = resData.userPhone;
+          this.consignee.phone = resData.consigneePhone;
+          this.consignee.sex = resData.userSex;
+          this.consignee.address = resData.dispatchProvince + resData.dispatchCity + resData.dispatchArea + resData.dispatchAdd;
+          this.buyDate = resData.buyTime;
+          this.orderType = resData.orderType;
+          this.deliveryTime = resData.deliveryTime;
+          const dt = new Date(Date.parse(this.deliveryTime));
+          const y = dt.getFullYear();
+          const m = dt.getMonth() + 1;
+          const d = dt.getDate();
+          const h = dt.getHours();
+          const ha = h + 1;
+
+          const time = `${y}-${m}-${d} ${h}:00` + `-${ha}:00`;
+          this.deliveryTime = time;
+          this.createdTime = resData.createdTime;
+          this.orderNo = resData.orderNo;
+          if (resData.rightsUserJson) {
+            const str = JSON.parse(resData.rightsUserJson);
+
+            this.activityList = str.rightsUserInterestsDTO;
           }
-        ],
-        // 订单类型
-        orderType: 2,
-        // 购机时间
-        buyDate: '',
-        // 产品列表
-        productList: [],
-        // 活动列表
-        activityList: [
-
-        ],
-        // 选中的活动id
-        choosedActivitys: [],
-        // 选择礼品pop显示隐藏
-        chooseGiftPopShow: false,
-        // pop礼品列表
-        giftList: [
-        ],
-        orderNo: '',
-        createdTime: '',
-        deliveryTime: '',
-        customerString: '',
-        username: '',
-        phone: ''
-      };
-    },
-    computed: {},
-    created() {
-      this.orderNo = this.$route.params.orderNo;
-      this.getData();
-    },
-    methods: {
-      getData() {
-        this.orderService.queryOrderInfoByOrderNo({}, { orderNo: this.orderNo }).then((response) => {
-          if (response.code === 1) {
-            const resData = response.data;
-            this.shopName = resData.storeName;
-            this.consignee.name = resData.consigneeName;
-            this.username = resData.userName;
-            this.phone = resData.userPhone;
-            this.consignee.phone = resData.consigneePhone;
-            this.consignee.sex = resData.userSex;
-            this.consignee.address = resData.dispatchProvince + resData.dispatchCity + resData.dispatchArea + resData.dispatchAdd;
-            this.buyDate = resData.buyTime;
-            this.orderType = resData.orderType;
-            this.deliveryTime = resData.deliveryTime;
-            const dt =  new Date(Date.parse(this.deliveryTime));
-            const y = dt.getFullYear()
-            const m = dt.getMonth() + 1
-            const d = dt.getDate()
-            const h = dt.getHours()
-            const ha = h + 1
-            debugger
-            let time = y+'-'+m+'-'+d+' '+h+':00'+'-'+ha+':00'
-            this.deliveryTime = time
-            this.createdTime = resData.createdTime;
-            this.orderNo = resData.orderNo;
-            if (resData.rightsUserJson) {
-              const str = JSON.parse(resData.rightsUserJson);
-              debugger
-              this.activityList = str.rightsUserInterestsDTO;
-            }
-            if (resData.orderDetailDtoList.length !== 0) {
-              this.productList = resData.orderDetailDtoList;
-              this.productList.forEach((item) => {
-                if (item.productBrand == 'haier') {
-                  item.productBrandCN = '海尔';
-                } else {
-                  item.productBrandCN = '卡萨帝';
-                }
-              });
-            }
-          }
-        });
-      },
-
-
-      next() {
-        // /* 下一步 */
-        // this.orderService.createOrderSubmit({}, { orderNo: this.orderNo }).then((res) => {
-        //   if (res.code === 1) {
-        //     Toast.succeed(res.msg);
-        //   }
-        // });
-        // this.$router.push({
-        //   name: 'Order.OrderFollowCommitResult',
-        //
-        // });
-        this.$router.go(-1)
-      },
-      // changeOrder(){
-      //   this.$router.push({
-      //     name: 'Order.OrderModify',
-      //     param:{orderNo:this.orderNo}
-      //   });
-      // },
-      saveOrder() {
-
-      }
-    },
-    beforeRouteLeave(to, from, next) {
-      if (this.$vnode && this.$vnode.data.keepAlive) {
-        if (this.$vnode.parent && this.$vnode.parent.componentInstance && this.$vnode.parent.componentInstance.cache) {
-          if (this.$vnode.componentOptions) {
-            const key = this.$vnode.key == null
-              ? this.$vnode.componentOptions.Ctor.cid + (this.$vnode.componentOptions.tag ? `::${this.$vnode.componentOptions.tag}` : '')
-              : this.$vnode.key;
-            const cache = this.$vnode.parent.componentInstance.cache;
-            debugger;
-            const keys = this.$vnode.parent.componentInstance.keys;
-            if (cache[key]) {
-              if (keys.length) {
-                const index = keys.indexOf(key);
-                if (index > -1) {
-                  keys.splice(index, 1);
-                }
+          if (resData.orderDetailDtoList.length !== 0) {
+            this.productList = resData.orderDetailDtoList;
+            this.productList.forEach((item) => {
+              if (item.productBrand == 'haier') {
+                item.productBrandCN = '海尔';
+              } else {
+                item.productBrandCN = '卡萨帝';
               }
-              delete cache[key];
+            });
+          }
+        }
+      });
+    },
+
+
+    next() {
+      // /* 下一步 */
+      // this.orderService.createOrderSubmit({}, { orderNo: this.orderNo }).then((res) => {
+      //   if (res.code === 1) {
+      //     Toast.succeed(res.msg);
+      //   }
+      // });
+      // this.$router.push({
+      //   name: 'Order.OrderFollowCommitResult',
+      //
+      // });
+      this.$router.go(-1);
+    },
+    // changeOrder(){
+    //   this.$router.push({
+    //     name: 'Order.OrderModify',
+    //     param:{orderNo:this.orderNo}
+    //   });
+    // },
+    saveOrder() {
+
+    }
+  },
+  beforeRouteLeave(to, from, next) {
+    if (this.$vnode && this.$vnode.data.keepAlive) {
+      if (this.$vnode.parent && this.$vnode.parent.componentInstance && this.$vnode.parent.componentInstance.cache) {
+        if (this.$vnode.componentOptions) {
+          const key = this.$vnode.key == null
+            ? this.$vnode.componentOptions.Ctor.cid + (this.$vnode.componentOptions.tag ? `::${this.$vnode.componentOptions.tag}` : '')
+            : this.$vnode.key;
+          const cache = this.$vnode.parent.componentInstance.cache;
+
+          const keys = this.$vnode.parent.componentInstance.keys;
+          if (cache[key]) {
+            if (keys.length) {
+              const index = keys.indexOf(key);
+              if (index > -1) {
+                keys.splice(index, 1);
+              }
             }
+            delete cache[key];
           }
         }
       }
-      this.$destroy();
-      next();
-    },
-  };
+    }
+    this.$destroy();
+    next();
+  },
+};
 </script>
 
 <style lang="scss">

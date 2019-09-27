@@ -41,7 +41,7 @@ export default {
       }
     },
     radioVal(newVal) {
-      debugger
+
       this.$emit('radioChange', newVal);
     }
   }

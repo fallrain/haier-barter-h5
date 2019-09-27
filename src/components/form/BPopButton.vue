@@ -71,7 +71,7 @@ export default {
   },
   methods: {
     checkboxClick({ id }) {
-      debugger
+
       this.checkIds = [];
       this.checkIds.push(id)
       this.$emit('popButtonClicked', this.checkIds);

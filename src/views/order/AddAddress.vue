@@ -232,22 +232,20 @@ export default {
     this.customerInfo.hmcId = JSON.parse(localStorage.getItem('userinfo')).hmcid;
     this.customerInfo.tag = [];
     this.getFamilyItem();
-    debugger;
+
     if (this.$route.params) {
       this.region = this.$route.params.region;
-      debugger;
+
       if (this.region === 'add' && this.$route.params.info === '{}') {
         this.confirmShow = true;
-        debugger;
       } else if (this.region === 'userAdd') {
         this.confirmShow = true;
         this.searchEnd = false;
       } else {
         // this.confirmShow = false;
-        debugger;
+
         this.searchEnd = true;
         if (this.region === 'add' && !JSON.parse(this.$route.params.info).address) {
-          debugger;
           this.customerInfo.username = JSON.parse(this.$route.params.info).username;
           this.customerInfo.mobile = JSON.parse(this.$route.params.info).mobile;
           this.customerInfo.userId = JSON.parse(this.$route.params.info).userId;
@@ -255,21 +253,17 @@ export default {
         } else {
           this.customerInfo = JSON.parse(this.$route.params.info);
           this.customerInfo.hmcId = JSON.parse(localStorage.getItem('userinfo')).hmcid;
-          debugger
         }
         if (this.customerInfo.familyItemCode) {
-          let a = []
-          a.push(this.customerInfo.familyItemCode)
+          const a = [];
+          a.push(this.customerInfo.familyItemCode);
           this.customerInfo.tag = a;
         }
       }
-
     }
-
   },
   computed: {
     tagName() {
-      debugger;
       if (this.customerInfo.tag) {
         const tagObj = this.tagList.find(v => v.id === this.customerInfo.tag[0]);
         let name;
@@ -306,13 +300,12 @@ export default {
             this.customerInfo.username = res.data.username;
             this.customerInfo.sex = res.data.sex;
             this.customerInfo.customerId = res.data.customerId;
-            this.customerInfo.consigneeUserName = res.data.consigneeUserName
-            this.customerInfo.consigneeUserPhone = res.data.consigneeUserPhone
+            this.customerInfo.consigneeUserName = res.data.consigneeUserName;
+            this.customerInfo.consigneeUserPhone = res.data.consigneeUserPhone;
             this.defaultA.push(res.data.province);
             this.defaultA.push(res.data.city);
             this.defaultA.push(res.data.district);
           } else {
-            debugger;
             this.searchResultShow = true;
           }
         } else {
@@ -327,8 +320,8 @@ export default {
     },
     addressChange(address) {
       /* 地址change */
-      debugger;
-      console.log('ssssss',this.defaultA)
+
+      console.log('ssssss', this.defaultA);
       const addressA = address.options.map(v => v.label);
       const addressAy = address.values;
       this.customerInfo.city = addressAy[1];
@@ -362,13 +355,12 @@ export default {
         Toast.failed('地址不能为空');
         return;
       }
-      if(this.customerInfo.consignee){
-        delete this.customerInfo.consignee
+      if (this.customerInfo.consignee) {
+        delete this.customerInfo.consignee;
       }
       if (this.customerInfo.tag) {
-        debugger
         const tagObj = this.tagList.find(v => v.id === this.customerInfo.tag[0]);
-        debugger
+
         if (tagObj) {
           this.customerInfo.familyItemCode = tagObj.id;
         } else {
@@ -385,7 +377,7 @@ export default {
           }
         });
       } else {
-        delete this.customerInfo.hmcId
+        delete this.customerInfo.hmcId;
         this.productService.updateCustomerAddress(this.customerInfo, {}).then((res) => {
           if (res.code === 1) {
             Toast.succeed('地址修改成功');
@@ -399,7 +391,6 @@ export default {
     // 查询家庭关系数据字典
     getFamilyItem() {
       this.productService.commonTypeQuery('FAMILY-ITEM').then((res) => {
-        debugger;
         if (res.code === 1) {
           res.data.forEach((val) => {
             const a = {};
@@ -424,7 +415,7 @@ export default {
               ? this.$vnode.componentOptions.Ctor.cid + (this.$vnode.componentOptions.tag ? `::${this.$vnode.componentOptions.tag}` : '')
               : this.$vnode.key;
             const cache = this.$vnode.parent.componentInstance.cache;
-            debugger;
+
             const keys = this.$vnode.parent.componentInstance.keys;
             if (cache[key]) {
               if (keys.length) {
@@ -443,10 +434,8 @@ export default {
     if (this.smld) {
       if (this.confirmClicked) {
         next();// 必须要有这个，否则无法跳转
-        debugger
       } else {
         Toast.failed('请添加用户信息');
-        debugger
       }
     } else {
       next();

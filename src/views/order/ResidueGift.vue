@@ -25,163 +25,158 @@
 </template>
 
 <script>
-  import {
-    TabBar,
-  } from 'mand-mobile';
+import {
+  TabBar,
+} from 'mand-mobile';
 
-  import {
-    BActivityItem
-  } from '@/components/form';
+import {
+  BActivityItem
+} from '@/components/form';
 
-  export default {
-    name: 'OrderFollowActivity',
-    components: {
-      [TabBar.name]: TabBar,
-      BActivityItem,
-    },
-    data() {
-      return {
-        currentList:[],
-        subInfo:{},
-        current: 0,
-        orderNo:'',
-        items: [{
-          name: 0,
-          label: '可参与活动'
-        }, {
-          name: 1,
-          label: '不可参与活动'
-        }],
-        isFinished: false,
-        scrollViewActivity: {
-          mescroll: null,
-          list: [
-            {
-              title: '6月场景套权益昆明小微',
-              reason: '套餐价格不符合',
-              brand: '海尔，卡萨帝',
-              scope: '所有产品',
-              data: '2019-07-30至2019-08-02',
-              data2: '2019-08-30至2019-09-02',
-              type: '海贝积分',
-              product: [{
-                name: 'KFR-35GW/A4RCA21AU1套机空调 + 50T82电视',
-                gift: '7500积分',
-                count: '666',
-                remain: '222',
-              }, {
-                name: '50T82电视',
-                gift: '500积分233222222222222333vvervevrdfvsrftbrthytnjuykuikiuktgteegtgythh235456',
-                count: '6',
-                remain: '2',
-              }
-              ]
+export default {
+  name: 'OrderFollowActivity',
+  components: {
+    [TabBar.name]: TabBar,
+    BActivityItem,
+  },
+  data() {
+    return {
+      currentList: [],
+      subInfo: {},
+      current: 0,
+      orderNo: '',
+      items: [{
+        name: 0,
+        label: '可参与活动'
+      }, {
+        name: 1,
+        label: '不可参与活动'
+      }],
+      isFinished: false,
+      scrollViewActivity: {
+        mescroll: null,
+        list: [
+          {
+            title: '6月场景套权益昆明小微',
+            reason: '套餐价格不符合',
+            brand: '海尔，卡萨帝',
+            scope: '所有产品',
+            data: '2019-07-30至2019-08-02',
+            data2: '2019-08-30至2019-09-02',
+            type: '海贝积分',
+            product: [{
+              name: 'KFR-35GW/A4RCA21AU1套机空调 + 50T82电视',
+              gift: '7500积分',
+              count: '666',
+              remain: '222',
             }, {
-              title: '6月场景套权益昆明小微',
-              reasn: '',
-              brand: '海尔，卡萨帝',
-              scope: '所有产品',
-              data: '2019-07-30至2019-08-02',
-              data2: '2019-08-30至2019-09-02',
-              type: '海贝积分',
+              name: '50T82电视',
+              gift: '500积分233222222222222333vvervevrdfvsrftbrthytnjuykuikiuktgteegtgythh235456',
+              count: '6',
+              remain: '2',
             }
-          ],
-          isListInit: false
-        },
-        rightsJson:'',
-        scrollViewFinish: {
-          mescroll: null,
-          list: [
-            {
-              title: '666666',
-              reason: '套餐价格不符合',
-            },
-          ],
-          isListInit: false
-        },
-      };
-    },
-    computed: {
-      curScrollViewName() {
-        // 当前tab下的scrollView的ref名字
-       return 'scrollViewActivity'
-
-      }
-    },
-    watch: {
-      current(val) {
-        const obj = {
-          0: 'scrollViewActivity',
-        };
-        const viewName = obj[val];
-        // tab切换后，创建新MeScroll对象（若无创建过），没有加载过则加载
-        this.bUtil.scroviewTabChange(viewName, this);
-      }
-    },
-    mounted() {
-      this.bUtil.scroviewTabChange(this.curScrollViewName, this);
-    },
-    created(){
-
-
-    },
-    methods: {
-      upCallback(page) {
-        // 下载过就设置已经初始化
-        this[this.curScrollViewName].isListInit = true;
-        this.search(page).then(({ result, pages }) => {
-          this.$nextTick(() => {
-            // 通过当前页的数据条数，和总数据量来判断是否加载完
-            this[this.curScrollViewName].mescroll.endBySize(result.length, pages);
-          });
-        });
-      },
-
-      showLimit(item){
-        this.rightsService.queryRightsLimitConfigList({limitType:'model',rightsNo:item.rightsNo},{}).then(res => {
-          if(res.code === 1){
-            item.limitList = res.data
+            ]
+          }, {
+            title: '6月场景套权益昆明小微',
+            reasn: '',
+            brand: '海尔，卡萨帝',
+            scope: '所有产品',
+            data: '2019-07-30至2019-08-02',
+            data2: '2019-08-30至2019-09-02',
+            type: '海贝积分',
           }
-
-        })
+        ],
+        isListInit: false
       },
-      search(page) {
-        // todo
-        this.subInfo = this.$route.params.orderInfo
-        this.orderNo = this.subInfo.orderNo
-        const formData = {
-          pageNum: page.num,
-          pageSize: page.size,
-        };
-          this.rightsService.queryRightsResidue().then(res =>{
-            debugger
-            const sroviewObj = {};
-            if(res.code === 1){
-              const {
-                result,
-                pages
-              } = res.data;
-              sroviewObj.pages = pages;
-              sroviewObj.result = result;
-              if(result && result.length > 0){
-                const list = result
-                this.anylizeData(list)
-              }
-              this[this.curScrollViewName].list = this.currentList
-            }else {
-
-              this[this.curScrollViewName].mescroll.endErr();
-            }
-            return sroviewObj;
-          })
-
+      rightsJson: '',
+      scrollViewFinish: {
+        mescroll: null,
+        list: [
+          {
+            title: '666666',
+            reason: '套餐价格不符合',
+          },
+        ],
+        isListInit: false
       },
-      anylizeData(curlist){
-        this.currentList = curlist
-      }
+    };
+  },
+  computed: {
+    curScrollViewName() {
+      // 当前tab下的scrollView的ref名字
+      return 'scrollViewActivity';
+    }
+  },
+  watch: {
+    current(val) {
+      const obj = {
+        0: 'scrollViewActivity',
+      };
+      const viewName = obj[val];
+      // tab切换后，创建新MeScroll对象（若无创建过），没有加载过则加载
+      this.bUtil.scroviewTabChange(viewName, this);
+    }
+  },
+  mounted() {
+    this.bUtil.scroviewTabChange(this.curScrollViewName, this);
+  },
+  created() {
+
+
+  },
+  methods: {
+    upCallback(page) {
+      // 下载过就设置已经初始化
+      this[this.curScrollViewName].isListInit = true;
+      this.search(page).then(({ result, pages }) => {
+        this.$nextTick(() => {
+          // 通过当前页的数据条数，和总数据量来判断是否加载完
+          this[this.curScrollViewName].mescroll.endBySize(result.length, pages);
+        });
+      });
     },
 
-  };
+    showLimit(item) {
+      this.rightsService.queryRightsLimitConfigList({ limitType: 'model', rightsNo: item.rightsNo }, {}).then((res) => {
+        if (res.code === 1) {
+          item.limitList = res.data;
+        }
+      });
+    },
+    search(page) {
+      // todo
+      this.subInfo = this.$route.params.orderInfo;
+      this.orderNo = this.subInfo.orderNo;
+      const formData = {
+        pageNum: page.num,
+        pageSize: page.size,
+      };
+      this.rightsService.queryRightsResidue().then((res) => {
+        const sroviewObj = {};
+        if (res.code === 1) {
+          const {
+            result,
+            pages
+          } = res.data;
+          sroviewObj.pages = pages;
+          sroviewObj.result = result;
+          if (result && result.length > 0) {
+            const list = result;
+            this.anylizeData(list);
+          }
+          this[this.curScrollViewName].list = this.currentList;
+        } else {
+          this[this.curScrollViewName].mescroll.endErr();
+        }
+        return sroviewObj;
+      });
+    },
+    anylizeData(curlist) {
+      this.currentList = curlist;
+    }
+  },
+
+};
 </script>
 
 <style lang="scss">

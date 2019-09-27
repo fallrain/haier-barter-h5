@@ -114,7 +114,7 @@ export default {
     }
     const y = [];
     y.push(dayList);
-    debugger
+
     this.pickerData = y;
   },
   mounted() {
@@ -159,14 +159,14 @@ export default {
       //   value && (res += `${value.text || value.text} `);
       // });
       // this[`pickerValue${index}`] = res;
-      // debugger;
+      // ;
     },
     getColumnValues(columnsValue) {
       return columnsValue;
     },
 
     confirmPicker(columnsValue) {
-      debugger;
+      ;
       const data = `${columnsValue[0].text} ${columnsValue[1].text}`;
       this.$emit('confirmDeliveryTime', data);
     },

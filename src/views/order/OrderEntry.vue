@@ -400,7 +400,6 @@ export default {
         this.queryCustomerDefault();
       }
       if (obj.product) {
-        debugger;
         if (!obj.product.productBrandName) {
           return;
         }
@@ -423,7 +422,6 @@ export default {
             pro.productPrice = '';
             pro.invoiceStatus = 0;
             this.productList.push(pro);
-            debugger;
           } else {
             Toast.failed(res.message);
           }
@@ -433,7 +431,7 @@ export default {
         this.rightsJson = obj.rightsJson;
 
         const right = JSON.parse(obj.rightsJson);
-        debugger;
+
         this.rightName = right.rightName;
         this.rightId = right.rightId;
         const rightsPro = JSON.parse(obj.rightsJson).rightsUserInterestsDTO;
@@ -442,7 +440,6 @@ export default {
         }
         this.isDetail = true;
         this.rightsList = rightsPro;
-        debugger;
       }
     }
   },
@@ -450,7 +447,7 @@ export default {
     this.addressData = addressData;
     this.userParam = JSON.parse(localStorage.getItem('userinfo'));
     this.shopId = this.userParam.shopId;
-    debugger;
+
     this.getUserStore();
     if (this.$route.params.customerConsigneeInfo.businessScenarios) {
       this.orderSource = this.$route.params.customerConsigneeInfo.businessScenarios;
@@ -468,11 +465,11 @@ export default {
       this.orderFollowId = '';
     }
 
-    debugger;
+
     if (this.$route.params.region === 'hand') {
       this.haveConsignee = false;
       this.haveCustomer = false;
-      debugger;
+
       return;
     }
     this.customerInfo.username = this.$route.params.customerConsigneeInfo.userName;
@@ -522,7 +519,7 @@ export default {
     },
     // 获取门店信息
     sponsorCheck(checkid) {
-      // debugger;
+      // ;
       // this.multBuyParticipant = this.buyerList;
       // const temp = this.buyerList;
       // temp.forEach((v) => {
@@ -537,8 +534,8 @@ export default {
     particpantClick(checkids) {
 
     },
-    confirmDeliveryTime(date){
-      this.deliveryTime = date
+    confirmDeliveryTime(date) {
+      this.deliveryTime = date;
     },
     getUserStore() {
       // this.shopId = '8800332156';
@@ -552,7 +549,6 @@ export default {
     // 生成订单号
     genarateOrderNum() {
       if (this.recordMode == '' || !this.recordMode) {
-        debugger;
         this.recordMode = 'Haier';
       }
 
@@ -585,7 +581,6 @@ export default {
     },
     // 查询客户信息及默认地址
     queryCustomerDefault() {
-      debugger;
       this.productService.deafaultCustomerAddress(this.mobile).then((res) => {
         if (res.code === 1) {
           if (res.data !== null) {
@@ -599,7 +594,7 @@ export default {
             // this.consignee.address = res.data.province + res.data.city + res.data.district + res.data.address;
             this.getAddressName(res.data.province, res.data.city, res.data.district);
             this.consignee.address.street = res.data.address;
-            debugger;
+
             this.consignee.phone = res.data.consigneeUserPhone;
             this.consignee.name = res.data.consigneeUserName;
             if (res.data.sex === 1) {
@@ -612,7 +607,6 @@ export default {
             this.queryCustomerAddressList();
             this.genarateOrderNum();
           } else {
-            debugger;
             this.addUserShow = true;
           }
         }
@@ -650,12 +644,12 @@ export default {
       this.genarateSubInfo(1);
       if (this.orderNo !== '') {
         Toast.loading('保存中...');
-        debugger;
+
         this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId }).then((res) => {
           if (res.code === 1) {
             if (type === 1) {
               Toast.succeed('订单暂存成功');
-              this.$router.go(-1)
+              this.$router.go(-1);
             }
             Toast.hide();
             if (type === 2) {
@@ -737,7 +731,7 @@ export default {
       subInfo.dispatchArea = this.consignee.address.districtName;
       subInfo.dispatchAdd = this.customerInfo.address;
       subInfo.buyTime = this.buyDate;
-      const dt = this.deliveryTime.substring(0, 16)
+      const dt = this.deliveryTime.substring(0, 16);
       subInfo.deliveryTime = dt;
       subInfo.orderType = this.orderType;
       subInfo.rightId = this.rightId;
@@ -751,7 +745,7 @@ export default {
       subInfo.remark = ''; // 备注，记录订单创建、订单修改原因等信息
       subInfo.rightsUserJson = this.rightsJson;
       subInfo.orderDetailSaveQoList = this.productList;
-      debugger;
+
       this.subInfo = subInfo;
       if (type === 2) {
         const info = JSON.stringify(this.subInfo);
@@ -767,7 +761,7 @@ export default {
         Toast.info('请选择产品');
         return;
       }
-      debugger;
+
       for (let i = 0; i < this.productList.length; i++) {
         if (this.productList[i].productPrice === '') {
           Toast.failed('请输入产品价格');
@@ -780,20 +774,20 @@ export default {
       this.addressPopShow = false;
       this.consignee.name = item.consigneeUserName;
       this.consignee.phone = item.consigneeUserPhone;
-      this.consignee.address = item.consignee
-      this.consignee.address.street = item.address
+      this.consignee.address = item.consignee;
+      this.consignee.address.street = item.address;
       if (item.sex === 1) {
         this.consignee.sexCn = '男士';
       } else {
         this.consignee.sexCn = '女士';
       }
       // // this.customerInfo = item;
-      // debugger
+      //
       // // delete this.customerInfo.consignee
     },
     addAddress() {
       // 添加新地址
-      debugger;
+
       this.region = 'add';
       this.$router.push({
         name: 'Order.AddAddress',
@@ -824,7 +818,7 @@ export default {
       info.username = this.customerInfo.username;
       info.mobile = this.customerInfo.mobile;
       this.region = 'edit';
-      debugger;
+
       this.$router.push({
         name: 'Order.AddAddress',
         params: { region: this.region, info: JSON.stringify(info) }
@@ -861,7 +855,7 @@ export default {
     }
   },
   // beforeRouteLeave(to,from,next){
-  //   debugger
+  //
   //   if(to.path === '/'){
   //     this.$router.go(-1)
   //   }
@@ -876,7 +870,7 @@ export default {
               ? this.$vnode.componentOptions.Ctor.cid + (this.$vnode.componentOptions.tag ? `::${this.$vnode.componentOptions.tag}` : '')
               : this.$vnode.key;
             const cache = this.$vnode.parent.componentInstance.cache;
-            debugger;
+
             const keys = this.$vnode.parent.componentInstance.keys;
             if (cache[key]) {
               if (keys.length) {

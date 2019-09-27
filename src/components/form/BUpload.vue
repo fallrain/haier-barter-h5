@@ -48,11 +48,11 @@ export default {
   },
   methods:{
     imageuploaded(data){
-      debugger
+
       this.$emit('imageuploaded',data,this.imgs)
     },
     delFun(index){
-      debugger
+
       this.$emit('delFun',index,this.imgs)
     },
     imageuploading(){

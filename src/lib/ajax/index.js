@@ -34,7 +34,7 @@ ax.interceptors.request.use((config) => {
     config.headers.Authorization = `Bearer  ${localStorage.getItem('acces_token')}`;
   }
   if (!config.params.noLoading) {
-    debugger
+
     loadingAy.push(Toast.loading('加载中...'));
     // Toast.loading('加载中...')
     // Toast.hide()
@@ -46,7 +46,7 @@ ax.interceptors.response.use((response) => {
   const customOptions = response.config.params;
   // 关闭遮罩
   if (!response.config.params.noLoading) {
-    debugger
+
     closeLoading();
     // Toast.hide()
   }
