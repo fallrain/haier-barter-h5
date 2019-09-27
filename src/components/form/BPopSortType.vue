@@ -3,14 +3,8 @@
     <md-popup
       v-model="popupShow"
       position="top"
+      transition="fade"
     >
-     <!-- <md-popup-title-bar
-        v-bind="$attrs"
-        ok-text="确定"
-        cancel-text="取消"
-        @confirm="confirm()"
-        @cancel="popupShow = false"
-      ></md-popup-title-bar> -->
       <div class="b-pop-checkList-cnt">
         <ul>
           <li
@@ -97,7 +91,6 @@ export default {
   .b-pop-checkList1 {
     .md-popup-title-bar {
       height: 80px;
-
       .title-bar-left {
         font-size: 28px;
         color: #BBB;
@@ -123,7 +116,7 @@ export default {
 
   .b-pop-checkList-cnt {
     background: #fff;
-    padding-bottom: 24px;
+    /*padding-bottom: 24px;*/
   }
 
   .b-pop-checkList-item2 {

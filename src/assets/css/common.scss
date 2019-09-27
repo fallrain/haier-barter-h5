@@ -426,7 +426,12 @@
 .app-container {
   .mescroll-downwarp .downwarp-tip,
   .mescroll-upwarp .upwarp-nodata,
-  .mescroll-upwarp .upwarp-tip {
+  .mescroll-upwarp .upwarp-tip
+  .mescroll-upwarp .upwarp-empty
+  {
+    font-size: 24px;
+  }
+  .mescroll-empty{
     font-size: 24px;
   }
 }

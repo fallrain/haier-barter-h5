@@ -1,6 +1,6 @@
 <template>
   <div class="page-class">
-    <div class="md-example-child md-example-child-notice-bar md-example-child-notice-bar-4">
+    <div class="">
       <md-notice-bar
         mode="closable"
         :time="4000"
@@ -8,7 +8,7 @@
         您有{{noticeNum}}笔超过24小时未处理的订单，请及时跟进
       </md-notice-bar>
     </div>
-    <div class="uni-form-item uni-column search-view">
+    <div class="search-class">
       <input
         class="input-class"
         confirm-type="search"
@@ -21,7 +21,7 @@
         class="search-image"
         @click="fuzzySearch"
       >
-      <p class="orderFollowButton" @click="handEntry()">手动录单</p>
+      <p class="orderFollowButton-search" @click="handEntry()">手动录单</p>
     </div>
     <div
       id="scrollView"
@@ -225,22 +225,21 @@ export default {
 
     const userinfostr = this.getQueryString('userinfo');
     this.userinfo = JSON.parse(userinfostr);
-    // this.userinfo = {
-    //   hmcid: 'a0008949',
-    //   mobile: '18561715460',
-    //   shopId: '8800136445',
-    //   // hmcid:'01467897',
-    //   // mobile: '15253269729',
-    //   // shopId: '8700000484',
-    //   // hmcid: 'a0032188',
-    //   // mobile: '13905427400',
-    //   // shopId: '8700048360',
-    //   // hmcid: 'z0188893',
-    //   // mobile: '13176882725',
-    //   // shopId: '8700048360',
-    //   token: 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAwODk0OSIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2ODcxNzc2OCwiZXhwIjoxNTY5NTgxNzY4fQ.pLNFaidqOYIZABIbxlOxxqc5-oi26obOix4CAxkSShU'
-    //   // token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX0FQUCIsIlJPTEVfU0VMTEVSIiwiUk9MRV9BUFAiXSwic3ViIjoiMDE0Njc4OTciLCJraW5kIjoxMCwicG9pbnQiOjEsImlhdCI6MTU2ODc3MjY1MywiZXhwIjoxNTY5NjM2NjUzfQ.shGqUkZmSdmXwKBYOmfQ3K2o2QgDIQT4vyUn0_DfM-g'
-    // };
+    this.userinfo = {
+      hmcid: 'a0008949',
+      mobile: '18561715460',
+      shopId: '8800136445',
+      // hmcid:'01467897',
+      // mobile: '15253269729',
+      // shopId: '8700000484',
+      // hmcid: 'a0032188',
+      // mobile: '13905427400',
+      // shopId: '8700048360',
+      // hmcid: 'z0188893',
+      // mobile: '13176882725',
+      // shopId: '8700048360',
+      token: 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAwODk0OSIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2OTU4MzUwOSwiZXhwIjoxNTcwNDQ3NTA5fQ.5qSNdRmZsWt5ecdD5gOdYE6gDM2HgiTmRBdLLJ3Gz6Q'
+    };
     const Str = JSON.stringify(this.userinfo);
     localStorage.setItem('userinfo', Str);
     localStorage.setItem('acces_token', this.userinfo.token);
@@ -620,7 +619,15 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  .orderFollowButton {
+  .search-class{
+    width: 100%;
+    height: 90px;
+    background-color: #f5f5f5;
+    position: absolute;
+    top: 0;
+    z-index: 12;
+  }
+  .orderFollowButton-search {
     padding-left: 24px;
     padding-right: 24px;
     height: 60px;
@@ -632,8 +639,8 @@ export default {
     width: 180px;
     border-radius: 30px;
     position: absolute;
-    right: 20px;
-    top: 10px;
+    top: 15px;
+    left: 560px;
   }
 
   .search-image {
@@ -729,4 +736,5 @@ export default {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+
 </style>

@@ -3,6 +3,7 @@
     <md-popup
       v-model="popupShow"
       position="top"
+      transition="fade"
     >
       <div class="b-pop-checkList-cnt">
         <ul>

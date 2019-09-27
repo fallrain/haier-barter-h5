@@ -1,7 +1,6 @@
 <template>
   <div class="orderFollowItemClass" >
     <div class="bar-v">
-
       <div
         class="bar-class"
         v-for="(item,index) in headList"
@@ -28,6 +27,7 @@
       :list="scenarioList"
       @popButtonClicked="buttonClicked"
     ></b-pop-button>
+    <div style="height: 82px;"></div>
     <div
       class="label-class"
       v-for="(followItem,index) in list"
@@ -601,6 +601,9 @@ export default {
 .bar-v {
   background-color: white;
   height: 72px;
+  position: absolute;
+  top: 90px;
+  z-index: 100;
 }
 
 .label-class {
