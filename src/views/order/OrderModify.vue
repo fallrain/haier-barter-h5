@@ -676,7 +676,8 @@ export default {
       subInfo.dispatchArea = this.consignee.address.districtName;
       subInfo.dispatchAdd = this.customerInfo.address;
       subInfo.buyTime = this.buyDate;
-      subInfo.deliveryTime = this.deliveryTime;
+      const dt = this.deliveryTime.substring(0, 16)
+      subInfo.deliveryTime = dt;
       subInfo.orderType = this.orderType;
       subInfo.rightId = '';
       subInfo.rightName = '';
