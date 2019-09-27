@@ -316,7 +316,29 @@ export default {
       this.popShow = false;
     },
     confirmRemark() {
-      this.hidePopUp();
+      if (this.remark === '') {
+        Toast.info('请输入暂不跟进原因');
+        this.popShow = true;
+        return;
+      }
+      const  type = '3'
+      this.orderService
+        .updateOrderFollowByType(
+          {},
+          {
+            orderFollowId: this.ID,
+            type,
+            remark: this.remark
+          }
+        )
+        .then((res) => {
+          if (res.code === 1) {
+            this.remark = ''
+            console.log('this.list', this.list);
+            Toast.succeed(res.msg);
+            this.$emit('updateOrderType', type);
+          }
+        });
     },
     itemClick(index) {
       debugger;
@@ -427,13 +449,7 @@ export default {
         return;
       }
       if (type === '3') {
-        debugger;
-        if (this.remark === '') {
-          debugger;
-          Toast.info('请输入暂不跟进原因');
-          this.popShow = true;
-          return;
-        }
+        return
       }
       this.orderService
         .updateOrderFollowByType(
@@ -445,8 +461,8 @@ export default {
           }
         )
         .then((res) => {
-          debugger;
           if (res.code === 1) {
+            this.remark = ''
             console.log('this.list', this.list);
             Toast.succeed(res.msg);
             this.$emit('updateOrderType', type);

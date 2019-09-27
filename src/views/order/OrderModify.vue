@@ -676,8 +676,16 @@ export default {
       subInfo.dispatchAdd = this.consignee.address.street;
       debugger
       subInfo.buyTime = this.buyDate;
-      const dt = this.deliveryTime.substring(0, 16)
-      subInfo.deliveryTime = dt;
+      this.deliveryTime = resData.deliveryTime;
+      const dt =  new Date(Date.parse(this.deliveryTime));
+      const y = dt.getFullYear()
+      const m = dt.getMonth() + 1
+      const d = dt.getDate()
+      const h = dt.getHours()
+      const ha = h + 1
+      debugger
+      let time = y+'-'+m+'-'+d+' '+h+':00'+'-'+ha+':00'
+      this.deliveryTime = time
       subInfo.orderType = this.orderType;
       subInfo.rightId = '';
       subInfo.rightName = '';
