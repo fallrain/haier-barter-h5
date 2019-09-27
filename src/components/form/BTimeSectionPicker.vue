@@ -96,14 +96,15 @@ export default {
   },
   created() {
     const dayList = [];
-    let i = 0;
+    let m = 0;
     const h = this.dd.getHours();
-    if (h >= 12) {
-      i++;
-    }
-    for (i; i < 365; i++) {
-      const day = this.GetDateStr(i).day;
-      const timeSectionArray = this.GetDateStr(i).timeSection;
+    for (let i = 0; i < 365; i++) {
+      if (h >= 12) {
+        m = 1
+      }
+      const dateS = this.GetDateStr(m)
+      const day = dateS.day;
+      const timeSectionArray = dateS.timeSection;
       const dayV = {
         value: i,
         text: day,
@@ -111,13 +112,10 @@ export default {
       };
       dayList.push(dayV);
     }
-    // data.children = dayList
     const y = [];
     y.push(dayList);
-    // const t = [];
-    // t.push(y);
+    debugger
     this.pickerData = y;
-    debugger;
   },
   mounted() {
     // this.pickerData = district

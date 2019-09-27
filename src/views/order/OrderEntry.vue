@@ -655,6 +655,7 @@ export default {
           if (res.code === 1) {
             if (type === 1) {
               Toast.succeed('订单暂存成功');
+              this.$router.go(-1)
             }
             Toast.hide();
             if (type === 2) {

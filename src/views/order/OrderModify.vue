@@ -237,11 +237,7 @@ export default {
       pattern: 'yyyy-MM-dd hh:mm',
       customerString: '',
       // 收货人信息
-      consignee: {
-      /* name: '',
-            sex: '男士',
-            phone: '15067543689' */
-      },
+      consignee: {},
       customerInfo: {},
       // 订单类型单选
       orderTypes: [
@@ -460,7 +456,9 @@ export default {
           this.consignee.phone = resData.consigneePhone;
           this.consignee.sex = resData.userSex;
           this.consignee.address = {}
-          this.consignee.address.proivinceName = resData.dispatchProvince
+          this.consignee.address.provinceName = resData.dispatchProvince
+          console.log('this.consignee.address.proivinceName',this.consignee.address.provinceName)
+          debugger
           this.consignee.address.cityName = resData.dispatchCity
           this.consignee.address.districtName = resData.dispatchArea
           this.consignee.address.street = resData.dispatchAdd
@@ -515,6 +513,7 @@ export default {
       this.productService.deafaultCustomerAddress(this.mobile).then((res) => {
         if (res.code === 1) {
           if (res.data !== null) {
+            this.customerInfo = res.data;
             this.getAddressName(res.data.province, res.data.city, res.data.district);
             this.consignee.address.street = res.data.address;
             debugger;
@@ -674,7 +673,8 @@ export default {
       subInfo.dispatchCity = this.consignee.address.cityName;
       subInfo.dispatchAreaId = this.customerInfo.area;
       subInfo.dispatchArea = this.consignee.address.districtName;
-      subInfo.dispatchAdd = this.customerInfo.address;
+      subInfo.dispatchAdd = this.consignee.address.street;
+      debugger
       subInfo.buyTime = this.buyDate;
       const dt = this.deliveryTime.substring(0, 16)
       subInfo.deliveryTime = dt;
