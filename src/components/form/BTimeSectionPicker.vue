@@ -96,13 +96,20 @@ export default {
   },
   created() {
     const dayList = [];
-    let m = 0;
+    let dateS = {};
     const h = this.dd.getHours();
-    for (let i = 0; i < 365; i++) {
-      if (h >= 12) {
-        m = 1
+    let i = 0;
+    let j = 365;
+    if (h >= 12) {
+      i = 1;
+      j = 366;
+    }
+    for (i; i < j; i++) {
+      if (i === 0) {
+        dateS = this.GetDateStr(0);
+      } else {
+        dateS = this.GetDateStr(1);
       }
-      const dateS = this.GetDateStr(m)
       const day = dateS.day;
       const timeSectionArray = dateS.timeSection;
       const dayV = {
@@ -166,7 +173,6 @@ export default {
     },
 
     confirmPicker(columnsValue) {
-      ;
       const data = `${columnsValue[0].text} ${columnsValue[1].text}`;
       this.$emit('confirmDeliveryTime', data);
     },
