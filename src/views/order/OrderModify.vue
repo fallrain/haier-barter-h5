@@ -61,7 +61,7 @@
         ></b-radio-item>
       </template>
     </b-item>
-    <div class="orderEntry-header-cus" v-show="orderType == '1'">
+    <div class="orderEntry-header-cus" v-show="orderType == 1">
       <button
         type="button"
         class="common-btn-primary w100per"
@@ -243,16 +243,16 @@ export default {
       // 订单类型单选
       orderTypes: [
         {
-          key: '0',
+          key: 0,
           value: '单品'
         },
         {
-          key: '1',
+          key: 1,
           value: '套购'
         }
       ],
       // 订单类型
-      orderType: '0',
+      orderType: 0,
       // 购机时间
       buyDate: '',
       subInfo: {},
@@ -457,13 +457,20 @@ export default {
           this.consignee.address = {};
           this.consignee.address.provinceName = resData.dispatchProvince;
           console.log('this.consignee.address.proivinceName', this.consignee.address.provinceName);
-
           this.consignee.address.cityName = resData.dispatchCity;
           this.consignee.address.districtName = resData.dispatchArea;
           this.consignee.address.street = resData.dispatchAdd;
           this.buyDate = resData.buyTime;
           this.orderType = resData.orderType;
           this.deliveryTime = resData.deliveryTime;
+          const dt = new Date(Date.parse(this.deliveryTime));
+          const y = dt.getFullYear();
+          const m = dt.getMonth() + 1;
+          const d = dt.getDate();
+          const h = dt.getHours();
+          const ha = h + 1;
+          const time = `${y}-${m}-${d} ${h}:00` + `-${ha}:00`;
+          this.deliveryTime = time;
           this.createdTime = resData.createdTime;
           this.orderSource = resData.orderSource;
           this.orderFollowId = resData.id;
@@ -672,7 +679,6 @@ export default {
       subInfo.dispatchAreaId = this.customerInfo.area;
       subInfo.dispatchArea = this.consignee.address.districtName;
       subInfo.dispatchAdd = this.consignee.address.street;
-
       subInfo.buyTime = this.buyDate;
       this.deliveryTime = resData.deliveryTime;
       const dt = new Date(Date.parse(this.deliveryTime));

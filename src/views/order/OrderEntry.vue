@@ -11,7 +11,7 @@
       v-show="haveCustomer"
     > -->
     <div class="orderEntry-header-cus"  v-show="haveCustomer">
-            <span class="name mr16">顾客信息:{{customerInfo.username}}</span>
+            <span class="name mr16">顾客信息：{{customerInfo.username}}</span>
             <span class="name mr16">{{customerInfo.mobile}}</span>
     </div>
     <b-fieldset
@@ -77,7 +77,7 @@
         ></b-radio-item>
       </template>
     </b-item>
-    <div class="orderEntry-header-cus" v-show="orderType == '1'">
+    <div class="orderEntry-header-cus" v-show="orderType == 1">
       <button
         type="button"
         class="common-btn-primary w100per"
