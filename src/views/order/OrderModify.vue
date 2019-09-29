@@ -58,10 +58,11 @@
           :inline="true"
           :list="orderTypes"
           v-model="orderType"
+          @radioChange="radioChange"
         ></b-radio-item>
       </template>
     </b-item>
-    <div class="orderEntry-header-cus" v-show="orderType == 1">
+    <div class="orderEntry-header-cus" v-show="orderType">
       <button
         type="button"
         class="common-btn-primary w100per"
@@ -465,11 +466,12 @@ export default {
           this.deliveryTime = resData.deliveryTime;
           const dt = new Date(Date.parse(this.deliveryTime));
           const y = dt.getFullYear();
-          const m = dt.getMonth() + 1;
-          const d = dt.getDate();
-          const h = dt.getHours();
-          const ha = h + 1;
+          const m = (dt.getMonth() + 1) < 10 ? `0${dt.getMonth() + 1}` : (dt.getMonth() + 1);// 获取当前月份的日期，不足10补0
+          const d = dt.getDate() < 10 ? `0${dt.getDate()}` : dt.getDate();
+          const h = dt.getHours() < 10 ? `0${dt.getHours()}` : dt.getHours();
+          const ha = (dt.getHours() + 1) < 10 ? `0${dt.getHours() + 1}` : (dt.getHours() + 1);
           const time = `${y}-${m}-${d} ${h}:00` + `-${ha}:00`;
+          this.deliveryTime = time;
           this.deliveryTime = time;
           this.createdTime = resData.createdTime;
           this.orderSource = resData.orderSource;
@@ -593,8 +595,9 @@ export default {
           if (res.code === 1) {
             if (type === 1) {
               Toast.succeed('订单暂存成功');
+
+              this.$router.go(-1);
             }
-            Toast.hide();
             if (type === 2) {
               this.$router.push({
                 name: 'Order.OrderUploadInvoice',
@@ -680,16 +683,9 @@ export default {
       subInfo.dispatchArea = this.consignee.address.districtName;
       subInfo.dispatchAdd = this.consignee.address.street;
       subInfo.buyTime = this.buyDate;
-      this.deliveryTime = resData.deliveryTime;
-      const dt = new Date(Date.parse(this.deliveryTime));
-      const y = dt.getFullYear();
-      const m = dt.getMonth() + 1;
-      const d = dt.getDate();
-      const h = dt.getHours();
-      const ha = h + 1;
+      const dt = this.deliveryTime.substring(0, 16);
 
-      const time = `${y}-${m}-${d} ${h}:00` + `-${ha}:00`;
-      this.deliveryTime = time;
+      subInfo.deliveryTime = dt;
       subInfo.orderType = this.orderType;
       subInfo.rightId = '';
       subInfo.rightName = '';
@@ -776,6 +772,16 @@ export default {
     }
   },
   beforeRouteLeave(to, from, next) {
+    if (to.path === '/order/OrderConfirm') {
+      next(false);
+      if (this.$router.go(-4) === 'order.OrderModify') {
+        this.$router.go(-5);
+      } else {
+        this.$router.go(-4);
+      }
+      return;
+    }
+
     if (to.path === '/') { // 此处判断是如果返回上一层，你可以根据自己的业务更改此处的判断逻辑，酌情决定是否摧毁本层缓存。
       if (this.$vnode && this.$vnode.data.keepAlive) {
         if (this.$vnode.parent && this.$vnode.parent.componentInstance && this.$vnode.parent.componentInstance.cache) {

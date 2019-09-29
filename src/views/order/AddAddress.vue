@@ -405,7 +405,7 @@ export default {
   },
 
   beforeRouteLeave(to, from, next) {
-    const obj = { tel: this.customerInfo.mobile };
+    const obj = { tel: this.customerInfo.mobile, smld: this.smld };
     if (to.name === 'Order.OrderEntry' || 'Order.OrderModify') {
       to.query.temp = JSON.stringify(obj);
       if (this.$vnode && this.$vnode.data.keepAlive) {

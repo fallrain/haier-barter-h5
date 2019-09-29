@@ -77,7 +77,7 @@
         ></b-radio-item>
       </template>
     </b-item>
-    <div class="orderEntry-header-cus" v-show="orderType == 1">
+    <div class="orderEntry-header-cus" v-show="orderType">
       <button
         type="button"
         class="common-btn-primary w100per"
@@ -283,16 +283,16 @@ export default {
       // 订单类型单选
       orderTypes: [
         {
-          key: '0',
+          key: 0,
           value: '单品'
         },
         {
-          key: '1',
+          key: 1,
           value: '套购'
         }
       ],
       // 订单类型
-      orderType: '0',
+      orderType: 0,
       // 购机时间
       buyDate: '',
       subInfo: {},
@@ -607,7 +607,12 @@ export default {
             this.queryCustomerAddressList();
             this.genarateOrderNum();
           } else {
-            this.addUserShow = true;
+            if (this.$route.query.temp.smld) {
+              ;
+              this.addUserShow = true;
+            } else {
+              ;
+            }
           }
         }
       });
@@ -644,14 +649,14 @@ export default {
       this.genarateSubInfo(1);
       if (this.orderNo !== '') {
         Toast.loading('保存中...');
-
         this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId }).then((res) => {
           if (res.code === 1) {
             if (type === 1) {
               Toast.succeed('订单暂存成功');
+
               this.$router.go(-1);
             }
-            Toast.hide();
+            // Toast.hide();
             if (type === 2) {
               this.$router.push({
                 name: 'Order.OrderUploadInvoice',
