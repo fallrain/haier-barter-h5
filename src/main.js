@@ -39,9 +39,9 @@ new Vue({
 }).$mount('#app');
 
 function getuserInfo() {
-
-  const userinfostr =  vm.getQueryString('userinfo')
-  const userinfo = JSON.parse(userinfostr)
+  const userinfostr = decodeURIComponent(bUtil.getUrlVal('userinfo'));
+  const userinfo = JSON.parse(userinfostr);
   localStorage.setItem('userinfo', userinfostr);
   localStorage.setItem('acces_token', userinfo.token);
 }
+getuserInfo();

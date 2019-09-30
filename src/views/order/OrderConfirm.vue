@@ -41,7 +41,7 @@
     <b-item
       class="mt16"
       title="订单类型："
-      value="单品"
+      :value="orderType"
     >
     </b-item>
     <b-fieldset
@@ -147,17 +147,7 @@ export default {
               sex: '男士',
               phone: '15067543689' */
       },
-      // 订单类型单选
-      orderTypes: [
-        {
-          key: 1,
-          value: '单品'
-        },
-        {
-          key: 2,
-          value: '套购'
-        }
-      ],
+
       // 订单类型
       orderType: 2,
       // 购机时间
@@ -202,7 +192,11 @@ export default {
           this.consignee.sex = resData.userSex;
           this.consignee.address = resData.dispatchProvince + resData.dispatchCity + resData.dispatchArea + resData.dispatchAdd;
           this.buyDate = resData.buyTime;
-          this.orderType = resData.orderType;
+          if(resData.orderType == 1){
+            this.orderType = '单品'
+          }else{
+            this.orderType = '套购'
+          }
           this.deliveryTime = resData.deliveryTime;
           const dt = new Date(Date.parse(this.deliveryTime));
           const y = dt.getFullYear();
@@ -210,7 +204,6 @@ export default {
           const d = dt.getDate();
           const h = dt.getHours();
           const ha = h + 1;
-
           const time = `${y}-${m}-${d} ${h}:00` + `-${ha}:00`;
           this.deliveryTime = time;
           this.createdTime = resData.createdTime;

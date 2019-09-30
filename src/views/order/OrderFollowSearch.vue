@@ -225,21 +225,21 @@ export default {
 
     const userinfostr = this.getQueryString('userinfo');
     this.userinfo = JSON.parse(userinfostr);
-    this.userinfo = {
-      hmcid: 'a0008949',
-      mobile: '18561715460',
-      shopId: '8800136445',
-      // hmcid:'01467897',
-      // mobile: '15253269729',
-      // shopId: '8700000484',
-      // hmcid: 'a0032188',
-      // mobile: '13905427400',
-      // shopId: '8700048360',
-      // hmcid: 'z0188893',
-      // mobile: '13176882725',
-      // shopId: '8700048360',
-      token: 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAwODk0OSIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2OTU4MzUwOSwiZXhwIjoxNTcwNDQ3NTA5fQ.5qSNdRmZsWt5ecdD5gOdYE6gDM2HgiTmRBdLLJ3Gz6Q'
-    };
+    // this.userinfo = {
+    //   // hmcid: 'a0008949',
+    //   // mobile: '18561715460',
+    //   // shopId: '8800136445',
+    //   hmcid:'01467897',
+    //   mobile: '15253269729',
+    //   shopId: '8700000484',
+    //   // hmcid: 'a0032188',
+    //   // mobile: '13905427400',
+    //   // shopId: '8700048360',
+    //   // hmcid: 'z0188893',
+    //   // mobile: '13176882725',
+    //   // shopId: '8700048360',
+    //   token: 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAwODk0OSIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2OTU4MzUwOSwiZXhwIjoxNTcwNDQ3NTA5fQ.5qSNdRmZsWt5ecdD5gOdYE6gDM2HgiTmRBdLLJ3Gz6Q'
+    // };
     const Str = JSON.stringify(this.userinfo);
     localStorage.setItem('userinfo', Str);
     localStorage.setItem('acces_token', this.userinfo.token);
@@ -604,6 +604,7 @@ export default {
   beforeRouteEnter(to, from, next) {
     if (from.name === 'Order.OrderFollowCommitResult') {
       next();
+
       window.location.reload();
     }
     next();
