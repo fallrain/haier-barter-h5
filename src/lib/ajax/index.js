@@ -1,13 +1,10 @@
-import Vue from 'vue';
 import axios from 'axios';
 import qs from 'qs';
 import {
   Toast
 } from 'mand-mobile';
-import router from '@/router';
-import store from '@/store';
-
 const ax = axios.create();
+
 ax.defaults = Object.assign(
   ax.defaults,
   {
