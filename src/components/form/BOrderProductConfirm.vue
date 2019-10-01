@@ -13,7 +13,7 @@
     <div
       v-if="content"
       class="b-order-product-item-cnt"
-    >
+    <p class="install-class">代包装时间：{{data.installTime}}</p>
       <slot></slot>
     </div>
   </li>
@@ -86,5 +86,8 @@ export default {
   .b-order-product-item-cnt {
     padding: 24px 16px;
   }
-
+  .install-class {
+    padding: 20px;
+    color: #1969C6;
+  }
 </style>

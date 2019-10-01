@@ -331,12 +331,21 @@ export default {
     },
     confirm() {
       if (!(/^1[34578]\d{9}$/.test(this.customerInfo.mobile))) {
-        Toast.failed('手机格式错误');
+        Toast.failed('手机号格式错误');
         this.customerInfo.mobile = '';
         return;
       }
       if (this.customerInfo.username === '') {
-        Toast.failed('姓名不能为空');
+        Toast.failed('顾客姓名不能为空');
+        return;
+      }
+      if (!(/^1[34578]\d{9}$/.test(this.customerInfo.consigneeUserPhone))) {
+        Toast.failed('手机号格式错误');
+        this.customerInfo.consigneeUserPhone = '';
+        return;
+      }
+      if (this.customerInfo.consigneeUserName === '') {
+        Toast.failed('收件人姓名不能为空');
         return;
       }
       if (this.customerInfo.province === '') {
