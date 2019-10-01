@@ -82,7 +82,7 @@
             :key="index"
             :data="item"
             :index="index"
-            :content="item.isReport"
+            :content="isInstall"
             @onDel="onDelete"
           >
             <template
@@ -349,7 +349,9 @@ export default {
       orderSource: '',
       orderFollowId: '',
       recordMode: '',
-      sourceSn: ''
+      sourceSn: '',
+      queryInstall: false,
+      isInstall:false
     };
   },
   computed: {},
@@ -397,9 +399,7 @@ export default {
             pro.storeName = this.shopName;
             pro.invoiceStatus = 0;
             pro.userId = this.userParam.userId;
-
-
-            this.productList.push(pro);
+            this.isReportInstall(pro);
           } else {
             Toast.failed(res.msg);
           }
@@ -441,6 +441,27 @@ export default {
     },
     confirmDeliveryTime(date) {
       this.deliveryTime = date;
+    },
+    isReportInstall(pro) {
+      this.productList.push(pro);
+      const orderDetailInfo = [
+        { hmcId: this.userParam.hmcid,
+          storeId: this.userParam.shopId,
+          productModel: pro.productModel}
+      ];
+      this.orderService.isReportInstallNew({ orderDetailInfo }, {}).then((res) => {
+        debugger;
+        this.queryInstall = true;
+        if (res.code === 1) {
+          this.isInstall = true;
+          // if (res.msg === 'SUCCESS') {
+          //   this.isInstall = true;
+          // } else {
+          //   this.isInstall = false;
+          // }
+        } else {
+        }
+      });
     },
     getData() {
       this.orderService.queryOrderInfoByOrderNo({}, { orderNo: this.orderNo }).then((response) => {

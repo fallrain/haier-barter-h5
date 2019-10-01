@@ -16,7 +16,9 @@ const urls = {
   uploadInvoice: '/orderManage/hmcUploadInvoice', // 上传发票
   queryOrderDetailAndInvoice: '/orderManage/queryOrderDetailAndInvoice', // 根据订单ID查询发票信息
   checkInvoice: '/orderManage/checkInvoice', // 校验发票
-  simpleUpload: '/file/simpleUpload'// 上传图片
+  simpleUpload: '/file/simpleUpload',// 上传图片
+  isReportInstallNew:'/reportInstall/isReportInstallNew'//查询产品是否需要代包装
+
 };
 
 Object.entries(urls).forEach(([key, value]) => {

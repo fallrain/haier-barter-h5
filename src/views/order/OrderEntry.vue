@@ -97,16 +97,9 @@
             :key="index"
             :data="item"
             :index="index"
-            :content="item.isReport"
+            :content="isInstall"
             @onDel="onDelete"
           >
-            <template
-              v-slot:default
-            >
-              <p class="orderEntry-reportInf">
-                该产品需代报装,请选择安装时间
-              </p>
-            </template>
           </b-order-product>
         </ul>
         <button
@@ -275,9 +268,6 @@ export default {
       customerString: '',
       // 收货人信息
       consignee: {
-        /* name: '',
-              sex: '男士',
-              phone: '15067543689' */
       },
       customerInfo: {},
       // 订单类型单选
@@ -384,7 +374,9 @@ export default {
       userParam: {},
       rightName: '',
       rightId: '',
-      addUserShow: false
+      addUserShow: false,
+      queryInstall: false,
+      isInstall: false
     };
   },
   computed: {},
@@ -416,12 +408,12 @@ export default {
             pro.productCategoryName = obj.product.productGroupName;
             pro.productCode = obj.product.productCode;
             pro.productModel = obj.product.productModel;
-            // pro.productGroup = obj.product.productGroup
             pro.installTime = '';
             pro.bccPrice = obj.product.price;
             pro.productPrice = '';
             pro.invoiceStatus = 0;
-            this.productList.push(pro);
+            debugger;
+            this.isReportInstall(pro);
           } else {
             Toast.failed(res.message);
           }
@@ -490,10 +482,34 @@ export default {
     //   /* 选择礼品 */
     //   this.chooseGiftPopShow = true;
     // },
+    isReportInstall(pro) {
+      this.productList.push(pro);
+
+      const orderDetailInfo = [
+        { hmcId: this.userParam.hmcid,
+          storeId: this.shopId,
+          productModel: pro.productModel}
+      ];
+      this.orderService.isReportInstallNew({ orderDetailInfo }, {}).then((res) => {
+        debugger;
+        this.queryInstall = true;
+        if (res.code === 1) {
+          this.isInstall = true;
+          // if (res.msg === 'SUCCESS') {
+          //   this.isInstall = true;
+          // } else {
+          //   this.isInstall = false;
+          // }
+        } else {
+        }
+      });
+    },
     radioChange(val) {
       this.orderType = val;
+      debugger;
     },
     selectSetBuyer() {
+      debugger;
       this.multBuyPopShow = true;
     },
     consporConfirm() {
@@ -608,10 +624,9 @@ export default {
             this.genarateOrderNum();
           } else {
             if (this.$route.query.temp.smld) {
-              ;
               this.addUserShow = true;
             } else {
-              ;
+
             }
           }
         }
@@ -653,7 +668,6 @@ export default {
           if (res.code === 1) {
             if (type === 1) {
               Toast.succeed('订单暂存成功');
-
               this.$router.go(-1);
             }
             // Toast.hide();
@@ -977,10 +991,6 @@ export default {
     width: 320px;
   }
 
-  .orderEntry-reportInf {
-    color: #3078CC;
-    font-size: 24px;
-  }
 
   .orderEntry-rights-fieldset {
     .b-fieldset-legend-left {

@@ -52,5 +52,8 @@ export default {
   },
   simpleUpload() {
     return axPost(urls.simpleUpload);
+  },
+  isReportInstallNew(data,params){
+    return axPostJson(urls.isReportInstallNew,data,params)
   }
 };
