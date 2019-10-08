@@ -379,8 +379,8 @@ export default {
             ID = res.data;
             const pro = {};
             pro.id = ID;
-
-            pro.deliveryTime = this.deliveryTime;
+            const dt = this.deliveryTime.substring(0, 16);
+            pro.deliveryTime = dt;
             // pro.hmcId= "A0008949"
             pro.hmcId = this.userParam.hmcId;
             pro.installTime = '1564650104445';
@@ -492,7 +492,6 @@ export default {
           const h = dt.getHours() < 10 ? `0${dt.getHours()}` : dt.getHours();
           const ha = (dt.getHours() + 1) < 10 ? `0${dt.getHours() + 1}` : (dt.getHours() + 1);
           const time = `${y}-${m}-${d} ${h}:00` + `-${ha}:00`;
-          this.deliveryTime = time;
           this.deliveryTime = time;
           this.createdTime = resData.createdTime;
           this.orderSource = resData.orderSource;
@@ -705,7 +704,6 @@ export default {
       subInfo.dispatchAdd = this.consignee.address.street;
       subInfo.buyTime = this.buyDate;
       const dt = this.deliveryTime.substring(0, 16);
-
       subInfo.deliveryTime = dt;
       subInfo.orderType = this.orderType;
       subInfo.rightId = '';
@@ -747,7 +745,7 @@ export default {
       }
     },
     changeAddress(item) {
-      item.userName = this.customerInfo.username;
+      item.username = this.customerInfo.username;
       item.mobile = this.customerInfo.mobile;
       this.region = 'edit';
       if (this.addressList.length < 1) {

@@ -376,7 +376,8 @@ export default {
       rightId: '',
       addUserShow: false,
       queryInstall: false,
-      isInstall: false
+      isInstall: false,
+      multyBuy:false
     };
   },
   computed: {},
@@ -668,7 +669,10 @@ export default {
           if (res.code === 1) {
             if (type === 1) {
               Toast.succeed('订单暂存成功');
-              this.$router.go(-1);
+              setTimeout(() => {
+                Toast.hide()
+                this.$router.go(-1);
+              }, 3000)
             }
             // Toast.hide();
             if (type === 2) {
@@ -850,6 +854,11 @@ export default {
     queryUserList() {
       this.productService.userList(this.shopId).then((res) => {
         if (res.code === 1) {
+          if(res.data === '' || res.data === []){
+            this.multyBuy = false
+          }else {
+            this.multyBuy = true
+          }
           this.multBuySponsor = res.data;
           this.multBuyParticipant = this.multBuySponsor;
           this.buyerList = res.data;

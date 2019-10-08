@@ -222,9 +222,10 @@ export default {
       this.curTab = 3;
       localStorage.setItem('confirm', '');
     }
-    const userinfostr = localStorage.getItem('userinfo')
+    const userinfostr = localStorage.getItem('userinfo');
     this.userinfo = JSON.parse(userinfostr);
     // const userinfostr = this.getQueryString('userinfo');
+    // this.userinfo = JSON.parse(userinfostr);
     // this.userinfo = {
     //   // hmcid: 'a0008949',
     //   // mobile: '18561715460',
@@ -238,11 +239,12 @@ export default {
     //   hmcid: 'A0032254',
     //   mobile: '15621017056',
     //   shopId: '8700048360',
-    //   token: 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAwODk0OSIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU2OTU4MzUwOSwiZXhwIjoxNTcwNDQ3NTA5fQ.5qSNdRmZsWt5ecdD5gOdYE6gDM2HgiTmRBdLLJ3Gz6Q'
+    //   token: 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAwODk0OSIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU3MDQ5OTA1MSwiZXhwIjoxNTcxMzYzMDUxfQ.8MXYFbO3775zxV2w9teGQ_SlByggO5cpZGJqdnG2DWo'
     // };
+    // const Str = JSON.stringify(this.userinfo);
     // localStorage.setItem('userinfo', Str);
     // localStorage.setItem('acces_token', this.userinfo.token);
-    // const Str = JSON.stringify(this.userinfo);
+
 
     this.getNoticeData();
   },

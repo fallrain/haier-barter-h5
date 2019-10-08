@@ -164,6 +164,12 @@ export default {
     font-size: 28px;
     color: #333;
     margin-left: 15px;
+    display: block;
+    word-break:normal;
+    width:400px;
+    white-space:pre-wrap;
+    word-wrap : break-word ;
+    overflow: hidden ;
   }
 
   .activity-common-text {
@@ -197,6 +203,7 @@ export default {
 
   .activity-reason-text {
     color: #FF001F;
+    width: 500px;
   }
 
   .activity-type-text {
