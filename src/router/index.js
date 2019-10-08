@@ -28,6 +28,10 @@ router.beforeEach((to, from, next) => {
   } else {
     store.commit('delAliveExclude', 'SuggestionList');
   }
+  next();
+});
+router.afterEach(() => {
+  alert(window.location.href)
   Vue.prototype.basicService.jsSign(window.location.href).then(({ code, data }) => {
     if (code === 1) {
       wx.config({
@@ -43,6 +47,5 @@ router.beforeEach((to, from, next) => {
       });
     }
   });
-  next();
 });
 export default router;
