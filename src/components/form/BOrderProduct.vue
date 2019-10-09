@@ -26,7 +26,7 @@
       class="b-order-product-item-cnt"
     >
 
-      <p class="p-class">产品需要代报装,请选择代包装时间:</p>
+      <p class="p-class">产品需要代报装,请选择时间:</p>
       <b-date-picker
         class="orderEntry-date2"
         slot="right"
@@ -68,20 +68,20 @@ export default {
   data(){
     return {
       reportTime:'',
-      currentDate: new Date(),
+      currentDate: '',
       customType:['yyyy', 'MM', 'dd', 'hh'],
       pattern:'yyyy-MM-dd hh:00'
     }
   },
   created(){
-
-    const y = this.currentDate.getFullYear();
-    // const m = (this.currentDate.getMonth() + 1) < 10 ? `0${dd.getMonth() + 1}` : (dd.getMonth() + 1);// 获取当前月份的日期，不足10补0
-    // const d = this.currentDate.getDate() < 10 ? `0${dd.getDate()}` : dd.getDate();
-    const m = this.currentDate.getMonth()
-    const d = this.currentDate.getDate()
-    const h = this.currentDate.getHours() + 1
-    // this.currentDate = `${y}-${m}-${d} ${h}`
+    const dd = new Date()
+    const y = dd.getFullYear();
+    const m = (dd.getMonth() + 1) < 10 ? `0${dd.getMonth() + 1}` : (dd.getMonth() + 1);// 获取当前月份的日期，不足10补0
+    const d = dd.getDate() < 10 ? `0${dd.getDate()}` : dd.getDate();
+    const h = dd.getHours() + 1
+    this.currentDate = `${y}-${m}-${d} ${h}:00`
+    this.data.installTime = this.currentDate
+    this.currentDate = new Date(this.currentDate)
   },
   methods: {
     onDel() {
@@ -144,14 +144,16 @@ export default {
     color: #3078CC !important;
     font-size: 26px;
     position: relative;
+
   }
   .orderEntry-date2 {
-    width: 280px;
-    float: right;
+    width: 320px;
     margin-bottom: 10px;
+    position: absolute;
+    margin-left: 340px;
   }
   .p-class{
-    width: 380px;
+    width: 350px;
     float: left;
     margin-top: 10px;
   }

@@ -322,9 +322,11 @@ export default {
         region: 'new' }
       });
     },
+    // 入户服务
     userService(item) {
       wx.miniProgram.navigateTo({ url: '/pages/userService/userService' });
     },
+    // 潜在客户
     maybeBuyer(item) {
       wx.miniProgram.navigateTo({ url: '/pages/mabyByuser/mabyByuser', userId: item.userId });
     },
@@ -389,7 +391,7 @@ export default {
       });
     },
     followButtonClicked(val, info) {
-      if (val.name === '录新订单' || val.name === '成交录单') {
+      if (val.name === '成交录单') {
         this.$router.push({
           name: 'Order.OrderEntry',
           params: { customerConsigneeInfo: {
@@ -406,10 +408,29 @@ export default {
       } else if (val.name === '继续录单') {
         this.$router.push({
           name: 'Order.OrderModify',
-          params: { orderNo: info.orderNo }
+          params: { orderNo: info.orderNo, orderFollowId: info.id }
         });
       } else {
-
+        // val.name === '录新订单'
+        // 生成一条新的待办
+        this.orderService.createNewOrder({}, { orderNo: info.orderNo }).then((res) => {
+          if (res.code === 1) {
+            const orderFollowId = res.data.id;
+            this.$router.push({
+              name: 'Order.OrderEntry',
+              params: { customerConsigneeInfo: {
+                userName: info.userName,
+                mobile: info.userMobile,
+                userId: info.userId,
+                recordMode: info.recordMode,
+                businessScenarios: info.businessScenarios,
+                sourceSn: info.sourceSn,
+                id: orderFollowId,
+              },
+              region: 'new' }
+            });
+          }
+        });
       }
     },
 
