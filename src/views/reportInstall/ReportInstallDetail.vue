@@ -345,13 +345,13 @@ export default {
                 if (this.data.itemIndex !== undefined) {
                   sessionStorage.setStorageSync('reportInstallList.itemIndex', this.data.itemIndex);
                 }
-                this.jump();
+                this.$mBack();
               }
             });
           });
         }
       } else {
-        this.jump();
+        this.$mBack();
       }
     },
     shwAddressList() {
