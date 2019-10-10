@@ -175,7 +175,7 @@
         </div>
         <p class="common-error mt16" v-show="qrCodeDialog.error">{{qrCodeDialog.errorText}}</p>
         <div class="salesVerification-qrcode-tips">
-          提示信息：发送到发送到发送到发送到发送到发放水电费水电费水电费是电费水费水电费水电费水电费是发送到
+          提示信息：点击右上【扫描】，可扫产品条码自动带入输入框。
         </div>
       </div>
     </md-dialog>
