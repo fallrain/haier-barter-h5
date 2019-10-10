@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="bMonthPop">
     <div
       class="bMonthPop-filed"
       @click="showPop"
@@ -11,6 +11,8 @@
       v-model="isDatePickerShow"
       ref="datePicker"
       :default-date="defaultDate"
+      :min-date="minDate"
+      :max-date="maxDate"
       type="custom"
       :custom-types="['yyyy', 'MM']"
       @confirm="confirmClick"
@@ -40,7 +42,9 @@ export default {
       // 日期pop显示隐藏
       isDatePickerShow: false,
       // 选中的日期文字
-      curDateText: `${this.checkCurMonth(this.defaultDate.getMonth() + 1)}`
+      curDateText: `${this.checkCurMonth(this.defaultDate.getMonth() + 1)}`,
+      minDate: new Date(this.defaultDate.getFullYear() - 1, this.defaultDate.getMonth() + 1),
+      maxDate: new Date(),
     };
   },
   methods: {
@@ -63,7 +67,7 @@ export default {
 
 <style lang="scss" scoped>
   .bMonthPop {
-
+    width: 130px;
   }
 
   .bMonthPop-filed {

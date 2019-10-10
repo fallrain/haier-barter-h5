@@ -368,7 +368,9 @@ export default {
     },
     confirmDate(dates) {
       /* 确认时间 */
-
+      if (dates) {
+        this.curSearchDate = `${dates[0].value}-${dates[1].value}`;
+      }
     },
     upCallback(page) {
       // 下载过就设置已经初始化
