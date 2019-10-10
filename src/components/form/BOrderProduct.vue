@@ -44,13 +44,13 @@
 </template>
 <script>
 import {
-  BItem,BDatePicker
+  BItem, BDatePicker
 } from '@/components/form';
 
 export default {
   name: 'BOrderProduct',
   components: {
-    BItem,BDatePicker
+    BItem, BDatePicker
   },
   props: {
     // 产品详情
@@ -65,23 +65,23 @@ export default {
       default: false
     }
   },
-  data(){
+  data() {
     return {
-      reportTime:'',
+      reportTime: '',
       currentDate: '',
-      customType:['yyyy', 'MM', 'dd', 'hh'],
-      pattern:'yyyy-MM-dd hh:00'
-    }
+      customType: ['yyyy', 'MM', 'dd', 'hh'],
+      pattern: 'yyyy-MM-dd hh:00'
+    };
   },
-  created(){
-    const dd = new Date()
+  created() {
+    const dd = new Date();
     const y = dd.getFullYear();
     const m = (dd.getMonth() + 1) < 10 ? `0${dd.getMonth() + 1}` : (dd.getMonth() + 1);// 获取当前月份的日期，不足10补0
     const d = dd.getDate() < 10 ? `0${dd.getDate()}` : dd.getDate();
-    const h = dd.getHours() + 1
-    this.currentDate = `${y}-${m}-${d} ${h}:00`
-    this.data.installTime = this.currentDate
-    this.currentDate = new Date(this.currentDate)
+    const h = dd.getHours() + 1;
+    this.currentDate = `${y}-${m}-${d} ${h}:00`;
+    this.data.installTime = this.currentDate;
+    this.currentDate = new Date(this.currentDate);
   },
   methods: {
     onDel() {
@@ -89,7 +89,7 @@ export default {
       this.$emit('onDel', this.index);
     }
   }
-}
+};
 </script>
 
 <style lang="scss">
@@ -126,6 +126,8 @@ export default {
     height: 60px;
     border: 1px solid #D0D0D0;
     border-radius: 8px;
+    padding-left: 8px;
+    padding-right: 8px;
   }
 
   .b-order-product-item-price-unit {
