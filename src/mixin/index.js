@@ -53,11 +53,11 @@ export default {
         });
       }
     },
-    back() {
+    $mBack() {
       /* 返回上一页 */
       this.$router.back();
     },
-    copy(selector, text) {
+    $mCopy(selector, text) {
       /* 复制功能 */
       const copyIns = this.bUtil.clipboardCopy(selector, text);
       copyIns.on('success', () => {

@@ -33,7 +33,7 @@
         type="custom"
         :custom-types="customType"
         title="请选择日期"
-        :defaultDate="currentDate"
+        :defaultDate="defaultDate"
         :min-date="currentDate"
         v-model="data.installTime"
         :pattern="pattern"
@@ -70,7 +70,8 @@ export default {
       reportTime: '',
       currentDate: '',
       customType: ['yyyy', 'MM', 'dd', 'hh'],
-      pattern: 'yyyy-MM-dd hh:00'
+      pattern: 'yyyy-MM-dd hh:00',
+      defaultDate:''
     };
   },
   created() {
@@ -78,9 +79,9 @@ export default {
     const y = dd.getFullYear();
     const m = (dd.getMonth() + 1) < 10 ? `0${dd.getMonth() + 1}` : (dd.getMonth() + 1);// 获取当前月份的日期，不足10补0
     const d = dd.getDate() < 10 ? `0${dd.getDate()}` : dd.getDate();
-    const h = dd.getHours() + 1;
-    this.currentDate = `${y}-${m}-${d} ${h}:00`;
-    this.data.installTime = this.currentDate;
+    const h = `${dd.getHours()}:00`;
+    this.currentDate = `${y}-${m}-${d} ${h}`;
+    // this.data.installTime = this.currentDate;
     this.currentDate = new Date(this.currentDate);
   },
   methods: {

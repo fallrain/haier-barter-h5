@@ -167,14 +167,15 @@
           >
           <div
             class="salesVerification-qrcode-icon-wrap"
+            @click="salesScanQRCode"
           >
             <i class="iconfont icon-saomiao"
-               @click="salesScanQRCode"></i>
+            ></i>
           </div>
         </div>
         <p class="common-error mt16" v-show="qrCodeDialog.error">{{qrCodeDialog.errorText}}</p>
         <div class="salesVerification-qrcode-tips">
-          提示信息：发送到发送到发送到发送到发送到发放水电费水电费水电费是电费水费水电费水电费水电费是发送到
+          提示信息：点击右上【扫描】，可扫产品条码自动带入输入框。
         </div>
       </div>
     </md-dialog>
@@ -533,7 +534,7 @@ export default {
     salesScanQRCode() {
       wx.ready(() => {
         wx.scanQRCode({
-          needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+          needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
           scanType: ['qrCode', 'barCode'], // 可以指定扫二维码还是一维码，默认二者都有
           success(res) {
             const result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
@@ -611,9 +612,11 @@ export default {
   }
 
   .salesVerification-qrcode-icon-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
     width: 60px;
     height: 60px;
-    line-height: 60px;
     border-radius: 100%;
     background: #1969C6;
     color: #fff;

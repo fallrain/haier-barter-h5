@@ -211,7 +211,8 @@ export default {
         mescroll: null,
         list: [],
         isListInit: false
-      }
+      },
+      fuzzy:false
     };
   },
   activated() {
@@ -224,8 +225,6 @@ export default {
     }
     const userinfostr = localStorage.getItem('userinfo');
     this.userinfo = JSON.parse(userinfostr);
-    // const userinfostr = this.getQueryString('userinfo');
-    // this.userinfo = JSON.parse(userinfostr);
     // this.userinfo = {
     //   // hmcid: 'a0008949',
     //   // mobile: '18561715460',
@@ -469,10 +468,16 @@ export default {
             } = res.data;
             sroviewObj.pages = pages;
             sroviewObj.result = result;
+            if(this.fuzzy){
+              if(result.length === 0){
+                  Toast.failed('搜索结果不存在')
+                this.fuzzy = false
+                return
+              }
+            }
             if (result && result.length > 0) {
               const curList = result;
               this.anylizeData(curList);
-
               if (!this.updateList) {
                 if (page.num === 1) {
                   this[this.curScrollViewName].list = [];
@@ -615,6 +620,7 @@ export default {
         size: 10
       };
       this.searchData(page);
+      this.fuzzy = true
     },
     updateOrderType(type) {
       this.updateList = true;
@@ -628,7 +634,6 @@ export default {
   beforeRouteEnter(to, from, next) {
     if (from.name === 'Order.OrderFollowCommitResult') {
       next();
-
       window.location.reload();
     }
     next();

@@ -110,7 +110,6 @@ export default {
   created() {
     console.log('tag', this.$route.params);
     this.orderNo = this.$route.params.orderNo;
-
     this.getData();
   },
   methods: {
@@ -171,7 +170,7 @@ export default {
     },
   },
   beforeRouteLeave(to, from, next) {
-    if (to.name === 'Order.OrderEntry') { // 此处判断是如果返回上一层，你可以根据自己的业务更改此处的判断逻辑，酌情决定是否摧毁本层缓存。
+    if (to.name === 'Order.OrderEntry' || to.name === 'Order.OrderModify') { // 此处判断是如果返回上一层，你可以根据自己的业务更改此处的判断逻辑，酌情决定是否摧毁本层缓存。
       if (this.$vnode && this.$vnode.data.keepAlive) {
         if (this.$vnode.parent && this.$vnode.parent.componentInstance && this.$vnode.parent.componentInstance.cache) {
           if (this.$vnode.componentOptions) {

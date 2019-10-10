@@ -149,7 +149,7 @@ export default {
       },
 
       // 订单类型
-      orderType: 2,
+      orderType: 0,
       // 购机时间
       buyDate: '',
       // 产品列表
