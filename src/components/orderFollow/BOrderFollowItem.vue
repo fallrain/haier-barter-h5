@@ -55,6 +55,11 @@
         v-show="followItem.businessScenarios =='SMLD'"
       >
       <img
+        src="@/assets/images/orderFollow-up/SGLD.png"
+        class="labelImage"
+        v-show="followItem.businessScenarios =='SGLD'"
+      >
+      <img
         src="@/assets/images/orderFollow-up/renchou@3x.png"
         class="labelImage"
         v-show="followItem.businessScenarios =='RC'"
