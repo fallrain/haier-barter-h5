@@ -1,5 +1,5 @@
 <template>
-  <div class="report-bg">
+  <div class="report-bg" @click="showDetail">
 
     <div class="report-box1">
       <span class="report-box1-goods-name">{{orderItem.productCategoryName}}</span>
@@ -23,7 +23,7 @@
     </div>
 
     <Button class="report-btn"
-            v-if="isShow"
+            v-if="isShow && orderItem.sendStatus == 1"
             @click="reportBtn">修改
     </Button>
 
@@ -41,7 +41,9 @@
       isShow: true,
     },
     methods: {
-      reportBtn() {
+      reportBtn(event) {
+        //
+        event.stopPropagation();
         const formData = {
           installId: this.orderItem.installId
         };
@@ -56,6 +58,7 @@
               workFlowId: this.orderItem.orderId,
               parentPage: 'list', // 从何处跳过去的，此处代表列表
               flowStatus: this.curTab, // 判断待报装、非待报装
+              tag: 'update' //判断是修改进详情还是item进详情
               // itemIndex: orderIndex
             };
             this.$router.push({
@@ -66,7 +69,26 @@
             });
           }
         });
-      }
+      },
+      showDetail() {
+        const argsObj = {
+          userId: undefined,
+          userName: this.orderItem.customerName,
+          mobile: this.orderItem.phoneNumber,
+          orderNo: this.orderItem.orderNo,
+          workFlowId: this.orderItem.orderId,
+          parentPage: 'list', // 从何处跳过去的，此处代表列表
+          flowStatus: this.curTab, // 判断待报装、非待报装
+          tag: 'detail' //判断是修改进详情还是item进详情
+          // itemIndex: orderIndex
+        };
+        this.$router.push({
+          name: 'ReportInstall.ReportInstallDetail',
+          query: {
+            ...argsObj
+          }
+        });
+      },
     }
   }
 </script>
