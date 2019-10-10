@@ -94,7 +94,7 @@
     </div>
     <div class="reportInstallDetail-btns-par">
       <button
-        v-if="notAllSend"
+        v-if="notAllSend && tag != 'detail'"
         class="reportInstallDetail-btn"
         @click="submit"
       >提交报装信息
@@ -194,6 +194,7 @@ export default {
       canUpdateAddress: false, // 是否可修改地址
       itemIndex: undefined, // 待修改的列表序号
       addStatus: '', // 是否是手动录单，此参数与录单员参数名保持一致
+      tag: '',
       // 选择收货人列表pop show
       addressPopShow: false,
       // 收货人地址pop列表
@@ -224,6 +225,8 @@ export default {
       // 已经报装 报装异常不可修改地址
       this.canUpdateAddress = !!(option.flowStatus !== '1' && option.flowStatus !== '2');
       this.parentPage = option.parentPage;
+      this.tag = option.tag;
+      console.log('this.tag', this.tag);
       // this.addressList = [{
       //   mobile: userInfo.mobile
       // }];
