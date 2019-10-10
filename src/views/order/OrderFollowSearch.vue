@@ -224,8 +224,6 @@ export default {
     }
     const userinfostr = localStorage.getItem('userinfo');
     this.userinfo = JSON.parse(userinfostr);
-    // const userinfostr = this.getQueryString('userinfo');
-    // this.userinfo = JSON.parse(userinfostr);
     // this.userinfo = {
     //   // hmcid: 'a0008949',
     //   // mobile: '18561715460',
@@ -628,7 +626,6 @@ export default {
   beforeRouteEnter(to, from, next) {
     if (from.name === 'Order.OrderFollowCommitResult') {
       next();
-
       window.location.reload();
     }
     next();

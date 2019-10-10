@@ -98,7 +98,7 @@
           class="timeImage"
         >
         <span class="time-label">{{followItem.updatedTime}}</span>
-        <span v-show="followItem.flowStatus !== 1" @click="detailHide(index,followItem)">
+        <span v-show="followItem.flowStatus !== 1 && (followItem.add1 !=null || followItem.add2 !=null)" @click="detailHide(index,followItem)">
           <span class="information-class">详细信息</span>
           <img
             src="@/assets/images/orderFollow-up/xialablue@3x.png"
@@ -128,22 +128,22 @@
           </span>
 
       </div>
-      <div
-        v-show="followItem.detailShow && followItem.showDetail"
-        v-for="(item,index) in followItem.productList"
-        :key="index"
-      >
-        <p>
-          <span class="orderFollowItem-span">{{item.productBrandCN}}/{{item.productCategoryName}}，{{item.productModel}}</span>
-          <span class="orderFollowItem-span-blue">￥{{item.bccPrice}}</span>
-        </p>
-      </div>
+      <!--<div-->
+        <!--v-show="followItem.detailShow && followItem.showDetail"-->
+        <!--v-for="(item,index) in followItem.productList"-->
+        <!--:key="index"-->
+      <!--&gt;-->
+        <!--<p>-->
+          <!--<span class="orderFollowItem-span">{{item.productBrandCN}}/{{item.productCategoryName}}，{{item.productModel}}</span>-->
+          <!--<span class="orderFollowItem-span-blue">￥{{item.bccPrice}}</span>-->
+        <!--</p>-->
+      <!--</div>-->
       <div
         class="information-p"
-        v-show="followItem.detailShow && (followItem.add1 != '')"
+        v-show="followItem.detailShow"
       >
-        <!--<p>{{followItem.add1}}：{{followItem.add1}}</p>-->
-        <!--<p>{{followItem.add2}}：{{followItem.add2}}</p>-->
+        <p>{{followItem.add1}}</p>
+        <p>{{followItem.add2}}</p>
       </div>
       <div class="bottom-class">
         <img
@@ -417,7 +417,6 @@ export default {
       }
     },
     detailHide(index, item) {
-      ;
       this.stopProcess();
       this.$set(this.list[index], 'detailShow', !this.list[index].detailShow);
       if (this.list[index].detailShow) {
@@ -603,7 +602,7 @@ export default {
   height: 72px;
   position: absolute;
   top: 90px;
-  z-index: 100;
+  z-index: 15;
 }
 
 .label-class {

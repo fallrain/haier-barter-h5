@@ -690,6 +690,7 @@ export default {
       subInfo.storeName = this.shopName;
       subInfo.userId = this.customerInfo.userId;
       subInfo.userName = this.customerInfo.username;
+      subInfo.userSex = this.consignee.sex
       subInfo.consigneeName = this.consignee.name;
       subInfo.consigneePhone = this.consignee.phone;
       subInfo.consigneeId = this.consignee.customerId;
