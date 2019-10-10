@@ -737,6 +737,7 @@ export default {
       // this.userParam.userId;
       // subInfo.userName = '张三',
       subInfo.userName = this.customerInfo.username;
+      subInfo.userSex = this.consignee.sex
       subInfo.consigneeName = this.consignee.name;
       subInfo.consigneePhone = this.consignee.phone;
       subInfo.consigneeId = this.consignee.customerId;
