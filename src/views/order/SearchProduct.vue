@@ -249,7 +249,7 @@ export default {
   .searchProduct-scan-inf {
     line-height: 1;
     margin-left: 12px;
-    font-size: 10px;
+    font-size: 20px;
     writing-mode: vertical-lr;
   }
 </style>

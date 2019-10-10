@@ -2,7 +2,12 @@ export default {
   resetInput: {
     // 当被绑定的元素插入到 DOM 中时
     inserted(el) {
-      const inputEls = el.getElementsByTagName('input');
+      let inputEls;
+      if (!['INPUT'].includes(el.nodeName)) {
+        inputEls = el.getElementsByTagName('input');
+      } else {
+        inputEls = [el];
+      }
       if (!inputEls.length) {
         return;
       }
