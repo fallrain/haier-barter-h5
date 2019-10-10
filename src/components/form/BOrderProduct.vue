@@ -79,8 +79,8 @@ export default {
     const y = dd.getFullYear();
     const m = (dd.getMonth() + 1) < 10 ? `0${dd.getMonth() + 1}` : (dd.getMonth() + 1);// 获取当前月份的日期，不足10补0
     const d = dd.getDate() < 10 ? `0${dd.getDate()}` : dd.getDate();
-    const h = dd.getHours() + 1;
-    this.currentDate = `${y}-${m}-${d} ${h}:00`;
+    const h = `${dd.getHours()}:00`;
+    this.currentDate = `${y}-${m}-${d} ${h}`;
     // this.data.installTime = this.currentDate;
     this.currentDate = new Date(this.currentDate);
   },
