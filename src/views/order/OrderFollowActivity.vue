@@ -207,10 +207,10 @@ export default {
       });
     },
     showConfig(item) {
-      if (this.subInfo.orderType === '0') {
+      if (this.subInfo.orderType === 0) {
         this.rightsService.queryRightsSingleConfigList({}, { rightsNo: item.rightsNo },).then((res) => {
           if (res.code === 1) {
-            if (res.data.rightsProductDtoList.length > 0) {
+            if (res.data.length > 0) {
               item.isShowConfig = true;
               item.configList = res.data;
             } else {
@@ -221,7 +221,7 @@ export default {
       } else {
         this.rightsService.queryRightsSetsByRightsNo({}, { rightsNo: item.rightsNo }).then((res) => {
           if (res.code === 1) {
-            if (res.data.rightsProductDtoList.length > 0) {
+            if (res.data.length > 0) {
               item.isShowConfig = true;
               item.configList = res.data;
             } else {
@@ -249,7 +249,7 @@ export default {
     search(page) {
       // todo
       this.subInfo = JSON.parse(this.$route.params.orderInfo);
-
+      debugger
       this.orderNo = this.subInfo.orderNo;
       if (this.current === 0) {
         return this.rightsService.queryOrderOptionalRights(this.subInfo, {

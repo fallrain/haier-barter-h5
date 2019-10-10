@@ -418,6 +418,7 @@ export default {
   created() {
     this.addressData = addressData;
     this.orderNo = this.$route.params.orderNo;
+    this.orderFollowId = this.$route.params.orderFollowId
     this.userParam = JSON.parse(localStorage.getItem('userinfo'));
     this.getData();
   },
@@ -495,7 +496,7 @@ export default {
           this.deliveryTime = time;
           this.createdTime = resData.createdTime;
           this.orderSource = resData.orderSource;
-          this.orderFollowId = resData.id;
+          // this.orderFollowId = resData.id;
           this.sourceSn = resData.sourceSn;
           this.recordMode = resData.recordMode;
           this.queryUserList(resData.storeId);
@@ -505,6 +506,9 @@ export default {
           if (resData.orderDetailDtoList.length !== 0) {
             this.productList = resData.orderDetailDtoList;
             this.productList.forEach((item) => {
+              if(item.installTime !== ''){
+                this.isInstall = true
+              }
               if (item.productBrand == 'haier') {
                 item.productBrandCN = '海尔';
               } else {

@@ -192,7 +192,7 @@ export default {
           this.consignee.sex = resData.userSex;
           this.consignee.address = resData.dispatchProvince + resData.dispatchCity + resData.dispatchArea + resData.dispatchAdd;
           this.buyDate = resData.buyTime;
-          if(resData.orderType == 1){
+          if(resData.orderType == 0){
             this.orderType = '单品'
           }else{
             this.orderType = '套购'
