@@ -377,7 +377,8 @@ export default {
       addUserShow: false,
       queryInstall: false,
       isInstall: false,
-      multyBuy:false
+      multyBuy:false,
+    saveType:1,
     };
   },
   computed: {},
@@ -413,7 +414,6 @@ export default {
             pro.bccPrice = obj.product.price;
             pro.productPrice = '';
             pro.invoiceStatus = 0;
-            debugger;
             this.isReportInstall(pro);
           } else {
             Toast.failed(res.message);
@@ -662,29 +662,18 @@ export default {
     },
     // 暂存
     saveTemporary(type) {
-      this.genarateSubInfo(1);
-      if (this.orderNo !== '') {
-        Toast.loading('保存中...');
-        this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId }).then((res) => {
-          if (res.code === 1) {
-            if (type === 1) {
-              Toast.succeed('订单暂存成功');
-              setTimeout(() => {
-                Toast.hide()
-                this.$router.go(-1);
-              }, 3000)
-            }
-            // Toast.hide();
-            if (type === 2) {
-              this.$router.push({
-                name: 'Order.OrderUploadInvoice',
-                params: { orderNo: this.orderNo }
-              });
-            }
-          }
-        });
+      debugger
+      if(type === 1){
+        this.saveType = 1
+      }else {
+        this.saveType = 0
       }
+      this.generateSubInfo(1);
     },
+    // 暂存
+    // saveTemporary(type) {
+    //   this.generateSubInfo(1);
+    // },
     // 添加产品
     addProduct() {
       /* 添加产品 */
@@ -692,9 +681,11 @@ export default {
         name: 'Order.SearchProduct',
       });
     },
-    genarateSubInfo(type) {
+    generateSubInfo(type) {
+      if (!this.bUtil.isReportInstallFit(this.productList,this.deliveryTime)) {
+        return;
+      }
       const subInfo = {};
-      // multBuyParticipantCheckIds
       if (this.multBuySponsorCheckedIds.length) {
         subInfo.coupleSponsor = this.multBuySponsorCheckedIds[0];
         const obj = this.multBuySponsor.find(v => v.hmcId === this.multBuySponsorCheckedIds[0]);
@@ -779,6 +770,23 @@ export default {
           params: { orderInfo: info }
         });
       }
+      if (this.orderNo !== '') {
+        Toast.loading('保存中...');
+        this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId }).then((res) => {
+          if (res.code === 1) {
+            if (this.saveType === 1) {
+              Toast.succeed('订单暂存成功');
+              this.$router.go(-1);
+            }
+            if (this.saveType === 0) {
+              this.$router.push({
+                name: 'Order.OrderUploadInvoice',
+                params: { orderNo: this.orderNo }
+              });
+            }
+          }
+        });
+      }
     },
     selectActivity() {
       if (this.productList.length === 0) {
@@ -792,7 +800,7 @@ export default {
           return;
         }
       }
-      this.genarateSubInfo(2);
+      this.generateSubInfo(2);
     },
     selectAddress(item) {
       this.addressPopShow = false;
@@ -874,6 +882,7 @@ export default {
       if (this.productList.length === 0) {
         Toast.info('请选择产品');
       }
+      this.saveType = 0
       this.saveTemporary(2);
     },
     saveOrder() {

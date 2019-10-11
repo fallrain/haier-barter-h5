@@ -197,7 +197,7 @@ export default {
           }else{
             this.orderType = '套购'
           }
-          this.deliveryTime = resData.deliveryTime;
+          this.deliveryTime = resData.deliveryTime.replace(/-/g,'/');
           const dt = new Date(Date.parse(this.deliveryTime));
           const y = dt.getFullYear();
           const m = dt.getMonth() + 1;

@@ -71,18 +71,23 @@ export default {
       currentDate: '',
       customType: ['yyyy', 'MM', 'dd', 'hh'],
       pattern: 'yyyy-MM-dd hh:00',
-      defaultDate:''
+      defaultDate: ''
     };
   },
   created() {
-    const dd = new Date();
-    const y = dd.getFullYear();
-    const m = (dd.getMonth() + 1) < 10 ? `0${dd.getMonth() + 1}` : (dd.getMonth() + 1);// 获取当前月份的日期，不足10补0
-    const d = dd.getDate() < 10 ? `0${dd.getDate()}` : dd.getDate();
-    const h = `${dd.getHours()}`;
-    this.currentDate = `${y}-${m}-${d} ${h}:00`
-    this.currentDate = Date.parse(this.currentDate)
-    this.currentDate = new Date(this.currentDate)
+    //  const dd = new Date();
+    // const y = dd.getFullYear();
+    // const m = (dd.getMonth() + 1) < 10 ? `0${dd.getMonth() + 1}` : (dd.getMonth() + 1);// 获取当前月份的日期，不足10补0
+    // const d = dd.getDate() < 10 ? `0${dd.getDate()}` : dd.getDate();// 获取当前几号，不足10补0
+    // const h = dd.getHours() + 1;
+    // this.currentDate = `${y}-${m}-${d} ${h}:00`
+    // debugger
+    // this.currentDate = Date.parse(this.currentDate)
+    // this.currentDate = new Date(this.currentDate)
+    // if(h >=14){
+    //   this.currentDate = new Date(new Date().getTime() + 3600 * 33000)
+    // }
+    this.currentDate = new Date(new Date().getTime() + 3600 * 2000);
   },
   methods: {
     onDel() {
