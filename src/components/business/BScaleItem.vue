@@ -7,10 +7,10 @@
       <span class="name">{{data.name}}</span>
       <span class="type">{{data.type}}</span>
       <div class="bScaleItem-head-right">
-        <div v-if="type==='normal' || type==='success'">
+        <div v-if="type==='normal' || type==='success' || type==='verify' ">
           <span class="count">{{data.count}}</span>
           <i
-            v-if="type==='normal'"
+            v-if="type==='normal' || type==='verify'"
             class="iconfont icon-jiantou9"
             :class="[isShowDetail && 'reverse']"
             @click="showDetail(data,index)"
@@ -39,7 +39,7 @@
             class="bScaleItem-detail-exception-inf mt16"
           >异常原因：{{detail.errorReason || '暂无'}}</p>
           <button
-            v-if="type==='normal'"
+            v-if="type==='normal'&& detail.ehubDataType==0"
             type="button"
             class="common-btn-primary"
             @click="barCodeClick(detail)"
@@ -66,7 +66,7 @@ export default {
       type: Number,
       required: true
     },
-    // 类型：normal exception fail success
+    // 类型：normal verify exception fail success
     type: {
       type: String,
       default: 'normal'
