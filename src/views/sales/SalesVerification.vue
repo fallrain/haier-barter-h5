@@ -55,6 +55,7 @@
             :key="index"
             :data="item"
             :index="index"
+            type="verify"
             @barCodeDeclare="barCodeDeclare"
             @showDetail="showDetail"
             v-show="$data[curScrollViewName].choosedIndex===false || ($data[curScrollViewName].choosedIndex!==false && index===$data[curScrollViewName].choosedIndex)"
@@ -419,7 +420,7 @@ export default {
 
           const listTemp = result.map(v => ({
             name: v.productLine,
-            type: v.product,
+            type: v.productModel,
             count: v.dataCount,
             product: v.product,
             detail: [
@@ -431,7 +432,8 @@ export default {
                 orderName: v.hmcName,
                 errorReason: v.ehubMsg,
                 errorType: v.ehubExceptionType,
-                tip: v.showMsg
+                tip: v.showMsg,
+                ehubDataType: v.ehubDataType
               }
             ]
           }));
@@ -471,7 +473,8 @@ export default {
             buyName: v.yhName,
             time: v.gjTime,
             orderName: v.hmcName,
-            errorReason: v.ehubMsg
+            errorReason: v.ehubMsg,
+            ehubDataType: v.ehubDataType
           }));
         }
       });
