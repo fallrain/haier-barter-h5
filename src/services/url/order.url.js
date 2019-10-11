@@ -17,7 +17,8 @@ const urls = {
   queryOrderDetailAndInvoice: '/orderManage/queryOrderDetailAndInvoice', // 根据订单ID查询发票信息
   checkInvoice: '/orderManage/checkInvoice', // 校验发票
   simpleUpload: '/file/simpleUpload',// 上传图片
-  isReportInstallNew:'/reportInstall/isReportInstallNew'//查询产品是否需要代包装
+  isReportInstallNew:'/reportInstall/isReportInstallNew',//查询产品是否需要代包装
+  checkUpperLimitForSGLD:'/orderManage/checkUpperLimitForSGLD'//手工录单限制
 
 };
 
