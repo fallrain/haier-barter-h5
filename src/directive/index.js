@@ -29,6 +29,7 @@ export default {
 
         input.focus();
         input.blur();
+        window.scrollTo(0, 0);
       });
     }
   }
