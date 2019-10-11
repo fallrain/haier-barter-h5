@@ -9,7 +9,7 @@ const dllPath = './dll';
 const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 
 module.exports = {
-  publicPath: env === 'prod' ? '/' : '/',
+  publicPath: process.env.VUE_APP_PUBLIC_PATH,
   devServer: {
     host: '0.0.0.0',
     port: 8094,
@@ -48,7 +48,7 @@ module.exports = {
           // dll文件位置
           filepath: path.resolve(__dirname, `${dllPath}/*.js`),
           // dll 引用路径
-          publicPath: dllPath,
+          publicPath: path.join(process.env.VUE_APP_PUBLIC_PATH, dllPath),
           // dll最终输出的目录
           outputPath: dllPath
         })
