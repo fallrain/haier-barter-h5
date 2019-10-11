@@ -256,9 +256,9 @@ const util = {
       _this[viewName].mescroll.triggerDownScroll();
     }
   },
-  /*******判断代报装时间是否符合要求*********/
-  isReportInstallFit(productlist,deliveryTime) {
-    let change = true
+  /** *****判断代报装时间是否符合要求******** */
+  isReportInstallFit(productlist, deliveryTime) {
+    let change = true;
     // const now = new Date()
     const deT = Date.parse(deliveryTime.substring(0, 16));
     const detFor = new Date(deT);
@@ -266,32 +266,33 @@ const util = {
     const h = detFor.getHours();
     debugger;
     productlist.forEach((pro) => {
-      const t = Date.parse(pro.installTime);
-      const tFor = new Date(t)
-      const td = tFor.getDate();
-      const th = tFor.getHours();
-      if (t < deT) {
-        Toast.failed('代包装时间不能小于送达时间');
-        debugger
-        change = false
-        return
-      }
-      if (td === d) {
-        if (h > 16) {
-          Toast.failed('送达时间为16：00之后代报装时间不可选当天');
-          debugger
-          change = false
-          return
+      if (pro.installTime != '') {
+        const t = Date.parse(pro.installTime);
+        const tFor = new Date(t);
+        const td = tFor.getDate();
+        const th = tFor.getHours();
+        if (t < deT) {
+          Toast.failed('代包装时间不能小于送达时间');
+          debugger;
+          change = false;
+          return;
         }
-        if (th < (h + 4)) {
-          Toast.failed('代包装时间必须大于送达时间4小时');
-          debugger
-          change = false
-          return
+        if (td === d) {
+          if (h > 16) {
+            Toast.failed('送达时间为16：00之后代报装时间不可选当天');
+            debugger;
+            change = false;
+            return;
+          }
+          if (th < (h + 4)) {
+            Toast.failed('代包装时间必须大于送达时间4小时');
+            debugger;
+            change = false;
+          }
         }
       }
     });
-    return change
+    return change;
   },
 };
 
