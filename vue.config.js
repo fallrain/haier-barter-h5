@@ -3,6 +3,11 @@ const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
 const path = require('path');
 
 const smp = new SpeedMeasurePlugin();
+const webpack = require('webpack');
+
+const dllPath = './dll';
+const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
+
 module.exports = {
   publicPath: env === 'prod' ? '/' : '/',
   devServer: {
@@ -29,10 +34,28 @@ module.exports = {
     }
   },
   configureWebpack: (config) => {
-    const cfg = {};
-    if (env !== 'dev') {
-      return smp.wrap(cfg);
+    if (env === 'dev') {
+    } else {
+      config.plugins.push(
+        new webpack.DllReferencePlugin({
+          context: process.cwd(),
+          manifest: require(`${dllPath}/vendor-manifest.json`)
+        })
+      );
+      // / 将打包出来文件动态引入index.html
+      config.plugins.push(
+        new AddAssetHtmlPlugin({
+          // dll文件位置
+          filepath: path.resolve(__dirname, `${dllPath}/*.js`),
+          // dll 引用路径
+          publicPath: dllPath,
+          // dll最终输出的目录
+          outputPath: dllPath
+        })
+      );
+      /* if (process.env.Analyse) {
+        config.plugins.push(new BundleAnalyzerPlugin());
+      } */
     }
-    return cfg;
-  }
+  },
 };
