@@ -725,23 +725,25 @@ export default {
           name: 'Order.OrderFollowActivity',
           params: { orderInfo: info }
         });
-      }
-      if (this.orderNo !== '') {
-        Toast.loading('保存中...');
-        this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId }).then((res) => {
-          if (res.code === 1) {
-            if (this.saveType === 1) {
-              Toast.succeed('订单暂存成功');
-              this.$router.go(-1);
-            }
-            if (this.saveType === 0) {
-              this.$router.push({
-                name: 'Order.OrderUploadInvoice',
-                params: { orderNo: this.orderNo }
-              });
-            }
-          }
-        });
+      }else {
+        if (this.orderNo !== '') {
+          Toast.loading('保存中...');
+          this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
+            .then((res) => {
+              if (res.code === 1) {
+                if (this.saveType === 1) {
+                  Toast.succeed('订单暂存成功');
+                  this.$router.go(-1);
+                }
+                if (this.saveType === 0) {
+                  this.$router.push({
+                    name: 'Order.OrderUploadInvoice',
+                    params: { orderNo: this.orderNo }
+                  });
+                }
+              }
+            });
+        }
       }
     },
     selectAddress(item) {

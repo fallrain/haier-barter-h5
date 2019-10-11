@@ -22,7 +22,7 @@
       <div>
         <div class="orderEntry-user-head">
           <span class="name mr16">收货人：{{consignee.name}}</span>
-          <span class="sex mr16">{{consignee.sex}}</span>
+          <span class="sex mr16">{{consignee.sexCn}}</span>
           <i class="iconfont icon-dianhua mr16"></i>
           <span class="phone mr16">{{consignee.phone}}</span>
 
@@ -190,6 +190,11 @@ export default {
           this.phone = resData.userPhone;
           this.consignee.phone = resData.consigneePhone;
           this.consignee.sex = resData.userSex;
+          if(resData.userSex === 1){
+            this.consignee.SexCn = '男士'
+          }else {
+            this.consignee.SexCn = '女士'
+          }
           this.consignee.address = resData.dispatchProvince + resData.dispatchCity + resData.dispatchArea + resData.dispatchAdd;
           this.buyDate = resData.buyTime;
           if(resData.orderType == 0){
