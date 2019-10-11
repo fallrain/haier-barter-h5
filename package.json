@@ -6,7 +6,8 @@
     "dev": "vue-cli-service serve --mode dev",
     "sit": "vue-cli-service build --mode sit",
     "prod": "vue-cli-service build --mode prod",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "dll": "webpack --config webpack.dll.config.js"
   },
   "dependencies": {
     "axios": "^0.19.0",
@@ -30,8 +31,10 @@
     "@vue/cli-service": "^3.8.0",
     "@vue/eslint-config-airbnb": "^4.0.0",
     "add": "^2.0.6",
+    "add-asset-html-webpack-plugin": "^3.1.3",
     "babel-eslint": "^10.0.1",
     "babel-plugin-import": "^1.11.0",
+    "clean-webpack-plugin": "^3.0.0",
     "cssnano": "^3.10.0",
     "eslint": "^5.16.0",
     "eslint-import-resolver-webpack": "^0.11.1",
@@ -46,6 +49,7 @@
     "sass": "^1.18.0",
     "sass-loader": "^7.1.0",
     "speed-measure-webpack-plugin": "^1.3.1",
-    "vue-template-compiler": "^2.6.10"
+    "vue-template-compiler": "^2.6.10",
+    "webpack-cli": "^3.3.9"
   }
 }

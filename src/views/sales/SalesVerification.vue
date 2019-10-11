@@ -55,6 +55,7 @@
             :key="index"
             :data="item"
             :index="index"
+            type="verify"
             @barCodeDeclare="barCodeDeclare"
             @showDetail="showDetail"
             v-show="$data[curScrollViewName].choosedIndex===false || ($data[curScrollViewName].choosedIndex!==false && index===$data[curScrollViewName].choosedIndex)"
@@ -419,7 +420,7 @@ export default {
 
           const listTemp = result.map(v => ({
             name: v.productLine,
-            type: v.product,
+            type: v.productModel,
             count: v.dataCount,
             product: v.product,
             detail: [
@@ -431,7 +432,8 @@ export default {
                 orderName: v.hmcName,
                 errorReason: v.ehubMsg,
                 errorType: v.ehubExceptionType,
-                tip: v.showMsg
+                tip: v.showMsg,
+                ehubDataType: v.ehubDataType
               }
             ]
           }));
@@ -471,7 +473,8 @@ export default {
             buyName: v.yhName,
             time: v.gjTime,
             orderName: v.hmcName,
-            errorReason: v.ehubMsg
+            errorReason: v.ehubMsg,
+            ehubDataType: v.ehubDataType
           }));
         }
       });
@@ -537,7 +540,7 @@ export default {
         wx.scanQRCode({
           needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
           scanType: ['qrCode', 'barCode'], // 可以指定扫二维码还是一维码，默认二者都有
-          success(res) {
+          success: (res) => {
             const result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
             this.qrCodeForm.code = result;
           }
