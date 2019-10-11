@@ -165,6 +165,7 @@
             type="text"
             v-model="qrCodeForm.code"
             placeholder="请扫描条码信息"
+            v-resetInput
           >
           <div
             class="salesVerification-qrcode-icon-wrap"
@@ -625,6 +626,9 @@ export default {
     color: #fff;
     text-align: center;
     margin-left: 16px;
+    .iconfont{
+      font-size: 30px;
+    }
   }
 
   .salesVerification-qrcode-icon {
