@@ -890,6 +890,7 @@ color: #333;
 .orderEntry-user-head {
   display: flex;
   align-items: center;
+  padding-top: 10px;
 
   .name {
     color: #333;

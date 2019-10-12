@@ -244,7 +244,7 @@ export default {
             params: { orderInfo: res.data }
           });
         } else if (res.code === -1) {
-          Toast.info('不能重复提交订单');
+          Toast.info(res.msg);
         } else {}
       });
     },
