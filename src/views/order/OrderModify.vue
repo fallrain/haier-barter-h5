@@ -351,7 +351,8 @@ export default {
       recordMode: '',
       sourceSn: '',
       queryInstall: false,
-      isInstall:false
+      isInstall: false,
+      saveType:1
     };
   },
   computed: {},
@@ -418,7 +419,7 @@ export default {
   created() {
     this.addressData = addressData;
     this.orderNo = this.$route.params.orderNo;
-    this.orderFollowId = this.$route.params.orderFollowId
+    this.orderFollowId = this.$route.params.orderFollowId;
     this.userParam = JSON.parse(localStorage.getItem('userinfo'));
     this.getData();
   },
@@ -448,7 +449,7 @@ export default {
       const orderDetailInfo = [
         { hmcId: this.userParam.hmcid,
           storeId: this.userParam.shopId,
-          productModel: pro.productModel}
+          productModel: pro.productModel }
       ];
       this.orderService.isReportInstallNew({ orderDetailInfo }, {}).then((res) => {
         debugger;
@@ -485,7 +486,7 @@ export default {
           this.consignee.address.street = resData.dispatchAdd;
           this.buyDate = resData.buyTime;
           this.orderType = resData.orderType;
-          this.deliveryTime = resData.deliveryTime;
+          this.deliveryTime = resData.deliveryTime.replace(/-/g, '/');
           const dt = new Date(Date.parse(this.deliveryTime));
           const y = dt.getFullYear();
           const m = (dt.getMonth() + 1) < 10 ? `0${dt.getMonth() + 1}` : (dt.getMonth() + 1);// 获取当前月份的日期，不足10补0
@@ -506,8 +507,8 @@ export default {
           if (resData.orderDetailDtoList.length !== 0) {
             this.productList = resData.orderDetailDtoList;
             this.productList.forEach((item) => {
-              if(item.installTime !== ''){
-                this.isInstall = true
+              if (item.installTime !== '') {
+                this.isInstall = true;
               }
               if (item.productBrand == 'haier') {
                 item.productBrandCN = '海尔';
@@ -611,26 +612,13 @@ export default {
     },
     // 暂存
     saveTemporary(type) {
-      this.genarateSubInfo(1);
-      if (this.orderNo !== '') {
-        Toast.loading('保存中...');
-
-        this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId }).then((res) => {
-          if (res.code === 1) {
-            if (type === 1) {
-              Toast.succeed('订单暂存成功');
-
-              this.$router.go(-1);
-            }
-            if (type === 2) {
-              this.$router.push({
-                name: 'Order.OrderUploadInvoice',
-                params: { orderNo: this.orderNo }
-              });
-            }
-          }
-        });
+      debugger
+      if(type === 1){
+        this.saveType = 1
+      }else {
+        this.saveType = 0
       }
+      this.generateSubInfo(1);
     },
     // 添加产品
     addProduct() {
@@ -652,9 +640,15 @@ export default {
         }
       }
       /* 选择活动 */
-      this.genarateSubInfo(2);
+      this.generateSubInfo(2);
     },
-    genarateSubInfo(type) {
+
+    generateSubInfo(type) {
+      debugger
+      if (!this.bUtil.isReportInstallFit(this.productList,this.deliveryTime)) {
+        return;
+      }
+
       const subInfo = {};
       // multBuyParticipantCheckIds
       if (this.multBuySponsorCheckedIds.length) {
@@ -690,7 +684,7 @@ export default {
       subInfo.storeName = this.shopName;
       subInfo.userId = this.customerInfo.userId;
       subInfo.userName = this.customerInfo.username;
-      subInfo.userSex = this.consignee.sex
+      subInfo.userSex = this.consignee.sex;
       subInfo.consigneeName = this.consignee.name;
       subInfo.consigneePhone = this.consignee.phone;
       subInfo.consigneeId = this.consignee.customerId;
@@ -731,6 +725,25 @@ export default {
           name: 'Order.OrderFollowActivity',
           params: { orderInfo: info }
         });
+      }else {
+        if (this.orderNo !== '') {
+          Toast.loading('保存中...');
+          this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
+            .then((res) => {
+              if (res.code === 1) {
+                if (this.saveType === 1) {
+                  Toast.succeed('订单暂存成功');
+                  this.$router.go(-1);
+                }
+                if (this.saveType === 0) {
+                  this.$router.push({
+                    name: 'Order.OrderUploadInvoice',
+                    params: { orderNo: this.orderNo }
+                  });
+                }
+              }
+            });
+        }
       }
     },
     selectAddress(item) {
@@ -786,6 +799,7 @@ export default {
       if (this.productList.length === 0) {
         Toast.info('请选择产品');
       }
+      this.saveType = 0
       this.saveTemporary(2);
     },
     saveOrder() {
@@ -876,6 +890,7 @@ color: #333;
 .orderEntry-user-head {
   display: flex;
   align-items: center;
+  padding-top: 10px;
 
   .name {
     color: #333;

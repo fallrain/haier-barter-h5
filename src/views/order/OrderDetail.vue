@@ -201,12 +201,12 @@ export default {
           this.consignee.sex = resData.userSex;
           this.consignee.address = resData.dispatchProvince + resData.dispatchCity + resData.dispatchArea + resData.dispatchAdd;
           this.buyDate = resData.buyTime;
-          if(resData.orderType == 1){
-            this.orderType = '单品'
-          }else{
-            this.orderType = '套购'
+          if (resData.orderType == 1) {
+            this.orderType = '单品';
+          } else {
+            this.orderType = '套购';
           }
-          this.deliveryTime = resData.deliveryTime;
+          this.deliveryTime = resData.deliveryTime.replace(/-/g, '/');
           const dt = new Date(Date.parse(this.deliveryTime));
           const y = dt.getFullYear();
           const m = dt.getMonth() + 1;

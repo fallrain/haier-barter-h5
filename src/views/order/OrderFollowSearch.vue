@@ -243,8 +243,7 @@ export default {
     // const Str = JSON.stringify(this.userinfo);
     // localStorage.setItem('userinfo', Str);
     // localStorage.setItem('acces_token', this.userinfo.token);
-
-
+    //
     this.getNoticeData();
   },
   computed: {
