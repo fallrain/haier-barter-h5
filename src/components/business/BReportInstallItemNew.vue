@@ -31,6 +31,9 @@
 </template>
 
 <script>
+  import {
+    Toast
+  } from 'mand-mobile';
   export default {
     name: "BReportInstallItemNew",
     props: {
@@ -49,24 +52,28 @@
         };
         return this.reportInstallService.checkRequireServiceDate(formData).then((res) => {
           if (res.code === 1) {
-            /* 跳转报装详情 */
-            const argsObj = {
-              userId: undefined,
-              userName: this.orderItem.customerName,
-              mobile: this.orderItem.phoneNumber,
-              orderNo: this.orderItem.orderNo,
-              workFlowId: this.orderItem.orderId,
-              parentPage: 'list', // 从何处跳过去的，此处代表列表
-              flowStatus: this.curTab, // 判断待报装、非待报装
-              tag: 'update' //判断是修改进详情还是item进详情
-              // itemIndex: orderIndex
-            };
-            this.$router.push({
-              name: 'ReportInstall.ReportInstallDetail',
-              query: {
-                ...argsObj
-              }
-            });
+            if (res.msg == 'SUCCESS') {
+              /* 跳转报装详情 */
+              const argsObj = {
+                userId: undefined,
+                userName: this.orderItem.customerName,
+                mobile: this.orderItem.phoneNumber,
+                orderNo: this.orderItem.orderNo,
+                workFlowId: this.orderItem.orderId,
+                parentPage: 'list', // 从何处跳过去的，此处代表列表
+                flowStatus: this.curTab, // 判断待报装、非待报装
+                tag: 'update' //判断是修改进详情还是item进详情
+                // itemIndex: orderIndex
+              };
+              this.$router.push({
+                name: 'ReportInstall.ReportInstallDetail',
+                query: {
+                  ...argsObj
+                }
+              });
+            } else {
+              Toast.failed('不能修改');
+            }
           }
         });
       },
