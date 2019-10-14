@@ -3,7 +3,7 @@
     <b-search-input
       v-model="searchVal"
       @search="searchByCondition"
-      placeholder="搜索用户姓名、电话或产品"
+      placeholder="输入产品型号进行搜索"
     >
       <div class="salesVerification-search-right">
         <b-month-pop
