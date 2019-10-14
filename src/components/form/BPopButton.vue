@@ -14,7 +14,7 @@
             v-for="(item,index) in list"
             :key="index"
             @click="checkboxClick(item)"
-        ><span class="b-pop-checkList-item-name">{{item.name}}</span></p>
+        ><span class="b-pop-checkList-item-name">{{item.itemName}}</span></p>
       </div>
         </ul>
       </div>
@@ -71,11 +71,11 @@ export default {
     }
   },
   methods: {
-    checkboxClick({ id }) {
+    checkboxClick(item) {
 
       this.checkIds = [];
-      this.checkIds.push(id)
-      this.$emit('popButtonClicked', this.checkIds);
+      this.checkIds.push(item.id)
+      this.$emit('popButtonClicked', item);
       this.popupShow = false;
 
     },
@@ -94,7 +94,7 @@ export default {
 <style lang="scss">
   .b-pop-checkList1 {
     .md-popup-title-bar {
-      height: 80px;
+      height: 100px;
 
       .title-bar-left {
         font-size: 28px;
@@ -122,6 +122,7 @@ export default {
   .b-pop-checkList-cnt {
     background: #fff;
     padding-bottom: 24px;
+    height: 150px;
   }
 
   .b-pop-checkList-item1 {

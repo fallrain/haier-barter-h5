@@ -203,7 +203,6 @@
         请完善顾客信息
         <p @click="addUserClick()" class="popConfirm">确定</p>
       </div>
-
     </md-popup>
   </div>
 </template>
@@ -422,11 +421,10 @@ export default {
       }
       if (obj.rightsJson) {
         this.rightsJson = obj.rightsJson;
-
+        debugger
         const right = JSON.parse(obj.rightsJson);
-
-        this.rightName = right.rightName;
-        this.rightId = right.rightId;
+        this.rightName = right.rightsName;
+        this.rightId = right.rightsId;
         const rightsPro = JSON.parse(obj.rightsJson).rightsUserInterestsDTO;
         if (!rightsPro.length) {
           return;

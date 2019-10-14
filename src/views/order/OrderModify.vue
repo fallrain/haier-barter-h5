@@ -262,19 +262,19 @@ export default {
       // 产品列表
       productList: [],
       // 活动列表
-      activityList: [
-        {
-          id: 1,
-          activityName: '6月场景套权益昆明小微',
-          inf: '满10000元送7500积分',
-          num: 33
-        },
-        {
-          id: 2,
-          activityName: '6月场景套权益昆明小微',
-          inf: '满10000元送7500积分',
-          num: 21
-        }
+      rightsList: [
+        // {
+        //   id: 1,
+        //   activityName: '6月场景套权益昆明小微',
+        //   inf: '满10000元送7500积分',
+        //   num: 33
+        // },
+        // {
+        //   id: 2,
+        //   activityName: '6月场景套权益昆明小微',
+        //   inf: '满10000元送7500积分',
+        //   num: 21
+        // }
       ],
       // 选中的活动id
       choosedActivitys: [],
@@ -365,11 +365,26 @@ export default {
   },
   activated() {
     if (this.$route.query.temp) {
+      debugger
       let ID = '';
       const obj = JSON.parse(this.$route.query.temp);
       if (obj.tel) {
         this.mobile = obj.tel;
         this.queryCustomerDefault();
+      }
+      if (obj.rightsJson) {
+        this.rightsJson = obj.rightsJson;
+        debugger
+        const right = JSON.parse(obj.rightsJson);
+
+        this.rightName = right.rightsName;
+        this.rightId = right.rightsId;
+        const rightsPro = JSON.parse(obj.rightsJson).rightsUserInterestsDTO;
+        if (!rightsPro.length) {
+          return;
+        }
+        this.isDetail = true;
+        this.rightsList = rightsPro;
       }
       if (obj.product) {
         if (!obj.product.productGroupName) {
@@ -393,9 +408,9 @@ export default {
             pro.productModel = obj.product.productModel;
             pro.bccPrice = obj.product.price;
             pro.productPrice = obj.product.price;
-            pro.remark = '备注，记录订单创建、订单修改原因等信息';
-            pro.rightId = '111111';
-            pro.rightName = '八月套购权益';
+            pro.remark = '';
+            pro.rightId = '';
+            pro.rightName = '';
             pro.storeId = this.shopId;
             pro.storeName = this.shopName;
             pro.invoiceStatus = 0;
@@ -405,14 +420,6 @@ export default {
             Toast.failed(res.msg);
           }
         });
-        if (obj.rightsJson) {
-          const right = JSON.parse(obj.rightsJson);
-          if (!right.rightsName) {
-            return;
-          }
-          this.isDetail = true;
-          this.rightsList = right.rightsName.replace(/(.)(?=[^$])/g, '$1,').split(',');
-        }
       }
     }
   },
@@ -452,7 +459,6 @@ export default {
           productModel: pro.productModel }
       ];
       this.orderService.isReportInstallNew({ orderDetailInfo }, {}).then((res) => {
-        debugger;
         this.queryInstall = true;
         if (res.code === 1) {
           this.isInstall = true;
@@ -502,7 +508,7 @@ export default {
           this.recordMode = resData.recordMode;
           this.queryUserList(resData.storeId);
           if (resData.rightsUserJson) {
-            this.activityList = JSON.parse(resData.rightsUserJson).rightsUserInterestsDetailsDTO;
+            this.rightsList = JSON.parse(resData.rightsUserJson).rightsUserInterestsDTO;
           }
           if (resData.orderDetailDtoList.length !== 0) {
             this.productList = resData.orderDetailDtoList;
@@ -612,7 +618,7 @@ export default {
     },
     // 暂存
     saveTemporary(type) {
-      debugger
+
       if(type === 1){
         this.saveType = 1
       }else {
@@ -644,7 +650,6 @@ export default {
     },
 
     generateSubInfo(type) {
-      debugger
       if (!this.bUtil.isReportInstallFit(this.productList,this.deliveryTime)) {
         return;
       }
@@ -705,8 +710,8 @@ export default {
       const dt = this.deliveryTime.substring(0, 16);
       subInfo.deliveryTime = dt;
       subInfo.orderType = this.orderType;
-      subInfo.rightId = '';
-      subInfo.rightName = '';
+      subInfo.rightId = this.rightId;
+      subInfo.rightName = this.rightName;
       subInfo.giftId = '';
       subInfo.giftName = '';
       subInfo.orderStatus = 0;

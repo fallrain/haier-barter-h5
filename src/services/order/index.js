@@ -57,6 +57,6 @@ export default {
     return axPostJson(urls.isReportInstallNew,data,params)
   },
   checkUpperLimitForSGLD(){
-    return axGet(urls.checkUpperLimitForSGLD);
+    return axPost(urls.checkUpperLimitForSGLD);
   }
 };

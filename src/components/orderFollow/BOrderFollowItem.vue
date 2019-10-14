@@ -313,8 +313,12 @@ export default {
     };
   },
   created() {
-
-
+    this.productService.commonTypeQuery('BUSINESS_SCENARIOS').then((res) => {
+      if (res.code === 1) {
+        this.scenarioList = res.data
+        debugger
+      }
+    });
   },
   methods: {
     hidePopUp() {
@@ -389,12 +393,13 @@ export default {
 
 
     buttonClicked(val) {
+      debugger
       this.stopProcess();
       this.checkedButtonId = val[0];
       for (let i = 0; i < this.headList.length; i++) {
         this.headList[i].isActive = false;
       }
-      this.$emit('popButtonClicked', this.checkedButtonId);
+      this.$emit('popButtonClicked', val);
     },
     followButtonClick(button, item) {
       this.stopProcess();

@@ -108,9 +108,13 @@ export default {
   },
 
   beforeRouteLeave(to, from, next) {
-    if (to.name === 'Order.OrderConfirm') {
-      this.orderFollow();
-    }
+   if(to.name != 'Order.OrderFollowSearch'){
+     next(false)
+   }
+   debugger
+    this.$router.replace({
+      name: 'Order.OrderFollowSearch',
+    });
     next();// 必须要有这个，否则无法跳转
   }
 };
