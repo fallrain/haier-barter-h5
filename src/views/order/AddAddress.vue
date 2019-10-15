@@ -153,7 +153,10 @@ import {
 } from '@/components/form';
 
 import addressData from '@/lib/address';
-
+import {
+  mapGetters,
+  mapMutations
+} from 'vuex';
 
 export default {
   name: 'AddAddress',
@@ -197,6 +200,11 @@ export default {
         source: '',
         username: '',
         tag: []
+      },
+      newAddress: {
+        provinceName: '',
+        districtName: '',
+        cityName: '',
       },
       subCustomerInfo: {},
       searchEnd: false,
@@ -278,6 +286,9 @@ export default {
     },
   },
   methods: {
+    ...mapMutations([
+      'updataNewAddress'
+    ]),
     showTags() {
       /* 地址标签显示隐藏 */
       this.tagPopShow = true;
@@ -324,10 +335,15 @@ export default {
       console.log('ssssss', this.defaultA);
       const addressA = address.options.map(v => v.label);
       const addressAy = address.values;
+      const addressName = address.options;
       this.customerInfo.city = addressAy[1];
       this.customerInfo.province = addressAy[0];
       this.customerInfo.district = addressAy[2];
+      this.newAddress.cityName = addressName[1].label;
+      this.newAddress.provinceName = addressName[0].label;
+      this.newAddress.districtName = addressName[2].label;
       this.addressName = addressA.join('/');
+      console.log('this.newAddress', this.newAddress);
     },
     confirm() {
       if (!(/^1[34578]\d{9}$/.test(this.customerInfo.mobile))) {
@@ -395,6 +411,16 @@ export default {
           }
         });
       }
+      console.log('customerInfo', this.customerInfo);
+      let newAddress = {
+        trueName: this.customerInfo.consigneeUserName,
+        provinceName: this.newAddress.provinceName,
+        mobile: this.customerInfo.consigneeUserPhone,
+        cityName: this.newAddress.cityName,
+        areaName: this.newAddress.districtName,
+        detailAddress: this.customerInfo.address
+      };
+      this.updataNewAddress(newAddress);
     },
     // 修改地址
     // 查询家庭关系数据字典
