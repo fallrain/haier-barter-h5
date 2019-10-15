@@ -313,10 +313,10 @@ export default {
               requireServiceDate: (`${productList[index].requireServiceDate}:00`).substr(0, 19),
               customerName: addressList[0].trueName,
               phoneNumber: addressList[0].mobile,
-              provinceName: addressList[0].provinceName,
-              cityName: addressList[0].cityName,
-              districtName: addressList[0].areaName,
-              address: addressList[0].detailAddress,
+              provinceName: this.getNewAddress.provinceName,
+              cityName: this.getNewAddress.cityName,
+              districtName: this.getNewAddress.areaName,
+              address: this.getNewAddress.detailAddress,
               regionCode: addressList[0].regionCode,
               // todo hmcId 需要接口获取
               hmcId: 'a000894',
@@ -342,9 +342,9 @@ export default {
               confirmText: '确定',
               onConfirm: () => {
                 // 成功后传回要删除的list下标
-                if (this.data.itemIndex !== undefined) {
-                  sessionStorage.setStorageSync('reportInstallList.itemIndex', this.data.itemIndex);
-                }
+                // if (this.data.itemIndex !== undefined) {
+                //   sessionStorage.setStorageSync('reportInstallList.itemIndex', this.data.itemIndex);
+                // }
                 this.$mBack();
               }
             });
@@ -353,10 +353,6 @@ export default {
       } else {
         this.$mBack();
       }
-    },
-    shwAddressList() {
-      /* 展示选择用户pop */
-      this.addressPopShow = true;
     },
     editAddress(info) {
       this.addressPopShow = false;
