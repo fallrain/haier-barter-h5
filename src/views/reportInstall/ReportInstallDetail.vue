@@ -103,6 +103,7 @@
     <div class="report-install-address">
       <b-pop-address-list
         :show.sync="addressPopShow"
+        :isFromReportInstallDetail="true"
         :list="addressAllList"
         @addNew="addAddress"
         @editAddress="editAddress"
@@ -277,8 +278,8 @@ export default {
       const errorTimeIndex = productList.findIndex(v => v.sendStatus < '2' && new Date(v.requireServiceDate) < new Date(v.startDateTime));
       const valid = this.bUtil.valid([
         {
-          ruleFun() {
-            const address = addressList[0];
+          ruleFun: () => {
+            const address = this.getNewAddress;
             return address && address.trueName && address.mobile && address.provinceName && address.cityName && address.areaName && address.detailAddress;
           },
           message: '请完善安装地址'
@@ -319,9 +320,9 @@ export default {
             }
             return data;
           });
-          if (!this.bUtil.isReportInstallFit(this.productList, this.deliveryTime)) {
-            return;
-          }
+          // if (!this.bUtil.isReportInstallFit(this.productList, this.deliveryTime)) {
+          //   return;
+          // }
           this.reportInstallService.agentReportInstall({
             reportInstallInfo
           }).then((res) => {
