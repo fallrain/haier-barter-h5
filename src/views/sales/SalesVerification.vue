@@ -530,6 +530,7 @@ export default {
       }).then((res) => {
         if (res.code === 1) {
           this[this.curScrollViewName].list.splice(index, 1);
+          this[this.curScrollViewName].mescroll.triggerDownScroll();
         } else {
           item.detail[0].errorReason = res.data;
         }
