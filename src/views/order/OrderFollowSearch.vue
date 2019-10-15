@@ -114,6 +114,16 @@
         </template>
       </md-tab-bar>
     </div>
+    <md-popup v-model="handEntryCon">
+      <div class="popHand">
+        您本月还有{{handCount}}个手工录单名额，超出限制后本月将不能手工录单！同时，手工录入的订单不能发放购机权益
+        <div>
+          <p @click="handEntryConfirm()" class="popConfirm">确定</p>
+          <p @click="handEntryCancle()" class="popConfirm">取消</p>
+        </div>
+
+      </div>
+    </md-popup>
   </div>
 </template>
 <script>
@@ -124,7 +134,7 @@ import {
   ScrollViewMore,
   ScrollViewRefresh,
   TabBar,
-  Toast
+  Toast,Popup
 } from 'mand-mobile';
 import {
   BPopButton,
@@ -146,7 +156,7 @@ export default {
     [NoticeBar.name]: NoticeBar,
     BPopSortType,
     BPopButton,
-    BOrderFollowItem
+    BOrderFollowItem,Popup
   },
   data() {
     return {
@@ -212,7 +222,10 @@ export default {
         list: [],
         isListInit: false
       },
-      fuzzy:false
+      fuzzy:false,
+      businessType:'',
+      handEntryCon:false,
+      handCount:''
     };
   },
   activated() {
@@ -226,18 +239,18 @@ export default {
     const userinfostr = localStorage.getItem('userinfo');
     this.userinfo = JSON.parse(userinfostr);
     // this.userinfo = {
-    //   // hmcid: 'a0008949',
-    //   // mobile: '18561715460',
-    //   // shopId: '8800136445',
+    //   hmcid: 'a0008949',
+    //   mobile: '18561715460',
+    //   shopId: '8800136445',
     //   // hmcid:'01467897',
     //   // mobile: '15253269729',
     //   // shopId: '8700000484',
     //   // hmcid: 'a0032188',
     //   // mobile: '13905427400',
     //   // shopId: '8700048360',
-    //   hmcid: 'A0032254',
-    //   mobile: '15621017056',
-    //   shopId: '8700048360',
+    //   // hmcid: 'A0032254',
+    //   // mobile: '15621017056',
+    //   // shopId: '8700048360',
     //   token: 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAwODk0OSIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU3MDQ5OTA1MSwiZXhwIjoxNTcxMzYzMDUxfQ.8MXYFbO3775zxV2w9teGQ_SlByggO5cpZGJqdnG2DWo'
     // };
     // const Str = JSON.stringify(this.userinfo);
@@ -293,10 +306,16 @@ export default {
       this.curTab = index;
     },
     handEntry() {
-      this.$router.push({
-        name: 'Order.OrderEntry',
-        params: { customerConsigneeInfo: {}, region: 'hand' }
-      });
+      this.orderService.checkUpperLimitForSGLD().then(res => {
+        if(res.code === 1){
+          this.handEntryCon = true
+          this.handCount = res.data
+        }
+      })
+      // this.$router.push({
+      //   name: 'Order.OrderEntry',
+      //   params: { customerConsigneeInfo: {}, region: 'hand' }
+      // });
     },
     itemClick(index) {
       this.$router.push({
@@ -363,7 +382,7 @@ export default {
     upCallback(page) {
       // 下载过就设置已经初始化
       this[this.curScrollViewName].isListInit = true;
-
+      this.businessType = ''
       this.searchData(page).then(({ result, pages }) => {
         this.$nextTick(() => {
           // 通过当前页的数据条数，和总页数来判断是否加载完
@@ -375,6 +394,7 @@ export default {
     checkClicked(val) {
       this.updateList = true;
       this.sortType = val;
+      this.businessType = ''
       this.searchData({
         num: 0,
         size: 10
@@ -382,7 +402,7 @@ export default {
     },
     buttonClicked(val) {
       this.updateList = true;
-      this.checkedButtonId = val;
+      this.businessType = val.itemCode
       this.searchData({
         num: 0,
         size: 10
@@ -447,7 +467,7 @@ export default {
             flowType: '',
             flowStatus: '',
             orderFollowSource: '',
-            businessScenarios: this.scenarioType,
+            businessScenarios: this.businessType,
             sourceSystem: '',
             orderFollowStartDate: '',
             orderFollowEndDate: '',
@@ -618,11 +638,13 @@ export default {
         num: 1,
         size: 10
       };
+      this.businessType = ''
       this.searchData(page);
       this.fuzzy = true
     },
     updateOrderType(type) {
       this.updateList = true;
+      this.businessType = ''
       this.searchData({
         num: 0,
         size: 10
@@ -765,5 +787,14 @@ export default {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-
+  .popHand{
+    text-align: center;
+    font-size: 34px;
+    color: #1969C6;
+    width: 400px;
+    height: 220px;
+    background-color: white;
+    border-radius: 20px;
+    padding-top: 50px;
+  }
 </style>

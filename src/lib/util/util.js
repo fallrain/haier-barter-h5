@@ -264,7 +264,6 @@ const util = {
     const detFor = new Date(deT);
     const d = detFor.getDate();
     const h = detFor.getHours();
-    debugger;
     productlist.forEach((pro) => {
       if (pro.installTime != '') {
         const t = Date.parse(pro.installTime);
@@ -273,20 +272,17 @@ const util = {
         const th = tFor.getHours();
         if (t < deT) {
           Toast.failed('代包装时间不能小于送达时间');
-          debugger;
           change = false;
           return;
         }
         if (td === d) {
           if (h > 16) {
             Toast.failed('送达时间为16：00之后代报装时间不可选当天');
-            debugger;
             change = false;
             return;
           }
           if (th < (h + 4)) {
             Toast.failed('代包装时间必须大于送达时间4小时');
-            debugger;
             change = false;
           }
         }
