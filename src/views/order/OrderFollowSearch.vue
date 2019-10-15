@@ -306,16 +306,16 @@ export default {
       this.curTab = index;
     },
     handEntry() {
-      this.orderService.checkUpperLimitForSGLD().then(res => {
-        if(res.code === 1){
-          this.handEntryCon = true
-          this.handCount = res.data
-        }
-      })
-      // this.$router.push({
-      //   name: 'Order.OrderEntry',
-      //   params: { customerConsigneeInfo: {}, region: 'hand' }
-      // });
+      // this.orderService.checkUpperLimitForSGLD().then(res => {
+      //   if(res.code === 1){
+      //     this.handEntryCon = true
+      //     this.handCount = res.data
+      //   }
+      // })
+      this.$router.push({
+        name: 'Order.OrderEntry',
+        params: { customerConsigneeInfo: {}, region: 'hand' }
+      });
     },
     itemClick(index) {
       this.$router.push({
