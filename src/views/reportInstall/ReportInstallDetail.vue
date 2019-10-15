@@ -254,15 +254,19 @@ export default {
               dateDisabled: (v.sendStatus !== '0' && v.sendStatus !== '1'),
               sendStatus: v.sendStatus
             };
-            const curDate = new Date();
+            const deliveryTime = new Date(v.deliveryTime.replace('-', '/'));
             // 开始时间开始取接口传回时间（配送时间+4小时或者第二天10天）和今天的时间相比更晚的值
             // obj.startDateTime = v.requireServiceDate;//2019-06-13暂时去掉，改为只用当前时间作为开始时间
             let startDateTime;
-            if (curDate.getHours() >= 16) {
+            if (deliveryTime.getHours() >= 16) {
               const nextDay = new Date(new Date().getTime() + 24 * 3600 * 1000);
-              startDateTime = new Date(`${nextDay.getFullYear()}/${nextDay.getMonth() + 1}/${nextDay.getDate()} 10:00`);
+              startDateTime = new Date(`${nextDay.getFullYear()}/${nextDay.getMonth() + 1}/${nextDay.getDate()} 00:00`);
             } else {
-              startDateTime = new Date(curDate * 4 + 3600 * 1000).toString();
+              startDateTime = new Date(deliveryTime.getTime() + 4 * 3600 * 1000);
+            }
+            const curDate = new Date();
+            if (startDateTime.getTime() < curDate.getTime()) {
+              startDateTime = new Date(deliveryTime.getTime() + 3600 * 1000);
             }
             obj.startDateTime = startDateTime;
             return obj;
