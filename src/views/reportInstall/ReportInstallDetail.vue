@@ -256,12 +256,15 @@ export default {
             };
             const curDate = new Date();
             // 开始时间开始取接口传回时间（配送时间+4小时或者第二天10天）和今天的时间相比更晚的值
-            if (v.requireServiceDate && new Date(v.requireServiceDate) > curDate) {
-              // obj.startDateTime = v.requireServiceDate;//2019-06-13暂时去掉，改为只用当前时间作为开始时间
-              obj.startDateTime = new Date(curDate * 1 + 3600 * 1000).toString();
+            // obj.startDateTime = v.requireServiceDate;//2019-06-13暂时去掉，改为只用当前时间作为开始时间
+            let startDateTime;
+            if (curDate.getHours() >= 16) {
+              const nextDay = new Date(new Date().getTime() + 24 * 3600 * 1000);
+              startDateTime = new Date(`${nextDay.getFullYear()}/${nextDay.getMonth() + 1}/${nextDay.getDate()} 10:00`);
             } else {
-              obj.startDateTime = new Date(curDate * 1 + 3600 * 1000).toString();
+              startDateTime = new Date(curDate * 4 + 3600 * 1000).toString();
             }
+            obj.startDateTime = startDateTime;
             return obj;
           });
           this.canUpdateAddress = canUpdateAddress;
