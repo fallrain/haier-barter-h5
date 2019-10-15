@@ -177,17 +177,16 @@ export default {
       addressPopShow: false,
       // 收货人地址pop列表
       region: '',
+      // 是否从ReportInstallList跳转过来
+      isFromList: true
     };
   },
-  created() {
-  },
-  beforeRouteEnter(to,from,next){
-    next(vm=>{
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
       vm.addressData = addressData;
       vm.setUserInfo();
-      if(from.name==='ReportInstall.ReportInstallList'){
-        vm.getProductList();
-      }
+      vm.isFromList = !!(from.name === 'ReportInstall.ReportInstallList');
+      vm.getProductList();
     });
   },
   methods: {
@@ -208,7 +207,6 @@ export default {
         orderNo: option.orderNo || '',
         orderId: option.orderId || ''
       };
-
       this.user = userInfo;
       this.addStatus = option.addStatus || false;
       this.itemIndex = option.itemIndex || undefined;
@@ -259,13 +257,14 @@ export default {
             // 开始时间开始取接口传回时间（配送时间+4小时或者第二天10天）和今天的时间相比更晚的值
             if (v.requireServiceDate && new Date(v.requireServiceDate) > curDate) {
               // obj.startDateTime = v.requireServiceDate;//2019-06-13暂时去掉，改为只用当前时间作为开始时间
+              obj.startDateTime = new Date(curDate * 1 + 3600 * 1000).toString();
             } else {
               obj.startDateTime = new Date(curDate * 1 + 3600 * 1000).toString();
             }
             return obj;
           });
           this.canUpdateAddress = canUpdateAddress;
-          this.updataNewAddress(newAddress);
+          this.isFromList && (this.updataNewAddress(newAddress));
           this.productList = productList;
           this.productListTemp = data;
         }
@@ -358,11 +357,11 @@ export default {
       this.region = 'edit';
       this.$router.push({
         name: 'Order.AddAddress',
-        params: {region: this.region, info: JSON.stringify(info)}
+        params: { region: this.region, info: JSON.stringify(info) }
       });
     },
     selectAddress(item) {
-      let newAddress = {
+      const newAddress = {
         trueName: item.consigneeUserName,
         provinceName: item.consignee.provinceName,
         mobile: item.consigneeUserPhone,
@@ -378,7 +377,7 @@ export default {
       this.region = 'add';
       this.$router.push({
         name: 'Order.AddAddress',
-        params: {region: this.region, info: JSON.stringify(this.customerInfo)}
+        params: { region: this.region, info: JSON.stringify(this.customerInfo) }
       });
     },
     // 查询客户地址列表
