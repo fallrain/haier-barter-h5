@@ -11,6 +11,10 @@ const urls = {
   customerAddressList(mobile) {
     return `/customer/address/list/${mobile}`;
   },
+  // 根据手机号查询顾客地址列表
+  customerAddressListForTel(mobile) {
+    return `/customer/address/list/mobile/${mobile}`;
+  },
   // 新增用户地址
   addcustomerAddress: '/customer/create',
   // 更新顾客地址列表

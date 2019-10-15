@@ -21,7 +21,7 @@
         slot="right"
         class="reportInstallDetail-right-text"
         catchtap='newAddress'
-        @click="shwAddressList"
+        @click="queryCustomerAddressList"
       >
         {{addressList.length?'修改地址':'新增地址'}}
       </span>
@@ -29,16 +29,16 @@
       <div class="reportInstallDetail-block-cnt">
         <div class="reportInstallDetail-ads-item">
           <label class="name">收货人：</label>
-          <span class="val">{{addressList[0].trueName}}</span>
+          <span class="val">{{getNewAddress.trueName}}</span>
         </div>
         <div class="reportInstallDetail-ads-item">
           <label class="name">联系电话：</label>
-          <span class="val">{{addressList[0].mobile}}</span>
+          <span class="val">{{getNewAddress.mobile}}</span>
         </div>
         <div class="reportInstallDetail-ads-item">
           <label class="name">收货地址：</label>
-          <span class="val">{{(addressList[0].provinceName+
-          addressList[0].cityName+addressList[0].areaName+addressList[0].detailAddress) || ''}}</span>
+          <span class="val">{{(getNewAddress.provinceName+
+          getNewAddress.cityName+getNewAddress.areaName+getNewAddress.detailAddress) || ''}}</span>
         </div>
       </div>
     </div>
@@ -103,7 +103,10 @@
     <div class="report-install-address">
       <b-pop-address-list
         :show.sync="addressPopShow"
-        :list="addressList"
+        :list="addressAllList"
+        @addNew="addAddress"
+        @editAddress="editAddress"
+        @clickAddress="selectAddress"
       ></b-pop-address-list>
     </div>
   </div>
@@ -112,6 +115,13 @@
 import {
   BReportInstallDetailHead
 } from '@/components/business';
+
+import addressData from '@/lib/address';
+
+import {
+  mapGetters,
+  mapMutations
+} from 'vuex';
 
 import {
   BPopAddressList,
@@ -153,41 +163,9 @@ export default {
       notAllSend: true, // 没有全发送
       productList: [],
       addressList: [{
-        name: '张三',
-        phone: '15000000000',
-        address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-        tagName: '自己家'
-      },
-      {
-        name: '李四',
-        phone: '15000000000',
-        address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-        tagName: '办公室'
-      },
-      {
-        name: '王二',
-        phone: '15000000000',
-        address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-        tagName: '父母家'
-      },
-      {
-        name: '尼古拉斯赵四',
-        phone: '15000000000',
-        address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-        tagName: '其他'
-      },
-      {
-        name: '莱桑尼丝铁柱',
-        phone: '15000000000',
-        address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-        tagName: '其他'
-      },
-      {
-        name: '罗伯特英子',
-        phone: '15000000000',
-        address: '山东省青岛市崂山区海尔路1号左岸风度小区12号楼1单元801户',
-        tagName: '其他'
+        trueName: ''
       }],
+      addressAllList: [],
       orderNo: '',
       productListTemp: [],
       flowStatus: '', // 待报装、已报装。。。。
@@ -198,13 +176,25 @@ export default {
       // 选择收货人列表pop show
       addressPopShow: false,
       // 收货人地址pop列表
+      region: '',
     };
   },
   created() {
-    this.setUserInfo();
-    this.getProductList();
+  },
+  beforeRouteEnter(to,from,next){
+    next(vm=>{
+      vm.addressData = addressData;
+      vm.setUserInfo();
+      if(from.name==='ReportInstall.ReportInstallList'){
+        vm.getProductList();
+      }
+    });
   },
   methods: {
+    ...mapMutations([
+      'updataNewAddress'
+    ]),
+
     setUserInfo() {
       /* 设置订单用户信息 */
       const option = this.$route.query;
@@ -218,6 +208,7 @@ export default {
         orderNo: option.orderNo || '',
         orderId: option.orderId || ''
       };
+
       this.user = userInfo;
       this.addStatus = option.addStatus || false;
       this.itemIndex = option.itemIndex || undefined;
@@ -226,7 +217,6 @@ export default {
       this.canUpdateAddress = !!(option.flowStatus !== '1' && option.flowStatus !== '2');
       this.parentPage = option.parentPage;
       this.tag = option.tag;
-      console.log('this.tag', this.tag);
       // this.addressList = [{
       //   mobile: userInfo.mobile
       // }];
@@ -275,10 +265,7 @@ export default {
             return obj;
           });
           this.canUpdateAddress = canUpdateAddress;
-          this.addressList[0] = {
-            ...this.addressList[0],
-            ...newAddress
-          };
+          this.updataNewAddress(newAddress);
           this.productList = productList;
           this.productListTemp = data;
         }
@@ -333,6 +320,9 @@ export default {
             }
             return data;
           });
+          if (!this.bUtil.isReportInstallFit(this.productList, this.deliveryTime)) {
+            return;
+          }
           this.reportInstallService.agentReportInstall({
             reportInstallInfo
           }).then((res) => {
@@ -361,6 +351,69 @@ export default {
       /* 展示选择用户pop */
       this.addressPopShow = true;
     },
+    editAddress(info) {
+      this.addressPopShow = false;
+      info.username = this.user.userName;
+      info.mobile = this.user.mobile;
+      this.region = 'edit';
+      this.$router.push({
+        name: 'Order.AddAddress',
+        params: {region: this.region, info: JSON.stringify(info)}
+      });
+    },
+    selectAddress(item) {
+      let newAddress = {
+        trueName: item.consigneeUserName,
+        provinceName: item.consignee.provinceName,
+        mobile: item.consigneeUserPhone,
+        cityName: item.consignee.cityName,
+        areaName: item.consignee.districtName,
+        detailAddress: item.address
+      };
+      this.updataNewAddress(newAddress);
+      this.addressPopShow = false;
+    },
+    addAddress() {
+      // 添加新地址
+      this.region = 'add';
+      this.$router.push({
+        name: 'Order.AddAddress',
+        params: {region: this.region, info: JSON.stringify(this.customerInfo)}
+      });
+    },
+    // 查询客户地址列表
+    queryCustomerAddressList() {
+      this.productService.customerAddressListForTel(this.user.mobile).then((res) => {
+        if (res.code === 1) {
+          const Data = this.addressData.options;
+          res.data.forEach((address) => {
+            address.consignee = {};
+            Data.forEach((p) => {
+              if (address.province === p.value) {
+                address.consignee.provinceName = p.label;
+                p.children.options.forEach((c) => {
+                  if (address.city === c.value) {
+                    address.consignee.cityName = c.label;
+                    c.children.options.forEach((d) => {
+                      if (address.district === d.value) {
+                        address.consignee.districtName = d.label;
+                      }
+                    });
+                  }
+                });
+              }
+            });
+          });
+          this.addressAllList = res.data;
+          this.addressPopShow = true;
+        }
+      });
+    },
+  },
+  computed: {
+    ...mapGetters([
+      'getNewAddress'
+    ]),
   }
 };
 </script>
