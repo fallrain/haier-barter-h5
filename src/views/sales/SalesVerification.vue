@@ -502,6 +502,10 @@ export default {
                 content: res.msg,
                 cancelText: '取消',
                 confirmText: '确定',
+                onConfirm: () => {
+                  this[this.curScrollViewName].choosedIndex = false;
+                  this[this.curScrollViewName].mescroll.triggerDownScroll();
+                }
               })
             }
           });
