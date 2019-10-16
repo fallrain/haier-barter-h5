@@ -387,6 +387,7 @@ export default {
         this.rightsList = rightsPro;
       }
       if (obj.product) {
+        debugger
         if (!obj.product.productGroupName) {
           return;
         }
@@ -395,26 +396,18 @@ export default {
             ID = res.data;
             const pro = {};
             pro.id = ID;
-            const dt = this.deliveryTime.substring(0, 16);
-            pro.deliveryTime = dt;
-            // pro.hmcId= "A0008949"
-            pro.hmcId = this.userParam.hmcId;
-            pro.installTime = '1564650104445';
-            pro.orderFlag = 0;
-            pro.orderNo = this.orderNo;
+            pro.bccPrice = obj.product.price;
+            pro.industryName = obj.product.industryName;
+            pro.industryCode = obj.product.industryCode;
+            pro.productBrand = obj.product.productBrandCode;
+            pro.productCategoryCode = obj.product.productGroup;
             pro.productCategoryName = obj.product.productGroupName;
-            pro.productCategoryCode = obj.product.productBrandCode;
             pro.productCode = obj.product.productCode;
             pro.productModel = obj.product.productModel;
+            pro.installTime = '';
             pro.bccPrice = obj.product.price;
-            pro.productPrice = obj.product.price;
-            pro.remark = '';
-            pro.rightId = '';
-            pro.rightName = '';
-            pro.storeId = this.shopId;
-            pro.storeName = this.shopName;
+            pro.productPrice = '';
             pro.invoiceStatus = 0;
-            pro.userId = this.userParam.userId;
             this.isReportInstall(pro);
           } else {
             Toast.failed(res.msg);
@@ -453,6 +446,7 @@ export default {
     },
     isReportInstall(pro) {
       this.productList.push(pro);
+      debugger
       const orderDetailInfo = [
         { hmcId: this.userParam.hmcid,
           storeId: this.userParam.shopId,
@@ -650,6 +644,10 @@ export default {
     },
 
     generateSubInfo(type) {
+      if(this.productList.length === 0){
+        Toast.failed('请选择产品');
+        return;
+      }
       if (!this.bUtil.isReportInstallFit(this.productList,this.deliveryTime)) {
         return;
       }
@@ -889,13 +887,12 @@ color: #333;
 
 .orderEntry-user1 {
   background: #fff;
-  padding: 0;
+  padding: 24px;
 }
 
 .orderEntry-user-head {
   display: flex;
   align-items: center;
-  padding-top: 10px;
 
   .name {
     color: #333;

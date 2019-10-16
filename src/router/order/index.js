@@ -10,6 +10,8 @@ const OrderModify = () => import(/* webpackChunkName: "OrderEntry" */ '@/views/o
 const OrderConfirm = () => import(/* webpackChunkName: "OrderConfirm" */ '@/views/order/OrderConfirm');// 订单录入
 const OrderDetail = () => import(/* webpackChunkName: "OrderDetail" */ '@/views/order/OrderDetail');// 订单详情
 const ResidueGift = () => import(/* webpackChunkName: "OrderDetail" */ '@/views/order/ResidueGift');//查询权益剩余量
+const OrderSupplement = () => import(/* webpackChunkName: "OrderSupplement" */ '@/views/order/OrderSupplement');//订单补录
+
 const prefix = '/order';
 const module = 'Order';
 const data = [
@@ -36,6 +38,14 @@ const data = [
     component: OrderModify,
     meta: {
       title: '订单修改'
+    }
+  },
+  {
+    path: `${prefix}/orderSupplement`,
+    name: `${module}.OrderSupplement`,
+    component: OrderSupplement,
+    meta: {
+      title: '订单补录'
     }
   },
   {

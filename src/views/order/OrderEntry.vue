@@ -680,6 +680,19 @@ export default {
       });
     },
     generateSubInfo(type) {
+      if (this.buyTime === '') {
+        Toast.failed('请选择购买时间');
+        return;
+      }
+
+      if (this.deliveryTime === '') {
+        Toast.failed('请选择送达时间');
+        return;
+      }
+      if(this.productList.length === 0){
+        Toast.failed('请选择产品');
+        return;
+      }
       if (!this.bUtil.isReportInstallFit(this.productList,this.deliveryTime)) {
         return;
       }
@@ -707,15 +720,7 @@ export default {
         subInfo.mayEditCoupleOrderName = '';
         subInfo.mayEditCoupleOrderId = '';
       }
-      if (this.buyTime === '') {
-        Toast.failed('请选择购买时间');
-        return;
-      }
 
-      if (this.deliveryTime === '') {
-        Toast.failed('请选择送达时间');
-        return;
-      }
       subInfo.orderNo = this.orderNo;
       subInfo.recordMode = this.recordMode;
       subInfo.hmcId = this.userParam.hmcid;

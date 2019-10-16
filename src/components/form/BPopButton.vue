@@ -5,7 +5,7 @@
       position="top"
       transition="fade"
     >
-      <div class="b-pop-checkList-cnt">
+      <div class="b-pop-checkList-cnt1">
         <ul>
           <div style="background-color:white;height: 50px;">
         <p
@@ -119,7 +119,7 @@ export default {
   }
   }
 
-  .b-pop-checkList-cnt {
+  .b-pop-checkList-cnt1 {
     background: #fff;
     padding-bottom: 24px;
     height: 150px;

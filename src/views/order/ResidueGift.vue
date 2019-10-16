@@ -243,21 +243,5 @@ export default {
   .salesVerification-view {
     height: calc(100vh - 84px);
   }
-  @mixin mix-submit-btn {
-    width: 100%;
-    height: 84px;
-    font-size: 34px;
-    border-radius: 8px;
-  }
-  .common-submit-btn-default{
-    @include mix-submit-btn;
-    color: #fff;
-    background: #1969C6;
-    /*position: fixed;*/
-    width: 90%;
-    margin-left: 5%;
-    /*margin-bottom: 20px;*/
-    position: absolute;
-    bottom: 20px;
-  }
+
 </style>

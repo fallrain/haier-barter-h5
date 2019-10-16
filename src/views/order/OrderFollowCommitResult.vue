@@ -6,7 +6,7 @@
     </div>
     <div class="order-commit-id">订单编号：{{orderNo}}</div>
     <!--<div class="order-commit-id">创建时间：</div>-->
-    <div class="orderEntry-btns-par1">
+    <div class="orderEntry-btns-par">
       <button
         type="button"
         class="common-submit-btn-primary"
@@ -14,6 +14,7 @@
       >查看订单列表
       </button>
       <button
+
         type="button"
         class="common-submit-btn-default"
         @click="orderFollow()"
@@ -153,7 +154,7 @@ export default {
     padding: 24px;
     margin-top: 36px;
 
-    .common-submit-btn-primary {
+    .common-submit-btn-primary1 {
       margin-right: 24px;
     }
   }
