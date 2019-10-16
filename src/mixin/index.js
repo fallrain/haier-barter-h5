@@ -5,6 +5,7 @@ import {
 export default {
   async beforeRouteEnter(to, from, next) {
     next((vm) => {
+      alert(window.location.href.split('#')[0]);
       vm.basicService.jsSign(encodeURIComponent(window.location.href.split('#')[0])).then(({ code, data }) => {
         if (code === 1) {
           wx.config({
