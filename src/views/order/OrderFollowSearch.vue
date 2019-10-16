@@ -53,7 +53,6 @@
         @popButtonClicked="buttonClicked"
         @updateOrderType="updateOrderType"
         @followButtonClick="followButtonClicked"
-        @searchProduct="searchProduct"
         @againEntry="againEntry"
         @itemClick="itemClick"
         @userService="userService"
@@ -117,9 +116,9 @@
     <md-popup v-model="handEntryCon">
       <div class="popHand">
         您本月还有{{handCount}}个手工录单名额，超出限制后本月将不能手工录单！同时，手工录入的订单不能发放购机权益
-        <div>
-          <p @click="handEntryConfirm()" class="popConfirm">确定</p>
-          <p @click="handEntryCancle()" class="popConfirm">取消</p>
+        <div class="pop-div">
+          <span @click="handEntryConfirm() " class="popConfirm1">确定</span>
+          <span @click="handEntryCancel()" class="popConfirm2">取消</span>
         </div>
 
       </div>
@@ -156,7 +155,8 @@ export default {
     [NoticeBar.name]: NoticeBar,
     BPopSortType,
     BPopButton,
-    BOrderFollowItem,Popup
+    BOrderFollowItem,
+    [Popup.name]: Popup
   },
   data() {
     return {
@@ -239,24 +239,24 @@ export default {
     const userinfostr = localStorage.getItem('userinfo');
     this.userinfo = JSON.parse(userinfostr);
     // this.userinfo = {
-    //   hmcid: 'a0008949',
-    //   mobile: '18561715460',
-    //   shopId: '8800136445',
+    //   // hmcid: 'a0008949',
+    //   // mobile: '18561715460',
+    //   // shopId: '8800136445',
     //   // hmcid:'01467897',
     //   // mobile: '15253269729',
     //   // shopId: '8700000484',
     //   // hmcid: 'a0032188',
     //   // mobile: '13905427400',
     //   // shopId: '8700048360',
-    //   // hmcid: 'A0032254',
-    //   // mobile: '15621017056',
-    //   // shopId: '8700048360',
-    //   token: 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBMDAwODk0OSIsImtpbmQiOjk5OSwicG9pbnQiOjEsImlhdCI6MTU3MDQ5OTA1MSwiZXhwIjoxNTcxMzYzMDUxfQ.8MXYFbO3775zxV2w9teGQ_SlByggO5cpZGJqdnG2DWo'
+    //   hmcid: 'A0032254',
+    //   mobile: '15621017056',
+    //   shopId: '8700048360',
+    //   token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IkEwMDMyMjU0Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MTIxOTA1NCwiZXhwIjoxNTcyMDgzMDU0fQ.i0qRLhbomRvHJQw3-4oZ63l3XGfjOXeFHdy1IdpX39M'
     // };
     // const Str = JSON.stringify(this.userinfo);
     // localStorage.setItem('userinfo', Str);
     // localStorage.setItem('acces_token', this.userinfo.token);
-    //
+
     this.getNoticeData();
   },
   computed: {
@@ -306,16 +306,25 @@ export default {
       this.curTab = index;
     },
     handEntry() {
-      // this.orderService.checkUpperLimitForSGLD().then(res => {
-      //   if(res.code === 1){
-      //     this.handEntryCon = true
-      //     this.handCount = res.data
-      //   }
-      // })
+      this.orderService.checkUpperLimitForSGLD().then(res => {
+        if(res.code === 1){
+          this.handEntryCon = true
+          this.handCount = res.data
+        }else {
+            Toast.info('您已没有手动录单条数，请选择其他录单方式')
+        }
+      })
+
+    },
+    handEntryConfirm(){
+      this.handEntryCon = false
       this.$router.push({
         name: 'Order.OrderEntry',
         params: { customerConsigneeInfo: {}, region: 'hand' }
       });
+    },
+    handEntryCancel(){
+      this.handEntryCon = false
     },
     itemClick(index) {
       this.$router.push({
@@ -347,23 +356,23 @@ export default {
     maybeBuyer(item) {
       wx.miniProgram.navigateTo({ url: '/pages/mabyByuser/mabyByuser', userId: item.userId });
     },
-    searchProduct(item) {
-      this.orderService.queryOrderInfoByOrderNo({}, { orderNo: item.orderNo }).then((response) => {
-        if (response.code === 1) {
-          const resData = response.data;
-          if (resData.orderDetailDtoList.length !== 0) {
-            item.productList = resData.orderDetailDtoList;
-            item.productList.forEach((val) => {
-              if (val.productBrand === 'haier') {
-                val.productBrandCN = '海尔';
-              } else {
-                val.productBrandCN = '卡萨帝';
-              }
-            });
-          }
-        }
-      });
-    },
+    // searchProduct(item) {
+    //   this.orderService.queryOrderInfoByOrderNo({}, { orderNo: item.orderNo }).then((response) => {
+    //     if (response.code === 1) {
+    //       const resData = response.data;
+    //       if (resData.orderDetailDtoList.length !== 0) {
+    //         item.productList = resData.orderDetailDtoList;
+    //         item.productList.forEach((val) => {
+    //           if (val.productBrand === 'haier') {
+    //             val.productBrandCN = '海尔';
+    //           } else {
+    //             val.productBrandCN = '卡萨帝';
+    //           }
+    //         });
+    //       }
+    //     }
+    //   });
+    // },
     headSwitch(index) {
       if (index === this.preIndex) {
         this.headList[index].isActive = false;
@@ -426,6 +435,11 @@ export default {
       } else if (val.name === '继续录单') {
         this.$router.push({
           name: 'Order.OrderModify',
+          params: { orderNo: info.orderNo, orderFollowId: info.id }
+        });
+      } else if (val.name === '补录订单') {
+        this.$router.push({
+          name: 'Order.OrderSupplement',
           params: { orderNo: info.orderNo, orderFollowId: info.id }
         });
       } else {
@@ -526,7 +540,8 @@ export default {
         */
         if (item.flowStatus === 1) {
           // item.buttonList = [{ name: '录新订单' }, { name: '退货' }, { name: '换货' }];// 已完成
-          item.buttonList = [{ name: '录新订单' }];// 已完成
+          // item.buttonList = [{ name: '录新订单' },{ name: '补录订单' }];// 已完成
+          item.buttonList = [{ name: '录新订单' }];
         } else if (item.flowStatus === 0) {
           // item.buttonList = [{ name: '成交录单' }, { name: '发放卡券' }];
           item.buttonList = [{ name: '成交录单' }];
@@ -660,7 +675,8 @@ export default {
     next();
   },
   beforeRouteLeave(to, from, next) {
-    if (to.name === 'Order.OrderFollowCommitResult' || to.name === 'Order.OrderConfirm') {
+    debugger
+    if (to.name === 'Order.OrderFollowCommitResult' || to.name === 'Order.OrderConfirm' || to.name === 'Order.OrderUploadInvoice') {
       wx.miniProgram.switchTab({ url: 'pages/tool/tool' });
       next();
     }
@@ -791,10 +807,26 @@ export default {
     text-align: center;
     font-size: 34px;
     color: #1969C6;
-    width: 400px;
-    height: 220px;
+    width: 600px;
+    height: 290px;
     background-color: white;
     border-radius: 20px;
-    padding-top: 50px;
+    padding-top: 40px;
+
+  }
+  .pop-div {
+    margin-top: 10px;
+    border-top: 1px solid #1969C6;
+    text-align: center;
+    padding-top: 20px;
+    .popConfirm2 {
+      display: inline-block;
+      width: 300px;
+    }
+    .popConfirm1 {
+      display: inline-block;
+      width: 300px;
+      border-right: 1px #1969C6 solid;
+    }
   }
 </style>

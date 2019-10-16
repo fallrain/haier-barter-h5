@@ -22,7 +22,7 @@
       <div>
         <div class="orderEntry-user-head">
           <span class="name mr16">收货人：{{consignee.name}}</span>
-          <span class="sex mr16">{{consignee.sex}}</span>
+          <span class="sex mr16">{{consignee.sexCn}}</span>
           <i class="iconfont icon-dianhua mr16"></i>
           <span class="phone mr16">{{consignee.phone}}</span>
 
@@ -81,7 +81,7 @@
         ></b-activity-list>
       </div>
     </b-fieldset>
-    <div class="orderEntry-btns-par">
+    <div class="orderEntry-btns-par2">
       <!--<button-->
         <!--type="button"-->
         <!--class="common-submit-btn-primary"-->
@@ -90,7 +90,7 @@
       <!--</button>-->
       <button
         type="button"
-        class="common-submit-btn-default"
+        class="common-submit-btn-default1"
         @click="next"
       >确认
       </button>
@@ -199,9 +199,14 @@ export default {
           this.phone = resData.userPhone;
           this.consignee.phone = resData.consigneePhone;
           this.consignee.sex = resData.userSex;
+          if(resData.userSex === 1){
+            this.consignee.sexCn = '男士'
+          }else {
+            this.consignee.sexCn = '女士'
+          }
           this.consignee.address = resData.dispatchProvince + resData.dispatchCity + resData.dispatchArea + resData.dispatchAdd;
           this.buyDate = resData.buyTime;
-          if (resData.orderType == 1) {
+          if (resData.orderType === 0) {
             this.orderType = '单品';
           } else {
             this.orderType = '套购';
@@ -416,5 +421,18 @@ export default {
     padding-right: 25px;
     color: #333;
     margin-top: 20px;
+  }
+  .common-submit-btn-default1{
+    height: 84px;
+    font-size: 34px;
+    border-radius: 8px;
+    color: #fff;
+    background: #1969C6;
+    /*position: fixed;*/
+    width: 90%;
+    margin-left: 5%;
+    /*margin-bottom: 20px;*/
+    position: absolute;
+    bottom: 20px;
   }
 </style>

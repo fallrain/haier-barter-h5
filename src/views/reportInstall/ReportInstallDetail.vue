@@ -341,9 +341,9 @@ export default {
               content: '报装成功',
               confirmText: '确定',
               onConfirm: () => {
-                成功后传回要删除的list下标
-                if (this.data.itemIndex !== undefined) {
-                  sessionStorage.setStorageSync('reportInstallList.itemIndex', this.data.itemIndex);
+                // 成功后传回要删除的list下标
+                if (this.itemIndex !== undefined) {
+                  sessionStorage.setStorageSync('reportInstallList.itemIndex', this.itemIndex);
                 }
                 this.$mBack();
               }

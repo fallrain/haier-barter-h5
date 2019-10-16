@@ -102,7 +102,8 @@ export default {
     };
   },
   methods: {
-    inputFunction() {
+    inputFunction(val) {
+      debugger
       this.searchList = this.searchHistory;
       if (this.searchVal === '') {
         this.searchList = [];
@@ -175,12 +176,7 @@ export default {
 
   },
   beforeRouteLeave(to, from, next) {
-    if (to.name === 'Order.OrderEntry') {
-      const obj = { product: this.currentClickItemData };
-
-      to.query.temp = JSON.stringify(obj);
-    }
-    if (to.name === 'Order.OrderModify') {
+    if (to.name === 'Order.OrderEntry' || to.name === 'Order.OrderModify' || to.name === 'Order.OrderSupplement') {
       const obj = { product: this.currentClickItemData };
       to.query.temp = JSON.stringify(obj);
     }

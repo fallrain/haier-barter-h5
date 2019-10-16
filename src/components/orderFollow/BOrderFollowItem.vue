@@ -345,12 +345,12 @@ export default {
             this.remark = ''
             console.log('this.list', this.list);
             Toast.succeed(res.msg);
+            this.popShow = false;
             this.$emit('updateOrderType', type);
           }
         });
     },
     itemClick(index) {
-      ;
       this.stopProcess();
       this.$emit('itemClick', index);
     },
@@ -435,7 +435,6 @@ export default {
     },
     updateOrderType(type, item) {
       this.stopProcess();
-      ;
       for (let i = 0; i < this.list.length; i++) {
         this.$set(this.list[i], 'show', false);
       }
@@ -458,6 +457,7 @@ export default {
         return;
       }
       if (type === '3') {
+        this.popShow = true
         return
       }
       this.orderService

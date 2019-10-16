@@ -8,7 +8,7 @@
         <slot></slot>
         <button
           type="button"
-          class="common-submit-btn-default mt23"
+          class="common-submit-btn-default2"
           @click="btmConfirmClick"
         >确定</button>
       </div>
@@ -99,5 +99,23 @@ export default {
   .b-pop-cnt {
     background: #fff;
     padding: 24px;
+  }
+  @mixin mix-submit-btn {
+    width: 100%;
+    height: 84px;
+    font-size: 34px;
+    border-radius: 8px;
+  }
+  .common-submit-btn-default2{
+    @include mix-submit-btn;
+    color: #fff;
+    background: #1969C6;
+    /*position: fixed;*/
+    width: 90%;
+    margin-left: 5%;
+    margin-top: 20px;
+    /*margin-bottom: 20px;*/
+    /*position: absolute;*/
+    /*bottom: 20px;*/
   }
 </style>
