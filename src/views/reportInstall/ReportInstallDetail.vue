@@ -17,13 +17,13 @@
         :right="true"
       >
       <span
-        v-if="canUpdateAddress"
+        v-if="canUpdateAddress && tag != 'detail'"
         slot="right"
         class="reportInstallDetail-right-text"
         catchtap='newAddress'
         @click="queryCustomerAddressList"
       >
-        {{addressList.length?'修改地址':'新增地址'}}
+        修改地址
       </span>
       </b-report-install-detail-head>
       <div class="reportInstallDetail-block-cnt">
@@ -67,7 +67,7 @@
                   type="custom"
                   :custom-types="['yyyy', 'MM','dd', 'hh']"
                   pattern="yyyy-MM-dd hh:00"
-                  :disabled="product.dateDisabled"
+                  :disabled="product.dateDisabled || tag == 'detail'"
                   :default-date="new Date(product.requireServiceDate)"
                   :min-date="new Date(product.startDateTime)"
                   v-model="product.requireServiceDate"
@@ -341,10 +341,10 @@ export default {
               content: '报装成功',
               confirmText: '确定',
               onConfirm: () => {
-                // 成功后传回要删除的list下标
-                // if (this.data.itemIndex !== undefined) {
-                //   sessionStorage.setStorageSync('reportInstallList.itemIndex', this.data.itemIndex);
-                // }
+                成功后传回要删除的list下标
+                if (this.data.itemIndex !== undefined) {
+                  sessionStorage.setStorageSync('reportInstallList.itemIndex', this.data.itemIndex);
+                }
                 this.$mBack();
               }
             });

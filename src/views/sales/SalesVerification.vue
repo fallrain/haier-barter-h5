@@ -497,10 +497,12 @@ export default {
             id: this.qrCodeForm.id,
             barCode: this.qrCodeForm.code
           }).then((res) => {
-            if (res.code === 1) {
-              Toast.succeed(res.msg);
-            } else {
-              Toast.failed(res.msg);
+            if (res.msg) {
+              Dialog.alert({
+                content: res.msg,
+                cancelText: '取消',
+                confirmText: '确定',
+              })
             }
           });
         } else {
