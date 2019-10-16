@@ -268,6 +268,9 @@ export default {
           this.customerInfo.tag = a;
         }
       }
+      this.newAddress.provinceName = JSON.parse(this.$route.params.info).consignee.provinceName;
+      this.newAddress.districtName = JSON.parse(this.$route.params.info).consignee.districtName;
+      this.newAddress.cityName = JSON.parse(this.$route.params.info).consignee.cityName;
     }
   },
   computed: {

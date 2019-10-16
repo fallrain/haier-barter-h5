@@ -497,10 +497,16 @@ export default {
             id: this.qrCodeForm.id,
             barCode: this.qrCodeForm.code
           }).then((res) => {
-            if (res.code === 1) {
-              Toast.succeed(res.msg);
-            } else {
-              Toast.failed(res.msg);
+            if (res.msg) {
+              Dialog.alert({
+                content: res.msg,
+                cancelText: '取消',
+                confirmText: '确定',
+                onConfirm: () => {
+                  this[this.curScrollViewName].choosedIndex = false;
+                  this[this.curScrollViewName].mescroll.triggerDownScroll();
+                }
+              })
             }
           });
         } else {
@@ -530,6 +536,7 @@ export default {
       }).then((res) => {
         if (res.code === 1) {
           this[this.curScrollViewName].list.splice(index, 1);
+          this[this.curScrollViewName].mescroll.triggerDownScroll();
         } else {
           item.detail[0].errorReason = res.data;
         }
@@ -539,7 +546,7 @@ export default {
       wx.ready(() => {
         wx.scanQRCode({
           needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
-          scanType: ['qrCode', 'barCode'], // 可以指定扫二维码还是一维码，默认二者都有
+          scanType: ['barCode'], // 可以指定扫二维码还是一维码，默认二者都有
           success: (res) => {
             const result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
             this.qrCodeForm.code = result;

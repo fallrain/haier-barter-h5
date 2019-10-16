@@ -63,6 +63,11 @@ export default {
     list: {
       type: Array,
       default: () => []
+    },
+    //判断地址列表是否从代报装详情显示的
+    isFromReportInstallDetail: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -93,7 +98,9 @@ export default {
       this.$emit('addNew', item);
     },
     editAddress(item) {
-      delete item.consignee
+      if (!this.isFromReportInstallDetail) {
+        delete item.consignee
+      }
       // 编辑地址
       this.$emit('editAddress', item);
     },
