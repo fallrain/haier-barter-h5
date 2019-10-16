@@ -1,4 +1,3 @@
-<!-- message.wxml -->
 <template>
   <div>
     <div class="reportInstallList-tab">
@@ -99,6 +98,9 @@ export default {
     localStorage.setItem('userinfo', Str);
     localStorage.setItem('acces_token', this.userinfo.token);
   },
+  activated() {
+    this.removeBySessionIndex();
+  },
   computed: {
     curScrollViewName() {
       // 当前tab下的scrollView的ref名字
@@ -124,6 +126,14 @@ export default {
     this.bUtil.scroviewTabChange(this.curScrollViewName, this);
   },
   methods: {
+    removeBySessionIndex() {
+      /* 删除一条记录，通过存在session里的列表index */
+      const itemIndex = sessionStorage.getItem('reportInstallList.itemIndex');
+      if (itemIndex) {
+        sessionStorage.removeItem('reportInstallList.itemIndex');
+        this[this.curScrollViewName].list.splice(itemIndex * 1, 1);
+      }
+    },
     upCallback(page) {
       // 下载过就设置已经初始化
       this[this.curScrollViewName].isListInit = true;
