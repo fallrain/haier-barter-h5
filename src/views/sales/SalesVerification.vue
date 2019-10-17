@@ -326,11 +326,10 @@ export default {
     };
   },
   created() {
-    const userinfostr = this.getQueryString('userinfo');
-    this.userinfo = JSON.parse(userinfostr);
-    const Str = JSON.stringify(this.userinfo);
-    localStorage.setItem('userinfo', Str);
-    localStorage.setItem('acces_token', this.userinfo.token);
+    const userInfoStr = localStorage.getItem('userinfo');
+    if (userInfoStr) {
+      this.userinfo = JSON.parse(userInfoStr);
+    }
   },
   computed: {
     curScrollViewName() {
@@ -506,7 +505,7 @@ export default {
                   this[this.curScrollViewName].choosedIndex = false;
                   this[this.curScrollViewName].mescroll.triggerDownScroll();
                 }
-              })
+              });
             }
           });
         } else {
