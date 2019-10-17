@@ -490,22 +490,24 @@ export default {
         this.qrCodeDialog.error = true;
       } else {
         if (this.qrCodeForm.code.length == 20 || this.qrCodeForm.code.length == 22) {
-          this.qrCodeDialog.open = false;
+          this.qrCodeDialog.errorText = '';
+          this.qrCodeDialog.error = false;
           this.salesService.saveEhubBarCode({
             hmcId: this.userinfo.hmcid,
             id: this.qrCodeForm.id,
             barCode: this.qrCodeForm.code
           }).then((res) => {
             if (res.msg) {
-              Dialog.alert({
-                content: res.msg,
-                cancelText: '取消',
-                confirmText: '确定',
-                onConfirm: () => {
-                  this[this.curScrollViewName].choosedIndex = false;
-                  this[this.curScrollViewName].mescroll.triggerDownScroll();
-                }
-              });
+              if (res.code === 1) {
+                this.qrCodeDialog.open = false;
+                Toast.succeed(res.msg);
+                this[this.curScrollViewName].list = null;
+                this[this.curScrollViewName].choosedIndex = false;
+                this[this.curScrollViewName].mescroll.triggerDownScroll();
+              } else {
+                this.qrCodeDialog.errorText = res.msg;
+                this.qrCodeDialog.error = true;
+              }
             }
           });
         } else {
