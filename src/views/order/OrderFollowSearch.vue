@@ -502,8 +502,9 @@ export default {
             sroviewObj.pages = pages;
             sroviewObj.result = result;
             if(this.fuzzy){
-              if(result.length === 0){
-                  Toast.failed('搜索结果不存在')
+              if(result.length === 0){console.log(1)
+                this[this.curScrollViewName].list = [];
+                Toast.failed('搜索结果不存在')
                 this.fuzzy = false
                 return
               }
@@ -526,6 +527,9 @@ export default {
               }
 
               // });
+            } else {
+              Toast.failed('暂无数据')
+              this[this.curScrollViewName].list = [];
             }
           } else {
             this[this.curScrollViewName].mescroll.endErr();
@@ -657,7 +661,7 @@ export default {
       this.searchData(page);
       this.fuzzy = true
     },
-    updateOrderType(type) {
+    updateOrderType(type) {debugger
       this.updateList = true;
       this.businessType = ''
       this.searchData({
@@ -675,7 +679,6 @@ export default {
     next();
   },
   beforeRouteLeave(to, from, next) {
-    debugger
     if (to.name === 'Order.OrderFollowCommitResult' || to.name === 'Order.OrderConfirm' || to.name === 'Order.OrderUploadInvoice') {
       wx.miniProgram.switchTab({ url: 'pages/tool/tool' });
       next();
@@ -686,11 +689,19 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  .mescroll {
+    /*解决滚动条异常bug*/
+    height: auto !important;
+  }
+  .md-notice-bar {
+    position: absolute;
+    width: 100%;
+  }
   .search-class{
     width: 100%;
     height: 90px;
     background-color: #f5f5f5;
-    position: absolute;
+    position: fixed;
     top: 0;
     z-index: 12;
   }

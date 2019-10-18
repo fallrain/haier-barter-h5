@@ -204,12 +204,22 @@
         <p @click="addUserClick()" class="popConfirm">确定</p>
       </div>
     </md-popup>
+
+
+    <md-dialog
+      title=""
+      :closable="true"
+      v-model="basicDialog.open"
+      :btns="basicDialog.btns"
+    >
+      该用户满足{{rightsName}}购机活动，您录单时未选则该活动，用户将无法获得购机礼品，请确定是否提交。
+    </md-dialog>
   </div>
 </template>
 
 <script>
 import {
-  Toast, Popup, PopupTitleBar, Button, Icon
+  Toast, Popup, PopupTitleBar, Button, Icon, Dialog
 } from 'mand-mobile';
 
 import {
@@ -233,6 +243,7 @@ export default {
   name: 'OrderEntry',
   components: {
     [Toast.name]: Toast,
+    [Dialog.name]: Dialog,
     BActivityList,
     BDatePicker,
     BFieldset,
@@ -251,6 +262,20 @@ export default {
   },
   data() {
     return {
+      rightsName: '',
+      basicDialog: { // 模态框  提示选择购机权益活动
+        open: false,
+        btns: [
+          {
+            text: '取消',
+            handler: this.onBasicCancel,
+          },
+          {
+            text: '确认提交',
+            handler: this.onBasicConfirm,
+          },
+        ],
+      },
       // 是否详情模式
       isDetail: false,
       orderSource: '',
@@ -381,13 +406,18 @@ export default {
     };
   },
   computed: {},
+  watch: {
+    buyDate(newV, oldV) {
+      console.log(oldV, newV);
+    }
+  },
   mounted() {
 
   },
   activated() {
     if (this.$route.query.temp) {
       let ID = '';
-      const obj = JSON.parse(this.$route.query.temp);
+      const obj = JSON.parse(this.$route.query.temp);console.log(obj)
       if (obj.tel) {
         this.mobile = obj.tel;
         this.queryCustomerDefault();
@@ -455,7 +485,8 @@ export default {
     } else {
       this.orderFollowId = '';
     }
-
+    localStorage.setItem('orderFollowId',this.orderFollowId)
+console.log(this.orderFollowId)
 
     if (this.$route.params.region === 'hand') {
       this.haveConsignee = false;
@@ -490,7 +521,6 @@ export default {
           productModel: pro.productModel}
       ];
       this.orderService.isReportInstallNew({ orderDetailInfo }, {}).then((res) => {
-        debugger;
         this.queryInstall = true;
         if (res.code === 1) {
           this.isInstall = true;
@@ -660,7 +690,6 @@ export default {
     },
     // 暂存
     saveTemporary(type) {
-      debugger
       if(type === 1){
         this.saveType = 1
       }else {
@@ -684,15 +713,22 @@ export default {
         Toast.failed('请选择购买时间');
         return;
       }
-
-      if (this.deliveryTime === '') {
-        Toast.failed('请选择送达时间');
-        return;
-      }
       if(this.productList.length === 0){
         Toast.failed('请选择产品');
         return;
       }
+      for (let i=0; i<this.productList.length; i++) {
+        if (this.productList[i].productPrice == '') {
+          Toast.failed('请输入产品价格');
+          return;
+        }
+      }
+      console.log(this.productList);
+      if (this.deliveryTime === '') {
+        Toast.failed('请选择送达时间');
+        return;
+      }
+
       if (!this.bUtil.isReportInstallFit(this.productList,this.deliveryTime)) {
         return;
       }
@@ -772,23 +808,55 @@ export default {
           name: 'Order.OrderFollowActivity',
           params: { orderInfo: info }
         });
-      }else {
-        if (this.orderNo !== '') {
-          Toast.loading('保存中...');
-          this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId }).then((res) => {
-            if (res.code === 1) {
-              if (this.saveType === 1) {
-                Toast.succeed('订单暂存成功');
-                this.$router.go(-1);
-              }
-              if (this.saveType === 0) {
-                this.$router.push({
-                  name: 'Order.OrderUploadInvoice',
-                  params: { orderNo: this.orderNo }
-                });
+      } else {
+        if (this.rightsList.length == 0) {
+          this.rightsService.queryOrderOptionalRights(this.subInfo, {
+            pageNum: 0,
+            pageSize: 10,
+          }).then((res) => {
+            if (res.code != -1 && res.data.result.length > 0){
+              this.rightsName = res.data.result[0].rightsName;
+              this.basicDialog.open = true;
+            } else {
+              if (this.orderNo !== '') {
+                Toast.loading('保存中...');
+                this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
+                  .then((res) => {
+                    if (res.code === 1) {
+                      if (this.saveType === 1) {
+                        Toast.succeed('订单暂存成功');
+                        this.$router.go(-1);
+                      }
+                      if (this.saveType === 0) {
+                        this.$router.push({
+                          name: 'Order.OrderUploadInvoice',
+                          params: { orderNo: this.orderNo }
+                        });
+                      }
+                    }
+                  });
               }
             }
           });
+        } else {
+          if (this.orderNo !== '') {
+            Toast.loading('保存中...');
+            this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
+              .then((res) => {
+                if (res.code === 1) {
+                  if (this.saveType === 1) {
+                    Toast.succeed('订单暂存成功');
+                    this.$router.go(-1);
+                  }
+                  if (this.saveType === 0) {
+                    this.$router.push({
+                      name: 'Order.OrderUploadInvoice',
+                      params: { orderNo: this.orderNo }
+                    });
+                  }
+                }
+              });
+          }
         }
       }
 
@@ -895,6 +963,31 @@ export default {
     },
     onDelete(index) {
       this.productList.splice(index, 1);
+    },
+    // 模态框确认取消处理
+    onBasicCancel() {
+      this.basicDialog.open = false;
+    },
+    onBasicConfirm() {
+      if (this.orderNo !== '') {
+        Toast.loading('保存中...');
+        this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
+          .then((res) => {
+            if (res.code === 1) {
+              if (this.saveType === 1) {
+                Toast.succeed('订单暂存成功');
+                this.$router.go(-1);
+              }
+              if (this.saveType === 0) {
+                this.$router.push({
+                  name: 'Order.OrderUploadInvoice',
+                  params: { orderNo: this.orderNo }
+                });
+              }
+            }
+          });
+      }
+      this.basicDialog.open = false;
     }
   },
   // beforeRouteLeave(to,from,next){

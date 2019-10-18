@@ -103,7 +103,6 @@ export default {
   },
   methods: {
     inputFunction(val) {
-      debugger
       this.searchList = this.searchHistory;
       if (this.searchVal === '') {
         this.searchList = [];
@@ -112,7 +111,8 @@ export default {
 
     search() {
       /* 搜索产品 */
-      this.productService.list(this.searchVal.toUpperCase(), '1', '30').then((res) => {
+      const searchStr = this.searchVal.toUpperCase().replace(/\//g, '%2F');
+      this.productService.list(searchStr, '1', '30').then((res) => {
         // ;
         if (res.code === 1) {
           this.searchList = res.data;
@@ -143,9 +143,10 @@ export default {
           scanType: ['barCode'], // 可以指定扫二维码还是一维码，默认二者都有
           success: (res) => {
             const result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
-            // this.qrCodeForm.code = result;
-            this.searchVal = result;
-            this.search();
+            if (result && typeof result === 'string') {
+              this.searchVal = result.split(',')[1];
+              this.search();
+            }
           }
         });
       });

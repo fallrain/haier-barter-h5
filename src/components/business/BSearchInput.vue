@@ -7,7 +7,7 @@
           type="search"
           :placeholder="placeholder"
           v-model="searchVal"
-          @keyup.enter="searchClick"
+          @keyup.enter.native="searchClick"
         >
         <iframe :name="iframeId" style="display: none;"></iframe>
       </form>

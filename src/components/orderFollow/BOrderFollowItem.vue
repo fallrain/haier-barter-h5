@@ -316,7 +316,6 @@ export default {
     this.productService.commonTypeQuery('BUSINESS_SCENARIOS').then((res) => {
       if (res.code === 1) {
         this.scenarioList = res.data
-        debugger
       }
     });
   },
@@ -393,7 +392,6 @@ export default {
 
 
     buttonClicked(val) {
-      debugger
       this.stopProcess();
       this.checkedButtonId = val[0];
       for (let i = 0; i < this.headList.length; i++) {
@@ -433,7 +431,7 @@ export default {
         this.$emit('searchProduct', item);
       }
     },
-    updateOrderType(type, item) {
+    updateOrderType(type, item) {debugger
       this.stopProcess();
       for (let i = 0; i < this.list.length; i++) {
         this.$set(this.list[i], 'show', false);
@@ -610,7 +608,8 @@ export default {
 .bar-v {
   background-color: white;
   height: 72px;
-  position: absolute;
+  /*position: absolute;*/
+  position: fixed;
   top: 90px;
   z-index: 15;
 }

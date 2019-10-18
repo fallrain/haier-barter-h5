@@ -16,6 +16,18 @@ const util = {
       }
     }
   },
+  convertQueryStingToMap() {
+    /* 查询字符串转为对象 */
+    let search = window.location.search;
+    search = search.replace('?', '');
+    const searchAy = search.split('&');
+    const map = {};
+    searchAy.forEach((v) => {
+      const splitAy = v.split('=');
+      map[splitAy[0]] = splitAy[1];
+    });
+    return map;
+  },
   getNextDayDate() {
     const curDate = new Date();
     let curTime = curDate.getTime();

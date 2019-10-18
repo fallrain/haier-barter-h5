@@ -120,6 +120,7 @@
               slot="headRight"
               type="button"
               class="common-btn-primary"
+              v-if="false"
               @click="getFailureOrder(item)"
             >
               修改订单
@@ -326,11 +327,10 @@ export default {
     };
   },
   created() {
-    const userinfostr = this.getQueryString('userinfo');
-    this.userinfo = JSON.parse(userinfostr);
-    const Str = JSON.stringify(this.userinfo);
-    localStorage.setItem('userinfo', Str);
-    localStorage.setItem('acces_token', this.userinfo.token);
+    const userInfoStr = localStorage.getItem('userinfo');
+    if (userInfoStr) {
+      this.userinfo = JSON.parse(userInfoStr);
+    }
   },
   computed: {
     curScrollViewName() {
@@ -491,22 +491,24 @@ export default {
         this.qrCodeDialog.error = true;
       } else {
         if (this.qrCodeForm.code.length == 20 || this.qrCodeForm.code.length == 22) {
-          this.qrCodeDialog.open = false;
+          this.qrCodeDialog.errorText = '';
+          this.qrCodeDialog.error = false;
           this.salesService.saveEhubBarCode({
             hmcId: this.userinfo.hmcid,
             id: this.qrCodeForm.id,
             barCode: this.qrCodeForm.code
           }).then((res) => {
             if (res.msg) {
-              Dialog.alert({
-                content: res.msg,
-                cancelText: '取消',
-                confirmText: '确定',
-                onConfirm: () => {
-                  this[this.curScrollViewName].choosedIndex = false;
-                  this[this.curScrollViewName].mescroll.triggerDownScroll();
-                }
-              })
+              if (res.code === 1) {
+                this.qrCodeDialog.open = false;
+                Toast.succeed(res.msg);
+                this[this.curScrollViewName].list = null;
+                this[this.curScrollViewName].choosedIndex = false;
+                this[this.curScrollViewName].mescroll.triggerDownScroll();
+              } else {
+                this.qrCodeDialog.errorText = res.msg;
+                this.qrCodeDialog.error = true;
+              }
             }
           });
         } else {
@@ -549,7 +551,9 @@ export default {
           scanType: ['barCode'], // 可以指定扫二维码还是一维码，默认二者都有
           success: (res) => {
             const result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
-            this.qrCodeForm.code = result;
+            if (result && typeof result === 'string') {
+              this.qrCodeForm.code = result.split(',')[1];
+            }
           }
         });
       });
