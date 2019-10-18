@@ -103,7 +103,6 @@ export default {
   },
   methods: {
     inputFunction(val) {
-      debugger;
       this.searchList = this.searchHistory;
       if (this.searchVal === '') {
         this.searchList = [];
@@ -112,7 +111,8 @@ export default {
 
     search() {
       /* 搜索产品 */
-      this.productService.list(this.searchVal.toUpperCase(), '1', '30').then((res) => {
+      const searchStr = this.searchVal.toUpperCase().replace(/\//g, '%2F');
+      this.productService.list(searchStr, '1', '30').then((res) => {
         // ;
         if (res.code === 1) {
           this.searchList = res.data;

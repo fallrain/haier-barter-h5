@@ -189,12 +189,21 @@
       type="checkbox"
     ></b-multbuy-check>
   </b-pop>
+
+    <md-dialog
+      title=""
+      :closable="true"
+      v-model="basicDialog.open"
+      :btns="basicDialog.btns"
+    >
+      该用户满足{{rightsName}}购机活动，您录单时未选则该活动，用户将无法获得购机礼品，请确定是否提交。
+    </md-dialog>
 </div>
 </template>
 
 <script>
 import {
-  Toast
+  Toast, Dialog
 } from 'mand-mobile';
 import {
   BActivityList,
@@ -216,6 +225,7 @@ export default {
   name: 'OrderEntry',
   components: {
     Toast,
+    [Dialog.name]: Dialog,
     BActivityList,
     BDatePicker,
     BFieldset,
@@ -230,7 +240,21 @@ export default {
   },
   data() {
     return {
-    // 是否详情模式
+      rightsName: '',
+      basicDialog: { // 模态框  提示选择购机权益活动
+        open: false,
+        btns: [
+          {
+            text: '取消',
+            handler: this.onBasicCancel,
+          },
+          {
+            text: '确认提交',
+            handler: this.onBasicConfirm,
+          },
+        ],
+      },
+      // 是否详情模式
       isDetail: false,
       // 门店名称
       shopName: '',
@@ -363,9 +387,8 @@ export default {
   //   console.log('tag', address)
   //    }
   },
-  activated() {
+  activated() {debugger
     if (this.$route.query.temp) {
-      debugger
       let ID = '';
       const obj = JSON.parse(this.$route.query.temp);
       if (obj.tel) {
@@ -415,13 +438,15 @@ export default {
         });
       }
     }
+    console.log(this.orderFollowId)
   },
-  created() {
+  created() {debugger
     this.addressData = addressData;
     this.orderNo = this.$route.params.orderNo;
     this.orderFollowId = this.$route.params.orderFollowId;
     this.userParam = JSON.parse(localStorage.getItem('userinfo'));
     this.getData();
+    console.log(this.orderFollowId)
   },
   methods: {
   //  haveConsignee() {
@@ -643,7 +668,7 @@ export default {
       this.generateSubInfo(2);
     },
 
-    generateSubInfo(type) {
+    generateSubInfo(type) {debugger
       if(this.productList.length === 0){
         Toast.failed('请选择产品');
         return;
@@ -728,24 +753,58 @@ export default {
           name: 'Order.OrderFollowActivity',
           params: { orderInfo: info }
         });
-      }else {
-        if (this.orderNo !== '') {
-          Toast.loading('保存中...');
-          this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
-            .then((res) => {
-              if (res.code === 1) {
-                if (this.saveType === 1) {
-                  Toast.succeed('订单暂存成功');
-                  this.$router.go(-1);
+      } else {
+        if (this.rightsList.length == 0) {
+          this.rightsService.queryOrderOptionalRights(this.subInfo, {
+            pageNum: 0,
+            pageSize: 10,
+          }).then((res) => {
+            if (res.code != -1 && res.data.result.length > 0) {
+              this.rightsName = res.data.result[0].rightsName;
+              this.basicDialog.open = true;
+            } else {
+              if (this.orderNo !== '') {
+                if (!this.orderFollowId) {
+                  this.orderFollowId = localStorage.getItem('orderFollowId');
                 }
-                if (this.saveType === 0) {
-                  this.$router.push({
-                    name: 'Order.OrderUploadInvoice',
-                    params: { orderNo: this.orderNo }
+                Toast.loading('保存中...');
+                this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
+                  .then((res) => {
+                    if (res.code === 1) {
+                      if (this.saveType === 1) {
+                        Toast.succeed('订单暂存成功');
+                        this.$router.go(-1);
+                      }
+                      if (this.saveType === 0) {
+                        this.$router.push({
+                          name: 'Order.OrderUploadInvoice',
+                          params: { orderNo: this.orderNo }
+                        });
+                      }
+                    }
                   });
-                }
               }
-            });
+            }
+          });
+        } else {
+          if (this.orderNo !== '') {console.log(2)
+            Toast.loading('保存中...');
+            this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
+              .then((res) => {
+                if (res.code === 1) {
+                  if (this.saveType === 1) {
+                    Toast.succeed('订单暂存成功');
+                    this.$router.go(-1);
+                  }
+                  if (this.saveType === 0) {
+                    this.$router.push({
+                      name: 'Order.OrderUploadInvoice',
+                      params: { orderNo: this.orderNo }
+                    });
+                  }
+                }
+              });
+          }
         }
       }
     },
@@ -810,6 +869,31 @@ export default {
     },
     onDelete(index) {
       this.productList.splice(index, 1);
+    },
+    // 模态框确认取消处理
+    onBasicCancel() {
+      this.basicDialog.open = false;
+    },
+    onBasicConfirm() {
+      if (this.orderNo !== '') {console.log(3)
+        Toast.loading('保存中...');
+        this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
+          .then((res) => {
+            if (res.code === 1) {
+              if (this.saveType === 1) {
+                Toast.succeed('订单暂存成功');
+                this.$router.go(-1);
+              }
+              if (this.saveType === 0) {
+                this.$router.push({
+                  name: 'Order.OrderUploadInvoice',
+                  params: { orderNo: this.orderNo }
+                });
+              }
+            }
+          });
+      }
+      this.basicDialog.open = false;
     }
   },
   beforeRouteLeave(to, from, next) {

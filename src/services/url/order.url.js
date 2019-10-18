@@ -16,9 +16,11 @@ const urls = {
   uploadInvoice: '/orderManage/hmcUploadInvoice', // 上传发票
   queryOrderDetailAndInvoice: '/orderManage/queryOrderDetailAndInvoice', // 根据订单ID查询发票信息
   checkInvoice: '/orderManage/checkInvoice', // 校验发票
-  simpleUpload: '/file/simpleUpload',// 上传图片
-  isReportInstallNew:'/reportInstall/isReportInstallNew',//查询产品是否需要代包装
-  checkUpperLimitForSGLD:'/orderManage/checkUpperLimitForSGLD'//手工录单限制
+  simpleUpload: '/file/simpleUpload', // 上传图片
+  isReportInstallNew: '/reportInstall/isReportInstallNew', // 查询产品是否需要代包装
+  checkUpperLimitForSGLD: '/orderManage/checkUpperLimitForSGLD', // 手工录单限制
+  checkProductPrice: '/orderManage/checkProductPrice', // 校验价格
+  isAccordDeadline: '/reportEhub/isAccordDeadline' // 校验 购买日期与其当月销量闸口是否关闭
 
 };
 
