@@ -58,5 +58,11 @@ export default {
   },
   checkUpperLimitForSGLD(){
     return axPost(urls.checkUpperLimitForSGLD);
-  }
+  },
+  checkProductPrice(data, param) {
+    return axPostJson(urls.checkProductPrice, data, param);
+  },
+  isAccordDeadline(data, param) {
+    return axPostJson(urls.isAccordDeadline, data, param);
+  },
 };

@@ -11,6 +11,7 @@
           class="b-order-product-item-price"
           type="number"
           v-model="data.productPrice"
+          @blur="checkProductPrice"
         ><span class="b-order-product-item-price-unit">元</span>
       </div>
 
@@ -46,11 +47,14 @@
 import {
   BItem, BDatePicker
 } from '@/components/form';
-
+import {
+  Toast
+} from 'mand-mobile';
 export default {
   name: 'BOrderProduct',
   components: {
-    BItem, BDatePicker
+    BItem, BDatePicker,
+    [Toast.name]: Toast,
   },
   props: {
     // 产品详情
@@ -93,6 +97,21 @@ export default {
     onDel() {
       /* 删除 */
       this.$emit('onDel', this.index);
+    },
+    checkProductPrice() { // 价格闸口判断 失去焦点触发
+      const obj = {
+        bccPrice: '',
+        productCode: this.data.productCode,
+        productPrice: this.data.productPrice
+      }
+      if (this.data.bccPrice) {
+        obj.bccPrice = this.data.bccPrice;
+      }
+      this.orderService.checkProductPrice({}, obj).then((res) => {
+        if (res.code == -1) {
+          this.data.productPrice = '';
+        }
+      });
     }
   }
 };

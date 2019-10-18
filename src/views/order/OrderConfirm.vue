@@ -249,6 +249,7 @@ export default {
       });
     },
     changeOrder() {
+
       this.$router.push({
         name: 'Order.OrderModify',
         params: { orderNo: this.orderNo }
@@ -258,7 +259,7 @@ export default {
 
     }
   },
-  beforeRouteLeave(to, from, next) {
+  beforeRouteLeave(to, from, next) {debugger
     if (this.$vnode && this.$vnode.data.keepAlive) {
       if (this.$vnode.parent && this.$vnode.parent.componentInstance && this.$vnode.parent.componentInstance.cache) {
         if (this.$vnode.componentOptions) {
