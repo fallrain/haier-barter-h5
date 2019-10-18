@@ -155,7 +155,7 @@ export default {
     padding-right: 10px;
   }
   .md-popup-box{
-    margin-top: 170px !important;
+    margin-top: 160px !important;
   }
 
 </style>
