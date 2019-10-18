@@ -728,7 +728,11 @@ export default {
           name: 'Order.OrderFollowActivity',
           params: { orderInfo: info }
         });
-      }else {
+        // this.$router.push({
+        //   name: 'Order.OrderRights',
+        //   params: { orderInfo: info }
+        // });
+      }else{
         if (this.orderNo !== '') {
           Toast.loading('保存中...');
           this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })

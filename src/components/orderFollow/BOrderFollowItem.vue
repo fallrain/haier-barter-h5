@@ -103,7 +103,7 @@
           class="timeImage"
         >
         <span class="time-label">{{followItem.updatedTime}}</span>
-        <span v-show="followItem.flowStatus !== 1 && (followItem.add1 !=null || followItem.add2 !=null)" @click="detailHide(index,followItem)">
+        <span v-show="followItem.flowStatus !== 1 && followItem.flowStatus !== 0 && followItem.flowStatus !== 3&& followItem.flowStatus !== 2&& (followItem.add1 !=null || followItem.add2 !=null)" @click="detailHide(index,followItem)">
           <span class="information-class">详细信息</span>
           <img
             src="@/assets/images/orderFollow-up/xialablue@3x.png"
@@ -344,7 +344,7 @@ export default {
           if (res.code === 1) {
             this.remark = ''
             console.log('this.list', this.list);
-            Toast.succeed(res.msg);
+            Toast.succeed('状态更新成功');
             this.popShow = false;
             this.$emit('updateOrderType', type);
           }
