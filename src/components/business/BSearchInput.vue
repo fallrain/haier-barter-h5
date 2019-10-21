@@ -7,7 +7,7 @@
           type="search"
           :placeholder="placeholder"
           v-model="searchVal"
-          @keypress="searchClick"
+          @keyup.enter="searchClick"
         >
         <iframe :name="iframeId" style="display: none;"></iframe>
 <!--      </form>-->
@@ -51,12 +51,9 @@ export default {
     }
   },
   methods: {
-    searchClick(e) {
-      if (e.keyCode == 13) { // 如果按的是enter键 13是enter
-        e.preventDefault(); // 禁止默认事件（默认是换行）
-        /* 搜索 */
-        this.$emit('search', this.searchVal);
-      }
+    searchClick() {
+      /* 搜索 */
+      this.$emit('search', this.searchVal);
     },
   }
 };

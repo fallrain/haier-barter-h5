@@ -143,9 +143,10 @@ export default {
           scanType: ['barCode'], // 可以指定扫二维码还是一维码，默认二者都有
           success: (res) => {
             const result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
-            // this.qrCodeForm.code = result;
-            this.searchVal = result;
-            this.search();
+            if (result && typeof result === 'string') {
+              this.searchVal = result.split(',')[1];
+              this.search();
+            }
           }
         });
       });
