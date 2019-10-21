@@ -21,6 +21,7 @@
             v-for="(orderItem,orderIndex) in scrollViewFinished.list"
             :key="orderIndex"
             :orderItem="orderItem"
+            :index="orderIndex"
             :isShow="true"
           ></b-report-install-item-new>
         </div>
@@ -127,10 +128,12 @@ export default {
   methods: {
     removeBySessionIndex() {
       /* 删除一条记录，通过存在session里的列表index */
+      debugger;
       const itemIndex = sessionStorage.getItem('reportInstallList.itemIndex');
       if (itemIndex) {
         sessionStorage.removeItem('reportInstallList.itemIndex');
-        this[this.curScrollViewName].list.splice(itemIndex * 1, 1);
+        // this[this.curScrollViewName].list.splice(itemIndex * 1, 1);
+        this[this.curScrollViewName].mescroll.triggerDownScroll();
       }
     },
     upCallback(page) {
