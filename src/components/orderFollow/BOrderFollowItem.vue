@@ -27,7 +27,7 @@
       :list="scenarioList"
       @popButtonClicked="buttonClicked"
     ></b-pop-button>
-    <div style="height: 82px;"></div>
+    <div style="height: 140px;"></div>
     <div
       class="label-class"
       v-for="(followItem,index) in list"

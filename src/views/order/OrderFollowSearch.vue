@@ -228,10 +228,10 @@ export default {
       handCount:''
     };
   },
-  activated() {debugger
+  activated() {
     // window.location.reload()
   },
-  created() {debugger
+  created() {
     if (localStorage.getItem('confirm') === 'list') {
       this.curTab = 3;
       localStorage.setItem('confirm', '');
@@ -668,7 +668,7 @@ export default {
       this.searchData(page);
       this.fuzzy = true
     },
-    updateOrderType(type) {debugger
+    updateOrderType(type) {
       this.updateList = true;
       this.businessType = ''
       this.searchData({
