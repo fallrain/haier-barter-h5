@@ -205,6 +205,7 @@ export default {
         provinceName: '',
         districtName: '',
         cityName: '',
+        regionCode: ''
       },
       subCustomerInfo: {},
       searchEnd: false,
@@ -271,6 +272,7 @@ export default {
       this.newAddress.provinceName = JSON.parse(this.$route.params.info).consignee.provinceName;
       this.newAddress.districtName = JSON.parse(this.$route.params.info).consignee.districtName;
       this.newAddress.cityName = JSON.parse(this.$route.params.info).consignee.cityName;
+      this.newAddress.regionCode = JSON.parse(this.$route.params.info).regionCode;
     }
   },
   computed: {
@@ -334,8 +336,6 @@ export default {
     },
     addressChange(address) {
       /* 地址change */
-
-      console.log('ssssss', this.defaultA);
       const addressA = address.options.map(v => v.label);
       const addressAy = address.values;
       const addressName = address.options;
@@ -345,8 +345,8 @@ export default {
       this.newAddress.cityName = addressName[1].label;
       this.newAddress.provinceName = addressName[0].label;
       this.newAddress.districtName = addressName[2].label;
+      this.newAddress.regionCode = addressAy[0] + addressAy[1] + addressAy[2];
       this.addressName = addressA.join('/');
-      console.log('this.newAddress', this.newAddress);
     },
     confirm() {
       if (!(/^1[34578]\d{9}$/.test(this.customerInfo.mobile))) {
@@ -414,14 +414,14 @@ export default {
           }
         });
       }
-      console.log('customerInfo', this.customerInfo);
       let newAddress = {
         trueName: this.customerInfo.consigneeUserName,
         provinceName: this.newAddress.provinceName,
         mobile: this.customerInfo.consigneeUserPhone,
         cityName: this.newAddress.cityName,
         areaName: this.newAddress.districtName,
-        detailAddress: this.customerInfo.address
+        detailAddress: this.customerInfo.address,
+        regionCode: this.newAddress.regionCode
       };
       this.updataNewAddress(newAddress);
     },

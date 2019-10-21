@@ -144,11 +144,13 @@ export default {
   data() {
     return {
       parentPage: '', // 是否从
+      hmcid: '',
       user: {
         userId: '',
         userName: '',
         mobile: '',
-        shopName: ''
+        shopName: '',
+        regionCode: '',
       },
       radiosIsReport: [
         {
@@ -163,9 +165,6 @@ export default {
       isReport: 1, // 是否代报装
       notAllSend: true, // 没有全发送
       productList: [],
-      addressList: [{
-        trueName: ''
-      }],
       addressAllList: [],
       orderNo: '',
       productListTemp: [],
@@ -216,9 +215,6 @@ export default {
       this.canUpdateAddress = !!(option.flowStatus !== '1' && option.flowStatus !== '2');
       this.parentPage = option.parentPage;
       this.tag = option.tag;
-      // this.addressList = [{
-      //   mobile: userInfo.mobile
-      // }];
     },
     getProductList() {
       /* 获取产品列表 */
@@ -239,9 +235,12 @@ export default {
               mobile: data[0].phoneNumber,
               cityName: data[0].cityName,
               areaName: data[0].districtName,
-              detailAddress: data[0].address
+              detailAddress: data[0].address,
+              regionCode: data[0].regionCode,
             };
             this.user.shopName = data[0].storeName || '';
+            this.user.regionCode = data[0].regionCode
+            this.hmcid = data[0].hmcid;
           }
           let canUpdateAddress = true;
           const productList = data.map((v) => {
@@ -280,7 +279,7 @@ export default {
     },
     submit() {
       /* 提交报装信息 */
-      const { isReport, productList, addressList, productListTemp } = this;
+      const {isReport, productList, productListTemp} = this;
       const fillAddresList = productList.filter(v => v.requireServiceDate);
       const errorTimeIndex = productList.findIndex(v => v.sendStatus < '2' && new Date(v.requireServiceDate) < new Date(v.startDateTime));
       const valid = this.bUtil.valid([
@@ -311,18 +310,17 @@ export default {
               ...product,
               // requireServiceDate: productList[index].requireServiceDate + ':00',
               requireServiceDate: (`${productList[index].requireServiceDate}:00`).substr(0, 19),
-              customerName: addressList[0].trueName,
-              phoneNumber: addressList[0].mobile,
+              customerName: this.getNewAddress.trueName,
+              phoneNumber: this.getNewAddress.mobile,
               provinceName: this.getNewAddress.provinceName,
               cityName: this.getNewAddress.cityName,
               districtName: this.getNewAddress.areaName,
               address: this.getNewAddress.detailAddress,
-              regionCode: addressList[0].regionCode,
-              // todo hmcId 需要接口获取
-              hmcId: 'a000894',
-              isReportInstall: isReport
+              regionCode: this.getNewAddress.regionCode,
+              isReportInstall: isReport,
+              hmcid: this.hmcid
             };
-            if (!addressList[0].regionCode) {
+            if (!this.getNewAddress.regionCode) {
               data.regionCode = product.regionCode;
             }
             return data;
@@ -372,7 +370,8 @@ export default {
         mobile: item.consigneeUserPhone,
         cityName: item.consignee.cityName,
         areaName: item.consignee.districtName,
-        detailAddress: item.address
+        detailAddress: item.address,
+        regionCode: item.regionCode
       };
       this.updataNewAddress(newAddress);
       this.addressPopShow = false;
