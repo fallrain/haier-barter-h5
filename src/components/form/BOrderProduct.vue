@@ -104,10 +104,6 @@ export default {
         productCode: this.data.productCode,
         productPrice: this.data.productPrice
       };
-      // 测试数据
-      if (this.data.productCode == 'DC1PS0000') {
-        this.data.bccPrice = '1000';
-      }
       if (this.data.bccPrice) {
         obj.bccPrice = this.data.bccPrice;
       }

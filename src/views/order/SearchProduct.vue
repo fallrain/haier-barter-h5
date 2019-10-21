@@ -154,6 +154,13 @@ export default {
       return !!array.find(v => v.productCode === obj.productCode);
     },
     onItemClick(item) {
+      const orderMode = JSON.parse(localStorage.getItem('userinfo')).orderMode;
+      if (orderMode == 'Casarte') {
+        if (item.productBrandName == '海尔') {
+          Toast.failed('当前是卡萨帝模式，只能选择卡萨帝品牌的产品，请重新选择！');
+          return;
+        }
+      }
       if (!this.array_contain(this.searchHistory, item)) {
         this.searchHistory.push(item);
       }
@@ -187,6 +194,9 @@ export default {
 </script>
 
 <style lang="scss">
+  .md-toast-text{
+    white-space: normal !important;
+  }
   .searchProduct-notice-bar-title {
     color: #E89748;
   }

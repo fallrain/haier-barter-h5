@@ -228,10 +228,10 @@ export default {
       handCount:''
     };
   },
-  activated() {
+  activated() {debugger
     // window.location.reload()
   },
-  created() {
+  created() {debugger
     if (localStorage.getItem('confirm') === 'list') {
       this.curTab = 3;
       localStorage.setItem('confirm', '');
@@ -248,10 +248,12 @@ export default {
     //   // hmcid: 'a0032188',
     //   // mobile: '13905427400',
     //   // shopId: '8700048360',
-    //   hmcid: 'A0032254',
+    //   hmcid: 'Z0166654',
+    //   orderMode: 'Haier',
+    //   // orderMode: 'Casarte',
     //   mobile: '15621017056',
-    //   shopId: '8700048360',
-    //   token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IkEwMDMyMjU0Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MTIxOTA1NCwiZXhwIjoxNTcyMDgzMDU0fQ.i0qRLhbomRvHJQw3-4oZ63l3XGfjOXeFHdy1IdpX39M'
+    //   shopId: '8800266470',
+    //   token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IlowMTY2NjU0Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MTY0MzUxOSwiZXhwIjoxNTcyNTA3NTE5fQ.enFcDUUuaR_IrewO533cyA9zGShVrHJIAT0VmHDsv-Y'
     // };
     // const Str = JSON.stringify(this.userinfo);
     // localStorage.setItem('userinfo', Str);
@@ -306,12 +308,17 @@ export default {
       this.curTab = index;
     },
     handEntry() {
+      const orderMode = JSON.parse(localStorage.getItem('userinfo')).orderMode;
+      if (orderMode == 'Casarte') {
+        Toast.failed('卡萨帝模式，不支持手动录单');
+        return;
+      }
       this.orderService.checkUpperLimitForSGLD().then(res => {
         if(res.code === 1){
           this.handEntryCon = true
           this.handCount = res.data
         }else {
-            Toast.info('您已没有手动录单条数，请选择其他录单方式')
+            Toast.info('您已没有手动录单条数，请选择其他录单方式', 300000);
         }
       })
 

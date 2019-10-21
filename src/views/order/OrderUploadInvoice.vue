@@ -151,6 +151,10 @@ export default {
     },
 
     updateSubmit() {
+      if (this.invoiceList.length == 0) {
+        Toast.failed('请上传凭证！');
+        return;
+      }
       this.orderService.uploadInvoice(this.invoiceList, { orderNo: this.orderNo }).then((res) => {
         if (res.code === 1) {
           Toast.succeed('上传成功');
