@@ -1,7 +1,7 @@
 <template>
   <div class="bSearchInput-par">
     <div class="bSearchInput-wrap">
-      <form :target="iframeId" @submit.prevent class="bSearchInput-form" action="#">
+<!--      <form :target="iframeId" @submit.prevent class="bSearchInput-form" action="#">-->
         <input
           class="bSearchInput"
           type="search"
@@ -10,7 +10,7 @@
           @keypress="searchClick"
         >
         <iframe :name="iframeId" style="display: none;"></iframe>
-      </form>
+<!--      </form>-->
       <i
         class="iconfont icon-fangdajing"
         @click="searchClick"
