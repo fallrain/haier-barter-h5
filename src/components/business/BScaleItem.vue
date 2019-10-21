@@ -1,5 +1,6 @@
 <template>
-  <div class="bScaleItem">
+  <div class="bScaleItem"
+       @click="showDetail(data,index)">
     <div
       class="bScaleItem-head"
       :class="[isShowDetail && 'sticky']"
@@ -13,7 +14,6 @@
             v-if="type==='normal' || type==='verify'"
             class="iconfont icon-jiantou9"
             :class="[isShowDetail && 'reverse']"
-            @click="showDetail(data,index)"
           ></i>
         </div>
         <div>
