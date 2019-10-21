@@ -214,6 +214,14 @@
     >
       该用户满足{{rightsName}}购机活动，您录单时未选则该活动，用户将无法获得购机礼品，请确定是否提交。
     </md-dialog>
+    <md-dialog
+      title=""
+      :closable="true"
+      v-model="basicDialog1.open"
+      :btns="basicDialog1.btns"
+    >
+      上月销量闸口已关闭，你录入的该订单为上月订单，将无法拿到销量提成，请确定是否继续？
+    </md-dialog>
   </div>
 </template>
 
@@ -273,6 +281,19 @@ export default {
           {
             text: '确认提交',
             handler: this.onBasicConfirm,
+          },
+        ],
+      },
+      basicDialog1: { // 模态框  提示销量闸口
+        open: false,
+        btns: [
+          {
+            text: '取消',
+            handler: this.onBasicCancel1,
+          },
+          {
+            text: '确定',
+            handler: this.onBasicConfirm1,
           },
         ],
       },
@@ -408,7 +429,17 @@ export default {
   computed: {},
   watch: {
     buyDate(newV, oldV) {
-      console.log(oldV, newV);
+      console.log(this.userParam.hmcid)
+      this.orderService.isAccordDeadline({
+      }, {
+        hmcId: this.userParam.hmcid,
+        orderCrTime: newV,
+        requestNoToast: true
+      }).then((res) => {
+        if (res.code == -1) {
+          this.basicDialog1.open = true;
+        }
+      });
     }
   },
   mounted() {
@@ -988,6 +1019,13 @@ console.log(this.orderFollowId)
           });
       }
       this.basicDialog.open = false;
+    },
+    onBasicCancel1() {
+      this.basicDialog1.open = false;
+      this.$router.go(-1);
+    },
+    onBasicConfirm1() {
+      this.basicDialog1.open = false;
     }
   },
   // beforeRouteLeave(to,from,next){
@@ -1029,6 +1067,9 @@ console.log(this.orderFollowId)
 </script>
 
 <style lang="scss">
+  .md-popup-box{
+    z-index: 999999999 !important;
+  }
   .orderEntry-header {
     display: flex;
     align-items: center;

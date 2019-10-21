@@ -13,7 +13,7 @@
     <div
       v-if="content"
       class="b-order-product-item-cnt"
-    <p class="install-class">代包装时间：{{data.installTime}}</p>
+    <p class="install-class">代报装时间：{{data.installTime}}</p>
       <slot></slot>
     </div>
   </li>

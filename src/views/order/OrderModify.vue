@@ -184,7 +184,7 @@
       v-model="multBuyParticipantCheckIds"
       @allCheck="particpantAll"
       @multiCheck="particpantClick"
-      tips="套购参秘人可查看套头订单不需要录入订单,但是需确定确单信息正确后自主申报销量。"
+      tips="套购参与人可查看套购订单不需要录入订单,但是需确定订单信息正确后自主申报销量。"
       :checkAll="true"
       type="checkbox"
     ></b-multbuy-check>
@@ -197,6 +197,14 @@
       :btns="basicDialog.btns"
     >
       该用户满足{{rightsName}}购机活动，您录单时未选则该活动，用户将无法获得购机礼品，请确定是否提交。
+    </md-dialog>
+    <md-dialog
+      title=""
+      :closable="true"
+      v-model="basicDialog1.open"
+      :btns="basicDialog1.btns"
+    >
+      上月销量闸口已关闭，你录入的该订单为上月订单，将无法拿到销量提成，请确定是否继续？
     </md-dialog>
 </div>
 </template>
@@ -251,6 +259,19 @@ export default {
           {
             text: '确认提交',
             handler: this.onBasicConfirm,
+          },
+        ],
+      },
+      basicDialog1: { // 模态框  提示销量闸口
+        open: false,
+        btns: [
+          {
+            text: '取消',
+            handler: this.onBasicCancel1,
+          },
+          {
+            text: '确定',
+            handler: this.onBasicConfirm1,
           },
         ],
       },
@@ -376,10 +397,25 @@ export default {
       sourceSn: '',
       queryInstall: false,
       isInstall: false,
-      saveType: 1
+      saveType:1
     };
   },
   computed: {},
+  watch: {
+    buyDate(newV, oldV) {
+      console.log(this.userParam.hmcid)
+      this.orderService.isAccordDeadline({
+      }, {
+        hmcId: this.userParam.hmcid,
+        orderCrTime: newV,
+        requestNoToast: true
+      }).then((res) => {
+        if (res.code == -1) {
+          this.basicDialog1.open = true;
+        }
+      });
+    }
+  },
   mounted() {
   //
   //    if(this.$route.query){
@@ -388,7 +424,6 @@ export default {
   //    }
   },
   activated() {
-    debugger;
     if (this.$route.query.temp) {
       let ID = '';
       const obj = JSON.parse(this.$route.query.temp);
@@ -398,7 +433,7 @@ export default {
       }
       if (obj.rightsJson) {
         this.rightsJson = obj.rightsJson;
-        debugger;
+        debugger
         const right = JSON.parse(obj.rightsJson);
 
         this.rightName = right.rightsName;
@@ -411,7 +446,7 @@ export default {
         this.rightsList = rightsPro;
       }
       if (obj.product) {
-        debugger;
+        debugger
         if (!obj.product.productGroupName) {
           return;
         }
@@ -439,16 +474,15 @@ export default {
         });
       }
     }
-    console.log(this.orderFollowId);
+    console.log(this.orderFollowId)
   },
-  created() {
-    debugger;
+  created() {debugger
     this.addressData = addressData;
     this.orderNo = this.$route.params.orderNo;
     this.orderFollowId = this.$route.params.orderFollowId;
     this.userParam = JSON.parse(localStorage.getItem('userinfo'));
     this.getData();
-    console.log(this.orderFollowId);
+    console.log(this.orderFollowId)
   },
   methods: {
   //  haveConsignee() {
@@ -473,7 +507,7 @@ export default {
     },
     isReportInstall(pro) {
       this.productList.push(pro);
-      debugger;
+      debugger
       const orderDetailInfo = [
         { hmcId: this.userParam.hmcid,
           storeId: this.userParam.shopId,
@@ -639,10 +673,11 @@ export default {
     },
     // 暂存
     saveTemporary(type) {
-      if (type === 1) {
-        this.saveType = 1;
-      } else {
-        this.saveType = 0;
+
+      if(type === 1){
+        this.saveType = 1
+      }else {
+        this.saveType = 0
       }
       this.generateSubInfo(1);
     },
@@ -669,12 +704,12 @@ export default {
       this.generateSubInfo(2);
     },
 
-    generateSubInfo(type) {
-      if (this.productList.length === 0) {
+    generateSubInfo(type) {debugger
+      if(this.productList.length === 0){
         Toast.failed('请选择产品');
         return;
       }
-      if (!this.bUtil.isReportInstallFit(this.productList, this.deliveryTime)) {
+      if (!this.bUtil.isReportInstallFit(this.productList,this.deliveryTime)) {
         return;
       }
 
@@ -754,10 +789,6 @@ export default {
           name: 'Order.OrderFollowActivity',
           params: { orderInfo: info }
         });
-        // this.$router.push({
-        //   name: 'Order.OrderRights',
-        //   params: { orderInfo: info }
-        // });
       } else {
         if (this.rightsList.length == 0) {
           this.rightsService.queryOrderOptionalRights(this.subInfo, {
@@ -791,6 +822,25 @@ export default {
               }
             }
           });
+        } else {
+          if (this.orderNo !== '') {console.log(2)
+            Toast.loading('保存中...');
+            this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
+              .then((res) => {
+                if (res.code === 1) {
+                  if (this.saveType === 1) {
+                    Toast.succeed('订单暂存成功');
+                    this.$router.go(-1);
+                  }
+                  if (this.saveType === 0) {
+                    this.$router.push({
+                      name: 'Order.OrderUploadInvoice',
+                      params: { orderNo: this.orderNo }
+                    });
+                  }
+                }
+              });
+          }
         }
       }
     },
@@ -847,7 +897,7 @@ export default {
       if (this.productList.length === 0) {
         Toast.info('请选择产品');
       }
-      this.saveType = 0;
+      this.saveType = 0
       this.saveTemporary(2);
     },
     saveOrder() {
@@ -861,8 +911,7 @@ export default {
       this.basicDialog.open = false;
     },
     onBasicConfirm() {
-      if (this.orderNo !== '') {
-        console.log(3);
+      if (this.orderNo !== '') {console.log(3)
         Toast.loading('保存中...');
         this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
           .then((res) => {
@@ -881,6 +930,13 @@ export default {
           });
       }
       this.basicDialog.open = false;
+    },
+    onBasicCancel1() {
+      this.basicDialog1.open = false;
+      this.$router.go(-1);
+    },
+    onBasicConfirm1() {
+      this.basicDialog1.open = false;
     }
   },
   beforeRouteLeave(to, from, next) {

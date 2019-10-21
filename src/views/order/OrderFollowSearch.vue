@@ -689,10 +689,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  .mescroll {
-    /*解决滚动条异常bug*/
-    height: auto !important;
-  }
   .md-notice-bar {
     position: absolute;
     width: 100%;
