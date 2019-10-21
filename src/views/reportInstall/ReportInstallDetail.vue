@@ -68,7 +68,7 @@
                   :custom-types="['yyyy', 'MM','dd', 'hh']"
                   pattern="yyyy-MM-dd hh:00"
                   :disabled="product.dateDisabled || tag == 'detail'"
-                  :default-date="new Date(product.requireServiceDate)"
+                  :default-date="new Date(product.requireServiceDate.replace(/-/g,'/'))"
                   :min-date="new Date(product.startDateTime)"
                   v-model="product.requireServiceDate"
                 ></b-date-picker>
@@ -253,7 +253,7 @@ export default {
               dateDisabled: (v.sendStatus !== '0' && v.sendStatus !== '1'),
               sendStatus: v.sendStatus
             };
-            const deliveryTime = new Date(v.deliveryTime.replace('-', '/'));
+            const deliveryTime = new Date(v.deliveryTime.replace(/-/g, '/'));
             // 开始时间开始取接口传回时间（配送时间+4小时或者第二天10天）和今天的时间相比更晚的值
             // obj.startDateTime = v.requireServiceDate;//2019-06-13暂时去掉，改为只用当前时间作为开始时间
             let startDateTime;
