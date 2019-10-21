@@ -96,15 +96,26 @@ export default {
   },
   methods: {
     orderFollow() {
+      // this.$router.push({
+      //   name: 'Order.OrderFollowSearch',
+      // });
       this.$router.push({
-        name: 'Order.OrderFollowSearch',
+        path: '/',
+        query: {
+          userinfo: localStorage.getItem('userinfo')
+        }
+        // name: 'Order.OrderFollowSearch',
       });
     },
     checkOrder() {
-      this.$router.push({
-        name: 'Order.OrderFollowSearch',
-      });
       localStorage.setItem('confirm', 'list');
+      this.$router.push({
+        path: '/',
+        query: {
+          userinfo: localStorage.getItem('userinfo')
+        }
+        // name: 'Order.OrderFollowSearch',
+      });
     },
   },
 

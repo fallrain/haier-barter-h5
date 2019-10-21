@@ -193,7 +193,7 @@
         v-model="multBuyParticipantCheckIds"
         @allCheck="particpantAll"
         @multiCheck="particpantClick"
-        tips="套购参秘人可查看套头订单不需要录入订单,但是需确定确单信息正确后自主申报销量。"
+        tips="套购参与人可查看套购订单不需要录入订单,但是需确定订单信息正确后自主申报销量。"
         :checkAll="true"
         type="checkbox"
       ></b-multbuy-check>
@@ -499,6 +499,7 @@ export default {
     this.addressData = addressData;
     this.userParam = JSON.parse(localStorage.getItem('userinfo'));
     this.shopId = this.userParam.shopId;
+    this.queryUserList();
 
     this.getUserStore();
     if (this.$route.params.customerConsigneeInfo.businessScenarios) {
@@ -522,7 +523,6 @@ console.log(this.orderFollowId)
     if (this.$route.params.region === 'hand') {
       this.haveConsignee = false;
       this.haveCustomer = false;
-
       return;
     }
     this.customerInfo.username = this.$route.params.customerConsigneeInfo.userName;
@@ -532,7 +532,6 @@ console.log(this.orderFollowId)
     this.recordMode = this.$route.params.customerConsigneeInfo.recordMode;
     this.mobile = this.customerInfo.mobile;
     this.queryCustomerDefault();
-    this.queryUserList();
   },
   methods: {
     //  haveConsignee() {
