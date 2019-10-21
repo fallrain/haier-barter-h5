@@ -259,7 +259,7 @@ export default {
 
     }
   },
-  beforeRouteLeave(to, from, next) {debugger
+  beforeRouteLeave(to, from, next) {
     if (this.$vnode && this.$vnode.data.keepAlive) {
       if (this.$vnode.parent && this.$vnode.parent.componentInstance && this.$vnode.parent.componentInstance.cache) {
         if (this.$vnode.componentOptions) {

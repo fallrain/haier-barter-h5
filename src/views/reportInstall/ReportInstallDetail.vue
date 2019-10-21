@@ -342,8 +342,9 @@ export default {
               confirmText: '确定',
               onConfirm: () => {
                 // 成功后传回要删除的list下标
+                console.log('this.itemIndex ', this.itemIndex);
                 if (this.itemIndex !== undefined) {
-                  sessionStorage.setStorageSync('reportInstallList.itemIndex', this.itemIndex);
+                  sessionStorage.setItem('reportInstallList.itemIndex', this.itemIndex);
                 }
                 this.$mBack();
               }

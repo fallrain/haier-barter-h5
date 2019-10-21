@@ -153,11 +153,13 @@ export default {
     updateSubmit() {
       this.orderService.uploadInvoice(this.invoiceList, { orderNo: this.orderNo }).then((res) => {
         if (res.code === 1) {
-          // Toast.succed(res.msg);
-          this.$router.push({
-            name: 'Order.OrderConfirm',
-            params: { orderNo: this.orderNo }
-          });
+          Toast.succeed('上传成功');
+          setTimeout(() => {
+            this.$router.push({
+              name: 'Order.OrderConfirm',
+              params: { orderNo: this.orderNo }
+            });
+          }, 800);
         }
       });
     },

@@ -41,6 +41,10 @@
         type: Object,
         require: true
       },
+      index: {
+        type: Number,
+        default: -1
+      },
       isShow: true,
     },
     methods: {
@@ -62,8 +66,8 @@
                 workFlowId: this.orderItem.orderId,
                 parentPage: 'list', // 从何处跳过去的，此处代表列表
                 flowStatus: this.curTab, // 判断待报装、非待报装
-                tag: 'update' //判断是修改进详情还是item进详情
-                // itemIndex: orderIndex
+                tag: 'update', //判断是修改进详情还是item进详情
+                itemIndex: this.index
               };
               this.$router.push({
                 name: 'ReportInstall.ReportInstallDetail',
