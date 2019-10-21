@@ -652,4 +652,8 @@ export default {
     color: #999;
     line-height: 40px;
   }
+  .reportInstallList-view {
+    height: calc(100vh - 184px);
+  }
+
 </style>
