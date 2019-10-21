@@ -184,7 +184,7 @@
       v-model="multBuyParticipantCheckIds"
       @allCheck="particpantAll"
       @multiCheck="particpantClick"
-      tips="套购参秘人可查看套头订单不需要录入订单,但是需确定确单信息正确后自主申报销量。"
+      tips="套购参与人可查看套购订单不需要录入订单,但是需确定订单信息正确后自主申报销量。"
       :checkAll="true"
       type="checkbox"
     ></b-multbuy-check>
@@ -197,6 +197,14 @@
       :btns="basicDialog.btns"
     >
       该用户满足{{rightsName}}购机活动，您录单时未选则该活动，用户将无法获得购机礼品，请确定是否提交。
+    </md-dialog>
+    <md-dialog
+      title=""
+      :closable="true"
+      v-model="basicDialog1.open"
+      :btns="basicDialog1.btns"
+    >
+      上月销量闸口已关闭，你录入的该订单为上月订单，将无法拿到销量提成，请确定是否继续？
     </md-dialog>
 </div>
 </template>
@@ -251,6 +259,19 @@ export default {
           {
             text: '确认提交',
             handler: this.onBasicConfirm,
+          },
+        ],
+      },
+      basicDialog1: { // 模态框  提示销量闸口
+        open: false,
+        btns: [
+          {
+            text: '取消',
+            handler: this.onBasicCancel1,
+          },
+          {
+            text: '确定',
+            handler: this.onBasicConfirm1,
           },
         ],
       },
@@ -380,6 +401,21 @@ export default {
     };
   },
   computed: {},
+  watch: {
+    buyDate(newV, oldV) {
+      console.log(this.userParam.hmcid)
+      this.orderService.isAccordDeadline({
+      }, {
+        hmcId: this.userParam.hmcid,
+        orderCrTime: newV,
+        requestNoToast: true
+      }).then((res) => {
+        if (res.code == -1) {
+          this.basicDialog1.open = true;
+        }
+      });
+    }
+  },
   mounted() {
   //
   //    if(this.$route.query){
@@ -387,7 +423,7 @@ export default {
   //   console.log('tag', address)
   //    }
   },
-  activated() {debugger
+  activated() {
     if (this.$route.query.temp) {
       let ID = '';
       const obj = JSON.parse(this.$route.query.temp);
@@ -894,6 +930,13 @@ export default {
           });
       }
       this.basicDialog.open = false;
+    },
+    onBasicCancel1() {
+      this.basicDialog1.open = false;
+      this.$router.go(-1);
+    },
+    onBasicConfirm1() {
+      this.basicDialog1.open = false;
     }
   },
   beforeRouteLeave(to, from, next) {
