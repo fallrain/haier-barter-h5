@@ -376,7 +376,7 @@ export default {
       sourceSn: '',
       queryInstall: false,
       isInstall: false,
-      saveType:1
+      saveType: 1
     };
   },
   computed: {},
@@ -387,7 +387,8 @@ export default {
   //   console.log('tag', address)
   //    }
   },
-  activated() {debugger
+  activated() {
+    debugger;
     if (this.$route.query.temp) {
       let ID = '';
       const obj = JSON.parse(this.$route.query.temp);
@@ -397,7 +398,7 @@ export default {
       }
       if (obj.rightsJson) {
         this.rightsJson = obj.rightsJson;
-        debugger
+        debugger;
         const right = JSON.parse(obj.rightsJson);
 
         this.rightName = right.rightsName;
@@ -410,7 +411,7 @@ export default {
         this.rightsList = rightsPro;
       }
       if (obj.product) {
-        debugger
+        debugger;
         if (!obj.product.productGroupName) {
           return;
         }
@@ -438,15 +439,16 @@ export default {
         });
       }
     }
-    console.log(this.orderFollowId)
+    console.log(this.orderFollowId);
   },
-  created() {debugger
+  created() {
+    debugger;
     this.addressData = addressData;
     this.orderNo = this.$route.params.orderNo;
     this.orderFollowId = this.$route.params.orderFollowId;
     this.userParam = JSON.parse(localStorage.getItem('userinfo'));
     this.getData();
-    console.log(this.orderFollowId)
+    console.log(this.orderFollowId);
   },
   methods: {
   //  haveConsignee() {
@@ -471,7 +473,7 @@ export default {
     },
     isReportInstall(pro) {
       this.productList.push(pro);
-      debugger
+      debugger;
       const orderDetailInfo = [
         { hmcId: this.userParam.hmcid,
           storeId: this.userParam.shopId,
@@ -637,11 +639,10 @@ export default {
     },
     // 暂存
     saveTemporary(type) {
-
-      if(type === 1){
-        this.saveType = 1
-      }else {
-        this.saveType = 0
+      if (type === 1) {
+        this.saveType = 1;
+      } else {
+        this.saveType = 0;
       }
       this.generateSubInfo(1);
     },
@@ -668,12 +669,12 @@ export default {
       this.generateSubInfo(2);
     },
 
-    generateSubInfo(type) {debugger
-      if(this.productList.length === 0){
+    generateSubInfo(type) {
+      if (this.productList.length === 0) {
         Toast.failed('请选择产品');
         return;
       }
-      if (!this.bUtil.isReportInstallFit(this.productList,this.deliveryTime)) {
+      if (!this.bUtil.isReportInstallFit(this.productList, this.deliveryTime)) {
         return;
       }
 
@@ -753,6 +754,10 @@ export default {
           name: 'Order.OrderFollowActivity',
           params: { orderInfo: info }
         });
+        // this.$router.push({
+        //   name: 'Order.OrderRights',
+        //   params: { orderInfo: info }
+        // });
       } else {
         if (this.rightsList.length == 0) {
           this.rightsService.queryOrderOptionalRights(this.subInfo, {
@@ -786,25 +791,6 @@ export default {
               }
             }
           });
-        } else {
-          if (this.orderNo !== '') {console.log(2)
-            Toast.loading('保存中...');
-            this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
-              .then((res) => {
-                if (res.code === 1) {
-                  if (this.saveType === 1) {
-                    Toast.succeed('订单暂存成功');
-                    this.$router.go(-1);
-                  }
-                  if (this.saveType === 0) {
-                    this.$router.push({
-                      name: 'Order.OrderUploadInvoice',
-                      params: { orderNo: this.orderNo }
-                    });
-                  }
-                }
-              });
-          }
         }
       }
     },
@@ -861,7 +847,7 @@ export default {
       if (this.productList.length === 0) {
         Toast.info('请选择产品');
       }
-      this.saveType = 0
+      this.saveType = 0;
       this.saveTemporary(2);
     },
     saveOrder() {
@@ -875,7 +861,8 @@ export default {
       this.basicDialog.open = false;
     },
     onBasicConfirm() {
-      if (this.orderNo !== '') {console.log(3)
+      if (this.orderNo !== '') {
+        console.log(3);
         Toast.loading('保存中...');
         this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
           .then((res) => {
