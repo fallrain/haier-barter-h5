@@ -94,7 +94,7 @@ export default {
 <style lang="scss">
   .b-pop-checkList1 {
     .md-popup-title-bar {
-      height: 100px;
+      // height: 100px;
 
       .title-bar-left {
         font-size: 28px;
