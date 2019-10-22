@@ -883,6 +883,7 @@ console.log(this.orderFollowId)
                       name: 'Order.OrderUploadInvoice',
                       params: { orderNo: this.orderNo }
                     });
+                    this.$destroy();
                   }
                 }
               });

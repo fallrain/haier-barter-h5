@@ -40,8 +40,11 @@ new Vue({
 
 function getuserInfo() {
   const userinfostr = decodeURIComponent(bUtil.getUrlVal('userinfo'));
-  const userinfo = JSON.parse(userinfostr);
-  localStorage.setItem('userinfo', userinfostr);
-  localStorage.setItem('acces_token', userinfo.token);
+  if (typeof(userinfostr) == 'undefined') {
+    console.log(userinfostr);
+    const userinfo = JSON.parse(userinfostr);
+    localStorage.setItem('userinfo', userinfostr);
+    localStorage.setItem('acces_token', userinfo.token);
+  }
 }
 getuserInfo();

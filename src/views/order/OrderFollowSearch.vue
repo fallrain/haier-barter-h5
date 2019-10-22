@@ -229,11 +229,7 @@ export default {
     };
   },
   activated() {
-    this.updateList = true;
-    this.searchData({
-      num: 0,
-      size: 10
-    });
+    // window.location.reload();
   },
   created() {
     if (localStorage.getItem('confirm') === 'list') {
@@ -322,7 +318,7 @@ export default {
           this.handEntryCon = true
           this.handCount = res.data
         }else {
-            Toast.info('您已没有手动录单条数，请选择其他录单方式', 300000);
+            Toast.info('您已没有手动录单条数，请选择其他录单方式', 3000);
         }
       })
 
@@ -513,7 +509,7 @@ export default {
             sroviewObj.pages = pages;
             sroviewObj.result = result;
             if(this.fuzzy){
-              if(result.length === 0){console.log(1)
+              if(result.length === 0){
                 this[this.curScrollViewName].list = [];
                 Toast.failed('搜索结果不存在')
                 this.fuzzy = false
@@ -524,7 +520,9 @@ export default {
               const curList = result;
               this.anylizeData(curList);
               if (!this.updateList) {
+                console.log(page);
                 if (page.num === 1) {
+                  console.log(this.curScrollViewName)
                   this[this.curScrollViewName].list = [];
 
                   this[this.curScrollViewName].list = this.currentList;
@@ -535,7 +533,7 @@ export default {
               } else {
                 this[this.curScrollViewName].list = [];
                 this[this.curScrollViewName].list = this.currentList;
-                this.updateList = false
+                // this.updateList = false;
               }
 
               // });
@@ -686,7 +684,7 @@ export default {
   beforeRouteEnter(to, from, next) {
     if (from.name === 'Order.OrderFollowCommitResult') {
       next();
-      // window.location.reload();
+      window.location.reload();
     }
     next();
   },

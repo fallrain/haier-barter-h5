@@ -1,5 +1,5 @@
 <template xmlns:v-slot="">
-  <div>
+  <div style="padding-bottom: 72px;">
     <div class="orderConfirm-no">
       <span class="orderConfirm-p">订单号：</span>
       <p class="orderConfirm-s">{{orderNo}}</p>
@@ -428,11 +428,11 @@ export default {
     border-radius: 8px;
     color: #fff;
     background: #1969C6;
-    /*position: fixed;*/
+    position: fixed;
     width: 90%;
     margin-left: 5%;
-    /*margin-bottom: 20px;*/
-    position: absolute;
+    margin-bottom: 20px;
+    /*position: absolute;*/
     bottom: 20px;
   }
 </style>
