@@ -40,7 +40,7 @@ new Vue({
 
 function getuserInfo() {
   const userinfo = bUtil.convertQueryStingToMap();
-  if (userinfo) {
+  if (userinfo.hmcid) {
     localStorage.setItem('userinfo', JSON.stringify(userinfo));
     localStorage.setItem('acces_token', userinfo.token);
   }
