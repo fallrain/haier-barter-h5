@@ -153,6 +153,8 @@ export default {
         shopName: '',
         regionCode: '',
       },
+      //顾客信息
+      customerInfo: {},
       radiosIsReport: [
         {
           key: 1,
@@ -211,6 +213,9 @@ export default {
         orderId: option.orderId || ''
       };
       this.user = userInfo;
+      this.customerInfo.username = option.userName;
+      this.customerInfo.mobile = option.mobile;
+      this.customerInfo.userId = option.userId;
       this.addStatus = option.addStatus || false;
       this.itemIndex = option.itemIndex || undefined;
       this.flowStatus = option.flowStatus;
@@ -342,7 +347,6 @@ export default {
               confirmText: '确定',
               onConfirm: () => {
                 // 成功后传回要删除的list下标
-                console.log('this.itemIndex ', this.itemIndex);
                 if (this.itemIndex !== undefined) {
                   sessionStorage.setItem('reportInstallList.itemIndex', this.itemIndex);
                 }
