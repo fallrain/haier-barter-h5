@@ -220,7 +220,7 @@
       v-model="basicDialog1.open"
       :btns="basicDialog1.btns"
     >
-      上月销量闸口已关闭，你录入的该订单为上月订单，将无法拿到销量提成，请确定是否继续？
+      该月销量闸口已关闭，你录入的该订单非本月订单，将无法拿到销量提成，请确定是否继续？
     </md-dialog>
   </div>
 </template>
