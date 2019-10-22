@@ -8,15 +8,7 @@
             type="number"
             class="addAddress-form-item-ipt"
             placeholder="请输入手机号"
-            v-model="customerInfo.mobile"
-            v-show="region != 'edit'"
-          >
-          <input
-            type="number"
-            class="addAddress-form-item-ipt"
-            placeholder="请输入手机号"
             disabled="true"
-            v-show="region == 'edit'"
             v-model="customerInfo.mobile"
           >
         </div>
@@ -32,15 +24,7 @@
             type="text"
             class="addAddress-form-item-ipt"
             placeholder="请输入姓名"
-            v-show="region != 'edit'"
-            v-model="customerInfo.username"
-          >
-          <input
-            type="text"
-            class="addAddress-form-item-ipt"
-            placeholder="请输入姓名"
             disabled="true"
-            v-show="region == 'edit'"
             v-model="customerInfo.username"
           >
         </div>
