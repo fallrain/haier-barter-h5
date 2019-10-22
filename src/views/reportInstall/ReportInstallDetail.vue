@@ -53,6 +53,7 @@
           :inline="true"
           :list="radiosIsReport"
           v-model="isReport"
+          @radioChange="changeReport"
         ></b-radio-item>
         <div v-if="isReport===1">
           <div
@@ -193,7 +194,9 @@ export default {
     ...mapMutations([
       'updataNewAddress'
     ]),
-
+    changeReport(isReport) {
+      this.isReport = isReport;
+    },
     setUserInfo() {
       /* 设置订单用户信息 */
       const option = this.$route.query;
@@ -303,7 +306,6 @@ export default {
           message: `第${errorTimeIndex + 1}个产品安装时间不正确`
         }
       ]);
-      if (isReport) {
         if (valid()) {
           const reportInstallInfo = productListTemp.map((product, index) => {
             const data = {
@@ -349,9 +351,7 @@ export default {
             });
           });
         }
-      } else {
-        this.$mBack();
-      }
+
     },
     editAddress(info) {
       this.addressPopShow = false;
