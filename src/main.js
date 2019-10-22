@@ -39,11 +39,9 @@ new Vue({
 }).$mount('#app');
 
 function getuserInfo() {
-  const userinfostr = decodeURIComponent(bUtil.getUrlVal('userinfo'));
-  if (typeof(userinfostr) == 'undefined') {
-    console.log(userinfostr);
-    const userinfo = JSON.parse(userinfostr);
-    localStorage.setItem('userinfo', userinfostr);
+  const userinfo = bUtil.convertQueryStingToMap();
+  if (userinfo) {
+    localStorage.setItem('userinfo', JSON.stringify(userinfo));
     localStorage.setItem('acces_token', userinfo.token);
   }
 }
