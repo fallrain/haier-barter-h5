@@ -111,7 +111,7 @@ export default {
 
     search() {
       /* 搜索产品 */
-      const searchStr = this.searchVal.toUpperCase().replace(/\//g, '%2F');
+      const searchStr = this.searchVal.toUpperCase().replace(/\//g, ' ');
       this.productService.list(searchStr, '1', '30').then((res) => {
         // ;
         if (res.code === 1) {
@@ -157,7 +157,7 @@ export default {
     onItemClick(item) {
       const orderMode = JSON.parse(localStorage.getItem('userinfo')).orderMode;
       if (orderMode == 'Casarte') {
-        if (item.productBrandName == '海尔') {
+        if (item.productBrandName != '卡萨帝') {
           Toast.failed('当前是卡萨帝模式，只能选择卡萨帝品牌的产品，请重新选择！');
           return;
         }
