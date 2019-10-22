@@ -229,7 +229,11 @@ export default {
     };
   },
   activated() {
-    // window.location.reload()
+    this.updateList = true;
+    this.searchData({
+      num: 0,
+      size: 10
+    });
   },
   created() {
     if (localStorage.getItem('confirm') === 'list') {
@@ -285,7 +289,7 @@ export default {
       this.bUtil.scroviewTabChange(viewName, this);
     }
   },
-  mounted() {
+  mounted() {console.log('mounted')
     // 创建当前tab的MeScroll对象，并下拉刷新
     this.bUtil.scroviewTabChange(this.curScrollViewName, this);
   },
@@ -526,11 +530,12 @@ export default {
                   this[this.curScrollViewName].list = this.currentList;
                 } else {
                   this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(this.currentList);
+                  console.log(this[this.curScrollViewName].list);
                 }
               } else {
                 this[this.curScrollViewName].list = [];
                 this[this.curScrollViewName].list = this.currentList;
-                // this.updateList = false
+                this.updateList = false
               }
 
               // });
@@ -681,7 +686,7 @@ export default {
   beforeRouteEnter(to, from, next) {
     if (from.name === 'Order.OrderFollowCommitResult') {
       next();
-      window.location.reload();
+      // window.location.reload();
     }
     next();
   },
