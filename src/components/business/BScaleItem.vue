@@ -81,12 +81,14 @@ export default {
   methods: {
     showDetail(item, index) {
       /* 显示详情与否 */
-      this.isShowDetail = !this.isShowDetail;
-      this.$emit('showDetail', {
-        isShowDetail: this.isShowDetail,
-        item,
-        index
-      });
+      if (this.type == 'normal' || this.type == 'verify') {
+        this.isShowDetail = !this.isShowDetail;
+        this.$emit('showDetail', {
+          isShowDetail: this.isShowDetail,
+          item,
+          index
+        });
+      }
     },
     barCodeClick(detail) {
       /* 销量申报按钮click */
