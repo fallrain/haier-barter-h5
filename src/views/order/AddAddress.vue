@@ -8,7 +8,6 @@
             type="number"
             class="addAddress-form-item-ipt"
             placeholder="请输入手机号"
-            disabled="true"
             v-model="customerInfo.mobile"
           >
         </div>
@@ -24,7 +23,6 @@
             type="text"
             class="addAddress-form-item-ipt"
             placeholder="请输入姓名"
-            disabled="true"
             v-model="customerInfo.username"
           >
         </div>
@@ -253,10 +251,12 @@ export default {
           this.customerInfo.tag = a;
         }
       }
-      this.newAddress.provinceName = JSON.parse(this.$route.params.info).consignee.provinceName;
-      this.newAddress.districtName = JSON.parse(this.$route.params.info).consignee.districtName;
-      this.newAddress.cityName = JSON.parse(this.$route.params.info).consignee.cityName;
-      this.newAddress.regionCode = JSON.parse(this.$route.params.info).regionCode;
+      if (this.$route.params.info != '{}') {
+        this.newAddress.provinceName = JSON.parse(this.$route.params.info).consignee.provinceName;
+        this.newAddress.districtName = JSON.parse(this.$route.params.info).consignee.districtName;
+        this.newAddress.cityName = JSON.parse(this.$route.params.info).consignee.cityName;
+        this.newAddress.regionCode = JSON.parse(this.$route.params.info).regionCode;
+      }
     }
   },
   computed: {
@@ -296,6 +296,7 @@ export default {
       this.productService.deafaultCustomerAddress(this.customerInfo.mobile).then((res) => {
         if (res.code === 1) {
           if (res.data) {
+            this.searchResultShow = false;
             this.searchEnd = true;
             this.customerInfo.username = res.data.username;
             this.customerInfo.sex = res.data.sex;
