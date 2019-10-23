@@ -98,9 +98,9 @@ export default {
       this.$emit('addNew', item);
     },
     editAddress(item) {
-      if (!this.isFromReportInstallDetail) {
-        delete item.consignee
-      }
+      // if (!this.isFromReportInstallDetail) {
+      //   delete item.consignee
+      // }
       // 编辑地址
       this.$emit('editAddress', item);
     },
