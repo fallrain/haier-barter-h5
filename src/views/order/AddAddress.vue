@@ -9,6 +9,15 @@
             class="addAddress-form-item-ipt"
             placeholder="请输入手机号"
             v-model="customerInfo.mobile"
+            v-show="region != 'edit'"
+          >
+          <input
+            type="number"
+            class="addAddress-form-item-ipt"
+            placeholder="请输入手机号"
+            disabled="true"
+            v-show="region == 'edit'"
+            v-model="customerInfo.mobile"
           >
         </div>
       </li>
@@ -23,6 +32,15 @@
             type="text"
             class="addAddress-form-item-ipt"
             placeholder="请输入姓名"
+            v-show="region != 'edit'"
+            v-model="customerInfo.username"
+          >
+          <input
+            type="text"
+            class="addAddress-form-item-ipt"
+            placeholder="请输入姓名"
+            disabled="true"
+            v-show="region == 'edit'"
             v-model="customerInfo.username"
           >
         </div>
@@ -226,7 +244,7 @@ export default {
 
     if (this.$route.params) {
       this.region = this.$route.params.region;
-
+      console.log(this.region)
       if (this.region === 'add' && this.$route.params.info === '{}') {
         this.confirmShow = true;
       } else if (this.region === 'userAdd') {
