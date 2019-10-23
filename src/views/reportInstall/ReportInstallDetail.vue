@@ -152,8 +152,9 @@ export default {
         mobile: '',
         shopName: '',
         regionCode: '',
+        customerPhone: '',
       },
-      //顾客信息
+      // 顾客信息
       customerInfo: {},
       radiosIsReport: [
         {
@@ -247,7 +248,8 @@ export default {
               regionCode: data[0].regionCode,
             };
             this.user.shopName = data[0].storeName || '';
-            this.user.regionCode = data[0].regionCode
+            this.user.regionCode = data[0].regionCode;
+            this.user.customerPhone = data[0].customerPhone;
             this.hmcid = data[0].hmcid;
           }
           let canUpdateAddress = true;
@@ -311,51 +313,48 @@ export default {
           message: `第${errorTimeIndex + 1}个产品安装时间不正确`
         }
       ]);
-        if (valid()) {
-          const reportInstallInfo = productListTemp.map((product, index) => {
-            const data = {
-              ...product,
-              // requireServiceDate: productList[index].requireServiceDate + ':00',
-              requireServiceDate: (`${productList[index].requireServiceDate}:00`).substr(0, 19),
-              customerName: this.getNewAddress.trueName,
-              phoneNumber: this.getNewAddress.mobile,
-              provinceName: this.getNewAddress.provinceName,
-              cityName: this.getNewAddress.cityName,
-              districtName: this.getNewAddress.areaName,
-              address: this.getNewAddress.detailAddress,
-              regionCode: this.getNewAddress.regionCode,
-              isReportInstall: isReport,
-              hmcid: this.hmcid
-            };
-            if (!this.getNewAddress.regionCode) {
-              data.regionCode = product.regionCode;
-            }
-            return data;
-          });
+      if (valid()) {
+        const reportInstallInfo = productListTemp.map((product, index) => {
+          const data = {
+            ...product,
+            // requireServiceDate: productList[index].requireServiceDate + ':00',
+            requireServiceDate: (`${productList[index].requireServiceDate}:00`).substr(0, 19),
+            customerName: this.getNewAddress.trueName,
+            phoneNumber: this.getNewAddress.mobile,
+            provinceName: this.getNewAddress.provinceName,
+            cityName: this.getNewAddress.cityName,
+            districtName: this.getNewAddress.areaName,
+            address: this.getNewAddress.detailAddress,
+            regionCode: this.getNewAddress.regionCode,
+            isReportInstall: isReport,
+            hmcid: this.hmcid
+          };
+          if (!this.getNewAddress.regionCode) {
+            data.regionCode = product.regionCode;
+          }
+          return data;
+        });
           // if (!this.bUtil.isReportInstallFit(this.productList, this.deliveryTime)) {
           //   return;
           // }
-          this.reportInstallService.agentReportInstall({
-            reportInstallInfo
-          }).then((res) => {
-            if (res.code !== 1) {
-              return;
+        this.reportInstallService.agentReportInstall({
+          reportInstallInfo
+        }).then((res) => {
+          if (res.code !== 1) {
+            return;
+          }
+          Dialog.succeed({
+            title: '成功',
+            content: '报装成功',
+            confirmText: '确定',
+            onConfirm: () => {
+              //用来判断是否刷新代报装列表页面 如果reportInstallList.itemIndex有值就刷新
+              sessionStorage.setItem('reportInstallList.itemIndex', 1);
+              this.$mBack();
             }
-            Dialog.succeed({
-              title: '成功',
-              content: '报装成功',
-              confirmText: '确定',
-              onConfirm: () => {
-                // 成功后传回要删除的list下标
-                if (this.itemIndex !== undefined) {
-                  sessionStorage.setItem('reportInstallList.itemIndex', this.itemIndex);
-                }
-                this.$mBack();
-              }
-            });
           });
-        }
-
+        });
+      }
     },
     editAddress(info) {
       this.addressPopShow = false;
@@ -390,7 +389,7 @@ export default {
     },
     // 查询客户地址列表
     queryCustomerAddressList() {
-      this.productService.customerAddressListForTel(this.user.mobile).then((res) => {
+      this.productService.customerAddressListForCustomerTel(this.user.customerPhone).then((res) => {
         if (res.code === 1) {
           const Data = this.addressData.options;
           res.data.forEach((address) => {

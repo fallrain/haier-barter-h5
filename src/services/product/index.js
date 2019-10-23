@@ -17,8 +17,8 @@ export default {
   customerAddressList(mobile) {
     return axGet(urls.customerAddressList(mobile));
   },
-  customerAddressListForTel(mobile) {
-    return axGet(urls.customerAddressListForTel(mobile));
+  customerAddressListForCustomerTel(mobile) {
+    return axGet(urls.customerAddressListForCustomerTel(mobile));
   },
   updateCustomerAddress(data, param) {
     return axPostJson(urls.updateCustomerAddress, data, param);
