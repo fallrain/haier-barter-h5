@@ -443,6 +443,7 @@ export default {
           return;
         }
         this.isDetail = true;
+        console.log(rightsPro);
         this.rightsList = rightsPro;
       }
       if (obj.product) {
