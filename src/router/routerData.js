@@ -3,6 +3,7 @@ import Test from '@/views/home/Test';
 import orderRoutes from '@/router/order';
 import salesRoutes from '@/router/sales';
 import reportInstallRoutes from '@/router/reportInstall';
+import activityRoutes from '@/router/activity';
 
 const data = [
   {
@@ -15,7 +16,8 @@ const data = [
   },
   ...orderRoutes,
   ...salesRoutes,
-  ...reportInstallRoutes
+  ...reportInstallRoutes,
+  ...activityRoutes
 ];
 if (process.env.NODE_ENV !== 'production') {
   data.unshift({
