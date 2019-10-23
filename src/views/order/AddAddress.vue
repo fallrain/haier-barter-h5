@@ -9,14 +9,14 @@
             class="addAddress-form-item-ipt"
             placeholder="请输入手机号"
             v-model="customerInfo.mobile"
-            v-show="region != 'edit'"
+            v-show="region == 'userAdd'"
           >
           <input
             type="number"
             class="addAddress-form-item-ipt"
             placeholder="请输入手机号"
             disabled="true"
-            v-show="region == 'edit'"
+            v-show="region != 'userAdd'"
             v-model="customerInfo.mobile"
           >
         </div>
@@ -32,7 +32,7 @@
             type="text"
             class="addAddress-form-item-ipt"
             placeholder="请输入姓名"
-            v-show="region != 'edit'"
+            v-show="region == 'userAdd'"
             v-model="customerInfo.username"
           >
           <input
@@ -40,7 +40,7 @@
             class="addAddress-form-item-ipt"
             placeholder="请输入姓名"
             disabled="true"
-            v-show="region == 'edit'"
+            v-show="region != 'userAdd'"
             v-model="customerInfo.username"
           >
         </div>
@@ -242,7 +242,7 @@ export default {
     this.customerInfo.tag = [];
     this.getFamilyItem();
 
-    if (this.$route.params) {
+    if (this.$route.params) {debugger;
       this.region = this.$route.params.region;
       console.log(this.region)
       if (this.region === 'add' && this.$route.params.info === '{}') {
@@ -270,10 +270,13 @@ export default {
         }
       }
       if (this.$route.params.info != '{}') {
+        const obj = JSON.parse(this.$route.params.info);
+        console.log(obj);
         this.newAddress.provinceName = JSON.parse(this.$route.params.info).consignee.provinceName;
         this.newAddress.districtName = JSON.parse(this.$route.params.info).consignee.districtName;
         this.newAddress.cityName = JSON.parse(this.$route.params.info).consignee.cityName;
         this.newAddress.regionCode = JSON.parse(this.$route.params.info).regionCode;
+        this.addressName = `${this.newAddress.provinceName}/${this.newAddress.cityName}/${this.newAddress.districtName}`
       }
     }
   },

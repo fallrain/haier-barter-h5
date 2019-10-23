@@ -474,15 +474,13 @@ export default {
         });
       }
     }
-    console.log(this.orderFollowId)
   },
-  created() {debugger
+  created() {
     this.addressData = addressData;
     this.orderNo = this.$route.params.orderNo;
     this.orderFollowId = this.$route.params.orderFollowId;
     this.userParam = JSON.parse(localStorage.getItem('userinfo'));
     this.getData();
-    console.log(this.orderFollowId)
   },
   methods: {
   //  haveConsignee() {
@@ -535,13 +533,13 @@ export default {
           this.customerInfo.username = resData.userName;
           this.customerInfo.customerId = resData.userId;
           this.customerInfo.mobile = resData.userPhone;
+          this.mobile = resData.userPhone;
           this.phone = resData.userPhone;
           this.hmcId = resData.hmcId;
           this.consignee.phone = resData.consigneePhone;
           this.consignee.sex = resData.userSex;
           this.consignee.address = {};
           this.consignee.address.provinceName = resData.dispatchProvince;
-          console.log('this.consignee.address.proivinceName', this.consignee.address.provinceName);
           this.consignee.address.cityName = resData.dispatchCity;
           this.consignee.address.districtName = resData.dispatchArea;
           this.consignee.address.street = resData.dispatchAdd;
@@ -578,6 +576,7 @@ export default {
               }
             });
           }
+          this.queryCustomerDefault();
         }
       });
     },
@@ -602,7 +601,7 @@ export default {
       });
     },
     // 查询客户信息及默认地址
-    queryCustomerDefault() {
+    queryCustomerDefault() {console.log(this.mobile)
       this.productService.deafaultCustomerAddress(this.mobile).then((res) => {
         if (res.code === 1) {
           if (res.data !== null) {
@@ -845,20 +844,29 @@ export default {
       }
     },
     selectAddress(item) {
-      console.log('11111111111', item);
-      this.customerInfo = item;
+      // 修改收货人地址
+      this.consignee.address.provinceName = item.consignee.provinceName;
+      this.consignee.address.cityName = item.consignee.cityName;
+      this.consignee.address.districtName = item.consignee.districtName;
+      this.consignee.address.street = item.address;
+      this.consignee.customerId = item.customerId;
+      this.consignee.name = item.consigneeUserName;
+      this.consignee.phone = item.consigneeUserPhone;
+      this.consignee.sex = item.sex;
+      if (item.sex == 1) {
+        this.consignee.sexCn = '男士';
+      } else if (item.sex == 2) {
+        this.consignee.sexCn = '女士';
+      }
+      // this.customerInfo = item;
     },
     addAddress() {
     /* 添加新地址 */
-      if (this.addressList.length === 0) {
-        this.region = 'add';
-        this.$router.push({
-          name: 'Order.AddAddress',
-          params: { region: this.region, info: JSON.stringify(this.customerInfo) }
-        });
-      } else {
-        this.showAddressList();
-      }
+      this.region = 'add';
+      this.$router.push({
+        name: 'Order.AddAddress',
+        params: { region: this.region, info: JSON.stringify(this.customerInfo) }
+      });
     },
     changeAddress(item) {
       item.username = this.customerInfo.username;
@@ -874,6 +882,8 @@ export default {
       }
     },
     editAddress(info) {
+      info.username = this.customerInfo.username
+      info.mobile = this.customerInfo.mobile
       this.region = 'edit';
       this.$router.push({
         name: 'Order.AddAddress',
