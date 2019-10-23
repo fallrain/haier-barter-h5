@@ -269,16 +269,16 @@ const util = {
     }
   },
   /** *****判断代报装时间是否符合要求******** */
-  isReportInstallFit(productlist, deliveryTime) {
+  isReportInstallFit(productlist, deliveryTime) {debugger
     let change = true;
     // const now = new Date()
-    const deT = Date.parse(deliveryTime.substring(0, 16));
+    const deT = Date.parse(deliveryTime.substring(0, 16).replace(/-/g, '/'));
     const detFor = new Date(deT);
     const d = detFor.getDate();
     const h = detFor.getHours();
     productlist.forEach((pro) => {
       if (pro.installTime != '') {
-        const t = Date.parse(pro.installTime);
+        const t = Date.parse(pro.installTime.replace(/-/g, '/'));
         const tFor = new Date(t);
         const td = tFor.getDate();
         const th = tFor.getHours();
