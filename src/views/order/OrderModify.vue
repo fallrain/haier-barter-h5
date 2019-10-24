@@ -433,7 +433,6 @@ export default {
       }
       if (obj.rightsJson) {
         this.rightsJson = obj.rightsJson;
-        debugger
         const right = JSON.parse(obj.rightsJson);
 
         this.rightName = right.rightsName;
@@ -443,10 +442,10 @@ export default {
           return;
         }
         this.isDetail = true;
+        console.log(rightsPro);
         this.rightsList = rightsPro;
       }
       if (obj.product) {
-        debugger
         if (!obj.product.productGroupName) {
           return;
         }
@@ -703,11 +702,13 @@ export default {
       this.generateSubInfo(2);
     },
 
-    generateSubInfo(type) {debugger
+    generateSubInfo(type) {
       if(this.productList.length === 0){
         Toast.failed('请选择产品');
         return;
       }
+      console.log(this.productList)
+      console.log(this.deliveryTime)
       if (!this.bUtil.isReportInstallFit(this.productList,this.deliveryTime)) {
         return;
       }
@@ -822,7 +823,7 @@ export default {
             }
           });
         } else {
-          if (this.orderNo !== '') {console.log(2)
+          if (this.orderNo !== '') {
             Toast.loading('保存中...');
             this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
               .then((res) => {
@@ -903,6 +904,7 @@ export default {
       });
     },
     next() {
+      debugger;
     /* 下一步 */
       if (this.productList.length === 0) {
         Toast.info('请选择产品');
@@ -923,6 +925,9 @@ export default {
     onBasicConfirm() {
       if (this.orderNo !== '') {console.log(3)
         Toast.loading('保存中...');
+        if (!this.orderFollowId) {
+          this.orderFollowId = localStorage.getItem('orderFollowId');
+        }
         this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
           .then((res) => {
             if (res.code === 1) {

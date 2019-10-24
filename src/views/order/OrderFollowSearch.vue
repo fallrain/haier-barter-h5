@@ -12,7 +12,7 @@
       <input
         class="input-class"
         confirm-type="search"
-        placeholder="搜索用户姓名、电话或产品"
+        placeholder="搜索用户姓名、电话"
         placeholder-style="font-size: 28px;color: #BBBBBB;margin-left: 10px;"
         v-model="searchWord"
       />
@@ -357,7 +357,9 @@ export default {
     },
     // 入户服务
     userService(item) {
-      wx.miniProgram.navigateTo({ url: '/pages/userService/userService' });
+      wx.miniProgram.navigateTo({
+        // url: `/pages/userService/userService?userId=${item.userId}&userName=${item.userName}&mobile=${item.userMobile}&workFlowId=${item.workFlowId}&flowStatus=${item.flowStatus}&domainName=${item.domainName}&id=${item.id}` });
+        url: `/pages/userService/userService?userId=${item.userId}&userName=${item.userName}&mobile=${item.userMobile}&flowStatus=${item.flowStatus}&workFlowId=${item.id}`});
     },
     // 潜在客户
     maybeBuyer(item) {
@@ -682,18 +684,22 @@ export default {
 
   },
   beforeRouteEnter(to, from, next) {
-    if (from.name === 'Order.OrderFollowCommitResult') {
+    if (from.name === 'Order.OrderFollowCommitResult' || from.name === 'Order.OrderConfirm') {
       next();
       window.location.reload();
     }
     next();
   },
   beforeRouteLeave(to, from, next) {
+    // wx.miniProgram.switchTab({ url: '/pages/tool/tool' });
+
     if (to.name === 'Order.OrderFollowCommitResult' || to.name === 'Order.OrderConfirm' || to.name === 'Order.OrderUploadInvoice') {
-      wx.miniProgram.switchTab({ url: 'pages/tool/tool' });
+      wx.miniProgram.switchTab({ url: '/pages/tool/tool' })
+      // wx.miniProgram.navigateTo({ url: '/pages/tool/tool' });
+      // next();
+    } else {
       next();
     }
-    next();
   },
 };
 </script>
