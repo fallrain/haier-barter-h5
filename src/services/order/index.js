@@ -65,4 +65,7 @@ export default {
   isAccordDeadline(data, param) {
     return axPostJson(urls.isAccordDeadline, data, param);
   },
+  checkCreateOrder() {
+    return axPostJson(urls.checkCreateOrder, {}, {});
+  },
 };

@@ -103,7 +103,7 @@ export default {
         bccPrice: '',
         productCode: this.data.productCode,
         productPrice: this.data.productPrice
-      }
+      };
       if (this.data.bccPrice) {
         obj.bccPrice = this.data.bccPrice;
       }

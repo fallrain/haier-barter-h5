@@ -75,7 +75,7 @@ export default {
 <style lang="scss">
   .b-pop {
     .md-popup-title-bar {
-      height: 80px;
+      // height: 80px;
 
       .title-bar-left {
         font-size: 28px;

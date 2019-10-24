@@ -12,7 +12,7 @@ const urls = {
     return `/customer/address/list/${mobile}`;
   },
   // 根据手机号查询顾客地址列表
-  customerAddressListForTel(mobile) {
+  customerAddressListForCustomerTel(mobile) {
     return `/customer/address/list/mobile/${mobile}`;
   },
   // 新增用户地址

@@ -12,7 +12,7 @@
       <input
         class="input-class"
         confirm-type="search"
-        placeholder="搜索用户姓名、电话或产品"
+        placeholder="搜索用户姓名、电话"
         placeholder-style="font-size: 28px;color: #BBBBBB;margin-left: 10px;"
         v-model="searchWord"
       />
@@ -229,34 +229,38 @@ export default {
     };
   },
   activated() {
-    // window.location.reload()
+    // window.location.reload();
   },
-  created() {
+  created() {debugger
     if (localStorage.getItem('confirm') === 'list') {
       this.curTab = 3;
+      localStorage.setItem('confirm', '');
+    } else if (localStorage.getItem('confirm') === 'caogao'){
+      this.curTab = 4;
       localStorage.setItem('confirm', '');
     }
     const userinfostr = localStorage.getItem('userinfo');
     this.userinfo = JSON.parse(userinfostr);
-    this.userinfo = {
-      // hmcid: 'a0008949',
-      // mobile: '18561715460',
-      // shopId: '8800136445',
-      // hmcid:'01467897',
-      // mobile: '15253269729',
-      // shopId: '8700000484',
-      // hmcid: 'a0032188',
-      // mobile: '13905427400',
-      // shopId: '8700048360',
-      hmcid: 'A0032254',
-      mobile: '15621017056',
-      shopId: '8700048360',
-      token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IkEwMDMyMjU0Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MTY0NzUwOSwiZXhwIjoxNTcyNTExNTA5fQ.aBIGiT0xwqnMWv3C3HzH3TEIN0jYXMJbWktdMdR_UN8'
-    };
-    const Str = JSON.stringify(this.userinfo);
-    localStorage.setItem('userinfo', Str);
-    localStorage.setItem('acces_token', this.userinfo.token);
-
+    // this.userinfo = {
+    //   // hmcid: 'a0008949',
+    //   // mobile: '18561715460',
+    //   // shopId: '8800136445',
+    //   // hmcid:'01467897',
+    //   // mobile: '15253269729',
+    //   // shopId: '8700000484',
+    //   // hmcid: 'a0032188',
+    //   // mobile: '13905427400',
+    //   // shopId: '8700048360',
+    //   hmcid: 'Z0166654',
+    //   orderMode: 'Haier',
+    //   // orderMode: 'Casarte',
+    //   mobile: '15621017056',
+    //   shopId: '8800266470',
+    //   token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IlowMTY2NjU0Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MTY0MzUxOSwiZXhwIjoxNTcyNTA3NTE5fQ.enFcDUUuaR_IrewO533cyA9zGShVrHJIAT0VmHDsv-Y'
+    // };
+    // const Str = JSON.stringify(this.userinfo);
+    // localStorage.setItem('userinfo', Str);
+    // localStorage.setItem('acces_token', this.userinfo.token);
     this.getNoticeData();
   },
   computed: {
@@ -283,7 +287,7 @@ export default {
       this.bUtil.scroviewTabChange(viewName, this);
     }
   },
-  mounted() {
+  mounted() {console.log('mounted')
     // 创建当前tab的MeScroll对象，并下拉刷新
     this.bUtil.scroviewTabChange(this.curScrollViewName, this);
   },
@@ -306,15 +310,23 @@ export default {
       this.curTab = index;
     },
     handEntry() {
-      this.orderService.checkUpperLimitForSGLD().then(res => {
-        if(res.code === 1){
-          this.handEntryCon = true
-          this.handCount = res.data
-        }else {
-            Toast.info('您已没有手动录单条数，请选择其他录单方式')
+      this.orderService.checkCreateOrder().then((res) => { // 判断店铺是否冻结
+        if (res.code != -1) {
+          const orderMode = JSON.parse(localStorage.getItem('userinfo')).orderMode;
+          if (orderMode == 'Casarte') {
+            Toast.failed('卡萨帝模式，不支持手动录单');
+            return;
+          }
+          this.orderService.checkUpperLimitForSGLD().then(res => {
+            if(res.code === 1){
+              this.handEntryCon = true
+              this.handCount = res.data
+            }else {
+              Toast.info('您已没有手动录单条数，请选择其他录单方式', 3000);
+            }
+          })
         }
-      })
-
+      });
     },
     handEntryConfirm(){
       this.handEntryCon = false
@@ -350,7 +362,9 @@ export default {
     },
     // 入户服务
     userService(item) {
-      wx.miniProgram.navigateTo({ url: '/pages/userService/userService'});
+      wx.miniProgram.navigateTo({
+        // url: `/pages/userService/userService?userId=${item.userId}&userName=${item.userName}&mobile=${item.userMobile}&workFlowId=${item.workFlowId}&flowStatus=${item.flowStatus}&domainName=${item.domainName}&id=${item.id}` });
+        url: `/pages/userService/userService?userId=${item.userId}&userName=${item.userName}&mobile=${item.userMobile}&flowStatus=${item.flowStatus}&workFlowId=${item.id}`});
     },
     // 潜在客户
     maybeBuyer(item) {
@@ -419,35 +433,8 @@ export default {
     },
     followButtonClicked(val, info) {
       if (val.name === '成交录单') {
-        this.$router.push({
-          name: 'Order.OrderEntry',
-          params: { customerConsigneeInfo: {
-            userName: info.userName,
-            mobile: info.userMobile,
-            userId: info.userId,
-            recordMode: info.recordMode,
-            businessScenarios: info.businessScenarios,
-            sourceSn: info.sourceSn,
-            id: info.id,
-          },
-          region: 'new' }
-        });
-      } else if (val.name === '继续录单') {
-        this.$router.push({
-          name: 'Order.OrderModify',
-          params: { orderNo: info.orderNo, orderFollowId: info.id }
-        });
-      } else if (val.name === '补录订单') {
-        this.$router.push({
-          name: 'Order.OrderSupplement',
-          params: { orderNo: info.orderNo, orderFollowId: info.id }
-        });
-      } else {
-        // val.name === '录新订单'
-        // 生成一条新的待办
-        this.orderService.createNewOrder({}, { orderNo: info.orderNo }).then((res) => {
-          if (res.code === 1) {
-            const orderFollowId = res.data.id;
+        this.orderService.checkCreateOrder().then((res) => { // 判断店铺是否冻结
+          if (res.code != -1) {
             this.$router.push({
               name: 'Order.OrderEntry',
               params: { customerConsigneeInfo: {
@@ -457,9 +444,52 @@ export default {
                 recordMode: info.recordMode,
                 businessScenarios: info.businessScenarios,
                 sourceSn: info.sourceSn,
-                id: orderFollowId,
+                id: info.id,
               },
               region: 'new' }
+            });
+          }
+        });
+      } else if (val.name === '继续录单') {
+        this.orderService.checkCreateOrder().then((res) => { // 判断店铺是否冻结
+          if (res.code != -1) {
+            this.$router.push({
+              name: 'Order.OrderModify',
+              params: { orderNo: info.orderNo, orderFollowId: info.id }
+            });
+          }
+        });
+      } else if (val.name === '补录订单') {
+        this.orderService.checkCreateOrder().then((res) => { // 判断店铺是否冻结
+          if (res.code != -1) {
+            this.$router.push({
+              name: 'Order.OrderSupplement',
+              params: { orderNo: info.orderNo, orderFollowId: info.id }
+            });
+          }
+        });
+      } else {
+        // val.name === '录新订单'
+        this.orderService.checkCreateOrder().then((res) => { // 判断店铺是否冻结
+          if (res.code != -1) {
+            // 生成一条新的待办
+            this.orderService.createNewOrder({}, { orderNo: info.orderNo }).then((res) => {
+              if (res.code === 1) {
+                const orderFollowId = res.data.id;
+                this.$router.push({
+                  name: 'Order.OrderEntry',
+                  params: { customerConsigneeInfo: {
+                      userName: info.userName,
+                      mobile: info.userMobile,
+                      userId: info.userId,
+                      recordMode: info.recordMode,
+                      businessScenarios: info.businessScenarios,
+                      sourceSn: info.sourceSn,
+                      id: orderFollowId,
+                    },
+                    region: 'new' }
+                });
+              }
             });
           }
         });
@@ -502,7 +532,7 @@ export default {
             sroviewObj.pages = pages;
             sroviewObj.result = result;
             if(this.fuzzy){
-              if(result.length === 0){console.log(1)
+              if(result.length === 0){
                 this[this.curScrollViewName].list = [];
                 Toast.failed('搜索结果不存在')
                 this.fuzzy = false
@@ -513,17 +543,20 @@ export default {
               const curList = result;
               this.anylizeData(curList);
               if (!this.updateList) {
+                console.log(page);
                 if (page.num === 1) {
+                  console.log(this.curScrollViewName)
                   this[this.curScrollViewName].list = [];
 
                   this[this.curScrollViewName].list = this.currentList;
                 } else {
                   this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(this.currentList);
+                  console.log(this[this.curScrollViewName].list);
                 }
               } else {
                 this[this.curScrollViewName].list = [];
                 this[this.curScrollViewName].list = this.currentList;
-                // this.updateList = false
+                // this.updateList = false;
               }
 
               // });
@@ -673,7 +706,7 @@ export default {
       this.searchData(page);
       this.fuzzy = true
     },
-    updateOrderType(type) {debugger
+    updateOrderType(type) {
       this.updateList = true;
       this.businessType = ''
       this.searchData({
@@ -684,27 +717,27 @@ export default {
 
   },
   beforeRouteEnter(to, from, next) {
-    if (from.name === 'Order.OrderFollowCommitResult') {
+    if (from.name === 'Order.OrderFollowCommitResult' || from.name === 'Order.OrderConfirm' || from.name === 'Order.OrderEntry' || from.name === 'Order.OrderModify') {
       next();
       window.location.reload();
     }
     next();
   },
   beforeRouteLeave(to, from, next) {
+    // wx.miniProgram.switchTab({ url: '/pages/tool/tool' });
+
     if (to.name === 'Order.OrderFollowCommitResult' || to.name === 'Order.OrderConfirm' || to.name === 'Order.OrderUploadInvoice') {
-      wx.miniProgram.switchTab({ url: 'pages/tool/tool' });
+      wx.miniProgram.switchTab({ url: '/pages/tool/tool' })
+      // wx.miniProgram.navigateTo({ url: '/pages/tool/tool' });
+      // next();
+    } else {
       next();
     }
-    next();
   },
 };
 </script>
 
 <style scoped lang="scss">
-  .mescroll {
-    /*解决滚动条异常bug*/
-    height: auto !important;
-  }
   .md-notice-bar {
     position: absolute;
     width: 100%;

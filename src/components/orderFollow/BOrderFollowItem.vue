@@ -399,7 +399,14 @@ export default {
       }
       this.$emit('popButtonClicked', val);
     },
-    followButtonClick(button, item) {
+    followButtonClick(button, item) {console.log(item)
+      const orderMode = JSON.parse(localStorage.getItem('userinfo')).orderMode;
+      if (orderMode == 'Casarte') {
+        if (item.businessScenarios == 'SGLD') {
+          Toast.failed('卡萨帝模式，不支持手工录单');
+          return;
+        }
+      }
       this.stopProcess();
       ;
       this.$emit('followButtonClick', button, item);

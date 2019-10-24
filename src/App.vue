@@ -34,3 +34,8 @@ export default {
 <style lang="scss">
   @import 'assets/css/common';
 </style>
+<style>
+  .md-toast-text {
+    white-space: normal !important;
+  }
+</style>

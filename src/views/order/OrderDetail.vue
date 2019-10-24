@@ -1,5 +1,5 @@
 <template xmlns:v-slot="">
-  <div>
+  <div style="padding-bottom: 72px;">
     <div class="orderConfirm-no">
       <span class="orderConfirm-p">订单号：</span>
       <p class="orderConfirm-s">{{orderNo}}</p>
@@ -422,17 +422,22 @@ export default {
     color: #333;
     margin-top: 20px;
   }
+  .orderEntry-btns-par2 {
+    width: 100%;
+    position: relative;
+    padding-top: 10px;
+    background: #fff;
+  }
   .common-submit-btn-default1{
     height: 84px;
     font-size: 34px;
     border-radius: 8px;
     color: #fff;
     background: #1969C6;
-    /*position: fixed;*/
     width: 90%;
     margin-left: 5%;
-    /*margin-bottom: 20px;*/
-    position: absolute;
+    margin-bottom: 20px;
+    /*position: absolute;*/
     bottom: 20px;
   }
 </style>

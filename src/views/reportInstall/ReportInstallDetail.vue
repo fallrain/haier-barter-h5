@@ -7,8 +7,8 @@
       </div>
       <div class="reportInstallDetail-head-item">
         <i class="iconfont icon-tongxunlu"></i>
-        <span class="company mr16">{{user.userName}}</span>
-        <span class="tel">{{user.mobile}}</span>
+        <span class="company mr16">{{customerInfo.username}}</span>
+        <span class="tel">{{customerInfo.mobile}}</span>
       </div>
     </div>
     <div class="reportInstallDetail-block mb16">
@@ -29,11 +29,11 @@
       <div class="reportInstallDetail-block-cnt">
         <div class="reportInstallDetail-ads-item">
           <label class="name">收货人：</label>
-          <span class="val">{{getNewAddress.trueName}}</span>
+          <span class="val">{{getNewAddress.consigneeName}}</span>
         </div>
         <div class="reportInstallDetail-ads-item">
           <label class="name">联系电话：</label>
-          <span class="val">{{getNewAddress.mobile}}</span>
+          <span class="val">{{getNewAddress.consigneePhone}}</span>
         </div>
         <div class="reportInstallDetail-ads-item">
           <label class="name">收货地址：</label>
@@ -53,6 +53,7 @@
           :inline="true"
           :list="radiosIsReport"
           v-model="isReport"
+          @radioChange="changeReport"
         ></b-radio-item>
         <div v-if="isReport===1">
           <div
@@ -68,7 +69,7 @@
                   :custom-types="['yyyy', 'MM','dd', 'hh']"
                   pattern="yyyy-MM-dd hh:00"
                   :disabled="product.dateDisabled || tag == 'detail'"
-                  :default-date="new Date(product.requireServiceDate)"
+                  :default-date="new Date(product.requireServiceDate.replace(/-/g,'/'))"
                   :min-date="new Date(product.startDateTime)"
                   v-model="product.requireServiceDate"
                 ></b-date-picker>
@@ -144,11 +145,17 @@ export default {
   data() {
     return {
       parentPage: '', // 是否从
+      hmcid: '',
       user: {
         userId: '',
-        userName: '',
         mobile: '',
-        shopName: ''
+        shopName: '',
+        regionCode: '',
+      },
+      // 顾客信息
+      customerInfo: {
+        mobile: '',
+        username: '',
       },
       radiosIsReport: [
         {
@@ -163,9 +170,6 @@ export default {
       isReport: 1, // 是否代报装
       notAllSend: true, // 没有全发送
       productList: [],
-      addressList: [{
-        trueName: ''
-      }],
       addressAllList: [],
       orderNo: '',
       productListTemp: [],
@@ -194,7 +198,9 @@ export default {
     ...mapMutations([
       'updataNewAddress'
     ]),
-
+    changeReport(isReport) {
+      this.isReport = isReport;
+    },
     setUserInfo() {
       /* 设置订单用户信息 */
       const option = this.$route.query;
@@ -203,8 +209,6 @@ export default {
         addStatus: option.addStatus || '', // 是否到标签页面，上页返回的状态
         workFlowId: option.workFlowId || '',
         userId: option.userId || '',
-        userName: option.userName || '',
-        mobile: option.mobile || '',
         orderNo: option.orderNo || '',
         orderId: option.orderId || ''
       };
@@ -216,9 +220,6 @@ export default {
       this.canUpdateAddress = !!(option.flowStatus !== '1' && option.flowStatus !== '2');
       this.parentPage = option.parentPage;
       this.tag = option.tag;
-      // this.addressList = [{
-      //   mobile: userInfo.mobile
-      // }];
     },
     getProductList() {
       /* 获取产品列表 */
@@ -234,14 +235,20 @@ export default {
           if (data[0]) {
             data[0].isReportInstall && (this.isReport = data[0].isReportInstall * 1);
             newAddress = {
-              trueName: data[0].customerName,
               provinceName: data[0].provinceName,
-              mobile: data[0].phoneNumber,
               cityName: data[0].cityName,
               areaName: data[0].districtName,
-              detailAddress: data[0].address
+              detailAddress: data[0].address,
+              regionCode: data[0].regionCode,
+              consigneeName: data[0].consigneeName,
+              consigneePhone: data[0].consigneePhone
             };
             this.user.shopName = data[0].storeName || '';
+            this.user.regionCode = data[0].regionCode;
+            this.customerInfo.username = data[0].customerName;
+            this.customerInfo.mobile = data[0].phoneNumber;
+            this.customerInfo.userId = data[0].userId;
+            this.hmcid = data[0].hmcid;
           }
           let canUpdateAddress = true;
           const productList = data.map((v) => {
@@ -254,7 +261,7 @@ export default {
               dateDisabled: (v.sendStatus !== '0' && v.sendStatus !== '1'),
               sendStatus: v.sendStatus
             };
-            const deliveryTime = new Date(v.deliveryTime.replace('-', '/'));
+            const deliveryTime = new Date(v.deliveryTime.replace(/-/g, '/'));
             // 开始时间开始取接口传回时间（配送时间+4小时或者第二天10天）和今天的时间相比更晚的值
             // obj.startDateTime = v.requireServiceDate;//2019-06-13暂时去掉，改为只用当前时间作为开始时间
             let startDateTime;
@@ -280,14 +287,14 @@ export default {
     },
     submit() {
       /* 提交报装信息 */
-      const { isReport, productList, addressList, productListTemp } = this;
+      const {isReport, productList, productListTemp} = this;
       const fillAddresList = productList.filter(v => v.requireServiceDate);
       const errorTimeIndex = productList.findIndex(v => v.sendStatus < '2' && new Date(v.requireServiceDate) < new Date(v.startDateTime));
       const valid = this.bUtil.valid([
         {
           ruleFun: () => {
             const address = this.getNewAddress;
-            return address && address.trueName && address.mobile && address.provinceName && address.cityName && address.areaName && address.detailAddress;
+            return address && address.consigneeName && address.consigneePhone && address.provinceName && address.cityName && address.areaName && address.detailAddress;
           },
           message: '请完善安装地址'
         },
@@ -304,60 +311,55 @@ export default {
           message: `第${errorTimeIndex + 1}个产品安装时间不正确`
         }
       ]);
-      if (isReport) {
-        if (valid()) {
-          const reportInstallInfo = productListTemp.map((product, index) => {
-            const data = {
-              ...product,
-              // requireServiceDate: productList[index].requireServiceDate + ':00',
-              requireServiceDate: (`${productList[index].requireServiceDate}:00`).substr(0, 19),
-              customerName: addressList[0].trueName,
-              phoneNumber: addressList[0].mobile,
-              provinceName: this.getNewAddress.provinceName,
-              cityName: this.getNewAddress.cityName,
-              districtName: this.getNewAddress.areaName,
-              address: this.getNewAddress.detailAddress,
-              regionCode: addressList[0].regionCode,
-              // todo hmcId 需要接口获取
-              hmcId: 'a000894',
-              isReportInstall: isReport
-            };
-            if (!addressList[0].regionCode) {
-              data.regionCode = product.regionCode;
-            }
-            return data;
-          });
+      if (valid()) {
+        const reportInstallInfo = productListTemp.map((product, index) => {
+          const data = {
+            ...product,
+            // requireServiceDate: productList[index].requireServiceDate + ':00',
+            requireServiceDate: (`${productList[index].requireServiceDate}:00`).substr(0, 19),
+            consigneeName: this.getNewAddress.consigneeName,
+            consigneePhone: this.getNewAddress.consigneePhone,
+            provinceName: this.getNewAddress.provinceName,
+            cityName: this.getNewAddress.cityName,
+            districtName: this.getNewAddress.areaName,
+            address: this.getNewAddress.detailAddress,
+            regionCode: this.getNewAddress.regionCode,
+            isReportInstall: isReport,
+            customerName: this.customerInfo.username,
+            phoneNumber: this.customerInfo.mobile,
+            hmcid: this.hmcid
+          };
+          if (!this.getNewAddress.regionCode) {
+            data.regionCode = product.regionCode;
+          }
+          return data;
+        });
           // if (!this.bUtil.isReportInstallFit(this.productList, this.deliveryTime)) {
           //   return;
           // }
-          this.reportInstallService.agentReportInstall({
-            reportInstallInfo
-          }).then((res) => {
-            if (res.code !== 1) {
-              return;
+        this.reportInstallService.agentReportInstall({
+          reportInstallInfo
+        }).then((res) => {
+          if (res.code !== 1) {
+            return;
+          }
+          Dialog.succeed({
+            title: '成功',
+            content: '报装成功',
+            confirmText: '确定',
+            onConfirm: () => {
+              //用来判断是否刷新代报装列表页面 如果reportInstallList.itemIndex有值就刷新
+              sessionStorage.setItem('reportInstallList.itemIndex', 1);
+              this.$mBack();
             }
-            Dialog.succeed({
-              title: '成功',
-              content: '报装成功',
-              confirmText: '确定',
-              onConfirm: () => {
-                // 成功后传回要删除的list下标
-                if (this.itemIndex !== undefined) {
-                  sessionStorage.setStorageSync('reportInstallList.itemIndex', this.itemIndex);
-                }
-                this.$mBack();
-              }
-            });
           });
-        }
-      } else {
-        this.$mBack();
+        });
       }
     },
     editAddress(info) {
       this.addressPopShow = false;
-      info.username = this.user.userName;
-      info.mobile = this.user.mobile;
+      // info.username = this.user.userName;
+      // info.mobile = this.user.mobile;
       this.region = 'edit';
       this.$router.push({
         name: 'Order.AddAddress',
@@ -366,12 +368,13 @@ export default {
     },
     selectAddress(item) {
       const newAddress = {
-        trueName: item.consigneeUserName,
         provinceName: item.consignee.provinceName,
-        mobile: item.consigneeUserPhone,
         cityName: item.consignee.cityName,
         areaName: item.consignee.districtName,
-        detailAddress: item.address
+        detailAddress: item.address,
+        regionCode: item.regionCode,
+        consigneeName: item.consigneeUserName,
+        consigneePhone: item.consigneeUserPhone
       };
       this.updataNewAddress(newAddress);
       this.addressPopShow = false;
@@ -386,7 +389,7 @@ export default {
     },
     // 查询客户地址列表
     queryCustomerAddressList() {
-      this.productService.customerAddressListForTel(this.user.mobile).then((res) => {
+      this.productService.customerAddressListForCustomerTel(this.customerInfo.mobile).then((res) => {
         if (res.code === 1) {
           const Data = this.addressData.options;
           res.data.forEach((address) => {

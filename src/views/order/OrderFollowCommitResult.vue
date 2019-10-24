@@ -96,15 +96,16 @@ export default {
   },
   methods: {
     orderFollow() {
-      this.$router.push({
+      this.$router.replace({
         name: 'Order.OrderFollowSearch',
       });
+
     },
     checkOrder() {
-      this.$router.push({
+      localStorage.setItem('confirm', 'list');
+      this.$router.replace({
         name: 'Order.OrderFollowSearch',
       });
-      localStorage.setItem('confirm', 'list');
     },
   },
 

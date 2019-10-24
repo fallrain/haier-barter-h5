@@ -193,7 +193,7 @@
         v-model="multBuyParticipantCheckIds"
         @allCheck="particpantAll"
         @multiCheck="particpantClick"
-        tips="套购参秘人可查看套头订单不需要录入订单,但是需确定确单信息正确后自主申报销量。"
+        tips="套购参与人可查看套购订单不需要录入订单,但是需确定订单信息正确后自主申报销量。"
         :checkAll="true"
         type="checkbox"
       ></b-multbuy-check>
@@ -213,6 +213,14 @@
       :btns="basicDialog.btns"
     >
       该用户满足{{rightsName}}购机活动，您录单时未选则该活动，用户将无法获得购机礼品，请确定是否提交。
+    </md-dialog>
+    <md-dialog
+      title=""
+      :closable="true"
+      v-model="basicDialog1.open"
+      :btns="basicDialog1.btns"
+    >
+      该月销量闸口已关闭，你录入的该订单非本月订单，将无法拿到销量提成，请确定是否继续？
     </md-dialog>
   </div>
 </template>
@@ -273,6 +281,19 @@ export default {
           {
             text: '确认提交',
             handler: this.onBasicConfirm,
+          },
+        ],
+      },
+      basicDialog1: { // 模态框  提示销量闸口
+        open: false,
+        btns: [
+          {
+            text: '取消',
+            handler: this.onBasicCancel1,
+          },
+          {
+            text: '确定',
+            handler: this.onBasicConfirm1,
           },
         ],
       },
@@ -408,7 +429,17 @@ export default {
   computed: {},
   watch: {
     buyDate(newV, oldV) {
-      console.log(oldV, newV);
+      console.log(this.userParam.hmcid)
+      this.orderService.isAccordDeadline({
+      }, {
+        hmcId: this.userParam.hmcid,
+        orderCrTime: newV,
+        requestNoToast: true
+      }).then((res) => {
+        if (res.code == -1) {
+          this.basicDialog1.open = true;
+        }
+      });
     }
   },
   mounted() {
@@ -468,6 +499,7 @@ export default {
     this.addressData = addressData;
     this.userParam = JSON.parse(localStorage.getItem('userinfo'));
     this.shopId = this.userParam.shopId;
+    this.queryUserList();
 
     this.getUserStore();
     if (this.$route.params.customerConsigneeInfo.businessScenarios) {
@@ -491,7 +523,6 @@ console.log(this.orderFollowId)
     if (this.$route.params.region === 'hand') {
       this.haveConsignee = false;
       this.haveCustomer = false;
-
       return;
     }
     this.customerInfo.username = this.$route.params.customerConsigneeInfo.userName;
@@ -501,7 +532,6 @@ console.log(this.orderFollowId)
     this.recordMode = this.$route.params.customerConsigneeInfo.recordMode;
     this.mobile = this.customerInfo.mobile;
     this.queryCustomerDefault();
-    this.queryUserList();
   },
   methods: {
     //  haveConsignee() {
@@ -709,27 +739,27 @@ console.log(this.orderFollowId)
       });
     },
     generateSubInfo(type) {
-      if (this.buyTime === '') {
+      if (this.buyTime === '' && this.saveType == 0) {
         Toast.failed('请选择购买时间');
         return;
       }
-      if(this.productList.length === 0){
+      if(this.productList.length === 0 && this.saveType == 0){
         Toast.failed('请选择产品');
         return;
       }
       for (let i=0; i<this.productList.length; i++) {
-        if (this.productList[i].productPrice == '') {
+        if (this.productList[i].productPrice == '' && this.saveType == 0) {
           Toast.failed('请输入产品价格');
           return;
         }
       }
       console.log(this.productList);
-      if (this.deliveryTime === '') {
+      if (this.deliveryTime === '' && this.saveType == 0) {
         Toast.failed('请选择送达时间');
         return;
       }
 
-      if (!this.bUtil.isReportInstallFit(this.productList,this.deliveryTime)) {
+      if (!this.bUtil.isReportInstallFit(this.productList,this.deliveryTime) && this.saveType == 0) {
         return;
       }
       const subInfo = {};
@@ -825,6 +855,7 @@ console.log(this.orderFollowId)
                     if (res.code === 1) {
                       if (this.saveType === 1) {
                         Toast.succeed('订单暂存成功');
+                        localStorage.setItem('confirm', 'caogao');
                         this.$router.go(-1);
                       }
                       if (this.saveType === 0) {
@@ -846,6 +877,7 @@ console.log(this.orderFollowId)
                 if (res.code === 1) {
                   if (this.saveType === 1) {
                     Toast.succeed('订单暂存成功');
+                    localStorage.setItem('confirm', 'caogao');
                     this.$router.go(-1);
                   }
                   if (this.saveType === 0) {
@@ -853,6 +885,7 @@ console.log(this.orderFollowId)
                       name: 'Order.OrderUploadInvoice',
                       params: { orderNo: this.orderNo }
                     });
+                    this.$destroy();
                   }
                 }
               });
@@ -976,6 +1009,7 @@ console.log(this.orderFollowId)
             if (res.code === 1) {
               if (this.saveType === 1) {
                 Toast.succeed('订单暂存成功');
+                localStorage.setItem('confirm', 'caogao');
                 this.$router.go(-1);
               }
               if (this.saveType === 0) {
@@ -988,6 +1022,13 @@ console.log(this.orderFollowId)
           });
       }
       this.basicDialog.open = false;
+    },
+    onBasicCancel1() {
+      this.basicDialog1.open = false;
+      this.$router.go(-1);
+    },
+    onBasicConfirm1() {
+      this.basicDialog1.open = false;
     }
   },
   // beforeRouteLeave(to,from,next){
@@ -1029,6 +1070,9 @@ console.log(this.orderFollowId)
 </script>
 
 <style lang="scss">
+  .md-popup-box{
+    z-index: 999999999 !important;
+  }
   .orderEntry-header {
     display: flex;
     align-items: center;

@@ -98,9 +98,9 @@ export default {
       this.$emit('addNew', item);
     },
     editAddress(item) {
-      if (!this.isFromReportInstallDetail) {
-        delete item.consignee
-      }
+      // if (!this.isFromReportInstallDetail) {
+      //   delete item.consignee
+      // }
       // 编辑地址
       this.$emit('editAddress', item);
     },
@@ -112,9 +112,10 @@ export default {
 <style lang="scss">
   .b-address-checkList {
     .md-popup-title-bar {
-      height: 80px;
+      // height: 80px;
 
       .title-bar-left {
+        width: auto;
         font-size: 30px;
         color: #333;
       }
@@ -127,6 +128,7 @@ export default {
       }
 
       .title-bar-right {
+        width: auto;
         font-size: 24px;
         color: #F5A026;
       }

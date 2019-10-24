@@ -1,5 +1,6 @@
 <template>
-  <div class="bScaleItem">
+  <div class="bScaleItem"
+       @click="showDetail(data,index)">
     <div
       class="bScaleItem-head"
       :class="[isShowDetail && 'sticky']"
@@ -13,7 +14,6 @@
             v-if="type==='normal' || type==='verify'"
             class="iconfont icon-jiantou9"
             :class="[isShowDetail && 'reverse']"
-            @click="showDetail(data,index)"
           ></i>
         </div>
         <div>
@@ -81,12 +81,14 @@ export default {
   methods: {
     showDetail(item, index) {
       /* 显示详情与否 */
-      this.isShowDetail = !this.isShowDetail;
-      this.$emit('showDetail', {
-        isShowDetail: this.isShowDetail,
-        item,
-        index
-      });
+      if (this.type == 'normal' || this.type == 'verify') {
+        this.isShowDetail = !this.isShowDetail;
+        this.$emit('showDetail', {
+          isShowDetail: this.isShowDetail,
+          item,
+          index
+        });
+      }
     },
     barCodeClick(detail) {
       /* 销量申报按钮click */

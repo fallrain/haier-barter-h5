@@ -1,16 +1,16 @@
 <template>
   <div class="bSearchInput-par">
     <div class="bSearchInput-wrap">
-      <form :target="iframeId" class="bSearchInput-form" action="#">
+<!--      <form :target="iframeId" class="bSearchInput-form" action="#">-->
         <input
           class="bSearchInput"
           type="search"
           :placeholder="placeholder"
           v-model="searchVal"
-          @keyup.enter.native="searchClick"
+          @keyup.enter="searchClick"
         >
         <iframe :name="iframeId" style="display: none;"></iframe>
-      </form>
+<!--      </form>-->
       <i
         class="iconfont icon-fangdajing"
         @click="searchClick"

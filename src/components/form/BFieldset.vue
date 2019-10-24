@@ -35,7 +35,7 @@ export default {
 
 <style lang="scss">
   .b-fieldset {
-    padding-bottom: 24px;
+    /*padding-bottom: 24px;*/
     background: #fff;
   }
 
