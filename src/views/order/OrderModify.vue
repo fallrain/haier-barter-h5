@@ -904,6 +904,7 @@ export default {
       });
     },
     next() {
+      debugger;
     /* 下一步 */
       if (this.productList.length === 0) {
         Toast.info('请选择产品');
