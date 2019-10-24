@@ -238,24 +238,24 @@ export default {
     }
     const userinfostr = localStorage.getItem('userinfo');
     this.userinfo = JSON.parse(userinfostr);
-    // this.userinfo = {
-    //   // hmcid: 'a0008949',
-    //   // mobile: '18561715460',
-    //   // shopId: '8800136445',
-    //   // hmcid:'01467897',
-    //   // mobile: '15253269729',
-    //   // shopId: '8700000484',
-    //   // hmcid: 'a0032188',
-    //   // mobile: '13905427400',
-    //   // shopId: '8700048360',
-    //   hmcid: 'A0032254',
-    //   mobile: '15621017056',
-    //   shopId: '8700048360',
-    //   token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IkEwMDMyMjU0Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MTIxOTA1NCwiZXhwIjoxNTcyMDgzMDU0fQ.i0qRLhbomRvHJQw3-4oZ63l3XGfjOXeFHdy1IdpX39M'
-    // };
-    // const Str = JSON.stringify(this.userinfo);
-    // localStorage.setItem('userinfo', Str);
-    // localStorage.setItem('acces_token', this.userinfo.token);
+    this.userinfo = {
+      // hmcid: 'a0008949',
+      // mobile: '18561715460',
+      // shopId: '8800136445',
+      // hmcid:'01467897',
+      // mobile: '15253269729',
+      // shopId: '8700000484',
+      // hmcid: 'a0032188',
+      // mobile: '13905427400',
+      // shopId: '8700048360',
+      hmcid: 'A0032254',
+      mobile: '15621017056',
+      shopId: '8700048360',
+      token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IkEwMDMyMjU0Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MTY0NzUwOSwiZXhwIjoxNTcyNTExNTA5fQ.aBIGiT0xwqnMWv3C3HzH3TEIN0jYXMJbWktdMdR_UN8'
+    };
+    const Str = JSON.stringify(this.userinfo);
+    localStorage.setItem('userinfo', Str);
+    localStorage.setItem('acces_token', this.userinfo.token);
 
     this.getNoticeData();
   },
@@ -350,7 +350,7 @@ export default {
     },
     // 入户服务
     userService(item) {
-      wx.miniProgram.navigateTo({ url: '/pages/userService/userService' });
+      wx.miniProgram.navigateTo({ url: '/pages/userService/userService'});
     },
     // 潜在客户
     maybeBuyer(item) {
@@ -591,6 +591,12 @@ export default {
             }, {
               id: '3',
               name: '暂不跟进'
+            },{
+              id: '20',
+              name: '入户服务'
+            }, {
+              id: '21',
+              name: '潜在客户'
             });
           } else {
             item.userS = '';
@@ -601,10 +607,7 @@ export default {
             }, {
               id: '3',
               name: '暂不跟进'
-            });
-          }
-          if (item.businessScenarios === 'SMLD') {
-            item.showList.push({
+            },{
               id: '20',
               name: '入户服务'
             }, {
@@ -612,6 +615,15 @@ export default {
               name: '潜在客户'
             });
           }
+          // if (item.businessScenarios === 'SMLD') {
+          //   item.showList.push({
+          //     id: '20',
+          //     name: '入户服务'
+          //   }, {
+          //     id: '21',
+          //     name: '潜在客户'
+          //   });
+          // }
         } else if (this.curTab === 3) {
           item.showList = [];
           // item.showList.push({

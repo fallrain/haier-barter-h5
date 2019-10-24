@@ -7,9 +7,14 @@
         :hasInk="false"
       />
     </div>
-        <div>
+        <div v-show="current === 0">
+          <p class="right-p" @click="shareRightsClick">同享活动
+            <i class="iconfont icon-xialaactive-copy" v-show="shareShow"></i>
+            <i class="iconfont icon-jiantou9" v-show="!shareShow"></i>
+          </p>
+
           <b-activity-item
-            v-for="(item,index) in rightListTest"
+            v-for="(item,index) in shareRightsList"
             :key="index"
             :getData.sync="item"
             :isFinish="false"
@@ -18,34 +23,43 @@
             :hasData="false"
             @showLimit="showLimit"
             @showConfig="showConfig"
+            v-show="shareShow"
+          ></b-activity-item>
+
+          <p class="right-p" @click="mutexRightsClick">互斥活动
+            <i class="iconfont icon-xialaactive-copy" v-show="mutexShow"></i>
+            <i class="iconfont icon-jiantou9" v-show="!mutexShow"></i>
+          </p>
+          <b-activity-item
+            v-for="(item,index) in mutexRightsList"
+            :key="index"
+            :getData.sync="item"
+            :isFinish="false"
+            @minusCount="minusMCount"
+            @addCount="addMCount"
+            :hasData="false"
+            @showLimit="showLimit"
+            @showConfig="showConfig"
+            v-show="mutexShow"
           ></b-activity-item>
         </div>
-    <!--<div class="reportInstallList-view"-->
-         <!--v-show="curScrollViewName==='scrollViewFinish'">-->
-      <!--<div-->
-        <!--id="scrollViewFinish"-->
-        <!--ref="scrollViewFinish"-->
-        <!--class="mescroll"-->
+    <div v-show="current === 1">
+      <b-activity-item
+        v-for="(item,index) in notOptionalList"
+        :key="index"
+        :getData.sync="item"
+        :isFinish="true"
+        :hasData="false"
+        @showLimit="showLimit"
+        @showConfig="showConfig"
+      ></b-activity-item>
+    </div>
 
-      <!--&gt;-->
-        <!--<div>-->
-          <!--<b-activity-item-->
-            <!--v-for="(item,index) in scrollViewFinish.list"-->
-            <!--:key="index"-->
-            <!--:getData.sync="item"-->
-            <!--:isFinish="true"-->
-            <!--:hasData="false"-->
-            <!--@showLimit="showLimit"-->
-            <!--@showConfig="showConfig"-->
-          <!--&gt;</b-activity-item>-->
-        <!--</div>-->
-      <!--</div>-->
-    <!--</div>-->
-    <!--<button-->
-      <!--type="button"-->
-      <!--class="common-submit-btn-default1 mt23"-->
-      <!--@click="btmConfirmClick"-->
-    <!--&gt;确定</button>-->
+    <button
+      type="button"
+      class="common-submit-btn-default3 mt23"
+      @click="btmConfirmClick"
+    >确定</button>
   </div>
 </template>
 
@@ -68,10 +82,15 @@ export default {
   },
   data() {
     return {
+      rightsDetailList: [],
+      nameList: [],
+      idList: [],
+      rightsUserDto: [],
       rightListTest: [],
-      selectRightsList: [],
       residueRightsList: [],
-      currentList: [],
+      shareRightsList: [],
+      mutexRightsList: [],
+      notOptionalList: [],
       subInfo: {},
       current: 0,
       orderNo: '',
@@ -82,297 +101,327 @@ export default {
         name: 1,
         label: '不可参与活动'
       }],
-      isFinished: false,
-      scrollViewActivity: {
-        mescroll: null,
-        list: [
-          // {
-          //   title: '6月场景套权益昆明小微',
-          //   reason: '套餐价格不符合',
-          //   brand: '海尔，卡萨帝',
-          //   scope: '所有产品',
-          //   data: '2019-07-30至2019-08-02',
-          //   data2: '2019-08-30至2019-09-02',
-          //   type: '海贝积分',
-          //   product: [{
-          //     name: 'KFR-35GW/A4RCA21AU1套机空调 + 50T82电视',
-          //     gift: '7500积分',
-          //     count: '666',
-          //     remain: '222',
-          //   }, {
-          //     name: '50T82电视',
-          //     gift: '500积分233222222222222333vvervevrdfvsrftbrthytnjuykuikiuktgteegtgythh235456',
-          //     count: '6',
-          //     remain: '2',
-          //   }
-          //   ]
-          // }, {
-          //   title: '6月场景套权益昆明小微',
-          //   reasn: '',
-          //   brand: '海尔，卡萨帝',
-          //   scope: '所有产品',
-          //   data: '2019-07-30至2019-08-02',
-          //   data2: '2019-08-30至2019-09-02',
-          //   type: '海贝积分',
-          // }
-        ],
-        isListInit: false
-      },
       rightsJson: '',
-      scrollViewFinish: {
-        mescroll: null,
-        list: [
-          // {
-          //   title: '666666',
-          //   reason: '套餐价格不符合',
-          // },
-        ],
-        isListInit: false
-      },
+      shareShow: false,
+      mutexShow: false,
+      num: 0
     };
   },
   computed: {
-    curScrollViewName() {
-      // 当前tab下的scrollView的ref名字
-      return {
-        0: 'scrollViewActivity',
-        1: 'scrollViewFinish'
-      }[this.current];
+
+  },
+  watch: {
+    current(val) {
+      this.getData();
     }
   },
-  // watch: {
-  //   current(val) {
-  //     const obj = {
-  //       0: 'scrollViewActivity',
-  //       1: 'scrollViewFinish'
-  //     };
-  //     const viewName = obj[val];
-  //
-  //     // tab切换后，创建新MeScroll对象（若无创建过），没有加载过则加载
-  //     this.bUtil.scroviewTabChange(viewName, this);
-  //   }
-  // },
-  mounted() {
-    // this.bUtil.scroviewTabChange(this.curScrollViewName, this);
-  },
+
   created() {
-    this.rightListTest = rightListTest;
-    this.residueRightsList = rightListTest;
-    this.rightListTest.forEach((rights) => {
-      rights.flag = 0;
-    });
-    this.anylizeData(rightListTest);
+    // this.rightListTest = rightListTest;
+    // this.residueRightsList = rightListTest;
+    // this.rightListTest.forEach((rights) => {
+    //   rights.flag = 0;
+    // });
+    this.getData();
+    // this.anylizeData(rightListTest);
   },
   methods: {
-    // upCallback(page) {
-    //   // 下载过就设置已经初始化
-    //   this[this.curScrollViewName].isListInit = true;
-    //   this.search(page).then(({ result, pages }) => {
-    //     this.$nextTick(() => {
-    //       // 通过当前页的数据条数，和总数据量来判断是否加载完
-    //       this[this.curScrollViewName].mescroll.endBySize(result.length, pages);
-    //     });
-    //   });
-    // },
+    shareRightsClick() {
+      this.shareShow = !this.shareShow;
+      if (!this.shareRightsList.length) {
+        this.getData(1);
+      }
+    },
+    mutexRightsClick() {
+      this.mutexShow = !this.mutexShow;
+      if (!this.mutexRightsList.length) {
+        this.getData(2);
+      }
+    },
     minusCount(item) {
-      // // 单品
-      // if (item.rightsType === 'single') {
-      //   // 同享
-      //   item.rightsSelectedGroupDtoList.shift();
-      //   let isReturn = false
-      //   item.allowRightsConditionDtoList.forEach((rights) => {
-      //     if (!isReturn) {
-      //       if (rights.flag !== 0) {
-      //         rights.flag = 0;
-      //         item.selectedNum--;
-      //         this.$set(item, 'selectedNum', item.selectedNum);
-      //         this.$set(item, 'isSelected', item.selectedNum);
-      //         isReturn = true
-      //       }
-      //     }
-      //   });
-      // } else {
-      //   //套购同享
-      //   let isReturn = false
-      //   item.rightsSelectedGroupDtoList.shift();
-      //   let present = []
-      //   item.allowRightsConditionDtoList.forEach((rights) => {
-      //     if (!isReturn) {
-      //       if (rights.flag !== 0) {
-      //         rights.flag = 0;
-      //         item.selectedNum--;
-      //         present = rights.orderIdList
-      //         this.$set(item, 'selectedNum', item.selectedNum);
-      //         this.$set(item, 'isSelected', item.selectedNum);
-      //         isReturn = true
-      //       }
-      //     }
-      //     rights.orderIdList.forEach(ri => {
-      //       if (present.length > 0) {
-      //         for (var i = 0; i < present.length; i++) {
-      //           if (ri === present[i]) {
-      //             this.$set(rights, 'flag', 0);
-      //           }
-      //         }
-      //       }
-      //     })
-      //   });
-      // }
-      // if(item.isOptional = 0){
-      //   this.$set(item,'isOptional',1)
-      // }
-      // this.anylizeData(this.rightListTest)
+      // 单品
+      if (item.rightsType === 'single') {
+        debugger;
+        // 同享
+        item.rightsSelectedGroupDtoList.shift();
+        let isReturn = false;
+        item.allowRightsConditionDtoList.forEach((rights) => {
+          if (!isReturn) {
+            if (rights.flag !== 0) {
+              rights.flag = 0;
+              item.selectedNum--;
+              this.$set(item, 'selectedNum', item.selectedNum);
+              this.$set(item, 'isSelected', item.selectedNum);
+              isReturn = true;
+            }
+          }
+        });
+      } else {
+        // 套购同享
+        let isReturn = false;
+        item.rightsSelectedGroupDtoList.shift();
+        let present = [];
+        item.allowRightsConditionDtoList.forEach((rights) => {
+          if (!isReturn) {
+            if (rights.flag !== 0) {
+              rights.flag = 0;
+              item.selectedNum--;
+              present = rights.orderIdList;
+              this.$set(item, 'selectedNum', item.selectedNum);
+              this.$set(item, 'isSelected', item.selectedNum);
+              isReturn = true;
+              item.num --
+            }
+          }
+          if (item.isOptional === 0) {
+            this.$set(item, 'isOptional', 1);
+          }
+
+          if(rights.flag !== 0){
+            // let re = false
+            //     rights.orderIdList.forEach((ri) => {
+            //       if (!re) {
+            //         for (let i = 0; i < present.length; i++) {
+            //           if (ri === present[i]) {
+            //             this.$set(rights, 'flag', 0);
+            //             item.num--
+            //             re = true
+            //             return
+            //           }
+            //         }
+            //       }
+            //     });
+            if(this.uniqueArray(rights.orderIdList,present)){
+              this.$set(rights, 'flag', 0);
+              item.num--
+            }
+          }
+
+        });
+      }
+
+       this.anylizeMCData(this.shareRightsList);
+    },
+    minusMCount(item) {
       /** **************互斥********************** */
       // 单品
       if (item.rightsType === 'single') {
-        this.$set(item, 'isOptional', 1);
-        this.$set(item, 'isSelected', 0);
-        this.$set(item, 'selectedNum', 0);
-        const present = item.allowRightsConditionDtoList;
-        this.rightListTest.forEach((rights) => {
+        let rightid = '';
+        item.rightsSelectedGroupDtoList.shift();
+        let isReturn = false;
+        item.allowRightsConditionDtoList.forEach((rights) => {
+          debugger
+          if (!isReturn) {
+            debugger
+            if (rights.flag !== 0) {
+              rights.flag = 0;
+              rightid = rights.orderId;
+              item.selectedNum--;
+              this.$set(item, 'selectedNum', item.selectedNum);
+              this.$set(item, 'isSelected', item.selectedNum);
+              isReturn = true;
+            }
+          }
+        });
+        if (item.isOptional === 0) {
+          this.$set(item, 'isOptional', 1);
+        }
+        this.mutexRightsList.forEach((rights) => {
           rights.allowRightsConditionDtoList.forEach((ri) => {
-            if (present.length > 0) {
-              for (let i = 0; i < present.length; i++) {
-                if (ri.orderId === present[i].orderId) {
+            if (rightid === ri.orderId) {
+              this.$set(ri, 'flag', 0);
+              if (rights.isOptional === 0) {
+                this.$set(rights, 'isOptional', 1);
+              }
+            }
+          });
+        });
+      } else {
+        // 套购huchi
+        let isReturn = false;
+        item.rightsSelectedGroupDtoList.shift();
+        let present = [];
+        item.allowRightsConditionDtoList.forEach((rights) => {
+          if (!isReturn) {
+            if (rights.flag !== 0) {
+              rights.flag = 0;
+              item.selectedNum--;
+              present = rights.orderIdList;
+              this.$set(item, 'selectedNum', item.selectedNum);
+              this.$set(item, 'isSelected', item.selectedNum);
+              isReturn = true;
+            }
+          }
+          if (item.isOptional === 0) {
+            this.$set(item, 'isOptional', 1);
+          }
+          if(rights.flag !== 0){
+            if(this.uniqueArray(rights.orderIdList,present)){
+              this.$set(rights, 'flag', 0);
+              item.num--;
+            }
+          }
+        });
+        this.mutexRightsList.forEach((rights) => {
+          rights.allowRightsConditionDtoList.forEach((ri) => {
+            if (ri.flag !== 0) {
+              if(this.uniqueArray(ri.orderIdList,present)){
+                this.$set(ri, 'flag', 1);
+                rights.num--;
+                if (rights.isOptional === 0) {
                   this.$set(rights, 'isOptional', 1);
                 }
               }
             }
           });
         });
-      } else {
-        // 套购同享
-        this.$set(item, 'isOptional', 1);
-        this.$set(item, 'isSelected', 0);
-        this.$set(item, 'selectedNum', 0);
-        const present = item.allowRightsConditionDtoList;
-        this.rightListTest.forEach((rights) => {
-          if(rights != item) {
-            if(!rights.isOptional){
-              rights.allowRightsConditionDtoList.forEach((ri) => {
-                ri.orderIdList.forEach((id) => {
-                  present.forEach(pre => {
-                    if (this.array_contain(pre.orderIdList, id)) {
-                      this.$set(rights, 'isOptional', 1);
-                    }
-                  })
-                });
-              });
+      }
+       this.anylizeMCData(this.mutexRightsList);
+    },
+    addCount(item) {
+      // 单品;
+      if (item.rightsType === 'single') {
+        // 同享
+        let isReturn = false;
+        item.allowRightsConditionDtoList.forEach((rights) => {
+          if (!isReturn) {
+            if (rights.flag !== 1) {
+              this.$set(rights, 'flag', 1);
+              item.rightsSelectedGroupDtoList.push(rights);
+              item.selectedNum++;
+              this.$set(item, 'selectedNum', item.selectedNum);
+              this.$set(item, 'isSelected', 1);
+              isReturn = true;
             }
           }
         });
+        if (item.allowRightsConditionDtoList.length === item.rightsSelectedGroupDtoList.length) {
+          this.$set(item, 'isOptional', 0);
+        }
+      } else {
+        // 套购
+        debugger;
+        let isReturn = false;
+        let present = [];
+        item.allowRightsConditionDtoList.forEach((rights) => {
+          if (!isReturn) {
+            if (rights.flag !== 1) {
+              this.$set(rights, 'flag', 1);
+              item.rightsSelectedGroupDtoList.push(rights);
+              present = rights.orderIdList;
+              item.selectedNum++;
+              this.$set(item, 'selectedNum', item.selectedNum);
+              this.$set(item, 'isSelected', 1);
+              isReturn = true;
+              item.num ++
+            }
+          }
+          if(rights.flag !== 1){
+            if(this.uniqueArray(rights.orderIdList,present)){
+              this.$set(rights, 'flag', 1);
+              item.num ++
+            }
+          }
+        });
+        if (item.num === item.allowRightsConditionDtoList.length) {
+          this.$set(item, 'isOptional', 0);
+        }
       }
-      this.anylizeData(this.rightListTest);
+
+       this.anylizeMCData(this.shareRightsList);
     },
-
-    addCount(item) {
-      // 单品
-      // if (item.rightsType === 'single') {
-      //   // 同享
-      //   let isReturn = false
-      //   item.allowRightsConditionDtoList.forEach((rights) => {
-      //     if(!isReturn){
-      //       if (rights.flag !== 1) {
-      //         this.$set(rights,'flag',1);
-      //         item.rightsSelectedGroupDtoList.push(rights);
-      //         item.selectedNum++;
-      //         this.$set(item, 'selectedNum', item.selectedNum);
-      //         this.$set(item, 'isSelected', item.selectedNum);
-      //         isReturn = true
-      //       }
-      //     }
-      //   });
-      //   if (item.allowRightsConditionDtoList.length === item.rightsSelectedGroupDtoList.length) {
-      //     this.$set(item, 'isOptional', 0);
-      //   }
-      // }else {
-      //   // 套购
-      //   debugger
-      //   let isReturn = false
-      //   let present = []
-      //   item.allowRightsConditionDtoList.forEach((rights) => {
-      //     if(!isReturn) {
-      //       if (rights.flag !== 1) {
-      //         this.$set(rights, 'flag', 1);
-      //         item.rightsSelectedGroupDtoList.push(rights);
-      //         present = rights.orderIdList
-      //         item.selectedNum++;
-      //         this.$set(item, 'selectedNum', item.selectedNum);
-      //         this.$set(item, 'isSelected', item.selectedNum);
-      //         isReturn = true
-      //       }
-      //     }
-      //     rights.orderIdList.forEach(ri => {
-      //       if(present.length > 0){
-      //         for(var i = 0;i < present.length;i ++){
-      //           if(ri === present[i]){
-      //             this.$set(rights, 'flag', 1);
-      //           }
-      //         }
-      //       }
-      //     })
-      //   })
-      //   let num = 0
-      //   item.allowRightsConditionDtoList.forEach(rights => {
-      //     if(rights.flag === 1){
-      //       num ++
-      //     }
-      //   })
-      //   if(num === item.allowRightsConditionDtoList.length){
-      //     this.$set(item, 'isOptional', 0);
-      //   }
-      // }
-      //
-      // this.anylizeData(this.rightListTest)
-
+    addMCount(item) {
       /** ************互斥***************** */
       // 单品
       if (item.rightsType === 'single') {
-        this.$set(item, 'isSelected', 1);
-        this.$set(item, 'isOptional', 0);
-        this.$set(item, 'selectedNum', 1);
-        const present = item.allowRightsConditionDtoList;
-        this.rightListTest.forEach((rights) => {
+        let isReturn = false;
+        let rightid = '';
+        item.allowRightsConditionDtoList.forEach((rights) => {
+          if (!isReturn) {
+            if (rights.flag !== 1) {
+              this.$set(rights, 'flag', 1);
+              rightid = rights.orderId;
+              item.rightsSelectedGroupDtoList.push(rights);
+              item.selectedNum++;
+              this.$set(item, 'selectedNum', item.selectedNum);
+              this.$set(item, 'isSelected', 1);
+              isReturn = true;
+            }
+          }
+        });
+        if (item.selectedNum === item.rightsSelectedGroupDtoList.length) {
+          this.$set(item, 'isOptional', 0);
+        }
+        // let num = 0;
+        this.mutexRightsList.forEach((rights) => {
           rights.allowRightsConditionDtoList.forEach((ri) => {
-            if (present.length > 0) {
-              for (let i = 0; i < present.length; i++) {
-                if (ri.orderId === present[i].orderId) {
-                  this.$set(rights, 'isOptional', 0);
-                }
+            if (ri.flag !== 1) {
+              if (rightid === ri.orderId) {
+                this.$set(ri, 'flag', 1);
+                rights.num++;
               }
             }
           });
+          if (rights.num === rights.allowRightsConditionDtoList.length) {
+            this.$set(rights, 'isOptional', 0);
+          }
         });
       } else {
         // 套购
-        this.$set(item, 'isSelected', 1);
-        this.$set(item, 'isOptional', 0);
-        this.$set(item, 'selectedNum', 1);
-        debugger
-        const present = item.allowRightsConditionDtoList;
-        this.rightListTest.forEach((rights) => {
-          if(rights != item) {
-            if(rights.isOptional){
-              rights.allowRightsConditionDtoList.forEach((ri) => {
-                ri.orderIdList.forEach((id) => {
-                  present.forEach(pre => {
-                    if (this.array_contain(pre.orderIdList, id)) {
-                      this.$set(rights, 'isOptional', 0);
-                    }
-                  })
-
-                });
-              });
+        let isReturn = false;
+        let present = [];
+        item.allowRightsConditionDtoList.forEach((rights) => {
+          if (!isReturn) {
+            if (rights.flag !== 1) {
+              this.$set(rights, 'flag', 1);
+              item.rightsSelectedGroupDtoList.push(rights);
+              present = rights.orderIdList;
+              item.selectedNum++;
+              this.$set(item, 'selectedNum', item.selectedNum);
+              this.$set(item, 'isSelected', 1);
+              item.num ++
+              isReturn = true;
             }
           }
+          if(rights.flag !== 1){
+            if(this.uniqueArray(rights.orderIdList,present)){
+              this.$set(rights, 'flag', 1);
+              item.num ++
+            }
+          }
+        });
+        if (item.num === item.allowRightsConditionDtoList.length) {
+          this.$set(item, 'isOptional', 0);
+        }
+        this.mutexRightsList.forEach((rights) => {
+          rights.allowRightsConditionDtoList.forEach((ri) => {
+            if (ri.flag !== 1) {
+              if(this.uniqueArray(ri.orderIdList,present)){
+                this.$set(ri, 'flag', 1);
+                rights.num++;
+              }
+            }
           });
-
+          if (rights.num === rights.allowRightsConditionDtoList.length) {
+            this.$set(rights, 'isOptional', 0);
+          }
+        });
       }
-      this.anylizeData(this.rightListTest);
+       this.anylizeMCData(this.mutexRightsList);
     },
-
+    uniqueArray(array1,array2){
+      const a = array1.length
+      const b = array2.length
+      let concatA =  array1.concat(array2)
+      const setArray = Array.from(new Set(concatA))
+      if(setArray.length < a + b){
+        return true
+      }else {
+        return false
+      }
+    },
     array_contain(array, obj) {
-      debugger
+      debugger;
       return array.find(v => v === obj);
     },
     showConfig(item) {
@@ -408,86 +457,181 @@ export default {
       });
     },
     btmConfirmClick() {
-      this.rightsService.confirmSelectedOrderRights({}, { orderNo: this.orderNo }).then((res) => {
-        if (res.code === 1) {
-          this.rightsJson = JSON.stringify(res.data);
-          this.$router.go(-1);
+      this.jsonRightsList(this.shareRightsList, 'share');
+      this.jsonRightsList(this.mutexRightsList, 'mutex');
+    },
+    jsonRightsList(list, type) {
+      list.forEach((item) => {
+        if (item.isSelected) {
+          this.nameList.push(item.rightsName);
+          this.idList.push(item.rightsNo);
+          const r = {
+            rightsId: item.rightsNo,
+            rightsGroup: '',
+            configId: ''
+          };
+          if (item.rightsType === 'single') {
+            item.rightsSelectedGroupDtoList.forEach((sel) => {
+              let timestamp = new Date().getTime();
+              let Num = 0;
+              for (let i = 0; i < 3; i++) {
+                Num += Math.floor(Math.random() * 10);
+              }
+              timestamp += Num;
+              const a = {};
+              a.orderDetailId = sel.orderId;
+              a.rightsGroup = timestamp;
+              r.rightsGroup = timestamp;
+              this.rightsDetailList.push(a);
+              r.configId = sel.configId;
+              this.rightsUserDto.push(r);
+            });
+          } else {
+            item.rightsSelectedGroupDtoList.forEach((sel) => {
+              let timestamp = new Date().getTime();
+              let Num = 0;
+              for (let i = 0; i < 3; i++) {
+                Num += Math.floor(Math.random() * 10);
+              }
+              timestamp += Num
+              sel.orderIdList.forEach((val) => {
+                const a = {};
+                a.orderDetailId = val;
+                a.rightsGroup = timestamp;
+                this.rightsDetailList.push(a);
+              });
+              r.rightsGroup = timestamp;
+              r.configId = sel.configId;
+              this.rightsUserDto.push(r);
+            });
+          }
         }
       });
+      this.num++;
+      debugger
+      if (this.num === 2) {
+        const rightJson = {};
+        rightJson.rightsUserInterestsDetailsDTO = this.rightsDetailList;
+        if(this.nameList.length === 1){
+          rightJson.rightName = this.nameList[0]
+        }else {
+          rightJson.rightName = this.nameList.join(',');
+        }
+        if(this.idList.length === 1){
+          rightJson.rightId = this.idList[0]
+        }else {
+          rightJson.rightId = this.id.join(',');
+        }
+        rightJson.rightsUserInterestsDTO = this.rightsUserDto;
+        this.rightsJson = JSON.stringify(rightJson);
+        debugger
+        this.$router.go(-1);
+      }
     },
-    search(page) {
+    getData(type) {
+      debugger;
       // todo
       this.subInfo = JSON.parse(this.$route.params.orderInfo);
       this.orderNo = this.subInfo.orderNo;
       if (this.current === 0) {
-        return this.rightsService.queryOrderOptionalRights(this.subInfo, {
-          pageNum: page.num,
-          pageSize: page.size,
-        }).then((res) => {
-          const sroviewObj = {};
-          if (res.code === 1) {
-            const {
-              result,
-              pages
-            } = res.data;
-            sroviewObj.pages = pages;
-            sroviewObj.result = result;
-            if (result && result.length > 0) {
-              const list = result;
-              console.log('currentList', list);
-              this.anylizeData(list);
-            }
-            if (page.num === 1) {
-              this[this.curScrollViewName].list = [];
-              this[this.curScrollViewName].list = this.currentList;
-            } else {
-              this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(this.currentList);
-            }
-          } else {
-            Toast.failed(res.msg);
-            this[this.curScrollViewName].mescroll.endErr();
-          }
-          return sroviewObj;
-        });
-      }
-      return this.rightsService.queryOrderNotOptionalRights(this.subInfo, {
-        pageNum: page.num,
-        pageSize: page.size,
-      }).then((res) => {
-        const sroviewObj = {};
-        if (res.code === 1) {
-          const {
-            result,
-            pages
-          } = res.data;
-          sroviewObj.pages = pages;
-          sroviewObj.result = result;
-          if (result && result.length > 0) {
-            this.currentList = result;
-            this[this.curScrollViewName].list = this.currentList;
-          } else {
-            Toast.info('暂无数据');
-          }
-        } else {
-          Toast.failed(res.msg);
-          this[this.curScrollViewName].mescroll.endErr();
+        if (!type) {
+          return;
         }
-        return sroviewObj;
-      });
+        if (type === 1) {
+          this.rightsService.queryOrderOptionalShareRights(this.subInfo, {})
+            .then((res) => {
+              if (res.code === 1) {
+                if (res.data.length > 0) {
+                  // this.shareRightsList = res.data;
+                  this.anylizeData(res.data, 1);
+                } else {
+                  Toast.failed('暂无数据');
+                }
+              } else {
+                Toast.failed(res.msg);
+              }
+            });
+        } else {
+          this.rightsService.queryOrderOptionalMutexRights(this.subInfo, {})
+            .then((res) => {
+              if (res.code === 1) {
+                if (res.data.length > 0) {
+                  this.anylizeData(res.data, 2);
+                  // this.mutexRightsList = res.data;
+                } else {
+                  Toast.failed('暂无数据');
+                }
+              } else {
+                Toast.failed(res.msg);
+              }
+            });
+        }
+      } else {
+        debugger;
+        this.rightsService.queryOrderNotOptionalRights(this.subInfo, { pageNum: 1,
+          pageSize: 10 })
+          .then((res) => {
+            if (res.code === 1) {
+              debugger;
+              if (res.data.result.length > 0) {
+                debugger;
+                const temp = res.data.result;
+                temp.forEach((not) => {
+                  const a = not.rightsBrand.split(',');
+                  const b = [];
+                  a.forEach((i) => {
+                    if (i === '000') {
+                      i = '海尔';
+                      b.push(i);
+                    } else if (i === '051') {
+                      i = '卡萨帝';
+                      b.push(i);
+                    } else {
+                      i = '统帅';
+                      b.push(i);
+                    }
+                  });
+                  not.rightsBrandC = b.join(',');
+                });
+                console.log('aaaaaaaaaaaaaaa', temp);
+                debugger;
+                this.notOptionalList = temp;
+              } else {
+                Toast.info('暂无数据');
+              }
+            } else {
+              Toast.failed(res.msg);
+            }
+          });
+      }
     },
-    anylizeData(curlist) {
+    anylizeMCData(list){
+      list.forEach(item => {
+        if (item.isOptional === 1) {
+          this.$set(item, 'addGray', false);
+        } else {
+          this.$set(item, 'addGray', true);
+        }
+        if (item.selectedNum !== 0) {
+          debugger;
+          this.$set(item, 'minesGray', false);
+        }
+      })
+    },
+    anylizeData(curlist, type) {
       console.log('curlist', curlist);
-
       curlist.forEach((item) => {
-        // if (item.rightsBrand = '000') {
-        //   ;
-        //   item.rightsBrandC = '海尔';
-        // } else if (item.rightsBrand = '051') {
-        //   ;
-        //   item.rightsBrandC = '卡萨帝';
-        // } else {
-        //   item.rightsBrandC = '统帅';
-        // }
+        item.num = 0;
+        item.allowRightsConditionDtoList.forEach((al) => {
+          al.flag = 0;
+        });
+        if (item.rightsBrand === '000') {
+          item.rightsBrandC = '海尔';
+        } else if (item.rightsBrand === '051') {
+          item.rightsBrandC = '卡萨帝';
+        } else {
+          item.rightsBrandC = '统帅';
+        }
         this.$set(item, 'minesGray', true);
         if (item.isOptional === 1) {
           this.$set(item, 'addGray', false);
@@ -499,7 +643,11 @@ export default {
           this.$set(item, 'minesGray', false);
         }
       });
-      this.rightListTest = curlist;
+      if (type === 1) {
+        this.shareRightsList = curlist;
+      } else {
+        this.mutexRightsList = curlist;
+      }
     }
   },
   beforeRouteLeave(to, from, next) {
@@ -608,15 +756,32 @@ export default {
     font-size: 34px;
     border-radius: 8px;
   }
-  .common-submit-btn-default1{
+  .right-p{
+    height: 80px;
+    /*line-height: 80px;*/
+    padding: 20px;
+    border-radius: 8px;
+    width: 700px;
+    margin-left: 24px;
+    margin-top: 24px;
+    background-color: white;
+    color: #666666;
+  }
+  .iconfont{
+   font-size: 40px;
+    float: right;
+  }
+  .common-submit-btn-default3{
     @include mix-submit-btn;
     color: #fff;
     background: #1969C6;
     /*position: fixed;*/
     width: 90%;
     margin-left: 5%;
+    margin-top: 20px;
     /*margin-bottom: 20px;*/
     position: absolute;
     bottom: 20px;
+    z-index: 10;
   }
 </style>
