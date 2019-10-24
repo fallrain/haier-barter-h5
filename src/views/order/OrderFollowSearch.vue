@@ -231,9 +231,12 @@ export default {
   activated() {
     // window.location.reload();
   },
-  created() {
+  created() {debugger
     if (localStorage.getItem('confirm') === 'list') {
       this.curTab = 3;
+      localStorage.setItem('confirm', '');
+    } else if (localStorage.getItem('confirm') === 'caogao'){
+      this.curTab = 4;
       localStorage.setItem('confirm', '');
     }
     const userinfostr = localStorage.getItem('userinfo');
@@ -308,20 +311,23 @@ export default {
       this.curTab = index;
     },
     handEntry() {
-      const orderMode = JSON.parse(localStorage.getItem('userinfo')).orderMode;
-      if (orderMode == 'Casarte') {
-        Toast.failed('卡萨帝模式，不支持手动录单');
-        return;
-      }
-      this.orderService.checkUpperLimitForSGLD().then(res => {
-        if(res.code === 1){
-          this.handEntryCon = true
-          this.handCount = res.data
-        }else {
-            Toast.info('您已没有手动录单条数，请选择其他录单方式', 3000);
+      this.orderService.checkCreateOrder().then((res) => { // 判断店铺是否冻结
+        if (res.code != -1) {
+          const orderMode = JSON.parse(localStorage.getItem('userinfo')).orderMode;
+          if (orderMode == 'Casarte') {
+            Toast.failed('卡萨帝模式，不支持手动录单');
+            return;
+          }
+          this.orderService.checkUpperLimitForSGLD().then(res => {
+            if(res.code === 1){
+              this.handEntryCon = true
+              this.handCount = res.data
+            }else {
+              Toast.info('您已没有手动录单条数，请选择其他录单方式', 3000);
+            }
+          })
         }
-      })
-
+      });
     },
     handEntryConfirm(){
       this.handEntryCon = false
@@ -428,35 +434,8 @@ export default {
     },
     followButtonClicked(val, info) {
       if (val.name === '成交录单') {
-        this.$router.push({
-          name: 'Order.OrderEntry',
-          params: { customerConsigneeInfo: {
-            userName: info.userName,
-            mobile: info.userMobile,
-            userId: info.userId,
-            recordMode: info.recordMode,
-            businessScenarios: info.businessScenarios,
-            sourceSn: info.sourceSn,
-            id: info.id,
-          },
-          region: 'new' }
-        });
-      } else if (val.name === '继续录单') {
-        this.$router.push({
-          name: 'Order.OrderModify',
-          params: { orderNo: info.orderNo, orderFollowId: info.id }
-        });
-      } else if (val.name === '补录订单') {
-        this.$router.push({
-          name: 'Order.OrderSupplement',
-          params: { orderNo: info.orderNo, orderFollowId: info.id }
-        });
-      } else {
-        // val.name === '录新订单'
-        // 生成一条新的待办
-        this.orderService.createNewOrder({}, { orderNo: info.orderNo }).then((res) => {
-          if (res.code === 1) {
-            const orderFollowId = res.data.id;
+        this.orderService.checkCreateOrder().then((res) => { // 判断店铺是否冻结
+          if (res.code != -1) {
             this.$router.push({
               name: 'Order.OrderEntry',
               params: { customerConsigneeInfo: {
@@ -466,9 +445,52 @@ export default {
                 recordMode: info.recordMode,
                 businessScenarios: info.businessScenarios,
                 sourceSn: info.sourceSn,
-                id: orderFollowId,
+                id: info.id,
               },
               region: 'new' }
+            });
+          }
+        });
+      } else if (val.name === '继续录单') {
+        this.orderService.checkCreateOrder().then((res) => { // 判断店铺是否冻结
+          if (res.code != -1) {
+            this.$router.push({
+              name: 'Order.OrderModify',
+              params: { orderNo: info.orderNo, orderFollowId: info.id }
+            });
+          }
+        });
+      } else if (val.name === '补录订单') {
+        this.orderService.checkCreateOrder().then((res) => { // 判断店铺是否冻结
+          if (res.code != -1) {
+            this.$router.push({
+              name: 'Order.OrderSupplement',
+              params: { orderNo: info.orderNo, orderFollowId: info.id }
+            });
+          }
+        });
+      } else {
+        // val.name === '录新订单'
+        this.orderService.checkCreateOrder().then((res) => { // 判断店铺是否冻结
+          if (res.code != -1) {
+            // 生成一条新的待办
+            this.orderService.createNewOrder({}, { orderNo: info.orderNo }).then((res) => {
+              if (res.code === 1) {
+                const orderFollowId = res.data.id;
+                this.$router.push({
+                  name: 'Order.OrderEntry',
+                  params: { customerConsigneeInfo: {
+                      userName: info.userName,
+                      mobile: info.userMobile,
+                      userId: info.userId,
+                      recordMode: info.recordMode,
+                      businessScenarios: info.businessScenarios,
+                      sourceSn: info.sourceSn,
+                      id: orderFollowId,
+                    },
+                    region: 'new' }
+                });
+              }
             });
           }
         });
@@ -684,7 +706,7 @@ export default {
 
   },
   beforeRouteEnter(to, from, next) {
-    if (from.name === 'Order.OrderFollowCommitResult' || from.name === 'Order.OrderConfirm') {
+    if (from.name === 'Order.OrderFollowCommitResult' || from.name === 'Order.OrderConfirm' || from.name === 'Order.OrderEntry' || from.name === 'Order.OrderModify') {
       next();
       window.location.reload();
     }

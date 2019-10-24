@@ -422,13 +422,18 @@ export default {
     color: #333;
     margin-top: 20px;
   }
+  .orderEntry-btns-par2 {
+    width: 100%;
+    position: relative;
+    padding-top: 10px;
+    background: #fff;
+  }
   .common-submit-btn-default1{
     height: 84px;
     font-size: 34px;
     border-radius: 8px;
     color: #fff;
     background: #1969C6;
-    position: fixed;
     width: 90%;
     margin-left: 5%;
     margin-bottom: 20px;

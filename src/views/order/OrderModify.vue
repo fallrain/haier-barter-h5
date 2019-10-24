@@ -703,13 +703,11 @@ export default {
     },
 
     generateSubInfo(type) {
-      if(this.productList.length === 0){
+      if (this.productList.length === 0 && this.saveType == 0) {
         Toast.failed('请选择产品');
         return;
       }
-      console.log(this.productList)
-      console.log(this.deliveryTime)
-      if (!this.bUtil.isReportInstallFit(this.productList,this.deliveryTime)) {
+      if (!this.bUtil.isReportInstallFit(this.productList,this.deliveryTime) && this.saveType == 0) {
         return;
       }
 
@@ -809,6 +807,7 @@ export default {
                     if (res.code === 1) {
                       if (this.saveType === 1) {
                         Toast.succeed('订单暂存成功');
+                        localStorage.setItem('confirm', 'caogao');
                         this.$router.go(-1);
                       }
                       if (this.saveType === 0) {
@@ -830,6 +829,7 @@ export default {
                 if (res.code === 1) {
                   if (this.saveType === 1) {
                     Toast.succeed('订单暂存成功');
+                    localStorage.setItem('confirm', 'caogao');
                     this.$router.go(-1);
                   }
                   if (this.saveType === 0) {
@@ -933,6 +933,7 @@ export default {
             if (res.code === 1) {
               if (this.saveType === 1) {
                 Toast.succeed('订单暂存成功');
+                localStorage.setItem('confirm', 'caogao');
                 this.$router.go(-1);
               }
               if (this.saveType === 0) {

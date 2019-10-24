@@ -739,27 +739,27 @@ console.log(this.orderFollowId)
       });
     },
     generateSubInfo(type) {
-      if (this.buyTime === '') {
+      if (this.buyTime === '' && this.saveType == 0) {
         Toast.failed('请选择购买时间');
         return;
       }
-      if(this.productList.length === 0){
+      if(this.productList.length === 0 && this.saveType == 0){
         Toast.failed('请选择产品');
         return;
       }
       for (let i=0; i<this.productList.length; i++) {
-        if (this.productList[i].productPrice == '') {
+        if (this.productList[i].productPrice == '' && this.saveType == 0) {
           Toast.failed('请输入产品价格');
           return;
         }
       }
       console.log(this.productList);
-      if (this.deliveryTime === '') {
+      if (this.deliveryTime === '' && this.saveType == 0) {
         Toast.failed('请选择送达时间');
         return;
       }
 
-      if (!this.bUtil.isReportInstallFit(this.productList,this.deliveryTime)) {
+      if (!this.bUtil.isReportInstallFit(this.productList,this.deliveryTime) && this.saveType == 0) {
         return;
       }
       const subInfo = {};
@@ -855,6 +855,7 @@ console.log(this.orderFollowId)
                     if (res.code === 1) {
                       if (this.saveType === 1) {
                         Toast.succeed('订单暂存成功');
+                        localStorage.setItem('confirm', 'caogao');
                         this.$router.go(-1);
                       }
                       if (this.saveType === 0) {
@@ -876,6 +877,7 @@ console.log(this.orderFollowId)
                 if (res.code === 1) {
                   if (this.saveType === 1) {
                     Toast.succeed('订单暂存成功');
+                    localStorage.setItem('confirm', 'caogao');
                     this.$router.go(-1);
                   }
                   if (this.saveType === 0) {
@@ -1007,6 +1009,7 @@ console.log(this.orderFollowId)
             if (res.code === 1) {
               if (this.saveType === 1) {
                 Toast.succeed('订单暂存成功');
+                localStorage.setItem('confirm', 'caogao');
                 this.$router.go(-1);
               }
               if (this.saveType === 0) {
