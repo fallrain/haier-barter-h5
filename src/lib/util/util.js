@@ -269,7 +269,7 @@ const util = {
     }
   },
   /** *****判断代报装时间是否符合要求******** */
-  isReportInstallFit(productlist, deliveryTime) {debugger
+  isReportInstallFit(productlist, deliveryTime) {
     let change = true;
     // const now = new Date()
     const deT = Date.parse(deliveryTime.substring(0, 16).replace(/-/g, '/'));
@@ -277,7 +277,7 @@ const util = {
     const d = detFor.getDate();
     const h = detFor.getHours();
     productlist.forEach((pro) => {
-      if (pro.installTime != '') {
+      if (pro.installTime) {
         const t = Date.parse(pro.installTime.replace(/-/g, '/'));
         const tFor = new Date(t);
         const td = tFor.getDate();
@@ -288,12 +288,12 @@ const util = {
           return;
         }
         if (td === d) {
-          if (h > 16) {
+          if (h >= 16) {
             Toast.failed('送达时间为16：00之后代报装时间不可选当天');
             change = false;
             return;
           }
-          if (th < (h + 4)) {
+          if (th <= (h + 4)) {
             Toast.failed('代报装时间必须大于送达时间4小时');
             change = false;
           }
