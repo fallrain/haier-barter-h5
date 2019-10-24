@@ -693,7 +693,7 @@ export default {
   beforeRouteLeave(to, from, next) {
     if (to.name === 'Order.OrderFollowCommitResult' || to.name === 'Order.OrderConfirm' || to.name === 'Order.OrderUploadInvoice') {
       wx.miniProgram.switchTab({ url: 'pages/tool/tool' });
-      next();
+      // next();
     }
     next();
   },
