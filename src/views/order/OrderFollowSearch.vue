@@ -691,10 +691,11 @@ export default {
     next();
   },
   beforeRouteLeave(to, from, next) {
-    // wx.miniProgram.switchTab({ url: 'pages/tool/tool' });
+    // wx.miniProgram.switchTab({ url: '/pages/tool/tool' });
 
     if (to.name === 'Order.OrderFollowCommitResult' || to.name === 'Order.OrderConfirm' || to.name === 'Order.OrderUploadInvoice') {
-      wx.miniProgram.navigateTo({ url: '/pages/tool/tool' });
+      wx.miniProgram.switchTab({ url: '/pages/tool/tool' })
+      // wx.miniProgram.navigateTo({ url: '/pages/tool/tool' });
       // next();
     } else {
       next();
