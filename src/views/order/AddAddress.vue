@@ -421,13 +421,13 @@ export default {
         });
       }
       let newAddress = {
-        trueName: this.customerInfo.consigneeUserName,
         provinceName: this.newAddress.provinceName,
-        mobile: this.customerInfo.consigneeUserPhone,
         cityName: this.newAddress.cityName,
         areaName: this.newAddress.districtName,
         detailAddress: this.customerInfo.address,
-        regionCode: this.newAddress.regionCode
+        regionCode: this.newAddress.regionCode,
+        consigneeName: this.customerInfo.consigneeUserName,
+        consigneePhone: this.customerInfo.consigneeUserPhone
       };
       this.updataNewAddress(newAddress);
     },
