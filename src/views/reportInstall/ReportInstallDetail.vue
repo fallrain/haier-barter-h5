@@ -317,14 +317,16 @@ export default {
             ...product,
             // requireServiceDate: productList[index].requireServiceDate + ':00',
             requireServiceDate: (`${productList[index].requireServiceDate}:00`).substr(0, 19),
-            customerName: this.getNewAddress.consigneeName,
-            phoneNumber: this.getNewAddress.consigneePhone,
+            consigneeName: this.getNewAddress.consigneeName,
+            consigneePhone: this.getNewAddress.consigneePhone,
             provinceName: this.getNewAddress.provinceName,
             cityName: this.getNewAddress.cityName,
             districtName: this.getNewAddress.areaName,
             address: this.getNewAddress.detailAddress,
             regionCode: this.getNewAddress.regionCode,
             isReportInstall: isReport,
+            customerName: this.customerInfo.username,
+            phoneNumber: this.customerInfo.mobile,
             hmcid: this.hmcid
           };
           if (!this.getNewAddress.regionCode) {
