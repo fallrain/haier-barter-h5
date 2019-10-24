@@ -1,7 +1,7 @@
 const env = process.env.NODE_ENV_MODE;
 const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
 const path = require('path');
-
+/* eslint-disable import/no-extraneous-dependencies */
 const smp = new SpeedMeasurePlugin();
 const webpack = require('webpack');
 
