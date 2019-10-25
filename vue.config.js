@@ -1,13 +1,15 @@
-const env = process.env.NODE_ENV_MODE;
-const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
-const path = require('path');
 /* eslint-disable import/no-extraneous-dependencies */
-const smp = new SpeedMeasurePlugin();
+/* eslint-disable import/no-dynamic-require */
+const env = process.env.NODE_ENV_MODE;
+// const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
+const path = require('path');
+// const smp = new SpeedMeasurePlugin();
 const webpack = require('webpack');
 
 const dllPath = './dll';
 const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 
+const manifest = require(`${dllPath}/vendor-manifest.json`);
 module.exports = {
   publicPath: process.env.VUE_APP_PUBLIC_PATH,
   devServer: {
@@ -34,12 +36,11 @@ module.exports = {
     }
   },
   configureWebpack: (config) => {
-    if (env === 'dev') {
-    } else {
+    if (env !== 'dev') {
       config.plugins.push(
         new webpack.DllReferencePlugin({
           context: process.cwd(),
-          manifest: require(`${dllPath}/vendor-manifest.json`)
+          manifest
         })
       );
       // / 将打包出来文件动态引入index.html
@@ -48,7 +49,7 @@ module.exports = {
           // dll文件位置
           filepath: path.resolve(__dirname, `${dllPath}/*.js`),
           // dll 引用路径
-          publicPath: path.join(process.env.VUE_APP_PUBLIC_PATH, dllPath),
+          publicPath: path.join(process.env.VUE_APP_PUBLIC_PATH || '', dllPath),
           // dll最终输出的目录
           outputPath: dllPath
         })

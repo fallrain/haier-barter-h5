@@ -1,0 +1,152 @@
+<template>
+  <div class="activityQRCode">
+    <div class="activityDataAnalysis-bg">
+      <img src="@/assets/images/activity/data-analysis-example.png" alt="">
+    </div>
+    <activity-name-time
+      title="海尔国潮家电节|海尔智慧厨房"
+      startDate="2019-06-01"
+      endDate="2019-06-18"
+      address="青岛市崂山区海尔路10号海尔专卖店"
+    ></activity-name-time>
+    <div class="activityQRCode-cnt">
+      <p class="activityQRCode-cnt-title">活动专属二维码</p>
+      <div class="activityQRCode-cnt-code-par">
+        <div class="activityQRCode-cnt-code-corner activityQRCode-cnt-code-corner1"></div>
+        <div class="activityQRCode-cnt-code-corner activityQRCode-cnt-code-corner2"></div>
+        <div class="activityQRCode-cnt-code-corner activityQRCode-cnt-code-corner3"></div>
+        <div class="activityQRCode-cnt-code-corner activityQRCode-cnt-code-corner4"></div>
+        <img src="@/assets/images/activity/qrcode-example.png">
+      </div>
+      <div class="activityQRCode-cnt-inf">
+        活动二维码可用于展示<span class="active">给用户报名参与活动</span>或
+        <span class="active">下载打印到物业或传单上</span>
+      </div>
+    </div>
+    <div class="activityQRCode-btn-par">
+      <button
+        class="common-submit-btn-primary"
+        type="button"
+      >取消
+      </button>
+      <a
+        download=""
+        :href="qrcodeImg"
+        class="common-submit-btn-default"
+      >下载二维码
+      </a>
+    </div>
+  </div>
+</template>
+
+<script>
+import ActivityNameTime from '../../components/business/activity/ActivityNameTime';
+import qrcodeImg from '@/assets/images/activity/qrcode-example.png';
+
+export default {
+  name: 'ActivityQRCode',
+  components: {
+    ActivityNameTime
+  },
+  data() {
+    return {
+      qrcodeImg
+    };
+  }
+};
+</script>
+
+<style lang="scss">
+  .activityQRCode-cnt {
+    margin-top: 16px;
+    text-align: center;
+  }
+
+  .activityQRCode-cnt-title {
+    color: #999;
+    font-size: 28px;
+    line-height: 1;
+  }
+
+  .activityQRCode-cnt-code-par {
+    position: relative;
+    width: 314px;
+    height: 314px;
+    margin-top: 24px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 28px;
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .activityQRCode-cnt-code-corner {
+    width: 28px;
+    height: 28px;
+    border-color: #999;
+    border-style: solid;
+    border-width: 0;
+  }
+
+  .activityQRCode-cnt-code-corner1 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-top-width: 1px;
+    border-left-width: 1px;
+  }
+
+  .activityQRCode-cnt-code-corner2 {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-top-width: 1px;
+    border-right-width: 1px;
+  }
+
+  .activityQRCode-cnt-code-corner3 {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    border-bottom-width: 1px;
+    border-right-width: 1px;
+  }
+
+  .activityQRCode-cnt-code-corner4 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+  }
+
+  .activityQRCode-cnt-inf {
+    margin-top: 22px;
+    margin-bottom: 22px;
+    margin-left: 52px;
+    margin-right: 52px;
+    text-align: center;
+    font-size: 24px;
+    line-height: 40px;
+    color: #999;
+    .active{
+      color: #1969C6;
+    }
+  }
+
+  .activityQRCode-btn-par{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: 22px 24px;
+
+    .common-submit-btn-primary,
+    .common-submit-btn-default{
+      width: 45%;
+    }
+  }
+</style>
