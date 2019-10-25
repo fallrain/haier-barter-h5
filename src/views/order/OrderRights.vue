@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding-bottom: 50px">
     <div class="activity-tab-bg activity-tab">
       <md-tab-bar
         v-model="current"
@@ -55,11 +55,13 @@
       ></b-activity-item>
     </div>
 
-    <button
-      type="button"
-      class="common-submit-btn-default3 mt23"
-      @click="btmConfirmClick"
-    >确定</button>
+    <div class="bottom-btn">
+      <button
+        type="button"
+        class="common-submit-btn-default3"
+        @click="btmConfirmClick"
+      >确定</button>
+    </div>
   </div>
 </template>
 
@@ -771,6 +773,13 @@ export default {
    font-size: 40px;
     float: right;
   }
+  .bottom-btn{
+    padding: 20px 0;
+    background: #fff;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+  }
   .common-submit-btn-default3{
     @include mix-submit-btn;
     color: #fff;
@@ -778,10 +787,10 @@ export default {
     /*position: fixed;*/
     width: 90%;
     margin-left: 5%;
-    margin-top: 20px;
+    /*margin-top: 20px;*/
     /*margin-bottom: 20px;*/
-    position: absolute;
-    bottom: 20px;
+    /*position: absolute;*/
+    /*bottom: 20px;*/
     z-index: 10;
   }
 </style>

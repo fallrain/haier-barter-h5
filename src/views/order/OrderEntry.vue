@@ -180,7 +180,7 @@
     >
       <b-multbuy-check
         type="radio"
-        title="请选择套购发起人"
+        title="套购发起人"
         :persons="multBuySponsor"
         v-model="multBuySponsorCheckedIds"
         @radioCheck="sponsorCheck"
@@ -412,6 +412,7 @@ export default {
       // 参与人选中id
       multBuyParticipantCheckIds: [],
       orderNo: '',
+      orderInfo: '',
       haveConsignee: false,
       title: '顾客信息：',
       mobile: '',
@@ -423,7 +424,7 @@ export default {
       queryInstall: false,
       isInstall: false,
       multyBuy:false,
-    saveType:1,
+      saveType:1,
     };
   },
   computed: {},
@@ -544,13 +545,20 @@ console.log(this.orderFollowId)
     // },
     isReportInstall(pro) {
       this.productList.push(pro);
-
-      const orderDetailInfo = [
+      const orderDetailDtoList = [
         { hmcId: this.userParam.hmcid,
           storeId: this.shopId,
-          productModel: pro.productModel}
+          productModel: pro.productModel,
+          productBrand: pro.productBrand,
+          productCategoryCode: pro.productCategoryCode
+        }
       ];
-      this.orderService.isReportInstallNew({ orderDetailInfo }, {}).then((res) => {
+      console.log(this.customerInfo)
+      this.orderService.isReportInstallNew({
+        microCode: this.customerInfo.microCode,
+        channel: this.customerInfo.channel,
+        orderDetailDtoList
+      }, {}).then((res) => {
         this.queryInstall = true;
         if (res.code === 1) {
           this.isInstall = true;
@@ -560,6 +568,7 @@ console.log(this.orderFollowId)
           //   this.isInstall = false;
           // }
         } else {
+          this.isInstall = false;
         }
       });
     },
@@ -630,6 +639,9 @@ console.log(this.orderFollowId)
       this.orderService.generateOrderNo({}, { recordMode: this.recordMode },).then((res) => {
         if (res.code === 1) {
           this.orderNo = res.data;
+          this.orderService.queryOrderInfoByOrderNo({}, { orderNo: this.orderNo }).then((response) => {
+            console.log(response);
+          });
         } else {
           Toast.failed(res.msg);
         }
@@ -763,15 +775,16 @@ console.log(this.orderFollowId)
         return;
       }
       const subInfo = {};
-      if (this.multBuySponsorCheckedIds.length) {
-        subInfo.coupleSponsor = this.multBuySponsorCheckedIds[0];
-        const obj = this.multBuySponsor.find(v => v.hmcId === this.multBuySponsorCheckedIds[0]);
-        subInfo.coupleSponsorName = obj.username;
-      } else {
-        subInfo.coupleSponsor = '';
-        subInfo.mayEditCoupleOrderId = '';
-      }
-
+      // if (this.multBuySponsorCheckedIds.length) {
+      //   subInfo.coupleSponsor = this.multBuySponsorCheckedIds[0];
+      //   const obj = this.multBuySponsor.find(v => v.hmcId === this.multBuySponsorCheckedIds[0]);
+      //   subInfo.coupleSponsorName = obj.username;
+      // } else {
+      //   subInfo.coupleSponsor = '';
+      //   subInfo.mayEditCoupleOrderId = '';
+      // }
+      subInfo.coupleSponsor = this.multBuySponsor[0].hmcId;
+      subInfo.coupleSponsorName = this.multBuySponsor[0].username;
       const part = [];
       if (this.multBuyParticipantCheckIds.length) {
         subInfo.mayEditCoupleOrderId = this.multBuyParticipantCheckIds.join(',');
@@ -978,8 +991,12 @@ console.log(this.orderFollowId)
           }else {
             this.multyBuy = true
           }
-          this.multBuySponsor = res.data;
-          this.multBuyParticipant = this.multBuySponsor;
+          res.data.forEach((item) => {
+            if (item.hmcId == this.hmcId) {
+              this.multBuySponsor.push(item);
+            }
+          });
+          this.multBuyParticipant = res.data;
           this.buyerList = res.data;
         }
       });
