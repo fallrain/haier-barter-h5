@@ -171,7 +171,7 @@
   >
     <b-multbuy-check
       type="radio"
-      title="请选择套购发起人"
+      title="套购发起人"
       :persons="multBuySponsor"
       v-model="multBuySponsorCheckedIds"
       @radioCheck="sponsorCheck"
@@ -403,7 +403,6 @@ export default {
   computed: {},
   watch: {
     buyDate(newV, oldV) {
-      console.log(this.userParam.hmcid)
       this.orderService.isAccordDeadline({
       }, {
         hmcId: this.userParam.hmcid,
@@ -898,8 +897,13 @@ export default {
     queryUserList(storeId) {
       this.productService.userList(storeId).then((res) => {
         if (res.code === 1) {
-          this.multBuySponsor = res.data;
-          this.multBuyParticipant = this.multBuySponsor;
+          console.log(this.hmcId);
+          res.data.forEach((item) => {
+            if (item.hmcId == this.hmcId) {
+              this.multBuySponsor.push(item);
+            }
+          });
+          this.multBuyParticipant = res.data;
         }
       });
     },
