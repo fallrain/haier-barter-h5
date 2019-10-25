@@ -261,7 +261,6 @@ export default {
     // const Str = JSON.stringify(this.userinfo);
     // localStorage.setItem('userinfo', Str);
     // localStorage.setItem('acces_token', this.userinfo.token);
-
     this.getNoticeData();
   },
   computed: {
@@ -625,6 +624,12 @@ export default {
             }, {
               id: '3',
               name: '暂不跟进'
+            },{
+              id: '20',
+              name: '入户服务'
+            }, {
+              id: '21',
+              name: '潜在客户'
             });
           } else {
             item.userS = '';
@@ -635,10 +640,7 @@ export default {
             }, {
               id: '3',
               name: '暂不跟进'
-            });
-          }
-          if (item.businessScenarios === 'SMLD') {
-            item.showList.push({
+            },{
               id: '20',
               name: '入户服务'
             }, {
@@ -646,6 +648,15 @@ export default {
               name: '潜在客户'
             });
           }
+          // if (item.businessScenarios === 'SMLD') {
+          //   item.showList.push({
+          //     id: '20',
+          //     name: '入户服务'
+          //   }, {
+          //     id: '21',
+          //     name: '潜在客户'
+          //   });
+          // }
         } else if (this.curTab === 3) {
           item.showList = [];
           // item.showList.push({

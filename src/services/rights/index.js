@@ -36,7 +36,11 @@ export default {
   confirmSelectedOrderRights(data,param){
     return axPostJson(urls.confirmSelectedOrderRights,data,param)
   },
-
-
+  queryOrderOptionalShareRights(data,param){
+    return axPostJson(urls.queryOrderOptionalShareRights,data,param)
+  },
+  queryOrderOptionalMutexRights(data,param){
+    return axPostJson(urls.queryOrderOptionalMutexRights,data,param)
+  }
 
 };

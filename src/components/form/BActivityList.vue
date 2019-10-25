@@ -3,11 +3,11 @@
     <ol class="bCheckbox-list">
       <li
         class="bCheckbox-item"
-        v-for="(item,i) in data"
-        :key="item.id"
+        v-for="(item,index) in data"
+        :key="index"
       >
         <div class="bCheckbox-item-detail-cnt">
-          <p class="bActivityList-activity-name">{{item.rightsName}}</p>
+          <p class="bActivityList-activity-name">{{item}}</p>
         </div>
         <div
           class="bActivityList-activity-num-par"
