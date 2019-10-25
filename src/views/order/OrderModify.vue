@@ -433,10 +433,9 @@ export default {
       if (obj.rightsJson) {
         this.rightsJson = obj.rightsJson;
         const right = JSON.parse(obj.rightsJson);
-
         this.rightName = right.rightsName;
         this.rightId = right.rightsId;
-        const rightsPro = JSON.parse(obj.rightsJson).rightsUserInterestsDTO;
+        const rightsPro = JSON.parse(obj.rightsJson).rightName.split(',');
         if (!rightsPro.length) {
           return;
         }
@@ -782,8 +781,12 @@ export default {
       if (type === 2) {
         const info = JSON.stringify(this.subInfo);
         /* 选择活动 */
+        // this.$router.push({
+        //   name: 'Order.OrderFollowActivity',
+        //   params: { orderInfo: info }
+        // });
         this.$router.push({
-          name: 'Order.OrderFollowActivity',
+          name: 'Order.OrderRights',
           params: { orderInfo: info }
         });
       } else {
@@ -791,35 +794,33 @@ export default {
           this.rightsService.queryOrderOptionalRights(this.subInfo, {
             pageNum: 0,
             pageSize: 10,
-          }).then((res) => {
-            if (res.code != -1 && res.data.result.length > 0) {
-              this.rightsName = res.data.result[0].rightsName;
-              this.basicDialog.open = true;
-            } else {
-              if (this.orderNo !== '') {
-                if (!this.orderFollowId) {
-                  this.orderFollowId = localStorage.getItem('orderFollowId');
+          })
+            .then((res) => {
+              if (res.code != -1 && res.data.result.length > 0) {
+                this.rightsName = res.data.result[0].rightsName;
+                this.basicDialog.open = true;
+              } else {
+                if (this.orderNo !== '') {
+                  Toast.loading('保存中...');
+                  this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
+                    .then((res) => {
+                      if (res.code === 1) {
+                        if (this.saveType === 1) {
+                          Toast.succeed('订单暂存成功');
+                          localStorage.setItem('confirm', 'caogao');
+                          this.$router.go(-1);
+                        }
+                        if (this.saveType === 0) {
+                          this.$router.push({
+                            name: 'Order.OrderUploadInvoice',
+                            params: { orderNo: this.orderNo }
+                          });
+                        }
+                      }
+                    });
                 }
-                Toast.loading('保存中...');
-                this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
-                  .then((res) => {
-                    if (res.code === 1) {
-                      if (this.saveType === 1) {
-                        Toast.succeed('订单暂存成功');
-                        localStorage.setItem('confirm', 'caogao');
-                        this.$router.go(-1);
-                      }
-                      if (this.saveType === 0) {
-                        this.$router.push({
-                          name: 'Order.OrderUploadInvoice',
-                          params: { orderNo: this.orderNo }
-                        });
-                      }
-                    }
-                  });
               }
-            }
-          });
+            });
         } else {
           if (this.orderNo !== '') {
             Toast.loading('保存中...');
@@ -836,6 +837,7 @@ export default {
                       name: 'Order.OrderUploadInvoice',
                       params: { orderNo: this.orderNo }
                     });
+                    this.$destroy();
                   }
                 }
               });

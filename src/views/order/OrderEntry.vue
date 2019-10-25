@@ -486,7 +486,7 @@ export default {
         const right = JSON.parse(obj.rightsJson);
         this.rightName = right.rightsName;
         this.rightId = right.rightsId;
-        const rightsPro = JSON.parse(obj.rightsJson).rightsUserInterestsDTO;
+        const rightsPro = JSON.parse(obj.rightsJson).rightName.split(',');
         if (!rightsPro.length) {
           return;
         }
@@ -834,8 +834,12 @@ console.log(this.orderFollowId)
       if (type === 2) {
         const info = JSON.stringify(this.subInfo);
         /* 选择活动 */
+        // this.$router.push({
+        //   name: 'Order.OrderFollowActivity',
+        //   params: { orderInfo: info }
+        // });
         this.$router.push({
-          name: 'Order.OrderFollowActivity',
+          name: 'Order.OrderRights',
           params: { orderInfo: info }
         });
       } else {

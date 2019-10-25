@@ -11,7 +11,7 @@
     <div class="activity-common-line activity-common-text activity-reason-text" v-if="getData.reason && isFinish">
       不可参与原因：{{getData.reason}}
     </div>
-    <div class="activity-common-line activity-common-text">活动品牌：{{getData.rightsBrand}}</div>
+    <div class="activity-common-line activity-common-text">活动品牌：{{getData.rightsBrandC}}</div>
     <div class="activity-common-line activity-common-text">试用范围：{{getData.rightsProductCategory}}</div>
     <div class="activity-common-line activity-common-text">
       活动日期：<span class="activity-data-text">{{getData.activityStartDate}}至{{getData.activityEndDate}}</span>
