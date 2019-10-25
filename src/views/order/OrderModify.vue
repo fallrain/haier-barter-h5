@@ -790,7 +790,7 @@ export default {
           params: { orderInfo: info }
         });
       } else {
-        if (this.rightsList.length == 0) {
+        if (this.rightsList.length == 0 && this.saveType == 0) {
           this.rightsService.queryOrderOptionalRights(this.subInfo, {
             pageNum: 0,
             pageSize: 10,
