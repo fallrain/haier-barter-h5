@@ -9,7 +9,8 @@ const urls = {
   queryRightsResidue:'/rightsManage/queryRightsResidue',//查询礼品剩余量
   checkedOrderRights:'/rightsManage/checkedOrderRights',//jia
   uncheckedOrderRights: '/rightsManage/uncheckedOrderRights',//jian
-
+  viewGifts:'/rightsManage/viewGifts',//查询礼品
+  viewOtherLimited:'/rightsManage/viewOtherLimited',//查询限制
 queryRightsSingleConfigList:'/rightsSingleConfig/queryRightsSingleConfigList',//根据权益编码查询权益活动单品配置信息列表
   queryRightsSetsByRightsNo:'/rightsSetsConfig/queryRightsSetsByRightsNo',//根据权益编码查询权益活动套购组合配置信息
 queryRightsLimitConfigList:'/rightsLimitConfig/queryRightsLimitConfigList',//查询限制信息

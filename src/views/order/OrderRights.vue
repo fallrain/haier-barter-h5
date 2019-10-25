@@ -170,14 +170,14 @@ export default {
               this.$set(item, 'selectedNum', item.selectedNum);
               this.$set(item, 'isSelected', item.selectedNum);
               isReturn = true;
-              item.num --
+              item.num--;
             }
           }
           if (item.isOptional === 0) {
             this.$set(item, 'isOptional', 1);
           }
 
-          if(rights.flag !== 0){
+          if (rights.flag !== 0) {
             // let re = false
             //     rights.orderIdList.forEach((ri) => {
             //       if (!re) {
@@ -191,16 +191,15 @@ export default {
             //         }
             //       }
             //     });
-            if(this.uniqueArray(rights.orderIdList,present)){
+            if (this.uniqueArray(rights.orderIdList, present)) {
               this.$set(rights, 'flag', 0);
-              item.num--
+              item.num--;
             }
           }
-
         });
       }
 
-       this.anylizeMCData(this.shareRightsList);
+      this.anylizeMCData(this.shareRightsList);
     },
     minusMCount(item) {
       /** **************互斥********************** */
@@ -210,9 +209,9 @@ export default {
         item.rightsSelectedGroupDtoList.shift();
         let isReturn = false;
         item.allowRightsConditionDtoList.forEach((rights) => {
-          debugger
+          debugger;
           if (!isReturn) {
-            debugger
+            debugger;
             if (rights.flag !== 0) {
               rights.flag = 0;
               rightid = rights.orderId;
@@ -255,8 +254,8 @@ export default {
           if (item.isOptional === 0) {
             this.$set(item, 'isOptional', 1);
           }
-          if(rights.flag !== 0){
-            if(this.uniqueArray(rights.orderIdList,present)){
+          if (rights.flag !== 0) {
+            if (this.uniqueArray(rights.orderIdList, present)) {
               this.$set(rights, 'flag', 0);
               item.num--;
             }
@@ -265,7 +264,7 @@ export default {
         this.mutexRightsList.forEach((rights) => {
           rights.allowRightsConditionDtoList.forEach((ri) => {
             if (ri.flag !== 0) {
-              if(this.uniqueArray(ri.orderIdList,present)){
+              if (this.uniqueArray(ri.orderIdList, present)) {
                 this.$set(ri, 'flag', 1);
                 rights.num--;
                 if (rights.isOptional === 0) {
@@ -276,7 +275,7 @@ export default {
           });
         });
       }
-       this.anylizeMCData(this.mutexRightsList);
+      this.anylizeMCData(this.mutexRightsList);
     },
     addCount(item) {
       // 单品;
@@ -313,13 +312,13 @@ export default {
               this.$set(item, 'selectedNum', item.selectedNum);
               this.$set(item, 'isSelected', 1);
               isReturn = true;
-              item.num ++
+              item.num++;
             }
           }
-          if(rights.flag !== 1){
-            if(this.uniqueArray(rights.orderIdList,present)){
+          if (rights.flag !== 1) {
+            if (this.uniqueArray(rights.orderIdList, present)) {
               this.$set(rights, 'flag', 1);
-              item.num ++
+              item.num++;
             }
           }
         });
@@ -328,7 +327,7 @@ export default {
         }
       }
 
-       this.anylizeMCData(this.shareRightsList);
+      this.anylizeMCData(this.shareRightsList);
     },
     addMCount(item) {
       /** ************互斥***************** */
@@ -379,14 +378,14 @@ export default {
               item.selectedNum++;
               this.$set(item, 'selectedNum', item.selectedNum);
               this.$set(item, 'isSelected', 1);
-              item.num ++
+              item.num++;
               isReturn = true;
             }
           }
-          if(rights.flag !== 1){
-            if(this.uniqueArray(rights.orderIdList,present)){
+          if (rights.flag !== 1) {
+            if (this.uniqueArray(rights.orderIdList, present)) {
               this.$set(rights, 'flag', 1);
-              item.num ++
+              item.num++;
             }
           }
         });
@@ -396,7 +395,7 @@ export default {
         this.mutexRightsList.forEach((rights) => {
           rights.allowRightsConditionDtoList.forEach((ri) => {
             if (ri.flag !== 1) {
-              if(this.uniqueArray(ri.orderIdList,present)){
+              if (this.uniqueArray(ri.orderIdList, present)) {
                 this.$set(ri, 'flag', 1);
                 rights.num++;
               }
@@ -407,52 +406,53 @@ export default {
           }
         });
       }
-       this.anylizeMCData(this.mutexRightsList);
+      this.anylizeMCData(this.mutexRightsList);
     },
-    uniqueArray(array1,array2){
-      const a = array1.length
-      const b = array2.length
-      let concatA =  array1.concat(array2)
-      const setArray = Array.from(new Set(concatA))
-      if(setArray.length < a + b){
-        return true
-      }else {
-        return false
+    uniqueArray(array1, array2) {
+      const a = array1.length;
+      const b = array2.length;
+      const concatA = array1.concat(array2);
+      const setArray = Array.from(new Set(concatA));
+      if (setArray.length < a + b) {
+        return true;
       }
+      return false;
     },
     array_contain(array, obj) {
       debugger;
       return array.find(v => v === obj);
     },
     showConfig(item) {
-      if (this.subInfo.orderType === 0) {
-        this.rightsService.queryRightsSingleConfigList({}, { rightsNo: item.rightsNo },).then((res) => {
-          if (res.code === 1) {
-            if (res.data.length > 0) {
-              item.isShowConfig = true;
-              item.configList = res.data;
-            } else {
-              item.configList = [];
-            }
+      // if (this.subInfo.orderType === 0) {
+      this.rightsService.viewGifts({}, { rightsNo: item.rightsNo },).then((res) => {
+        if (res.code === 1) {
+          if (res.data.length > 0) {
+            item.isShowConfig = true;
+            this.$set(item,'configList',res.data)
+            // item.configList = res.data;
+          } else {
+            item.configList = [];
           }
-        });
-      } else {
-        this.rightsService.queryRightsSetsByRightsNo({}, { rightsNo: item.rightsNo }).then((res) => {
-          if (res.code === 1) {
-            if (res.data.length > 0) {
-              item.isShowConfig = true;
-              item.configList = res.data;
-            } else {
-              item.configList = [];
-            }
-          }
-        });
-      }
+        }
+      });
+      // } else {
+      //   this.rightsService.queryRightsSetsByRightsNo({}, { rightsNo: item.rightsNo }).then((res) => {
+      //     if (res.code === 1) {
+      //       if (res.data.length > 0) {
+      //         item.isShowConfig = true;
+      //         item.configList = res.data;
+      //       } else {
+      //         item.configList = [];
+      //       }
+      //     }
+      //   });
+      // }
     },
     showLimit(item) {
-      this.rightsService.queryRightsLimitConfigList({}, { limitType: 'model', rightsNo: item.rightsNo }).then((res) => {
+      // item.rightsNo = 'HBR53341494705815552'
+      this.rightsService.viewOtherLimited({}, { rightsNo: item.rightsNo }).then((res) => {
         if (res.code === 1) {
-          item.limitList = res.data;
+          this.$set(item,'limitList',res.data)
         }
       });
     },
@@ -493,7 +493,7 @@ export default {
               for (let i = 0; i < 3; i++) {
                 Num += Math.floor(Math.random() * 10);
               }
-              timestamp += Num
+              timestamp += Num;
               sel.orderIdList.forEach((val) => {
                 const a = {};
                 a.orderDetailId = val;
@@ -508,23 +508,23 @@ export default {
         }
       });
       this.num++;
-      debugger
+      debugger;
       if (this.num === 2) {
         const rightJson = {};
         rightJson.rightsUserInterestsDetailsDTO = this.rightsDetailList;
-        if(this.nameList.length === 1){
-          rightJson.rightName = this.nameList[0]
-        }else {
+        if (this.nameList.length === 1) {
+          rightJson.rightName = this.nameList[0];
+        } else {
           rightJson.rightName = this.nameList.join(',');
         }
-        if(this.idList.length === 1){
-          rightJson.rightId = this.idList[0]
-        }else {
+        if (this.idList.length === 1) {
+          rightJson.rightId = this.idList[0];
+        } else {
           rightJson.rightId = this.id.join(',');
         }
         rightJson.rightsUserInterestsDTO = this.rightsUserDto;
         this.rightsJson = JSON.stringify(rightJson);
-        debugger
+        debugger;
         this.$router.go(-1);
       }
     },
@@ -605,8 +605,8 @@ export default {
           });
       }
     },
-    anylizeMCData(list){
-      list.forEach(item => {
+    anylizeMCData(list) {
+      list.forEach((item) => {
         if (item.isOptional === 1) {
           this.$set(item, 'addGray', false);
         } else {
@@ -616,7 +616,7 @@ export default {
           debugger;
           this.$set(item, 'minesGray', false);
         }
-      })
+      });
     },
     anylizeData(curlist, type) {
       console.log('curlist', curlist);
