@@ -1,5 +1,5 @@
 <template>
-  <div class="addAddress-form">
+  <div ref="addForm" class="addAddress-form">
     <ul class="address-back">
       <li>
         <div class="addAddress-form-item">
@@ -444,10 +444,17 @@ export default {
           });
         }
       });
+    },
+    stopScrolling(event) {
+      event.preventDefault();
     }
-
   },
-
+  mounted() {
+    this.$nextTick(() => {
+      console.log(this.$refs);
+      this.$refs.addForm.addEventListener('touchmove', this.stopScrolling, false);
+    });
+  },
   beforeRouteLeave(to, from, next) {
     const obj = { tel: this.customerInfo.mobile, smld: this.smld };
     if (to.name === 'Order.OrderEntry' || 'Order.OrderModify') {
