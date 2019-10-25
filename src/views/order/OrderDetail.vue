@@ -223,11 +223,12 @@ export default {
           this.deliveryTime = time;
           this.createdTime = resData.createdTime;
           this.orderNo = resData.orderNo;
-          if (resData.rightsUserJson) {
-            const str = JSON.parse(resData.rightsUserJson);
-
-            this.activityList = str.rightsUserInterestsDTO;
-          }
+          // if (resData.rightsUserJson) {
+          //   const str = JSON.parse(resData.rightsUserJson);
+          //
+          //   this.activityList = str.rightsUserInterestsDTO;
+          // }
+          this.activityList = resData.rightName.split(',');
           if (resData.orderDetailDtoList.length !== 0) {
             this.productList = resData.orderDetailDtoList;
             this.productList.forEach((item) => {

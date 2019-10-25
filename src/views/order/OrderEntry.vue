@@ -834,8 +834,12 @@ console.log(this.orderFollowId)
       if (type === 2) {
         const info = JSON.stringify(this.subInfo);
         /* 选择活动 */
+        // this.$router.push({
+        //   name: 'Order.OrderFollowActivity',
+        //   params: { orderInfo: info }
+        // });
         this.$router.push({
-          name: 'Order.OrderFollowActivity',
+          name: 'Order.OrderRights',
           params: { orderInfo: info }
         });
       } else {

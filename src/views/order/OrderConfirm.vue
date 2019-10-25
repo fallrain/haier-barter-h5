@@ -224,11 +224,12 @@ export default {
             });
           }
 
-          if (resData.rightsUserJson) {
-            const str = JSON.parse(resData.rightsUserJson);
-
-            this.activityList = str.rightsUserInterestsDTO;
-          }
+          // if (resData.rightsUserJson) {
+          //   const str = JSON.parse(resData.rightsUserJson);
+          //
+          //   this.activityList = str.rightsUserInterestsDTO;
+          // }
+          this.activityList = resData.rightName.split(',');
         }
       });
     },

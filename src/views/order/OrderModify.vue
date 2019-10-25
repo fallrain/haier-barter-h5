@@ -788,64 +788,63 @@ export default {
         // });
         this.$router.push({
           name: 'Order.OrderRights',
+          params: { orderInfo: info }
         });
       } else {
-        // if (this.rightsList.length == 0) {
-        //   this.rightsService.queryOrderOptionalRights(this.subInfo, {
-        //     pageNum: 0,
-        //     pageSize: 10,
-        //   }).then((res) => {
-        //     if (res.code != -1 && res.data.result.length > 0) {
-        //       this.rightsName = res.data.result[0].rightsName;
-        //       this.basicDialog.open = true;
-        //     } else {
-        //       if (this.orderNo !== '') {
-        //         if (!this.orderFollowId) {
-        //           this.orderFollowId = localStorage.getItem('orderFollowId');
-        //         }
-        //         Toast.loading('保存中...');
-        //         this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
-        //           .then((res) => {
-        //             if (res.code === 1) {
-        //               if (this.saveType === 1) {
-        //                 Toast.succeed('订单暂存成功');
-        //                 this.$router.go(-1);
-        //               }
-        //               if (this.saveType === 0) {
-        //                 this.$router.push({
-        //                   name: 'Order.OrderUploadInvoice',
-        //                   params: { orderNo: this.orderNo }
-        //                 });
-        //               }
-        //             }
-        //           });
-        //       }
-        //     }
-        //   });
-        // }
-        if (this.orderNo !== '') {
-          if (!this.orderFollowId) {
-            this.orderFollowId = localStorage.getItem('orderFollowId');
-          }
-                Toast.loading('保存中...');
-                this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
-                  .then((res) => {
-                    if (res.code === 1) {
-                      if (this.saveType === 1) {
-                        Toast.succeed('订单暂存成功');
-                        localStorage.setItem('confirm', 'caogao');
-                        this.$router.go(-1);
+        if (this.rightsList.length == 0) {
+          this.rightsService.queryOrderOptionalRights(this.subInfo, {
+            pageNum: 0,
+            pageSize: 10,
+          })
+            .then((res) => {
+              if (res.code != -1 && res.data.result.length > 0) {
+                this.rightsName = res.data.result[0].rightsName;
+                this.basicDialog.open = true;
+              } else {
+                if (this.orderNo !== '') {
+                  Toast.loading('保存中...');
+                  this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
+                    .then((res) => {
+                      if (res.code === 1) {
+                        if (this.saveType === 1) {
+                          Toast.succeed('订单暂存成功');
+                          localStorage.setItem('confirm', 'caogao');
+                          this.$router.go(-1);
+                        }
+                        if (this.saveType === 0) {
+                          this.$router.push({
+                            name: 'Order.OrderUploadInvoice',
+                            params: { orderNo: this.orderNo }
+                          });
+                        }
                       }
-                      if (this.saveType === 0) {
-                        this.$router.push({
-                          name: 'Order.OrderUploadInvoice',
-                          params: { orderNo: this.orderNo }
-                        });
-                      }
-                    }
-                  });
+                    });
                 }
               }
+            });
+        } else {
+          if (this.orderNo !== '') {
+            Toast.loading('保存中...');
+            this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
+              .then((res) => {
+                if (res.code === 1) {
+                  if (this.saveType === 1) {
+                    Toast.succeed('订单暂存成功');
+                    localStorage.setItem('confirm', 'caogao');
+                    this.$router.go(-1);
+                  }
+                  if (this.saveType === 0) {
+                    this.$router.push({
+                      name: 'Order.OrderUploadInvoice',
+                      params: { orderNo: this.orderNo }
+                    });
+                    this.$destroy();
+                  }
+                }
+              });
+          }
+        }
+      }
     },
     selectAddress(item) {
       // 修改收货人地址
