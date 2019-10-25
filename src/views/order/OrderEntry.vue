@@ -554,23 +554,21 @@ console.log(this.orderFollowId)
         }
       ];
       console.log(this.customerInfo)
-      this.orderService.isReportInstallNew({
-        microCode: this.customerInfo.microCode,
-        channel: this.customerInfo.channel,
-        orderDetailDtoList
-      }, {}).then((res) => {
-        this.queryInstall = true;
-        if (res.code === 1) {
-          this.isInstall = true;
-          // if (res.msg === 'SUCCESS') {
-          //   this.isInstall = true;
-          // } else {
-          //   this.isInstall = false;
-          // }
-        } else {
-          this.isInstall = false;
-        }
+      this.basicService.userInfo().then((res) => {
+        this.orderService.isReportInstallNew({
+          microCode: res.data.storeInfo.microCode,
+          channel: res.data.storeInfo.schannel,
+          orderDetailDtoList
+        }, {}).then((res1) => {
+          this.queryInstall = true;
+          if (res1.code === 1) {
+            this.isInstall = true;
+          } else {
+            this.isInstall = false;
+          }
+        });
       });
+
     },
     radioChange(val) {
       this.orderType = val;
@@ -639,9 +637,6 @@ console.log(this.orderFollowId)
       this.orderService.generateOrderNo({}, { recordMode: this.recordMode },).then((res) => {
         if (res.code === 1) {
           this.orderNo = res.data;
-          this.orderService.queryOrderInfoByOrderNo({}, { orderNo: this.orderNo }).then((response) => {
-            console.log(response);
-          });
         } else {
           Toast.failed(res.msg);
         }
@@ -783,8 +778,13 @@ console.log(this.orderFollowId)
       //   subInfo.coupleSponsor = '';
       //   subInfo.mayEditCoupleOrderId = '';
       // }
-      subInfo.coupleSponsor = this.multBuySponsor[0].hmcId;
-      subInfo.coupleSponsorName = this.multBuySponsor[0].username;
+      if (this.multBuySponsor.length > 0) {
+        subInfo.coupleSponsor = this.multBuySponsor[0].hmcId;
+        subInfo.coupleSponsorName = this.multBuySponsor[0].username;
+      } else {
+        subInfo.coupleSponsor = '';
+        subInfo.mayEditCoupleOrderId = '';
+      }
       const part = [];
       if (this.multBuyParticipantCheckIds.length) {
         subInfo.mayEditCoupleOrderId = this.multBuyParticipantCheckIds.join(',');
@@ -991,11 +991,13 @@ console.log(this.orderFollowId)
           }else {
             this.multyBuy = true
           }
+          const hmcId = this.userParam.hmcid;
           res.data.forEach((item) => {
-            if (item.hmcId == this.hmcId) {
+            if (item.hmcId == hmcId) {
               this.multBuySponsor.push(item);
             }
           });
+          console.log(this.multBuySponsor)
           this.multBuyParticipant = res.data;
           this.buyerList = res.data;
         }

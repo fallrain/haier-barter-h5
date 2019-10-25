@@ -231,7 +231,7 @@ export default {
   activated() {
     // window.location.reload();
   },
-  created() {debugger
+  created() {
     if (localStorage.getItem('confirm') === 'list') {
       this.curTab = 3;
       localStorage.setItem('confirm', '');

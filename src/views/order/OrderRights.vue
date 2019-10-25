@@ -774,6 +774,7 @@ export default {
     float: right;
   }
   .bottom-btn{
+    width: 100%;
     padding: 20px 0;
     background: #fff;
     position: fixed;

@@ -724,8 +724,13 @@ export default {
       //   subInfo.coupleSponsor = '';
       //   subInfo.mayEditCoupleOrderId = '';
       // }
-      subInfo.coupleSponsor = this.multBuySponsor[0].hmcId;
-      subInfo.coupleSponsorName = this.multBuySponsor[0].username;
+      if (this.multBuySponsor.length > 0) {
+        subInfo.coupleSponsor = this.multBuySponsor[0].hmcId;
+        subInfo.coupleSponsorName = this.multBuySponsor[0].username;
+      } else {
+        subInfo.coupleSponsor = '';
+        subInfo.mayEditCoupleOrderId = '';
+      }
       // multBuySponsor
       const part = [];debugger
       if (this.multBuyParticipantCheckIds.length) {
