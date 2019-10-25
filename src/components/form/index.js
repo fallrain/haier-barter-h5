@@ -22,6 +22,7 @@ import BPopSortType from './BPopSortType';
 import BPopButton from './BPopButton';
 import BOrderProductConfirm from './BOrderProductConfirm';
 import BTimeSectionPicker from './BTimeSectionPicker';
+import BDrainageActivity from './BDrainageActivity';
 /* eslint-disable import/prefer-default-export */
 export {
   BActivityList,
@@ -47,5 +48,6 @@ export {
   BPopSortType,
   BPopButton,
   BOrderProductConfirm,
-  BTimeSectionPicker
+  BTimeSectionPicker,
+  BDrainageActivity
 };
