@@ -171,7 +171,7 @@
   >
     <b-multbuy-check
       type="radio"
-      title="请选择套购发起人"
+      title="套购发起人"
       :persons="multBuySponsor"
       v-model="multBuySponsorCheckedIds"
       @radioCheck="sponsorCheck"
@@ -403,7 +403,6 @@ export default {
   computed: {},
   watch: {
     buyDate(newV, oldV) {
-      console.log(this.userParam.hmcid)
       this.orderService.isAccordDeadline({
       }, {
         hmcId: this.userParam.hmcid,
@@ -424,6 +423,7 @@ export default {
   //    }
   },
   activated() {
+    localStorage.setItem('confirm', 'caogao');
     if (this.$route.query.temp) {
       let ID = '';
       const obj = JSON.parse(this.$route.query.temp);
@@ -503,27 +503,30 @@ export default {
     },
     isReportInstall(pro) {
       this.productList.push(pro);
-      debugger
-      const orderDetailInfo = [
+      const orderDetailDtoList = [
         { hmcId: this.userParam.hmcid,
           storeId: this.userParam.shopId,
-          productModel: pro.productModel }
+          productModel: pro.productModel,
+          productBrand: pro.productBrand,
+          productCategoryCode: pro.productCategoryCode
+        }
       ];
-      this.orderService.isReportInstallNew({ orderDetailInfo }, {}).then((res) => {
+      this.orderService.isReportInstallNew({
+        microCode: this.microCode,
+        channel: this.channel,
+        orderDetailDtoList
+      }, {}).then((res) => {
         this.queryInstall = true;
-        if (res.code === 1) {
+        if (res.msg == 'SUCCESS') {
           this.isInstall = true;
-          // if (res.msg === 'SUCCESS') {
-          //   this.isInstall = true;
-          // } else {
-          //   this.isInstall = false;
-          // }
         } else {
+          this.isInstall = false;
         }
       });
     },
     getData() {
       this.orderService.queryOrderInfoByOrderNo({}, { orderNo: this.orderNo }).then((response) => {
+        console.log(response);
         if (response.code === 1) {
           const resData = response.data;
           this.shopName = resData.storeName;
@@ -534,6 +537,8 @@ export default {
           this.mobile = resData.userPhone;
           this.phone = resData.userPhone;
           this.hmcId = resData.hmcId;
+          this.microCode = resData.microCode;
+          this.channel = resData.channel;
           this.consignee.phone = resData.consigneePhone;
           this.consignee.sex = resData.userSex;
           this.consignee.address = {};
@@ -700,7 +705,6 @@ export default {
       /* 选择活动 */
       this.generateSubInfo(2);
     },
-
     generateSubInfo(type) {
       if (this.productList.length === 0 && this.saveType == 0) {
         Toast.failed('请选择产品');
@@ -712,16 +716,23 @@ export default {
 
       const subInfo = {};
       // multBuyParticipantCheckIds
-      if (this.multBuySponsorCheckedIds.length) {
-        subInfo.coupleSponsor = this.multBuySponsorCheckedIds[0];
-        const obj = this.multBuySponsor.find(v => v.hmcId === this.multBuySponsorCheckedIds[0]);
-        subInfo.coupleSponsorName = obj.username;
+      // if (this.multBuySponsorCheckedIds.length) {
+      //   subInfo.coupleSponsor = this.multBuySponsorCheckedIds[0];
+      //   const obj = this.multBuySponsor.find(v => v.hmcId === this.multBuySponsorCheckedIds[0]);
+      //   subInfo.coupleSponsorName = obj.username;
+      // } else {
+      //   subInfo.coupleSponsor = '';
+      //   subInfo.mayEditCoupleOrderId = '';
+      // }
+      if (this.multBuySponsor.length > 0) {
+        subInfo.coupleSponsor = this.multBuySponsor[0].hmcId;
+        subInfo.coupleSponsorName = this.multBuySponsor[0].username;
       } else {
         subInfo.coupleSponsor = '';
         subInfo.mayEditCoupleOrderId = '';
       }
-
-      const part = [];
+      // multBuySponsor
+      const part = [];debugger
       if (this.multBuyParticipantCheckIds.length) {
         subInfo.mayEditCoupleOrderId = this.multBuyParticipantCheckIds.join(',');
         this.multBuyParticipantCheckIds.forEach((val) => {
@@ -791,10 +802,11 @@ export default {
           params: { orderInfo: info }
         });
       } else {
-        if (this.rightsList.length == 0) {
+        if (this.rightsList.length == 0 && this.saveType == 0) {
           this.rightsService.queryOrderOptionalRights(this.subInfo, {
             pageNum: 0,
             pageSize: 10,
+            requestNoToast: true
           })
             .then((res) => {
               if (res.code != -1 && res.data.result.length > 0) {
@@ -808,7 +820,6 @@ export default {
                       if (res.code === 1) {
                         if (this.saveType === 1) {
                           Toast.succeed('订单暂存成功');
-                          localStorage.setItem('confirm', 'caogao');
                           this.$router.go(-1);
                         }
                         if (this.saveType === 0) {
@@ -900,8 +911,13 @@ export default {
     queryUserList(storeId) {
       this.productService.userList(storeId).then((res) => {
         if (res.code === 1) {
-          this.multBuySponsor = res.data;
-          this.multBuyParticipant = this.multBuySponsor;
+          console.log(this.hmcId);
+          res.data.forEach((item) => {
+            if (item.hmcId == this.hmcId) {
+              this.multBuySponsor.push(item);
+            }
+          });
+          this.multBuyParticipant = res.data;
         }
       });
     },

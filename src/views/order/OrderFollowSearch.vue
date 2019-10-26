@@ -231,7 +231,7 @@ export default {
   activated() {
     // window.location.reload();
   },
-  created() {debugger
+  created() {
     if (localStorage.getItem('confirm') === 'list') {
       this.curTab = 3;
       localStorage.setItem('confirm', '');
@@ -363,7 +363,7 @@ export default {
     userService(item) {
       wx.miniProgram.navigateTo({
         // url: `/pages/userService/userService?userId=${item.userId}&userName=${item.userName}&mobile=${item.userMobile}&workFlowId=${item.workFlowId}&flowStatus=${item.flowStatus}&domainName=${item.domainName}&id=${item.id}` });
-        url: `/pages/userService/userService?userId=${item.userId}&userName=${item.userName}&mobile=${item.userMobile}&flowStatus=${item.flowStatus}&workFlowId=${item.id}`});
+        url: `/pages/userService/userService?userId=${item.userId}&userName=${item.userName}&mobile=${item.userMobile}&flowStatus=${item.flowStatus}&workFlowId=${item.id}&hmcId=${this.userinfo.hmcid}`});
     },
     // 潜在客户
     maybeBuyer(item) {
@@ -737,6 +737,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  .mescroll{
+    padding: 21.6vw 0 0 0 !important;
+  }
   .md-notice-bar {
     position: absolute;
     width: 100%;

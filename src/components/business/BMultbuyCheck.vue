@@ -12,6 +12,16 @@
           <span>全部</span>
         </li>
         <li
+          v-if="title == '套购发起人'"
+          class="b-multbuy-check-item active"
+          v-for="(person,index) in persons"
+          :key="index"
+        >
+          <span>{{person.username}}</span>
+          <span class="b-multbuy-check-item-industry">{{person.industry}}</span>
+        </li>
+        <li
+          v-if="title != '套购发起人'"
           class="b-multbuy-check-item"
           :class="[value.some(v=>v===person.hmcId) && 'active']"
           v-for="(person,index) in persons"

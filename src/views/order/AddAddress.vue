@@ -260,7 +260,10 @@ export default {
           this.customerInfo.userId = JSON.parse(this.$route.params.info).userId;
           this.smld = true;
         } else {
-          this.customerInfo = JSON.parse(this.$route.params.info);
+          this.customerInfo.username = JSON.parse(this.$route.params.info).username;
+          this.customerInfo.mobile = JSON.parse(this.$route.params.info).mobile;
+          this.customerInfo.userId = JSON.parse(this.$route.params.info).userId;
+          // this.customerInfo = JSON.parse(this.$route.params.info);
           this.customerInfo.hmcId = JSON.parse(localStorage.getItem('userinfo')).hmcid;
         }
         if (this.customerInfo.familyItemCode) {
@@ -520,6 +523,13 @@ export default {
     .bItem-item-title {
       font-size: 26px;
       color: #666;
+    }
+    .md-tab-picker{
+      .md-tabs-content{
+        .md-scroll-view{
+          min-height: 101%;
+        }
+      }
     }
   }
 

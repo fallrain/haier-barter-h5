@@ -180,7 +180,7 @@
     >
       <b-multbuy-check
         type="radio"
-        title="请选择套购发起人"
+        title="套购发起人"
         :persons="multBuySponsor"
         v-model="multBuySponsorCheckedIds"
         @radioCheck="sponsorCheck"
@@ -412,6 +412,7 @@ export default {
       // 参与人选中id
       multBuyParticipantCheckIds: [],
       orderNo: '',
+      orderInfo: '',
       haveConsignee: false,
       title: '顾客信息：',
       mobile: '',
@@ -423,7 +424,7 @@ export default {
       queryInstall: false,
       isInstall: false,
       multyBuy:false,
-    saveType:1,
+      saveType:1,
     };
   },
   computed: {},
@@ -544,24 +545,30 @@ console.log(this.orderFollowId)
     // },
     isReportInstall(pro) {
       this.productList.push(pro);
-
-      const orderDetailInfo = [
+      const orderDetailDtoList = [
         { hmcId: this.userParam.hmcid,
           storeId: this.shopId,
-          productModel: pro.productModel}
-      ];
-      this.orderService.isReportInstallNew({ orderDetailInfo }, {}).then((res) => {
-        this.queryInstall = true;
-        if (res.code === 1) {
-          this.isInstall = true;
-          // if (res.msg === 'SUCCESS') {
-          //   this.isInstall = true;
-          // } else {
-          //   this.isInstall = false;
-          // }
-        } else {
+          productModel: pro.productModel,
+          productBrand: pro.productBrand,
+          productCategoryCode: pro.productCategoryCode
         }
+      ];
+      console.log(this.customerInfo)
+      this.basicService.userInfo().then((res) => {
+        this.orderService.isReportInstallNew({
+          microCode: res.data.storeInfo.microCode,
+          channel: res.data.storeInfo.schannel,
+          orderDetailDtoList
+        }, {}).then((res1) => {
+          this.queryInstall = true;
+          if (res1.msg === 'SUCCESS') {
+            this.isInstall = true;
+          } else {
+            this.isInstall = false;
+          }
+        });
       });
+
     },
     radioChange(val) {
       this.orderType = val;
@@ -763,15 +770,21 @@ console.log(this.orderFollowId)
         return;
       }
       const subInfo = {};
-      if (this.multBuySponsorCheckedIds.length) {
-        subInfo.coupleSponsor = this.multBuySponsorCheckedIds[0];
-        const obj = this.multBuySponsor.find(v => v.hmcId === this.multBuySponsorCheckedIds[0]);
-        subInfo.coupleSponsorName = obj.username;
+      // if (this.multBuySponsorCheckedIds.length) {
+      //   subInfo.coupleSponsor = this.multBuySponsorCheckedIds[0];
+      //   const obj = this.multBuySponsor.find(v => v.hmcId === this.multBuySponsorCheckedIds[0]);
+      //   subInfo.coupleSponsorName = obj.username;
+      // } else {
+      //   subInfo.coupleSponsor = '';
+      //   subInfo.mayEditCoupleOrderId = '';
+      // }
+      if (this.multBuySponsor.length > 0) {
+        subInfo.coupleSponsor = this.multBuySponsor[0].hmcId;
+        subInfo.coupleSponsorName = this.multBuySponsor[0].username;
       } else {
         subInfo.coupleSponsor = '';
         subInfo.mayEditCoupleOrderId = '';
       }
-
       const part = [];
       if (this.multBuyParticipantCheckIds.length) {
         subInfo.mayEditCoupleOrderId = this.multBuyParticipantCheckIds.join(',');
@@ -843,7 +856,7 @@ console.log(this.orderFollowId)
           params: { orderInfo: info }
         });
       } else {
-        if (this.rightsList.length == 0) {
+        if (this.rightsList.length == 0 && this.saveType == 0) {
           this.rightsService.queryOrderOptionalRights(this.subInfo, {
             pageNum: 0,
             pageSize: 10,
@@ -978,8 +991,14 @@ console.log(this.orderFollowId)
           }else {
             this.multyBuy = true
           }
-          this.multBuySponsor = res.data;
-          this.multBuyParticipant = this.multBuySponsor;
+          const hmcId = this.userParam.hmcid;
+          res.data.forEach((item) => {
+            if (item.hmcId == hmcId) {
+              this.multBuySponsor.push(item);
+            }
+          });
+          console.log(this.multBuySponsor)
+          this.multBuyParticipant = res.data;
           this.buyerList = res.data;
         }
       });

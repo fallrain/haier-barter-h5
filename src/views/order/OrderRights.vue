@@ -1,5 +1,5 @@
 <template>
-  <div class="page">
+  <div>
     <div class="activity-tab-bg activity-tab">
       <md-tab-bar
         v-model="current"
@@ -54,12 +54,13 @@
         @showConfig="showConfig"
       ></b-activity-item>
     </div>
-    <button
-      type="button"
-      class="common-submit-btn-default3 mt23"
-      @click="btmConfirmClick"
-    >确定</button>
-    <div class="line-Height"></div>
+      <button
+        type="button"
+        class="common-submit-btn-default3"
+        @click="btmConfirmClick"
+      >确定</button>
+    <div class="bottom-height">
+    </div>
   </div>
 </template>
 
@@ -774,6 +775,14 @@ export default {
    font-size: 40px;
     float: right;
   }
+  .bottom-btn{
+    width: 100%;
+    padding: 20px 0;
+    background: #fff;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+  }
   .common-submit-btn-default3{
     @include mix-submit-btn;
     color: #fff;
@@ -789,7 +798,7 @@ export default {
   .bottom-div{
     position: relative;
   }
-  .line-Height{
+  .bottom-height{
     height: 150px;
   }
 </style>
