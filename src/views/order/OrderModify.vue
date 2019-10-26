@@ -517,7 +517,7 @@ export default {
         orderDetailDtoList
       }, {}).then((res) => {
         this.queryInstall = true;
-        if (res.code === 'SUCCESS') {
+        if (res.msg == 'SUCCESS') {
           this.isInstall = true;
         } else {
           this.isInstall = false;
