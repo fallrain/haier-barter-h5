@@ -41,6 +41,13 @@ export default {
   },
   queryOrderOptionalMutexRights(data,param){
     return axPostJson(urls.queryOrderOptionalMutexRights,data,param)
-  }
+  },
+  viewGifts(data,param){
+    return axPostJson(urls.viewGifts,data,param)
+  },
+  viewOtherLimited(data,param){
+    return axPostJson(urls.viewOtherLimited,data,param)
+  },
+
 
 };
