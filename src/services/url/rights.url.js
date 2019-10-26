@@ -9,11 +9,14 @@ const urls = {
   queryRightsResidue:'/rightsManage/queryRightsResidue',//查询礼品剩余量
   checkedOrderRights:'/rightsManage/checkedOrderRights',//jia
   uncheckedOrderRights: '/rightsManage/uncheckedOrderRights',//jian
-
+  viewGifts:'/rightsManage/viewGifts',//查询礼品
+  viewOtherLimited:'/rightsManage/viewOtherLimited',//查询限制
 queryRightsSingleConfigList:'/rightsSingleConfig/queryRightsSingleConfigList',//根据权益编码查询权益活动单品配置信息列表
   queryRightsSetsByRightsNo:'/rightsSetsConfig/queryRightsSetsByRightsNo',//根据权益编码查询权益活动套购组合配置信息
 queryRightsLimitConfigList:'/rightsLimitConfig/queryRightsLimitConfigList',//查询限制信息
 confirmSelectedOrderRights:'/rightsManage/confirmSelectedOrderRights',//确认选择订单权益
+  queryOrderOptionalShareRights:'/rightsManage/queryOrderOptionalShareRights',//同享
+  queryOrderOptionalMutexRights:'/rightsManage/queryOrderOptionalMutexRights',//互斥
 };
 
 Object.entries(urls).forEach(([key, value]) => {

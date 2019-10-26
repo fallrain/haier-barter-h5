@@ -2,6 +2,7 @@ const baseURL = 'basic';
 const urls = {
   // 微信权限
   jsSign: '/common/weixin/jssign',
+  userInfo: '/user/info',
 };
 
 Object.entries(urls).forEach(([key, value]) => {

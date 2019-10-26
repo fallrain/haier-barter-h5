@@ -175,7 +175,9 @@ export default {
       this.search(page).then(({ result, pages }) => {
         this.$nextTick(() => {
           // 通过当前页的数据条数，和总数据量来判断是否加载完
-          this[this.curScrollViewName].mescroll.endBySize(result.length, pages);
+          if (result) {
+            this[this.curScrollViewName].mescroll.endBySize(result.length, pages);
+          }
         });
       });
     },
