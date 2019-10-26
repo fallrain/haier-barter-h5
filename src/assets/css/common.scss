@@ -435,11 +435,11 @@
   .mescroll-downwarp .downwarp-tip,
   .mescroll-upwarp .upwarp-nodata,
   .mescroll-upwarp .upwarp-tip
-  .mescroll-upwarp .upwarp-empty
-  {
+  .mescroll-upwarp .upwarp-empty {
     font-size: 24px;
   }
-  .mescroll-empty{
+
+  .mescroll-empty {
     font-size: 24px;
   }
 }
@@ -473,8 +473,16 @@
   }
 }
 
-.md-toast-text{
+.md-toast-text {
   white-space: normal;
+}
+
+.md-check-group-inline {
+  &.md-check-group{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
 }
 
 /*fix end*/
@@ -520,7 +528,8 @@
     margin-right: 24px;
   }
 }
-.common-bottom-button{
+
+.common-bottom-button {
   position: absolute;
   width: calc(100% - 48px);
   height: 84px;

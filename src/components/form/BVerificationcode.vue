@@ -56,9 +56,9 @@ export default {
         }
         let time = this.trueTime;
         this.disabled = true;
-        this.btnText = `重新获取验证码(${time}s)`;
+        this.btnText = `${time}秒后可重发`;
         const interval = setInterval(() => {
-          this.btnText = `重新获取验证码(${--time}s)`;
+          this.btnText = `${--time}秒后可重发`;
           if (time < 1) {
             this.btnText = '获取验证码';
             this.disabled = false;
@@ -72,12 +72,17 @@ export default {
 </script>
 <style lang="scss">
   .btn-send-code {
-    background: transparent;
-    color: #59C1B6;
-    font-size: 12px;
-
+    height:60px;
+    min-width: 172px;
+    background: #4A90E2;
+    color: #fff;
+    font-size: 28px;
+    border-radius:30px;
+    padding-left: 17px;
+    padding-right: 17px;
     &.disabled {
-      color: #474E66;
+      color: #fff;
+      font-size: 16px;
     }
   }
 </style>
