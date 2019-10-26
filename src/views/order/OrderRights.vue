@@ -231,6 +231,9 @@ export default {
         }
         this.mutexRightsList.forEach((rights) => {
           rights.allowRightsConditionDtoList.forEach((ri) => {
+            if(!ri.orderId){
+              ri.orderId = ri.orderIdList[0]
+            }
             if (rightid === ri.orderId) {
               this.$set(ri, 'flag', 0);
               if (rights.isOptional === 0) {
@@ -252,6 +255,7 @@ export default {
               present = rights.orderIdList;
               this.$set(item, 'selectedNum', item.selectedNum);
               this.$set(item, 'isSelected', item.selectedNum);
+              item.num--
               isReturn = true;
             }
           }
@@ -268,6 +272,10 @@ export default {
         this.mutexRightsList.forEach((rights) => {
           rights.allowRightsConditionDtoList.forEach((ri) => {
             if (ri.flag !== 0) {
+              if(!ri.orderIdList){
+                ri.orderIdList = []
+                ri.orderIdList.push(ri.orderId)
+              }
               if (this.uniqueArray(ri.orderIdList, present)) {
                 this.$set(ri, 'flag', 1);
                 rights.num--;
@@ -279,6 +287,7 @@ export default {
           });
         });
       }
+      debugger
       this.anylizeMCData(this.mutexRightsList);
     },
     addCount(item) {
@@ -334,6 +343,7 @@ export default {
       this.anylizeMCData(this.shareRightsList);
     },
     addMCount(item) {
+      debugger
       /** ************互斥***************** */
       // 单品
       if (item.rightsType === 'single') {
@@ -359,6 +369,9 @@ export default {
         this.mutexRightsList.forEach((rights) => {
           rights.allowRightsConditionDtoList.forEach((ri) => {
             if (ri.flag !== 1) {
+              if(!ri.orderId){
+                ri.orderId = ri.orderIdList[0]
+              }
               if (rightid === ri.orderId) {
                 this.$set(ri, 'flag', 1);
                 rights.num++;
@@ -399,6 +412,10 @@ export default {
         this.mutexRightsList.forEach((rights) => {
           rights.allowRightsConditionDtoList.forEach((ri) => {
             if (ri.flag !== 1) {
+              if(!ri.orderIdList){
+                ri.orderIdList = []
+                ri.orderIdList.push(ri.orderId)
+              }
               if (this.uniqueArray(ri.orderIdList, present)) {
                 this.$set(ri, 'flag', 1);
                 rights.num++;
@@ -614,11 +631,15 @@ export default {
         if (item.isOptional === 1) {
           this.$set(item, 'addGray', false);
         } else {
+          debugger
           this.$set(item, 'addGray', true);
         }
+        debugger
         if (item.selectedNum !== 0) {
           debugger;
           this.$set(item, 'minesGray', false);
+        }else {
+          this.$set(item, 'minesGray', true);
         }
       });
     },
