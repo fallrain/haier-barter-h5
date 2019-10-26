@@ -484,8 +484,10 @@ export default {
     jsonRightsList(list, type) {
       list.forEach((item) => {
         if (item.isSelected) {
-          this.nameList.push(item.rightsName);
-          this.idList.push(item.rightsNo);
+          for(var i = 0;i < item.selectedNum;i ++){
+            this.nameList.push(item.rightsName);
+            this.idList.push(item.rightsNo);
+          }
           const r = {
             rightsId: item.rightsNo,
             rightsGroup: '',
