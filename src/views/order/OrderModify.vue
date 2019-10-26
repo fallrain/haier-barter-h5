@@ -569,7 +569,7 @@ export default {
           if (resData.orderDetailDtoList.length !== 0) {
             this.productList = resData.orderDetailDtoList;
             this.productList.forEach((item) => {
-              if (item.installTime !== '') {
+              if (item.installTime !== '') {debugger
                 this.isInstall = true;
               }
               if (item.productBrand == 'haier') {

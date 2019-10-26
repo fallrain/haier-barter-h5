@@ -895,7 +895,7 @@ console.log(this.orderFollowId)
                   if (this.saveType === 1) {
                     Toast.succeed('订单暂存成功');
                     localStorage.setItem('confirm', 'caogao');
-                    this.$router.go(-1);
+                    // this.$router.go(-1);
                   }
                   if (this.saveType === 0) {
                     this.$router.push({
