@@ -33,7 +33,8 @@ const urls = {
   },
   userList(storeId) {
     return `/user/list/${storeId}`;
-  }
+  },
+  industryGroup: '/common/product_group/list/1'//获取全部产品组
 
 };
 

@@ -563,9 +563,10 @@ export default {
           this.sourceSn = resData.sourceSn;
           this.recordMode = resData.recordMode;
           this.queryUserList(resData.storeId);
-          if (resData.rightsUserJson) {
-            this.rightsList = JSON.parse(resData.rightsUserJson).rightsUserInterestsDTO;
-          }
+          // if (resData.rightsUserJson) {
+          //   this.rightsList = JSON.parse(resData.rightsUserJson).rightsUserInterestsDTO;
+          // }
+          this.rightsList = resData.rightName.split(',')
           if (resData.orderDetailDtoList.length !== 0) {
             this.productList = resData.orderDetailDtoList;
             this.productList.forEach((item) => {
