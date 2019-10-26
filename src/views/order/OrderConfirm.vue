@@ -155,9 +155,7 @@ export default {
       // 产品列表
       productList: [],
       // 活动列表
-      activityList: [
-
-      ],
+      activityList: [],
       // 选中的活动id
       choosedActivitys: [],
       // 选择礼品pop显示隐藏
@@ -229,7 +227,9 @@ export default {
           //
           //   this.activityList = str.rightsUserInterestsDTO;
           // }
-          this.activityList = resData.rightName.split(',');
+          if (resData.rightName) {
+            this.activityList = resData.rightName.split(',');
+          }
         }
       });
     },
