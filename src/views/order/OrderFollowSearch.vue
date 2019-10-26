@@ -738,6 +738,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  .mescroll{
+    padding: 21.6vw 0 0 0 !important;
+  }
   .md-notice-bar {
     position: absolute;
     width: 100%;

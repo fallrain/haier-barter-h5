@@ -561,7 +561,7 @@ console.log(this.orderFollowId)
           orderDetailDtoList
         }, {}).then((res1) => {
           this.queryInstall = true;
-          if (res1.code === 1) {
+          if (res1.msg === 'SUCCESS') {
             this.isInstall = true;
           } else {
             this.isInstall = false;
