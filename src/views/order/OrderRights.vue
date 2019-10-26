@@ -1,5 +1,5 @@
 <template>
-  <div style="padding-bottom: 50px">
+  <div>
     <div class="activity-tab-bg activity-tab">
       <md-tab-bar
         v-model="current"
@@ -54,13 +54,12 @@
         @showConfig="showConfig"
       ></b-activity-item>
     </div>
-
-    <div class="bottom-btn">
       <button
         type="button"
         class="common-submit-btn-default3"
         @click="btmConfirmClick"
       >确定</button>
+    <div class="bottom-height">
     </div>
   </div>
 </template>
@@ -158,6 +157,9 @@ export default {
             }
           }
         });
+        if(item.isOptional === 0){
+          this.$set(item,'isOptional',1)
+        }
       } else {
         // 套购同享
         let isReturn = false;
@@ -522,7 +524,7 @@ export default {
         if (this.idList.length === 1) {
           rightJson.rightId = this.idList[0];
         } else {
-          rightJson.rightId = this.id.join(',');
+          rightJson.rightId = this.idList.join(',');
         }
         rightJson.rightsUserInterestsDTO = this.rightsUserDto;
         this.rightsJson = JSON.stringify(rightJson);
@@ -571,7 +573,7 @@ export default {
       } else {
         debugger;
         this.rightsService.queryOrderNotOptionalRights(this.subInfo, { pageNum: 1,
-          pageSize: 10 })
+          pageSize: 30 })
           .then((res) => {
             if (res.code === 1) {
               debugger;
@@ -785,13 +787,18 @@ export default {
     @include mix-submit-btn;
     color: #fff;
     background: #1969C6;
-    /*position: fixed;*/
+    position: fixed;
     width: 90%;
     margin-left: 5%;
-    /*margin-top: 20px;*/
-    /*margin-bottom: 20px;*/
+    margin-top: 20px;
+    margin-bottom: 20px;
     /*position: absolute;*/
-    /*bottom: 20px;*/
-    z-index: 10;
+    bottom: 20px;
+  }
+  .bottom-div{
+    position: relative;
+  }
+  .bottom-height{
+    height: 150px;
   }
 </style>
