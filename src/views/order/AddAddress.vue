@@ -493,6 +493,13 @@ export default {
       font-size: 26px;
       color: #666;
     }
+    .md-tab-picker{
+      .md-tabs-content{
+        .md-scroll-view{
+          min-height: 101%;
+        }
+      }
+    }
   }
 
   .addAddress-form-item {
