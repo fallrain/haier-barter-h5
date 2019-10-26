@@ -11,7 +11,7 @@
     <div class="activity-common-line activity-common-text activity-reason-text" v-if="getData.reason && isFinish">
       不可参与原因：{{getData.reason}}
     </div>
-    <div class="activity-common-line activity-common-text">活动品牌：{{getData.rightsBrand}}</div>
+    <div class="activity-common-line activity-common-text">活动品牌：{{getData.rightsBrandC}}</div>
     <div class="activity-common-line activity-common-text">试用范围：{{getData.rightsProductCategory}}</div>
     <div class="activity-common-line activity-common-text">
       活动日期：<span class="activity-data-text">{{getData.activityStartDate}}至{{getData.activityEndDate}}</span>
@@ -40,6 +40,7 @@
         <span class="activity-common-text activity-common-left">共<span
           class="activity-type-text">{{item.rightsGiftTotal}}</span>份，剩余<span class="activity-count-remain">{{item.rightsGiftSurplus}}</span>份</span>
       </div>
+
       <!--套购-->
       <div class="activity-common-line activity-common-border activity-common-top activity-item" v-show="getData.rightsType == 'sets'">
        <!--按特定型号组合-->
@@ -68,33 +69,41 @@
         <span class="activity-common-text activity-common-left">共<span
           class="activity-type-text">{{item.rightsGiftTotal}}</span>份，剩余<span class="activity-count-remain">{{item.rightsGiftSurplus}}</span>份</span>
       </div>
-
       <div class="activity-common-line activity-item activity-item-gift">
         <span class="activity-name-icon">送</span>
         <span class="activity-common-text activity-common-left activity-item-gift-desc" v-show="getData.giveGiftMode == 'designated'">{{item.giftName}}</span>
         <span class="activity-common-text activity-common-left activity-item-gift-desc" v-show="getData.giveGiftMode == 'fixed'">{{item.giveIntegralValue}}</span>
         <span class="activity-common-text activity-common-left activity-item-gift-desc" v-show="getData.giveGiftMode == 'ratio'">{{item.integralPriceRatio}}</span>
         <span class="activity-common-text activity-common-left activity-item-gift-desc" v-show="getData.giftType == 'virtual'">{{item.virtualGiftName}}</span>
-        <!--<span class="activity-common-text activity-common-left activity-data-text activity-check-gift">查看推荐礼品</span>-->
       </div>
-      <!--<div>-->
-        <!--<div class="activity-recommend-gift">-->
-          <!--<div class="activity-recommend-gift-pop"/>-->
-          <!--<div class="activity-recommend-gift-text">111111111</div>-->
-          <!--<div class="activity-recommend-gift-text">2222222</div>-->
-        <!--</div>-->
-      <!--</div>-->
     </div>
     <div class="activity-common-line activity-item activity-common-top activity-common-border" @click="setShowLimit">
       <span class="activity-tip-text activity-count-remain">其他限制</span>
       <span class="icon iconfont icon-jiantou9 activity-tip-img activity-count-remain"
             :class="{'activity-tip-img-transform': isShowLimit}"></span>
     </div>
+
     <div v-if="isShowLimit">
-      <div class="activity-common-line activity-common-text" v-for="(limit,index) in getData.limitList">{{index}}{{limit.msg}}</div>
-      <!--<div class="activity-common-line activity-common-text">2、奥V给弄额</div>-->
-      <!--<div class="activity-common-line activity-common-text">3、奥V给弄额</div>-->
-      <!--<div class="activity-common-line activity-common-text">4、奥V给弄额</div>-->
+      <div class="activity-common-line activity-common-text">
+        <p>用户可兑换日期：{{getData.exchangeStartTime}}至{{getData.exchangeEndTime}}</p>
+      </div>
+      <div class="activity-common-line activity-common-text">
+        <p v-show="getData.giftType =='virtual'">礼品类型：尊享卡</p>
+        <p v-show="getData.giftType =='jfmall'">礼品类型：海贝积分</p>
+        <p v-show="getData.giftType =='casarte'">礼品类型：卡萨帝积分</p>
+        <p v-show="getData.giftType =='entity'">礼品类型：实物礼品</p>
+      </div>
+
+      <div class="activity-common-line activity-common-text" v-for="(model,index) in getData.limitList.model">
+        <span>{{model.productBrandName}}：{{model.productGroupName}}<span v-show="model.productModel == '*'">全部型号</span><span v-show="model.productModel != '*'">{{model.productModel}}</span></span>排除在权益计算之外
+      </div>
+      <div class="activity-common-line activity-common-text" v-for="(price,index) in getData.limitList.price">
+        <p>{{price.productBrandName}}：{{price.productGroupName}}价格在{{price.limitPriceMin}}-{{price.limitPriceMax}}之间可参与套餐</p>
+      </div>
+      <div class="activity-common-line activity-common-text" v-for="(appoint,index) in getData.limitList.appoint">
+        <span>{{appoint.productBrandName}}：{{appoint.productGroupName}}<span v-show="appoint.productModel == '*'">全部型号</span><span v-show="appoint.productModel != '*'">{{appoint.productModel}}</span></span>必须包含其中任意一个
+      </div>
+
     </div>
     <img class="activity-img" v-if="isFinish && !hasData" src="../../assets/images/orderFollow-up/activity-img.png"/>
     <div class="activity-number" v-if="!isFinish">

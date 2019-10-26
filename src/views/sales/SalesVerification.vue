@@ -536,12 +536,21 @@ export default {
         id: item.detail[0].id,
         ehubExceptionType: item.detail[0].errorType
       }).then((res) => {
-        if (res.code === 1) {
-          this[this.curScrollViewName].list.splice(index, 1);
-          this[this.curScrollViewName].mescroll.triggerDownScroll();
-        } else {
-          item.detail[0].errorReason = res.data;
+        if (res) {
+          Dialog.alert({
+            content: res.data,
+            cancelText: '取消',
+            confirmText: '确定',
+            onConfirm: () => {
+              this[this.curScrollViewName].mescroll.triggerDownScroll();
+            }
+          })
+          // this[this.curScrollViewName].list.splice(index, 1);
+          // this[this.curScrollViewName].mescroll.triggerDownScroll();
         }
+        // else {
+        //   item.detail[0].errorReason = res.data;
+        // }
       });
     },
     salesScanQRCode() {

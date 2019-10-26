@@ -8,5 +8,9 @@ export default {
   jsSign(url) {
     /* 微信权限 */
     return axGet(urls.jsSign, { url });
+  },
+  userInfo() {
+    /* 微信权限 */
+    return axGet(urls.userInfo);
   }
 };

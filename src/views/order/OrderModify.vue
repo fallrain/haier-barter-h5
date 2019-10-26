@@ -171,7 +171,7 @@
   >
     <b-multbuy-check
       type="radio"
-      title="请选择套购发起人"
+      title="套购发起人"
       :persons="multBuySponsor"
       v-model="multBuySponsorCheckedIds"
       @radioCheck="sponsorCheck"
@@ -403,7 +403,6 @@ export default {
   computed: {},
   watch: {
     buyDate(newV, oldV) {
-      console.log(this.userParam.hmcid)
       this.orderService.isAccordDeadline({
       }, {
         hmcId: this.userParam.hmcid,
@@ -424,6 +423,7 @@ export default {
   //    }
   },
   activated() {
+    localStorage.setItem('confirm', 'caogao');
     if (this.$route.query.temp) {
       let ID = '';
       const obj = JSON.parse(this.$route.query.temp);
@@ -433,20 +433,18 @@ export default {
       }
       if (obj.rightsJson) {
         this.rightsJson = obj.rightsJson;
-        debugger
         const right = JSON.parse(obj.rightsJson);
-
         this.rightName = right.rightsName;
         this.rightId = right.rightsId;
-        const rightsPro = JSON.parse(obj.rightsJson).rightsUserInterestsDTO;
+        const rightsPro = JSON.parse(obj.rightsJson).rightName.split(',');
         if (!rightsPro.length) {
           return;
         }
         this.isDetail = true;
+        console.log(rightsPro);
         this.rightsList = rightsPro;
       }
       if (obj.product) {
-        debugger
         if (!obj.product.productGroupName) {
           return;
         }
@@ -474,15 +472,13 @@ export default {
         });
       }
     }
-    console.log(this.orderFollowId)
   },
-  created() {debugger
+  created() {
     this.addressData = addressData;
     this.orderNo = this.$route.params.orderNo;
     this.orderFollowId = this.$route.params.orderFollowId;
     this.userParam = JSON.parse(localStorage.getItem('userinfo'));
     this.getData();
-    console.log(this.orderFollowId)
   },
   methods: {
   //  haveConsignee() {
@@ -507,27 +503,30 @@ export default {
     },
     isReportInstall(pro) {
       this.productList.push(pro);
-      debugger
-      const orderDetailInfo = [
+      const orderDetailDtoList = [
         { hmcId: this.userParam.hmcid,
           storeId: this.userParam.shopId,
-          productModel: pro.productModel }
+          productModel: pro.productModel,
+          productBrand: pro.productBrand,
+          productCategoryCode: pro.productCategoryCode
+        }
       ];
-      this.orderService.isReportInstallNew({ orderDetailInfo }, {}).then((res) => {
+      this.orderService.isReportInstallNew({
+        microCode: this.microCode,
+        channel: this.channel,
+        orderDetailDtoList
+      }, {}).then((res) => {
         this.queryInstall = true;
         if (res.code === 1) {
           this.isInstall = true;
-          // if (res.msg === 'SUCCESS') {
-          //   this.isInstall = true;
-          // } else {
-          //   this.isInstall = false;
-          // }
         } else {
+          this.isInstall = false;
         }
       });
     },
     getData() {
       this.orderService.queryOrderInfoByOrderNo({}, { orderNo: this.orderNo }).then((response) => {
+        console.log(response);
         if (response.code === 1) {
           const resData = response.data;
           this.shopName = resData.storeName;
@@ -535,13 +534,15 @@ export default {
           this.customerInfo.username = resData.userName;
           this.customerInfo.customerId = resData.userId;
           this.customerInfo.mobile = resData.userPhone;
+          this.mobile = resData.userPhone;
           this.phone = resData.userPhone;
           this.hmcId = resData.hmcId;
+          this.microCode = resData.microCode;
+          this.channel = resData.channel;
           this.consignee.phone = resData.consigneePhone;
           this.consignee.sex = resData.userSex;
           this.consignee.address = {};
           this.consignee.address.provinceName = resData.dispatchProvince;
-          console.log('this.consignee.address.proivinceName', this.consignee.address.provinceName);
           this.consignee.address.cityName = resData.dispatchCity;
           this.consignee.address.districtName = resData.dispatchArea;
           this.consignee.address.street = resData.dispatchAdd;
@@ -578,6 +579,7 @@ export default {
               }
             });
           }
+          this.queryCustomerDefault();
         }
       });
     },
@@ -602,7 +604,7 @@ export default {
       });
     },
     // 查询客户信息及默认地址
-    queryCustomerDefault() {
+    queryCustomerDefault() {console.log(this.mobile)
       this.productService.deafaultCustomerAddress(this.mobile).then((res) => {
         if (res.code === 1) {
           if (res.data !== null) {
@@ -703,28 +705,34 @@ export default {
       /* 选择活动 */
       this.generateSubInfo(2);
     },
-
-    generateSubInfo(type) {debugger
-      if(this.productList.length === 0){
+    generateSubInfo(type) {
+      if (this.productList.length === 0 && this.saveType == 0) {
         Toast.failed('请选择产品');
         return;
       }
-      if (!this.bUtil.isReportInstallFit(this.productList,this.deliveryTime)) {
+      if (!this.bUtil.isReportInstallFit(this.productList,this.deliveryTime) && this.saveType == 0) {
         return;
       }
 
       const subInfo = {};
       // multBuyParticipantCheckIds
-      if (this.multBuySponsorCheckedIds.length) {
-        subInfo.coupleSponsor = this.multBuySponsorCheckedIds[0];
-        const obj = this.multBuySponsor.find(v => v.hmcId === this.multBuySponsorCheckedIds[0]);
-        subInfo.coupleSponsorName = obj.username;
+      // if (this.multBuySponsorCheckedIds.length) {
+      //   subInfo.coupleSponsor = this.multBuySponsorCheckedIds[0];
+      //   const obj = this.multBuySponsor.find(v => v.hmcId === this.multBuySponsorCheckedIds[0]);
+      //   subInfo.coupleSponsorName = obj.username;
+      // } else {
+      //   subInfo.coupleSponsor = '';
+      //   subInfo.mayEditCoupleOrderId = '';
+      // }
+      if (this.multBuySponsor.length > 0) {
+        subInfo.coupleSponsor = this.multBuySponsor[0].hmcId;
+        subInfo.coupleSponsorName = this.multBuySponsor[0].username;
       } else {
         subInfo.coupleSponsor = '';
         subInfo.mayEditCoupleOrderId = '';
       }
-
-      const part = [];
+      // multBuySponsor
+      const part = [];debugger
       if (this.multBuyParticipantCheckIds.length) {
         subInfo.mayEditCoupleOrderId = this.multBuyParticipantCheckIds.join(',');
         this.multBuyParticipantCheckIds.forEach((val) => {
@@ -785,51 +793,55 @@ export default {
       if (type === 2) {
         const info = JSON.stringify(this.subInfo);
         /* 选择活动 */
+        // this.$router.push({
+        //   name: 'Order.OrderFollowActivity',
+        //   params: { orderInfo: info }
+        // });
         this.$router.push({
-          name: 'Order.OrderFollowActivity',
+          name: 'Order.OrderRights',
           params: { orderInfo: info }
         });
       } else {
-        if (this.rightsList.length == 0) {
+        if (this.rightsList.length == 0 && this.saveType == 0) {
           this.rightsService.queryOrderOptionalRights(this.subInfo, {
             pageNum: 0,
             pageSize: 10,
-          }).then((res) => {
-            if (res.code != -1 && res.data.result.length > 0) {
-              this.rightsName = res.data.result[0].rightsName;
-              this.basicDialog.open = true;
-            } else {
-              if (this.orderNo !== '') {
-                if (!this.orderFollowId) {
-                  this.orderFollowId = localStorage.getItem('orderFollowId');
+            requestNoToast: true
+          })
+            .then((res) => {
+              if (res.code != -1 && res.data.result.length > 0) {
+                this.rightsName = res.data.result[0].rightsName;
+                this.basicDialog.open = true;
+              } else {
+                if (this.orderNo !== '') {
+                  Toast.loading('保存中...');
+                  this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
+                    .then((res) => {
+                      if (res.code === 1) {
+                        if (this.saveType === 1) {
+                          Toast.succeed('订单暂存成功');
+                          this.$router.go(-1);
+                        }
+                        if (this.saveType === 0) {
+                          this.$router.push({
+                            name: 'Order.OrderUploadInvoice',
+                            params: { orderNo: this.orderNo }
+                          });
+                        }
+                      }
+                    });
                 }
-                Toast.loading('保存中...');
-                this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
-                  .then((res) => {
-                    if (res.code === 1) {
-                      if (this.saveType === 1) {
-                        Toast.succeed('订单暂存成功');
-                        this.$router.go(-1);
-                      }
-                      if (this.saveType === 0) {
-                        this.$router.push({
-                          name: 'Order.OrderUploadInvoice',
-                          params: { orderNo: this.orderNo }
-                        });
-                      }
-                    }
-                  });
               }
-            }
-          });
+            });
         } else {
-          if (this.orderNo !== '') {console.log(2)
+          if (this.orderNo !== '') {
             Toast.loading('保存中...');
             this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
               .then((res) => {
                 if (res.code === 1) {
                   if (this.saveType === 1) {
                     Toast.succeed('订单暂存成功');
+                    localStorage.setItem('confirm', 'caogao');
                     this.$router.go(-1);
                   }
                   if (this.saveType === 0) {
@@ -837,6 +849,7 @@ export default {
                       name: 'Order.OrderUploadInvoice',
                       params: { orderNo: this.orderNo }
                     });
+                    this.$destroy();
                   }
                 }
               });
@@ -845,20 +858,29 @@ export default {
       }
     },
     selectAddress(item) {
-      console.log('11111111111', item);
-      this.customerInfo = item;
+      // 修改收货人地址
+      this.consignee.address.provinceName = item.consignee.provinceName;
+      this.consignee.address.cityName = item.consignee.cityName;
+      this.consignee.address.districtName = item.consignee.districtName;
+      this.consignee.address.street = item.address;
+      this.consignee.customerId = item.customerId;
+      this.consignee.name = item.consigneeUserName;
+      this.consignee.phone = item.consigneeUserPhone;
+      this.consignee.sex = item.sex;
+      if (item.sex == 1) {
+        this.consignee.sexCn = '男士';
+      } else if (item.sex == 2) {
+        this.consignee.sexCn = '女士';
+      }
+      // this.customerInfo = item;
     },
     addAddress() {
     /* 添加新地址 */
-      if (this.addressList.length === 0) {
-        this.region = 'add';
-        this.$router.push({
-          name: 'Order.AddAddress',
-          params: { region: this.region, info: JSON.stringify(this.customerInfo) }
-        });
-      } else {
-        this.showAddressList();
-      }
+      this.region = 'add';
+      this.$router.push({
+        name: 'Order.AddAddress',
+        params: { region: this.region, info: JSON.stringify(this.customerInfo) }
+      });
     },
     changeAddress(item) {
       item.username = this.customerInfo.username;
@@ -874,6 +896,8 @@ export default {
       }
     },
     editAddress(info) {
+      info.username = this.customerInfo.username
+      info.mobile = this.customerInfo.mobile
       this.region = 'edit';
       this.$router.push({
         name: 'Order.AddAddress',
@@ -887,12 +911,18 @@ export default {
     queryUserList(storeId) {
       this.productService.userList(storeId).then((res) => {
         if (res.code === 1) {
-          this.multBuySponsor = res.data;
-          this.multBuyParticipant = this.multBuySponsor;
+          console.log(this.hmcId);
+          res.data.forEach((item) => {
+            if (item.hmcId == this.hmcId) {
+              this.multBuySponsor.push(item);
+            }
+          });
+          this.multBuyParticipant = res.data;
         }
       });
     },
     next() {
+      debugger;
     /* 下一步 */
       if (this.productList.length === 0) {
         Toast.info('请选择产品');
@@ -913,11 +943,15 @@ export default {
     onBasicConfirm() {
       if (this.orderNo !== '') {console.log(3)
         Toast.loading('保存中...');
+        if (!this.orderFollowId) {
+          this.orderFollowId = localStorage.getItem('orderFollowId');
+        }
         this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
           .then((res) => {
             if (res.code === 1) {
               if (this.saveType === 1) {
                 Toast.succeed('订单暂存成功');
+                localStorage.setItem('confirm', 'caogao');
                 this.$router.go(-1);
               }
               if (this.saveType === 0) {
