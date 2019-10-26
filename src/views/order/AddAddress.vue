@@ -25,26 +25,26 @@
         <span class="searchTextClass">搜索暂无结果,</span><span class="searchBtnClass" @click="creatCustomer">创建信息</span>
       </p>
       <div v-show="searchEnd">
-      <li>
-        <div class="addAddress-form-item">
-          <label class="addAddress-form-item-name">顾客姓名</label>
-          <input
-            type="text"
-            class="addAddress-form-item-ipt"
-            placeholder="请输入姓名"
-            v-show="region == 'userAdd'"
-            v-model="customerInfo.username"
-          >
-          <input
-            type="text"
-            class="addAddress-form-item-ipt"
-            placeholder="请输入姓名"
-            disabled="true"
-            v-show="region != 'userAdd'"
-            v-model="customerInfo.username"
-          >
-        </div>
-      </li>
+        <li>
+          <div class="addAddress-form-item">
+            <label class="addAddress-form-item-name">顾客姓名</label>
+            <input
+              type="text"
+              class="addAddress-form-item-ipt"
+              placeholder="请输入姓名"
+              v-show="region == 'userAdd'"
+              v-model="customerInfo.username"
+            >
+            <input
+              type="text"
+              class="addAddress-form-item-ipt"
+              placeholder="请输入姓名"
+              disabled="true"
+              v-show="region != 'userAdd'"
+              v-model="customerInfo.username"
+            >
+          </div>
+        </li>
       </div>
     </ul>
     <div class="consignee-class" v-show="searchEnd">
@@ -154,7 +154,6 @@ import {
 
 import addressData from '@/lib/address';
 import {
-  mapGetters,
   mapMutations
 } from 'vuex';
 
@@ -226,8 +225,7 @@ export default {
       // 地址标签列表
       // tagList: [],
       tag: [],
-      tagList: [
-      ],
+      tagList: [],
       // 地址pop显示隐藏
       addressPopShow: false,
       addressName: '',
@@ -242,9 +240,10 @@ export default {
     this.customerInfo.tag = [];
     this.getFamilyItem();
 
-    if (this.$route.params) {debugger;
+    if (this.$route.params) {
+      debugger;
       this.region = this.$route.params.region;
-      console.log(this.region)
+      console.log(this.region);
       if (this.region === 'add' && this.$route.params.info === '{}') {
         this.confirmShow = true;
       } else if (this.region === 'userAdd') {
@@ -276,7 +275,7 @@ export default {
         this.newAddress.districtName = JSON.parse(this.$route.params.info).consignee.districtName;
         this.newAddress.cityName = JSON.parse(this.$route.params.info).consignee.cityName;
         this.newAddress.regionCode = JSON.parse(this.$route.params.info).regionCode;
-        this.addressName = `${this.newAddress.provinceName}/${this.newAddress.cityName}/${this.newAddress.districtName}`
+        this.addressName = `${this.newAddress.provinceName}/${this.newAddress.cityName}/${this.newAddress.districtName}`;
       }
     }
   },
@@ -420,7 +419,7 @@ export default {
           }
         });
       }
-      let newAddress = {
+      const newAddress = {
         provinceName: this.newAddress.provinceName,
         cityName: this.newAddress.cityName,
         areaName: this.newAddress.districtName,
@@ -452,11 +451,14 @@ export default {
   mounted() {
     this.$nextTick(() => {
       console.log(this.$refs);
-      this.$refs.addForm.addEventListener('touchmove', this.stopScrolling, false);
+      // this.$refs.addForm.addEventListener('touchmove', this.stopScrolling, false);
     });
   },
   beforeRouteLeave(to, from, next) {
-    const obj = { tel: this.customerInfo.mobile, smld: this.smld };
+    const obj = {
+      tel: this.customerInfo.mobile,
+      smld: this.smld
+    };
     if (to.name === 'Order.OrderEntry' || 'Order.OrderModify') {
       to.query.temp = JSON.stringify(obj);
       if (this.$vnode && this.$vnode.data.keepAlive) {
@@ -496,17 +498,19 @@ export default {
 </script>
 
 <style lang="scss">
-  .consignee-class{
+  .consignee-class {
     margin-top: 20px;
     background: #fff;
     padding-left: 24px;
     padding-right: 24px;
   }
-  .address-back{
+
+  .address-back {
     padding-left: 24px;
     padding-right: 24px;
     background: #fff;
   }
+
   .addAddress-form {
 
     padding-bottom: 4px;
@@ -521,10 +525,12 @@ export default {
       font-size: 26px;
       color: #666;
     }
-    .md-tab-picker{
-      .md-tabs-content{
-        .md-scroll-view{
-          min-height: 101%;
+
+    .md-tab-picker {
+      .md-tabs-content {
+
+        .md-scroll-view {
+          overflow: scroll;
         }
       }
     }
@@ -559,12 +565,14 @@ export default {
       font-size: 40px;
     }
   }
+
   .searchResultClass {
     text-align: center;
     height: 100px;
     font-size: 32px;
     color: #666666;
     padding: 30px;
+
     .searchBtnClass {
       color: #1969C6;
     }
