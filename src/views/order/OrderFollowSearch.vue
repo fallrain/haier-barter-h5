@@ -261,7 +261,6 @@ export default {
     // localStorage.setItem('userinfo', Str);
     // localStorage.setItem('acces_token', this.userinfo.token);
     this.getNoticeData();
-    alert(5);
   },
   computed: {
     curScrollViewName() {
@@ -284,12 +283,12 @@ export default {
       };
       const viewName = obj[val];
       // tab切换后，创建新MeScroll对象（若无创建过），没有加载过则加载
-      this.bUtil.scroviewTabChange(viewName, this);alert(8)
+      this.bUtil.scroviewTabChange(viewName, this);
     }
   },
-  mounted() {alert(6)
+  mounted() {
     // 创建当前tab的MeScroll对象，并下拉刷新
-    this.bUtil.scroviewTabChange(this.curScrollViewName, this);alert(7)
+    this.bUtil.scroviewTabChange(this.curScrollViewName, this);
   },
   methods: {
     getQueryString(name) {
@@ -298,7 +297,7 @@ export default {
       if (r != null) return unescape(r[2]);
       return null;
     },
-    getNoticeData() {alert(45);
+    getNoticeData() {
       this.orderService
         .queryOverTwentyFourHourOrder().then((res) => {
           if (res.code === 1) {
@@ -716,17 +715,11 @@ export default {
     },
 
   },
-  beforeRouteEnter(to, from, next) {alert(1);
-    if (from.name === 'Order.OrderFollowCommitResult' || from.name === 'Order.OrderConfirm') {
+  beforeRouteEnter(to, from, next) {
+    if (from.name === 'Order.OrderFollowCommitResult' || from.name === 'Order.OrderConfirm' || from.name === 'Order.OrderEntry' || from.name === 'Order.OrderModify') {
       next();
-      window.location.reload();
-    }
-    if (from.name === 'Order.OrderEntry' || from.name === 'Order.OrderModify') {alert(2);
-      next();
-      if (localStorage.getItem('confirm') === 'caogao'){alert(3);
-        // window.location.reload(true);alert(4);
-        window.location.href = location.href+'?time='+((new Date()).getTime());alert(4);
-      }
+      // window.location.reload();
+      window.location.href = location.href+'?time='+((new Date()).getTime());
     } else {
       next();
     }
