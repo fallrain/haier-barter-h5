@@ -716,11 +716,18 @@ export default {
 
   },
   beforeRouteEnter(to, from, next) {
-    if (from.name === 'Order.OrderFollowCommitResult' || from.name === 'Order.OrderConfirm' || from.name === 'Order.OrderEntry' || from.name === 'Order.OrderModify') {
+    if (from.name === 'Order.OrderFollowCommitResult' || from.name === 'Order.OrderConfirm') {
       next();
-      // window.location.reload();
+      window.location.reload();
     }
-    next();
+    if (from.name === 'Order.OrderEntry' || from.name === 'Order.OrderModify') {
+      next();
+      if (localStorage.getItem('confirm') === 'caogao'){
+        window.location.reload();
+      }
+    } else {
+      next();
+    }
   },
   beforeRouteLeave(to, from, next) {
     // wx.miniProgram.switchTab({ url: '/pages/tool/tool' });
