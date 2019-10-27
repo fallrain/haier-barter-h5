@@ -298,7 +298,7 @@ export default {
       if (r != null) return unescape(r[2]);
       return null;
     },
-    getNoticeData() {
+    getNoticeData() {alert(45);
       this.orderService
         .queryOverTwentyFourHourOrder().then((res) => {
           if (res.code === 1) {
