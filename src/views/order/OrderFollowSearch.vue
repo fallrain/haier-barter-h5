@@ -724,7 +724,8 @@ export default {
     if (from.name === 'Order.OrderEntry' || from.name === 'Order.OrderModify') {alert(2);
       next();
       if (localStorage.getItem('confirm') === 'caogao'){alert(3);
-        window.location.reload();alert(4);
+        // window.location.reload(true);alert(4);
+        window.location.href = location.href+'?time='+((new Date()).getTime());alert(4);
       }
     } else {
       next();
