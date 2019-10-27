@@ -261,6 +261,7 @@ export default {
     // localStorage.setItem('userinfo', Str);
     // localStorage.setItem('acces_token', this.userinfo.token);
     this.getNoticeData();
+    alert(5);
   },
   computed: {
     curScrollViewName() {
@@ -283,12 +284,12 @@ export default {
       };
       const viewName = obj[val];
       // tab切换后，创建新MeScroll对象（若无创建过），没有加载过则加载
-      this.bUtil.scroviewTabChange(viewName, this);
+      this.bUtil.scroviewTabChange(viewName, this);alert(8)
     }
   },
-  mounted() {console.log('mounted')
+  mounted() {alert(6)
     // 创建当前tab的MeScroll对象，并下拉刷新
-    this.bUtil.scroviewTabChange(this.curScrollViewName, this);
+    this.bUtil.scroviewTabChange(this.curScrollViewName, this);alert(7)
   },
   methods: {
     getQueryString(name) {
@@ -715,15 +716,15 @@ export default {
     },
 
   },
-  beforeRouteEnter(to, from, next) {
+  beforeRouteEnter(to, from, next) {alert(1);
     if (from.name === 'Order.OrderFollowCommitResult' || from.name === 'Order.OrderConfirm') {
       next();
       window.location.reload();
     }
-    if (from.name === 'Order.OrderEntry' || from.name === 'Order.OrderModify') {
+    if (from.name === 'Order.OrderEntry' || from.name === 'Order.OrderModify') {alert(2);
       next();
-      if (localStorage.getItem('confirm') === 'caogao'){
-        window.location.reload();
+      if (localStorage.getItem('confirm') === 'caogao'){alert(3);
+        window.location.reload();alert(4);
       }
     } else {
       next();
