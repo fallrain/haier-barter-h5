@@ -718,7 +718,7 @@ export default {
   beforeRouteEnter(to, from, next) {
     if (from.name === 'Order.OrderFollowCommitResult' || from.name === 'Order.OrderConfirm' || from.name === 'Order.OrderEntry' || from.name === 'Order.OrderModify') {
       next();
-      window.location.reload();
+      // window.location.reload();
     }
     next();
   },
