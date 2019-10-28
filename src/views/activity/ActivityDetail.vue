@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="activityDetail">
     <div class="activityDetail-detail-title-bg">
       <img src="@/assets/images/activity/detail-example.png" alt="">
     </div>
@@ -22,6 +22,7 @@
       </button>
     </div>
     <md-dialog
+      class="activityDetail-register-dialog"
       title="注册海尔账号"
       :closable="true"
       v-model="registerDialogShow"
@@ -64,12 +65,16 @@
           title="选择产品类别"
           :arrow="true"
           @rightClick="showProductCatagory"
+          :value="productCatagoryName"
         >
         </b-item>
-        <div class="activityDetail-register-item">
+        <div class="activityDetail-register-protocol">
           <b-radio
             inf="本人已阅读并同意"
-          ></b-radio>
+            v-model="isRead"
+          >
+          </b-radio>
+          <span class="activityDetail-register-protocol-href">《用户信息收集隐私协议》</span>
         </div>
         <div class="activityDetail-register-btns">
           <button
@@ -86,10 +91,41 @@
       </div>
     </md-dialog>
     <b-pop-check-list
+      type="radio"
       :show.sync="isShowProductCatagory"
       title="选择产品类别"
       :list="productCatagoryList"
+      v-model="form.productCatagoryList"
     ></b-pop-check-list>
+    <md-dialog
+      class="activityDetail-register-dialog"
+      :closable="true"
+      v-model="registerDialogShow"
+    >
+      <div class="activityDetail-qrcode-body">
+        <div class="activityDetail-qrcode-title">
+          <p class="">
+            扫描或长按识别
+          </p>
+          <p>
+            关注海知友服务号
+          </p>
+        </div>
+        <div class="activityDetail-qrcode-par">
+          <div class="activityDetail-qrcode-corner activityDetail-qrcode-corner1"></div>
+          <div class="activityDetail-qrcode-corner activityDetail-qrcode-corner2"></div>
+          <div class="activityDetail-qrcode-corner activityDetail-qrcode-corner3"></div>
+          <div class="activityDetail-qrcode-corner activityDetail-qrcode-corner4"></div>
+          <img src="@/assets/images/activity/qrcode-example.png" alt="">
+        </div>
+        <p class="activityDetail-qrcode-inf">
+          了解更多会员权益，获取更多会员福利尽在
+        </p>
+        <p class="activityDetail-qrcode-name">
+          海尔·海知友服务号
+        </p>
+      </div>
+    </md-dialog>
   </div>
 </template>
 
@@ -103,9 +139,9 @@ import ActivityNameTime from '../../components/business/activity/ActivityNameTim
 import {
   BItem,
   BPopCheckList,
+  BRadio,
   BVerificationcode
 } from '@/components/form';
-import BRadio from "../../components/form/BRadio";
 
 export default {
   name: 'ActivityDetail',
@@ -121,6 +157,9 @@ export default {
   },
   data() {
     return {
+      form: {
+        productCatagoryList: []
+      },
       // 注册对话框显示隐藏
       registerDialogShow: true,
       // 注册对话框显示隐藏
@@ -143,7 +182,18 @@ export default {
           name: '刘能'
         }
       ],
+      isRead: 0
     };
+  },
+  computed: {
+    productCatagoryName() {
+      /* 产品类别名 */
+      const id = this.form.productCatagoryList[0];
+      if (!id) {
+        return '';
+      }
+      return this.productCatagoryList.find(v => id === v.id).name;
+    }
   },
   methods: {
     showProductCatagory() {
@@ -155,6 +205,14 @@ export default {
 </script>
 
 <style lang="scss">
+  .activityDetail {
+    .b-pop-checkList {
+      .md-popup {
+        z-index: 9999;
+      }
+    }
+  }
+
   .activityDetail-detail-title-bg {
     width: 100%;
 
@@ -178,14 +236,27 @@ export default {
     }
   }
 
+  .activityDetail-register-dialog {
+    .md-dialog-title {
+      text-align: left;
+      font-size: 36px;
+    }
+
+    .md-dialog-body {
+      padding: 36px;
+    }
+  }
+
   .activityDetail-register-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
     width: 100%;
     min-height: 80px;
     box-shadow: 0 1px 0 0 rgba(208, 208, 208, 0.6);
     color: #999;
+    font-size: 28px;
 
     &.bItem-item {
       padding-left: 0;
@@ -223,6 +294,108 @@ export default {
 
     .activityDetail-register-btn {
       width: 48%;
+    }
+  }
+
+  .activityDetail-register-protocol {
+    margin-top: 40px;
+    font-size: 26px;
+
+    .b-radio {
+      display: inline;
+      font-size: 26px;
+      line-height: 38px;
+
+      .iconfont {
+        font-size: 26px;
+      }
+    }
+  }
+
+  .activityDetail-register-protocol-href {
+    color: #4A90E2;
+  }
+
+  .activityDetail-qrcode-par {
+    position: relative;
+    padding: 42px;
+    width: 500px;
+    height: 500px;
+    margin-left: auto;
+    margin-right: auto;
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .activityDetail-qrcode-corner {
+    width: 40px;
+    height: 40px;
+    border-color: #999;
+    border-style: solid;
+    border-width: 0;
+  }
+
+  .activityDetail-qrcode-corner1 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-top-width: 1px;
+    border-left-width: 1px;
+  }
+
+  .activityDetail-qrcode-corner2 {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-top-width: 1px;
+    border-right-width: 1px;
+  }
+
+  .activityDetail-qrcode-corner3 {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    border-bottom-width: 1px;
+    border-right-width: 1px;
+  }
+
+  .activityDetail-qrcode-corner4 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+  }
+
+  .activityDetail-qrcode-inf {
+    margin-top: 38px;
+    line-height: 1;
+    color: #666;
+    font-size: 26px;
+    text-align: center;
+  }
+
+  .activityDetail-qrcode-name {
+    margin-top: 20px;
+    color: #333;
+    font-size: 32px;
+    line-height: 1;
+    text-align: center;
+  }
+
+  .activityDetail-qrcode-title {
+    text-align: center;
+    p:nth-child(1) {
+      color: #666;
+      font-size: 26px;
+    }
+
+    p:nth-child(2) {
+      color: #333;
+      font-size: 32px;
     }
   }
 </style>

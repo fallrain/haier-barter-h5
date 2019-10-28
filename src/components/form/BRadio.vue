@@ -1,7 +1,7 @@
 <template>
   <div class="b-radio" @click="toggle">
     <i :class="['val-top iconfont',style]"></i>
-    <span class="b-radio-inf">{{inf}}</span>
+    <span class="b-radio-inf">{{inf}}<slot></slot></span>
   </div>
 </template>
 <script>
@@ -60,6 +60,7 @@ export default {
 
     .iconfont {
       font-size: 6px;
+      color: #1969C6;
 
       &:before {
       }
