@@ -97,6 +97,28 @@
       :list="productCatagoryList"
       v-model="form.productCatagoryList"
     ></b-pop-check-list>
+    <md-dialog
+      class="activityDetail-register-dialog"
+      title="关注海知友服务号"
+      :closable="true"
+      v-model="registerDialogShow"
+    >
+      <div class="activityDetail-qrcode-body">
+        <div class="activityDetail-qrcode-par">
+          <div class="activityDetail-qrcode-corner activityDetail-qrcode-corner1"></div>
+          <div class="activityDetail-qrcode-corner activityDetail-qrcode-corner2"></div>
+          <div class="activityDetail-qrcode-corner activityDetail-qrcode-corner3"></div>
+          <div class="activityDetail-qrcode-corner activityDetail-qrcode-corner4"></div>
+          <img src="@/assets/images/activity/qrcode-example.png" alt="">
+        </div>
+        <p class="activityDetail-qrcode-inf">
+          了解更多会员权益，获取更多会员福利尽在
+        </p>
+        <p class="activityDetail-qrcode-name">
+          海尔·海知友服务号
+        </p>
+      </div>
+    </md-dialog>
   </div>
 </template>
 
@@ -285,5 +307,75 @@ export default {
 
   .activityDetail-register-protocol-href {
     color: #4A90E2;
+  }
+
+  .activityDetail-qrcode-par {
+    position: relative;
+    padding: 42px;
+    width: 500px;
+    height: 500px;
+    margin-left: auto;
+    margin-right: auto;
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .activityDetail-qrcode-corner {
+    width: 40px;
+    height: 40px;
+    border-color: #999;
+    border-style: solid;
+    border-width: 0;
+  }
+
+  .activityDetail-qrcode-corner1 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-top-width: 1px;
+    border-left-width: 1px;
+  }
+
+  .activityDetail-qrcode-corner2 {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-top-width: 1px;
+    border-right-width: 1px;
+  }
+
+  .activityDetail-qrcode-corner3 {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    border-bottom-width: 1px;
+    border-right-width: 1px;
+  }
+
+  .activityDetail-qrcode-corner4 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+  }
+
+  .activityDetail-qrcode-inf {
+    margin-top: 38px;
+    line-height: 1;
+    color: #666;
+    font-size: 26px;
+    text-align: center;
+  }
+
+  .activityDetail-qrcode-name {
+    margin-top: 20px;
+    color: #333;
+    font-size: 32px;
+    line-height: 1;
+    text-align: center;
   }
 </style>
