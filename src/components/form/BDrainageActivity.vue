@@ -27,7 +27,8 @@
     <div class="drainage-activity-btns">
       <button
         type="button"
-        class="common-btn-primary">
+        class="common-btn-primary"
+        @click="share">
         分享
       </button>
       <button
@@ -49,12 +50,64 @@
         数据统计
       </button>
     </div>
+
+    <md-popup
+      v-model="isPopupShow"
+      position="bottom"
+      class="md-popup-class"
+    >
+      <md-popup-title-bar
+        large-radius
+        @confirm="hidePopUp('bottom')"
+        @cancel="hidePopUp('bottom')"
+      ></md-popup-title-bar>
+      <div class="drainage-popup-items">
+        <div class="drainage-popup-item">
+
+          <i class="iconfont icon-weixin drainage-popup-img"/>
+          <div>
+            <span class="drainage-popup-title">分享微信好友</span>
+          </div>
+          <div>
+            <span class="drainage-popup-tip">转发到聊天</span>
+          </div>
+
+        </div>
+        <div class="drainage-popup-item">
+
+          <i class="iconfont icon-weixin drainage-popup-img"/>
+          <div>
+            <span class="drainage-popup-title">生成分享图片</span>
+          </div>
+          <div>
+            <span class="drainage-popup-tip">长按保存图片可分享</span>
+          </div>
+
+        </div>
+      </div>
+      <div class="popup-cancle">
+        <span class="popup-cancle-text">取消</span>
+      </div>
+    </md-popup>
+
   </div>
 </template>
 
 <script>
+  import {Popup, PopupTitleBar, Button, Icon} from 'mand-mobile'
 export default {
   name: 'BDrainageActivity',
+  components: {
+    [Popup.name]: Popup,
+    [PopupTitleBar.name]: PopupTitleBar,
+    [Button.name]: Button,
+    [Icon.name]: Icon,
+  },
+  data() {
+    return {
+      isPopupShow: false,
+    };
+  },
   props: {
     getData: {
       name: '',
@@ -62,6 +115,11 @@ export default {
       time: '',
       scope: '',
       people: ''
+    }
+  },
+  methods: {
+    share() {
+      this.isPopupShow = true;
     }
   },
 };
@@ -78,6 +136,17 @@ export default {
     padding: 24px 24px 0 24px;
     margin-top: 16px;
     margin-bottom: 40px;
+
+    .md-popup-class {
+      .md-popup-box {
+        background: #fff;
+      }
+
+      .md-popup-title-bar {
+        background: #fff;
+        height: 15px;
+      }
+    }
   }
 
   .drainage-activity-contains {
@@ -142,5 +211,50 @@ export default {
     width: 100%;
   }
 
+  .popup-cancle {
+    width: 100%;
+    height: 100px;
+    background: #F5F5F5;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
 
+  .popup-cancle-text {
+    font-size: 32px;
+    color: #333;
+  }
+
+  .drainage-popup-items {
+    width: 100%;
+    height: 284px;
+    background: #fff;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .drainage-popup-item {
+    /*width: 170px;*/
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+    margin-left: 58px;
+  }
+
+  .drainage-popup-title {
+    font-size: 28px;
+    color: #333;
+  }
+
+  .drainage-popup-tip {
+    font-size: 20px;
+    color: #999;
+  }
+
+  .drainage-popup-img {
+    font-size: 80px;
+  }
 </style>
