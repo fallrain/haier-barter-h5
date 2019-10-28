@@ -719,14 +719,16 @@ export default {
     if (from.name === 'Order.OrderFollowCommitResult' || from.name === 'Order.OrderConfirm' || from.name === 'Order.OrderEntry' || from.name === 'Order.OrderModify') {
       next();
       // window.location.reload();
-      window.location.href = location.href+'?time='+((new Date()).getTime());
+      let href = window.location.href;
+      href += (href.indexOf('?') > -1 ? '&' : '?') + `_t=${(Math.random() + '').replace('.', '')}`;
+      window.location.replace(href);
+      // window.location.href = location.href+'?time='+((new Date()).getTime());
     } else {
       next();
     }
   },
   beforeRouteLeave(to, from, next) {
     // wx.miniProgram.switchTab({ url: '/pages/tool/tool' });
-
     if (to.name === 'Order.OrderFollowCommitResult' || to.name === 'Order.OrderConfirm' || to.name === 'Order.OrderUploadInvoice') {
       wx.miniProgram.switchTab({ url: '/pages/tool/tool' })
       // wx.miniProgram.navigateTo({ url: '/pages/tool/tool' });

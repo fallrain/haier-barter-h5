@@ -912,7 +912,7 @@ console.log(this.orderFollowId)
                         localStorage.setItem('confirm', 'caogao');
                         setTimeout(() => {
                           this.$router.go(-1);
-                        }, 2000);
+                        }, 1000);
                       }
                       if (this.saveType === 0) {
                         this.$router.push({
@@ -936,7 +936,7 @@ console.log(this.orderFollowId)
                     localStorage.setItem('confirm', 'caogao');
                     setTimeout(() => {
                       this.$router.go(-1);
-                    }, 2000);
+                    }, 1000);
                   }
                   if (this.saveType === 0) {
                     this.$router.push({
@@ -1109,11 +1109,11 @@ console.log(this.orderFollowId)
           .then((res) => {
             if (res.code === 1) {
               if (this.saveType === 1) {
-                Toast.succeed('订单暂存成功', 2000);
+                Toast.succeed('订单暂存成功', 1000);
                 localStorage.setItem('confirm', 'caogao');
                 setTimeout(() => {
                   this.$router.go(-1);
-                }, 2000);
+                }, 1000);
               }
               if (this.saveType === 0) {
                 this.$router.push({
