@@ -333,7 +333,6 @@ export default {
         name: 'Order.OrderEntry',
         params: { customerConsigneeInfo: {}, region: 'hand' }
       });
-      this.$destroy();
     },
     handEntryCancel(){
       this.handEntryCon = false
@@ -343,7 +342,6 @@ export default {
         name: 'Order.OrderDetail',
         params: { orderNo: this.currentList[index % 10].orderNo }
       });
-      this.$destroy();
     },
     againEntry(item) {
       // this.orderService.createNewOrder({}, { orderNo: item.orderNo }).then((res) => {
@@ -360,7 +358,6 @@ export default {
         },
         region: 'new' }
       });
-      this.$destroy();
     },
     // 入户服务
     userService(item) {
@@ -450,7 +447,6 @@ export default {
               },
               region: 'new' }
             });
-            this.$destroy();
           }
         });
       } else if (val.name === '继续录单') {
@@ -460,7 +456,6 @@ export default {
               name: 'Order.OrderModify',
               params: { orderNo: info.orderNo, orderFollowId: info.id }
             });
-            this.$destroy();
           }
         });
       } else if (val.name === '补录订单') {
@@ -470,7 +465,6 @@ export default {
               name: 'Order.OrderSupplement',
               params: { orderNo: info.orderNo, orderFollowId: info.id }
             });
-            this.$destroy();
           }
         });
       } else {
@@ -494,7 +488,6 @@ export default {
                     },
                     region: 'new' }
                 });
-                this.$destroy();
               }
             });
           }
@@ -723,8 +716,8 @@ export default {
 
   },
   beforeRouteEnter(to, from, next) {
-  //   alert(to.name);
-  // alert(from.name);
+    alert(to.name+'1');
+  alert(from.name);
     if (from.name === 'Order.OrderFollowCommitResult' || from.name === 'Order.OrderConfirm' || from.name === 'Order.OrderEntry' || from.name === 'Order.OrderModify') {
       next();
       // window.location.reload();
@@ -734,6 +727,8 @@ export default {
     }
   },
   beforeRouteLeave(to, from, next) {
+    alert(to.name+'2');
+    alert(from.name);
     // wx.miniProgram.switchTab({ url: '/pages/tool/tool' });
     if (to.name === 'Order.OrderFollowCommitResult' || to.name === 'Order.OrderConfirm' || to.name === 'Order.OrderUploadInvoice') {
       wx.miniProgram.switchTab({ url: '/pages/tool/tool' })
