@@ -286,7 +286,7 @@ export default {
       this.bUtil.scroviewTabChange(viewName, this);
     }
   },
-  mounted() {console.log('mounted')
+  mounted() {
     // 创建当前tab的MeScroll对象，并下拉刷新
     this.bUtil.scroviewTabChange(this.curScrollViewName, this);
   },
@@ -718,9 +718,11 @@ export default {
   beforeRouteEnter(to, from, next) {
     if (from.name === 'Order.OrderFollowCommitResult' || from.name === 'Order.OrderConfirm' || from.name === 'Order.OrderEntry' || from.name === 'Order.OrderModify') {
       next();
-      window.location.reload();
+      // window.location.reload();
+      window.location.href = location.href+'?time='+((new Date()).getTime());
+    } else {
+      next();
     }
-    next();
   },
   beforeRouteLeave(to, from, next) {
     // wx.miniProgram.switchTab({ url: '/pages/tool/tool' });

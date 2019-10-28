@@ -97,7 +97,7 @@
             :key="index"
             :data="item"
             :index="index"
-            :content="isInstall"
+            :content="item.isInstall"
             @onDel="onDelete"
           >
           </b-order-product>
@@ -422,7 +422,6 @@ export default {
       rightId: '',
       addUserShow: false,
       queryInstall: false,
-      isInstall: false,
       multyBuy:false,
       saveType:1,
     };
@@ -544,7 +543,6 @@ console.log(this.orderFollowId)
     //   this.chooseGiftPopShow = true;
     // },
     isReportInstall(pro) {
-      this.productList.push(pro);
       const orderDetailDtoList = [
         { hmcId: this.userParam.hmcid,
           storeId: this.shopId,
@@ -553,7 +551,6 @@ console.log(this.orderFollowId)
           productCategoryCode: pro.productCategoryCode
         }
       ];
-      console.log(this.customerInfo)
       this.basicService.userInfo().then((res) => {
         this.orderService.isReportInstallNew({
           microCode: res.data.storeInfo.microCode,
@@ -562,10 +559,11 @@ console.log(this.orderFollowId)
         }, {}).then((res1) => {
           this.queryInstall = true;
           if (res1.msg === 'SUCCESS') {
-            this.isInstall = true;
+            pro.isInstall = true;
           } else {
-            this.isInstall = false;
+            pro.isInstall = false;
           }
+          this.productList.push(pro);
         });
       });
 
@@ -732,7 +730,46 @@ console.log(this.orderFollowId)
       }else {
         this.saveType = 0
       }
-      this.generateSubInfo(1);
+      if (this.productList.length > 0) {
+        for (let i = 0; i < this.productList.length; i++) {
+          if (this.productList[i].productPrice === '') {
+            Toast.failed('请输入产品价格');
+            return;
+          }
+        }
+        // 产品价格闸口判断
+        let result = 0;
+        let state = false;
+        let resultMsg = [];
+        for (let i = 0; i < this.productList.length; i++) {
+          const obj = {
+            bccPrice: '',
+            productCode: this.productList[i].productCode,
+            productPrice: this.productList[i].productPrice,
+            requestNoToast: true
+          };
+          if (this.productList[i].bccPrice) {
+            obj.bccPrice = this.productList[i].bccPrice;
+          }
+          this.orderService.checkProductPrice({}, obj).then((res) => {
+            result++;
+            if (res.code == -1) {
+              resultMsg.push(res.msg);
+              state = true;
+              this.productList[i].productPrice = '';
+            }
+            if (result == this.productList.length) {
+              if (!state) {
+                this.generateSubInfo(1);
+              } else {
+                Toast.failed(resultMsg[0]);
+              }
+            }
+          });
+        }
+      } else {
+        this.generateSubInfo(1);
+      }
     },
     // 暂存
     // saveTemporary(type) {
@@ -871,9 +908,11 @@ console.log(this.orderFollowId)
                   .then((res) => {
                     if (res.code === 1) {
                       if (this.saveType === 1) {
-                        Toast.succeed('订单暂存成功');
+                        Toast.succeed('订单暂存成功', 1000);
                         localStorage.setItem('confirm', 'caogao');
-                        this.$router.go(-1);
+                        setTimeout(() => {
+                          this.$router.go(-1);
+                        }, 2000);
                       }
                       if (this.saveType === 0) {
                         this.$router.push({
@@ -893,9 +932,11 @@ console.log(this.orderFollowId)
               .then((res) => {
                 if (res.code === 1) {
                   if (this.saveType === 1) {
-                    Toast.succeed('订单暂存成功');
+                    Toast.succeed('订单暂存成功', 1000);
                     localStorage.setItem('confirm', 'caogao');
-                    // this.$router.go(-1);
+                    setTimeout(() => {
+                      this.$router.go(-1);
+                    }, 2000);
                   }
                   if (this.saveType === 0) {
                     this.$router.push({
@@ -1011,6 +1052,43 @@ console.log(this.orderFollowId)
       if (this.productList.length === 0) {
         Toast.info('请选择产品');
       }
+      for (let i = 0; i < this.productList.length; i++) {
+        if (this.productList[i].productPrice === '') {
+          Toast.failed('请输入产品价格');
+          return;
+        }
+      }
+      // 产品价格闸口判断
+      let result = 0;
+      let state = false;
+      let resultMsg = [];
+      for (let i = 0; i < this.productList.length; i++) {
+        const obj = {
+          bccPrice: '',
+          productCode: this.productList[i].productCode,
+          productPrice: this.productList[i].productPrice,
+          requestNoToast: true
+        };
+        if (this.productList[i].bccPrice) {
+          obj.bccPrice = this.productList[i].bccPrice;
+        }
+        this.orderService.checkProductPrice({}, obj).then((res) => {
+          result++;
+          if (res.code == -1) {
+            resultMsg.push(res.msg);
+            state = true;
+            this.productList[i].productPrice = '';
+          }
+          if (result == this.productList.length) {
+            if (!state) {
+              this.saveType = 0
+              this.saveTemporary(2);
+            } else {
+              Toast.failed(resultMsg[0]);
+            }
+          }
+        });
+      }
       this.saveType = 0
       this.saveTemporary(2);
     },
@@ -1031,9 +1109,11 @@ console.log(this.orderFollowId)
           .then((res) => {
             if (res.code === 1) {
               if (this.saveType === 1) {
-                Toast.succeed('订单暂存成功');
+                Toast.succeed('订单暂存成功', 2000);
                 localStorage.setItem('confirm', 'caogao');
-                this.$router.go(-1);
+                setTimeout(() => {
+                  this.$router.go(-1);
+                }, 2000);
               }
               if (this.saveType === 0) {
                 this.$router.push({

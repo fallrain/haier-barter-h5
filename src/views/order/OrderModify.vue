@@ -501,8 +501,7 @@ export default {
     confirmDeliveryTime(date) {
       this.deliveryTime = date;
     },
-    isReportInstall(pro) {
-      this.productList.push(pro);
+    isReportInstall(pro, index) {
       const orderDetailDtoList = [
         { hmcId: this.userParam.hmcid,
           storeId: this.userParam.shopId,
@@ -518,15 +517,19 @@ export default {
       }, {}).then((res) => {
         this.queryInstall = true;
         if (res.msg == 'SUCCESS') {
-          this.isInstall = true;
+          pro.isInstall = true;
         } else {
-          this.isInstall = false;
+          pro.isInstall = false;
+        }
+        if (typeof(index) != 'undefined') {
+          this.productList[index].isInstall = pro.isInstall;
+        } else {
+          this.productList.push(pro);
         }
       });
     },
     getData() {
       this.orderService.queryOrderInfoByOrderNo({}, { orderNo: this.orderNo }).then((response) => {
-        console.log(response);
         if (response.code === 1) {
           const resData = response.data;
           this.shopName = resData.storeName;
@@ -563,17 +566,18 @@ export default {
           this.sourceSn = resData.sourceSn;
           this.recordMode = resData.recordMode;
           this.queryUserList(resData.storeId);
-          // if (resData.rightsUserJson) {
-          //   this.rightsList = JSON.parse(resData.rightsUserJson).rightsUserInterestsDTO;
-          // }
-          if(resData.rightName != ''){
-            this.rightsList = resData.rightName.split(',')
+
+          if (resData.rightName) {
+            this.rightsList = resData.rightName.split(',');
+
           }
           if (resData.orderDetailDtoList.length !== 0) {
             this.productList = resData.orderDetailDtoList;
-            this.productList.forEach((item) => {
-              if (item.installTime !== '') {debugger
-                this.isInstall = true;
+            this.productList.forEach((item, index) => {
+              if (item.installTime) {
+                item.isInstall = true;
+              } else {
+                this.isReportInstall(item, index);
               }
               if (item.productBrand == 'haier') {
                 item.productBrandCN = '海尔';
@@ -678,13 +682,51 @@ export default {
     },
     // 暂存
     saveTemporary(type) {
-
       if(type === 1){
         this.saveType = 1
       }else {
         this.saveType = 0
       }
-      this.generateSubInfo(1);
+      if (this.productList.length > 0) {
+        for (let i = 0; i < this.productList.length; i++) {
+          if (this.productList[i].productPrice === '') {
+            Toast.failed('请输入产品价格');
+            return;
+          }
+        }
+        // 产品价格闸口判断
+        let result = 0;
+        let state = false;
+        let resultMsg = [];
+        for (let i = 0; i < this.productList.length; i++) {
+          const obj = {
+            bccPrice: '',
+            productCode: this.productList[i].productCode,
+            productPrice: this.productList[i].productPrice,
+            requestNoToast: true
+          };
+          if (this.productList[i].bccPrice) {
+            obj.bccPrice = this.productList[i].bccPrice;
+          }
+          this.orderService.checkProductPrice({}, obj).then((res) => {
+            result++;
+            if (res.code == -1) {
+              resultMsg.push(res.msg);
+              state = true;
+              this.productList[i].productPrice = '';
+            }
+            if (result == this.productList.length) {
+              if (!state) {
+                this.generateSubInfo(1);
+              } else {
+                Toast.failed(resultMsg[0]);
+              }
+            }
+          });
+        }
+      } else {
+        this.generateSubInfo(1);
+      }
     },
     // 添加产品
     addProduct() {
@@ -735,7 +777,7 @@ export default {
         subInfo.mayEditCoupleOrderId = '';
       }
       // multBuySponsor
-      const part = [];debugger
+      const part = [];
       if (this.multBuyParticipantCheckIds.length) {
         subInfo.mayEditCoupleOrderId = this.multBuyParticipantCheckIds.join(',');
         this.multBuyParticipantCheckIds.forEach((val) => {
@@ -792,7 +834,6 @@ export default {
       subInfo.rightsUserJson = this.rightsJson;
       subInfo.orderDetailSaveQoList = this.productList;
       this.subInfo = subInfo;
-
       if (type === 2) {
         const info = JSON.stringify(this.subInfo);
         /* 选择活动 */
@@ -925,13 +966,48 @@ export default {
       });
     },
     next() {
-      debugger;
     /* 下一步 */
       if (this.productList.length === 0) {
         Toast.info('请选择产品');
+        return;
       }
-      this.saveType = 0
-      this.saveTemporary(2);
+      for (let i = 0; i < this.productList.length; i++) {
+        if (this.productList[i].productPrice === '') {
+          Toast.failed('请输入产品价格');
+          return;
+        }
+      }
+      // 产品价格闸口判断
+      let result = 0;
+      let state = false;
+      let resultMsg = [];
+      for (let i = 0; i < this.productList.length; i++) {
+        const obj = {
+          bccPrice: '',
+          productCode: this.productList[i].productCode,
+          productPrice: this.productList[i].productPrice,
+          requestNoToast: true
+        };
+        if (this.productList[i].bccPrice) {
+          obj.bccPrice = this.productList[i].bccPrice;
+        }
+        this.orderService.checkProductPrice({}, obj).then((res) => {
+          result++;
+          if (res.code == -1) {
+            resultMsg.push(res.msg);
+            state = true;
+            this.productList[i].productPrice = '';
+          }
+          if (result == this.productList.length) {
+            if (!state) {
+              this.saveType = 0
+              this.saveTemporary(2);
+            } else {
+              Toast.failed(resultMsg[0]);
+            }
+          }
+        });
+      }
     },
     saveOrder() {
 
