@@ -37,7 +37,7 @@
           <span class="activity-name-icon">购</span>
           <span class="activity-common-text activity-common-left activity-common-product">全部型号</span>
         </div>
-        <span class="activity-common-text activity-common-left">共<span
+        <span class="activity-common-text activity-common-left activity-float">共<span
           class="activity-type-text">{{item.rightsGiftTotal}}</span>份，剩余<span class="activity-count-remain">{{item.rightsGiftSurplus}}</span>份</span>
       </div>
 
@@ -63,10 +63,11 @@
         <!--按满赠-->
         <div class="activity-item"  v-show=" getData.setsCombineMode == '2'">
           <span class="activity-name-icon">满</span>
-          <span class="activity-common-text activity-common-left activity-common-product">{{item.priceRangeStart}}-</span>
-          <span class="activity-common-text activity-common-left activity-common-product">{{item.priceRangeEnd}}</span>
+          <span class=" activity-common-left activity-span">{{item.priceRangeStart}}</span>
+          <span class=" activity-common-left activity-span">-</span>
+          <span class=" activity-common-left activity-span">{{item.priceRangeEnd}}</span>
         </div>
-        <span class="activity-common-text activity-common-left">共<span
+        <span class="activity-common-text activity-common-left activity-float">共<span
           class="activity-type-text">{{item.rightsGiftTotal}}</span>份，剩余<span class="activity-count-remain">{{item.rightsGiftSurplus}}</span>份</span>
       </div>
       <div class="activity-common-line activity-item activity-item-gift">
@@ -106,7 +107,7 @@
 
     </div>
     <img class="activity-img" v-if="isFinish && !hasData" src="../../assets/images/orderFollow-up/activity-img.png"/>
-    <div class="activity-number" v-if="!isFinish">
+    <div class="activity-number" v-if="!isFinish && !residueGift">
       <span class="activity-number-minus activity-number-common" @click="minusCount" v-show="!getData.minesGray">-</span>
       <span class="activity-number-minus activity-number-common-no" v-show="getData.minesGray">-</span>
 
@@ -152,6 +153,7 @@ export default {
       }
     },
     isFinish: false,
+    residueGift:false,
     hasData: false,
     rightsType: '',
 
@@ -362,6 +364,14 @@ export default {
   .activity-item-gift-desc {
     flex-grow: 1;
     word-break: break-all;
+  }
+  .activity-span{
+    font-size: 24px;
+    color: #666;
+  }
+  .activity-float{
+    position: absolute;
+    margin-left: 460px;
   }
 
   .activity-check-gift {

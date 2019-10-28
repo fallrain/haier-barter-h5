@@ -14,8 +14,10 @@
           <b-activity-item
             v-for="(item,index) in scrollViewActivity.list"
             :key="index"
-            :hasData="true"
+            :hasData="false"
             :getData.sync="item"
+            :residueGift="true"
+            :isFinish="false"
           ></b-activity-item>
         </div>
       </div>
@@ -128,10 +130,10 @@ export default {
     upCallback(page) {
       // 下载过就设置已经初始化
       this[this.curScrollViewName].isListInit = true;
-      this.search(page).then(({ result, pages }) => {
+      this.search(page).then(({ result, total }) => {
         this.$nextTick(() => {
           // 通过当前页的数据条数，和总数据量来判断是否加载完
-          this[this.curScrollViewName].mescroll.endBySize(result.length, pages);
+          this[this.curScrollViewName].mescroll.endBySize(result.length, total);
         });
       });
     },
@@ -145,13 +147,9 @@ export default {
     },
     search(page) {
       // todo
-      this.subInfo = this.$route.params.orderInfo;
-      this.orderNo = this.subInfo.orderNo;
-      const formData = {
-        pageNum: page.num,
-        pageSize: page.size,
-      };
-      this.rightsService.queryRightsResidue().then((res) => {
+      this.rightsService.queryRightsResidue({},{}).then((res) => {
+        // pageNum: page.num,
+        //   pageSize: page.size,
         const sroviewObj = {};
         if (res.code === 1) {
           const {
@@ -172,6 +170,27 @@ export default {
       });
     },
     anylizeData(curlist) {
+      curlist.forEach((item) => {
+        const ProductCategoryNameAy = []
+        this.productGroupName.forEach((v) => {
+          const reg = new RegExp(v.groupCode);
+          if (reg.test(item.rightsProductCategory)) {
+            ProductCategoryNameAy.push(v.groupName);
+          }
+        });
+        item.rightsProductCategory = ProductCategoryNameAy.join('、');
+        item.num = 0;
+        item.allowRightsConditionDtoList.forEach((al) => {
+          al.flag = 0;
+        });
+        if (item.rightsBrand === '000') {
+          item.rightsBrandC = '海尔';
+        } else if (item.rightsBrand === '051') {
+          item.rightsBrandC = '卡萨帝';
+        } else {
+          item.rightsBrandC = '统帅';
+        }
+      })
       this.currentList = curlist;
     }
   },
