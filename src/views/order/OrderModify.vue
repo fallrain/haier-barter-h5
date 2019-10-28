@@ -196,7 +196,7 @@
       v-model="basicDialog.open"
       :btns="basicDialog.btns"
     >
-      该用户满足{{rightsName}}购机活动，您录单时未选则该活动，用户将无法获得购机礼品，请确定是否提交。
+      该用户满足购机权益活动，您录单时未选权益活动，用户将无法获得购机礼品，请确定是否提交。
     </md-dialog>
     <md-dialog
       title=""
@@ -687,7 +687,7 @@ export default {
       }else {
         this.saveType = 0
       }
-      if (this.productList.length > 0) {
+      if (this.productList.length > 0 && type === 1) {
         for (let i = 0; i < this.productList.length; i++) {
           if (this.productList[i].productPrice === '') {
             Toast.failed('请输入产品价格');

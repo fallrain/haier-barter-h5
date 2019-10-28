@@ -212,7 +212,7 @@
       v-model="basicDialog.open"
       :btns="basicDialog.btns"
     >
-      该用户满足{{rightsName}}购机活动，您录单时未选则该活动，用户将无法获得购机礼品，请确定是否提交。
+      该用户满足购机权益活动，您录单时未选权益活动，用户将无法获得购机礼品，请确定是否提交。
     </md-dialog>
     <md-dialog
       title=""
