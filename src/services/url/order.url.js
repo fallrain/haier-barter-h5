@@ -20,7 +20,8 @@ const urls = {
   isReportInstallNew: '/reportInstall/isReportInstallNew', // 查询产品是否需要代包装
   checkUpperLimitForSGLD: '/orderManage/checkUpperLimitForSGLD', // 手工录单限制
   checkProductPrice: '/orderManage/checkProductPrice', // 校验价格
-  isAccordDeadline: '/reportEhub/isAccordDeadline' // 校验 购买日期与其当月销量闸口是否关闭
+  isAccordDeadline: '/reportEhub/isAccordDeadline', // 校验 购买日期与其当月销量闸口是否关闭
+  checkCreateOrder: '/orderManage/checkCreateOrder' // 校验 订单录入校验
 
 };
 

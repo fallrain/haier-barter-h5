@@ -399,7 +399,7 @@ export default {
       }
       this.$emit('popButtonClicked', val);
     },
-    followButtonClick(button, item) {
+    followButtonClick(button, item) {console.log(item)
       const orderMode = JSON.parse(localStorage.getItem('userinfo')).orderMode;
       if (orderMode == 'Casarte') {
         if (item.businessScenarios == 'SGLD') {

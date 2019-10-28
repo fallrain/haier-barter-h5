@@ -4,6 +4,7 @@ const webpack = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');// 清理文件夹
 
 module.exports = {
+  mode: 'production',
   entry: {
     // 需要提取的库文件
     vendor: [

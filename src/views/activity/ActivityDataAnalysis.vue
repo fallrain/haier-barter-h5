@@ -52,15 +52,18 @@
       <button
         class="common-submit-btn-primary"
         type="button"
-      >传播核心用户分析</button>
+      >传播核心用户分析
+      </button>
       <button
         class="common-submit-btn-primary"
         type="button"
-      >已核销名单</button>
+      >已核销名单
+      </button>
       <button
         class="common-submit-btn-primary"
         type="button"
-      >未核销名单</button>
+      >未核销名单
+      </button>
     </div>
   </div>
 </template>
@@ -79,58 +82,49 @@ export default {
 </script>
 
 <style lang="scss">
-  .activityDataAnalysis-bg {
-    width: 100%;
-    height: 300px;
-
-    img {
-      width: 100%;
-      height: 100%;
-    }
-  }
-
   .activityDataAnalysis-b-item {
     &.bItem-item {
       background: transparent;
     }
   }
 
-  .activityDataAnalysis-data-grid{
+  .activityDataAnalysis-data-grid {
     display: flex;
     flex-wrap: wrap;
-    border-radius:8px;
+    border-radius: 8px;
     background: #fff;
     padding: 30px;
   }
 
-  .activityDataAnalysis-data-grid-item{
+  .activityDataAnalysis-data-grid-item {
     width: 25%;
     line-height: 1;
     text-align: center;
   }
 
-  .activityDataAnalysis-data-grid-item:nth-child(n+5){
+  .activityDataAnalysis-data-grid-item:nth-child(n+5) {
     margin-top: 70px;
   }
 
-  .activityDataAnalysis-data-grid-item-num{
+  .activityDataAnalysis-data-grid-item-num {
     color: #1969C6;
     font-size: 32px;
     margin-bottom: 24px;
   }
 
-  .activityDataAnalysis-data-grid-item-user{
+  .activityDataAnalysis-data-grid-item-user {
     color: #666;
     font-size: 24px;
   }
 
-  .activityDataAnalysis-btn-par{
+  .activityDataAnalysis-btn-par {
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
     padding: 27px 24px;
-    .common-submit-btn-primary{
+
+    .common-submit-btn-primary {
       width: 45%;
       margin-bottom: 24px;
     }

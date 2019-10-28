@@ -1,5 +1,5 @@
 <template>
-  <div class="addAddress-form">
+  <div ref="addForm" class="addAddress-form">
     <ul class="address-back">
       <li>
         <div class="addAddress-form-item">
@@ -8,6 +8,15 @@
             type="number"
             class="addAddress-form-item-ipt"
             placeholder="请输入手机号"
+            v-model="customerInfo.mobile"
+            v-show="region == 'userAdd'"
+          >
+          <input
+            type="number"
+            class="addAddress-form-item-ipt"
+            placeholder="请输入手机号"
+            disabled="true"
+            v-show="region != 'userAdd'"
             v-model="customerInfo.mobile"
           >
         </div>
@@ -23,6 +32,15 @@
             type="text"
             class="addAddress-form-item-ipt"
             placeholder="请输入姓名"
+            v-show="region == 'userAdd'"
+            v-model="customerInfo.username"
+          >
+          <input
+            type="text"
+            class="addAddress-form-item-ipt"
+            placeholder="请输入姓名"
+            disabled="true"
+            v-show="region != 'userAdd'"
             v-model="customerInfo.username"
           >
         </div>
@@ -224,9 +242,9 @@ export default {
     this.customerInfo.tag = [];
     this.getFamilyItem();
 
-    if (this.$route.params) {
+    if (this.$route.params) {debugger;
       this.region = this.$route.params.region;
-
+      console.log(this.region)
       if (this.region === 'add' && this.$route.params.info === '{}') {
         this.confirmShow = true;
       } else if (this.region === 'userAdd') {
@@ -252,10 +270,13 @@ export default {
         }
       }
       if (this.$route.params.info != '{}') {
+        const obj = JSON.parse(this.$route.params.info);
+        console.log(obj);
         this.newAddress.provinceName = JSON.parse(this.$route.params.info).consignee.provinceName;
         this.newAddress.districtName = JSON.parse(this.$route.params.info).consignee.districtName;
         this.newAddress.cityName = JSON.parse(this.$route.params.info).consignee.cityName;
         this.newAddress.regionCode = JSON.parse(this.$route.params.info).regionCode;
+        this.addressName = `${this.newAddress.provinceName}/${this.newAddress.cityName}/${this.newAddress.districtName}`
       }
     }
   },
@@ -400,13 +421,13 @@ export default {
         });
       }
       let newAddress = {
-        trueName: this.customerInfo.consigneeUserName,
         provinceName: this.newAddress.provinceName,
-        mobile: this.customerInfo.consigneeUserPhone,
         cityName: this.newAddress.cityName,
         areaName: this.newAddress.districtName,
         detailAddress: this.customerInfo.address,
-        regionCode: this.newAddress.regionCode
+        regionCode: this.newAddress.regionCode,
+        consigneeName: this.customerInfo.consigneeUserName,
+        consigneePhone: this.customerInfo.consigneeUserPhone
       };
       this.updataNewAddress(newAddress);
     },
@@ -423,10 +444,17 @@ export default {
           });
         }
       });
+    },
+    stopScrolling(event) {
+      event.preventDefault();
     }
-
   },
-
+  mounted() {
+    this.$nextTick(() => {
+      console.log(this.$refs);
+      this.$refs.addForm.addEventListener('touchmove', this.stopScrolling, false);
+    });
+  },
   beforeRouteLeave(to, from, next) {
     const obj = { tel: this.customerInfo.mobile, smld: this.smld };
     if (to.name === 'Order.OrderEntry' || 'Order.OrderModify') {
@@ -492,6 +520,13 @@ export default {
     .bItem-item-title {
       font-size: 26px;
       color: #666;
+    }
+    .md-tab-picker{
+      .md-tabs-content{
+        .md-scroll-view{
+          min-height: 101%;
+        }
+      }
     }
   }
 

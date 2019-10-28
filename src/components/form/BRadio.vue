@@ -13,7 +13,10 @@ export default {
     event: 'upOutside'
   },
   props: {
-    type: Number, // 单选框类型
+    type: {
+      type: Number,
+      default: 1
+    }, // 单选框类型
     color: String, // 颜色
     inf: String, // 文字
     // 选中状态
@@ -32,7 +35,7 @@ export default {
       /* 用选中状态和 type来切换选中、未选中的样式 */
       let style;
       if (this.type === 1) {
-        style = ['icon-radiounchecked', 'icon-radiounchecked active'][this.checked];
+        style = ['icon-guifanduoxuanweixuanzhong', 'icon-guifanduoxuanxuanzhong active'][this.checked];
       } else if (this.type === 2) {
         style = ['icon-msnui-radio-copy', 'icon-danxuanxuanzhong'][this.checked];
       }

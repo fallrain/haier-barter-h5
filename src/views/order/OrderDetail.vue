@@ -223,11 +223,12 @@ export default {
           this.deliveryTime = time;
           this.createdTime = resData.createdTime;
           this.orderNo = resData.orderNo;
-          if (resData.rightsUserJson) {
-            const str = JSON.parse(resData.rightsUserJson);
-
-            this.activityList = str.rightsUserInterestsDTO;
-          }
+          // if (resData.rightsUserJson) {
+          //   const str = JSON.parse(resData.rightsUserJson);
+          //
+          //   this.activityList = str.rightsUserInterestsDTO;
+          // }
+          this.activityList = resData.rightName.split(',');
           if (resData.orderDetailDtoList.length !== 0) {
             this.productList = resData.orderDetailDtoList;
             this.productList.forEach((item) => {
@@ -422,13 +423,18 @@ export default {
     color: #333;
     margin-top: 20px;
   }
+  .orderEntry-btns-par2 {
+    width: 100%;
+    position: relative;
+    padding-top: 10px;
+    background: #fff;
+  }
   .common-submit-btn-default1{
     height: 84px;
     font-size: 34px;
     border-radius: 8px;
     color: #fff;
     background: #1969C6;
-    position: fixed;
     width: 90%;
     margin-left: 5%;
     margin-bottom: 20px;
