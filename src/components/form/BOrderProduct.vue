@@ -11,7 +11,6 @@
           class="b-order-product-item-price"
           type="number"
           v-model="data.productPrice"
-          @blur="checkProductPrice"
         ><span class="b-order-product-item-price-unit">元</span>
       </div>
 
