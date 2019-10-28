@@ -566,7 +566,9 @@ export default {
           // if (resData.rightsUserJson) {
           //   this.rightsList = JSON.parse(resData.rightsUserJson).rightsUserInterestsDTO;
           // }
-          this.rightsList = resData.rightName.split(',')
+          if(resData.rightName != ''){
+            this.rightsList = resData.rightName.split(',')
+          }
           if (resData.orderDetailDtoList.length !== 0) {
             this.productList = resData.orderDetailDtoList;
             this.productList.forEach((item) => {
@@ -1050,6 +1052,8 @@ color: #333;
 .orderEntry-user1 {
   background: #fff;
   padding: 24px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .orderEntry-user-head {

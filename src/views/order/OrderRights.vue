@@ -43,16 +43,37 @@
             v-show="mutexShow"
           ></b-activity-item>
         </div>
-    <div v-show="current === 1">
-      <b-activity-item
-        v-for="(item,index) in notOptionalList"
-        :key="index"
-        :getData.sync="item"
-        :isFinish="true"
-        :hasData="false"
-        @showLimit="showLimit"
-        @showConfig="showConfig"
-      ></b-activity-item>
+    <!--<div v-show="current === 1">-->
+      <!--<b-activity-item-->
+        <!--v-for="(item,index) in notOptionalList"-->
+        <!--:key="index"-->
+        <!--:getData.sync="item"-->
+        <!--:isFinish="true"-->
+        <!--:hasData="false"-->
+        <!--@showLimit="showLimit"-->
+        <!--@showConfig="showConfig"-->
+      <!--&gt;</b-activity-item>-->
+    <!--</div>-->
+    <div class="reportInstallList-view"
+         v-show="current === 1">
+      <div
+        id="scrollViewFinish"
+        ref="scrollViewFinish"
+        class="mescroll"
+
+      >
+        <div>
+          <b-activity-item
+            v-for="(item,index) in scrollViewFinish.list"
+            :key="index"
+            :getData.sync="item"
+            :isFinish="true"
+            :hasData="false"
+            @showLimit="showLimit"
+            @showConfig="showConfig"
+          ></b-activity-item>
+        </div>
+      </div>
     </div>
       <button
         type="button"
@@ -106,16 +127,15 @@ export default {
       rightsJson: '',
       shareShow: false,
       mutexShow: false,
-      num: 0
+      num: 0,
+      scrollViewFinish: {
+        mescroll: null,
+        list: [
+        ],
+        isListInit: false
+      },
+      isFinished: false,
     };
-  },
-  computed: {
-
-  },
-  watch: {
-    current(val) {
-      this.getData();
-    }
   },
 
   created() {
@@ -128,7 +148,41 @@ export default {
     this.getProductGroup()
     // this.anylizeData(rightListTest);
   },
+  computed: {
+    curScrollViewName() {
+      // 当前tab下的scrollView的ref名字
+      // return {
+      //   0: 'scrollViewActivity',
+      //   1: 'scrollViewFinish'
+      // }[this.current];
+      return 'scrollViewFinish'
+    }
+  },
+  watch: {
+    current(val) {
+      if(val === 0){
+        // this.getData();
+      }else {
+        const viewName = 'scrollViewFinish';
+        // tab切换后，创建新MeScroll对象（若无创建过），没有加载过则加载
+        this.bUtil.scroviewTabChange(viewName, this);
+      }
+    }
+  },
+  mounted() {
+    this.bUtil.scroviewTabChange(this.curScrollViewName, this);
+  },
   methods: {
+    upCallback(page) {
+      // 下载过就设置已经初始化
+      this[this.curScrollViewName].isListInit = true;
+      this.searchData(page).then(({ result, total}) => {
+        this.$nextTick(() => {
+          // 通过当前页的数据条数，和总数据量来判断是否加载完
+          this[this.curScrollViewName].mescroll.endBySize(result.length, total);
+        });
+      });
+    },
     shareRightsClick() {
       this.shareShow = !this.shareShow;
       if (!this.shareRightsList.length) {
@@ -261,9 +315,16 @@ export default {
               rights.flag = 0;
               rightid = rights.orderId;
               item.selectedNum--;
+              item.num --
               this.$set(item, 'selectedNum', item.selectedNum);
               this.$set(item, 'isSelected', item.selectedNum);
               isReturn = true;
+            }
+          }
+          if(rights.flag !== 0){
+            if(rights.orderId === rightid){
+              rights.flag = 0
+              item.num--
             }
           }
         });
@@ -274,7 +335,7 @@ export default {
           rights.allowRightsConditionDtoList.forEach((ri) => {
             if(ri.flag !== 0 ){
               if (!ri.orderId) {
-                ri.orderId = ri.orderIdList[0];
+                ri.orderId = ri.orderIdList[0][0];
               }
               if (rightid === ri.orderId) {
                 this.$set(ri, 'flag', 0);
@@ -296,6 +357,9 @@ export default {
             if (rights.flag !== 0) {
               rights.flag = 0;
               item.selectedNum--;
+              // rights.orderIdList.forEach(id =>{
+              //   present.concat(id)
+              // })
               present = rights.orderIdList;
               this.$set(item, 'selectedNum', item.selectedNum);
               this.$set(item, 'isSelected', item.selectedNum);
@@ -317,8 +381,10 @@ export default {
           rights.allowRightsConditionDtoList.forEach((ri) => {
             if (ri.flag !== 0) {
               if (!ri.orderIdList) {
+                const a = []
                 ri.orderIdList = [];
-                ri.orderIdList.push(ri.orderId);
+                a.push(ri.orderId);
+                ri.orderIdList.push(a)
               }
               if (this.uniqueArray(ri.orderIdList, present)) {
                 this.$set(ri, 'flag', 0);
@@ -350,13 +416,21 @@ export default {
               rightid = rights.orderId;
               item.rightsSelectedGroupDtoList.push(rights);
               item.selectedNum++;
+              item.num ++
               this.$set(item, 'selectedNum', item.selectedNum);
               this.$set(item, 'isSelected', 1);
               isReturn = true;
             }
           }
+          if(rights.flag!== 1){
+            if(rights.orderId === rightid){
+              rights.flag = 1
+              item.num ++
+            }
+          }
         });
-        if (item.selectedNum === item.rightsSelectedGroupDtoList.length) {
+
+        if (item.num === item.allowRightsConditionDtoList.length) {
           this.$set(item, 'isOptional', 0);
         }
         // let num = 0;
@@ -364,7 +438,7 @@ export default {
           rights.allowRightsConditionDtoList.forEach((ri) => {
             if (ri.flag !== 1) {
               if (!ri.orderId) {
-                ri.orderId = ri.orderIdList[0];
+                ri.orderId = ri.orderIdList[0][0];
               }
               if (rightid === ri.orderId) {
                 this.$set(ri, 'flag', 1);
@@ -407,8 +481,10 @@ export default {
           rights.allowRightsConditionDtoList.forEach((ri) => {
             if (ri.flag !== 1) {
               if (!ri.orderIdList) {
+                const a = []
                 ri.orderIdList = [];
-                ri.orderIdList.push(ri.orderId);
+                a.push(ri.orderId);
+                ri.orderIdList.push(a)
               }
               if (this.uniqueArray(ri.orderIdList, present)) {
                 this.$set(ri, 'flag', 1);
@@ -418,6 +494,7 @@ export default {
               }
             }
           });
+          debugger
           if (rights.num === rights.allowRightsConditionDtoList.length) {
             this.$set(rights, 'isOptional', 0);
           }
@@ -426,9 +503,25 @@ export default {
       this.anylizeMCData(this.mutexRightsList);
     },
     uniqueArray(array1, array2) {
-      const a = array1.length;
-      const b = array2.length;
-      const concatA = array1.concat(array2);
+      // const a = array1.length;
+      let temp = []
+      let temp2 = []
+      // array1.forEach(id =>{
+      //
+      // })
+      // array2.forEach(id => {
+      //   temp2.concat(id)
+      // })
+      for(var i = 0;i < array1.length;i ++){
+        temp = temp.concat(array1[i])
+      }
+      for(var i = 0;i < array2.length;i ++){
+        temp2 = temp2.concat(array2[i])
+      }
+
+      const a = temp.length
+      const b = temp2.length;
+      const concatA = temp.concat(temp2);
       const setArray = Array.from(new Set(concatA));
       if (setArray.length < a + b) {
         return true;
@@ -547,6 +640,89 @@ export default {
         this.$router.go(-1);
       }
     },
+    searchData(page){
+     return this.rightsService.queryOrderNotOptionalRights(this.subInfo, {pageNum: page.num,
+       pageSize: page.size, })
+        .then((res) => {
+          const sroviewObj = {};
+          if (res.code === 1) {
+            const {
+              result,
+              pages
+            } = res.data;
+            sroviewObj.pages = pages;
+            sroviewObj.result = result;
+            if (result && result.length > 0) {
+              const temp = result;
+              temp.forEach((not) => {
+                const ProductCategoryNameAy = []
+                this.productGroupName.forEach((v) => {
+                  const reg = new RegExp(v.groupCode);
+                  if (reg.test(not.rightsProductCategory)) {
+                    ProductCategoryNameAy.push(v.groupName);
+                  }
+                });
+                not.rightsProductCategory = ProductCategoryNameAy.join('、');
+                const a = not.rightsBrand.split(',');
+                const b = [];
+                a.forEach((i) => {
+                  if (i === '000') {
+                    i = '海尔';
+                    b.push(i);
+                  } else if (i === '051') {
+                    i = '卡萨帝';
+                    b.push(i);
+                  } else {
+                    i = '统帅';
+                    b.push(i);
+                  }
+                });
+                not.rightsBrandC = b.join(',');
+              });
+              this.notOptionalList = temp;
+              if (page.num === 1) {
+                this[this.curScrollViewName].list = [];
+                this[this.curScrollViewName].list = this.notOptionalList;
+              } else {
+                this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(this.notOptionalList);
+              }
+            } else {
+             Toast.failed('暂无数据')
+            }
+            // debugger;
+            // if (res.data.result.length > 0) {
+            //   debugger;
+            //   const temp = res.data.result;
+            //   temp.forEach((not) => {
+            //     const a = not.rightsBrand.split(',');
+            //     const b = [];
+            //     a.forEach((i) => {
+            //       if (i === '000') {
+            //         i = '海尔';
+            //         b.push(i);
+            //       } else if (i === '051') {
+            //         i = '卡萨帝';
+            //         b.push(i);
+            //       } else {
+            //         i = '统帅';
+            //         b.push(i);
+            //       }
+            //     });
+            //     not.rightsBrandC = b.join(',');
+            //   });
+            //   console.log('aaaaaaaaaaaaaaa', temp);
+            //   debugger;
+            //   this.notOptionalList = temp;
+            // } else {
+            //   Toast.info('暂无数据');
+            // }
+          } else {
+            Toast.failed(res.msg);
+            this[this.curScrollViewName].mescroll.endErr();
+          }
+          return sroviewObj;
+        });
+    },
     getData(type) {
       debugger;
       // todo
@@ -625,6 +801,7 @@ export default {
       }
     },
     anylizeMCData(list) {
+      debugger
       list.forEach((item) => {
         if (item.isOptional === 1) {
           this.$set(item, 'addGray', false);
@@ -648,15 +825,6 @@ export default {
         }else {
           Toast.failed(res.msg)
         }
-
-        // const ProductCategoryNameAy = [];
-        // data.forEach((v) => {
-        //   const reg = new RegExp(v.groupCode);
-        //   if (reg.test(newVal)) {
-        //     ProductCategoryNameAy.push(v.groupName);
-        //   }
-        // });
-        // this.form.rightsProductCategoryName = ProductCategoryNameAy.join('、');
       });
     },
     anylizeData(curlist, type) {
