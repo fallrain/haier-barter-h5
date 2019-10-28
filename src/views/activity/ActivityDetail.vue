@@ -99,11 +99,18 @@
     ></b-pop-check-list>
     <md-dialog
       class="activityDetail-register-dialog"
-      title="关注海知友服务号"
       :closable="true"
       v-model="registerDialogShow"
     >
       <div class="activityDetail-qrcode-body">
+        <div class="activityDetail-qrcode-title">
+          <p class="">
+            扫描或长按识别
+          </p>
+          <p>
+            关注海知友服务号
+          </p>
+        </div>
         <div class="activityDetail-qrcode-par">
           <div class="activityDetail-qrcode-corner activityDetail-qrcode-corner1"></div>
           <div class="activityDetail-qrcode-corner activityDetail-qrcode-corner2"></div>
@@ -377,5 +384,18 @@ export default {
     font-size: 32px;
     line-height: 1;
     text-align: center;
+  }
+
+  .activityDetail-qrcode-title {
+    text-align: center;
+    p:nth-child(1) {
+      color: #666;
+      font-size: 26px;
+    }
+
+    p:nth-child(2) {
+      color: #333;
+      font-size: 32px;
+    }
   }
 </style>
