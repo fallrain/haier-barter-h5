@@ -734,6 +734,7 @@ export default {
       this.$router.push({
         name: 'Order.SearchProduct',
       });
+
     },
     selectActivity() {
       if (this.productList.length === 0) {
@@ -845,6 +846,9 @@ export default {
           name: 'Order.OrderRights',
           params: { orderInfo: info }
         });
+        // this.$router.push({
+        //   name: 'Order.ResidueGift',
+        // });
       } else {
         if (this.rightsList.length == 0 && this.saveType == 0) {
           this.rightsService.queryOrderOptionalRights(this.subInfo, {
@@ -1014,6 +1018,7 @@ export default {
     },
     onDelete(index) {
       this.productList.splice(index, 1);
+      this.rightsList = []
     },
     // 模态框确认取消处理
     onBasicCancel() {
