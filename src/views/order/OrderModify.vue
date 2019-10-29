@@ -477,6 +477,9 @@ export default {
     this.addressData = addressData;
     this.orderNo = this.$route.params.orderNo;
     this.orderFollowId = this.$route.params.orderFollowId;
+    if (!this.orderFollowId) {
+      this.orderFollowId = localStorage.getItem('orderFollowId');
+    }
     this.userParam = JSON.parse(localStorage.getItem('userinfo'));
     this.getData();
   },

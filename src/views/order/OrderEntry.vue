@@ -782,7 +782,7 @@ console.log(this.orderFollowId)
         name: 'Order.SearchProduct',
       });
     },
-    generateSubInfo(type) {
+    generateSubInfo(type) {debugger
       if (this.buyTime === '' && this.saveType == 0) {
         Toast.failed('请选择购买时间');
         return;
@@ -904,6 +904,9 @@ console.log(this.orderFollowId)
             } else {
               if (this.orderNo !== '') {
                 Toast.loading('保存中...');
+                if (!this.orderFollowId) {
+                  this.orderFollowId = localStorage.getItem('orderFollowId');
+                }
                 this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
                   .then((res) => {
                     if (res.code === 1) {
@@ -928,6 +931,9 @@ console.log(this.orderFollowId)
         } else {
           if (this.orderNo !== '') {
             Toast.loading('保存中...');
+            if (!this.orderFollowId) {
+              this.orderFollowId = localStorage.getItem('orderFollowId');
+            }
             this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
               .then((res) => {
                 if (res.code === 1) {
@@ -1090,7 +1096,7 @@ console.log(this.orderFollowId)
         });
       }
       this.saveType = 0
-      this.saveTemporary(2);
+      this.saveTemporary(2);debugger
     },
     saveOrder() {
 
