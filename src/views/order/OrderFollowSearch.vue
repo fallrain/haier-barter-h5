@@ -251,7 +251,7 @@ export default {
     //   hmcid: 'a0032254',
     //   mobile: '15621017056',
     //   shopId: '8700048360',
-    //   // hmcid: 'Z0166654',
+    //   // hmcid: '18000560',
     //   // orderMode: 'Haier',
     //   // orderMode: 'Casarte',
     //   // mobile: '15621017056',

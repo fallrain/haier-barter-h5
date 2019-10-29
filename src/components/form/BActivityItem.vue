@@ -371,7 +371,7 @@ export default {
   }
   .activity-float{
     position: absolute;
-    margin-left: 460px;
+    margin-left: 400px;
   }
 
   .activity-check-gift {

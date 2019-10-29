@@ -133,6 +133,7 @@
       title="选择可用的购机权益活动"
       :arrow="true"
       @rightClick="selectActivity()"
+      v-show="!handRegion"
     >
     </b-item>
       <b-activity-list
@@ -417,6 +418,7 @@ export default {
       title: '顾客信息：',
       mobile: '',
       region: '',
+      handRegion:false,
       userParam: {},
       rightName: '',
       rightId: '',
@@ -424,6 +426,7 @@ export default {
       queryInstall: false,
       multyBuy:false,
       saveType:1,
+
     };
   },
   computed: {},
@@ -499,6 +502,9 @@ export default {
     this.addressData = addressData;
     this.userParam = JSON.parse(localStorage.getItem('userinfo'));
     this.shopId = this.userParam.shopId;
+    if(this.$route.params.region === 'hand') {
+      this.handRegion = true
+    }
     this.queryUserList();
 
     this.getUserStore();

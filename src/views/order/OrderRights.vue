@@ -318,14 +318,14 @@ export default {
               rights.flag = 0;
               rightid = rights.orderId;
               item.selectedNum--;
-              item.num --
+              item.num--
               this.$set(item, 'selectedNum', item.selectedNum);
               this.$set(item, 'isSelected', item.selectedNum);
               isReturn = true;
             }
           }
-          if(rights.flag !== 0){
-            if(rights.orderId === rightid){
+          if (rights.flag !== 0) {
+            if (rights.orderId === rightid) {
               rights.flag = 0
               item.num--
             }
@@ -336,9 +336,9 @@ export default {
         }
         this.mutexRightsList.forEach((rights) => {
           rights.allowRightsConditionDtoList.forEach((ri) => {
-            if(ri.flag !== 0 ){
+            if (ri.flag !== 0) {
               if (!ri.orderId) {
-                ri.orderId = ri.orderIdList[0][0];
+                ri.orderId = ri.orderIdList[0][0].ids;
               }
               if (rightid === ri.orderId) {
                 this.$set(ri, 'flag', 0);
@@ -356,54 +356,96 @@ export default {
         item.rightsSelectedGroupDtoList.shift();
         let present = [];
         item.allowRightsConditionDtoList.forEach((rights) => {
-          if (!isReturn) {
+          // if (!isReturn) {
             if (rights.flag !== 0) {
-              rights.flag = 0;
-              item.selectedNum--;
-              // rights.orderIdList.forEach(id =>{
-              //   present.concat(id)
-              // })
-              present = rights.orderIdList;
-              this.$set(item, 'selectedNum', item.selectedNum);
-              this.$set(item, 'isSelected', item.selectedNum);
-              item.num--;
-              isReturn = true;
+              // rights.flag = 0;
+              // item.selectedNum--;
+              // present = rights.orderIdList;
+              // this.$set(item, 'selectedNum', item.selectedNum);
+              // this.$set(item, 'isSelected', item.selectedNum);
+              // item.num--;
+              // isReturn = true;
+              rights.orderIdList.forEach(ri => {
+                if (!isReturn) {
+                  if (ri.flag !== 0) {
+                    this.$set(ri, 'flag', 0);
+                    present = ri.ids;
+                    item.selectedNum--;
+                    this.$set(item, 'selectedNum', item.selectedNum);
+                    this.$set(item, 'isSelected', item.selectedNum);
+                    rights.num--;
+                    if (rights.num === 0) {
+                      this.$set(rights, 'flag', 0);
+                      item.num--
+                    }
+                    isReturn = true;
+                  }
+                }
+              })
             }
-          }
+          // }
           if (item.isOptional === 0) {
             this.$set(item, 'isOptional', 1);
           }
-          if (rights.flag !== 0) {
-            if (this.uniqueArray(rights.orderIdList, present)) {
-              this.$set(rights, 'flag', 0);
-              item.num--;
-            }
-          }
+          // if (rights.flag !== 0) {
+          //   if (this.uniqueArray(rights.orderIdList, present)) {
+          //     this.$set(rights, 'flag', 0);
+          //     item.num--;
+          //   }
+          // }
         });
         this.mutexRightsList.forEach((rights) => {
+          // rights.allowRightsConditionDtoList.forEach((ri) => {
+          //   if (ri.flag !== 0) {
+          //     if (!ri.orderIdList) {
+          //       const a = []
+          //       ri.orderIdList = [];
+          //       a.push(ri.orderId);
+          //       ri.orderIdList.push(a)
+          //     }
+          //     if (this.uniqueArray(ri.orderIdList, present)) {
+          //       this.$set(ri, 'flag', 0);
+          //       // if (rights.rightsType === 'sets') {
+          //         rights.num--;
+          //       // }
+          //       if (rights.isOptional === 0) {
+          //         this.$set(rights, 'isOptional', 1);
+          //       }
+          //     }
+          //   }
+          // });
           rights.allowRightsConditionDtoList.forEach((ri) => {
-            if (ri.flag !== 0) {
-              if (!ri.orderIdList) {
-                const a = []
-                ri.orderIdList = [];
-                a.push(ri.orderId);
-                ri.orderIdList.push(a)
-              }
-              if (this.uniqueArray(ri.orderIdList, present)) {
-                this.$set(ri, 'flag', 0);
-                // if (rights.rightsType === 'sets') {
-                  rights.num--;
-                // }
-                if (rights.isOptional === 0) {
-                  this.$set(rights, 'isOptional', 1);
+            if (!ri.orderIdList) {
+              const a = []
+              ri.orderIdList = [];
+              let b = {}
+              a.push(ri.orderId);
+              b.ids = a
+              b.flag = 0
+              ri.orderIdList.push(b)
+            }
+            // if (ri.flag !== 0) {
+            ri.orderIdList.forEach(id => {
+              if (id.flag !== 0) {
+                if (this.uniqueArray(id.ids, present)) {
+                  this.$set(id, 'flag', 0);
+                  ri.num--
+                  if (ri.num === rights.allowRightsConditionDtoList.length - 1) {
+                    this.$set(ri, 'flag', 0)
+                    rights.num--
+                  }
                 }
               }
+            })
+            debugger
+            if (rights.isOptional === 0) {
+              this.$set(rights, 'isOptional', 1);
             }
           });
-        });
+        })
+        debugger;
+        this.anylizeMCData(this.mutexRightsList);
       }
-      debugger;
-      this.anylizeMCData(this.mutexRightsList);
     },
     addMCount(item) {
       debugger;
@@ -416,7 +458,7 @@ export default {
           if (!isReturn) {
             if (rights.flag !== 1) {
               this.$set(rights, 'flag', 1);
-              rightid = rights.orderId;
+                rightid = rights.orderId;
               item.rightsSelectedGroupDtoList.push(rights);
               item.selectedNum++;
               item.num ++
@@ -441,7 +483,7 @@ export default {
           rights.allowRightsConditionDtoList.forEach((ri) => {
             if (ri.flag !== 1) {
               if (!ri.orderId) {
-                ri.orderId = ri.orderIdList[0][0];
+                ri.orderId = ri.orderIdList[0][0].ids;
               }
               if (rightid === ri.orderId) {
                 this.$set(ri, 'flag', 1);
@@ -458,43 +500,71 @@ export default {
         let isReturn = false;
         let present = [];
         item.allowRightsConditionDtoList.forEach((rights) => {
-          if (!isReturn) {
+          // if (!isReturn) {
             if (rights.flag !== 1) {
-              this.$set(rights, 'flag', 1);
               item.rightsSelectedGroupDtoList.push(rights);
-              present = rights.orderIdList;
-              item.selectedNum++;
-              this.$set(item, 'selectedNum', item.selectedNum);
-              this.$set(item, 'isSelected', 1);
-              item.num++;
-              isReturn = true;
+              rights.orderIdList.forEach(ri => {
+                if (!isReturn) {
+                if(ri.flag !== 1) {
+                  this.$set(ri, 'flag', 1);
+                  present = ri.ids;
+                  item.selectedNum++;
+                  this.$set(item, 'selectedNum', item.selectedNum);
+                  this.$set(item, 'isSelected', 1);
+                  rights.num++;
+                  if (rights.num == rights.orderIdList.length) {
+                    this.$set(rights, 'flag', 1);
+                    item.num++
+                  }
+                  isReturn = true;
+                }
+                }
+              })
             }
-          }
-          if (rights.flag !== 1) {
-            if (this.uniqueArray(rights.orderIdList, present)) {
-              this.$set(rights, 'flag', 1);
-              item.num++;
-            }
-          }
+          // }
+          // if (rights.flag !== 1) {
+          //   if (this.uniqueArray(rights.orderIdList, present)) {
+          //     rights.num++;
+          //     if(rights.num == rights.orderIdList.length){
+          //       this.$set(rights, 'flag', 1);
+          //       item.num ++
+          //     }
+          //   }
+          // }
         });
         if (item.num === item.allowRightsConditionDtoList.length) {
           this.$set(item, 'isOptional', 0);
         }
         this.mutexRightsList.forEach((rights) => {
           rights.allowRightsConditionDtoList.forEach((ri) => {
+            if (!ri.orderIdList) {
+              const a = []
+              ri.orderIdList = [];
+              let b = {}
+              a.push(ri.orderId);
+              b.ids = a
+              b.flag = 0
+              ri.orderIdList.push(b)
+            }
             if (ri.flag !== 1) {
-              if (!ri.orderIdList) {
-                const a = []
-                ri.orderIdList = [];
-                a.push(ri.orderId);
-                ri.orderIdList.push(a)
-              }
-              if (this.uniqueArray(ri.orderIdList, present)) {
-                this.$set(ri, 'flag', 1);
-                // if (rights.rightsType === 'sets') {
-                  rights.num++;
-                // }
-              }
+              ri.orderIdList.forEach(id => {
+                if(id.flag !== 1){
+                  if (this.uniqueArray(id.ids, present)) {
+                    this.$set(id, 'flag', 1);
+                    ri.num ++
+                    if(ri.num === ri.orderIdList.length){
+                      this.$set(ri,'flag',1)
+                      rights.num ++
+                    }
+                  }
+                }
+              })
+              // if (this.uniqueArray(ri.orderIdList, present)) {
+              //   this.$set(ri, 'flag', 1);
+              //   // if (rights.rightsType === 'sets') {
+              //     rights.num++;
+              //   // }
+              // }
             }
           });
           debugger
@@ -506,25 +576,28 @@ export default {
       this.anylizeMCData(this.mutexRightsList);
     },
     uniqueArray(array1, array2) {
+      debugger
       // const a = array1.length;
-      let temp = []
-      let temp2 = []
+      // let temp = []
+      // let temp2 = []
       // array1.forEach(id =>{
       //
       // })
       // array2.forEach(id => {
       //   temp2.concat(id)
       // })
-      for(var i = 0;i < array1.length;i ++){
-        temp = temp.concat(array1[i])
-      }
-      for(var i = 0;i < array2.length;i ++){
-        temp2 = temp2.concat(array2[i])
-      }
-
-      const a = temp.length
-      const b = temp2.length;
-      const concatA = temp.concat(temp2);
+      // for(var i = 0;i < array1.length;i ++){
+      //   temp = temp.concat(array1[i])
+      // }
+      // for(var i = 0;i < array2.length;i ++){
+      //   temp2 = temp2.concat(array2[i])
+      // }
+      //
+      // const a = temp.length
+      // const b = temp2.length;
+      const a = array1.length
+      const b = array2.length
+      const concatA = array1.concat(array2);
       const setArray = Array.from(new Set(concatA));
       if (setArray.length < a + b) {
         return true;
@@ -765,7 +838,6 @@ export default {
             });
         }
       } else {
-        debugger;
         this.rightsService.queryOrderNotOptionalRights(this.subInfo, { pageNum: 1,
           pageSize: 30 })
           .then((res) => {
@@ -777,16 +849,14 @@ export default {
                 temp.forEach((not) => {
                   const a = not.rightsBrand.split(',');
                   const b = [];
+                  debugger
                   a.forEach((i) => {
                     if (i === '000') {
-                      i = '海尔';
-                      b.push(i);
+                      b.push('海尔');
                     } else if (i === '051') {
-                      i = '卡萨帝';
-                      b.push(i);
+                      b.push('卡萨帝');
                     } else {
-                      i = '统帅';
-                      b.push(i);
+                      b.push('统帅');
                     }
                   });
                   not.rightsBrandC = b.join(',');
@@ -844,14 +914,32 @@ export default {
         item.num = 0;
         item.allowRightsConditionDtoList.forEach((al) => {
           al.flag = 0;
+
+          if(al.orderIdList){
+            const temp = []
+            al.num = 0;
+            for(var i = 0;i < al.orderIdList.length; i++){
+              let a = {}
+              a.flag = 0
+              a.ids = al.orderIdList[i]
+              temp.push(a)
+            }
+            al.orderIdList = temp
+          }
+
         });
-        if (item.rightsBrand === '000') {
-          item.rightsBrandC = '海尔';
-        } else if (item.rightsBrand === '051') {
-          item.rightsBrandC = '卡萨帝';
-        } else {
-          item.rightsBrandC = '统帅';
-        }
+        const brands = []
+        const a = item.rightsBrand.split(',')
+        a.forEach(i => {
+          if (i === '000') {
+            brands.push('海尔')
+          } else if (i === '051') {
+            brands.push('卡萨帝')
+          } else {
+            brands.push('统帅')
+          }
+        })
+        item.rightsBrandC = brands.join(',')
         this.$set(item, 'minesGray', true);
         if (item.isOptional === 1) {
           this.$set(item, 'addGray', false);
