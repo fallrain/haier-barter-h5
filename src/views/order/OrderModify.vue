@@ -82,7 +82,7 @@
             :key="index"
             :data="item"
             :index="index"
-            :content="isInstall"
+            :content="item.isInstall"
             @onDel="onDelete"
           >
             <template
@@ -196,7 +196,7 @@
       v-model="basicDialog.open"
       :btns="basicDialog.btns"
     >
-      该用户满足{{rightsName}}购机活动，您录单时未选则该活动，用户将无法获得购机礼品，请确定是否提交。
+      该用户满足购机权益活动，您录单时未选权益活动，用户将无法获得购机礼品，请确定是否提交。
     </md-dialog>
     <md-dialog
       title=""
@@ -423,7 +423,6 @@ export default {
   //    }
   },
   activated() {
-    localStorage.setItem('confirm', 'caogao');
     if (this.$route.query.temp) {
       let ID = '';
       const obj = JSON.parse(this.$route.query.temp);
@@ -477,8 +476,13 @@ export default {
     this.addressData = addressData;
     this.orderNo = this.$route.params.orderNo;
     this.orderFollowId = this.$route.params.orderFollowId;
+    if (!this.orderFollowId) {
+      this.orderFollowId = localStorage.getItem('orderFollowId');
+    }
     this.userParam = JSON.parse(localStorage.getItem('userinfo'));
-    this.getData();
+    if (this.orderNo) {
+      this.getData();
+    }
   },
   methods: {
   //  haveConsignee() {
@@ -505,7 +509,7 @@ export default {
       const orderDetailDtoList = [
         { hmcId: this.userParam.hmcid,
           storeId: this.userParam.shopId,
-          productModel: pro.productModel,
+          productCode: pro.productCode,
           productBrand: pro.productBrand,
           productCategoryCode: pro.productCategoryCode
         }
@@ -521,11 +525,14 @@ export default {
         } else {
           pro.isInstall = false;
         }
+        debugger;
+        console.log(this.productList);
         if (typeof(index) != 'undefined') {
           this.productList[index].isInstall = pro.isInstall;
         } else {
           this.productList.push(pro);
         }
+        console.log(this.productList);
       });
     },
     getData() {
@@ -687,7 +694,7 @@ export default {
       }else {
         this.saveType = 0
       }
-      if (this.productList.length > 0) {
+      if (this.productList.length > 0 && type === 1) {
         for (let i = 0; i < this.productList.length; i++) {
           if (this.productList[i].productPrice === '') {
             Toast.failed('请输入产品价格');
@@ -863,6 +870,9 @@ export default {
               } else {
                 if (this.orderNo !== '') {
                   Toast.loading('保存中...');
+                  if (!this.orderFollowId) {
+                    this.orderFollowId = localStorage.getItem('orderFollowId');
+                  }
                   this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
                     .then((res) => {
                       if (res.code === 1) {
@@ -884,6 +894,9 @@ export default {
         } else {
           if (this.orderNo !== '') {
             Toast.loading('保存中...');
+            if (!this.orderFollowId) {
+              this.orderFollowId = localStorage.getItem('orderFollowId');
+            }
             this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
               .then((res) => {
                 if (res.code === 1) {
@@ -957,16 +970,25 @@ export default {
       this.addressPopShow = true;
     },
     queryUserList(storeId) {
-      this.productService.userList(storeId).then((res) => {
-        if (res.code === 1) {
-          console.log(this.hmcId);
-          res.data.forEach((item) => {
-            if (item.hmcId == this.hmcId) {
-              this.multBuySponsor.push(item);
+      this.basicService.userInfo().then((res) => {
+        const user = {
+          hmcId: res.data.hmcId,
+          username: res.data.username
+        };
+        this.productService.userList(storeId).then((res) => {
+          if (res.code === 1) {
+            console.log(res);
+            res.data.forEach((item) => {
+              if (item.hmcId == this.hmcId) {
+                this.multBuySponsor.push(item);
+              }
+            });
+            if (this.multBuySponsor.length == 0) {
+              this.multBuySponsor.push(user);
             }
-          });
-          this.multBuyParticipant = res.data;
-        }
+            this.multBuyParticipant = res.data;
+          }
+        });
       });
     },
     next() {

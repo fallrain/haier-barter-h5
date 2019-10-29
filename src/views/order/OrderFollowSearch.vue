@@ -718,11 +718,11 @@ export default {
   beforeRouteEnter(to, from, next) {
     if (from.name === 'Order.OrderFollowCommitResult' || from.name === 'Order.OrderConfirm' || from.name === 'Order.OrderEntry' || from.name === 'Order.OrderModify') {
       next();
+      this.$router.go(0);
       // window.location.reload();
-      let href = window.location.href;
-      href += (href.indexOf('?') > -1 ? '&' : '?') + `_t=${(Math.random() + '').replace('.', '')}`;
-      window.location.replace(href);
-      // window.location.href = location.href+'?time='+((new Date()).getTime());
+      // let href = window.location.href;
+      // href += (href.indexOf('?') > -1 ? '&' : '?') + `_t=${(Math.random() + '').replace('.', '')}`;
+      // window.location.replace(href);
     } else {
       next();
     }

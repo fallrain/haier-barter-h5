@@ -108,7 +108,6 @@ export default {
       });
     },
   },
-
   deactivated() {
     this.$router.replace({
       name: 'Order.OrderFollowSearch',

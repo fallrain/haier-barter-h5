@@ -213,7 +213,7 @@
       v-model="basicDialog.open"
       :btns="basicDialog.btns"
     >
-      该用户满足{{rightsName}}购机活动，您录单时未选则该活动，用户将无法获得购机礼品，请确定是否提交。
+      该用户满足购机权益活动，您录单时未选权益活动，用户将无法获得购机礼品，请确定是否提交。
     </md-dialog>
     <md-dialog
       title=""
@@ -552,7 +552,7 @@ console.log(this.orderFollowId)
       const orderDetailDtoList = [
         { hmcId: this.userParam.hmcid,
           storeId: this.shopId,
-          productModel: pro.productModel,
+          productCode: pro.productCode,
           productBrand: pro.productBrand,
           productCategoryCode: pro.productCategoryCode
         }
@@ -788,7 +788,7 @@ console.log(this.orderFollowId)
         name: 'Order.SearchProduct',
       });
     },
-    generateSubInfo(type) {
+    generateSubInfo(type) {debugger
       if (this.buyTime === '' && this.saveType == 0) {
         Toast.failed('请选择购买时间');
         return;
@@ -910,6 +910,9 @@ console.log(this.orderFollowId)
             } else {
               if (this.orderNo !== '') {
                 Toast.loading('保存中...');
+                if (!this.orderFollowId) {
+                  this.orderFollowId = localStorage.getItem('orderFollowId');
+                }
                 this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
                   .then((res) => {
                     if (res.code === 1) {
@@ -934,6 +937,9 @@ console.log(this.orderFollowId)
         } else {
           if (this.orderNo !== '') {
             Toast.loading('保存中...');
+            if (!this.orderFollowId) {
+              this.orderFollowId = localStorage.getItem('orderFollowId');
+            }
             this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
               .then((res) => {
                 if (res.code === 1) {
@@ -1031,23 +1037,29 @@ console.log(this.orderFollowId)
       this.addressPopShow = true;
     },
     queryUserList() {
-      this.productService.userList(this.shopId).then((res) => {
-        if (res.code === 1) {
-          if(res.data === '' || res.data === []){
-            this.multyBuy = false
-          }else {
-            this.multyBuy = true
-          }
-          const hmcId = this.userParam.hmcid;
-          res.data.forEach((item) => {
-            if (item.hmcId == hmcId) {
-              this.multBuySponsor.push(item);
+      this.basicService.userInfo().then((res) => {
+        const user = {
+          hmcId: res.data.hmcId,
+          username: res.data.username
+        };
+        this.productService.userList(this.shopId).then((res1) => {
+          if (res1.code === 1) {
+            if (res1.data === '' || res1.data === []) {
+              this.multyBuy = false
+            } else {
+              this.multyBuy = true
             }
-          });
-          console.log(this.multBuySponsor)
-          this.multBuyParticipant = res.data;
-          this.buyerList = res.data;
-        }
+            res1.data.forEach((item) => {
+              if (item.hmcId == user.hmcId) {
+                this.multBuySponsor.push(item);
+              }
+            });
+            if (this.multBuySponsor.length == 0) {
+              this.multBuySponsor.push(user);
+            }
+            this.multBuyParticipant = res1.data;
+          }
+        });
       });
     },
     // consporConfirm() {
@@ -1096,7 +1108,7 @@ console.log(this.orderFollowId)
         });
       }
       this.saveType = 0
-      this.saveTemporary(2);
+      this.saveTemporary(2);debugger
     },
     saveOrder() {
 
@@ -1111,6 +1123,9 @@ console.log(this.orderFollowId)
     onBasicConfirm() {
       if (this.orderNo !== '') {
         Toast.loading('保存中...');
+        if (!this.orderFollowId) {
+          this.orderFollowId = localStorage.getItem('orderFollowId');
+        }
         this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
           .then((res) => {
             if (res.code === 1) {

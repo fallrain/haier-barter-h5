@@ -175,7 +175,9 @@ export default {
   created() {
     this.orderNo = this.$route.params.orderNo;
     // this.orderNo = 'Z15645424968056668';
-    this.getData();
+    if (this.orderNo) {
+      this.getData();
+    }
   },
   methods: {
     getData() {
