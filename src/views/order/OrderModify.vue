@@ -82,7 +82,7 @@
             :key="index"
             :data="item"
             :index="index"
-            :content="isInstall"
+            :content="item.isInstall"
             @onDel="onDelete"
           >
             <template
@@ -524,11 +524,14 @@ export default {
         } else {
           pro.isInstall = false;
         }
+        debugger;
+        console.log(this.productList);
         if (typeof(index) != 'undefined') {
           this.productList[index].isInstall = pro.isInstall;
         } else {
           this.productList.push(pro);
         }
+        console.log(this.productList);
       });
     },
     getData() {
