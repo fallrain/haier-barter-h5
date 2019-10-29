@@ -866,6 +866,9 @@ export default {
               } else {
                 if (this.orderNo !== '') {
                   Toast.loading('保存中...');
+                  if (!this.orderFollowId) {
+                    this.orderFollowId = localStorage.getItem('orderFollowId');
+                  }
                   this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
                     .then((res) => {
                       if (res.code === 1) {
@@ -887,6 +890,9 @@ export default {
         } else {
           if (this.orderNo !== '') {
             Toast.loading('保存中...');
+            if (!this.orderFollowId) {
+              this.orderFollowId = localStorage.getItem('orderFollowId');
+            }
             this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
               .then((res) => {
                 if (res.code === 1) {
