@@ -1031,23 +1031,29 @@ console.log(this.orderFollowId)
       this.addressPopShow = true;
     },
     queryUserList() {
-      this.productService.userList(this.shopId).then((res) => {
-        if (res.code === 1) {
-          if(res.data === '' || res.data === []){
-            this.multyBuy = false
-          }else {
-            this.multyBuy = true
-          }
-          const hmcId = this.userParam.hmcid;
-          res.data.forEach((item) => {
-            if (item.hmcId == hmcId) {
-              this.multBuySponsor.push(item);
+      this.basicService.userInfo().then((res) => {
+        const user = {
+          hmcId: res.data.hmcId,
+          username: res.data.username
+        };
+        this.productService.userList(this.shopId).then((res1) => {
+          if (res1.code === 1) {
+            if (res1.data === '' || res1.data === []) {
+              this.multyBuy = false
+            } else {
+              this.multyBuy = true
             }
-          });
-          console.log(this.multBuySponsor)
-          this.multBuyParticipant = res.data;
-          this.buyerList = res.data;
-        }
+            res1.data.forEach((item) => {
+              if (item.hmcId == user.hmcId) {
+                this.multBuySponsor.push(item);
+              }
+            });
+            if (this.multBuySponsor.length == 0) {
+              this.multBuySponsor.push(user);
+            }
+            this.multBuyParticipant = res1.data;
+          }
+        });
       });
     },
     // consporConfirm() {

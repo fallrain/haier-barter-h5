@@ -480,7 +480,9 @@ export default {
       this.orderFollowId = localStorage.getItem('orderFollowId');
     }
     this.userParam = JSON.parse(localStorage.getItem('userinfo'));
-    this.getData();
+    if (this.orderNo) {
+      this.getData();
+    }
   },
   methods: {
   //  haveConsignee() {
@@ -968,16 +970,25 @@ export default {
       this.addressPopShow = true;
     },
     queryUserList(storeId) {
-      this.productService.userList(storeId).then((res) => {
-        if (res.code === 1) {
-          console.log(this.hmcId);
-          res.data.forEach((item) => {
-            if (item.hmcId == this.hmcId) {
-              this.multBuySponsor.push(item);
+      this.basicService.userInfo().then((res) => {
+        const user = {
+          hmcId: res.data.hmcId,
+          username: res.data.username
+        };
+        this.productService.userList(storeId).then((res) => {
+          if (res.code === 1) {
+            console.log(res);
+            res.data.forEach((item) => {
+              if (item.hmcId == this.hmcId) {
+                this.multBuySponsor.push(item);
+              }
+            });
+            if (this.multBuySponsor.length == 0) {
+              this.multBuySponsor.push(user);
             }
-          });
-          this.multBuyParticipant = res.data;
-        }
+            this.multBuyParticipant = res.data;
+          }
+        });
       });
     },
     next() {
