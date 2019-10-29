@@ -126,13 +126,7 @@ export default {
       },
       scrollViewDrainageActivity: {
         mescroll: null,
-        list: [{
-          name: 'name',
-          giftUrl: 'url',
-          time: 'time',
-          scope: 'scope',
-          people: 'people'
-        }],
+        list: [],
         isListInit: false
       },
       // 搜索值
@@ -140,6 +134,50 @@ export default {
     };
   },
   methods: {
+    upCallback(page) {
+      // 下载过就设置已经初始化
+      this[this.curScrollViewName].isListInit = true;
+      this.search(page).then(({result, pages}) => {
+        this.$nextTick(() => {
+          // 通过当前页的数据条数，和总数据量来判断是否加载完
+          if (result) {
+            this[this.curScrollViewName].mescroll.endBySize(result.length, pages);
+          }
+        });
+      });
+    },
+    search(page) {
+      return this.activityService.queryActivityInfoListForHmc({
+        channelType: '',
+        activityRules: '',
+        activityTitle: '营销活动',
+        createdBy: 'A0008949',
+        productGroup: '',
+        activityType: 1,
+        microCode: '',
+        keyWord: this.searchVal
+      }, {
+        pageNum: page.num,
+        pageSize: page.size,
+      }).then((res) => {
+        const sroviewObj = {};
+        if (res.code === 1) {
+          const {
+            result,
+            pages
+          } = res.data;
+          sroviewObj.pages = pages;
+          sroviewObj.result = result;
+          if (page.num === 1) {
+            this[this.curScrollViewName].list = [];
+            this[this.curScrollViewName].list = result;
+          } else {
+            this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(result);
+          }
+        }
+        return sroviewObj;
+      });
+    },
     searchByCondition() {
       this[this.curScrollViewName].mescroll.triggerDownScroll();
     },
@@ -236,8 +274,22 @@ export default {
         1: 'scrollViewDrainageActivity'
       }[this.current];
     }
-  }
-  ,
+  },
+  watch: {
+    current(val) {
+      const obj = {
+        0: 'scrollViewRightsActivity',
+        1: 'scrollViewDrainageActivity'
+      };
+      const viewName = obj[val];
+
+      // tab切换后，创建新MeScroll对象（若无创建过），没有加载过则加载
+      this.bUtil.scroviewTabChange(viewName, this);
+    }
+  },
+  mounted() {
+    this.bUtil.scroviewTabChange(this.curScrollViewName, this);
+  },
 };
 </script>
 
