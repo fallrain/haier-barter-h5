@@ -546,7 +546,7 @@ console.log(this.orderFollowId)
       const orderDetailDtoList = [
         { hmcId: this.userParam.hmcid,
           storeId: this.shopId,
-          productModel: pro.productModel,
+          productCode: pro.productCode,
           productBrand: pro.productBrand,
           productCategoryCode: pro.productCategoryCode
         }

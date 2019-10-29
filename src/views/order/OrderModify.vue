@@ -423,7 +423,6 @@ export default {
   //    }
   },
   activated() {
-    localStorage.setItem('confirm', 'caogao');
     if (this.$route.query.temp) {
       let ID = '';
       const obj = JSON.parse(this.$route.query.temp);
@@ -508,7 +507,7 @@ export default {
       const orderDetailDtoList = [
         { hmcId: this.userParam.hmcid,
           storeId: this.userParam.shopId,
-          productModel: pro.productModel,
+          productCode: pro.productCode,
           productBrand: pro.productBrand,
           productCategoryCode: pro.productCategoryCode
         }
