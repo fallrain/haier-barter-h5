@@ -578,10 +578,11 @@ export default {
           this.sourceSn = resData.sourceSn;
           this.recordMode = resData.recordMode;
           this.queryUserList(resData.storeId);
+          if(!this.isDetail){
+            if (resData.rightName) {
+              this.rightsList = resData.rightName.split(',');
 
-          if (resData.rightName) {
-            this.rightsList = resData.rightName.split(',');
-
+            }
           }
           if (resData.orderDetailDtoList.length !== 0) {
             this.productList = resData.orderDetailDtoList;
