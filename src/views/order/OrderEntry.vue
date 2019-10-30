@@ -433,22 +433,24 @@ export default {
   watch: {
     buyDate(newV, oldV) {
       console.log(this.userParam.hmcid)
-      this.orderService.isAccordDeadline({
-      }, {
-        hmcId: this.userParam.hmcid,
-        orderCrTime: newV,
-        requestNoToast: true
-      }).then((res) => {
-        if (res.code == -1) {
-          this.basicDialog1.open = true;
-        }
-      });
+      if (newV != '') {
+        this.orderService.isAccordDeadline({
+        }, {
+          hmcId: this.userParam.hmcid,
+          orderCrTime: newV,
+          requestNoToast: true
+        }).then((res) => {
+          if (res.code == -1) {
+            this.basicDialog1.open = true;
+          }
+        });
+      }
     }
   },
   mounted() {
 
   },
-  activated() {
+  activated() {debugger
     if (this.$route.query.temp) {
       let ID = '';
       const obj = JSON.parse(this.$route.query.temp);console.log(obj)
@@ -496,9 +498,22 @@ export default {
         this.isDetail = true;
         this.rightsList = rightsPro;
       }
+    } else if (this.$route.params.region != 'hand') {
+      // 清空缓存组件数据
+      this.productList = [];
+      this.buyDate = '';
+      this.deliveryTime = '';
+      this.rightsList = [];
+      this.customerInfo.username = this.$route.params.customerConsigneeInfo.userName;
+      this.customerInfo.mobile = this.$route.params.customerConsigneeInfo.mobile;
+      this.customerInfo.userId = this.$route.params.customerConsigneeInfo.userId;
+      this.userId = this.$route.params.customerConsigneeInfo.userId;
+      this.recordMode = this.$route.params.customerConsigneeInfo.recordMode;
+      this.mobile = this.customerInfo.mobile;
+      this.queryCustomerDefault();
     }
   },
-  created() {
+  created() {debugger
     this.addressData = addressData;
     this.userParam = JSON.parse(localStorage.getItem('userinfo'));
     this.shopId = this.userParam.shopId;
@@ -524,20 +539,18 @@ export default {
       this.orderFollowId = '';
     }
     localStorage.setItem('orderFollowId',this.orderFollowId)
-console.log(this.orderFollowId)
-
     if (this.$route.params.region === 'hand') {
       this.haveConsignee = false;
       this.haveCustomer = false;
       return;
     }
-    this.customerInfo.username = this.$route.params.customerConsigneeInfo.userName;
-    this.customerInfo.mobile = this.$route.params.customerConsigneeInfo.mobile;
-    this.customerInfo.userId = this.$route.params.customerConsigneeInfo.userId;
-    this.userId = this.$route.params.customerConsigneeInfo.userId;
-    this.recordMode = this.$route.params.customerConsigneeInfo.recordMode;
-    this.mobile = this.customerInfo.mobile;
-    this.queryCustomerDefault();
+    // this.customerInfo.username = this.$route.params.customerConsigneeInfo.userName;
+    // this.customerInfo.mobile = this.$route.params.customerConsigneeInfo.mobile;
+    // this.customerInfo.userId = this.$route.params.customerConsigneeInfo.userId;
+    // this.userId = this.$route.params.customerConsigneeInfo.userId;
+    // this.recordMode = this.$route.params.customerConsigneeInfo.recordMode;
+    // this.mobile = this.customerInfo.mobile;
+    // this.queryCustomerDefault();
   },
   methods: {
     //  haveConsignee() {
