@@ -863,7 +863,7 @@ export default {
         //   name: 'Order.ResidueGift',
         // });
       } else {
-        if (this.rightsList.length == 0 && this.saveType == 0) {
+        if (this.rightsList.length == 0 && this.saveType == 0 && this.subInfo.orderSource != 'SGLD') {
           this.rightsService.queryOrderOptionalRights(this.subInfo, {
             pageNum: 0,
             pageSize: 10,

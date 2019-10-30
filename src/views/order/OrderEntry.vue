@@ -913,7 +913,7 @@ export default {
           name: 'Order.OrderRights',
           params: { orderInfo: info }
         });
-      } else {
+      } else {debugger;
         if (this.rightsList.length == 0 && this.saveType == 0 && this.subInfo.orderSource != 'SGLD') {
           this.rightsService.queryOrderOptionalRights(this.subInfo, {
             pageNum: 0,
@@ -952,9 +952,9 @@ export default {
         } else {
           if (this.orderNo !== '') {
             Toast.loading('保存中...');
-            if (!this.orderFollowId) {
-              this.orderFollowId = localStorage.getItem('orderFollowId');
-            }
+            // if (!this.orderFollowId) {
+            //   this.orderFollowId = localStorage.getItem('orderFollowId');
+            // }
             this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
               .then((res) => {
                 if (res.code === 1) {
