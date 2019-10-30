@@ -268,14 +268,15 @@ export default {
           }
           this.smld = true;
         } else if (this.region === 'edit') {
-          this.customerInfo.username = JSON.parse(this.$route.params.info).username;
-          this.customerInfo.mobile = JSON.parse(this.$route.params.info).mobile;
-          this.customerInfo.userId = JSON.parse(this.$route.params.info).userId;
-          this.customerInfo.consigneeUserName = JSON.parse(this.$route.params.info).consigneeUserName;
-          this.customerInfo.consigneeUserPhone = JSON.parse(this.$route.params.info).consigneeUserPhone;
-          this.customerInfo.sex = JSON.parse(this.$route.params.info).sex;
-          this.customerInfo.address = JSON.parse(this.$route.params.info).address;
-          this.customerInfo.id = JSON.parse(this.$route.params.info).id;
+          this.customerInfo = JSON.parse(this.$route.params.info);
+          // this.customerInfo.username = JSON.parse(this.$route.params.info).username;
+          // this.customerInfo.mobile = JSON.parse(this.$route.params.info).mobile;
+          // this.customerInfo.userId = JSON.parse(this.$route.params.info).userId;
+          // this.customerInfo.consigneeUserName = JSON.parse(this.$route.params.info).consigneeUserName;
+          // this.customerInfo.consigneeUserPhone = JSON.parse(this.$route.params.info).consigneeUserPhone;
+          // this.customerInfo.sex = JSON.parse(this.$route.params.info).sex;
+          // this.customerInfo.address = JSON.parse(this.$route.params.info).address;
+          // this.customerInfo.id = JSON.parse(this.$route.params.info).id;
         }else {
           console.log(JSON.parse(this.$route.params.info));
           this.customerInfo.username = JSON.parse(this.$route.params.info).username;
