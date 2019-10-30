@@ -452,6 +452,10 @@ export default {
 
   },
   activated() {debugger
+    if (this.$route.params.customerConsigneeInfo.id) {
+      this.orderFollowId = this.$route.params.customerConsigneeInfo.id;
+      localStorage.setItem('orderFollowId', this.orderFollowId);
+    }
     if (this.$route.query.temp) {
       let ID = '';
       const obj = JSON.parse(this.$route.query.temp);console.log(obj)
@@ -500,6 +504,10 @@ export default {
         this.rightsList = rightsPro;
       }
     } else if (this.$route.params.region != 'hand') {
+      if (localStorage.getItem('invoice') == 'true') {
+        localStorage.setItem('invoice', '');
+        return;
+      }
       // 清空缓存组件数据
       this.productList = [];
       this.buyDate = '';
@@ -543,12 +551,6 @@ export default {
     } else {
       this.sourceSn = '';
     }
-    if (this.$route.params.customerConsigneeInfo.id) {
-      this.orderFollowId = this.$route.params.customerConsigneeInfo.id;
-    } else {
-      this.orderFollowId = '';
-    }
-    localStorage.setItem('orderFollowId',this.orderFollowId)
     if (this.$route.params.region === 'hand') {
       this.haveConsignee = false;
       this.haveCustomer = false;
@@ -922,7 +924,7 @@ export default {
           params: { orderInfo: info }
         });
       } else {
-        if (this.rightsList.length == 0 && this.saveType == 0) {
+        if (this.rightsList.length == 0 && this.saveType == 0 && this.subInfo.orderSource != 'SGLD') {
           this.rightsService.queryOrderOptionalRights(this.subInfo, {
             pageNum: 0,
             pageSize: 10,
@@ -978,7 +980,7 @@ export default {
                       name: 'Order.OrderUploadInvoice',
                       params: { orderNo: this.orderNo }
                     });
-                    this.$destroy();
+                    // this.$destroy();
                   }
                 }
               });
