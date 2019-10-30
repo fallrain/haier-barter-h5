@@ -452,8 +452,7 @@ export default {
 
   },
   activated() {
-    debugger;
-    if (this.$route.params.customerConsigneeInfo.id) {
+    if (this.$route.params.customerConsigneeInfo && this.$route.params.customerConsigneeInfo.id) {
       this.orderFollowId = this.$route.params.customerConsigneeInfo.id;
       localStorage.setItem('orderFollowId', this.orderFollowId);
     }
@@ -493,7 +492,6 @@ export default {
       }
       if (obj.rightsJson) {
         this.rightsJson = obj.rightsJson;
-        debugger;
         const right = JSON.parse(obj.rightsJson);
         this.rightName = right.rightsName;
         this.rightId = right.rightsId;
@@ -599,10 +597,8 @@ export default {
     },
     radioChange(val) {
       this.orderType = val;
-      debugger;
     },
     selectSetBuyer() {
-      debugger;
       this.multBuyPopShow = true;
     },
     consporConfirm() {
@@ -812,7 +808,6 @@ export default {
       });
     },
     generateSubInfo(type) {
-      debugger;
       if (this.buyTime === '' && this.saveType == 0) {
         Toast.failed('请选择购买时间');
         return;
@@ -923,7 +918,6 @@ export default {
           params: { orderInfo: info }
         });
       } else {
-        debugger;
         if (this.rightsList.length == 0 && this.saveType == 0 && this.subInfo.orderSource != 'SGLD') {
           this.rightsService.queryOrderOptionalRights(this.subInfo, {
             pageNum: 0,
@@ -1136,7 +1130,7 @@ export default {
         });
       }
       this.saveType = 0;
-      this.saveTemporary(2); debugger;
+      this.saveTemporary(2);
     },
     saveOrder() {
 
