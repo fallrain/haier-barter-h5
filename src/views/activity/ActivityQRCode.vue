@@ -4,9 +4,9 @@
       <img src="@/assets/images/activity/data-analysis-example.png" alt="">
     </div>
     <activity-name-time
-      title="海尔国潮家电节|海尔智慧厨房"
-      startDate="2019-06-01"
-      endDate="2019-06-18"
+      :title="activityInfo.activityTitle"
+      :startDate="activityInfo.activityStartTime"
+      :endDate="activityInfo.activityEndTime"
       address="青岛市崂山区海尔路10号海尔专卖店"
     ></activity-name-time>
     <div class="activityQRCode-cnt">
@@ -41,18 +41,31 @@
 
 <script>
 import ActivityNameTime from '../../components/business/activity/ActivityNameTime';
-import qrcodeImg from '@/assets/images/activity/qrcode-example.png';
+// import qrcodeImg from '@/assets/images/activity/qrcode-example.png';
 
 export default {
   name: 'ActivityQRCode',
   components: {
     ActivityNameTime
   },
+  created() {
+    this.activityInfo = this.$route.params.activityInfo;
+    this.createQrcode();
+  },
   data() {
     return {
-      qrcodeImg
+      qrcodeImg: '',
+      activityInfo: {},
     };
-  }
+  },
+  methods: {
+    createQrcode() {
+      return this.activityService.generateQrcode('http://baidu.com/', '123456', '9999').then((res) => {
+        // let url = window.URL.createObjectURL(res)
+        // this.qrcodeImg = url;
+      });
+    },
+  },
 };
 </script>
 

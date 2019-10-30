@@ -40,13 +40,15 @@
       <button
         type="button"
         class="common-btn-primary"
-        style="margin-left:15px">
+        style="margin-left:15px"
+        @click="qrCode">
         活动二维码
       </button>
       <button
         type="button"
         class="common-btn-primary"
-        style="margin-left:15px">
+        style="margin-left:15px"
+        @click="dataStatistics">
         数据统计
       </button>
     </div>
@@ -120,6 +122,18 @@ export default {
   methods: {
     share() {
       this.isPopupShow = true;
+    },
+    qrCode() {
+      this.$router.push({
+        name: 'Activity.ActivityQRCode',
+        params: {activityInfo: this.getData}
+      });
+    },
+    dataStatistics() {
+      this.$router.push({
+        name: 'Activity.ActivityDataAnalysis',
+        params: {activityInfo: this.getData}
+      });
     }
   },
 };

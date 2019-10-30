@@ -17,6 +17,7 @@ queryRightsLimitConfigList:'/rightsLimitConfig/queryRightsLimitConfigList',//查
 confirmSelectedOrderRights:'/rightsManage/confirmSelectedOrderRights',//确认选择订单权益
   queryOrderOptionalShareRights:'/rightsManage/queryOrderOptionalShareRights',//同享
   queryOrderOptionalMutexRights:'/rightsManage/queryOrderOptionalMutexRights',//互斥
+  queryRightsActivityList: '/rightsManage/queryRightsActivityList',//互斥
 };
 
 Object.entries(urls).forEach(([key, value]) => {

@@ -26,9 +26,8 @@
             v-for="(item,index) in scrollViewRightsActivity.list"
             :key="index"
             :getData.sync="item"
-            :isFinish="false"
-            @minusCount="minusCount"
-            @addCount="addCount"
+            :isFinish="true"
+            :isShowImg="false"
             :hasData="false"
             @showLimit="showLimit"
             @showConfig="showConfig"
@@ -91,37 +90,7 @@ export default {
       }],
       scrollViewRightsActivity: {
         mescroll: null,
-        list: [
-          {
-            title: '6月场景套权益昆明小微',
-            reason: '套餐价格不符合',
-            brand: '海尔，卡萨帝',
-            scope: '所有产品',
-            data: '2019-07-30至2019-08-02',
-            data2: '2019-08-30至2019-09-02',
-            type: '海贝积分',
-            product: [{
-              name: 'KFR-35GW/A4RCA21AU1套机空调 + 50T82电视',
-              gift: '7500积分',
-              count: '666',
-              remain: '222',
-            }, {
-              name: '50T82电视',
-              gift: '500积分233222222222222333vvervevrdfvsrftbrthytnjuykuikiuktgteegtgythh235456',
-              count: '6',
-              remain: '2',
-            }
-            ]
-          }, {
-            title: '6月场景套权益昆明小微',
-            reasn: '',
-            brand: '海尔，卡萨帝',
-            scope: '所有产品',
-            data: '2019-07-30至2019-08-02',
-            data2: '2019-08-30至2019-09-02',
-            type: '海贝积分',
-          }
-        ],
+        list: [],
         isListInit: false
       },
       scrollViewDrainageActivity: {
@@ -131,13 +100,14 @@ export default {
       },
       // 搜索值
       searchVal: '',
+      currentList: [],
     };
   },
   methods: {
     upCallback(page) {
       // 下载过就设置已经初始化
       this[this.curScrollViewName].isListInit = true;
-      this.search(page).then(({result, pages}) => {
+      this.search(page).then(({ result, pages }) => {
         this.$nextTick(() => {
           // 通过当前页的数据条数，和总数据量来判断是否加载完
           if (result) {
@@ -147,14 +117,27 @@ export default {
       });
     },
     search(page) {
+      if (this.current === 0) {
+        return this.rightsService.queryRightsActivityList(this.searchVal).then((res) => {
+          const sroviewObj = {};
+          if (res.code === 1) {
+            sroviewObj.pages = 1;
+            sroviewObj.result = res.data;
+            if (res.data && res.data.length > 0) {
+              this.anylizeData(res.data);
+            }
+            if (page.num === 1) {
+              this[this.curScrollViewName].list = [];
+              this[this.curScrollViewName].list = this.currentList;
+            } else {
+              this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(this.currentList);
+            }
+          }
+          return sroviewObj;
+        });
+      }
       return this.activityService.queryActivityInfoListForHmc({
-        channelType: '',
-        activityRules: '',
-        activityTitle: '营销活动',
-        createdBy: 'A0008949',
-        productGroup: '',
-        activityType: 1,
-        microCode: '',
+        activityType: '',
         keyWord: this.searchVal
       }, {
         pageNum: page.num,
@@ -181,90 +164,40 @@ export default {
     searchByCondition() {
       this[this.curScrollViewName].mescroll.triggerDownScroll();
     },
-    minusCount(item) {
-      // this.rightsService.uncheckedOrderRights({}, { orderNo: this.orderNo, rightsNo: item.rightsNo, pageNum: 1, pageSize: 10 }).then((res) => {
-      //   if (res.code === 1) {
-      //     const result = res.data.result;
-      //     if (result && result.length > 0) {
-      //       const list = result;
-      //       this.anylizeData(list);
-      //     }
-      //     this[this.curScrollViewName].list = this.currentList;
-      //   }
-      // });
-    },
-    addCount(item) {
-      // this.rightsService.checkedOrderRights({}, { orderNo: this.orderNo, rightsNo: item.rightsNo, pageNum: 1, pageSize: 10 }).then((res) => {
-      //   if (res.code === 1) {
-      //     const result = res.data.result;
-      //     if (result && result.length > 0) {
-      //       const list = result;
-      //       console.log('currentList', list);
-      //
-      //       this.anylizeData(list);
-      //     }
-      //     this[this.curScrollViewName].list = this.currentList;
-      //   }
-      // });
-    },
     showLimit(item) {
-      // this.rightsService.queryRightsLimitConfigList({}, { limitType: 'model', rightsNo: item.rightsNo }).then((res) => {
-      //   if (res.code === 1) {
-      //     item.limitList = res.data;
-      //   }
-      // });
+      this.rightsService.viewOtherLimited({}, { rightsNo: item.rightsNo }).then((res) => {
+        if (res.code === 1) {
+          this.$set(item, 'limitList', res.data);
+        }
+      });
     },
     showConfig(item) {
-      // if (this.subInfo.orderType === 0) {
-      //   this.rightsService.queryRightsSingleConfigList({}, { rightsNo: item.rightsNo },).then((res) => {
-      //     if (res.code === 1) {
-      //       if (res.data.length > 0) {
-      //         item.isShowConfig = true;
-      //         item.configList = res.data;
-      //       } else {
-      //         item.configList = [];
-      //       }
-      //     }
-      //   });
-      // } else {
-      //   this.rightsService.queryRightsSetsByRightsNo({}, { rightsNo: item.rightsNo }).then((res) => {
-      //     if (res.code === 1) {
-      //       if (res.data.length > 0) {
-      //         item.isShowConfig = true;
-      //         item.configList = res.data;
-      //       } else {
-      //         item.configList = [];
-      //       }
-      //     }
-      //   });
-      // }
+      this.rightsService.viewGifts({}, { rightsNo: item.rightsNo },).then((res) => {
+        if (res.code === 1) {
+          if (res.data.length > 0) {
+            item.isShowConfig = true;
+            this.$set(item, 'configList', res.data);
+            // item.configList = res.data;
+          } else {
+            item.configList = [];
+          }
+        }
+      });
     },
-    showConfig(item) {
-      // if (this.subInfo.orderType === 0) {
-      //   this.rightsService.queryRightsSingleConfigList({}, { rightsNo: item.rightsNo },).then((res) => {
-      //     if (res.code === 1) {
-      //       if (res.data.length > 0) {
-      //         item.isShowConfig = true;
-      //         item.configList = res.data;
-      //       } else {
-      //         item.configList = [];
-      //       }
-      //     }
-      //   });
-      // } else {
-      //   this.rightsService.queryRightsSetsByRightsNo({}, { rightsNo: item.rightsNo }).then((res) => {
-      //     if (res.code === 1) {
-      //       if (res.data.length > 0) {
-      //         item.isShowConfig = true;
-      //         item.configList = res.data;
-      //       } else {
-      //         item.configList = [];
-      //       }
-      //     }
-      //   });
-      // }
-    }
-    ,
+    anylizeData(curlist) {
+      curlist.forEach((item) => {
+        this.$set(item, 'minesGray', true);
+        if (item.isOptional === 1) {
+          this.$set(item, 'addGray', false);
+        } else {
+          this.$set(item, 'addGray', true);
+        }
+        if (item.selectedNum !== 0) {
+          this.$set(item, 'minesGray', false);
+        }
+      });
+      this.currentList = curlist;
+    },
   },
   computed: {
     curScrollViewName() {
