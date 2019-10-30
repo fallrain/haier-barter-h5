@@ -338,14 +338,31 @@ export default {
           rights.allowRightsConditionDtoList.forEach((ri) => {
             if (ri.flag !== 0) {
               if (!ri.orderId) {
-                ri.orderId = ri.orderIdList[0][0].ids;
-              }
-              if (rightid === ri.orderId) {
+                // ri.orderId = ri.orderIdList[0][0].ids;
+
+                for (var i = 0; i < ri.orderIdList.length; i++) {
+                  for (var j = 0; j < ri.orderIdList[i].ids.length; j++) {
+                    if (rightid === ri.orderIdList[i].ids[j]) {
+                      ri.orderIdList[i].num--
+                      if (ri.orderIdList[i].flag === 1) {
+                        this.$set(ri.orderIdList[i], 'flag', 0)
+                        ri.num--
+                        if (ri.flag === 1) {
+                          this.$set(ri, 'flag', 0);
+                          rights.num--
+                        }
+                      }
+                    }
+                  }
+                }
+              } else {
+                if(rightid === ri.orderId) {
                 this.$set(ri, 'flag', 0);
                 rights.num--
-                if (rights.isOptional === 0) {
-                  this.$set(rights, 'isOptional', 1);
-                }
+              }
+            }
+              if (rights.isOptional === 0) {
+                this.$set(rights, 'isOptional', 1);
               }
             }
           });
@@ -444,8 +461,8 @@ export default {
           });
         })
         debugger;
-        this.anylizeMCData(this.mutexRightsList);
       }
+      this.anylizeMCData(this.mutexRightsList);
     },
     addMCount(item) {
       debugger;
@@ -483,12 +500,28 @@ export default {
           rights.allowRightsConditionDtoList.forEach((ri) => {
             if (ri.flag !== 1) {
               if (!ri.orderId) {
-                ri.orderId = ri.orderIdList[0][0].ids;
+                for(var i = 0;i < ri.orderIdList.length;i ++){
+                  for(var j = 0;j < ri.orderIdList[i].ids.length ;j++){
+                    if(rightid === ri.orderIdList[i].ids[j]){
+                        ri.orderIdList[i].num ++
+                      if(ri.orderIdList[i].num === ri.orderIdList[i].ids.length){
+                        this.$set(ri.orderIdList[i],'flag',1)
+                        ri.num ++
+                        if(ri.num === ri.orderIdList.length){
+                          this.$set(ri, 'flag', 1);
+                          rights.num ++
+                        }
+                      }
+                    }
+                  }
+                }
+              }else {
+                if (rightid === ri.orderId) {
+                  this.$set(ri, 'flag', 1);
+                  rights.num++;
+                }
               }
-              if (rightid === ri.orderId) {
-                this.$set(ri, 'flag', 1);
-                rights.num++;
-              }
+
             }
           });
           if (rights.num === rights.allowRightsConditionDtoList.length) {
@@ -940,7 +973,7 @@ export default {
           }
         })
         item.rightsBrandC = brands.join(',')
-        this.$set(item, 'minesGray', true);
+        // this.$set(item, 'minesGray', true);
         if (item.isOptional === 1) {
           this.$set(item, 'addGray', false);
         } else {
@@ -949,6 +982,8 @@ export default {
         if (item.selectedNum !== 0) {
           debugger;
           this.$set(item, 'minesGray', false);
+        }else {
+          this.$set(item, 'minesGray', true);
         }
       });
       if (type === 1) {

@@ -46,19 +46,23 @@
        <!--按特定型号组合-->
         <div class="activity-item"  v-show="getData.setsCombineMode == '1'">
           <span class="activity-name-icon">购</span>
-          <span class="activity-common-text activity-common-left activity-common-product" v-for="(rightsSetsCombine ,j) in item.rightsSetsCombineDtoList">
+          <span class="activity-product" v-for="(rightsSetsCombine ,j) in item.rightsSetsCombineDtoList">
             <span v-show="rightsSetsCombine.productModel == null">所有{{rightsSetsCombine.industryName}}
             </span>
+            <span v-show="item.productCombineSymbols == 'and' && j !== item.rightsSetsCombineDtoList.length - 1">+</span>
+          <span v-show="item.productCombineSymbols == 'or' && j !== item.rightsSetsCombineDtoList.length - 1">/</span>
           </span>
-          <span class="activity-common-text activity-common-left activity-common-product" v-for="(rightsSetsCombine ,j) in item.rightsSetsCombineDtoList">
+          <span class="activity-product" v-for="(rightsSetsCombine ,j) in item.rightsSetsCombineDtoList">
             <span v-show="rightsSetsCombine.productModel != null">
               <span v-for="(rightsSetsPro ,l) in rightsSetsCombine.rightsProductDtoList">
                 {{rightsSetsPro.productModel}}{{rightsSetsPro.industryName}}
               </span>
+              <span v-show="item.productCombineSymbols == 'and' && j !== item.rightsSetsCombineDtoList.length - 1">+</span>
+            <span v-show="item.productCombineSymbols == 'or' && j !== item.rightsSetsCombineDtoList.length - 1">/</span>
             </span>
           </span>
-          <span v-show="item.productCombineSymbols == 'and'">+</span>
-          <span v-show="item.productCombineSymbols == 'or'">/</span>
+          <!--<span v-show="item.productCombineSymbols == 'and'">+</span>-->
+          <!--<span v-show="item.productCombineSymbols == 'or'">/</span>-->
         </div>
         <!--按满赠-->
         <div class="activity-item"  v-show=" getData.setsCombineMode == '2'">
@@ -349,12 +353,14 @@ export default {
   }
 
   .activity-common-product {
-    width: 366px;
+    /*width: 366px;*/
+    width: 100px;
   }
 
   .activity-item {
     display: flex;
     justify-content: space-between;
+    position: relative;
   }
 
   .activity-item-gift {
@@ -371,7 +377,7 @@ export default {
   }
   .activity-float{
     position: absolute;
-    margin-left: 400px;
+    margin-left: 440px;
   }
 
   .activity-check-gift {
@@ -400,6 +406,10 @@ export default {
   .activity-recommend-gift-text {
     font-size: 24px;
     color: #999;
+  }
+  .activity-product{
+    font-size: 24px;
+    color: #666;
   }
 
   .activity-tip-text {
