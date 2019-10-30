@@ -107,10 +107,12 @@ export default {
       orderNo: '',
     };
   },
-  created() {
+  activated() {
     console.log('tag', this.$route.params);
     this.orderNo = this.$route.params.orderNo;
     this.getData();
+  },
+  created() {
   },
   methods: {
     skipUpload() {
