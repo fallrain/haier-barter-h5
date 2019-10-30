@@ -426,6 +426,7 @@ export default {
       queryInstall: false,
       multyBuy:false,
       saveType:1,
+      isYJHX:false
 
     };
   },
@@ -513,16 +514,25 @@ export default {
       this.queryCustomerDefault();
     }
   },
-  created() {debugger
+  created() {
     this.addressData = addressData;
     this.userParam = JSON.parse(localStorage.getItem('userinfo'));
     this.shopId = this.userParam.shopId;
+    this.queryUserList();
+    this.getUserStore();
     if(this.$route.params.region === 'hand') {
       this.handRegion = true
     }
-    this.queryUserList();
+    if(this.getQueryString('info')){
+      this.isYJHX = true
+      this.customerInfo.username = this.getQueryString('info').username
+      this.customerInfo.mobile = this.getQueryString('info').mobile
+      this.customerInfo.customerId = this.getQueryString('info').customerId
+      this.customerInfo.userId = ''
+      this.haveCustomer = true
+      this.haveConsignee = false
+    }
 
-    this.getUserStore();
     if (this.$route.params.customerConsigneeInfo.businessScenarios) {
       this.orderSource = this.$route.params.customerConsigneeInfo.businessScenarios;
     } else {
@@ -1008,7 +1018,6 @@ export default {
     },
     addAddress() {
       // 添加新地址
-
       this.region = 'add';
       this.$router.push({
         name: 'Order.AddAddress',
@@ -1016,12 +1025,16 @@ export default {
       });
     },
     addNew() {
-      /* 添加顾客信息 */
-      this.region = 'userAdd';
-      this.$router.push({
-        name: 'Order.AddAddress',
-        params: { region: this.region, info: JSON.stringify(this.customerInfo) }
-      });
+      if(!this.isYJHX){
+        /* 添加顾客信息 */
+        this.region = 'userAdd';
+        this.$router.push({
+          name: 'Order.AddAddress',
+          params: { region: this.region, info: JSON.stringify(this.customerInfo) }
+        });
+      }else {
+        this.addAddress()
+      }
     },
     changeAddress(item) {
       this.region = 'edit';

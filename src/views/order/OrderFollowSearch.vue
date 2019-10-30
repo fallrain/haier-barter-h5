@@ -37,6 +37,7 @@
         @followButtonClick="followButtonClicked"
         @againEntry="againEntry"
         @itemClick="itemClick"
+        @gujiaClick="gujiaClick()"
         @userService="userService"
         @maybeBuyer="maybeBuyer"
       ></b-order-follow-item>
@@ -55,6 +56,7 @@
         @followButtonClick="followButtonClicked"
         @againEntry="againEntry"
         @itemClick="itemClick"
+        @gujiaClick="gujiaClick()"
         @userService="userService"
         @maybeBuyer="maybeBuyer"
       ></b-order-follow-item>
@@ -72,6 +74,7 @@
         @updateOrderType="updateOrderType"
         @followButtonClick="followButtonClicked"
         @itemClick="itemClick()"
+        @gujiaClick="gujiaClick()"
       ></b-order-follow-item>
     </div>
     <div
@@ -88,6 +91,7 @@
         @followButtonClick="followButtonClicked"
         @userService="userService"
         @itemClick="itemClick()"
+        @gujiaClick="gujiaClick()"
         @maybeBuyer="maybeBuyer"
       ></b-order-follow-item>
     </div>
@@ -239,27 +243,27 @@ export default {
       this.curTab = 4;
       localStorage.setItem('confirm', '');
     }
-    const userinfostr = localStorage.getItem('userinfo');
-    this.userinfo = JSON.parse(userinfostr);
-    // this.userinfo = {
-    //   // hmcid: 'a0008949',
-    //   // mobile: '18561715460',
-    //   // shopId: '8800136445',
-    //   // hmcid:'01467897',
-    //   // mobile: '15253269729',
-    //   // shopId: '8700000484',
-    //   hmcid: 'a0032254',
-    //   mobile: '15621017056',
-    //   shopId: '8700048360',
-    //   // hmcid: '18000560',
-    //   // orderMode: 'Haier',
-    //   // orderMode: 'Casarte',
-    //   // mobile: '15621017056',
-    //   // shopId: '8800266470',
-    //   token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IkEwMDMyMjU0Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MTk3MjMwNywiZXhwIjoxNTcyODM2MzA3fQ.pSgDmSsv-CQypYKOi3qCFyN_SY3FC3whHGYV7faM-I8'}
-    // const Str = JSON.stringify(this.userinfo);
-    // localStorage.setItem('userinfo', Str);
-    // localStorage.setItem('acces_token', this.userinfo.token);
+    // const userinfostr = localStorage.getItem('userinfo');
+    // this.userinfo = JSON.parse(userinfostr);
+    this.userinfo = {
+      // hmcid: 'a0008949',
+      // mobile: '18561715460',
+      // shopId: '8800136445',
+      // hmcid:'01467897',
+      // mobile: '15253269729',
+      // shopId: '8700000484',
+      hmcid: 'a0032254',
+      mobile: '15621017056',
+      shopId: '8700048360',
+      // hmcid: '18000560',
+      // orderMode: 'Haier',
+      // orderMode: 'Casarte',
+      // mobile: '15621017056',
+      // shopId: '8800266470',
+      token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IkEwMDMyMjU0Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MTk3MjMwNywiZXhwIjoxNTcyODM2MzA3fQ.pSgDmSsv-CQypYKOi3qCFyN_SY3FC3whHGYV7faM-I8'}
+    const Str = JSON.stringify(this.userinfo);
+    localStorage.setItem('userinfo', Str);
+    localStorage.setItem('acces_token', this.userinfo.token);
     this.getNoticeData();
   },
   computed: {
@@ -341,6 +345,12 @@ export default {
       this.$router.push({
         name: 'Order.OrderDetail',
         params: { orderNo: this.currentList[index % 10].orderNo }
+      });
+    },
+    gujiaClick(item){
+      wx.miniProgram.navigateTo({
+        // url: `/pages/userService/userService?userId=${item.userId}&userName=${item.userName}&mobile=${item.userMobile}&workFlowId=${item.workFlowId}&flowStatus=${item.flowStatus}&domainName=${item.domainName}&id=${item.id}` });
+        url: `/pages/message/valuationInfo/valuationInfo?odlfornewdbId=${item.sourceSn}&workFlowId=${item.id}`
       });
     },
     againEntry(item) {
