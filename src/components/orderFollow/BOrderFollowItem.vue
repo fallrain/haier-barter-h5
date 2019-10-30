@@ -1,5 +1,5 @@
 <template>
-  <div class="orderFollowItemClass" >
+  <div class="orderFollowItemClass">
     <div class="bar-v">
       <div
         class="bar-class"
@@ -11,8 +11,8 @@
           v-bind:class="{active:item.isActive}"
           @click="headSwitch(index)"
         >{{item.name}}
-        <i class="iconfont icon-jiantou9" v-show="!item.isActive"></i>
-        <i class="iconfont2 icon-xialaactive-copy" v-show="item.isActive"></i>
+          <i class="iconfont icon-jiantou9" v-show="!item.isActive"></i>
+          <i class="iconfont2 icon-xialaactive-copy" v-show="item.isActive"></i>
         </p>
       </div>
     </div>
@@ -27,7 +27,7 @@
       :list="scenarioList"
       @popButtonClicked="buttonClicked"
     ></b-pop-button>
-<!--    <div style="height: 82px;"></div>-->
+    <!--    <div style="height: 82px;"></div>-->
     <div
       class="label-class"
       v-for="(followItem,index) in list"
@@ -39,7 +39,7 @@
         class="labelImage"
         v-show="followItem.businessScenarios =='YZZJ'"
       >
-       <img
+      <img
         src="@/assets/images/orderFollow-up/yijiuhuanxin@3x.png"
         class="labelImage"
         v-show="followItem.businessScenarios =='YJHX'"
@@ -80,7 +80,8 @@
             class="telImage"
           >
         </span>
-        <span class="sex-class-tel"> <a :href="'tel:' + followItem.userMobile" class="telClass" id="manual_bind_click_way">{{followItem.userMobile}}</a></span>
+        <span class="sex-class-tel"> <a :href="'tel:' + followItem.userMobile" class="telClass"
+                                        id="manual_bind_click_way">{{followItem.userMobile}}</a></span>
       </div>
       <div class="row-class">
         <img
@@ -103,35 +104,41 @@
           class="timeImage"
         >
         <span class="time-label">{{followItem.updatedTime}}</span>
-        <span v-show="followItem.flowStatus !== 1 && followItem.flowStatus !== 0 && followItem.flowStatus !== 3&& followItem.flowStatus !== 2&& (followItem.add1 !=null || followItem.add2 !=null)" @click="detailHide(index,followItem)">
+        <span
+          v-show="followItem.flowStatus !== 1 && followItem.flowStatus !== 0 && followItem.flowStatus !== 3&& followItem.flowStatus !== 2&& (followItem.add1 !=null || followItem.add2 !=null)"
+          @click="detailHide(index,followItem)">
           <span class="information-class">详细信息</span>
           </span>
-        <span v-show="followItem.businessScenarios === 'YJHX'" @click="gujiaClick(followItem)"><span class="information-class-de">估价详情</span></span>
-        <span v-show="followItem.flowStatus === 1"  @click="itemClick(index)">
+        <span v-show="followItem.businessScenarios === 'YJHX'" @click="gujiaClick(followItem)">
+          <span
+            class="information-class-de"
+          >估价详情</span>
+        </span>
+        <span v-show="followItem.flowStatus === 1" @click="itemClick(index)">
           <span class="information-class-de">查看详情</span>
           <!--<img-->
-            <!--src="@/assets/images/orderFollow-up/xialablue@3x.png"-->
-            <!--class="information-xiala"-->
+          <!--src="@/assets/images/orderFollow-up/xialablue@3x.png"-->
+          <!--class="information-xiala"-->
 
-            <!--v-show="!followItem.detailShow"-->
+          <!--v-show="!followItem.detailShow"-->
           <!--&gt;-->
-           <!--<img-->
-             <!--src="@/assets/images/orderFollow-up/shangla@3x.png"-->
-             <!--class="information-xiala"-->
-             <!--v-show="followItem.detailShow"-->
-           <!--&gt;-->
+          <!--<img-->
+          <!--src="@/assets/images/orderFollow-up/shangla@3x.png"-->
+          <!--class="information-xiala"-->
+          <!--v-show="followItem.detailShow"-->
+          <!--&gt;-->
           </span>
 
       </div>
       <!--<div-->
-        <!--v-show="followItem.detailShow && followItem.showDetail"-->
-        <!--v-for="(item,index) in followItem.productList"-->
-        <!--:key="index"-->
+      <!--v-show="followItem.detailShow && followItem.showDetail"-->
+      <!--v-for="(item,index) in followItem.productList"-->
+      <!--:key="index"-->
       <!--&gt;-->
-        <!--<p>-->
-          <!--<span class="orderFollowItem-span">{{item.productBrandCN}}/{{item.productCategoryName}}，{{item.productModel}}</span>-->
-          <!--<span class="orderFollowItem-span-blue">￥{{item.bccPrice}}</span>-->
-        <!--</p>-->
+      <!--<p>-->
+      <!--<span class="orderFollowItem-span">{{item.productBrandCN}}/{{item.productCategoryName}}，{{item.productModel}}</span>-->
+      <!--<span class="orderFollowItem-span-blue">￥{{item.bccPrice}}</span>-->
+      <!--</p>-->
       <!--</div>-->
       <div
         class="information-p"
@@ -147,9 +154,16 @@
           @click="showMore(index)"
           v-show="followItem.flowStatus != '1'"
         >
-
-        <p class="bottom-button" v-for="(button,index) in followItem.buttonList" @click="followButtonClick(button,followItem)">{{button.name}}</p>
-
+        <!--估价不显示录单操作-->
+        <span v-if="followItem.businessScenarios !== 'YJHX'">
+          <p
+            class="bottom-button"
+            v-for="(button,index) in followItem.buttonList"
+            :key="index"
+            @click="followButtonClick(button,followItem)"
+          >{{button.name}}
+          </p>
+        </span>
 
         <!-- <p class="bottom-button">发券</p> -->
         <div
@@ -175,7 +189,7 @@
     >
 
       <div class="popInput">
-      <p class="pop-p">暂不跟进原因</p>
+        <p class="pop-p">暂不跟进原因</p>
         <input
           class="input-class"
           placeholder="请输入"
@@ -194,10 +208,15 @@
 
 <script>
 import {
-  Icon, Toast, Popup, PopupTitleBar, Button
+  Button,
+  Icon,
+  Popup,
+  PopupTitleBar,
+  Toast
 } from 'mand-mobile';
 import {
-  BPopSortType, BPopButton
+  BPopButton,
+  BPopSortType
 } from '@/components/form';
 
 export default {
@@ -305,7 +324,7 @@ export default {
   created() {
     this.productService.commonTypeQuery('BUSINESS_SCENARIOS').then((res) => {
       if (res.code === 1) {
-        this.scenarioList = res.data
+        this.scenarioList = res.data;
       }
     });
   },
@@ -319,7 +338,7 @@ export default {
         this.popShow = true;
         return;
       }
-      const  type = '3'
+      const type = '3';
       this.orderService
         .updateOrderFollowByType(
           {},
@@ -331,7 +350,7 @@ export default {
         )
         .then((res) => {
           if (res.code === 1) {
-            this.remark = ''
+            this.remark = '';
             console.log('this.list', this.list);
             Toast.succeed('状态更新成功');
             this.popShow = false;
@@ -374,9 +393,9 @@ export default {
         this.scenarioShow = false;
       }
     },
-    preparation() {},
+    preparation() {
+    },
     checkClicked(val) {
-      ;
       this.checkedsortId = val[0];
       for (let i = 0; i < this.headList.length; i++) {
         this.headList[i].isActive = false;
@@ -393,7 +412,8 @@ export default {
       }
       this.$emit('popButtonClicked', val);
     },
-    followButtonClick(button, item) {console.log(item)
+    followButtonClick(button, item) {
+      console.log(item);
       const orderMode = JSON.parse(localStorage.getItem('userinfo')).orderMode;
       if (orderMode == 'Casarte') {
         if (item.businessScenarios == 'SGLD') {
@@ -402,7 +422,7 @@ export default {
         }
       }
       this.stopProcess();
-      ;
+
       this.$emit('followButtonClick', button, item);
     },
     showMore(index) {
@@ -432,7 +452,7 @@ export default {
         this.$emit('searchProduct', item);
       }
     },
-    updateOrderType(type, item) {debugger
+    updateOrderType(type, item) {
       this.stopProcess();
       for (let i = 0; i < this.list.length; i++) {
         this.$set(this.list[i], 'show', false);
@@ -456,8 +476,8 @@ export default {
         return;
       }
       if (type === '3') {
-        this.popShow = true
-        return
+        this.popShow = true;
+        return;
       }
       this.orderService
         .updateOrderFollowByType(
@@ -470,7 +490,7 @@ export default {
         )
         .then((res) => {
           if (res.code === 1) {
-            this.remark = ''
+            this.remark = '';
             console.log('this.list', this.list);
             Toast.succeed(res.msg);
             this.$emit('updateOrderType', type);
@@ -482,344 +502,373 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.orderFollowButton {
-  padding-left: 24px;
-  padding-right: 24px;
-  height: 60px;
-  line-height: 60px;
-  text-align: center;
-  color: #1969c6;
-  border: 1px #1969c6 solid;
-  font-size: 28px;
-  width: 180px;
-  border-radius: 30px;
-  position: absolute;
-  right: 20px;
-  top: 10px;
-}
-
-.orderFollowButtonRow {
-  padding-left: 24px;
-  padding-right: 24px;
-  height: 60px;
-  line-height: 60px;
-  text-align: center;
-  color: #666666;
-  border: 1px #cccccc solid;
-  font-size: 24px;
-  // width: 180px;
-  border-radius: 30px;
-  float: left;
-  margin-top: 10px;
-  margin-left: 24px;
-}
-
-.bottom-button {
-  padding-left: 24px;
-  padding-right: 24px;
-  height: 60px;
-  line-height: 60px;
-  text-align: center;
-  color: #1969c6;
-  border: 1px #1969c6 solid;
-  font-size: 24px;
-  // width: 180px;
-  border-radius: 30px;
-  float: right;
-  margin-top: 5px;
-  margin-left: 10px;
-}
-.bar-class .order-span.active {
-  color: #1969c6;
-}
-.order-span {
-  display: inline-block;
-  color: #666666;
-  font-size: 28px;
-  padding-left: 56px;
-  line-height: 72px;
-}
-.order-span-blue {
-  display: inline-block;
-  color: #1969c6;
-  font-size: 28px;
-  padding-left: 56px;
-  line-height: 72px;
-}
-
-.xialaimage {
-  width: 36px;
-  height: 36px;
-  margin-top: 20px;
-  position: absolute;
-  margin-left: 14px;
-}
-
-.brandImage {
-  height: 36px;
-  width: 90px;
-}
-.telImage {
-  height: 32px;
-  width: 32px;
-  margin-left: 10px;
-  padding-bottom: 2px;
-  top: 0;
-}
-.labelImage {
-  height: 72px;
-  width: 56px;
-  float: right;
-  right: 24px;
-}
-.timeImage {
-  width: 32px;
-  height: 32px;
-  position: absolute;
-  margin-top: 5px;
-}
-
-.time-label {
-  color: #bbbbbb;
-  font-size: 28px;
-  margin-left: 40px;
-  display: inline-block;
-  width: 300px;
-}
-
-.bar-class {
-  height: 72px;
-  width: 250px;
-  float: left;
-  position: relative;
-  .iconfont{
-    color: #666666
-  }
-  .iconfont2{
-    color: #1969c6 ;
-   font-family: "iconfont" !important;
-  font-size: 16px;
-  font-style: normal;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  .orderFollowButton {
+    padding-left: 24px;
+    padding-right: 24px;
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+    color: #1969c6;
+    border: 1px #1969c6 solid;
+    font-size: 28px;
+    width: 180px;
+    border-radius: 30px;
+    position: absolute;
+    right: 20px;
+    top: 10px;
   }
 
-}
+  .orderFollowButtonRow {
+    padding-left: 24px;
+    padding-right: 24px;
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+    color: #666666;
+    border: 1px #cccccc solid;
+    font-size: 24px;
+    // width: 180px;
+    border-radius: 30px;
+    float: left;
+    margin-top: 10px;
+    margin-left: 24px;
+  }
 
-.bar-v {
-  background-color: white;
-  height: 72px;
-  /*position: absolute;*/
-  position: fixed;
-  top: 90px;
-  z-index: 15;
-}
+  .bottom-button {
+    padding-left: 24px;
+    padding-right: 24px;
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+    color: #1969c6;
+    border: 1px #1969c6 solid;
+    font-size: 24px;
+    // width: 180px;
+    border-radius: 30px;
+    float: right;
+    margin-top: 5px;
+    margin-left: 10px;
+  }
 
-.label-class {
-  margin-top: 16px;
-  // height: 290px;
-  background-color: white;
-  padding: 24px;
-}
+  .bar-class .order-span.active {
+    color: #1969c6;
+  }
 
-.label-span {
-  // display: inline;
-  color: #333333;
-  font-size: 36px;
-}
+  .order-span {
+    display: inline-block;
+    color: #666666;
+    font-size: 28px;
+    padding-left: 56px;
+    line-height: 72px;
+  }
 
-.sex-class {
-  color: #999999;
-  font-size: 28px;
-  margin-left: 10px;
-}
-.sex-class-tel {
-  color: #999999;
-  font-size: 28px;
-  margin-left: 10px;
-  a {
+  .order-span-blue {
+    display: inline-block;
+    color: #1969c6;
+    font-size: 28px;
+    padding-left: 56px;
+    line-height: 72px;
+  }
+
+  .xialaimage {
+    width: 36px;
+    height: 36px;
+    margin-top: 20px;
+    position: absolute;
+    margin-left: 14px;
+  }
+
+  .brandImage {
+    height: 36px;
+    width: 90px;
+  }
+
+  .telImage {
+    height: 32px;
+    width: 32px;
+    margin-left: 10px;
+    padding-bottom: 2px;
+    top: 0;
+  }
+
+  .labelImage {
+    height: 72px;
+    width: 56px;
+    float: right;
+    right: 24px;
+  }
+
+  .timeImage {
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    margin-top: 5px;
+  }
+
+  .time-label {
+    color: #bbbbbb;
+    font-size: 28px;
+    margin-left: 40px;
+    display: inline-block;
+    width: 300px;
+  }
+
+  .bar-class {
+    height: 72px;
+    width: 250px;
+    float: left;
+    position: relative;
+
+    .iconfont {
+      color: #666666
+    }
+
+    .iconfont2 {
+      color: #1969c6;
+      font-family: "iconfont" !important;
+      font-size: 16px;
+      font-style: normal;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+  }
+
+  .bar-v {
+    background-color: white;
+    height: 72px;
+    /*position: absolute;*/
+    position: fixed;
+    top: 90px;
+    z-index: 15;
+  }
+
+  .label-class {
+    margin-top: 16px;
+    // height: 290px;
+    background-color: white;
+    padding: 24px;
+  }
+
+  .label-span {
+    // display: inline;
+    color: #333333;
+    font-size: 36px;
+  }
+
+  .sex-class {
     color: #999999;
-  }
-}
-
-.hand-class {
-  color: #f5a623;
-  font-size: 24px;
-  margin-left: 16px;
-}
-.handred-class {
-  color: #ff001f;
-  font-size: 24px;
-  margin-left: 16px;
-}
-.handgray-class {
-  color: #cccccc;
-  font-size: 24px;
-  margin-left: 16px;
-}
-
-.information-class {
-  color: #1969c6;
-  font-size: 28px;
-  margin-left: 200px;
-}
-.information-class-de{
-  color: #1969c6;
-  font-size: 28px;
-  margin-left: 230px;
-}
-.label-class {
-  position: relative;
-}
-.information-xiala {
-  width: 36px;
-  height: 36px;
-  margin-top: 5px;
-  position: absolute;
-  margin-left: 14px;
-}
-
-.information-p {
-  color: #666666;
-  font-size: 28px;
-  margin-top: 10px;
-  // line-height: 40px;
-  p {
-    line-height: 50px;
-    height: 50px;
-  }
-}
-
-.bottom-class {
-  margin-top: 20px;
-  padding-top: 15px;
-  height: 80px;
-  border-top: 1px solid #eeeeee;
-}
-
-.dian-Class {
-  width: 36px;
-  height: 6px;
-  margin-top: 30px;
-}
-
-.orderFollowItemClass {
-  background-color: #f5f5f5;
-}
-
-.app-container {
-  background-color: red !important;
-}
-
-.md-example-child-tab-bar-4 {
-  position: fixed;
-  bottom: 0;
-  width: 750px;
-  z-index: 10;
-  background-color: red;
-  .custom-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    // flex: 1;
-  }
-  .text {
-    font-size: 20px;
+    font-size: 28px;
+    margin-left: 10px;
   }
 
-  .md-tab-bar-inner {
-    width: 750px !important;
+  .sex-class-tel {
+    color: #999999;
+    font-size: 28px;
+    margin-left: 10px;
+
+    a {
+      color: #999999;
+    }
   }
 
-  .md-tab-bar {
-    padding: 0 !important;
+  .hand-class {
+    color: #f5a623;
+    font-size: 24px;
+    margin-left: 16px;
   }
-}
-.row-class {
-  margin-bottom: 10px;
-}
-.show-class {
-  // position: absolute;
-  // height: 140px;
-  // width: 240px;
-  // background-color: white;
-  // z-index: 10;
-}
-.show-p {
-  color: #666666;
-  font-size: 28px;
-  text-align: center;
-  height: 80px;
-  line-height: 80px;
-  white-space: 200px;
-  border-bottom: 1px solid #999999;
-}
 
-.demo {
-  width: 200px;
-  /*height: 200px;*/
-  border: 1px solid #999999;
-  background-color: white;
-  z-index: 10;
-  position: absolute;
-  margin-top: 10px;
-  border-radius: 10px;
-}
-.out,
-.in {
-  position: absolute;
-  width: 0;
-  height: 0px;
-}
-.out {
-  border: 20px solid transparent;
-  border-bottom-color: #999999; /*这里的颜色一定要跟上面demo边框颜色一样*/
-  top: -40px;
-  left: 20%;
-}
-.in {
-  border: 18px solid transparent;
-  border-bottom-color: #fff; /*这里的颜色一定要跟demo背景颜色一样*/
-  top: -35px;
-  left: 21%;
-}
-.orderFollowItem-span-blue {
-  color: #1969c6;
-  font-size: 28px;
-  float: right;
-}
-.orderFollowItem-span {
-  color: #666666;
-  font-size: 28px;
-}
-  .telClass{
+  .handred-class {
+    color: #ff001f;
+    font-size: 24px;
+    margin-left: 16px;
+  }
+
+  .handgray-class {
+    color: #cccccc;
+    font-size: 24px;
+    margin-left: 16px;
+  }
+
+  .information-class {
+    color: #1969c6;
+    font-size: 28px;
+    margin-left: 200px;
+  }
+
+  .information-class-de {
+    color: #1969c6;
+    font-size: 28px;
+    margin-left: 230px;
+  }
+
+  .label-class {
+    position: relative;
+  }
+
+  .information-xiala {
+    width: 36px;
+    height: 36px;
+    margin-top: 5px;
+    position: absolute;
+    margin-left: 14px;
+  }
+
+  .information-p {
+    color: #666666;
+    font-size: 28px;
+    margin-top: 10px;
+    // line-height: 40px;
+    p {
+      line-height: 50px;
+      height: 50px;
+    }
+  }
+
+  .bottom-class {
+    margin-top: 20px;
+    padding-top: 15px;
+    height: 80px;
+    border-top: 1px solid #eeeeee;
+  }
+
+  .dian-Class {
+    width: 36px;
+    height: 6px;
+    margin-top: 30px;
+  }
+
+  .orderFollowItemClass {
+    background-color: #f5f5f5;
+  }
+
+  .app-container {
+    background-color: red !important;
+  }
+
+  .md-example-child-tab-bar-4 {
+    position: fixed;
+    bottom: 0;
+    width: 750px;
+    z-index: 10;
+    background-color: red;
+
+    .custom-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      // flex: 1;
+    }
+
+    .text {
+      font-size: 20px;
+    }
+
+    .md-tab-bar-inner {
+      width: 750px !important;
+    }
+
+    .md-tab-bar {
+      padding: 0 !important;
+    }
+  }
+
+  .row-class {
+    margin-bottom: 10px;
+  }
+
+  .show-class {
+    // position: absolute;
+    // height: 140px;
+    // width: 240px;
+    // background-color: white;
+    // z-index: 10;
+  }
+
+  .show-p {
+    color: #666666;
+    font-size: 28px;
+    text-align: center;
+    height: 80px;
+    line-height: 80px;
+    white-space: 200px;
+    border-bottom: 1px solid #999999;
+  }
+
+  .demo {
+    width: 200px;
+    /*height: 200px;*/
+    border: 1px solid #999999;
+    background-color: white;
+    z-index: 10;
+    position: absolute;
+    margin-top: 10px;
+    border-radius: 10px;
+  }
+
+  .out,
+  .in {
+    position: absolute;
+    width: 0;
+    height: 0px;
+  }
+
+  .out {
+    border: 20px solid transparent;
+    border-bottom-color: #999999; /*这里的颜色一定要跟上面demo边框颜色一样*/
+    top: -40px;
+    left: 20%;
+  }
+
+  .in {
+    border: 18px solid transparent;
+    border-bottom-color: #fff; /*这里的颜色一定要跟demo背景颜色一样*/
+    top: -35px;
+    left: 21%;
+  }
+
+  .orderFollowItem-span-blue {
+    color: #1969c6;
+    font-size: 28px;
+    float: right;
+  }
+
+  .orderFollowItem-span {
+    color: #666666;
+    font-size: 28px;
+  }
+
+  .telClass {
     z-index: 100;
   }
 
-.popInput{
-  width: 600px;
-  height: 300px;
-  background-color: white;
-  text-align: center;
-  .pop-con{
-    margin-top: 30px;
+  .popInput {
+    width: 600px;
+    height: 300px;
+    background-color: white;
     text-align: center;
-    color: white;
-    width: 200px;
-    padding: 20px;
-    background-color: #1969C6;
-    border-radius: 20px;
-    margin-left: 200px;
+
+    .pop-con {
+      margin-top: 30px;
+      text-align: center;
+      color: white;
+      width: 200px;
+      padding: 20px;
+      background-color: #1969C6;
+      border-radius: 20px;
+      margin-left: 200px;
+    }
   }
-}
-.pop-p{
-  text-align: center;
-  padding: 20px;
-  width: 100%;
-  color: #333333;
-}
+
+  .pop-p {
+    text-align: center;
+    padding: 20px;
+    width: 100%;
+    color: #333333;
+  }
+
   .input-class {
     width: 550px;
     background-color: white;
