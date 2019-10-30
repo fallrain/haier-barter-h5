@@ -233,13 +233,8 @@ export default {
       smld: false
     };
   },
-  created() {
-    // 不加入双向绑定
-    this.addressData = addressData;
-    this.customerInfo.hmcId = JSON.parse(localStorage.getItem('userinfo')).hmcid;
-    this.customerInfo.tag = [];
-    this.getFamilyItem();
-
+  activated() {
+    debugger;
     if (this.$route.params) {
       debugger;
       this.region = this.$route.params.region;
@@ -258,7 +253,16 @@ export default {
           this.customerInfo.mobile = JSON.parse(this.$route.params.info).mobile;
           this.customerInfo.userId = JSON.parse(this.$route.params.info).userId;
           this.smld = true;
-        } else {
+        } else if (this.region === 'edit') {
+          this.customerInfo.username = JSON.parse(this.$route.params.info).username;
+          this.customerInfo.mobile = JSON.parse(this.$route.params.info).mobile;
+          this.customerInfo.userId = JSON.parse(this.$route.params.info).userId;
+          this.customerInfo.consigneeUserName = JSON.parse(this.$route.params.info).consigneeUserName;
+          this.customerInfo.consigneeUserPhone = JSON.parse(this.$route.params.info).consigneeUserPhone;
+          this.customerInfo.sex = JSON.parse(this.$route.params.info).sex;
+          this.customerInfo.address = JSON.parse(this.$route.params.info).address;
+        }else {
+          console.log(JSON.parse(this.$route.params.info));
           this.customerInfo.username = JSON.parse(this.$route.params.info).username;
           this.customerInfo.mobile = JSON.parse(this.$route.params.info).mobile;
           this.customerInfo.userId = JSON.parse(this.$route.params.info).userId;
@@ -281,6 +285,13 @@ export default {
         this.addressName = `${this.newAddress.provinceName}/${this.newAddress.cityName}/${this.newAddress.districtName}`;
       }
     }
+  },
+  created() {
+    // 不加入双向绑定
+    this.addressData = addressData;
+    this.customerInfo.hmcId = JSON.parse(localStorage.getItem('userinfo')).hmcid;
+    this.customerInfo.tag = [];
+    this.getFamilyItem();
   },
   computed: {
     tagName() {
