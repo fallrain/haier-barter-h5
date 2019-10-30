@@ -434,8 +434,8 @@ export default {
       if (obj.rightsJson) {
         this.rightsJson = obj.rightsJson;
         const right = JSON.parse(obj.rightsJson);
-        this.rightName = right.rightsName;
-        this.rightId = right.rightsId;
+        this.rightName = right.rightName;
+        this.rightId = right.rightId;
         const rightsPro = JSON.parse(obj.rightsJson).rightName.split(',');
         if (!rightsPro.length) {
           return;
@@ -443,6 +443,7 @@ export default {
         this.isDetail = true;
         console.log(rightsPro);
         this.rightsList = rightsPro;
+        debugger
       }
       if (obj.product) {
         if (!obj.product.productGroupName) {

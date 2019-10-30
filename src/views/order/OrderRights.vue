@@ -676,59 +676,67 @@ export default {
       });
     },
     btmConfirmClick() {
-      this.jsonRightsList(this.shareRightsList, 'share');
-      this.jsonRightsList(this.mutexRightsList, 'mutex');
+      this.jsonRightsList(this.shareRightsList,);
+      this.jsonRightsList(this.mutexRightsList,);
     },
-    jsonRightsList(list, type) {
-      list.forEach((item) => {
-        if (item.isSelected) {
-          for (let i = 0; i < item.selectedNum; i++) {
-            this.nameList.push(item.rightsName);
-            this.idList.push(item.rightsNo);
-          }
-          const r = {
-            rightsId: item.rightsNo,
-            rightsGroup: '',
-            configId: ''
-          };
-          if (item.rightsType === 'single') {
-            item.rightsSelectedGroupDtoList.forEach((sel) => {
-              let timestamp = new Date().getTime();
-              let Num = 0;
-              for (let i = 0; i < 3; i++) {
-                Num += Math.floor(Math.random() * 10);
-              }
-              timestamp += Num;
-              const a = {};
-              a.orderDetailId = sel.orderId;
-              a.rightsGroup = timestamp;
-              r.rightsGroup = timestamp;
-              this.rightsDetailList.push(a);
-              r.configId = sel.configId;
-              this.rightsUserDto.push(r);
-            });
-          } else {
-            item.rightsSelectedGroupDtoList.forEach((sel) => {
-              let timestamp = new Date().getTime();
-              let Num = 0;
-              for (let i = 0; i < 3; i++) {
-                Num += Math.floor(Math.random() * 10);
-              }
-              timestamp += Num;
-              sel.orderIdList.ids.forEach((val) => {
-                const a = {};
-                a.orderDetailId = val;
-                a.rightsGroup = timestamp;
-                this.rightsDetailList.push(a);
-              });
-              r.rightsGroup = timestamp;
-              r.configId = sel.configId;
-              this.rightsUserDto.push(r);
-            });
-          }
-        }
-      });
-      this.num++;
+    jsonRightsList(list) {
+     if(list.length === 0){
+      this.num ++
+     }else {
+       list.forEach((item) => {
+         if (item.isSelected) {
+           for (let i = 0; i < item.selectedNum; i++) {
+             this.nameList.push(item.rightsName);
+             this.idList.push(item.rightsNo);
+           }
+           const r = {
+             rightsId: item.rightsNo,
+             rightsGroup: '',
+             configId: ''
+           };
+           if (item.rightsType === 'single') {
+             item.rightsSelectedGroupDtoList.forEach((sel) => {
+               let timestamp = new Date().getTime();
+               let Num = 0;
+               for (let i = 0; i < 3; i++) {
+                 Num += Math.floor(Math.random() * 10);
+               }
+               timestamp += Num;
+               const a = {};
+               a.orderDetailId = sel.orderId;
+               a.rightsGroup = timestamp;
+               r.rightsGroup = timestamp;
+               this.rightsDetailList.push(a);
+               r.configId = sel.configId;
+               this.rightsUserDto.push(r);
+             });
+           } else {
+             item.rightsSelectedGroupDtoList.forEach((sel) => {
+               debugger
+               let timestamp = new Date().getTime();
+               let Num = 0;
+               for (let i = 0; i < 3; i++) {
+                 Num += Math.floor(Math.random() * 10);
+               }
+               timestamp += Num;
+               sel.orderIdList.forEach((val) => {
+                 val.ids.forEach(v =>{
+                   const a = {};
+                 a.orderDetailId = v;
+                 a.rightsGroup = timestamp;
+                 this.rightsDetailList.push(a);
+               });
+                 r.rightsGroup = timestamp;
+                 r.configId = sel.configId;
+                 this.rightsUserDto.push(r);
+                 })
+
+             });
+           }
+         }
+       });
+       this.num++;
+     }
       debugger;
       if (this.num === 2) {
         const rightJson = {};
