@@ -1026,6 +1026,7 @@ export default {
     changeAddress(item) {
       this.region = 'edit';
       if (this.addressList.length < 1) {
+        this.region = 'add';
         this.$router.push({
           name: 'Order.AddAddress',
           params: { region: this.region, info: JSON.stringify(item) }
