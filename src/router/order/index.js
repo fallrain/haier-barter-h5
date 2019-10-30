@@ -6,7 +6,7 @@ const OrderUploadInvoice = () => import(/* webpackChunkName: "OrderUploadInvoice
 const SearchProduct = () => import(/* webpackChunkName: "SearchProduct" */ '@/views/order/SearchProduct');// 搜索产品
 const AddUserTag = () => import('@/views/order/AddUserTag');
 const OrderFollowActivity = () => import('@/views/order/OrderFollowActivity');
-const OrderModify = () => import(/* webpackChunkName: "OrderEntry" */ '@/views/order/OrderModify');// 订单录入
+const OrderModify = () => import(/* webpackChunkName: "OrderModify" */ '@/views/order/OrderModify');// 订单录入
 const OrderConfirm = () => import(/* webpackChunkName: "OrderConfirm" */ '@/views/order/OrderConfirm');// 订单录入
 const OrderDetail = () => import(/* webpackChunkName: "OrderDetail" */ '@/views/order/OrderDetail');// 订单详情
 const ResidueGift = () => import(/* webpackChunkName: "OrderDetail" */ '@/views/order/ResidueGift');//查询权益剩余量
