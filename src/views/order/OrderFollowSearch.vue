@@ -37,6 +37,7 @@
         @followButtonClick="followButtonClicked"
         @againEntry="againEntry"
         @itemClick="itemClick"
+        @gujiaClick="gujiaClick()"
         @userService="userService"
         @maybeBuyer="maybeBuyer"
       ></b-order-follow-item>
@@ -55,6 +56,7 @@
         @followButtonClick="followButtonClicked"
         @againEntry="againEntry"
         @itemClick="itemClick"
+        @gujiaClick="gujiaClick()"
         @userService="userService"
         @maybeBuyer="maybeBuyer"
       ></b-order-follow-item>
@@ -72,6 +74,7 @@
         @updateOrderType="updateOrderType"
         @followButtonClick="followButtonClicked"
         @itemClick="itemClick()"
+        @gujiaClick="gujiaClick()"
       ></b-order-follow-item>
     </div>
     <div
@@ -88,6 +91,7 @@
         @followButtonClick="followButtonClicked"
         @userService="userService"
         @itemClick="itemClick()"
+        @gujiaClick="gujiaClick()"
         @maybeBuyer="maybeBuyer"
       ></b-order-follow-item>
     </div>
@@ -341,6 +345,12 @@ export default {
       this.$router.push({
         name: 'Order.OrderDetail',
         params: { orderNo: this.currentList[index % 10].orderNo }
+      });
+    },
+    gujiaClick(item){
+      wx.miniProgram.navigateTo({
+        // url: `/pages/userService/userService?userId=${item.userId}&userName=${item.userName}&mobile=${item.userMobile}&workFlowId=${item.workFlowId}&flowStatus=${item.flowStatus}&domainName=${item.domainName}&id=${item.id}` });
+        url: `/pages/message/valuationInfo/valuationInfo?odlfornewdbId=${item.sourceSn}&workFlowId=${item.id}`
       });
     },
     againEntry(item) {

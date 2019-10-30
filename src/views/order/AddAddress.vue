@@ -185,18 +185,29 @@ export default {
       customerInfo: {
         address: '',
         city: '',
-        // customerId: '',
         isDefault: false,
         district: '',
-        familyId: '',
+        id: '',
         familyItemCode: '',
-        // hmcId: 'A0008949',
         hmcId: '',
         mobile: '',
         province: '',
         sex: 1,
         userId: '',
-        source: '',
+        username: '',
+        tag: []
+      },
+      customerInfoCreate: {
+        address: '',
+        city: '',
+        isDefault: false,
+        district: '',
+        familyItemCode: '',
+        hmcId: '',
+        mobile: '',
+        province: '',
+        sex: 1,
+        userId: '',
         username: '',
         tag: []
       },
@@ -252,6 +263,9 @@ export default {
           this.customerInfo.username = JSON.parse(this.$route.params.info).username;
           this.customerInfo.mobile = JSON.parse(this.$route.params.info).mobile;
           this.customerInfo.userId = JSON.parse(this.$route.params.info).userId;
+          if(JSON.parse(this.$route.params.info).customerId){
+            this.customerInfo.customerId = JSON.parse(this.$route.params.info).customerId
+          }
           this.smld = true;
         } else if (this.region === 'edit') {
           this.customerInfo.username = JSON.parse(this.$route.params.info).username;
@@ -261,6 +275,7 @@ export default {
           this.customerInfo.consigneeUserPhone = JSON.parse(this.$route.params.info).consigneeUserPhone;
           this.customerInfo.sex = JSON.parse(this.$route.params.info).sex;
           this.customerInfo.address = JSON.parse(this.$route.params.info).address;
+          this.customerInfo.id = JSON.parse(this.$route.params.info).id;
         }else {
           console.log(JSON.parse(this.$route.params.info));
           this.customerInfo.username = JSON.parse(this.$route.params.info).username;
@@ -421,6 +436,7 @@ export default {
         delete this.customerInfo.tag;
       }
       if (this.region === 'add' || this.region === 'userAdd') {
+        delete this.customerInfo.id
         this.productService.addcustomerAddress(this.customerInfo, {}).then((res) => {
           if (res.code === 1) {
             Toast.succeed('地址添加成功');

@@ -105,18 +105,8 @@
         <span class="time-label">{{followItem.updatedTime}}</span>
         <span v-show="followItem.flowStatus !== 1 && followItem.flowStatus !== 0 && followItem.flowStatus !== 3&& followItem.flowStatus !== 2&& (followItem.add1 !=null || followItem.add2 !=null)" @click="detailHide(index,followItem)">
           <span class="information-class">详细信息</span>
-          <img
-            src="@/assets/images/orderFollow-up/xialablue@3x.png"
-            class="information-xiala"
-
-            v-show="!followItem.detailShow"
-          >
-           <img
-             src="@/assets/images/orderFollow-up/shangla@3x.png"
-             class="information-xiala"
-             v-show="followItem.detailShow"
-           >
           </span>
+        <span v-show="followItem.businessScenarios === 'YJHX'" @click="gujiaClick(followItem)"><span class="information-class-de">估价详情</span></span>
         <span v-show="followItem.flowStatus === 1"  @click="itemClick(index)">
           <span class="information-class-de">查看详情</span>
           <!--<img-->
@@ -352,6 +342,10 @@ export default {
     itemClick(index) {
       this.stopProcess();
       this.$emit('itemClick', index);
+    },
+    gujiaClick(followItem) {
+      this.stopProcess();
+      this.$emit('gujiaClick', followItem);
     },
     headSwitch(index) {
       if (index === this.preIndex) {

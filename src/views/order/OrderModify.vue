@@ -401,7 +401,8 @@ export default {
       sourceSn: '',
       queryInstall: false,
       isInstall: false,
-      saveType:1
+      saveType:1,
+      isProduct:false
     };
   },
   computed: {},
@@ -536,6 +537,7 @@ export default {
           this.productList[index].isInstall = pro.isInstall;
         } else {
           this.productList.push(pro);
+          this.isProduct = true
         }
         console.log(this.productList);
       });
@@ -578,26 +580,28 @@ export default {
           this.sourceSn = resData.sourceSn;
           this.recordMode = resData.recordMode;
           this.queryUserList(resData.storeId);
-          if(!this.isDetail){
+          if(!this.isDetail || !this.isProduct){
             if (resData.rightName) {
               this.rightsList = resData.rightName.split(',');
 
             }
           }
-          if (resData.orderDetailDtoList.length !== 0) {
-            this.productList = resData.orderDetailDtoList;
-            this.productList.forEach((item, index) => {
-              if (item.installTime) {
-                item.isInstall = true;
-              } else {
-                this.isReportInstall(item, index);
-              }
-              if (item.productBrand == 'haier') {
-                item.productBrandCN = '海尔';
-              } else {
-                item.productBrandCN = '卡萨帝';
-              }
-            });
+          if(!this.isProduct || !this.isDetail){
+            if (resData.orderDetailDtoList.length !== 0) {
+              this.productList = resData.orderDetailDtoList;
+              this.productList.forEach((item, index) => {
+                if (item.installTime) {
+                  item.isInstall = true;
+                } else {
+                  this.isReportInstall(item, index);
+                }
+                if (item.productBrand == 'haier') {
+                  item.productBrandCN = '海尔';
+                } else {
+                  item.productBrandCN = '卡萨帝';
+                }
+              });
+            }
           }
           this.queryCustomerDefault();
         }
