@@ -163,7 +163,7 @@ export default {
 
   },
   created() {
-    this.rightsType = this.getData.rightsType;
+    // this.rightsType = this.getData.rightsType;
   },
   methods: {
     setShowLimit() {

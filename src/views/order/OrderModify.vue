@@ -26,7 +26,10 @@
             >更改地址
             </button>
           </div>
-          <p class="orderEntry-user-address">
+          <p
+            v-if="consignee.address"
+            class="orderEntry-user-address"
+          >
             {{consignee.address.provinceName}}{{consignee.address.cityName}}{{consignee.address.districtName}}{{consignee.address.street}}
           </p>
         </div>
@@ -231,7 +234,7 @@ import {
 import addressData from '@/lib/address';
 
 export default {
-  name: 'OrderEntry',
+  name: 'OrderModify',
   components: {
     Toast,
     [Dialog.name]: Dialog,
@@ -575,10 +578,11 @@ export default {
           this.sourceSn = resData.sourceSn;
           this.recordMode = resData.recordMode;
           this.queryUserList(resData.storeId);
+          if(!this.isDetail){
+            if (resData.rightName) {
+              this.rightsList = resData.rightName.split(',');
 
-          if (resData.rightName) {
-            this.rightsList = resData.rightName.split(',');
-
+            }
           }
           if (resData.orderDetailDtoList.length !== 0) {
             this.productList = resData.orderDetailDtoList;
@@ -853,7 +857,7 @@ export default {
         // });
         this.$router.push({
           name: 'Order.OrderRights',
-          params: { orderInfo: info }
+          params: { orderInfo: info}
         });
         // this.$router.push({
         //   name: 'Order.ResidueGift',
