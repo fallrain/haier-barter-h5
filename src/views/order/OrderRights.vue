@@ -715,7 +715,7 @@ export default {
                 Num += Math.floor(Math.random() * 10);
               }
               timestamp += Num;
-              sel.orderIdList.forEach((val) => {
+              sel.orderIdList.ids.forEach((val) => {
                 const a = {};
                 a.orderDetailId = val;
                 a.rightsGroup = timestamp;
