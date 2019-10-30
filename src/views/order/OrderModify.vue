@@ -125,6 +125,7 @@
     title="选择可用的购机权益活动"
     :arrow="true"
     @rightClick="selectActivity()"
+    v-show="orderSource !=='SGLD'"
   >
   </b-item>
   <b-activity-list
