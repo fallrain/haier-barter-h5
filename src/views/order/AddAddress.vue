@@ -245,9 +245,7 @@ export default {
     };
   },
   activated() {
-    debugger;
     if (this.$route.params) {
-      debugger;
       this.region = this.$route.params.region;
       console.log(this.region);
       if (this.region === 'add' && this.$route.params.info === '{}') {
@@ -263,8 +261,8 @@ export default {
           this.customerInfo.username = JSON.parse(this.$route.params.info).username;
           this.customerInfo.mobile = JSON.parse(this.$route.params.info).mobile;
           this.customerInfo.userId = JSON.parse(this.$route.params.info).userId;
-          if(JSON.parse(this.$route.params.info).customerId){
-            this.customerInfo.customerId = JSON.parse(this.$route.params.info).customerId
+          if (JSON.parse(this.$route.params.info).customerId) {
+            this.customerInfo.customerId = JSON.parse(this.$route.params.info).customerId;
           }
           this.smld = true;
         } else if (this.region === 'edit') {
@@ -277,7 +275,7 @@ export default {
           // this.customerInfo.sex = JSON.parse(this.$route.params.info).sex;
           // this.customerInfo.address = JSON.parse(this.$route.params.info).address;
           // this.customerInfo.id = JSON.parse(this.$route.params.info).id;
-        }else {
+        } else {
           console.log(JSON.parse(this.$route.params.info));
           this.customerInfo.username = JSON.parse(this.$route.params.info).username;
           this.customerInfo.mobile = JSON.parse(this.$route.params.info).mobile;
@@ -385,7 +383,7 @@ export default {
     },
     confirm() {
       if (!(/^1[34578]\d{9}$/.test(this.customerInfo.mobile))) {
-        Toast.failed('手机号格式错误1');
+        Toast.failed('手机号格式错误');
         this.customerInfo.mobile = '';
         return;
       }
@@ -436,8 +434,9 @@ export default {
         }
         delete this.customerInfo.tag;
       }
+      debugger
       if (this.region === 'add' || this.region === 'userAdd') {
-        delete this.customerInfo.id
+        delete this.customerInfo.id;
         this.productService.addcustomerAddress(this.customerInfo, {}).then((res) => {
           if (res.code === 1) {
             Toast.succeed('地址添加成功');
