@@ -338,23 +338,20 @@ export default {
           rights.allowRightsConditionDtoList.forEach((ri) => {
             if (ri.flag !== 0) {
               if (!ri.orderId) {
-                // ri.orderId = ri.orderIdList[0][0].ids;
-
-                for (var i = 0; i < ri.orderIdList.length; i++) {
-                  for (var j = 0; j < ri.orderIdList[i].ids.length; j++) {
-                    if (rightid === ri.orderIdList[i].ids[j]) {
-                      ri.orderIdList[i].num--
-                      if (ri.orderIdList[i].flag === 1) {
-                        this.$set(ri.orderIdList[i], 'flag', 0)
-                        ri.num--
-                        if (ri.flag === 1) {
-                          this.$set(ri, 'flag', 0);
-                          rights.num--
-                        }
+                ri.orderIdList.forEach(id => {
+                  const a = []
+                  a.push(rightid);
+                  if(this.uniqueArray(a,id.ids)){
+                    this.$set(id, 'flag', 0);
+                    ri.num --
+                    if(ri.flag === 1){
+                      this.$set(ri,'flag',0)
+                      if(ri.num === ri.orderIdList.length -1){
+                        rights.num--
                       }
                     }
                   }
-                }
+                })
               } else {
                 if(rightid === ri.orderId) {
                 this.$set(ri, 'flag', 0);
@@ -375,17 +372,11 @@ export default {
         item.allowRightsConditionDtoList.forEach((rights) => {
           // if (!isReturn) {
             if (rights.flag !== 0) {
-              // rights.flag = 0;
-              // item.selectedNum--;
-              // present = rights.orderIdList;
-              // this.$set(item, 'selectedNum', item.selectedNum);
-              // this.$set(item, 'isSelected', item.selectedNum);
-              // item.num--;
-              // isReturn = true;
               rights.orderIdList.forEach(ri => {
                 if (!isReturn) {
                   if (ri.flag !== 0) {
                     this.$set(ri, 'flag', 0);
+                    ri.num --
                     present = ri.ids;
                     item.selectedNum--;
                     this.$set(item, 'selectedNum', item.selectedNum);
@@ -404,44 +395,20 @@ export default {
           if (item.isOptional === 0) {
             this.$set(item, 'isOptional', 1);
           }
-          // if (rights.flag !== 0) {
-          //   if (this.uniqueArray(rights.orderIdList, present)) {
-          //     this.$set(rights, 'flag', 0);
-          //     item.num--;
-          //   }
-          // }
+
         });
         this.mutexRightsList.forEach((rights) => {
-          // rights.allowRightsConditionDtoList.forEach((ri) => {
-          //   if (ri.flag !== 0) {
-          //     if (!ri.orderIdList) {
-          //       const a = []
-          //       ri.orderIdList = [];
-          //       a.push(ri.orderId);
-          //       ri.orderIdList.push(a)
-          //     }
-          //     if (this.uniqueArray(ri.orderIdList, present)) {
-          //       this.$set(ri, 'flag', 0);
-          //       // if (rights.rightsType === 'sets') {
-          //         rights.num--;
-          //       // }
-          //       if (rights.isOptional === 0) {
-          //         this.$set(rights, 'isOptional', 1);
-          //       }
-          //     }
-          //   }
-          // });
           rights.allowRightsConditionDtoList.forEach((ri) => {
-            if (!ri.orderIdList) {
-              const a = []
-              ri.orderIdList = [];
-              let b = {}
-              a.push(ri.orderId);
-              b.ids = a
-              b.flag = 0
-              ri.orderIdList.push(b)
-            }
-            // if (ri.flag !== 0) {
+            if (ri.flag !== 0) {
+              if (!ri.orderIdList) {
+                const a = []
+                ri.orderIdList = [];
+                a.push(ri.orderId);
+                if (this.uniqueArray(a, present)) {
+                  this.$set(ri, 'flag', 0);
+                  rights.num--
+                }
+              }
             ri.orderIdList.forEach(id => {
               if (id.flag !== 0) {
                 if (this.uniqueArray(id.ids, present)) {
@@ -454,11 +421,13 @@ export default {
                 }
               }
             })
+          }
             debugger
             if (rights.isOptional === 0) {
               this.$set(rights, 'isOptional', 1);
             }
           });
+
         })
         debugger;
       }
@@ -495,26 +464,22 @@ export default {
         if (item.num === item.allowRightsConditionDtoList.length) {
           this.$set(item, 'isOptional', 0);
         }
-        // let num = 0;
         this.mutexRightsList.forEach((rights) => {
           rights.allowRightsConditionDtoList.forEach((ri) => {
             if (ri.flag !== 1) {
               if (!ri.orderId) {
-                for(var i = 0;i < ri.orderIdList.length;i ++){
-                  for(var j = 0;j < ri.orderIdList[i].ids.length ;j++){
-                    if(rightid === ri.orderIdList[i].ids[j]){
-                        ri.orderIdList[i].num ++
-                      if(ri.orderIdList[i].num === ri.orderIdList[i].ids.length){
-                        this.$set(ri.orderIdList[i],'flag',1)
-                        ri.num ++
-                        if(ri.num === ri.orderIdList.length){
-                          this.$set(ri, 'flag', 1);
-                          rights.num ++
-                        }
+                  ri.orderIdList.forEach(r => {
+                    const a = []
+                    a.push(rightid);
+                    if(this.uniqueArray(a,r.ids)){
+                      this.$set(r, 'flag', 1);
+                      ri.num ++
+                      if(ri.num === ri.orderIdList.length){
+                        this.$set(ri,'flag',1)
+                        rights.num++
                       }
                     }
-                  }
-                }
+                  })
               }else {
                 if (rightid === ri.orderId) {
                   this.$set(ri, 'flag', 1);
@@ -554,36 +519,27 @@ export default {
                 }
               })
             }
-          // }
-          // if (rights.flag !== 1) {
-          //   if (this.uniqueArray(rights.orderIdList, present)) {
-          //     rights.num++;
-          //     if(rights.num == rights.orderIdList.length){
-          //       this.$set(rights, 'flag', 1);
-          //       item.num ++
-          //     }
-          //   }
-          // }
+
         });
         if (item.num === item.allowRightsConditionDtoList.length) {
           this.$set(item, 'isOptional', 0);
         }
         this.mutexRightsList.forEach((rights) => {
           rights.allowRightsConditionDtoList.forEach((ri) => {
-            if (!ri.orderIdList) {
-              const a = []
-              ri.orderIdList = [];
-              let b = {}
-              a.push(ri.orderId);
-              b.ids = a
-              b.flag = 0
-              ri.orderIdList.push(b)
-            }
             if (ri.flag !== 1) {
-              ri.orderIdList.forEach(id => {
-                if(id.flag !== 1){
-                  if (this.uniqueArray(id.ids, present)) {
-                    this.$set(id, 'flag', 1);
+              if (!ri.orderIdList) {
+                  const a = []
+                  ri.orderIdList = [];
+                  a.push(ri.orderId);
+                  if(this.uniqueArray(a,present)){
+                    this.$set(ri, 'flag', 1);
+                    rights.num ++
+                  }
+              }
+              ri.orderIdList.forEach(r => {
+                if(r.flag !== 1){
+                  if (this.uniqueArray(r.ids, present)) {
+                    this.$set(r, 'flag', 1);
                     ri.num ++
                     if(ri.num === ri.orderIdList.length){
                       this.$set(ri,'flag',1)
@@ -592,12 +548,6 @@ export default {
                   }
                 }
               })
-              // if (this.uniqueArray(ri.orderIdList, present)) {
-              //   this.$set(ri, 'flag', 1);
-              //   // if (rights.rightsType === 'sets') {
-              //     rights.num++;
-              //   // }
-              // }
             }
           });
           debugger
@@ -609,25 +559,6 @@ export default {
       this.anylizeMCData(this.mutexRightsList);
     },
     uniqueArray(array1, array2) {
-      debugger
-      // const a = array1.length;
-      // let temp = []
-      // let temp2 = []
-      // array1.forEach(id =>{
-      //
-      // })
-      // array2.forEach(id => {
-      //   temp2.concat(id)
-      // })
-      // for(var i = 0;i < array1.length;i ++){
-      //   temp = temp.concat(array1[i])
-      // }
-      // for(var i = 0;i < array2.length;i ++){
-      //   temp2 = temp2.concat(array2[i])
-      // }
-      //
-      // const a = temp.length
-      // const b = temp2.length;
       const a = array1.length
       const b = array2.length
       const concatA = array1.concat(array2);
@@ -638,7 +569,6 @@ export default {
       return false;
     },
     array_contain(array, obj) {
-      debugger;
       return array.find(v => v === obj);
     },
     showConfig(item) {
@@ -712,7 +642,7 @@ export default {
              });
            } else {
              item.rightsSelectedGroupDtoList.forEach((sel) => {
-               debugger
+
                let timestamp = new Date().getTime();
                let Num = 0;
                for (let i = 0; i < 3; i++) {
@@ -737,7 +667,6 @@ export default {
        });
        this.num++;
      }
-      debugger;
       if (this.num === 2) {
         const rightJson = {};
         rightJson.rightsUserInterestsDetailsDTO = this.rightsDetailList;
@@ -753,7 +682,6 @@ export default {
         }
         rightJson.rightsUserInterestsDTO = this.rightsUserDto;
         this.rightsJson = JSON.stringify(rightJson);
-        debugger;
         this.$router.go(-1);
       }
     },
@@ -883,14 +811,14 @@ export default {
           pageSize: 30 })
           .then((res) => {
             if (res.code === 1) {
-              debugger;
+
               if (res.data.result.length > 0) {
-                debugger;
+
                 const temp = res.data.result;
                 temp.forEach((not) => {
                   const a = not.rightsBrand.split(',');
                   const b = [];
-                  debugger
+
                   a.forEach((i) => {
                     if (i === '000') {
                       b.push('海尔');
@@ -902,8 +830,7 @@ export default {
                   });
                   not.rightsBrandC = b.join(',');
                 });
-                console.log('aaaaaaaaaaaaaaa', temp);
-                debugger;
+
                 this.notOptionalList = temp;
               } else {
                 Toast.info('暂无数据');
@@ -915,17 +842,17 @@ export default {
       }
     },
     anylizeMCData(list) {
-      debugger
+
       list.forEach((item) => {
         if (item.isOptional === 1) {
           this.$set(item, 'addGray', false);
         } else {
-          debugger;
+
           this.$set(item, 'addGray', true);
         }
-        debugger;
+
         if (item.selectedNum !== 0) {
-          debugger;
+
           this.$set(item, 'minesGray', false);
         } else {
           this.$set(item, 'minesGray', true);
@@ -988,7 +915,6 @@ export default {
           this.$set(item, 'addGray', true);
         }
         if (item.selectedNum !== 0) {
-          debugger;
           this.$set(item, 'minesGray', false);
         }else {
           this.$set(item, 'minesGray', true);
