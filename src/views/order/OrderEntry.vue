@@ -420,7 +420,6 @@ export default {
       region: '',
       handRegion: false,
       userParam: {},
-      oldForNewInfo:{},
       rightName: '',
       rightId: '',
       addUserShow: false,
@@ -525,19 +524,17 @@ export default {
   created() {
     this.addressData = addressData;
     this.userParam = JSON.parse(localStorage.getItem('userinfo'));
-    this.oldForNewInfo = JSON.parse(localStorage.getItem('oldForNewInfo'))
     this.shopId = this.userParam.shopId;
     this.queryUserList();
     this.getUserStore();
     if (this.$route.params.region === 'hand') {
       this.handRegion = true;
     }
-    if (this.oldForNewInfo.oldForNew === 1) {
+    if (this.userParam.oldForNew === '1') {
       this.isYJHX = true;
-      this.orderFollowId = this.oldForNewInfo.workFlowId
-      this.customerInfo.username = this.oldForNewInfo.username;
-      this.customerInfo.mobile = this.oldForNewInfo.mobile;
-      this.customerInfo.customerId = this.oldForNewInfo.customerId;
+      this.customerInfo.username = this.userParam.username;
+      this.customerInfo.mobile = this.userParam.mobile;
+      this.customerInfo.customerId = this.userParam.customerId;
       this.customerInfo.userId = '';
       this.haveCustomer = true;
       this.haveConsignee = false;
