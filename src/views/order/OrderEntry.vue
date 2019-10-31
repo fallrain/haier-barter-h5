@@ -418,22 +418,22 @@ export default {
       title: '顾客信息：',
       mobile: '',
       region: '',
-      handRegion:false,
+      handRegion: false,
       userParam: {},
       rightName: '',
       rightId: '',
       addUserShow: false,
       queryInstall: false,
-      multyBuy:false,
-      saveType:1,
-      isYJHX:false
+      multyBuy: false,
+      saveType: 1,
+      isYJHX: false
 
     };
   },
   computed: {},
   watch: {
     buyDate(newV, oldV) {
-      console.log(this.userParam.hmcid)
+      console.log(this.userParam.hmcid);
       if (newV != '') {
         this.orderService.isAccordDeadline({
         }, {
@@ -451,14 +451,14 @@ export default {
   mounted() {
 
   },
-  activated() {debugger
-    if (this.$route.params.customerConsigneeInfo.id) {
+  activated() {
+    if (this.$route.params.customerConsigneeInfo && this.$route.params.customerConsigneeInfo.id) {
       this.orderFollowId = this.$route.params.customerConsigneeInfo.id;
       localStorage.setItem('orderFollowId', this.orderFollowId);
     }
     if (this.$route.query.temp) {
       let ID = '';
-      const obj = JSON.parse(this.$route.query.temp);console.log(obj)
+      const obj = JSON.parse(this.$route.query.temp); console.log(obj);
       if (obj.tel) {
         this.mobile = obj.tel;
         this.queryCustomerDefault();
@@ -492,7 +492,6 @@ export default {
       }
       if (obj.rightsJson) {
         this.rightsJson = obj.rightsJson;
-        debugger
         const right = JSON.parse(obj.rightsJson);
         this.rightName = right.rightsName;
         this.rightId = right.rightsId;
@@ -528,17 +527,17 @@ export default {
     this.shopId = this.userParam.shopId;
     this.queryUserList();
     this.getUserStore();
-    if(this.$route.params.region === 'hand') {
-      this.handRegion = true
+    if (this.$route.params.region === 'hand') {
+      this.handRegion = true;
     }
-    if(this.getQueryString('info')){
-      this.isYJHX = true
-      this.customerInfo.username = this.getQueryString('info').username
-      this.customerInfo.mobile = this.getQueryString('info').mobile
-      this.customerInfo.customerId = this.getQueryString('info').customerId
-      this.customerInfo.userId = ''
-      this.haveCustomer = true
-      this.haveConsignee = false
+    if (this.userParam.oldForNew === 1) {
+      this.isYJHX = true;
+      this.customerInfo.username = this.userParam.username;
+      this.customerInfo.mobile = this.userParam.mobile;
+      this.customerInfo.customerId = this.userParam.customerId;
+      this.customerInfo.userId = '';
+      this.haveCustomer = true;
+      this.haveConsignee = false;
     }
 
     if (this.$route.params.customerConsigneeInfo.businessScenarios) {
@@ -554,7 +553,6 @@ export default {
     if (this.$route.params.region === 'hand') {
       this.haveConsignee = false;
       this.haveCustomer = false;
-      return;
     }
     // this.customerInfo.username = this.$route.params.customerConsigneeInfo.userName;
     // this.customerInfo.mobile = this.$route.params.customerConsigneeInfo.mobile;
@@ -579,8 +577,7 @@ export default {
           storeId: this.shopId,
           productCode: pro.productCode,
           productBrand: pro.productBrand,
-          productCategoryCode: pro.productCategoryCode
-        }
+          productCategoryCode: pro.productCategoryCode }
       ];
       this.basicService.userInfo().then((res) => {
         this.orderService.isReportInstallNew({
@@ -597,14 +594,11 @@ export default {
           this.productList.push(pro);
         });
       });
-
     },
     radioChange(val) {
       this.orderType = val;
-      debugger;
     },
     selectSetBuyer() {
-      debugger;
       this.multBuyPopShow = true;
     },
     consporConfirm() {
@@ -756,10 +750,10 @@ export default {
     },
     // 暂存
     saveTemporary(type) {
-      if(type === 1){
-        this.saveType = 1
-      }else {
-        this.saveType = 0
+      if (type === 1) {
+        this.saveType = 1;
+      } else {
+        this.saveType = 0;
       }
       if (this.productList.length > 0) {
         for (let i = 0; i < this.productList.length; i++) {
@@ -771,7 +765,7 @@ export default {
         // 产品价格闸口判断
         let result = 0;
         let state = false;
-        let resultMsg = [];
+        const resultMsg = [];
         for (let i = 0; i < this.productList.length; i++) {
           const obj = {
             bccPrice: '',
@@ -813,16 +807,16 @@ export default {
         name: 'Order.SearchProduct',
       });
     },
-    generateSubInfo(type) {debugger
+    generateSubInfo(type) {
       if (this.buyTime === '' && this.saveType == 0) {
         Toast.failed('请选择购买时间');
         return;
       }
-      if(this.productList.length === 0 && this.saveType == 0){
+      if (this.productList.length === 0 && this.saveType == 0) {
         Toast.failed('请选择产品');
         return;
       }
-      for (let i=0; i<this.productList.length; i++) {
+      for (let i = 0; i < this.productList.length; i++) {
         if (this.productList[i].productPrice == '' && this.saveType == 0) {
           Toast.failed('请输入产品价格');
           return;
@@ -834,7 +828,7 @@ export default {
         return;
       }
 
-      if (!this.bUtil.isReportInstallFit(this.productList,this.deliveryTime) && this.saveType == 0) {
+      if (!this.bUtil.isReportInstallFit(this.productList, this.deliveryTime) && this.saveType == 0) {
         return;
       }
       const subInfo = {};
@@ -878,7 +872,7 @@ export default {
       // this.userParam.userId;
       // subInfo.userName = '张三',
       subInfo.userName = this.customerInfo.username;
-      subInfo.userSex = this.consignee.sex
+      subInfo.userSex = this.consignee.sex;
       subInfo.consigneeName = this.consignee.name;
       subInfo.consigneePhone = this.consignee.phone;
       subInfo.consigneeId = this.consignee.customerId;
@@ -929,7 +923,7 @@ export default {
             pageNum: 0,
             pageSize: 10,
           }).then((res) => {
-            if (res.code != -1 && res.data.result.length > 0){
+            if (res.code != -1 && res.data.result.length > 0) {
               this.rightsName = res.data.result[0].rightsName;
               this.basicDialog.open = true;
             } else {
@@ -962,9 +956,9 @@ export default {
         } else {
           if (this.orderNo !== '') {
             Toast.loading('保存中...');
-            if (!this.orderFollowId) {
-              this.orderFollowId = localStorage.getItem('orderFollowId');
-            }
+            // if (!this.orderFollowId) {
+            //   this.orderFollowId = localStorage.getItem('orderFollowId');
+            // }
             this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
               .then((res) => {
                 if (res.code === 1) {
@@ -987,7 +981,6 @@ export default {
           }
         }
       }
-
     },
     selectActivity() {
       if (this.productList.length === 0) {
@@ -1027,15 +1020,15 @@ export default {
       });
     },
     addNew() {
-      if(!this.isYJHX){
+      if (!this.isYJHX) {
         /* 添加顾客信息 */
         this.region = 'userAdd';
         this.$router.push({
           name: 'Order.AddAddress',
           params: { region: this.region, info: JSON.stringify(this.customerInfo) }
         });
-      }else {
-        this.addAddress()
+      } else {
+        this.addAddress();
       }
     },
     changeAddress(item) {
@@ -1074,9 +1067,9 @@ export default {
         this.productService.userList(this.shopId).then((res1) => {
           if (res1.code === 1) {
             if (res1.data === '' || res1.data === []) {
-              this.multyBuy = false
+              this.multyBuy = false;
             } else {
-              this.multyBuy = true
+              this.multyBuy = true;
             }
             res1.data.forEach((item) => {
               if (item.hmcId == user.hmcId) {
@@ -1108,7 +1101,7 @@ export default {
       // 产品价格闸口判断
       let result = 0;
       let state = false;
-      let resultMsg = [];
+      const resultMsg = [];
       for (let i = 0; i < this.productList.length; i++) {
         const obj = {
           bccPrice: '',
@@ -1128,7 +1121,7 @@ export default {
           }
           if (result == this.productList.length) {
             if (!state) {
-              this.saveType = 0
+              this.saveType = 0;
               this.saveTemporary(2);
             } else {
               Toast.failed(resultMsg[0]);
@@ -1136,8 +1129,8 @@ export default {
           }
         });
       }
-      this.saveType = 0
-      this.saveTemporary(2);debugger
+      this.saveType = 0;
+      this.saveTemporary(2);
     },
     saveOrder() {
 

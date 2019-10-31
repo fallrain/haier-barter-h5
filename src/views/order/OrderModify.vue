@@ -429,6 +429,7 @@ export default {
   //    }
   },
   activated() {
+    debugger;
     if (this.$route.query.temp) {
       let ID = '';
       const obj = JSON.parse(this.$route.query.temp);
@@ -872,7 +873,7 @@ export default {
         //   name: 'Order.ResidueGift',
         // });
       } else {
-        if (this.rightsList.length == 0 && this.saveType == 0) {
+        if (this.rightsList.length == 0 && this.saveType == 0 && this.subInfo.orderSource != 'SGLD') {
           this.rightsService.queryOrderOptionalRights(this.subInfo, {
             pageNum: 0,
             pageSize: 10,
@@ -925,7 +926,7 @@ export default {
                       name: 'Order.OrderUploadInvoice',
                       params: { orderNo: this.orderNo }
                     });
-                    this.$destroy();
+                    // this.$destroy();
                   }
                 }
               });

@@ -109,8 +109,10 @@ export default {
   },
   activated() {
     console.log('tag', this.$route.params);
-    this.orderNo = this.$route.params.orderNo;
-    this.getData();
+    if (this.$route.params.orderNo) {
+      this.orderNo = this.$route.params.orderNo;
+      this.getData();
+    }
   },
   created() {
   },
