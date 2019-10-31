@@ -556,14 +556,6 @@ export default {
     }
   },
   methods: {
-    //  haveConsignee() {
-    //   /* 存在收货人信息 */
-    //   return this.consignee && JSON.stringify(this.consignee) !== '{}';
-    // },
-    // chooseGift() {
-    //   /* 选择礼品 */
-    //   this.chooseGiftPopShow = true;
-    // },
     isReportInstall(pro) {
       const orderDetailDtoList = [
         { hmcId: this.userParam.hmcid,
