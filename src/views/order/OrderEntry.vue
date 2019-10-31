@@ -420,6 +420,7 @@ export default {
       region: '',
       handRegion: false,
       userParam: {},
+      oldForNewInfo:{},
       rightName: '',
       rightId: '',
       addUserShow: false,
@@ -524,17 +525,19 @@ export default {
   created() {
     this.addressData = addressData;
     this.userParam = JSON.parse(localStorage.getItem('userinfo'));
+    this.oldForNewInfo = JSON.parse(localStorage.getItem('oldForNewInfo'))
     this.shopId = this.userParam.shopId;
     this.queryUserList();
     this.getUserStore();
     if (this.$route.params.region === 'hand') {
       this.handRegion = true;
     }
-    if (this.userParam.oldForNew === 1) {
+    if (this.oldForNewInfo.oldForNew === 1) {
       this.isYJHX = true;
-      this.customerInfo.username = this.userParam.username;
-      this.customerInfo.mobile = this.userParam.mobile;
-      this.customerInfo.customerId = this.userParam.customerId;
+      this.orderFollowId = this.oldForNewInfo.workFlowId
+      this.customerInfo.username = this.oldForNewInfo.username;
+      this.customerInfo.mobile = this.oldForNewInfo.mobile;
+      this.customerInfo.customerId = this.oldForNewInfo.customerId;
       this.customerInfo.userId = '';
       this.haveCustomer = true;
       this.haveConsignee = false;
@@ -556,14 +559,6 @@ export default {
     }
   },
   methods: {
-    //  haveConsignee() {
-    //   /* 存在收货人信息 */
-    //   return this.consignee && JSON.stringify(this.consignee) !== '{}';
-    // },
-    // chooseGift() {
-    //   /* 选择礼品 */
-    //   this.chooseGiftPopShow = true;
-    // },
     isReportInstall(pro) {
       const orderDetailDtoList = [
         { hmcId: this.userParam.hmcid,

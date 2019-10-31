@@ -43,6 +43,8 @@ function getuserInfo() {
   if (userinfo.hmcid) {
     localStorage.setItem('userinfo', JSON.stringify(userinfo));
     localStorage.setItem('acces_token', userinfo.token);
+  }else {
+    localStorage.setItem('oldForNewInfo', JSON.stringify(userinfo));
   }
 }
 getuserInfo();
