@@ -451,7 +451,7 @@ export default {
   mounted() {
 
   },
-  activated() {
+  activated() {debugger;
     if (this.$route.params.customerConsigneeInfo && this.$route.params.customerConsigneeInfo.id) {
       this.orderFollowId = this.$route.params.customerConsigneeInfo.id;
       localStorage.setItem('orderFollowId', this.orderFollowId);
@@ -740,7 +740,7 @@ export default {
       });
     },
     // 暂存
-    saveTemporary(type) {
+    saveTemporary(type) {console.log(2222)
       if (type === 1) {
         this.saveType = 1;
       } else {
@@ -1093,35 +1093,38 @@ export default {
       let result = 0;
       let state = false;
       const resultMsg = [];
-      for (let i = 0; i < this.productList.length; i++) {
-        const obj = {
-          bccPrice: '',
-          productCode: this.productList[i].productCode,
-          productPrice: this.productList[i].productPrice,
-          requestNoToast: true
-        };
-        if (this.productList[i].bccPrice) {
-          obj.bccPrice = this.productList[i].bccPrice;
-        }
-        this.orderService.checkProductPrice({}, obj).then((res) => {
-          result++;
-          if (res.code == -1) {
-            resultMsg.push(res.msg);
-            state = true;
-            this.productList[i].productPrice = '';
+      if (this.productList.length > 0) {
+        for (let i = 0; i < this.productList.length; i++) {
+          const obj = {
+            bccPrice: '',
+            productCode: this.productList[i].productCode,
+            productPrice: this.productList[i].productPrice,
+            requestNoToast: true
+          };
+          if (this.productList[i].bccPrice) {
+            obj.bccPrice = this.productList[i].bccPrice;
           }
-          if (result == this.productList.length) {
-            if (!state) {
-              this.saveType = 0;
-              this.saveTemporary(2);
-            } else {
-              Toast.failed(resultMsg[0]);
+          this.orderService.checkProductPrice({}, obj).then((res) => {
+            result++;
+            if (res.code == -1) {
+              resultMsg.push(res.msg);
+              state = true;
+              this.productList[i].productPrice = '';
             }
-          }
-        });
+            if (result == this.productList.length) {
+              if (!state) {
+                this.saveType = 0;
+                this.saveTemporary(2);
+              } else {
+                Toast.failed(resultMsg[0]);
+              }
+            }
+          });
+        }
+      } else {
+        this.saveType = 0;
+        this.saveTemporary(2);
       }
-      this.saveType = 0;
-      this.saveTemporary(2);
     },
     saveOrder() {
 
