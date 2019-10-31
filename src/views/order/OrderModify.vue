@@ -402,7 +402,8 @@ export default {
       queryInstall: false,
       isInstall: false,
       saveType:1,
-      isProduct:false
+      isProduct:false,
+      isProductList :[]
     };
   },
   computed: {},
@@ -453,6 +454,8 @@ export default {
         if (!obj.product.productGroupName) {
           return;
         }
+        this.isProduct = true
+        this.isProductList = this.$route.params.productList
         this.orderService.generateOrderDetailId().then((res) => {
           if (res.code === 1) {
             ID = res.data;
@@ -580,13 +583,13 @@ export default {
           this.sourceSn = resData.sourceSn;
           this.recordMode = resData.recordMode;
           this.queryUserList(resData.storeId);
-          if(!this.isDetail || !this.isProduct){
+          if(!this.isDetail){
             if (resData.rightName) {
               this.rightsList = resData.rightName.split(',');
 
             }
           }
-          if(!this.isProduct || !this.isDetail){
+          if(!this.isProduct){
             if (resData.orderDetailDtoList.length !== 0) {
               this.productList = resData.orderDetailDtoList;
               this.productList.forEach((item, index) => {
@@ -602,6 +605,8 @@ export default {
                 }
               });
             }
+          }else {
+            this.productList = this.isProductList.concat(this.productList)
           }
           this.queryCustomerDefault();
         }
@@ -750,8 +755,8 @@ export default {
     /* 添加产品 */
       this.$router.push({
         name: 'Order.SearchProduct',
+        params:{orderNo:this.orderNo,productList:this.productList}
       });
-
     },
     selectActivity() {
       if (this.productList.length === 0) {

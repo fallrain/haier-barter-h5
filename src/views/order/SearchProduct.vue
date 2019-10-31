@@ -80,6 +80,8 @@ export default {
     Toast
   },
   created() {
+    this.orderNo = this.$route.params.orderNo
+    this.isProductList = this.$route.params.productList
     if (localStorage.getItem('productSearchHistory')) {
       this.searchHistory = JSON.parse(localStorage.getItem('productSearchHistory'));
       if (this.searchHistory.length > 30) {
@@ -98,7 +100,9 @@ export default {
       currentClickItemData: {},
       searchList: [],
       // 搜索历史
-      searchHistory: []
+      searchHistory: [],
+      orderNo:'',
+      isProductList:[]
     };
   },
   methods: {
@@ -187,6 +191,8 @@ export default {
     if (to.name === 'Order.OrderEntry' || to.name === 'Order.OrderModify' || to.name === 'Order.OrderSupplement') {
       const obj = { product: this.currentClickItemData };
       to.query.temp = JSON.stringify(obj);
+      to.params.orderNo = this.orderNo;
+      to.params.productList = this.isProductList;
     }
     localStorage.setItem('productSearchHistory', JSON.stringify(this.searchHistory));
     next();// 必须要有这个，否则无法跳转
