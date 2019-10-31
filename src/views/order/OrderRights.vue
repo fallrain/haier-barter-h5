@@ -315,7 +315,7 @@ export default {
           if (!isReturn) {
             debugger;
             if (rights.flag !== 0) {
-              rights.flag = 0;
+              this.$set(rights,'flag',0)
               rightid = rights.orderId;
               item.selectedNum--;
               item.num--
@@ -326,7 +326,7 @@ export default {
           }
           if (rights.flag !== 0) {
             if (rights.orderId === rightid) {
-              rights.flag = 0
+              this.$set(rights,'flag',0)
               item.num--
             }
           }
@@ -342,8 +342,14 @@ export default {
                   const a = []
                   a.push(rightid);
                   if(this.uniqueArray(a,id.ids)){
-                    this.$set(id, 'flag', 0);
-                    ri.num --
+                    id.tempList = id.tempList.splice(id.tempList.findIndex(item => item === rightid),1)
+                      if(id.tempList.length === 0){
+                        this.$set(id, 'flag', 0);
+                        ri.num --
+                        if (rights.isOptional === 0) {
+                          this.$set(rights, 'isOptional', 1);
+                        }
+                      }
                     if(ri.flag === 1){
                       this.$set(ri,'flag',0)
                       if(ri.num === ri.orderIdList.length -1){
@@ -357,10 +363,10 @@ export default {
                 this.$set(ri, 'flag', 0);
                 rights.num--
               }
+                if (rights.isOptional === 0) {
+                  this.$set(rights, 'isOptional', 1);
+                }
             }
-              if (rights.isOptional === 0) {
-                this.$set(rights, 'isOptional', 1);
-              }
             }
           });
         });
@@ -378,6 +384,10 @@ export default {
                     this.$set(ri, 'flag', 0);
                     ri.num --
                     present = ri.ids;
+                    ri.tempList = []
+                    // for(var i = 0;i < present.length;i ++){
+                    //   ri.tempList = ri.tempList.splice(ri.tempList.findIndex(item => item === present[i]))
+                    // }
                     item.selectedNum--;
                     this.$set(item, 'selectedNum', item.selectedNum);
                     this.$set(item, 'isSelected', item.selectedNum);
@@ -399,38 +409,55 @@ export default {
         });
         this.mutexRightsList.forEach((rights) => {
           rights.allowRightsConditionDtoList.forEach((ri) => {
-            if (ri.flag !== 0) {
+            if (ri.flag !== 0 ) {
               if (!ri.orderIdList) {
                 const a = []
-                ri.orderIdList = [];
                 a.push(ri.orderId);
                 if (this.uniqueArray(a, present)) {
+                  if(rights.allowRightsConditionDtoList.length === 1 && rights.selectedNum ===1){
+                    return
+                  }
                   this.$set(ri, 'flag', 0);
                   rights.num--
                 }
-              }
-            ri.orderIdList.forEach(id => {
-              if (id.flag !== 0) {
-                if (this.uniqueArray(id.ids, present)) {
-                  this.$set(id, 'flag', 0);
-                  ri.num--
-                  if (ri.num === rights.allowRightsConditionDtoList.length - 1) {
-                    this.$set(ri, 'flag', 0)
-                    rights.num--
-                  }
+                if (rights.isOptional === 0) {
+                  this.$set(rights, 'isOptional', 1);
                 }
+              }else {
+                ri.orderIdList.forEach(r => {
+                  debugger
+                  if (r.flag !== 0) {
+                    if (this.uniqueArray(r.ids, present)) {
+                      for(var i = 0;i < r.ids.length;i ++){
+                        for(var j = 0;j < present.length; j++){
+                          if(r.ids[i] === present[j]){
+                              if(r.tempList.find(item => item === r.ids[i])){
+                                 r.tempList = r.tempList.splice(r.tempList.findIndex(item => item === r.ids[i]),1)
+                              }
+                          }
+                        }
+                      }
+                      if(r.tempList.length === 0){
+                        this.$set(r, 'flag', 0);
+                        ri.num--
+                        if(ri.flag !== 0){
+                          this.$set(ri, 'flag', 0)
+                          rights.num--
+                        }
+                        if (rights.isOptional === 0) {
+                          this.$set(rights, 'isOptional', 1);
+                        }
+                      }
+                    }
+                  }
+                })
               }
-            })
           }
-            debugger
-            if (rights.isOptional === 0) {
-              this.$set(rights, 'isOptional', 1);
-            }
-          });
 
+          });
         })
-        debugger;
       }
+      debugger
       this.anylizeMCData(this.mutexRightsList);
     },
     addMCount(item) {
@@ -455,7 +482,7 @@ export default {
           }
           if(rights.flag!== 1){
             if(rights.orderId === rightid){
-              rights.flag = 1
+              this.$set(rights, 'flag', 1);
               item.num ++
             }
           }
@@ -465,33 +492,35 @@ export default {
           this.$set(item, 'isOptional', 0);
         }
         this.mutexRightsList.forEach((rights) => {
-          rights.allowRightsConditionDtoList.forEach((ri) => {
-            if (ri.flag !== 1) {
-              if (!ri.orderId) {
+            rights.allowRightsConditionDtoList.forEach((ri) => {
+                if (!ri.orderId) {
                   ri.orderIdList.forEach(r => {
-                    const a = []
-                    a.push(rightid);
-                    if(this.uniqueArray(a,r.ids)){
-                      this.$set(r, 'flag', 1);
-                      ri.num ++
-                      if(ri.num === ri.orderIdList.length){
-                        this.$set(ri,'flag',1)
-                        rights.num++
-                      }
-                    }
+                     if(ri.flag !== 1 ||( r.tempList.length < r.ids.length)){
+                       const a = []
+                       a.push(rightid);
+                       if(this.uniqueArray(a,r.ids)){
+                         this.$set(r, 'flag', 1);
+                         r.tempList.push(rightid)
+                         ri.num ++
+                         if(ri.num === ri.orderIdList.length){
+                           this.$set(ri,'flag',1)
+                           rights.num++
+                         }
+                       }
+                     }
                   })
-              }else {
-                if (rightid === ri.orderId) {
-                  this.$set(ri, 'flag', 1);
-                  rights.num++;
-                }
-              }
-
+                }else {
+                  if (ri.flag !== 1) {
+                    if (rightid === ri.orderId) {
+                      this.$set(ri, 'flag', 1);
+                      rights.num++;
+                    }
+                  }
+                  }
+            });
+            if (rights.num === rights.allowRightsConditionDtoList.length) {
+              this.$set(rights, 'isOptional', 0);
             }
-          });
-          if (rights.num === rights.allowRightsConditionDtoList.length) {
-            this.$set(rights, 'isOptional', 0);
-          }
         });
       } else {
         // 套购
@@ -506,6 +535,8 @@ export default {
                 if(ri.flag !== 1) {
                   this.$set(ri, 'flag', 1);
                   present = ri.ids;
+                  ri.tempList =  ri.ids
+                  // ri.tempList = Array.from(new Set(ri.tempList))
                   item.selectedNum++;
                   this.$set(item, 'selectedNum', item.selectedNum);
                   this.$set(item, 'isSelected', 1);
@@ -525,35 +556,50 @@ export default {
           this.$set(item, 'isOptional', 0);
         }
         this.mutexRightsList.forEach((rights) => {
-          rights.allowRightsConditionDtoList.forEach((ri) => {
-            if (ri.flag !== 1) {
-              if (!ri.orderIdList) {
-                  const a = []
-                  ri.orderIdList = [];
-                  a.push(ri.orderId);
-                  if(this.uniqueArray(a,present)){
-                    this.$set(ri, 'flag', 1);
-                    rights.num ++
-                  }
-              }
-              ri.orderIdList.forEach(r => {
-                if(r.flag !== 1){
-                  if (this.uniqueArray(r.ids, present)) {
-                    this.$set(r, 'flag', 1);
-                    ri.num ++
-                    if(ri.num === ri.orderIdList.length){
-                      this.$set(ri,'flag',1)
+            rights.allowRightsConditionDtoList.forEach((ri) => {
+                if (!ri.orderIdList) {
+                  if (ri.flag !== 1 ) {
+                    const a = []
+                    a.push(ri.orderId);
+                    if(this.uniqueArray(a,present)){
+                      this.$set(ri, 'flag', 1);
                       rights.num ++
                     }
                   }
+                }else {
+                  ri.orderIdList.forEach(r => {
+                    debugger
+                    if (ri.flag !== 1 || (r.tempList.length < r.ids.length)) {
+                    if (r.flag !== 1 || ( r.tempList.length < r.ids.length)) {
+                      if (this.uniqueArray(r.ids, present)) {
+                        this.$set(r, 'flag', 1);
+                        ri.num++
+                        for (var i = 0; i < r.ids.length; i++) {
+                          for (var j = 0; j < present.length; j++) {
+                            if (r.ids[i] === present[j]) {
+                              if (r.tempList.length === 0) {
+                                r.tempList.push(r.ids[i])
+                              } else {
+                                if (!r.tempList.find(item => item === r.ids[i])) {
+                                  r.tempList.push(r.ids[i])
+                                }
+                              }
+                            }
+                          }
+                        }
+                        if (ri.num === ri.orderIdList.length) {
+                          this.$set(ri, 'flag', 1)
+                          rights.num++
+                        }
+                      }
+                    }
+                  }
+                  })
                 }
-              })
+            });
+            if (rights.num === rights.allowRightsConditionDtoList.length) {
+              this.$set(rights, 'isOptional', 0);
             }
-          });
-          debugger
-          if (rights.num === rights.allowRightsConditionDtoList.length) {
-            this.$set(rights, 'isOptional', 0);
-          }
         });
       }
       this.anylizeMCData(this.mutexRightsList);
@@ -842,7 +888,8 @@ export default {
       }
     },
     anylizeMCData(list) {
-
+      console.log('11111',list)
+      debugger
       list.forEach((item) => {
         if (item.isOptional === 1) {
           this.$set(item, 'addGray', false);
@@ -882,7 +929,6 @@ export default {
         item.num = 0;
         item.allowRightsConditionDtoList.forEach((al) => {
           al.flag = 0;
-
           if(al.orderIdList){
             const temp = []
             al.num = 0;
@@ -890,9 +936,12 @@ export default {
               let a = {}
               a.flag = 0
               a.ids = al.orderIdList[i]
+              a.tempList = []
+              a.num = 0
               temp.push(a)
             }
             al.orderIdList = temp
+
           }
 
         });

@@ -525,8 +525,6 @@ export default {
     this.addressData = addressData;
     this.userParam = JSON.parse(localStorage.getItem('userinfo'));
     this.shopId = this.userParam.shopId;
-    this.queryUserList();
-    this.getUserStore();
     // 处理权益是否可选
     if (this.$route.params.region === 'hand') {
       this.handRegion = true;
@@ -542,10 +540,13 @@ export default {
       this.customerInfo.mobile = this.userParam.mobile;
       this.customerInfo.customerId = this.userParam.customerId;
       this.customerInfo.orderFollowId = this.userParam.orderFollowId
+      this.shopId = this.userParam.storeId
       this.customerInfo.userId = '';
       this.haveCustomer = true;
       this.haveConsignee = false;
     }
+    this.queryUserList();
+    this.getUserStore();
 
     if (this.$route.params.customerConsigneeInfo.businessScenarios) {
       this.orderSource = this.$route.params.customerConsigneeInfo.businessScenarios;

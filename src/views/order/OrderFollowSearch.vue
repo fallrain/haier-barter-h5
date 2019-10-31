@@ -354,7 +354,7 @@ export default {
     gujiaClick(item) {
       wx.miniProgram.navigateTo({
         // url: `/pages/userService/userService?userId=${item.userId}&userName=${item.userName}&mobile=${item.userMobile}&workFlowId=${item.workFlowId}&flowStatus=${item.flowStatus}&domainName=${item.domainName}&id=${item.id}` });
-        url: `/pages/message/valuationInfo/valuationInfo?odlfornewdbId=${item.sourceSn}&workFlowId=${item.id}`
+        url: `/pages/message/valuationInfo/valuationInfo?odlfornewdbId=${item.sourceSn}&workFlowId=${item.id}&storeId=${item.storeId}`
       });
     },
     againEntry(item) {
