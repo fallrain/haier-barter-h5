@@ -428,6 +428,7 @@ export default {
   //    }
   },
   activated() {
+    debugger;
     if (this.$route.query.temp) {
       let ID = '';
       const obj = JSON.parse(this.$route.query.temp);
@@ -920,7 +921,7 @@ export default {
                       name: 'Order.OrderUploadInvoice',
                       params: { orderNo: this.orderNo }
                     });
-                    this.$destroy();
+                    // this.$destroy();
                   }
                 }
               });
