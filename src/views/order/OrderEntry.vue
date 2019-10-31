@@ -452,9 +452,11 @@ export default {
 
   },
   activated() {debugger
-    if (this.$route.params.customerConsigneeInfo.id) {
-      this.orderFollowId = this.$route.params.customerConsigneeInfo.id;
-      localStorage.setItem('orderFollowId', this.orderFollowId);
+    if (this.$route.params.customerConsigneeInfo) {
+      if (this.$route.params.customerConsigneeInfo.id) {
+        this.orderFollowId = this.$route.params.customerConsigneeInfo.id;
+        localStorage.setItem('orderFollowId', this.orderFollowId);
+      }
     }
     if (this.$route.query.temp) {
       let ID = '';
@@ -565,6 +567,12 @@ export default {
     // this.queryCustomerDefault();
   },
   methods: {
+    getQueryString(name) {
+      const reg = new RegExp(`(^|&)${name}=([^&]*)(&|$)`, 'i');
+      const r = window.location.search.substr(1).match(reg);
+      if (r != null) return unescape(r[2]);
+      return null;
+    },
     //  haveConsignee() {
     //   /* 存在收货人信息 */
     //   return this.consignee && JSON.stringify(this.consignee) !== '{}';
