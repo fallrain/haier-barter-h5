@@ -535,6 +535,7 @@ export default {
       this.customerInfo.username = this.userParam.username;
       this.customerInfo.mobile = this.userParam.mobile;
       this.customerInfo.customerId = this.userParam.customerId;
+      this.customerInfo.orderFollowId = this.userParam.orderFollowId
       this.customerInfo.userId = '';
       this.haveCustomer = true;
       this.haveConsignee = false;

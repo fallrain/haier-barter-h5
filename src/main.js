@@ -48,8 +48,9 @@ new Vue({
       userinfoOld = JSON.parse(userinfoOld);
     }
     localStorage.setItem('userinfo', JSON.stringify({
-      ...userinfo,
-      ...userinfoOld
+      ...userinfoOld,
+      ...userinfo
+
     }));
     userinfo.token && (localStorage.setItem('acces_token', userinfo.token));
   }
