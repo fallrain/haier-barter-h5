@@ -527,10 +527,16 @@ export default {
     this.shopId = this.userParam.shopId;
     this.queryUserList();
     this.getUserStore();
+    // 处理权益是否可选
     if (this.$route.params.region === 'hand') {
       this.handRegion = true;
     }
-    if (this.userParam.oldForNew === '1') {
+    if (this.$route.params.customerConsigneeInfo.freezeMsg) {
+      if (this.$route.params.customerConsigneeInfo.freezeMsg == 'Y') {
+        this.handRegion = true;
+      }
+    }
+    if (this.userParam.oldForNew === 1) {
       this.isYJHX = true;
       this.customerInfo.username = this.userParam.username;
       this.customerInfo.mobile = this.userParam.mobile;

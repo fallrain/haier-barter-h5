@@ -325,6 +325,7 @@ export default {
         //   num: 21
         // }
       ],
+      handRegion: false,
       // 选中的活动id
       choosedActivitys: [],
       // 选择礼品pop显示隐藏
@@ -488,6 +489,11 @@ export default {
     this.orderFollowId = this.$route.params.orderFollowId;
     if (!this.orderFollowId) {
       this.orderFollowId = localStorage.getItem('orderFollowId');
+    }
+    if (this.$route.params.freezeMsg) {
+      if (this.$route.params.freezeMsg == 'Y') {
+        this.handRegion = true;
+      }
     }
     this.userParam = JSON.parse(localStorage.getItem('userinfo'));
     if (this.orderNo) {

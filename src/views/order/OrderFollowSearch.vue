@@ -452,6 +452,7 @@ export default {
       if (val.name === '成交录单') {
         this.orderService.checkCreateOrder().then((res) => { // 判断店铺是否冻结
           if (res.code != -1) {
+            const freezeMsg = res.data;
             this.$router.push({
               name: 'Order.OrderEntry',
               params: {
@@ -463,6 +464,7 @@ export default {
                   businessScenarios: info.businessScenarios,
                   sourceSn: info.sourceSn,
                   id: info.id,
+                  freezeMsg: freezeMsg,
                 },
                 region: 'new'
               }
@@ -472,11 +474,13 @@ export default {
       } else if (val.name === '继续录单') {
         this.orderService.checkCreateOrder().then((res) => { // 判断店铺是否冻结
           if (res.code != -1) {
+            const freezeMsg = res.data;
             this.$router.push({
               name: 'Order.OrderModify',
               params: {
                 orderNo: info.orderNo,
-                orderFollowId: info.id
+                orderFollowId: info.id,
+                freezeMsg: freezeMsg,
               }
             });
           }
@@ -497,6 +501,7 @@ export default {
         // val.name === '录新订单'
         this.orderService.checkCreateOrder().then((res) => { // 判断店铺是否冻结
           if (res.code != -1) {
+            const freezeMsg = res.data;
             // 生成一条新的待办
             this.orderService.createNewOrder({}, { orderNo: info.orderNo }).then((res) => {
               if (res.code === 1) {
@@ -505,6 +510,7 @@ export default {
                   name: 'Order.OrderEntry',
                   params: {
                     customerConsigneeInfo: {
+                      freezeMsg: freezeMsg,
                       userName: info.userName,
                       mobile: info.userMobile,
                       userId: info.userId,
