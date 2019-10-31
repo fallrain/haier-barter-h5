@@ -38,11 +38,19 @@ new Vue({
   render: h => h(App),
 }).$mount('#app');
 
-function getuserInfo() {
+(function getuserInfo() {
   const userinfo = bUtil.convertQueryStingToMap();
-  if (userinfo.hmcid) {
-    localStorage.setItem('userinfo', JSON.stringify(userinfo));
-    localStorage.setItem('acces_token', userinfo.token);
+  debugger
+  if (userinfo) {
+    let userinfoOld = localStorage.getItem('userinfo');
+    // 存在某些特殊情况，存入null/undefined，导致用户缓存有误的情况
+    if (userinfoOld && userinfoOld !== 'null' && userinfoOld !== 'undefined') {
+      userinfoOld = JSON.parse(userinfoOld);
+    }
+    localStorage.setItem('userinfo', JSON.stringify({
+      ...userinfo,
+      ...userinfoOld
+    }));
+    userinfo.token && (localStorage.setItem('acces_token', userinfo.token));
   }
-}
-getuserInfo();
+}());

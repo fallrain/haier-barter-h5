@@ -530,7 +530,7 @@ export default {
     if (this.$route.params.region === 'hand') {
       this.handRegion = true;
     }
-    if (this.userParam.oldForNew === 1) {
+    if (this.userParam.oldForNew === '1') {
       this.isYJHX = true;
       this.customerInfo.username = this.userParam.username;
       this.customerInfo.mobile = this.userParam.mobile;
