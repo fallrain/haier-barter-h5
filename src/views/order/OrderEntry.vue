@@ -1247,7 +1247,7 @@ export default {
   .orderEntry-user-head {
     display: flex;
     align-items: center;
-    padding-top: 10px;
+    padding-top: 20px;
 
     .name {
       color: #333;
@@ -1280,6 +1280,7 @@ export default {
     font-size: 28px;
     line-height: 36px;
     margin-top: 28px;
+    padding-bottom: 20px;
   }
 
   .orderEntry-date {
