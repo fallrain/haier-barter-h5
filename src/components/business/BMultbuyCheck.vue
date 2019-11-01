@@ -151,6 +151,9 @@ export default {
     margin-right: 42px;
     margin-bottom: 16px;
     text-align: center;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 
     &:nth-child(3n) {
       margin-right: 0;
