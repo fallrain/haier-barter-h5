@@ -17,6 +17,7 @@
     </div>
     <vue-core-image-upload
       v-bind="$attrs"
+      inputAccept="*"
       @imageuploaded="imageuploaded"
       @imageuploading="imageuploading"
       @errorhandle="errorhandle"
