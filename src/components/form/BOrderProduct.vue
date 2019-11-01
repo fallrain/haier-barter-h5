@@ -25,7 +25,6 @@
       v-if="content"
       class="b-order-product-item-cnt"
     >
-
       <p class="p-class">产品需要代报装,请选择时间:</p>
       <b-date-picker
         class="orderEntry-date2"
