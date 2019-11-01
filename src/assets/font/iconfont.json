@@ -300,6 +300,13 @@
       "unicode_decimal": 59206
     },
     {
+      "icon_id": "11372728",
+      "name": "眼睛",
+      "font_class": "yanjing",
+      "unicode": "e8bf",
+      "unicode_decimal": 59583
+    },
+    {
       "icon_id": "11401392",
       "name": "下箭头",
       "font_class": "xialaactive-copy-copy",

@@ -4,9 +4,9 @@
       <img src="@/assets/images/activity/data-analysis-example.png" alt="">
     </div>
     <activity-name-time
-      title="海尔国潮家电节|海尔智慧厨房"
-      startDate="2019-06-01"
-      endDate="2019-06-18"
+      :title="activityInfo.activityTitle"
+      :startDate="activityInfo.activityStartTime"
+      :endDate="activityInfo.activityEndTime"
       address="青岛市崂山区海尔路10号海尔专卖店"
     ></activity-name-time>
     <b-item
@@ -77,6 +77,14 @@ export default {
   components: {
     BItem,
     ActivityNameTime
+  },
+  created() {
+    this.activityInfo = this.$route.params.activityInfo;
+  },
+  data() {
+    return {
+      activityInfo: {},
+    };
   }
 };
 </script>

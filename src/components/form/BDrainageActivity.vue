@@ -9,16 +9,16 @@
       </div>
 
       <div class="drainage-activity-right">
-        <span class="drainage-activity-title">{{getData.name}}</span>
-        <span class="drainage-activity-time">{{getData.time}}</span>
+        <span class="drainage-activity-title">{{getData.activityTitle}}</span>
+        <span class="drainage-activity-time">{{getData.activityStartTime}}至{{getData.activityEndTime}}</span>
 
         <div class="drainage-activity-container">
           <div>
-            <span class="drainage-activity-time">{{getData.scope}}</span>
+            <span class="drainage-activity-time">{{getData.microName}}</span>
           </div>
           <div>
-            <i class="iconfont icon-liwu"/>
-            <span class="drainage-activity-time">{{getData.people}}</span>
+            <i class="iconfont icon-yanjing"/>
+            <span class="drainage-activity-time">{{getData.allowShare}}</span>
           </div>
         </div>
 
@@ -40,13 +40,15 @@
       <button
         type="button"
         class="common-btn-primary"
-        style="margin-left:15px">
+        style="margin-left:15px"
+        @click="qrCode">
         活动二维码
       </button>
       <button
         type="button"
         class="common-btn-primary"
-        style="margin-left:15px">
+        style="margin-left:15px"
+        @click="dataStatistics">
         数据统计
       </button>
     </div>
@@ -120,6 +122,18 @@ export default {
   methods: {
     share() {
       this.isPopupShow = true;
+    },
+    qrCode() {
+      this.$router.push({
+        name: 'Activity.ActivityQRCode',
+        params: {activityInfo: this.getData}
+      });
+    },
+    dataStatistics() {
+      this.$router.push({
+        name: 'Activity.ActivityDataAnalysis',
+        params: {activityInfo: this.getData}
+      });
     }
   },
 };
@@ -256,5 +270,6 @@ export default {
 
   .drainage-popup-img {
     font-size: 80px;
+    color: #00cd00;
   }
 </style>
