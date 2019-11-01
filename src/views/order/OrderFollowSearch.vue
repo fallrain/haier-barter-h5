@@ -354,7 +354,7 @@ export default {
     gujiaClick(item) {
       wx.miniProgram.navigateTo({
         // url: `/pages/userService/userService?userId=${item.userId}&userName=${item.userName}&mobile=${item.userMobile}&workFlowId=${item.workFlowId}&flowStatus=${item.flowStatus}&domainName=${item.domainName}&id=${item.id}` });
-        url: `/pages/message/valuationInfo/valuationInfo?odlfornewdbId=${item.sourceSn}&workFlowId=${item.id}`
+        url: `/pages/message/valuationInfo/valuationInfo?odlfornewdbId=${item.sourceSn}&workFlowId=${item.id}&storeId=${item.storeId}`
       });
     },
     againEntry(item) {
@@ -448,7 +448,7 @@ export default {
         size: 10
       });
     },
-    followButtonClicked(val, info) {
+    followButtonClicked(val, info) {console.log(info)
       if (val.name === '成交录单') {
         this.orderService.checkCreateOrder().then((res) => { // 判断店铺是否冻结
           if (res.code != -1) {
@@ -764,7 +764,10 @@ export default {
 
 <style scoped lang="scss">
   .mescroll {
-    padding: 21.6vw 0 0 0 !important;
+    /*padding: 21.6vw 0 0 0 !important;*/
+    position: fixed;
+    top: 21.6vw;
+    padding: 0 0 34vw 0;
   }
 
   .md-notice-bar {
