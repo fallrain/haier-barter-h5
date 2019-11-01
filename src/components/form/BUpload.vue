@@ -17,7 +17,7 @@
     </div>
     <vue-core-image-upload
       v-bind="$attrs"
-      inputAccept="*"
+      inputAccept="image/*"
       @imageuploaded="imageuploaded"
       @imageuploading="imageuploading"
       @errorhandle="errorhandle"
@@ -63,6 +63,11 @@ export default {
       Toast.failed('上传失败')
     }
 
+  },
+  mounted() {
+    let fileInput = document.querySelector('input[type="file"]');
+    fileInput.setAttribute('accept', 'image/*');
+    console.log(fileInput);
   }
 };
 </script>
