@@ -65,9 +65,9 @@ export default {
 
   },
   mounted() {
-    let fileInput = document.querySelector('input[type="file"]');
-    fileInput.setAttribute('accept', 'image/*');
-    console.log(fileInput);
+    // let fileInput = document.querySelector('input[type="file"]');
+    // fileInput.setAttribute('accept', 'image/*');
+    // console.log(fileInput);
   }
 };
 </script>
