@@ -20,8 +20,8 @@ export default {
   uncheckedOrderRights(data, param) {
     return axPostJson(urls.uncheckedOrderRights, data, param);
   },
-  queryRightsResidue() {
-    return axGet(urls.queryRightsResidue);
+  queryRightsResidue(data, param) {
+    return axGet(urls.queryRightsResidue, data, param);
   },
   queryRightsSingleConfigList(data, param) {
     return axPostJson(urls.queryRightsSingleConfigList, data, param);
