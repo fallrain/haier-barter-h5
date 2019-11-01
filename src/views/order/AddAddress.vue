@@ -25,26 +25,26 @@
         <span class="searchTextClass">搜索暂无结果,</span><span class="searchBtnClass" @click="creatCustomer">创建信息</span>
       </p>
       <div v-show="searchEnd">
-      <li>
-        <div class="addAddress-form-item">
-          <label class="addAddress-form-item-name">顾客姓名</label>
-          <input
-            type="text"
-            class="addAddress-form-item-ipt"
-            placeholder="请输入姓名"
-            v-show="region == 'userAdd'"
-            v-model="customerInfo.username"
-          >
-          <input
-            type="text"
-            class="addAddress-form-item-ipt"
-            placeholder="请输入姓名"
-            disabled="true"
-            v-show="region != 'userAdd'"
-            v-model="customerInfo.username"
-          >
-        </div>
-      </li>
+        <li>
+          <div class="addAddress-form-item">
+            <label class="addAddress-form-item-name">顾客姓名</label>
+            <input
+              type="text"
+              class="addAddress-form-item-ipt"
+              placeholder="请输入姓名"
+              v-show="region == 'userAdd'"
+              v-model="customerInfo.username"
+            >
+            <input
+              type="text"
+              class="addAddress-form-item-ipt"
+              placeholder="请输入姓名"
+              disabled="true"
+              v-show="region != 'userAdd'"
+              v-model="customerInfo.username"
+            >
+          </div>
+        </li>
       </div>
     </ul>
     <div class="consignee-class" v-show="searchEnd">
@@ -154,7 +154,6 @@ import {
 
 import addressData from '@/lib/address';
 import {
-  mapGetters,
   mapMutations
 } from 'vuex';
 
@@ -186,18 +185,29 @@ export default {
       customerInfo: {
         address: '',
         city: '',
-        // customerId: '',
         isDefault: false,
         district: '',
-        familyId: '',
+        id: '',
         familyItemCode: '',
-        // hmcId: 'A0008949',
         hmcId: '',
         mobile: '',
         province: '',
         sex: 1,
         userId: '',
-        source: '',
+        username: '',
+        tag: []
+      },
+      customerInfoCreate: {
+        address: '',
+        city: '',
+        isDefault: false,
+        district: '',
+        familyItemCode: '',
+        hmcId: '',
+        mobile: '',
+        province: '',
+        sex: 1,
+        userId: '',
         username: '',
         tag: []
       },
@@ -226,8 +236,7 @@ export default {
       // 地址标签列表
       // tagList: [],
       tag: [],
-      tagList: [
-      ],
+      tagList: [],
       // 地址pop显示隐藏
       addressPopShow: false,
       addressName: '',
@@ -235,16 +244,10 @@ export default {
       smld: false
     };
   },
-  created() {
-    // 不加入双向绑定
-    this.addressData = addressData;
-    this.customerInfo.hmcId = JSON.parse(localStorage.getItem('userinfo')).hmcid;
-    this.customerInfo.tag = [];
-    this.getFamilyItem();
-
-    if (this.$route.params) {debugger;
+  activated() {
+    if (this.$route.params) {
       this.region = this.$route.params.region;
-      console.log(this.region)
+      console.log(this.region);
       if (this.region === 'add' && this.$route.params.info === '{}') {
         this.confirmShow = true;
       } else if (this.region === 'userAdd') {
@@ -258,9 +261,26 @@ export default {
           this.customerInfo.username = JSON.parse(this.$route.params.info).username;
           this.customerInfo.mobile = JSON.parse(this.$route.params.info).mobile;
           this.customerInfo.userId = JSON.parse(this.$route.params.info).userId;
+          if (JSON.parse(this.$route.params.info).customerId) {
+            this.customerInfo.customerId = JSON.parse(this.$route.params.info).customerId;
+          }
           this.smld = true;
-        } else {
+        } else if (this.region === 'edit') {
           this.customerInfo = JSON.parse(this.$route.params.info);
+          // this.customerInfo.username = JSON.parse(this.$route.params.info).username;
+          // this.customerInfo.mobile = JSON.parse(this.$route.params.info).mobile;
+          // this.customerInfo.userId = JSON.parse(this.$route.params.info).userId;
+          // this.customerInfo.consigneeUserName = JSON.parse(this.$route.params.info).consigneeUserName;
+          // this.customerInfo.consigneeUserPhone = JSON.parse(this.$route.params.info).consigneeUserPhone;
+          // this.customerInfo.sex = JSON.parse(this.$route.params.info).sex;
+          // this.customerInfo.address = JSON.parse(this.$route.params.info).address;
+          // this.customerInfo.id = JSON.parse(this.$route.params.info).id;
+        } else {
+          console.log(JSON.parse(this.$route.params.info));
+          this.customerInfo.username = JSON.parse(this.$route.params.info).username;
+          this.customerInfo.mobile = JSON.parse(this.$route.params.info).mobile;
+          this.customerInfo.userId = JSON.parse(this.$route.params.info).userId;
+          // this.customerInfo = JSON.parse(this.$route.params.info);
           this.customerInfo.hmcId = JSON.parse(localStorage.getItem('userinfo')).hmcid;
         }
         if (this.customerInfo.familyItemCode) {
@@ -276,9 +296,16 @@ export default {
         this.newAddress.districtName = JSON.parse(this.$route.params.info).consignee.districtName;
         this.newAddress.cityName = JSON.parse(this.$route.params.info).consignee.cityName;
         this.newAddress.regionCode = JSON.parse(this.$route.params.info).regionCode;
-        this.addressName = `${this.newAddress.provinceName}/${this.newAddress.cityName}/${this.newAddress.districtName}`
+        this.addressName = `${this.newAddress.provinceName}/${this.newAddress.cityName}/${this.newAddress.districtName}`;
       }
     }
+  },
+  created() {
+    // 不加入双向绑定
+    this.addressData = addressData;
+    this.customerInfo.hmcId = JSON.parse(localStorage.getItem('userinfo')).hmcid;
+    this.customerInfo.tag = [];
+    this.getFamilyItem();
   },
   computed: {
     tagName() {
@@ -364,15 +391,20 @@ export default {
         Toast.failed('顾客姓名不能为空');
         return;
       }
+      if (this.customerInfo.consigneeUserName === '') {
+        Toast.failed('收件人姓名不能为空');
+        return;
+      }
+      if (this.customerInfo.consigneeUserPhone === '') {
+        Toast.failed('收件人手机号不能为空');
+        return;
+      }
       if (!(/^1[34578]\d{9}$/.test(this.customerInfo.consigneeUserPhone))) {
         Toast.failed('手机号格式错误');
         this.customerInfo.consigneeUserPhone = '';
         return;
       }
-      if (this.customerInfo.consigneeUserName === '') {
-        Toast.failed('收件人姓名不能为空');
-        return;
-      }
+
       if (this.customerInfo.province === '') {
         Toast.failed('省份不能为空');
         return;
@@ -402,7 +434,9 @@ export default {
         }
         delete this.customerInfo.tag;
       }
+      debugger
       if (this.region === 'add' || this.region === 'userAdd') {
+        delete this.customerInfo.id;
         this.productService.addcustomerAddress(this.customerInfo, {}).then((res) => {
           if (res.code === 1) {
             Toast.succeed('地址添加成功');
@@ -420,7 +454,7 @@ export default {
           }
         });
       }
-      let newAddress = {
+      const newAddress = {
         provinceName: this.newAddress.provinceName,
         cityName: this.newAddress.cityName,
         areaName: this.newAddress.districtName,
@@ -452,11 +486,14 @@ export default {
   mounted() {
     this.$nextTick(() => {
       console.log(this.$refs);
-      this.$refs.addForm.addEventListener('touchmove', this.stopScrolling, false);
+      // this.$refs.addForm.addEventListener('touchmove', this.stopScrolling, false);
     });
   },
   beforeRouteLeave(to, from, next) {
-    const obj = { tel: this.customerInfo.mobile, smld: this.smld };
+    const obj = {
+      tel: this.customerInfo.mobile,
+      smld: this.smld
+    };
     if (to.name === 'Order.OrderEntry' || 'Order.OrderModify') {
       to.query.temp = JSON.stringify(obj);
       if (this.$vnode && this.$vnode.data.keepAlive) {
@@ -496,17 +533,19 @@ export default {
 </script>
 
 <style lang="scss">
-  .consignee-class{
+  .consignee-class {
     margin-top: 20px;
     background: #fff;
     padding-left: 24px;
     padding-right: 24px;
   }
-  .address-back{
+
+  .address-back {
     padding-left: 24px;
     padding-right: 24px;
     background: #fff;
   }
+
   .addAddress-form {
 
     padding-bottom: 4px;
@@ -521,10 +560,12 @@ export default {
       font-size: 26px;
       color: #666;
     }
-    .md-tab-picker{
-      .md-tabs-content{
-        .md-scroll-view{
-          min-height: 101%;
+
+    .md-tab-picker {
+      .md-tabs-content {
+
+        .md-scroll-view {
+          overflow: scroll;
         }
       }
     }
@@ -559,12 +600,14 @@ export default {
       font-size: 40px;
     }
   }
+
   .searchResultClass {
     text-align: center;
     height: 100px;
     font-size: 32px;
     color: #666666;
     padding: 30px;
+
     .searchBtnClass {
       color: #1969C6;
     }

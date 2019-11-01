@@ -228,7 +228,9 @@ export default {
           //
           //   this.activityList = str.rightsUserInterestsDTO;
           // }
-          this.activityList = resData.rightName.split(',');
+          if (resData.rightName != '') {
+            this.activityList = resData.rightName.split(',');
+          }
           if (resData.orderDetailDtoList.length !== 0) {
             this.productList = resData.orderDetailDtoList;
             this.productList.forEach((item) => {

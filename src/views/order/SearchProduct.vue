@@ -80,6 +80,8 @@ export default {
     Toast
   },
   created() {
+    this.orderNo = this.$route.params.orderNo;
+    this.isProductList = this.$route.params.productList;
     if (localStorage.getItem('productSearchHistory')) {
       this.searchHistory = JSON.parse(localStorage.getItem('productSearchHistory'));
       if (this.searchHistory.length > 30) {
@@ -98,7 +100,9 @@ export default {
       currentClickItemData: {},
       searchList: [],
       // 搜索历史
-      searchHistory: []
+      searchHistory: [],
+      orderNo: '',
+      isProductList: []
     };
   },
   methods: {
@@ -140,11 +144,15 @@ export default {
       wx.ready(() => {
         wx.scanQRCode({
           needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
-          scanType: ['barCode'], // 可以指定扫二维码还是一维码，默认二者都有
+          // scanType: ['barCode','qrCode'],//qrCode // 可以指定扫二维码还是一维码，默认二者都有
           success: (res) => {
             const result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
             if (result && typeof result === 'string') {
-              this.searchVal = result.split(',')[1];
+              if (result.includes(',')) {
+                this.searchVal = result.split(',')[1];
+              } else {
+                this.searchVal = result;
+              }
               this.search();
             }
           }
@@ -187,6 +195,8 @@ export default {
     if (to.name === 'Order.OrderEntry' || to.name === 'Order.OrderModify' || to.name === 'Order.OrderSupplement') {
       const obj = { product: this.currentClickItemData };
       to.query.temp = JSON.stringify(obj);
+      to.params.orderNo = this.orderNo;
+      to.params.productList = this.isProductList;
     }
     localStorage.setItem('productSearchHistory', JSON.stringify(this.searchHistory));
     next();// 必须要有这个，否则无法跳转

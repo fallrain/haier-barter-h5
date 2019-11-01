@@ -4907,7 +4907,7 @@ make-dir@^2.0.0:
     pify "^4.0.1"
     semver "^5.6.0"
 
-mand-mobile@^2.3.2:
+mand-mobile@^2.5.2:
   version "2.5.3"
   resolved "https://registry.npm.taobao.org/mand-mobile/download/mand-mobile-2.5.3.tgz#d3d87139ad9caa2d2f2ef8f8ecc287a2898af8a3"
   integrity sha1-09hxOa2cqi0vLvj47MKHoomK+KM=

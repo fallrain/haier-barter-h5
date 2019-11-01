@@ -37,6 +37,7 @@
         @followButtonClick="followButtonClicked"
         @againEntry="againEntry"
         @itemClick="itemClick"
+        @gujiaClick="gujiaClick"
         @userService="userService"
         @maybeBuyer="maybeBuyer"
       ></b-order-follow-item>
@@ -55,6 +56,7 @@
         @followButtonClick="followButtonClicked"
         @againEntry="againEntry"
         @itemClick="itemClick"
+        @gujiaClick="gujiaClick"
         @userService="userService"
         @maybeBuyer="maybeBuyer"
       ></b-order-follow-item>
@@ -72,6 +74,7 @@
         @updateOrderType="updateOrderType"
         @followButtonClick="followButtonClicked"
         @itemClick="itemClick()"
+        @gujiaClick="gujiaClick"
       ></b-order-follow-item>
     </div>
     <div
@@ -88,6 +91,7 @@
         @followButtonClick="followButtonClicked"
         @userService="userService"
         @itemClick="itemClick()"
+        @gujiaClick="gujiaClick"
         @maybeBuyer="maybeBuyer"
       ></b-order-follow-item>
     </div>
@@ -129,11 +133,12 @@
 import {
   Icon,
   NoticeBar,
+  Popup,
   ScrollView,
   ScrollViewMore,
   ScrollViewRefresh,
   TabBar,
-  Toast,Popup
+  Toast
 } from 'mand-mobile';
 import {
   BPopButton,
@@ -222,10 +227,10 @@ export default {
         list: [],
         isListInit: false
       },
-      fuzzy:false,
-      businessType:'',
-      handEntryCon:false,
-      handCount:''
+      fuzzy: false,
+      businessType: '',
+      handEntryCon: false,
+      handCount: ''
     };
   },
   activated() {
@@ -235,7 +240,7 @@ export default {
     if (localStorage.getItem('confirm') === 'list') {
       this.curTab = 3;
       localStorage.setItem('confirm', '');
-    } else if (localStorage.getItem('confirm') === 'caogao'){
+    } else if (localStorage.getItem('confirm') === 'caogao') {
       this.curTab = 4;
       localStorage.setItem('confirm', '');
     }
@@ -251,7 +256,7 @@ export default {
     //   hmcid: 'a0032254',
     //   mobile: '15621017056',
     //   shopId: '8700048360',
-    //   // hmcid: 'Z0166654',
+    //   // hmcid: '18000560',
     //   // orderMode: 'Haier',
     //   // orderMode: 'Casarte',
     //   // mobile: '15621017056',
@@ -286,7 +291,7 @@ export default {
       this.bUtil.scroviewTabChange(viewName, this);
     }
   },
-  mounted() {console.log('mounted')
+  mounted() {
     // 创建当前tab的MeScroll对象，并下拉刷新
     this.bUtil.scroviewTabChange(this.curScrollViewName, this);
   },
@@ -316,31 +321,40 @@ export default {
             Toast.failed('卡萨帝模式，不支持手动录单');
             return;
           }
-          this.orderService.checkUpperLimitForSGLD().then(res => {
-            if(res.code === 1){
-              this.handEntryCon = true
-              this.handCount = res.data
-            }else {
+          this.orderService.checkUpperLimitForSGLD().then((res) => {
+            if (res.code === 1) {
+              this.handEntryCon = true;
+              this.handCount = res.data;
+            } else {
               Toast.info('您已没有手动录单条数，请选择其他录单方式', 3000);
             }
-          })
+          });
         }
       });
     },
-    handEntryConfirm(){
-      this.handEntryCon = false
+    handEntryConfirm() {
+      this.handEntryCon = false;
       this.$router.push({
         name: 'Order.OrderEntry',
-        params: { customerConsigneeInfo: {}, region: 'hand' }
+        params: {
+          customerConsigneeInfo: {},
+          region: 'hand'
+        }
       });
     },
-    handEntryCancel(){
-      this.handEntryCon = false
+    handEntryCancel() {
+      this.handEntryCon = false;
     },
     itemClick(index) {
       this.$router.push({
         name: 'Order.OrderDetail',
         params: { orderNo: this.currentList[index % 10].orderNo }
+      });
+    },
+    gujiaClick(item) {
+      wx.miniProgram.navigateTo({
+        // url: `/pages/userService/userService?userId=${item.userId}&userName=${item.userName}&mobile=${item.userMobile}&workFlowId=${item.workFlowId}&flowStatus=${item.flowStatus}&domainName=${item.domainName}&id=${item.id}` });
+        url: `/pages/message/valuationInfo/valuationInfo?odlfornewdbId=${item.sourceSn}&workFlowId=${item.id}`
       });
     },
     againEntry(item) {
@@ -351,23 +365,27 @@ export default {
       // });
       this.$router.push({
         name: 'Order.OrderEntry',
-        params: { customerConsigneeInfo: {
-          userName: item.userName,
-          mobile: item.userMobile,
-          recordMode: item.recordMode
-        },
-        region: 'new' }
+        params: {
+          customerConsigneeInfo: {
+            userName: item.userName,
+            mobile: item.userMobile,
+            recordMode: item.recordMode
+          },
+          region: 'new'
+        }
       });
     },
     // 入户服务
     userService(item) {
       wx.miniProgram.navigateTo({
         // url: `/pages/userService/userService?userId=${item.userId}&userName=${item.userName}&mobile=${item.userMobile}&workFlowId=${item.workFlowId}&flowStatus=${item.flowStatus}&domainName=${item.domainName}&id=${item.id}` });
-        url: `/pages/userService/userService?userId=${item.userId}&userName=${item.userName}&mobile=${item.userMobile}&flowStatus=${item.flowStatus}&workFlowId=${item.id}&hmcId=${this.userinfo.hmcid}`});
+        url: `/pages/userService/userService?userId=${item.userId}&userName=${item.userName}&mobile=${item.userMobile}&flowStatus=${item.flowStatus}&workFlowId=${item.id}&hmcId=${this.userinfo.hmcid}`
+      });
     },
     // 潜在客户
     maybeBuyer(item) {
-      wx.miniProgram.navigateTo({ url: '/pages/mabyByuser/mabyByuser', userId: item.userId });
+      // url: '/pages/mabyByuser/mabyByuser?userId=' + userId + '&userName=' + userName + '&mobile=' + mobile + '&workFlowId=' + workFlowId + '&flowStatus=' + flowStatus + '&domainName=' + domainName + '&id=' + id,
+      wx.miniProgram.navigateTo({ url: `/pages/userService/userService?userId=${item.userId}&userName=${item.userName}&mobile=${item.userMobile}&flowStatus=${item.flowStatus}&workFlowId=${item.id}&domainName=${item.recordMode}` });
     },
     // searchProduct(item) {
     //   this.orderService.queryOrderInfoByOrderNo({}, { orderNo: item.orderNo }).then((response) => {
@@ -404,7 +422,7 @@ export default {
     upCallback(page) {
       // 下载过就设置已经初始化
       this[this.curScrollViewName].isListInit = true;
-      this.businessType = ''
+      this.businessType = '';
       this.searchData(page).then(({ result, pages }) => {
         this.$nextTick(() => {
           // 通过当前页的数据条数，和总页数来判断是否加载完
@@ -416,7 +434,7 @@ export default {
     checkClicked(val) {
       this.updateList = true;
       this.sortType = val;
-      this.businessType = ''
+      this.businessType = '';
       this.searchData({
         num: 0,
         size: 10
@@ -424,7 +442,7 @@ export default {
     },
     buttonClicked(val) {
       this.updateList = true;
-      this.businessType = val.itemCode
+      this.businessType = val.itemCode;
       this.searchData({
         num: 0,
         size: 10
@@ -434,27 +452,36 @@ export default {
       if (val.name === '成交录单') {
         this.orderService.checkCreateOrder().then((res) => { // 判断店铺是否冻结
           if (res.code != -1) {
+            const freezeMsg = res.data;
             this.$router.push({
               name: 'Order.OrderEntry',
-              params: { customerConsigneeInfo: {
-                userName: info.userName,
-                mobile: info.userMobile,
-                userId: info.userId,
-                recordMode: info.recordMode,
-                businessScenarios: info.businessScenarios,
-                sourceSn: info.sourceSn,
-                id: info.id,
-              },
-              region: 'new' }
+              params: {
+                customerConsigneeInfo: {
+                  userName: info.userName,
+                  mobile: info.userMobile,
+                  userId: info.userId,
+                  recordMode: info.recordMode,
+                  businessScenarios: info.businessScenarios,
+                  sourceSn: info.sourceSn,
+                  id: info.id,
+                  freezeMsg: freezeMsg,
+                },
+                region: 'new'
+              }
             });
           }
         });
       } else if (val.name === '继续录单') {
         this.orderService.checkCreateOrder().then((res) => { // 判断店铺是否冻结
           if (res.code != -1) {
+            const freezeMsg = res.data;
             this.$router.push({
               name: 'Order.OrderModify',
-              params: { orderNo: info.orderNo, orderFollowId: info.id }
+              params: {
+                orderNo: info.orderNo,
+                orderFollowId: info.id,
+                freezeMsg: freezeMsg,
+              }
             });
           }
         });
@@ -463,7 +490,10 @@ export default {
           if (res.code != -1) {
             this.$router.push({
               name: 'Order.OrderSupplement',
-              params: { orderNo: info.orderNo, orderFollowId: info.id }
+              params: {
+                orderNo: info.orderNo,
+                orderFollowId: info.id
+              }
             });
           }
         });
@@ -471,13 +501,16 @@ export default {
         // val.name === '录新订单'
         this.orderService.checkCreateOrder().then((res) => { // 判断店铺是否冻结
           if (res.code != -1) {
+            const freezeMsg = res.data;
             // 生成一条新的待办
             this.orderService.createNewOrder({}, { orderNo: info.orderNo }).then((res) => {
               if (res.code === 1) {
                 const orderFollowId = res.data.id;
                 this.$router.push({
                   name: 'Order.OrderEntry',
-                  params: { customerConsigneeInfo: {
+                  params: {
+                    customerConsigneeInfo: {
+                      freezeMsg: freezeMsg,
                       userName: info.userName,
                       mobile: info.userMobile,
                       userId: info.userId,
@@ -486,7 +519,8 @@ export default {
                       sourceSn: info.sourceSn,
                       id: orderFollowId,
                     },
-                    region: 'new' }
+                    region: 'new'
+                  }
                 });
               }
             });
@@ -530,12 +564,12 @@ export default {
             } = res.data;
             sroviewObj.pages = pages;
             sroviewObj.result = result;
-            if(this.fuzzy){
-              if(result.length === 0){
+            if (this.fuzzy) {
+              if (result.length === 0) {
                 this[this.curScrollViewName].list = [];
-                Toast.failed('搜索结果不存在')
-                this.fuzzy = false
-                return
+                Toast.failed('搜索结果不存在');
+                this.fuzzy = false;
+                return;
               }
             }
             if (result && result.length > 0) {
@@ -544,7 +578,7 @@ export default {
               if (!this.updateList) {
                 console.log(page);
                 if (page.num === 1) {
-                  console.log(this.curScrollViewName)
+                  console.log(this.curScrollViewName);
                   this[this.curScrollViewName].list = [];
 
                   this[this.curScrollViewName].list = this.currentList;
@@ -560,7 +594,7 @@ export default {
 
               // });
             } else {
-              Toast.failed('暂无数据')
+              Toast.failed('暂无数据');
               this[this.curScrollViewName].list = [];
             }
           } else {
@@ -572,8 +606,8 @@ export default {
     anylizeData(curList) {
       curList.forEach((item) => {
         /*
-        0-跟进中  1-已完成  2-草稿  3-暂不跟进 4-取消 5-异常
-        */
+          0-跟进中  1-已完成  2-草稿  3-暂不跟进 4-取消 5-异常
+          */
         if (item.flowStatus === 1) {
           // item.buttonList = [{ name: '录新订单' }, { name: '退货' }, { name: '换货' }];// 已完成
           // item.buttonList = [{ name: '录新订单' },{ name: '补录订单' }];// 已完成
@@ -623,12 +657,6 @@ export default {
             }, {
               id: '3',
               name: '暂不跟进'
-            },{
-              id: '20',
-              name: '入户服务'
-            }, {
-              id: '21',
-              name: '潜在客户'
             });
           } else {
             item.userS = '';
@@ -639,7 +667,10 @@ export default {
             }, {
               id: '3',
               name: '暂不跟进'
-            },{
+            });
+          }
+          if (item.businessScenarios === 'SMLD') {
+            item.showList.push({
               id: '20',
               name: '入户服务'
             }, {
@@ -647,15 +678,6 @@ export default {
               name: '潜在客户'
             });
           }
-          // if (item.businessScenarios === 'SMLD') {
-          //   item.showList.push({
-          //     id: '20',
-          //     name: '入户服务'
-          //   }, {
-          //     id: '21',
-          //     name: '潜在客户'
-          //   });
-          // }
         } else if (this.curTab === 3) {
           item.showList = [];
           // item.showList.push({
@@ -701,13 +723,13 @@ export default {
         num: 1,
         size: 10
       };
-      this.businessType = ''
+      this.businessType = '';
       this.searchData(page);
-      this.fuzzy = true
+      this.fuzzy = true;
     },
     updateOrderType(type) {
       this.updateList = true;
-      this.businessType = ''
+      this.businessType = '';
       this.searchData({
         num: 0,
         size: 10
@@ -718,15 +740,19 @@ export default {
   beforeRouteEnter(to, from, next) {
     if (from.name === 'Order.OrderFollowCommitResult' || from.name === 'Order.OrderConfirm' || from.name === 'Order.OrderEntry' || from.name === 'Order.OrderModify') {
       next();
-      window.location.reload();
+      // this.$router.go(0);
+      // window.location.reload();
+      // let href = window.location.href;
+      // href += (href.indexOf('?') > -1 ? '&' : '?') + `_t=${(Math.random() + '').replace('.', '')}`;
+      // window.location.replace(href);
+    } else {
+      next();
     }
-    next();
   },
   beforeRouteLeave(to, from, next) {
     // wx.miniProgram.switchTab({ url: '/pages/tool/tool' });
-
     if (to.name === 'Order.OrderFollowCommitResult' || to.name === 'Order.OrderConfirm' || to.name === 'Order.OrderUploadInvoice') {
-      wx.miniProgram.switchTab({ url: '/pages/tool/tool' })
+      wx.miniProgram.switchTab({ url: '/pages/tool/tool' });
       // wx.miniProgram.navigateTo({ url: '/pages/tool/tool' });
       // next();
     } else {
@@ -737,11 +763,16 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  .mescroll {
+    padding: 21.6vw 0 0 0 !important;
+  }
+
   .md-notice-bar {
     position: absolute;
     width: 100%;
   }
-  .search-class{
+
+  .search-class {
     width: 100%;
     height: 90px;
     background-color: #f5f5f5;
@@ -749,6 +780,7 @@ export default {
     top: 0;
     z-index: 12;
   }
+
   .orderFollowButton-search {
     padding-left: 24px;
     padding-right: 24px;
@@ -858,7 +890,8 @@ export default {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  .popHand{
+
+  .popHand {
     text-align: center;
     font-size: 34px;
     color: #1969C6;
@@ -869,15 +902,18 @@ export default {
     padding-top: 40px;
 
   }
+
   .pop-div {
     margin-top: 10px;
     border-top: 1px solid #1969C6;
     text-align: center;
     padding-top: 20px;
+
     .popConfirm2 {
       display: inline-block;
       width: 300px;
     }
+
     .popConfirm1 {
       display: inline-block;
       width: 300px;

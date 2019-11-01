@@ -155,9 +155,7 @@ export default {
       // 产品列表
       productList: [],
       // 活动列表
-      activityList: [
-
-      ],
+      activityList: [],
       // 选中的活动id
       choosedActivitys: [],
       // 选择礼品pop显示隐藏
@@ -177,7 +175,9 @@ export default {
   created() {
     this.orderNo = this.$route.params.orderNo;
     // this.orderNo = 'Z15645424968056668';
-    this.getData();
+    if (this.orderNo) {
+      this.getData();
+    }
   },
   methods: {
     getData() {
@@ -229,7 +229,9 @@ export default {
           //
           //   this.activityList = str.rightsUserInterestsDTO;
           // }
-          this.activityList = resData.rightName.split(',');
+          if (resData.rightName) {
+            this.activityList = resData.rightName.split(',');
+          }
         }
       });
     },
@@ -250,7 +252,6 @@ export default {
       });
     },
     changeOrder() {
-
       this.$router.push({
         name: 'Order.OrderModify',
         params: { orderNo: this.orderNo }

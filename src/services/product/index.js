@@ -37,6 +37,8 @@ export default {
   },
   userList(storeId) {
     return axGet(urls.userList(storeId));
+  },
+  industryGroup(){
+    return axGet(urls.industryGroup)
   }
-
 };

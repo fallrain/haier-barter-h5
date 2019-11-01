@@ -91,8 +91,10 @@ export default {
       routerData: routerData.data
     };
   },
-  created() {
+  activated() {debugger
     this.orderNo = this.$route.params.orderInfo;
+  },
+  created() {
   },
   methods: {
     orderFollow() {
@@ -108,7 +110,6 @@ export default {
       });
     },
   },
-
   deactivated() {
     this.$router.replace({
       name: 'Order.OrderFollowSearch',
