@@ -56,7 +56,7 @@
             :key="index"
             :data="item"
             :index="index"
-            :content="item.installTime != ''"
+            :content="item.installTime"
           >
           </b-order-product-confirm>
         </ul>

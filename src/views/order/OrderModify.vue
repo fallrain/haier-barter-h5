@@ -785,10 +785,19 @@ export default {
         Toast.failed('请选择产品');
         return;
       }
+      for (let i = 0; i < this.productList.length; i++) {
+        if (this.productList[i].productPrice == '' && this.saveType == 0) {
+          Toast.failed('请输入产品价格');
+          return;
+        }
+      }
+      if (this.deliveryTime === '' && this.saveType == 0) {
+        Toast.failed('请选择送达时间');
+        return;
+      }
       if (!this.bUtil.isReportInstallFit(this.productList,this.deliveryTime) && this.saveType == 0) {
         return;
       }
-
       const subInfo = {};
       // multBuyParticipantCheckIds
       // if (this.multBuySponsorCheckedIds.length) {
