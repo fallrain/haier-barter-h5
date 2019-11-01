@@ -764,7 +764,10 @@ export default {
 
 <style scoped lang="scss">
   .mescroll {
-    padding: 21.6vw 0 0 0 !important;
+    /*padding: 21.6vw 0 0 0 !important;*/
+    position: fixed;
+    top: 21.6vw;
+    padding: 0 0 34vw 0;
   }
 
   .md-notice-bar {
