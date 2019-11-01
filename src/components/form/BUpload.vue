@@ -48,26 +48,18 @@ export default {
     }
   },
   methods:{
-    imageuploaded(data){
-
-      this.$emit('imageuploaded',data,this.imgs)
+    imageuploaded(data) {
+      this.$emit('imageuploaded', data, this.imgs);
     },
-    delFun(index){
-
-      this.$emit('delFun',index,this.imgs)
+    delFun(index) {
+      this.$emit('delFun', index, this.imgs);
     },
-    imageuploading(){
-      Toast.loading('上传中')
+    imageuploading() {
+      Toast.loading('上传中');
     },
-    errorhandle(){
-      Toast.failed('上传失败')
+    errorhandle() {
+      Toast.failed('上传失败');
     }
-
-  },
-  mounted() {
-    // let fileInput = document.querySelector('input[type="file"]');
-    // fileInput.setAttribute('accept', 'image/*');
-    // console.log(fileInput);
   }
 };
 </script>
