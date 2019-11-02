@@ -295,7 +295,6 @@ export default {
                 if(ri.flag !== 1) {
                   this.$set(ri, 'flag', 1);
                   // present = ri.ids;
-                  rights.slected = []
                   rights.selcted = ri.ids
                   item.rightsSelectedGroupDtoList.push(rights);
                   // ri.tempList =  ri.ids
@@ -360,13 +359,17 @@ export default {
         }
         this.mutexRightsList.forEach((rights) => {
           rights.allowRightsConditionDtoList.forEach((ri) => {
-            if (ri.flag !== 0) {
+            // if (ri.flag !== 0) {
               if (!ri.orderId) {
                 ri.orderIdList.forEach(id => {
-                  const a = []
-                  a.push(rightid);
-                  if(this.uniqueArray(a,id.ids)){
-                    id.tempList = id.tempList.splice(id.tempList.findIndex(item => item === rightid),1)
+                  if (ri.flag !== 0 || id.tempList.length !== 0){
+                    const a = []
+                    a.push(rightid);
+                    if(this.uniqueArray(a,id.ids)){
+                      debugger
+                      const index = id.tempList.findIndex(item => item === rightid)
+                      const temp = id.tempList.splice(index,1)
+                      id.tempList = temp
                       if(id.tempList.length === 0){
                         this.$set(id, 'flag', 0);
                         ri.num --
@@ -374,24 +377,29 @@ export default {
                           this.$set(rights, 'isOptional', 1);
                         }
                       }
-                    if(ri.flag === 1){
-                      this.$set(ri,'flag',0)
-                      if(ri.num === ri.orderIdList.length -1){
-                        rights.num--
+                      if(ri.flag === 1){
+                        this.$set(ri,'flag',0)
+                        if(ri.num === ri.orderIdList.length -1){
+                          rights.num--
+                        }
                       }
                     }
+
                   }
+
                 })
               } else {
-                if(rightid === ri.orderId) {
-                this.$set(ri, 'flag', 0);
-                rights.num--
-              }
+                if(ri.flag !== 0){
+                  if(rightid === ri.orderId) {
+                    this.$set(ri, 'flag', 0);
+                    rights.num--
+                  }
+                }
                 if (rights.isOptional === 0) {
                   this.$set(rights, 'isOptional', 1);
                 }
             }
-            }
+            // }
           });
         });
       } else {
@@ -433,51 +441,57 @@ export default {
         });
         this.mutexRightsList.forEach((rights) => {
           rights.allowRightsConditionDtoList.forEach((ri) => {
-            if (ri.flag !== 0 ) {
+            // if (ri.flag !== 0 ) {
               if (!ri.orderIdList) {
-                const a = []
-                a.push(ri.orderId);
-                if (this.uniqueArray(a, present)) {
-                  if(rights.allowRightsConditionDtoList.length === 1 && rights.selectedNum ===1){
-                    return
+                if (ri.flag !== 0) {
+                  const a = []
+                  a.push(ri.orderId);
+                  if (this.uniqueArray(a, present)) {
+                    if (rights.allowRightsConditionDtoList.length === 1 && rights.selectedNum === 1) {
+                      return
+                    }
+                    this.$set(ri, 'flag', 0);
+                    rights.num--
                   }
-                  this.$set(ri, 'flag', 0);
-                  rights.num--
-                }
-                if (rights.isOptional === 0) {
-                  this.$set(rights, 'isOptional', 1);
+                  if (rights.isOptional === 0) {
+                    this.$set(rights, 'isOptional', 1);
+                  }
                 }
               }else {
-                ri.orderIdList.forEach(r => {
-                  debugger
-                  if (r.flag !== 0) {
-                    if (this.uniqueArray(r.ids, present)) {
-                      for(var i = 0;i < r.ids.length;i ++){
-                        for(var j = 0;j < present.length; j++){
-                          if(r.ids[i] === present[j]){
-                              if(r.tempList.find(item => item === r.ids[i])){
-                                 r.tempList = r.tempList.splice(r.tempList.findIndex(item => item === r.ids[i]),1)
+                  ri.orderIdList.forEach(r => {
+                    if (ri.flag !== 0 || r.tempList.length !== 0) {
+                    debugger
+                    if (r.flag !== 0) {
+                      if (this.uniqueArray(r.ids, present)) {
+                        for (var i = 0; i < r.ids.length; i++) {
+                          for (var j = 0; j < present.length; j++) {
+                            if (r.ids[i] === present[j]) {
+                              if (r.tempList.find(item => item === r.ids[i])) {
+                                // r.tempList = r.tempList.srplice(r.tempList.findIndex(item => item === r.ids[i]), 1)
+                                const index = r.tempList.findIndex(item => item === r.ids[i])
+                                const temp = r.tempList.splice(index,1)
+                                r.tempList = temp
                               }
+                            }
                           }
                         }
-                      }
-                      if(r.tempList.length === 0){
-                        this.$set(r, 'flag', 0);
-                        ri.num--
-                        if(ri.flag !== 0){
-                          this.$set(ri, 'flag', 0)
-                          rights.num--
-                        }
-                        if (rights.isOptional === 0) {
-                          this.$set(rights, 'isOptional', 1);
+                        if (r.tempList.length === 0) {
+                          this.$set(r, 'flag', 0);
+                          ri.num--
+                          if (ri.flag !== 0) {
+                            this.$set(ri, 'flag', 0)
+                            rights.num--
+                          }
+                          if (rights.isOptional === 0) {
+                            this.$set(rights, 'isOptional', 1);
+                          }
                         }
                       }
                     }
                   }
-                })
+                  })
               }
-          }
-
+          // }
           });
         })
       }
@@ -558,7 +572,6 @@ export default {
                 if(ri.flag !== 1) {
                   this.$set(ri, 'flag', 1);
                   present = ri.ids;
-                  rights.slected = []
                   rights.selcted = ri.ids
                   item.rightsSelectedGroupDtoList.push(rights);
                   // ri.tempList =  ri.ids
@@ -691,13 +704,13 @@ export default {
              this.nameList.push(item.rightsName);
              this.idList.push(item.rightsNo);
            }
-           const r = {
-             rightsId: item.rightsNo,
-             rightsGroup: '',
-             configId: ''
-           };
            if (item.rightsType === 'single') {
              item.rightsSelectedGroupDtoList.forEach((sel) => {
+               const r = {
+                 rightsId: item.rightsNo,
+                 rightsGroup: '',
+                 configId: ''
+               };
                let timestamp = new Date().getTime();
                // let timestamp = 0
                let Num = 0;
@@ -715,19 +728,24 @@ export default {
              });
 
            } else {
+             const r = {
+               rightsId: item.rightsNo,
+               rightsGroup: '',
+               configId: ''
+             };
              let timestamp = ''
              item.rightsSelectedGroupDtoList.forEach((sel) => {
-               sel.slected.forEach((val) => {
-                 timestamp = new Date().getTime();
-                 let Num = 0;
-                 for (let i = 0; i < 6; i++) {
-                   Num += Math.floor(Math.random() * 10);
-                 }
+               timestamp = new Date().getTime();
+               let Num = 0;
+               for (let i = 0; i < 6; i++) {
+                 Num += Math.floor(Math.random() * 10);
+               }
+               timestamp += Num;
+               sel.selcted.forEach((val) => {
                  const a = {};
                  a.orderDetailId = val;
                  a.rightsGroup = timestamp;
                  this.rightsDetailList.push(a)
-                 timestamp += Num;
                });
                  r.rightsGroup = timestamp;
                  r.configId = sel.configId;
@@ -955,7 +973,6 @@ export default {
         item.num = 0;
         item.allowRightsConditionDtoList.forEach((al) => {
           al.flag = 0;
-          al.slected = []
           if(al.orderIdList){
             const temp = []
             al.num = 0;
