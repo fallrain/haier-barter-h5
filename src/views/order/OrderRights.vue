@@ -275,26 +275,50 @@ export default {
         // 套购
         debugger;
         let isReturn = false;
-        let present = [];
+        // let present = [];
         item.allowRightsConditionDtoList.forEach((rights) => {
-          if (!isReturn) {
-            if (rights.flag !== 1) {
-              this.$set(rights, 'flag', 1);
-              item.rightsSelectedGroupDtoList.push(rights);
-              present = rights.orderIdList;
-              item.selectedNum++;
-              this.$set(item, 'selectedNum', item.selectedNum);
-              this.$set(item, 'isSelected', 1);
-              isReturn = true;
-              item.num++;
-            }
-          }
+          // if (!isReturn) {
+          //   if (rights.flag !== 1) {
+          //     this.$set(rights, 'flag', 1);
+          //     item.rightsSelectedGroupDtoList.push(rights);
+          //     present = rights.orderIdList;
+          //     item.selectedNum++;
+          //     this.$set(item, 'selectedNum', item.selectedNum);
+          //     this.$set(item, 'isSelected', 1);
+          //     isReturn = true;
+          //     item.num++;
+          //   }
+          // }
           if (rights.flag !== 1) {
-            if (this.uniqueArray(rights.orderIdList, present)) {
-              this.$set(rights, 'flag', 1);
-              item.num++;
-            }
+            rights.orderIdList.forEach(ri => {
+              if (!isReturn) {
+                if(ri.flag !== 1) {
+                  this.$set(ri, 'flag', 1);
+                  // present = ri.ids;
+                  rights.slected = []
+                  rights.selcted = ri.ids
+                  item.rightsSelectedGroupDtoList.push(rights);
+                  // ri.tempList =  ri.ids
+                  // ri.tempList = Array.from(new Set(ri.tempList))
+                  item.selectedNum++;
+                  this.$set(item, 'selectedNum', item.selectedNum);
+                  this.$set(item, 'isSelected', 1);
+                  rights.num++;
+                  if (rights.num == rights.orderIdList.length) {
+                    this.$set(rights, 'flag', 1);
+                    item.num++
+                  }
+                  isReturn = true;
+                }
+              }
+            })
           }
+          // if (rights.flag !== 1) {
+          //   if (this.uniqueArray(rights.orderIdList, present)) {
+          //     this.$set(rights, 'flag', 1);
+          //     item.num++;
+          //   }
+          // }
         });
         if (item.num === item.allowRightsConditionDtoList.length) {
           this.$set(item, 'isOptional', 0);
@@ -529,13 +553,15 @@ export default {
         item.allowRightsConditionDtoList.forEach((rights) => {
           // if (!isReturn) {
             if (rights.flag !== 1) {
-              item.rightsSelectedGroupDtoList.push(rights);
               rights.orderIdList.forEach(ri => {
                 if (!isReturn) {
                 if(ri.flag !== 1) {
                   this.$set(ri, 'flag', 1);
                   present = ri.ids;
-                  ri.tempList =  ri.ids
+                  rights.slected = []
+                  rights.selcted = ri.ids
+                  item.rightsSelectedGroupDtoList.push(rights);
+                  // ri.tempList =  ri.ids
                   // ri.tempList = Array.from(new Set(ri.tempList))
                   item.selectedNum++;
                   this.$set(item, 'selectedNum', item.selectedNum);
@@ -673,8 +699,9 @@ export default {
            if (item.rightsType === 'single') {
              item.rightsSelectedGroupDtoList.forEach((sel) => {
                let timestamp = new Date().getTime();
+               // let timestamp = 0
                let Num = 0;
-               for (let i = 0; i < 3; i++) {
+               for (let i = 0; i < 6; i++) {
                  Num += Math.floor(Math.random() * 10);
                }
                timestamp += Num;
@@ -686,28 +713,26 @@ export default {
                r.configId = sel.configId;
                this.rightsUserDto.push(r);
              });
-           } else {
-             item.rightsSelectedGroupDtoList.forEach((sel) => {
 
-               let timestamp = new Date().getTime();
-               let Num = 0;
-               for (let i = 0; i < 3; i++) {
-                 Num += Math.floor(Math.random() * 10);
-               }
-               timestamp += Num;
-               sel.orderIdList.forEach((val) => {
-                 val.ids.forEach(v =>{
-                   const a = {};
-                 a.orderDetailId = v;
+           } else {
+             let timestamp = ''
+             item.rightsSelectedGroupDtoList.forEach((sel) => {
+               sel.slected.forEach((val) => {
+                 timestamp = new Date().getTime();
+                 let Num = 0;
+                 for (let i = 0; i < 6; i++) {
+                   Num += Math.floor(Math.random() * 10);
+                 }
+                 const a = {};
+                 a.orderDetailId = val;
                  a.rightsGroup = timestamp;
-                 this.rightsDetailList.push(a);
+                 this.rightsDetailList.push(a)
+                 timestamp += Num;
                });
                  r.rightsGroup = timestamp;
                  r.configId = sel.configId;
-                 this.rightsUserDto.push(r);
-                 })
-
-             });
+               this.rightsUserDto.push(r);
+             })
            }
          }
        });
@@ -728,6 +753,7 @@ export default {
         }
         rightJson.rightsUserInterestsDTO = this.rightsUserDto;
         this.rightsJson = JSON.stringify(rightJson);
+        debugger
         this.$router.go(-1);
       }
     },
@@ -929,12 +955,14 @@ export default {
         item.num = 0;
         item.allowRightsConditionDtoList.forEach((al) => {
           al.flag = 0;
+          al.slected = []
           if(al.orderIdList){
             const temp = []
             al.num = 0;
             for(var i = 0;i < al.orderIdList.length; i++){
               let a = {}
               a.flag = 0
+
               a.ids = al.orderIdList[i]
               a.tempList = []
               a.num = 0
