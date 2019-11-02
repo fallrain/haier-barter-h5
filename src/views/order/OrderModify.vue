@@ -780,7 +780,7 @@ export default {
       /* 选择活动 */
       this.generateSubInfo(2);
     },
-    generateSubInfo(type) {
+    generateSubInfo(type) {debugger
       if (this.productList.length === 0 && this.saveType == 0) {
         Toast.failed('请选择产品');
         return;
@@ -817,20 +817,30 @@ export default {
       }
       // multBuySponsor
       const part = [];
-      if (this.multBuyParticipantCheckIds.length) {
-        subInfo.mayEditCoupleOrderId = this.multBuyParticipantCheckIds.join(',');
-        this.multBuyParticipantCheckIds.forEach((val) => {
+      const partId = this.multBuyParticipantCheckIds;
+      debugger
+      if (partId.length) {
+        const index = partId.indexOf(this.multBuySponsor[0].hmcId);
+        if (index > -1) {
+          partId.splice(index, 1);
+        }
+        // subInfo.mayEditCoupleOrderId = this.multBuyParticipantCheckIds.join(',');
+        partId.forEach((val) => {
           const obj = this.multBuyParticipant.find(v => v.hmcId === val);
           if (obj) {
             part.push(obj.username);
           }
-          subInfo.mayEditCoupleOrderName = part.join(',');
+          // subInfo.mayEditCoupleOrderName = part.join(',');
         });
-      } else {
-        subInfo.mayEditCoupleOrderName = '';
-        subInfo.mayEditCoupleOrderId = '';
+        // this.multBuyParticipantCheckIds.push(this.multBuySponsor[0].hmcId);
+      }
+      if (partId.indexOf(this.multBuySponsor[0].hmcId) < 0) {
+        partId.push(this.multBuySponsor[0].hmcId);
+        part.push(this.multBuySponsor[0].username);
       }
 
+      subInfo.mayEditCoupleOrderId = partId.join(',');
+      subInfo.mayEditCoupleOrderName = part.join(',');
       subInfo.orderNo = this.orderNo;
       subInfo.recordMode = this.recordMode;
       subInfo.hmcId = this.userParam.hmcid;

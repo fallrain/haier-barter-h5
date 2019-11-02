@@ -150,7 +150,12 @@ export default {
     font-size: 28px;
     margin-right: 42px;
     margin-bottom: 16px;
+    padding-left: 4px;
+    padding-right: 4px;
     text-align: center;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 
     &:nth-child(3n) {
       margin-right: 0;
