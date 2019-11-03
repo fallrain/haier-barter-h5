@@ -69,7 +69,7 @@
           <span class="activity-name-icon">满</span>
           <span class=" activity-common-left activity-span">{{item.priceRangeStart}}</span>
           <span class=" activity-common-left activity-span">-</span>
-          <span class=" activity-common-left activity-span">{{item.priceRangeEnd}}</span>
+          <span class=" activity-common-left activity-span">{{item.priceRangeEnd}}(元)</span>
         </div>
         <span class="activity-common-text activity-common-left activity-float">共<span
           class="activity-type-text">{{item.rightsGiftTotal}}</span>份，剩余<span class="activity-count-remain">{{item.rightsGiftSurplus}}</span>份</span>
@@ -77,7 +77,7 @@
       <div class="activity-common-line activity-item activity-item-gift">
         <span class="activity-name-icon">送</span>
         <span class="activity-common-text activity-common-left activity-item-gift-desc" v-show="getData.giveGiftMode == 'designated'">{{item.giftName}}</span>
-        <span class="activity-common-text activity-common-left activity-item-gift-desc" v-show="getData.giveGiftMode == 'fixed'">{{item.giveIntegralValue}}</span>
+        <span class="activity-common-text activity-common-left activity-item-gift-desc" v-show="getData.giveGiftMode == 'fixed'">{{item.giveIntegralValue}}积分</span>
         <span class="activity-common-text activity-common-left activity-item-gift-desc" v-show="getData.giveGiftMode == 'ratio'">{{item.integralPriceRatio}}</span>
         <span class="activity-common-text activity-common-left activity-item-gift-desc" v-show="getData.giftType == 'virtual'">{{item.virtualGiftName}}</span>
       </div>
