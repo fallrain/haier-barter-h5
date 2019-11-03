@@ -12,7 +12,7 @@
         不可参与原因：{{getData.reason}}
       </div>
       <div class="activity-common-line activity-common-text">活动品牌：{{getData.rightsBrandC}}</div>
-      <div class="activity-common-line activity-common-text">试用范围：{{getData.rightsProductCategory}}</div>
+      <div class="activity-common-line activity-common-text">适用范围：{{getData.rightsProductCategory}}</div>
       <div class="activity-common-line activity-common-text">
         活动日期：<span class="activity-data-text">{{getData.activityStartDate}}至{{getData.activityEndDate}}</span>
       </div>
@@ -28,11 +28,11 @@
              v-show="getData.rightsType == 'single'">
           <div class="activity-item" v-show=" getData.singleProductMode == 'single'">
             <span class="activity-name-icon">购</span>
-            <span class="activity-common-left activity-common-product">{{item.productModel}}{{item.industryName}}</span>
+            <span class="activity-common-left activity-common-product">{{item.productModel}}&nbsp{{item.productGroupName}}</span>
           </div>
           <div class="activity-item" v-show=" getData.singleProductMode == 'multi' ">
             <span class="activity-name-icon">购</span>
-            <span class="activity-common-left activity-common-product" v-for="(pro,i) in item.rightsProductDtoList">{{pro.productModel}}{{pro.industryName}}、</span>
+            <span class="activity-common-left activity-common-product1" v-for="(pro,i) in item.rightsProductDtoList">{{pro.productModel}}&nbsp{{pro.productGroupName}}、</span>
           </div>
           <div class="activity-item" v-show=" getData.singleProductMode == 'all' ">
             <span class="activity-name-icon">购</span>
@@ -55,10 +55,10 @@
               v-show="item.productCombineSymbols == 'and' && j !== item.rightsSetsCombineDtoList.length - 1">+</span>
           <span v-show="item.productCombineSymbols == 'or' && j !== item.rightsSetsCombineDtoList.length - 1">/</span>
           </span>
-            <span class="activity-product" v-for="(rightsSetsCombine ,j) in item.rightsSetsCombineDtoList">
+            <span class="activity-product1" v-for="(rightsSetsCombine ,j) in item.rightsSetsCombineDtoList">
             <span v-show="rightsSetsCombine.productModel != null">
               <span v-for="(rightsSetsPro ,l) in rightsSetsCombine.rightsProductDtoList">
-                {{rightsSetsPro.productModel}}{{rightsSetsPro.industryName}}
+                {{rightsSetsPro.productModel}}&nbsp{{rightsSetsPro.productGroupName}}
               </span>
               <span
                 v-show="item.productCombineSymbols == 'and' && j !== item.rightsSetsCombineDtoList.length - 1">+</span>
@@ -399,6 +399,12 @@ export default {
     font-size: 24px;
     color: #666;
   }
+  .activity-common-product1 {
+    font-size: 24px;
+    color: #666;
+    width: 50%;
+  }
+
 
   .activity-item {
     display: flex;
