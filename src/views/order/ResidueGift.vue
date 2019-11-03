@@ -211,13 +211,28 @@ export default {
         // item.allowRightsConditionDtoList.forEach((al) => {
         //   al.flag = 0;
         // });
-        if (item.rightsBrand === '000') {
-          item.rightsBrandC = '海尔';
-        } else if (item.rightsBrand === '051') {
-          item.rightsBrandC = '卡萨帝';
-        } else {
-          item.rightsBrandC = '统帅';
-        }
+        const a = item.rightsBrand.split(',');
+        const b = [];
+        a.forEach((i) => {
+          if (i === '000') {
+            i = '海尔';
+            b.push(i);
+          } else if (i === '051') {
+            i = '卡萨帝';
+            b.push(i);
+          } else {
+            i = '统帅';
+            b.push(i);
+          }
+        });
+        item.rightsBrandC = b.join(',');
+        // if (item.rightsBrand === '000') {
+        //   item.rightsBrandC = '海尔';
+        // } else if (item.rightsBrand === '051') {
+        //   item.rightsBrandC = '卡萨帝';
+        // } else {
+        //   item.rightsBrandC = '统帅';
+        // }
       })
       this.currentList = curlist;
     }

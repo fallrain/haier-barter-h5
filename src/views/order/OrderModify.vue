@@ -841,8 +841,6 @@ export default {
 
       subInfo.mayEditCoupleOrderId = partId.join(',');
       subInfo.mayEditCoupleOrderName = part.join(',');
-      console.log(subInfo.mayEditCoupleOrderId)
-      console.log(subInfo.mayEditCoupleOrderName)
       subInfo.orderNo = this.orderNo;
       subInfo.recordMode = this.recordMode;
       subInfo.hmcId = this.userParam.hmcid;

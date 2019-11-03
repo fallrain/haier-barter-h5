@@ -840,6 +840,7 @@ export default {
         subInfo.coupleSponsor = '';
         subInfo.mayEditCoupleOrderId = '';
       }
+      debugger
       const part = [];
       const partId = this.multBuyParticipantCheckIds;
       if (partId.length) {
@@ -862,6 +863,8 @@ export default {
         part.push(this.multBuySponsor[0].username);
       }
 
+      subInfo.mayEditCoupleOrderId = partId.join(',');
+      subInfo.mayEditCoupleOrderName = part.join(',');
       subInfo.orderNo = this.orderNo;
       subInfo.recordMode = this.recordMode;
       subInfo.hmcId = this.userParam.hmcid;
