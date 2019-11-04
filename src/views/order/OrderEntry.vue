@@ -78,14 +78,12 @@
         ></b-radio-item>
       </template>
     </b-item>
-
     <b-fieldset
       v-show="orderType"
       class="mt16"
-      title="套购发起人："
+      :title="'套购发起人：'+(multBuySponsor[0] && multBuySponsor[0].username) || ''"
       :showTitle="true"
     >
-      <span slot="headRight">{{(multBuySponsor[0] && multBuySponsor[0].username) || ''}}</span>
       <div>
         <div
           v-if="multBuyParticipanters"
@@ -148,7 +146,7 @@
       class="mt16"
       title="选择可用的购机权益活动"
       :arrow="true"
-      @rightClick="selectActivity()"
+      @click.native="selectActivity"
       v-show="!handRegion"
     >
     </b-item>
@@ -1108,31 +1106,34 @@ export default {
       /* 展示选择用户pop */
       this.addressPopShow = true;
     },
-    queryUserList() {
-      this.basicService.userInfo().then((res) => {
+    async queryUserList() {
+      const { code, data } = await this.basicService.userInfo();
+      if (code === 1) {
+        const {
+          hmcId
+        } = data;
         const user = {
-          hmcId: res.data.hmcId,
-          username: res.data.username
+          hmcId,
+          username: data.username
         };
-        this.productService.userList(this.shopId).then((res1) => {
-          if (res1.code === 1) {
-            if (res1.data === '' || res1.data === []) {
-              this.multyBuy = false;
-            } else {
-              this.multyBuy = true;
-            }
-            res1.data.forEach((item) => {
-              if (item.hmcId == user.hmcId) {
-                this.multBuySponsor.push(item);
-              }
-            });
-            if (this.multBuySponsor.length == 0) {
-              this.multBuySponsor.push(user);
-            }
-            this.multBuyParticipant = res1.data;
+        const { code: userListCode, data: userListData } = await this.productService.userList(this.shopId);
+        if (userListCode === 1) {
+          if (userListData === '' || userListData === []) {
+            this.multyBuy = false;
+          } else {
+            this.multyBuy = true;
           }
-        });
-      });
+          userListData.forEach((item) => {
+            if (item.hmcId === user.hmcId) {
+              this.multBuySponsor.push(item);
+            }
+          });
+          if (!this.multBuySponsor.length) {
+            this.multBuySponsor.push(user);
+          }
+          this.multBuyParticipant = userListData.filter(v => v.hmcId !== hmcId);
+        }
+      }
     },
     // consporConfirm() {
     //   // this.saveTemporary(1);
