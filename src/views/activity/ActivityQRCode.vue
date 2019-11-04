@@ -61,10 +61,12 @@ export default {
   methods: {
     createQrcode() {
       return this.activityService.generateQrcode('http://baidu.com/', '123456', '9999').then((res) => {
-        let blob = new Blob([res.data], {type: 'application/octet-stream'});
-        debugger
-        let url = window.URL.createObjectURL(blob);
-        this.qrcodeImg = url;
+        const blob = new Blob([res.data]);
+        const reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onload = function (e) {
+          this.qrcodeImg = e.target.result;
+        };
       });
     },
   },
