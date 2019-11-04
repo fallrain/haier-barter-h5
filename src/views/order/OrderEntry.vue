@@ -10,13 +10,14 @@
       :value="customerString"
       v-show="haveCustomer"
     > -->
-    <div class="orderEntry-header-cus"  v-show="haveCustomer">
-            <span class="name mr16">顾客信息：{{customerInfo.username}}</span>
-            <span class="name mr16">{{customerInfo.mobile}}</span>
+    <div class="orderEntry-header-cus" v-show="haveCustomer">
+      <span class="name mr16">顾客信息：{{customerInfo.username}}</span>
+      <span class="name mr16">{{customerInfo.mobile}}</span>
     </div>
     <b-fieldset
       class="mt16"
       :title="title"
+      :showTitle="true"
     >
       <div class="orderEntry-user1">
         <div v-if="haveConsignee">
@@ -77,14 +78,29 @@
         ></b-radio-item>
       </template>
     </b-item>
-    <div class="orderEntry-header-cus" v-show="orderType">
-      <button
-        type="button"
-        class="common-btn-primary w100per"
-        @click="selectSetBuyer()"
-      >选择套购发起人
-      </button>
-    </div>
+
+    <b-fieldset
+      v-show="orderType"
+      class="mt16"
+      title="套购发起人："
+      :showTitle="true"
+    >
+      <span slot="headRight">{{(multBuySponsor[0] && multBuySponsor[0].username) || ''}}</span>
+      <div>
+        <div
+          v-if="multBuyParticipanters"
+          class="orderEntry-multBuySponsor"
+        >
+          <span class="orderEntry-multBuySponsor-tips">参与人：</span>{{multBuyParticipanters}}
+        </div>
+        <button
+          type="button"
+          class="common-btn-primary w100per"
+          @click="selectSetBuyer"
+        >选择套购参与人
+        </button>
+      </div>
+    </b-fieldset>
     <b-fieldset
       class="mt16"
       title="用户购买的产品"
@@ -136,10 +152,10 @@
       v-show="!handRegion"
     >
     </b-item>
-      <b-activity-list
-        :data="rightsList"
-        :isDetail="isDetail"
-      ></b-activity-list>
+    <b-activity-list
+      :data="rightsList"
+      :isDetail="isDetail"
+    ></b-activity-list>
     <div class="orderEntry-btns-par">
       <button
         type="button"
@@ -194,6 +210,7 @@
         v-model="multBuyParticipantCheckIds"
         @allCheck="particpantAll"
         @multiCheck="particpantClick"
+        noPersonTips="当前门店不存在其他直销员"
         tips="套购参与人可查看套购订单不需要录入订单,但是需确定订单信息正确后自主申报销量。"
         :checkAll="true"
         type="checkbox"
@@ -228,7 +245,12 @@
 
 <script>
 import {
-  Toast, Popup, PopupTitleBar, Button, Icon, Dialog
+  Button,
+  Dialog,
+  Icon,
+  Popup,
+  PopupTitleBar,
+  Toast
 } from 'mand-mobile';
 
 import {
@@ -313,8 +335,7 @@ export default {
       pattern: 'yyyy-MM-dd hh:mm',
       customerString: '',
       // 收货人信息
-      consignee: {
-      },
+      consignee: {},
       customerInfo: {},
       // 订单类型单选
       orderTypes: [
@@ -396,19 +417,14 @@ export default {
       // 选择收货人列表pop show
       addressPopShow: false,
       // 收货人地址pop列表
-      addressList: [
-      ],
+      addressList: [],
       // 套购pop show
       multBuyPopShow: false,
       // 套购发起人
-      multBuySponsor: [
-
-      ],
+      multBuySponsor: [],
       multBuySponsorCheckedIds: [],
       // 套购参与人
-      multBuyParticipant: [
-
-      ],
+      multBuyParticipant: [],
       buyerList: [],
       // 参与人选中id
       multBuyParticipantCheckIds: [],
@@ -430,13 +446,11 @@ export default {
 
     };
   },
-  computed: {},
   watch: {
     buyDate(newV, oldV) {
       console.log(this.userParam.hmcid);
       if (newV != '') {
-        this.orderService.isAccordDeadline({
-        }, {
+        this.orderService.isAccordDeadline({}, {
           hmcId: this.userParam.hmcid,
           orderCrTime: newV,
           requestNoToast: true
@@ -448,17 +462,35 @@ export default {
       }
     }
   },
+  computed: {
+    multBuyParticipanters() {
+      /* 套购参与人文字 */
+      const {
+        multBuyParticipantCheckIds,
+        multBuyParticipant
+      } = this;
+      let nameStr = '';
+      if (multBuyParticipantCheckIds.length) {
+        const names = multBuyParticipant.filter(v => multBuyParticipantCheckIds.find(id => id === v.hmcId));
+        nameStr = names.map(v => v.username).join('、');
+      }
+
+      return nameStr;
+    }
+  },
   mounted() {
 
   },
-  activated() {debugger;
+  activated() {
+    debugger;
     if (this.$route.params.customerConsigneeInfo && this.$route.params.customerConsigneeInfo.id) {
       this.orderFollowId = this.$route.params.customerConsigneeInfo.id;
       localStorage.setItem('orderFollowId', this.orderFollowId);
     }
     if (this.$route.query.temp) {
       let ID = '';
-      const obj = JSON.parse(this.$route.query.temp); console.log(obj);
+      const obj = JSON.parse(this.$route.query.temp);
+      console.log(obj);
       if (obj.tel) {
         this.mobile = obj.tel;
         this.queryCustomerDefault();
@@ -539,8 +571,8 @@ export default {
       this.customerInfo.username = this.userParam.username;
       this.customerInfo.mobile = this.userParam.mobile;
       this.customerInfo.customerId = this.userParam.customerId;
-      this.customerInfo.orderFollowId = this.userParam.orderFollowId
-      this.shopId = this.userParam.storeId
+      this.customerInfo.orderFollowId = this.userParam.orderFollowId;
+      this.shopId = this.userParam.storeId;
       this.customerInfo.userId = '';
       this.haveCustomer = true;
       this.haveConsignee = false;
@@ -566,11 +598,13 @@ export default {
   methods: {
     isReportInstall(pro) {
       const orderDetailDtoList = [
-        { hmcId: this.userParam.hmcid,
+        {
+          hmcId: this.userParam.hmcid,
           storeId: this.shopId,
           productCode: pro.productCode,
           productBrand: pro.productBrand,
-          productCategoryCode: pro.productCategoryCode }
+          productCategoryCode: pro.productCategoryCode
+        }
       ];
       this.basicService.userInfo().then((res) => {
         this.orderService.isReportInstallNew({
@@ -742,7 +776,8 @@ export default {
       });
     },
     // 暂存
-    saveTemporary(type) {console.log(2222)
+    saveTemporary(type) {
+      console.log(2222);
       if (type === 1) {
         this.saveType = 1;
       } else {
@@ -840,7 +875,7 @@ export default {
         subInfo.coupleSponsor = '';
         subInfo.mayEditCoupleOrderId = '';
       }
-      debugger
+      debugger;
       const part = [];
       const partId = this.multBuyParticipantCheckIds;
       if (partId.length) {
@@ -1019,7 +1054,10 @@ export default {
       this.region = 'add';
       this.$router.push({
         name: 'Order.AddAddress',
-        params: { region: this.region, info: JSON.stringify(this.customerInfo) }
+        params: {
+          region: this.region,
+          info: JSON.stringify(this.customerInfo)
+        }
       });
     },
     addNew() {
@@ -1028,7 +1066,10 @@ export default {
         this.region = 'userAdd';
         this.$router.push({
           name: 'Order.AddAddress',
-          params: { region: this.region, info: JSON.stringify(this.customerInfo) }
+          params: {
+            region: this.region,
+            info: JSON.stringify(this.customerInfo)
+          }
         });
       } else {
         this.addAddress();
@@ -1040,7 +1081,10 @@ export default {
         this.region = 'add';
         this.$router.push({
           name: 'Order.AddAddress',
-          params: { region: this.region, info: JSON.stringify(item) }
+          params: {
+            region: this.region,
+            info: JSON.stringify(item)
+          }
         });
       } else {
         this.showAddressList();
@@ -1054,7 +1098,10 @@ export default {
 
       this.$router.push({
         name: 'Order.AddAddress',
-        params: { region: this.region, info: JSON.stringify(info) }
+        params: {
+          region: this.region,
+          info: JSON.stringify(info)
+        }
       });
     },
     showAddressList() {
@@ -1222,9 +1269,10 @@ export default {
 </script>
 
 <style lang="scss">
-  .md-popup-box{
+  .md-popup-box {
     z-index: 999999999 !important;
   }
+
   .orderEntry-header {
     display: flex;
     align-items: center;
@@ -1236,7 +1284,8 @@ export default {
     padding-right: 25px;
     color: #1969C6;
   }
-   .orderEntry-header-cus{
+
+  .orderEntry-header-cus {
     display: flex;
     align-items: center;
 
@@ -1245,7 +1294,7 @@ export default {
     background: #fff;
     padding-left: 27px;
     padding-right: 25px;
-  color: #333;
+    color: #333;
     margin-top: 20px;
   }
 
@@ -1330,7 +1379,8 @@ export default {
       top: 0;
     }
   }
-  .popUserAdd{
+
+  .popUserAdd {
     text-align: center;
     font-size: 34px;
     color: #1969C6;
@@ -1340,7 +1390,8 @@ export default {
     border-radius: 20px;
     padding-top: 50px;
   }
-  .popConfirm{
+
+  .popConfirm {
     color: #333333;
     margin-top: 50px;
     text-align: center;
@@ -1349,8 +1400,18 @@ export default {
     line-height: 70px;
     border-top: 1px solid lightgray;
   }
-  .orderEntry-date1{
-   width: 400px;
+
+  .orderEntry-date1 {
+    width: 400px;
   }
 
+  .orderEntry-multBuySponsor {
+    font-size: 24px;
+    word-break: break-all;
+    margin-bottom: 14px;
+  }
+
+  .orderEntry-multBuySponsor-tips {
+    color: #F4A623;
+  }
 </style>
