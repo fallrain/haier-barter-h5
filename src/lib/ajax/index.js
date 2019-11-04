@@ -50,8 +50,7 @@ ax.interceptors.response.use((response) => {
   }
   if (!(response.config.params && response.config.params.requestNoToast)) {
     if (response.data.code !== 1 && !response.data.isSuccess) {
-      if (response.config.url !== '/api/manage/reportEhub/saveEhubBarCode')
-        Toast.failed(msg || '请求失败');
+      if (response.config.url !== '/api/manage/reportEhub/saveEhubBarCode') Toast.failed(msg || '请求失败');
     }
   }
   if (customOptions && customOptions.returnResponse) {
@@ -96,6 +95,17 @@ const axPost = function (url, data, params) {
   });
 };
 
+const axGetBlob = function (url, params = {}) {
+  return ax({
+    method: 'get',
+    url,
+    responseType: 'blob',
+    params: {
+      returnResponse: true,
+      ...params
+    }
+  });
+};
 const axPostJson = function (url, data, params) {
   return ax({
     method: 'post',
@@ -106,4 +116,4 @@ const axPostJson = function (url, data, params) {
 };
 export default ax;
 
-export { axGet, axPost, axPostJson, axGetUrl };
+export { axGet, axPost, axPostJson, axGetUrl, axGetBlob };

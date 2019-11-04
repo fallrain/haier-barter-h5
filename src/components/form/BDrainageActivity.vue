@@ -64,7 +64,7 @@
         @cancel="hidePopUp('bottom')"
       ></md-popup-title-bar>
       <div class="drainage-popup-items">
-        <div class="drainage-popup-item">
+        <div class="drainage-popup-item" @click="shareWechat">
 
           <i class="iconfont icon-weixin drainage-popup-img"/>
           <div>
@@ -75,7 +75,7 @@
           </div>
 
         </div>
-        <div class="drainage-popup-item">
+        <div class="drainage-popup-item" @click="shareImg">
 
           <i class="iconfont icon-weixin drainage-popup-img"/>
           <div>
@@ -87,7 +87,7 @@
 
         </div>
       </div>
-      <div class="popup-cancle">
+      <div class="popup-cancle" @click="drainageCancle">
         <span class="popup-cancle-text">取消</span>
       </div>
     </md-popup>
@@ -134,6 +134,15 @@ export default {
         name: 'Activity.ActivityDataAnalysis',
         params: {activityInfo: this.getData}
       });
+    },
+    drainageCancle() {
+      this.isPopupShow = false;
+    },
+    shareWechat() {
+
+    },
+    shareImg() {
+
     }
   },
 };

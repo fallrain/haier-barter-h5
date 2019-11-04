@@ -61,8 +61,10 @@ export default {
   methods: {
     createQrcode() {
       return this.activityService.generateQrcode('http://baidu.com/', '123456', '9999').then((res) => {
-        // let url = window.URL.createObjectURL(res)
-        // this.qrcodeImg = url;
+        let blob = new Blob([res.data], {type: 'application/octet-stream'});
+        debugger
+        let url = window.URL.createObjectURL(blob);
+        this.qrcodeImg = url;
       });
     },
   },

@@ -2,7 +2,8 @@ import urls from '../url/activity.url';
 import {
   axPost,
   axPostJson,
-  axGet
+  axGet,
+  axGetBlob
 } from '@/lib/ajax';
 
 export default {
@@ -12,6 +13,6 @@ export default {
   },
   generateQrcode(data, data2, data3) {
     /* 营销活动之引流活动 */
-    return axGet(`${urls.generateQrcode}?redirectUrl=${data}&activityId=${data2}&hmcId=${data3}`);
+    return axGetBlob(`${urls.generateQrcode}?redirectUrl=${data}&activityId=${data2}&hmcId=${data3}`);
   },
 };
