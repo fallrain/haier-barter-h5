@@ -368,8 +368,7 @@ export default {
                     if(this.uniqueArray(a,id.ids)){
                       debugger
                       const index = id.tempList.findIndex(item => item === rightid)
-                      const temp = id.tempList.splice(index,1)
-                      id.tempList = temp
+                      id.tempList.splice(index,1)
                       if(id.tempList.length === 0){
                         this.$set(id, 'flag', 0);
                         ri.num --
@@ -469,8 +468,7 @@ export default {
                               if (r.tempList.find(item => item === r.ids[i])) {
                                 // r.tempList = r.tempList.srplice(r.tempList.findIndex(item => item === r.ids[i]), 1)
                                 const index = r.tempList.findIndex(item => item === r.ids[i])
-                                const temp = r.tempList.splice(index,1)
-                                r.tempList = temp
+                                r.tempList.splice(index,1)
                               }
                             }
                           }
@@ -620,6 +618,7 @@ export default {
                                 r.tempList.push(r.ids[i])
                               } else {
                                 if (!r.tempList.find(item => item === r.ids[i])) {
+                                  debugger
                                   r.tempList.push(r.ids[i])
                                 }
                               }
