@@ -250,18 +250,18 @@ export default {
     //   // hmcid: 'a0008949',
     //   // mobile: '18561715460',
     //   // shopId: '8800136445',
-    //   hmcid:'01467897',
-    //   mobile: '15253269729',
-    //   shopId: '9999999999',
-    //   // hmcid: 'a0032254',
-    //   // mobile: '15621017056',
-    //   // shopId: '8700048360',
+    //   // hmcid:'01467897',
+    //   // mobile: '15253269729',
+    //   // shopId: '9999999999',
+    //   hmcid: 'a0032254',
+    //   mobile: '15621017056',
+    //   shopId: '8700048360',
     //   // hmcid: '18000560',
     //   // orderMode: 'Haier',
     //   // orderMode: 'Casarte',
     //   // mobile: '15621017056',
     //   // shopId: '8800266470',
-    //   token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX0FETUlOIiwiUk9MRV9TRUxMRVIiLCJST0xFX0FQUCJdLCJzdWIiOiIwMTQ2Nzg5NyIsImtpbmQiOjAsInBvaW50IjoxLCJpYXQiOjE1NzI3NjEyNjYsImV4cCI6MTU3MzYyNTI2Nn0.wTeP4vv0fmUuft0fLbJpRam6IH953ld_-8aRNovI8Es'}
+    //   token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IkEwMDMyMjU0Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MjgzNzI1NywiZXhwIjoxNTczNzAxMjU3fQ.ZvtYE96qtDhpVvQ7anpugo71SJOSliDuY6wL17z21QE'}
     // const Str = JSON.stringify(this.userinfo);
     // localStorage.setItem('userinfo', Str);
     // localStorage.setItem('acces_token', this.userinfo.token);

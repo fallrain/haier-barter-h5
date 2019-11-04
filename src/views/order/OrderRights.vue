@@ -201,7 +201,7 @@ export default {
     minusCount(item) {
       // 单品
       if (item.rightsType === 'single') {
-        debugger;
+        ;
         // 同享
         item.rightsSelectedGroupDtoList.shift();
         let isReturn = false;
@@ -273,7 +273,7 @@ export default {
         }
       } else {
         // 套购
-        debugger;
+        ;
         let isReturn = false;
         // let present = [];
         item.allowRightsConditionDtoList.forEach((rights) => {
@@ -334,9 +334,9 @@ export default {
         item.rightsSelectedGroupDtoList.shift();
         let isReturn = false;
         item.allowRightsConditionDtoList.forEach((rights) => {
-          debugger;
+          ;
           if (!isReturn) {
-            debugger;
+            ;
             if (rights.flag !== 0) {
               this.$set(rights,'flag',0)
               rightid = rights.orderId;
@@ -366,7 +366,7 @@ export default {
                     const a = []
                     a.push(rightid);
                     if(this.uniqueArray(a,id.ids)){
-                      debugger
+
                       const index = id.tempList.findIndex(item => item === rightid)
                       id.tempList.splice(index,1)
                       if(id.tempList.length === 0){
@@ -459,7 +459,7 @@ export default {
               }else {
                   ri.orderIdList.forEach(r => {
                     if (ri.flag !== 0 || r.tempList.length !== 0) {
-                    debugger
+
                     if (r.flag !== 0) {
                       if (this.uniqueArray(r.ids, present)) {
                         for (var i = 0; i < r.ids.length; i++) {
@@ -493,11 +493,11 @@ export default {
           });
         })
       }
-      debugger
+
       this.anylizeMCData(this.mutexRightsList);
     },
     addMCount(item) {
-      debugger;
+      ;
       /** ************互斥***************** */
       // 单品
       if (item.rightsType === 'single') {
@@ -605,7 +605,7 @@ export default {
                   }
                 }else {
                   ri.orderIdList.forEach(r => {
-                    debugger
+
                     if (ri.flag !== 1 || (r.tempList.length < r.ids.length)) {
                     if (r.flag !== 1 || ( r.tempList.length < r.ids.length)) {
                       if (this.uniqueArray(r.ids, present)) {
@@ -618,7 +618,7 @@ export default {
                                 r.tempList.push(r.ids[i])
                               } else {
                                 if (!r.tempList.find(item => item === r.ids[i])) {
-                                  debugger
+
                                   r.tempList.push(r.ids[i])
                                 }
                               }
@@ -714,7 +714,7 @@ export default {
                // let timestamp = 0
                let Num = 0;
                for (let i = 0; i < 6; i++) {
-                 Num += Math.floor(Math.random() * 10);
+                 Num += Math.pow(10,i) *Math.floor(Math.random() * 10);
                }
                timestamp += Num;
                const a = {};
@@ -723,6 +723,7 @@ export default {
                r.rightsGroup = timestamp;
                this.rightsDetailList.push(a);
                r.configId = sel.configId;
+
                this.rightsUserDto.push(r);
              });
 
@@ -737,7 +738,7 @@ export default {
                timestamp = new Date().getTime();
                let Num = 0;
                for (let i = 0; i < 6; i++) {
-                 Num += Math.floor(Math.random() * 10);
+                 Num += Math.pow(10,i) *Math.floor(Math.random() * 10);
                }
                timestamp += Num;
                sel.selcted.forEach((val) => {
@@ -770,7 +771,7 @@ export default {
         }
         rightJson.rightsUserInterestsDTO = this.rightsUserDto;
         this.rightsJson = JSON.stringify(rightJson);
-        debugger
+
         this.$router.go(-1);
       }
     },
@@ -823,9 +824,9 @@ export default {
             } else {
              Toast.failed('暂无数据')
             }
-            // debugger;
+            // ;
             // if (res.data.result.length > 0) {
-            //   debugger;
+            //   ;
             //   const temp = res.data.result;
             //   temp.forEach((not) => {
             //     const a = not.rightsBrand.split(',');
@@ -845,7 +846,7 @@ export default {
             //     not.rightsBrandC = b.join(',');
             //   });
             //   console.log('aaaaaaaaaaaaaaa', temp);
-            //   debugger;
+            //   ;
             //   this.notOptionalList = temp;
             // } else {
             //   Toast.info('暂无数据');
@@ -858,7 +859,7 @@ export default {
         });
     },
     getData(type) {
-      debugger;
+      ;
       // todo
       this.subInfo = JSON.parse(this.$route.params.orderInfo);
       this.orderNo = this.subInfo.orderNo;
@@ -932,7 +933,7 @@ export default {
     },
     anylizeMCData(list) {
       console.log('11111',list)
-      debugger
+
       list.forEach((item) => {
         if (item.isOptional === 1) {
           this.$set(item, 'addGray', false);
