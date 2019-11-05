@@ -10,6 +10,7 @@
             placeholder="请输入手机号"
             v-model="customerInfo.mobile"
             v-show="region == 'userAdd'"
+            v-resetInput
           >
           <input
             type="number"
@@ -18,6 +19,7 @@
             disabled="true"
             v-show="region != 'userAdd'"
             v-model="customerInfo.mobile"
+            v-resetInput
           >
         </div>
       </li>
@@ -35,6 +37,7 @@
               v-show="region == 'userAdd'"
               v-model="customerInfo.username"
               @input="judgeName(customerInfo.username, 20)"
+              v-resetInput
             >
             <input
               type="text"
@@ -43,6 +46,7 @@
               disabled="true"
               v-show="region != 'userAdd'"
               v-model="customerInfo.username"
+              v-resetInput
             >
           </div>
         </li>
@@ -58,6 +62,7 @@
             placeholder="请输入姓名"
             v-model="customerInfo.consigneeUserName"
             @input="judgeName1(customerInfo.consigneeUserName, 20)"
+            v-resetInput
           >
         </div>
       </li>
@@ -69,6 +74,7 @@
             class="addAddress-form-item-ipt"
             placeholder="请输入手机号"
             v-model="customerInfo.consigneeUserPhone"
+            v-resetInput
           >
         </div>
       </li>
@@ -101,6 +107,7 @@
             placeholder="省道 门牌、楼层房间号等信息"
             v-model="customerInfo.address"
             @input="judgeAddress(customerInfo.address, 30)"
+            v-resetInput
           >
         </div>
       </li>
