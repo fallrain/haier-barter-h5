@@ -294,6 +294,7 @@ export default {
           this.customerInfo.userId = JSON.parse(this.$route.params.info).userId;
           // this.customerInfo = JSON.parse(this.$route.params.info);
           this.customerInfo.hmcId = JSON.parse(localStorage.getItem('userinfo')).hmcid;
+          // this.customerInfo.familyId = JSON.parse(this.$route.params.info).familyId;
         }
         if (this.customerInfo.familyItemCode) {
           const a = [];

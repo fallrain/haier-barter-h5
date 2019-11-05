@@ -7,7 +7,7 @@
     >
       <div class="b-pop-checkList-cnt1">
         <ul>
-          <div style="background-color:white;height: 50px;">
+          <div style="background-color:white;height: 70px;">
         <p
           class="b-pop-checkList-item1"
            :class="[checkIds.some(v=>v===item.id) && 'active']"
@@ -169,7 +169,6 @@ export default {
       text-align: center;
       padding: 15px;
       margin-left: 600px;
-      /*border: 1px #1969C6 solid;*/
       border-radius: 20px;
       width: 120px;
       margin-top: 10px;
