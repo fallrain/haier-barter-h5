@@ -1,6 +1,6 @@
 <template>
   <div class="page-class">
-    <div>
+    <div class="">
       <md-notice-bar
         mode="closable"
         :time="4000"
@@ -24,6 +24,12 @@
       >
       <p class="orderFollowButton-search" @click="handEntry()">手动录单</p>
     </div>
+    <b-order-follow-search-bar
+      v-show="curScrollViewName==='scrollView'"
+      :scenarioList="scenarioList"
+      @checkClick="checkClicked"
+      @popButtonClicked="buttonClicked"
+    ></b-order-follow-search-bar>
     <div
       id="scrollView"
       ref="scrollView"
@@ -43,6 +49,12 @@
         @maybeBuyer="maybeBuyer"
       ></b-order-follow-item>
     </div>
+    <b-order-follow-search-bar
+      v-show="curScrollViewName==='scrollViewFinished'"
+      :scenarioList="scenarioList"
+      @checkClick="checkClicked"
+      @popButtonClicked="buttonClicked"
+    ></b-order-follow-search-bar>
     <div
       id="scrollViewFinished"
       ref="scrollViewFinished"
@@ -62,6 +74,12 @@
         @maybeBuyer="maybeBuyer"
       ></b-order-follow-item>
     </div>
+    <b-order-follow-search-bar
+      v-show="curScrollViewName==='scrollViewOdd'"
+      :scenarioList="scenarioList"
+      @checkClick="checkClicked"
+      @popButtonClicked="buttonClicked"
+    ></b-order-follow-search-bar>
     <div
       id="scrollViewOdd"
       ref="scrollViewOdd"
@@ -78,6 +96,12 @@
         @gujiaClick="gujiaClick"
       ></b-order-follow-item>
     </div>
+    <b-order-follow-search-bar
+      v-show="curScrollViewName==='scrollViewProgress'"
+      :scenarioList="scenarioList"
+      @checkClick="checkClicked"
+      @popButtonClicked="buttonClicked"
+    ></b-order-follow-search-bar>
     <div
       id="scrollViewProgress"
       ref="scrollViewProgress"
@@ -86,8 +110,6 @@
     >
       <b-order-follow-item
         :list="scrollViewProgress.list"
-        @checkClick="checkClicked"
-        @popButtonClicked="buttonClicked"
         @updateOrderType="updateOrderType"
         @followButtonClick="followButtonClicked"
         @userService="userService"
@@ -96,7 +118,6 @@
         @maybeBuyer="maybeBuyer"
       ></b-order-follow-item>
     </div>
-    <div style="height:60px"></div>
     <div class="md-example-child md-example-child-tabs md-example-child-tab-bar-4">
       <md-tab-bar
         v-model="curTab"
@@ -147,10 +168,12 @@ import {
 import {
   BOrderFollowItem
 } from '@/components/orderFollow';
+import BOrderFollowSearchBar from '../../components/orderFollow/BOrderFollowSearchBar';
 
 export default {
   name: '',
   components: {
+    BOrderFollowSearchBar,
     [TabBar.name]: TabBar,
     [Icon.name]: Icon,
     [ScrollView.name]: ScrollView,
@@ -244,6 +267,8 @@ export default {
           },
         ],
       },
+      // 业务场景下拉数据
+      scenarioList: []
     };
   },
   activated() {
@@ -281,6 +306,7 @@ export default {
     // localStorage.setItem('userinfo', Str);
     // localStorage.setItem('acces_token', this.userinfo.token);
     this.getNoticeData();
+    this.getScenarioList();
   },
   computed: {
     curScrollViewName() {
@@ -311,7 +337,15 @@ export default {
     this.bUtil.scroviewTabChange(this.curScrollViewName, this);
   },
   methods: {
-    //获取消息
+    getScenarioList() {
+      /* 获取业务场景下拉数据 */
+      this.productService.commonTypeQuery('BUSINESS_SCENARIOS').then((res) => {
+        if (res.code === 1) {
+          this.scenarioList = res.data;
+        }
+      });
+    },
+    // 获取消息
     getNoticeData() {
       this.orderService
         .queryOverTwentyFourHourOrder().then((res) => {
@@ -323,7 +357,7 @@ export default {
     change(item, index, prevIndex) {
       this.curTab = index;
     },
-    //手工录单
+    // 手工录单
     handEntry() {
       this.orderService.checkCreateOrder().then((res) => { // 判断店铺是否冻结
         if (res.code != -1) {
@@ -433,11 +467,11 @@ export default {
     buttonClicked(val) {
       // debugger
       // this.updateList = true;
-      if(val.length === 0){
-        this.businessType = ''
-      }else if(val.length === 1){
-        this.businessType = val[0]
-      }else {
+      if (val.length === 0) {
+        this.businessType = '';
+      } else if (val.length === 1) {
+        this.businessType = val[0];
+      } else {
         this.businessType = val.join(',');
       }
       this.searchData({
@@ -445,7 +479,8 @@ export default {
         size: 10
       });
     },
-    followButtonClicked(val, info) {console.log(info)
+    followButtonClicked(val, info) {
+      console.log(info);
       if (val.name === '成交录单') {
         this.orderService.checkCreateOrder().then((res) => { // 判断店铺是否冻结
           if (res.code != -1) {
@@ -461,7 +496,7 @@ export default {
                   businessScenarios: info.businessScenarios,
                   sourceSn: info.sourceSn,
                   id: info.id,
-                  freezeMsg: freezeMsg,
+                  freezeMsg,
                 },
                 region: 'new'
               }
@@ -477,8 +512,8 @@ export default {
               params: {
                 orderNo: info.orderNo,
                 orderFollowId: info.id,
-                freezeMsg: freezeMsg,
-                recordMode:info.recordMode
+                freezeMsg,
+                recordMode: info.recordMode
               }
             });
           }
@@ -508,7 +543,7 @@ export default {
                   name: 'Order.OrderEntry',
                   params: {
                     customerConsigneeInfo: {
-                      freezeMsg: freezeMsg,
+                      freezeMsg,
                       userName: info.userName,
                       mobile: info.userMobile,
                       userId: info.userId,
@@ -577,9 +612,9 @@ export default {
               if (!this.updateList) {
                 console.log(page);
                 if (page.num === 1) {
-                  debugger
                   console.log(this.curScrollViewName);
                   this[this.curScrollViewName].list = [];
+
                   this[this.curScrollViewName].list = this.currentList;
                 } else {
                   this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(this.currentList);
@@ -764,9 +799,10 @@ export default {
 <style scoped lang="scss">
   .mescroll {
     /*padding: 21.6vw 0 0 0 !important;*/
-    position: fixed;
-    top: 21.6vw;
-    padding: 0 0 34vw 0;
+    /*position: fixed;
+    top: 21.6vw;*/
+    // 90 72 50
+    height: calc(100vh - 212px);
   }
 
   .md-notice-bar {
@@ -779,9 +815,6 @@ export default {
     width: 100%;
     height: 90px;
     background-color: #f5f5f5;
-    position: fixed;
-    top: 0;
-    z-index: 12;
   }
 
   .orderFollowButton-search {
@@ -849,7 +882,6 @@ export default {
 
   .page-class {
     background-color: #f5f5f5;
-    height: 1330px;
 
     .md-notice-bar {
       color: #E89748;

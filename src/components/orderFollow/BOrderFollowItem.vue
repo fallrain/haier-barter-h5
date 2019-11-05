@@ -1,33 +1,5 @@
 <template>
   <div class="orderFollowItemClass">
-    <div class="bar-v">
-      <div
-        class="bar-class"
-        v-for="(item,index) in headList"
-        :key="index"
-      >
-        <p
-          class="order-span"
-          v-bind:class="{active:item.isActive}"
-          @click="headSwitch(index)"
-        >{{item.name}}
-          <i class="iconfont icon-jiantou9" v-show="!item.isActive"></i>
-          <i class="iconfont2 icon-xialaactive-copy" v-show="item.isActive"></i>
-        </p>
-      </div>
-    </div>
-    <b-pop-sort-type
-      :show.sync="sortShow"
-      :list="sortList"
-      :value="sortType"
-      @checkClick="checkClicked"
-    >
-    </b-pop-sort-type>
-    <b-pop-button
-      :show.sync="scenarioShow"
-      :list="scenarioList"
-      @popButtonClicked="buttonClicked"
-    ></b-pop-button>
     <!--    <div style="height: 82px;"></div>-->
     <div
       class="label-class"
@@ -251,68 +223,17 @@ export default {
     return {
       popShow: false,
       remark: '',
-      sortShow: false,
-      scenarioShow: false,
       buttonList: [],
       pageNum: 1,
       dataList: [],
-      sortType: ['1'],
       scenarioType: '',
       show: false,
       showList: [],
-      checkedsortId: '',
-      checkedButtonId: '',
       ID: '',
-      headList: [
-        {
-          name: '排序',
-          isActive: false,
-          icon: '@/assets/images/orderFollow-up/xiala@3x.png',
-          activeIcon: '@/assets/images/orderFollow-up/shangla@3x.png'
-        },
-        {
-          name: '业务场景',
-          isActive: false,
-          icon: '@/assets/images/orderFollow-up/xiala@3x.png',
-          activeIcon: '@/assets/images/orderFollow-up/shangla@3x.png'
-        },
-        /*******功能未实现*******/
-        // {
-        //   name: '筛选',
-        //   isActive: false,
-        //   icon: '@/assets/images/orderFollow-up/shaixuan@3x.png',
-        //   activeIcon: '@/assets/images/orderFollow-up/shaixuan@3x.png'
-        // }
-      ],
-      sortList: [
-        {
-          id: '1',
-          name: '智能排序'
-        },
-        {
-          id: '2',
-          name: '按时间倒序'
-        },
-        // {
-        //   id: '3',
-        //   name: '按品牌'
-        // },
-        // {
-        //   id: '4',
-        //   name: '按成交可能性'
-        // }
-      ],
-      scenarioList: [],
-      preIndex: '',
       currentList: this.list
     };
   },
   created() {
-    this.productService.commonTypeQuery('BUSINESS_SCENARIOS').then((res) => {
-      if (res.code === 1) {
-        this.scenarioList = res.data;
-      }
-    });
   },
   methods: {
     hidePopUp() {
@@ -352,51 +273,7 @@ export default {
       this.stopProcess();
       this.$emit('gujiaClick', followItem);
     },
-    headSwitch(index) {
-      if (index === this.preIndex) {
-        this.headList[index].isActive = false;
-        this.preIndex = '';
-        this.sortShow = false;
-        this.scenarioShow = false;
-        return;
-      }
-      for (let i = 0; i < this.headList.length; i++) {
-        if (i === index) {
-          this.preIndex = index;
-          this.headList[i].isActive = true;
-        } else {
-          this.headList[i].isActive = false;
-        }
-      }
-      if (index === 0) {
-        this.sortShow = true;
-        this.scenarioShow = false;
-      } else if (index === 1) {
-        this.sortShow = false;
-        this.scenarioShow = true;
-      } else {
-        this.sortShow = false;
-        this.scenarioShow = false;
-      }
-    },
     preparation() {
-    },
-    checkClicked(val) {
-      this.checkedsortId = val[0];
-      for (let i = 0; i < this.headList.length; i++) {
-        this.headList[i].isActive = false;
-      }
-      this.$emit('checkClick', this.checkedsortId);
-    },
-
-
-    buttonClicked(val) {
-      this.stopProcess();
-      this.checkedButtonId = val[0];
-      for (let i = 0; i < this.headList.length; i++) {
-        this.headList[i].isActive = false;
-      }
-      this.$emit('popButtonClicked', val);
     },
     followButtonClick(button, item) {
       console.log(item);
@@ -536,26 +413,6 @@ export default {
     margin-left: 10px;
   }
 
-  .bar-class .order-span.active {
-    color: #1969c6;
-  }
-
-  .order-span {
-    display: inline-block;
-    color: #666666;
-    font-size: 28px;
-    padding-left: 56px;
-    line-height: 72px;
-  }
-
-  .order-span-blue {
-    display: inline-block;
-    color: #1969c6;
-    font-size: 28px;
-    padding-left: 56px;
-    line-height: 72px;
-  }
-
   .xialaimage {
     width: 36px;
     height: 36px;
@@ -597,36 +454,6 @@ export default {
     margin-left: 40px;
     display: inline-block;
     width: 300px;
-  }
-
-  .bar-class {
-    height: 72px;
-    width: 360px;
-    float: left;
-    position: relative;
-    .iconfont {
-      color: #666666
-    }
-
-    .iconfont2 {
-      color: #1969c6;
-      font-family: "iconfont" !important;
-      font-size: 16px;
-      font-style: normal;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
-  }
-
-  .bar-v {
-    background-color: white;
-    width: 100%;
-    height: 72px;
-    /*position: absolute;*/
-    position: fixed;
-    top: 90px;
-    z-index: 9999;
   }
 
   .label-class {
