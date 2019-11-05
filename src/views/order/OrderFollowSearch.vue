@@ -1,6 +1,6 @@
 <template>
   <div class="page-class">
-    <div class="">
+    <div>
       <md-notice-bar
         mode="closable"
         :time="4000"
@@ -15,6 +15,7 @@
         placeholder="搜索用户姓名、电话"
         placeholder-style="font-size: 28px;color: #BBBBBB;margin-left: 10px;"
         v-model="searchWord"
+        type="search"
       />
       <img
         src="@/assets/images/orderFollow-up/search@3x.png"
@@ -196,7 +197,7 @@ export default {
           icon: 'chengjiao'
         }
       ],
-      sortType: '',
+      sortType: 1,
       preIndex: '',
       currentScrollView: {},
       currentList: [],
@@ -262,18 +263,20 @@ export default {
     //   // hmcid: 'a0008949',
     //   // mobile: '18561715460',
     //   // shopId: '8800136445',
-    //   // hmcid:'01467897',
-    //   // mobile: '15253269729',
+    //   hmcid:'01467897',
+    //   mobile: '15253269729',
     //   // shopId: '9999999999',
-    //   hmcid: 'a0032254',
-    //   mobile: '15621017056',
-    //   shopId: '8700048360',
+    //   shopId:'8700000484',
+    //   // hmcid: 'a0032254',
+    //   // mobile: '15621017056',
+    //   // shopId: '8700048360',
+    //
     //   // hmcid: '18000560',
     //   // orderMode: 'Haier',
     //   // orderMode: 'Casarte',
     //   // mobile: '15621017056',
     //   // shopId: '8800266470',
-    //   token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IkEwMDMyMjU0Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MjgzNzI1NywiZXhwIjoxNTczNzAxMjU3fQ.ZvtYE96qtDhpVvQ7anpugo71SJOSliDuY6wL17z21QE'}
+    //   token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IjAxNDY3ODk3Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MjkyMTAxNywiZXhwIjoxNTczNzg1MDE3fQ.JoUwCT6WSriKN__FDP26PTFDFksnIb8E5Xr8FbYACNw'}
     // const Str = JSON.stringify(this.userinfo);
     // localStorage.setItem('userinfo', Str);
     // localStorage.setItem('acces_token', this.userinfo.token);
@@ -308,12 +311,7 @@ export default {
     this.bUtil.scroviewTabChange(this.curScrollViewName, this);
   },
   methods: {
-    getQueryString(name) {
-      const reg = new RegExp(`(^|&)${name}=([^&]*)(&|$)`, 'i');
-      const r = window.location.search.substr(1).match(reg);
-      if (r != null) return unescape(r[2]);
-      return null;
-    },
+    //获取消息
     getNoticeData() {
       this.orderService
         .queryOverTwentyFourHourOrder().then((res) => {
@@ -325,6 +323,7 @@ export default {
     change(item, index, prevIndex) {
       this.curTab = index;
     },
+    //手工录单
     handEntry() {
       this.orderService.checkCreateOrder().then((res) => { // 判断店铺是否冻结
         if (res.code != -1) {
@@ -370,11 +369,6 @@ export default {
       });
     },
     againEntry(item) {
-      // this.orderService.createNewOrder({}, { orderNo: item.orderNo }).then((res) => {
-      //   if (res.code === 1) {
-      //     Toast.succeed(res.msg);
-      //   }
-      // });
       this.$router.push({
         name: 'Order.OrderEntry',
         params: {
@@ -390,32 +384,16 @@ export default {
     // 入户服务
     userService(item) {
       wx.miniProgram.navigateTo({
-        // url: `/pages/userService/userService?userId=${item.userId}&userName=${item.userName}&mobile=${item.userMobile}&workFlowId=${item.workFlowId}&flowStatus=${item.flowStatus}&domainName=${item.domainName}&id=${item.id}` });
         url: `/pages/userService/userService?userId=${item.userId}&userName=${item.userName}&mobile=${item.userMobile}&flowStatus=${item.flowStatus}&workFlowId=${item.id}&hmcId=${this.userinfo.hmcid}`
       });
     },
     // 潜在客户
     maybeBuyer(item) {
-      // url: '/pages/mabyByuser/mabyByuser?userId=' + userId + '&userName=' + userName + '&mobile=' + mobile + '&workFlowId=' + workFlowId + '&flowStatus=' + flowStatus + '&domainName=' + domainName + '&id=' + id,
-      wx.miniProgram.navigateTo({ url: `/pages/userService/userService?userId=${item.userId}&userName=${item.userName}&mobile=${item.userMobile}&flowStatus=${item.flowStatus}&workFlowId=${item.id}&domainName=${item.recordMode}` });
+      wx.miniProgram.navigateTo({
+        url: `/pages/mabyByuser/mabyByuser?userId=${item.userId}&userName=${item.userName}&mobile=${item.userMobile}&flowStatus=${item.flowStatus}&workFlowId=${item.id}&domainName=${item.recordMode}`
+      });
     },
-    // searchProduct(item) {
-    //   this.orderService.queryOrderInfoByOrderNo({}, { orderNo: item.orderNo }).then((response) => {
-    //     if (response.code === 1) {
-    //       const resData = response.data;
-    //       if (resData.orderDetailDtoList.length !== 0) {
-    //         item.productList = resData.orderDetailDtoList;
-    //         item.productList.forEach((val) => {
-    //           if (val.productBrand === 'haier') {
-    //             val.productBrandCN = '海尔';
-    //           } else {
-    //             val.productBrandCN = '卡萨帝';
-    //           }
-    //         });
-    //       }
-    //     }
-    //   });
-    // },
+
     headSwitch(index) {
       if (index === this.preIndex) {
         this.headList[index].isActive = false;
@@ -434,7 +412,8 @@ export default {
     upCallback(page) {
       // 下载过就设置已经初始化
       this[this.curScrollViewName].isListInit = true;
-      this.businessType = '';
+      // this.businessType = '';
+      debugger
       this.searchData(page).then(({ result, pages }) => {
         this.$nextTick(() => {
           // 通过当前页的数据条数，和总页数来判断是否加载完
@@ -445,7 +424,7 @@ export default {
 
     checkClicked(val) {
       this.updateList = true;
-      this.sortType = val;
+      this.sortType = parseInt(val);
       this.businessType = '';
       this.searchData({
         num: 0,
@@ -785,6 +764,7 @@ export default {
 
   .md-notice-bar {
     position: absolute;
+    height: 80px;
     width: 100%;
   }
 
@@ -867,7 +847,11 @@ export default {
     .md-notice-bar {
       color: #E89748;
       background-color: #FDF0CE;
+      height: 80px;
     }
+  }
+  .notice-bar{
+    height: 80px;
   }
 
   .md-example-child-tab-bar-4 {

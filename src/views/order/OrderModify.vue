@@ -5,7 +5,7 @@
       <i class="iconfont icon-icon-question orderEntry-header-icon"></i>
     </div>
     <div class="orderEntry-header-cus">
-            <span class="name mr16">顾客信息:{{customerInfo.username}}</span>
+            <span class="name mr16">顾客信息：{{customerInfo.username}}</span>
             <span class="name mr16">{{customerInfo.mobile}}</span>
     </div>
     <b-fieldset
@@ -65,37 +65,14 @@
         ></b-radio-item>
       </template>
     </b-item>
-
-    <b-fieldset
-      v-show="orderType"
-      class="mt16"
-      :title="'套购发起人：'+(multBuySponsor[0] && multBuySponsor[0].username) || ''"
-      :showTitle="true"
-    >
-      <div>
-        <div
-          v-if="multBuyExceptHmc"
-          class="orderEntry-multBuySponsor"
-        >
-          <span class="orderEntry-multBuySponsor-tips">参与人：</span>{{multBuyExceptHmc}}
-        </div>
-        <button
-          type="button"
-          class="common-btn-primary w100per"
-          @click="selectSetBuyer"
-        >选择套购参与人
-        </button>
-      </div>
-    </b-fieldset>
-
-<!--    <div class="orderEntry-header-cus" v-show="orderType">-->
-<!--      <button-->
-<!--        type="button"-->
-<!--        class="common-btn-primary w100per"-->
-<!--        @click="selectSetBuyer()"-->
-<!--      >选择套购参与人-->
-<!--      </button>-->
-<!--    </div>-->
+    <div class="orderEntry-header-cus" v-show="orderType">
+      <button
+        type="button"
+        class="common-btn-primary w100per"
+        @click="selectSetBuyer()"
+      >选择套购发起人
+      </button>
+    </div>
     <b-fieldset
       class="mt16"
       title="用户购买的产品"
@@ -150,8 +127,8 @@
     class="mt16"
     title="选择可用的购机权益活动"
     :arrow="true"
-    @rightClick="selectActivity()"
     v-show="orderSource !=='SGLD'"
+    @click.native="selectActivity()"
   >
   </b-item>
   <b-activity-list
@@ -634,10 +611,14 @@ export default {
                 } else {
                   this.isReportInstall(item, index);
                 }
-                if (item.productBrand == 'haier') {
+                if (item.productBrand == '000') {
                   item.productBrandCN = '海尔';
-                } else {
+                } else if(item.productBrand == '051'){
                   item.productBrandCN = '卡萨帝';
+                }else if(item.productBrand == '089'){
+                  item.productBrandCN = '统帅';
+                }else {
+                  item.productBrandCN = '其他'
                 }
               });
             }
@@ -676,7 +657,6 @@ export default {
             this.customerInfo = res.data;
             this.getAddressName(res.data.province, res.data.city, res.data.district);
             this.consignee.address.street = res.data.address;
-
             this.consignee.phone = res.data.consigneeUserPhone;
             this.consignee.name = res.data.consigneeUserName;
             if (res.data.sex === 1) {
@@ -1058,6 +1038,7 @@ export default {
             if (this.multBuySponsor.length == 0) {
               this.multBuySponsor.push(user);
             }
+            this.multBuyParticipant = res.data;
           }
         });
       });

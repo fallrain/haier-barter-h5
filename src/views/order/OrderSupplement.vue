@@ -357,10 +357,14 @@ export default {
               if (item.installTime !== '') {
                 this.isInstall = true;
               }
-              if (item.productBrand == 'haier') {
+              if (item.productBrand == '000') {
                 item.productBrandCN = '海尔';
-              } else {
+              } else if(item.productBrand == '051'){
                 item.productBrandCN = '卡萨帝';
+              }else if(item.productBrand == '089'){
+                item.productBrandCN = '统帅';
+              }else {
+                item.productBrandCN = '其他'
               }
             });
           }
