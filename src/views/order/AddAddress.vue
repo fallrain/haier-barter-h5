@@ -85,6 +85,7 @@
             :inline="true"
             :list="sexTypes"
             v-model="customerInfo.sex"
+            @radioChange="radioChange"
           ></b-radio-item>
         </div>
       </li>
@@ -276,6 +277,7 @@ export default {
           }
           this.smld = true;
         } else if (this.region === 'edit') {
+          console.log(JSON.parse(this.$route.params.info))
           this.customerInfo = JSON.parse(this.$route.params.info);
           // this.customerInfo.username = JSON.parse(this.$route.params.info).username;
           // this.customerInfo.mobile = JSON.parse(this.$route.params.info).mobile;
@@ -343,6 +345,9 @@ export default {
     showAddressPop() {
       /* 展示地址pop */
       this.addressPopShow = true;
+    },
+    radioChange(val) {
+      this.customerInfo.sex = val;
     },
     search() {
       // this.searchEnd = true;
@@ -443,7 +448,7 @@ export default {
           this.customerInfo.familyItemCode = '';
         }
         delete this.customerInfo.tag;
-      }
+      }debugger
       if (this.region === 'add' || this.region === 'userAdd') {
         // delete this.customerInfo.id;
         this.productService.addcustomerAddress(this.customerInfo, {}).then((res) => {

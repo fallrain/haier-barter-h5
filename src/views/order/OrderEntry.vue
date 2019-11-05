@@ -30,7 +30,7 @@
               type="button"
               class="common-btn-waring"
               @click="changeAddress(customerInfo)"
-            >更改地址
+            >添加地址
             </button>
           </div>
           <p class="orderEntry-user-address">
@@ -784,6 +784,10 @@ export default {
         Toast.failed('请添加顾客信息');
         return;
       }
+      if (!this.consignee.phone || this.consignee.phone == '') {
+        Toast.failed('请添加收货信息');
+        return;
+      }
       if (this.buyDate === '' && this.saveType == 0) {
         Toast.failed('请选择购买时间');
         return;
@@ -1143,51 +1147,8 @@ export default {
     // },
     next() {
       /* 下一步 */
-      if (this.productList.length === 0) {
-        Toast.info('请选择产品');
-      }
-      for (let i = 0; i < this.productList.length; i++) {
-        if (this.productList[i].productPrice === '') {
-          Toast.failed('请输入产品价格');
-          return;
-        }
-      }
-      // 产品价格闸口判断
-      let result = 0;
-      let state = false;
-      const resultMsg = [];
-      if (this.productList.length > 0) {
-        for (let i = 0; i < this.productList.length; i++) {
-          const obj = {
-            bccPrice: '',
-            productCode: this.productList[i].productCode,
-            productPrice: this.productList[i].productPrice,
-            requestNoToast: true
-          };
-          if (this.productList[i].bccPrice) {
-            obj.bccPrice = this.productList[i].bccPrice;
-          }
-          this.orderService.checkProductPrice({}, obj).then((res) => {
-            result++;
-            if (res.code == -1) {
-              resultMsg.push(res.msg);
-              state = true;
-              this.productList[i].productPrice = '';
-            }
-            if (result == this.productList.length) {
-              if (!state) {
-                this.saveType = 0;
-                this.saveTemporary(2);
-              } else {
-                Toast.failed(resultMsg[0]);
-              }
-            }
-          });
-        }
-      } else {
-        this.saveType = 0;
-        this.saveTemporary(2);
-      }
+      this.saveType = 0;
+      this.saveTemporary(2);
     },
     saveOrder() {
 
