@@ -65,14 +65,27 @@
         ></b-radio-item>
       </template>
     </b-item>
-    <div class="orderEntry-header-cus" v-show="orderType">
-      <button
-        type="button"
-        class="common-btn-primary w100per"
-        @click="selectSetBuyer()"
-      >选择套购发起人
-      </button>
-    </div>
+    <b-fieldset
+      v-show="orderType"
+      class="mt16"
+      :title="'套购发起人：'+(multBuySponsor[0] && multBuySponsor[0].username) || ''"
+      :showTitle="true"
+    >
+      <div>
+        <div
+          v-if="multBuyExceptHmc"
+          class="orderEntry-multBuySponsor"
+        >
+          <span class="orderEntry-multBuySponsor-tips">参与人：</span>{{multBuyExceptHmc}}
+        </div>
+        <button
+          type="button"
+          class="common-btn-primary w100per"
+          @click="selectSetBuyer"
+        >选择套购参与人
+        </button>
+      </div>
+    </b-fieldset>
     <b-fieldset
       class="mt16"
       title="用户购买的产品"
@@ -420,6 +433,21 @@ export default {
           this.basicDialog1.open = true;
         }
       });
+    },
+    multBuyParticipantCheckIds(val) {
+      let arr = [];
+      console.log(val);
+      console.log(this.multBuyParticipant);
+      for (let i = 0; i < this.multBuyParticipant.length; i++) {
+        for (let j = 0; j < val.length; j++) {
+          if (val[j] == this.multBuyParticipant[i].hmcId && val[j] !== this.multBuySponsorCheckedIds[0]) {
+            arr.push(this.multBuyParticipant[i].username);
+          }
+        }
+      }
+      if (arr.length > 0){
+        this.multBuyExceptHmc = arr.join('、');
+      }
     }
   },
   mounted() {
@@ -589,11 +617,14 @@ export default {
           this.queryUserList(resData.storeId);
           this.multBuyParticipant = resData.mayEditCoupleOrderName.split(','); // 套购参与人赋值
           this.multBuyParticipantCheckIds = resData.mayEditCoupleOrderId.split(','); // 套购参与人赋值
+          console.log(this.multBuyParticipant)
+          console.log(this.multBuyParticipantCheckIds)
           // 套购参与人中去除直销员信息
           const hmc_index = resData.mayEditCoupleOrderId.split(',').indexOf(resData.coupleSponsor);
           let arr = resData.mayEditCoupleOrderName.split(',');
           arr.splice(hmc_index, 1);
-          this.multBuyExceptHmc = arr.join('，');
+          this.multBuyExceptHmc = arr.join('、');
+          console.log(this.multBuyExceptHmc)
           if (!this.isDetail) {
             if (resData.rightName) {
               this.rightsList = resData.rightName.split(',');
@@ -723,7 +754,29 @@ export default {
       }else {
         this.saveType = 0
       }
-      if (this.productList.length > 0 && type === 1) {
+      if (!this.customerInfo.mobile) {
+        Toast.failed('请添加顾客信息');
+        return;
+      }
+      if (this.buyDate === '' && this.saveType == 0) {
+        Toast.failed('请选择购买时间');
+        return;
+      }
+      if (this.productList.length === 0 && this.saveType == 0) {
+        Toast.failed('请选择产品');
+        return;
+      }
+      for (let i = 0; i < this.productList.length; i++) {
+        if (this.productList[i].productPrice == '' && this.saveType == 0) {
+          Toast.failed('请输入产品价格');
+          return;
+        }
+      }
+      if (this.deliveryTime === '' && this.saveType == 0) {
+        Toast.failed('请选择送货时间');
+        return;
+      }
+      if (this.productList.length > 0) {
         for (let i = 0; i < this.productList.length; i++) {
           if (this.productList[i].productPrice === '') {
             Toast.failed('请输入产品价格');
@@ -733,7 +786,7 @@ export default {
         // 产品价格闸口判断
         let result = 0;
         let state = false;
-        let resultMsg = [];
+        const resultMsg = [];
         for (let i = 0; i < this.productList.length; i++) {
           const obj = {
             bccPrice: '',
@@ -788,20 +841,6 @@ export default {
       this.generateSubInfo(2);
     },
     generateSubInfo(type) {
-      if (this.productList.length === 0 && this.saveType == 0) {
-        Toast.failed('请选择产品');
-        return;
-      }
-      for (let i = 0; i < this.productList.length; i++) {
-        if (this.productList[i].productPrice == '' && this.saveType == 0) {
-          Toast.failed('请输入产品价格');
-          return;
-        }
-      }
-      if (this.deliveryTime === '' && this.saveType == 0) {
-        Toast.failed('请选择送达时间');
-        return;
-      }
       if (!this.bUtil.isReportInstallFit(this.productList,this.deliveryTime) && this.saveType == 0) {
         return;
       }
@@ -1042,47 +1081,8 @@ export default {
     },
     next() {
     /* 下一步 */
-      if (this.productList.length === 0) {
-        Toast.info('请选择产品');
-        return;
-      }
-      for (let i = 0; i < this.productList.length; i++) {
-        if (this.productList[i].productPrice === '') {
-          Toast.failed('请输入产品价格');
-          return;
-        }
-      }
-      // 产品价格闸口判断
-      let result = 0;
-      let state = false;
-      let resultMsg = [];
-      for (let i = 0; i < this.productList.length; i++) {
-        const obj = {
-          bccPrice: '',
-          productCode: this.productList[i].productCode,
-          productPrice: this.productList[i].productPrice,
-          requestNoToast: true
-        };
-        if (this.productList[i].bccPrice) {
-          obj.bccPrice = this.productList[i].bccPrice;
-        }
-        this.orderService.checkProductPrice({}, obj).then((res) => {
-          result++;
-          if (res.code == -1) {
-            resultMsg.push(res.msg);
-            state = true;
-            this.productList[i].productPrice = '';
-          }
-          if (result == this.productList.length) {
-            if (!state) {
-              this.saveType = 0
-              this.saveTemporary(2);
-            } else {
-              Toast.failed(resultMsg[0]);
-            }
-          }
-        });
-      }
+      this.saveType = 0
+      this.saveTemporary(2);
     },
     saveOrder() {
 
@@ -1091,7 +1091,7 @@ export default {
       this.productList.splice(index, 1);
       this.rightsList = []
       this.rightsJson = ''
-      this.rightsName = ''
+      this.rightName = ''
       this.rightId = ''
     },
     // 模态框确认取消处理

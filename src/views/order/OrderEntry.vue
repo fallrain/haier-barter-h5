@@ -1193,6 +1193,10 @@ export default {
     },
     onDelete(index) {
       this.productList.splice(index, 1);
+      this.rightsList = []
+      this.rightsJson = ''
+      this.rightName = ''
+      this.rightId = ''
     },
     // 模态框确认取消处理
     onBasicCancel() {
@@ -1299,6 +1303,12 @@ export default {
     padding-right: 25px;
     color: #333;
     margin-top: 20px;
+    .name-ellipse{
+      width: 36vw;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
   }
 
   .orderEntry-header-name {
@@ -1322,6 +1332,10 @@ export default {
     .name {
       color: #333;
       font-size: 28px;
+      width: 32vw;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
     }
 
     .sex {
