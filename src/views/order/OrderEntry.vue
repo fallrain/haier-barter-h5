@@ -558,11 +558,15 @@ export default {
     // 处理权益是否可选
     if (this.$route.params.region === 'hand') {
       this.handRegion = true;
+      this.recordMode = 'Haier'
+    }else {
+      this.recordMode = this.$route.params.customerConsigneeInfo.recordMode
     }
     if (this.$route.params.customerConsigneeInfo.freezeMsg) {
       if (this.$route.params.customerConsigneeInfo.freezeMsg == 'Y') {
         this.handRegion = true;
       }
+
     }
     if (this.userParam.oldForNew === 1) {
       this.isYJHX = true;
@@ -833,6 +837,7 @@ export default {
       /* 添加产品 */
       this.$router.push({
         name: 'Order.SearchProduct',
+        params:{recordMode:this.recordMode}
       });
     },
     generateSubInfo(type) {

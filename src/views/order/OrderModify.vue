@@ -755,7 +755,7 @@ export default {
     /* 添加产品 */
       this.$router.push({
         name: 'Order.SearchProduct',
-        params:{orderNo:this.orderNo,productList:this.productList}
+        params:{orderNo:this.orderNo,productList:this.productList,recordMode:this.recordMode}
       });
     },
     selectActivity() {

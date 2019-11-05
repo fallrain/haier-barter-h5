@@ -467,6 +467,7 @@ export default {
                 orderNo: info.orderNo,
                 orderFollowId: info.id,
                 freezeMsg: freezeMsg,
+                recordMode:info.recordMode
               }
             });
           }

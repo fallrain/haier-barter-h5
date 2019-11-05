@@ -82,6 +82,7 @@ export default {
   created() {
     this.orderNo = this.$route.params.orderNo;
     this.isProductList = this.$route.params.productList;
+    this.recordMode = this.$route.params.recordMode
     if (localStorage.getItem('productSearchHistory')) {
       this.searchHistory = JSON.parse(localStorage.getItem('productSearchHistory'));
       if (this.searchHistory.length > 30) {
@@ -102,7 +103,8 @@ export default {
       // 搜索历史
       searchHistory: [],
       orderNo: '',
-      isProductList: []
+      isProductList: [],
+      recordMode:''
     };
   },
   methods: {
@@ -169,8 +171,9 @@ export default {
       return !!array.find(v => v.productCode === obj.productCode);
     },
     onItemClick(item) {
-      const orderMode = JSON.parse(localStorage.getItem('userinfo')).orderMode;
-      if (orderMode == 'Casarte') {
+      // const orderMode = JSON.parse(localStorage.getItem('userinfo')).orderMode;
+      const orderMode = this.recordMode
+      if (orderMode === 'Casarte') {
         if (item.productBrandName != '卡萨帝') {
           Toast.failed('当前是卡萨帝模式，只能选择卡萨帝品牌的产品，请重新选择！');
           return;

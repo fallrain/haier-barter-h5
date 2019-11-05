@@ -293,7 +293,7 @@ const util = {
         }
         if (td === d && tm === m && ty === y) {
           if (h >= 16) {
-            Toast.failed('代报装时间错误，请重新选择代包装时间');
+            Toast.failed('代报装时间不符合规则，请重新输入');
             change = false;
             return;
           }
