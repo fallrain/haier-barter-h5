@@ -466,7 +466,7 @@ export default {
     },
     buttonClicked(val) {
       // debugger
-      this.updateList = true;
+      // this.updateList = true;
       if (val.length === 0) {
         this.businessType = '';
       } else if (val.length === 1) {
@@ -564,6 +564,7 @@ export default {
     },
 
     searchData(page) {
+      debugger
       console.log('keyword', this.searchWord);
       return this.orderService
         .queryOrderFollowlList(
@@ -610,23 +611,18 @@ export default {
               const curList = result;
               this.anylizeData(curList);
                 console.log(page);
-              // if (!this.updateList) {
                 if (page.num === 1) {
                   console.log(this.curScrollViewName);
                   this[this.curScrollViewName].list = [];
                   this[this.curScrollViewName].list = this.currentList;
                 } else {
-                  if(!this.updateList){
+                  if(page.num > 1 && res.data.pages === 1){
+                  }else {
                     this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(this.currentList);
                     console.log(this[this.curScrollViewName].list);
-                    this.updateList = false;
                   }
                 }
-              // } else {
-              //   this[this.curScrollViewName].list = [];
-              //   this[this.curScrollViewName].list = this.currentList;
-              //   // this.updateList = false;
-              // }
+
 
               // });
             } else {
@@ -754,7 +750,7 @@ export default {
       this.currentList = curList;
     },
     fuzzySearch() {
-      this.updateList = true;
+      // this.updateList = true;
       const page = {
         num: 1,
         size: 10
@@ -764,7 +760,7 @@ export default {
       this.fuzzy = true;
     },
     updateOrderType(type) {
-      this.updateList = true;
+      // this.updateList = true;
       this.businessType = '';
       this.searchData({
         num: 1,

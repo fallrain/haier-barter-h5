@@ -510,6 +510,7 @@ export default {
     }
   },
   created() {
+    debugger
     this.addressData = addressData;
     this.orderNo = this.$route.params.orderNo;
     this.orderFollowId = this.$route.params.orderFollowId;

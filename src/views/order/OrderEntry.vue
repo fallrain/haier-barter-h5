@@ -1092,7 +1092,7 @@ export default {
       }
     },
     editAddress(info) {
-      this.addressPopShow = false;
+      // this.addressPopShow = false;
       info.username = this.customerInfo.username;
       info.mobile = this.customerInfo.mobile;
       delete info.familyC
