@@ -457,12 +457,12 @@ export default {
   //   console.log('tag', address)
   //    }
   },
-  activated() {
+  activated() {debugger;
     if (this.$route.query.temp) {
       let ID = '';
       const obj = JSON.parse(this.$route.query.temp);
       if (obj.tel) {
-        this.mobile = obj.tel;
+        this.mobile = obj.tel;debugger
         this.queryCustomerDefault();
       }
       if (obj.rightsJson) {
@@ -687,7 +687,7 @@ export default {
     // 查询客户信息及默认地址
     queryCustomerDefault() {
       this.productService.deafaultCustomerAddress(this.mobile).then((res) => {
-        if (res.code === 1) {
+        if (res.code === 1) {debugger
           if (res.data !== null) {
             this.customerInfo = res.data;
             this.getAddressName(res.data.province, res.data.city, res.data.district);
@@ -1042,7 +1042,7 @@ export default {
         params: { region: this.region, info: JSON.stringify(this.customerInfo) }
       });
     },
-    changeAddress(item) {
+    changeAddress(item) {console.log(this.addressPopShow)
       item.username = this.customerInfo.username;
       item.mobile = this.customerInfo.mobile;
       this.region = 'edit';
@@ -1056,6 +1056,7 @@ export default {
       }
     },
     editAddress(info) {
+      console.log(this.addressPopShow)
       delete info.familyC;
       info.username = this.customerInfo.username
       info.mobile = this.customerInfo.mobile
