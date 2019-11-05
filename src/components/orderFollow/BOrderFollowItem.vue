@@ -626,7 +626,7 @@ export default {
     /*position: absolute;*/
     position: fixed;
     top: 90px;
-    z-index: 15;
+    z-index: 9999;
   }
 
   .label-class {

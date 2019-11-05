@@ -91,8 +91,9 @@ export default {
       routerData: routerData.data
     };
   },
-  activated() {debugger
+  activated() {
     this.orderNo = this.$route.params.orderInfo;
+    console.log(this.$router);
   },
   created() {
   },

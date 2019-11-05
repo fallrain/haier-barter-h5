@@ -373,6 +373,7 @@ export default {
       /* 确认时间 */
       if (dates) {
         this.curSearchDate = `${dates[0].value}-${dates[1].value}`;
+        this[this.curScrollViewName].mescroll.triggerDownScroll();
       }
     },
     upCallback(page) {

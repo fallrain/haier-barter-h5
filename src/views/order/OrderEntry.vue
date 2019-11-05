@@ -11,7 +11,7 @@
       v-show="haveCustomer"
     > -->
     <div class="orderEntry-header-cus" v-show="haveCustomer">
-      <span class="name mr16">顾客信息：{{customerInfo.username}}</span>
+      <span class="name mr16 name-ellipse">顾客信息：{{customerInfo.username}}</span>
       <span class="name mr16">{{customerInfo.mobile}}</span>
     </div>
     <b-fieldset
@@ -480,7 +480,6 @@ export default {
 
   },
   activated() {
-    debugger;
     if (this.$route.params.customerConsigneeInfo && this.$route.params.customerConsigneeInfo.id) {
       this.orderFollowId = this.$route.params.customerConsigneeInfo.id;
       localStorage.setItem('orderFollowId', this.orderFollowId);
@@ -558,15 +557,11 @@ export default {
     // 处理权益是否可选
     if (this.$route.params.region === 'hand') {
       this.handRegion = true;
-      this.recordMode = 'Haier'
-    }else {
-      this.recordMode = this.$route.params.customerConsigneeInfo.recordMode
     }
     if (this.$route.params.customerConsigneeInfo.freezeMsg) {
       if (this.$route.params.customerConsigneeInfo.freezeMsg == 'Y') {
         this.handRegion = true;
       }
-
     }
     if (this.userParam.oldForNew === 1) {
       this.isYJHX = true;
@@ -778,14 +773,34 @@ export default {
         }
       });
     },
-
     // 暂存
     saveTemporary(type) {
-      console.log(2222);
       if (type === 1) {
         this.saveType = 1;
       } else {
         this.saveType = 0;
+      }
+      if (!this.customerInfo.mobile) {
+        Toast.failed('请添加顾客信息');
+        return;
+      }
+      if (this.buyDate === '' && this.saveType == 0) {
+        Toast.failed('请选择购买时间');
+        return;
+      }
+      if (this.productList.length === 0 && this.saveType == 0) {
+        Toast.failed('请选择产品');
+        return;
+      }
+      for (let i = 0; i < this.productList.length; i++) {
+        if (this.productList[i].productPrice == '' && this.saveType == 0) {
+          Toast.failed('请输入产品价格');
+          return;
+        }
+      }
+      if (this.deliveryTime === '' && this.saveType == 0) {
+        Toast.failed('请选择送货时间');
+        return;
       }
       if (this.productList.length > 0) {
         for (let i = 0; i < this.productList.length; i++) {
@@ -841,26 +856,6 @@ export default {
       });
     },
     generateSubInfo(type) {
-      if (this.buyTime === '' && this.saveType === 0) {
-        Toast.failed('请选择购买时间');
-        return;
-      }
-      if (this.productList.length === 0 && this.saveType === 0) {
-        Toast.failed('请选择产品');
-        return;
-      }
-      for (let i = 0; i < this.productList.length; i++) {
-        if (this.productList[i].productPrice === '' && this.saveType === 0) {
-          Toast.failed('请输入产品价格');
-          return;
-        }
-      }
-      console.log(this.productList);
-      if (this.deliveryTime === '' && this.saveType === 0) {
-        Toast.failed('请选择送货时间');
-        return;
-      }
-
       if (!this.bUtil.isReportInstallFit(this.productList, this.deliveryTime) && this.saveType == 0) {
         return;
       }

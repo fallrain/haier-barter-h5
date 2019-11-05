@@ -215,7 +215,6 @@ export default {
     },
     setShowConfig() {
       this.isShowConfig = !this.isShowConfig;
-      debugger;
       if (this.isShowConfig) {
         this.$emit('showConfig', this.getData);
       }

@@ -5,7 +5,7 @@
       <!--<i class="iconfont icon-icon-question orderEntry-header-icon"></i>-->
     </div>
     <div class="orderEntry-header-cus">
-            <span class="name mr16">顾客信息：{{customerInfo.username}}</span>
+            <span class="name mr16 name-ellipse">顾客信息：{{customerInfo.username}}</span>
             <span class="name mr16">{{customerInfo.mobile}}</span>
     </div>
     <b-fieldset
@@ -382,11 +382,11 @@ export default {
       ],
       multBuySponsorCheckedIds: [],
       // 套购参与人
-      multBuyParticipant: [
-
-      ],
+      multBuyParticipant: [],
       // 参与人选中id
       multBuyParticipantCheckIds: [],
+      multBuyExceptHmc: '', // 套购参与人除去直销员本人
+      multBuyExceptHmcId: '', // 套购参与人除去直销员本人
       orderNo: '',
       title: '顾客信息：',
       mobile: '',
@@ -423,10 +423,13 @@ export default {
     }
   },
   mounted() {
-
+  //
+  //    if(this.$route.query){
+  // const address = this.$route.query.temp
+  //   console.log('tag', address)
+  //    }
   },
   activated() {
-    debugger;
     if (this.$route.query.temp) {
       let ID = '';
       const obj = JSON.parse(this.$route.query.temp);
@@ -446,7 +449,6 @@ export default {
         this.isDetail = true;
         console.log(rightsPro);
         this.rightsList = rightsPro;
-        debugger
       }
       if (obj.product) {
         if (!obj.product.productGroupName) {
@@ -497,7 +499,14 @@ export default {
     }
   },
   methods: {
-
+  //  haveConsignee() {
+  //   /* 存在收货人信息 */
+  //   return this.consignee && JSON.stringify(this.consignee) !== '{}';
+  // },
+  // chooseGift() {
+  //   /* 选择礼品 */
+  //   this.chooseGiftPopShow = true;
+  // },
     radioChange(val) {
       this.orderType = val;
     },
@@ -530,7 +539,6 @@ export default {
         } else {
           pro.isInstall = false;
         }
-        debugger;
         console.log(this.productList);
         if (typeof(index) != 'undefined') {
           this.productList[index].isInstall = pro.isInstall;
@@ -579,13 +587,19 @@ export default {
           this.sourceSn = resData.sourceSn;
           this.recordMode = resData.recordMode;
           this.queryUserList(resData.storeId);
-          if(!this.isDetail){
+          this.multBuyParticipant = resData.mayEditCoupleOrderName.split(','); // 套购参与人赋值
+          this.multBuyParticipantCheckIds = resData.mayEditCoupleOrderId.split(','); // 套购参与人赋值
+          // 套购参与人中去除直销员信息
+          const hmc_index = resData.mayEditCoupleOrderId.split(',').indexOf(resData.coupleSponsor);
+          let arr = resData.mayEditCoupleOrderName.split(',');
+          arr.splice(hmc_index, 1);
+          this.multBuyExceptHmc = arr.join('，');
+          if (!this.isDetail) {
             if (resData.rightName) {
               this.rightsList = resData.rightName.split(',');
-
             }
           }
-          if(!this.isProduct){
+          if (!this.isProduct) {
             if (resData.orderDetailDtoList.length !== 0) {
               this.productList = resData.orderDetailDtoList;
               this.productList.forEach((item, index) => {
@@ -605,10 +619,10 @@ export default {
                 }
               });
             }
-          }else {
+          } else {
             this.productList = this.isProductList.concat(this.productList)
           }
-           this.queryCustomerDefault();
+          this.queryCustomerDefault();
         }
       });
     },
@@ -633,7 +647,7 @@ export default {
       });
     },
     // 查询客户信息及默认地址
-    queryCustomerDefault() {console.log(this.mobile)
+    queryCustomerDefault() {
       this.productService.deafaultCustomerAddress(this.mobile).then((res) => {
         if (res.code === 1) {
           if (res.data !== null) {
@@ -773,7 +787,7 @@ export default {
       /* 选择活动 */
       this.generateSubInfo(2);
     },
-    generateSubInfo(type) {debugger
+    generateSubInfo(type) {
       if (this.productList.length === 0 && this.saveType == 0) {
         Toast.failed('请选择产品');
         return;
@@ -785,13 +799,22 @@ export default {
         }
       }
       if (this.deliveryTime === '' && this.saveType == 0) {
-        Toast.failed('请选择送货时间');
+        Toast.failed('请选择送达时间');
         return;
       }
       if (!this.bUtil.isReportInstallFit(this.productList,this.deliveryTime) && this.saveType == 0) {
         return;
       }
       const subInfo = {};
+      // multBuyParticipantCheckIds
+      // if (this.multBuySponsorCheckedIds.length) {
+      //   subInfo.coupleSponsor = this.multBuySponsorCheckedIds[0];
+      //   const obj = this.multBuySponsor.find(v => v.hmcId === this.multBuySponsorCheckedIds[0]);
+      //   subInfo.coupleSponsorName = obj.username;
+      // } else {
+      //   subInfo.coupleSponsor = '';
+      //   subInfo.mayEditCoupleOrderId = '';
+      // }
       if (this.multBuySponsor.length > 0) {
         subInfo.coupleSponsor = this.multBuySponsor[0].hmcId;
         subInfo.coupleSponsorName = this.multBuySponsor[0].username;
@@ -799,9 +822,9 @@ export default {
         subInfo.coupleSponsor = '';
         subInfo.mayEditCoupleOrderId = '';
       }
+      // multBuySponsor
       const part = [];
       const partId = this.multBuyParticipantCheckIds;
-      debugger
       if (partId.length) {
         const index = partId.indexOf(this.multBuySponsor[0].hmcId);
         if (index > -1) {
@@ -1002,9 +1025,11 @@ export default {
         this.productService.userList(storeId).then((res) => {
           if (res.code === 1) {
             console.log(res);
-            res.data.forEach((item) => {
+            this.multBuyParticipant = res.data;
+            res.data.forEach((item, index) => {
               if (item.hmcId == this.hmcId) {
                 this.multBuySponsor.push(item);
+                this.multBuyParticipant.splice(index, 1);
               }
             });
             if (this.multBuySponsor.length == 0) {
@@ -1158,14 +1183,19 @@ export default {
  .orderEntry-header-cus{
   display: flex;
   align-items: center;
-
   width: 100%;
   height: 80px;
   background: #fff;
   padding-left: 27px;
   padding-right: 25px;
-color: #333;
+  color: #333;
   margin-top: 20px;
+   .name-ellipse{
+     width: 36vw;
+     text-overflow: ellipsis;
+     overflow: hidden;
+     white-space: nowrap;
+   }
 }
 
 .orderEntry-header-name {
@@ -1190,6 +1220,10 @@ color: #333;
   .name {
     color: #333;
     font-size: 28px;
+    width: 32vw;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
   }
 
   .sex {
@@ -1258,5 +1292,13 @@ color: #333;
   background: #fff;
   padding: 0;
 }
+.orderEntry-multBuySponsor {
+  font-size: 24px;
+  word-break: break-all;
+  margin-bottom: 14px;
+}
 
+.orderEntry-multBuySponsor-tips {
+  color: #F4A623;
+}
 </style>
