@@ -23,7 +23,7 @@
               type="button"
               class="common-btn-waring"
               @click="changeAddress(customerInfo)"
-            >更改地址
+            >添加地址
             </button>
           </div>
           <p
@@ -615,6 +615,12 @@ export default {
           this.sourceSn = resData.sourceSn;
           this.recordMode = resData.recordMode;
           this.queryUserList(resData.storeId);
+          this.multBuySponsor = [
+            {
+              hmcId: resData.coupleSponsor,
+              username: resData.coupleSponsorName
+            }
+          ] // 套购发起人赋值
           this.multBuyParticipant = resData.mayEditCoupleOrderName.split(','); // 套购参与人赋值
           this.multBuyParticipantCheckIds = resData.mayEditCoupleOrderId.split(','); // 套购参与人赋值
           console.log(this.multBuyParticipant)
@@ -756,6 +762,10 @@ export default {
       }
       if (!this.customerInfo.mobile) {
         Toast.failed('请添加顾客信息');
+        return;
+      }
+      if (!this.consignee.phone || this.consignee.phone == '') {
+        Toast.failed('请添加收货信息');
         return;
       }
       if (this.buyDate === '' && this.saveType == 0) {
@@ -1043,6 +1053,7 @@ export default {
       }
     },
     editAddress(info) {
+      delete info.familyC;
       info.username = this.customerInfo.username
       info.mobile = this.customerInfo.mobile
       this.region = 'edit';
@@ -1067,7 +1078,7 @@ export default {
             this.multBuyParticipant = res.data;
             res.data.forEach((item, index) => {
               if (item.hmcId == this.hmcId) {
-                this.multBuySponsor.push(item);
+                // this.multBuySponsor.push(item);
                 this.multBuyParticipant.splice(index, 1);
               }
             });

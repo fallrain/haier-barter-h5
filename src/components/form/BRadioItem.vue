@@ -35,7 +35,7 @@ export default {
     };
   },
   watch: {
-    value(newVal, oldVal) {
+    value(newVal, oldVal) {debugger
       if (newVal !== oldVal) {
         this.radioVal = newVal;
       }
