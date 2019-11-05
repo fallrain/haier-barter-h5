@@ -1193,6 +1193,10 @@ export default {
     },
     onDelete(index) {
       this.productList.splice(index, 1);
+      this.rightsList = []
+      this.rightsJson = ''
+      this.rightName = ''
+      this.rightId = ''
     },
     // 模态框确认取消处理
     onBasicCancel() {
