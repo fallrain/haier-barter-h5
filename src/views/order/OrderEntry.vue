@@ -1299,6 +1299,12 @@ export default {
     padding-right: 25px;
     color: #333;
     margin-top: 20px;
+    .name-ellipse{
+      width: 36vw;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
   }
 
   .orderEntry-header-name {
@@ -1322,6 +1328,10 @@ export default {
     .name {
       color: #333;
       font-size: 28px;
+      width: 32vw;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
     }
 
     .sex {
