@@ -850,7 +850,7 @@ export default {
       }
       console.log(this.productList);
       if (this.deliveryTime === '' && this.saveType == 0) {
-        Toast.failed('请选择送达时间');
+        Toast.failed('请选择送货时间');
         return;
       }
 

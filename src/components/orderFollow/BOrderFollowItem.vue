@@ -293,14 +293,14 @@ export default {
           id: '2',
           name: '按时间倒序'
         },
-        {
-          id: '3',
-          name: '按品牌'
-        },
-        {
-          id: '4',
-          name: '按成交可能性'
-        }
+        // {
+        //   id: '3',
+        //   name: '按品牌'
+        // },
+        // {
+        //   id: '4',
+        //   name: '按成交可能性'
+        // }
       ],
       scenarioList: [],
       preIndex: '',

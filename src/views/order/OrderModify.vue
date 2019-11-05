@@ -127,8 +127,8 @@
     class="mt16"
     title="选择可用的购机权益活动"
     :arrow="true"
-    @rightClick="selectActivity()"
     v-show="orderSource !=='SGLD'"
+    @click.native="selectActivity()"
   >
   </b-item>
   <b-activity-list
@@ -784,22 +784,13 @@ export default {
         }
       }
       if (this.deliveryTime === '' && this.saveType == 0) {
-        Toast.failed('请选择送达时间');
+        Toast.failed('请选择送货时间');
         return;
       }
       if (!this.bUtil.isReportInstallFit(this.productList,this.deliveryTime) && this.saveType == 0) {
         return;
       }
       const subInfo = {};
-      // multBuyParticipantCheckIds
-      // if (this.multBuySponsorCheckedIds.length) {
-      //   subInfo.coupleSponsor = this.multBuySponsorCheckedIds[0];
-      //   const obj = this.multBuySponsor.find(v => v.hmcId === this.multBuySponsorCheckedIds[0]);
-      //   subInfo.coupleSponsorName = obj.username;
-      // } else {
-      //   subInfo.coupleSponsor = '';
-      //   subInfo.mayEditCoupleOrderId = '';
-      // }
       if (this.multBuySponsor.length > 0) {
         subInfo.coupleSponsor = this.multBuySponsor[0].hmcId;
         subInfo.coupleSponsorName = this.multBuySponsor[0].username;
@@ -807,7 +798,6 @@ export default {
         subInfo.coupleSponsor = '';
         subInfo.mayEditCoupleOrderId = '';
       }
-      // multBuySponsor
       const part = [];
       const partId = this.multBuyParticipantCheckIds;
       debugger
