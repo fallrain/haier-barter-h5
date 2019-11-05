@@ -5,7 +5,7 @@
       <i class="iconfont icon-icon-question orderEntry-header-icon"></i>
     </div>
     <div class="orderEntry-header-cus">
-            <span class="name mr16">顾客信息：{{customerInfo.username}}</span>
+            <span class="name mr16 name-ellipse">顾客信息：{{customerInfo.username}}</span>
             <span class="name mr16">{{customerInfo.mobile}}</span>
     </div>
     <b-fieldset
@@ -430,7 +430,6 @@ export default {
   //    }
   },
   activated() {
-    debugger;
     if (this.$route.query.temp) {
       let ID = '';
       const obj = JSON.parse(this.$route.query.temp);
@@ -450,7 +449,6 @@ export default {
         this.isDetail = true;
         console.log(rightsPro);
         this.rightsList = rightsPro;
-        debugger
       }
       if (obj.product) {
         if (!obj.product.productGroupName) {
@@ -541,7 +539,6 @@ export default {
         } else {
           pro.isInstall = false;
         }
-        debugger;
         console.log(this.productList);
         if (typeof(index) != 'undefined') {
           this.productList[index].isInstall = pro.isInstall;
@@ -789,7 +786,7 @@ export default {
       /* 选择活动 */
       this.generateSubInfo(2);
     },
-    generateSubInfo(type) {debugger
+    generateSubInfo(type) {
       if (this.productList.length === 0 && this.saveType == 0) {
         Toast.failed('请选择产品');
         return;
@@ -827,7 +824,6 @@ export default {
       // multBuySponsor
       const part = [];
       const partId = this.multBuyParticipantCheckIds;
-      debugger
       if (partId.length) {
         const index = partId.indexOf(this.multBuySponsor[0].hmcId);
         if (index > -1) {
@@ -1186,14 +1182,19 @@ export default {
  .orderEntry-header-cus{
   display: flex;
   align-items: center;
-
   width: 100%;
   height: 80px;
   background: #fff;
   padding-left: 27px;
   padding-right: 25px;
-color: #333;
+  color: #333;
   margin-top: 20px;
+   .name-ellipse{
+     width: 36vw;
+     text-overflow: ellipsis;
+     overflow: hidden;
+     white-space: nowrap;
+   }
 }
 
 .orderEntry-header-name {
@@ -1218,6 +1219,10 @@ color: #333;
   .name {
     color: #333;
     font-size: 28px;
+    width: 32vw;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
   }
 
   .sex {

@@ -34,6 +34,7 @@
               placeholder="请输入姓名"
               v-show="region == 'userAdd'"
               v-model="customerInfo.username"
+              @input="judgeName(customerInfo.username, 20)"
             >
             <input
               type="text"
@@ -56,6 +57,7 @@
             class="addAddress-form-item-ipt"
             placeholder="请输入姓名"
             v-model="customerInfo.consigneeUserName"
+            @input="judgeName1(customerInfo.consigneeUserName, 20)"
           >
         </div>
       </li>
@@ -98,6 +100,7 @@
             class="addAddress-form-item-ipt"
             placeholder="省道 门牌、楼层房间号等信息"
             v-model="customerInfo.address"
+            @input="judgeAddress(customerInfo.address, 30)"
           >
         </div>
       </li>
@@ -336,7 +339,7 @@ export default {
     },
     search() {
       // this.searchEnd = true;
-      if (!(/^1[34578]\d{9}$/.test(this.customerInfo.mobile))) {
+      if (!(/^1[3456789]\d{9}$/.test(this.customerInfo.mobile))) {
         Toast.failed('手机格式错误');
         this.customerInfo.mobile = '';
         return;
@@ -382,24 +385,24 @@ export default {
       this.addressName = addressA.join('/');
     },
     confirm() {
-      if (!(/^1[34578]\d{9}$/.test(this.customerInfo.mobile))) {
+      if (!(/^1[3456789]\d{9}$/.test(this.customerInfo.mobile))) {
         Toast.failed('手机号格式错误');
         this.customerInfo.mobile = '';
         return;
       }
-      if (this.customerInfo.username === '') {
+      if (this.customerInfo.username === '' || !this.customerInfo.username) {
         Toast.failed('顾客姓名不能为空');
         return;
       }
-      if (this.customerInfo.consigneeUserName === '') {
-        Toast.failed('收件人姓名不能为空');
+      if (this.customerInfo.consigneeUserName === '' || !this.customerInfo.consigneeUserName) {
+        Toast.failed('收货人姓名不能为空');
         return;
       }
-      if (this.customerInfo.consigneeUserPhone === '') {
-        Toast.failed('收件人手机号不能为空');
+      if (this.customerInfo.consigneeUserPhone === '' || !this.customerInfo.consigneeUserPhone) {
+        Toast.failed('收货人手机号不能为空');
         return;
       }
-      if (!(/^1[34578]\d{9}$/.test(this.customerInfo.consigneeUserPhone))) {
+      if (!(/^1[3456789]\d{9}$/.test(this.customerInfo.consigneeUserPhone))) {
         Toast.failed('手机号格式错误');
         this.customerInfo.consigneeUserPhone = '';
         return;
@@ -418,7 +421,7 @@ export default {
         return;
       }
       if (this.customerInfo.address === '') {
-        Toast.failed('地址不能为空');
+        Toast.failed('详细地址不能为空');
         return;
       }
       if (this.customerInfo.consignee) {
@@ -434,7 +437,6 @@ export default {
         }
         delete this.customerInfo.tag;
       }
-      debugger
       if (this.region === 'add' || this.region === 'userAdd') {
         delete this.customerInfo.id;
         this.productService.addcustomerAddress(this.customerInfo, {}).then((res) => {
@@ -481,6 +483,27 @@ export default {
     },
     stopScrolling(event) {
       event.preventDefault();
+    },
+    judgeName(str, max) {
+      let strResult = String(str);
+      if (strResult.length > max) {
+        Toast.failed('对多可输入20个字符！')
+        this.customerInfo.username = strResult.slice(0, max);
+      }
+    },
+    judgeName1(str, max) {
+      let strResult = String(str);
+      if (strResult.length > max) {
+        Toast.failed('对多可输入20个字符！')
+        this.customerInfo.consigneeUserName = strResult.slice(0, max);
+      }
+    },
+    judgeAddress(str, max) {
+      let strResult = String(str);
+      if (strResult.length > max) {
+        Toast.failed('对多可输入30个字符！')
+        this.customerInfo.address = strResult.slice(0, max);
+      }
     }
   },
   mounted() {

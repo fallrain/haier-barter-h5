@@ -413,7 +413,6 @@ export default {
       // 下载过就设置已经初始化
       this[this.curScrollViewName].isListInit = true;
       // this.businessType = '';
-      debugger
       this.searchData(page).then(({ result, pages }) => {
         this.$nextTick(() => {
           // 通过当前页的数据条数，和总页数来判断是否加载完
