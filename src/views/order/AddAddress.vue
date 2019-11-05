@@ -438,7 +438,7 @@ export default {
         delete this.customerInfo.tag;
       }
       if (this.region === 'add' || this.region === 'userAdd') {
-        delete this.customerInfo.id;
+        // delete this.customerInfo.id;
         this.productService.addcustomerAddress(this.customerInfo, {}).then((res) => {
           if (res.code === 1) {
             Toast.succeed('地址添加成功');
@@ -447,7 +447,7 @@ export default {
           }
         });
       } else {
-        delete this.customerInfo.hmcId;
+        // delete this.customerInfo.hmcId;
         this.productService.updateCustomerAddress(this.customerInfo, {}).then((res) => {
           if (res.code === 1) {
             Toast.succeed('地址修改成功');

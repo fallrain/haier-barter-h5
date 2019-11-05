@@ -466,7 +466,7 @@ export default {
     },
     buttonClicked(val) {
       // debugger
-      // this.updateList = true;
+      this.updateList = true;
       if (val.length === 0) {
         this.businessType = '';
       } else if (val.length === 1) {
@@ -609,22 +609,24 @@ export default {
             if (result && result.length > 0) {
               const curList = result;
               this.anylizeData(curList);
-              if (!this.updateList) {
                 console.log(page);
+              // if (!this.updateList) {
                 if (page.num === 1) {
                   console.log(this.curScrollViewName);
                   this[this.curScrollViewName].list = [];
-
                   this[this.curScrollViewName].list = this.currentList;
                 } else {
-                  this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(this.currentList);
-                  console.log(this[this.curScrollViewName].list);
+                  if(!this.updateList){
+                    this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(this.currentList);
+                    console.log(this[this.curScrollViewName].list);
+                    this.updateList = false;
+                  }
                 }
-              } else {
-                this[this.curScrollViewName].list = [];
-                this[this.curScrollViewName].list = this.currentList;
-                // this.updateList = false;
-              }
+              // } else {
+              //   this[this.curScrollViewName].list = [];
+              //   this[this.curScrollViewName].list = this.currentList;
+              //   // this.updateList = false;
+              // }
 
               // });
             } else {
@@ -752,7 +754,7 @@ export default {
       this.currentList = curList;
     },
     fuzzySearch() {
-      // this.updateList = true;
+      this.updateList = true;
       const page = {
         num: 1,
         size: 10
@@ -762,7 +764,7 @@ export default {
       this.fuzzy = true;
     },
     updateOrderType(type) {
-      // this.updateList = true;
+      this.updateList = true;
       this.businessType = '';
       this.searchData({
         num: 1,

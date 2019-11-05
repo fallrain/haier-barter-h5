@@ -687,6 +687,7 @@ export default {
             this.consignee.address.street = res.data.address;
             this.consignee.phone = res.data.consigneeUserPhone;
             this.consignee.name = res.data.consigneeUserName;
+            this.consignee.familyId = res.data.familyId
             if (res.data.sex === 1) {
               this.consignee.sexCn = '男士';
             } else {
@@ -898,7 +899,7 @@ export default {
       subInfo.userSex = this.consignee.sex;
       subInfo.consigneeName = this.consignee.name;
       subInfo.consigneePhone = this.consignee.phone;
-      subInfo.consigneeId = this.consignee.customerId;
+      subInfo.consigneeId = this.consignee.familyId;
       subInfo.microCode = this.customerInfo.microCode;
       subInfo.microName = this.customerInfo.microName;
       subInfo.channel = this.customerInfo.channel;
@@ -1013,6 +1014,7 @@ export default {
       this.consignee.customerId = item.customerId;
       this.consignee.name = item.consigneeUserName;
       this.consignee.phone = item.consigneeUserPhone;
+      this.consignee.familyId = item.id
       this.consignee.sex = item.sex;
       if (item.sex == 1) {
         this.consignee.sexCn = '男士';
@@ -1045,6 +1047,7 @@ export default {
     editAddress(info) {
       info.username = this.customerInfo.username
       info.mobile = this.customerInfo.mobile
+      delete info.familyC
       this.region = 'edit';
       this.$router.push({
         name: 'Order.AddAddress',
