@@ -25,7 +25,6 @@
             :headers="headers"
             @imageuploaded="(data, fileList)=>imageuploaded(data, fileList,product)"
             extensions="png,jpg,jpeg,gif"
-            inputAccept="image/jpg,image/jpeg,image/png,image/gif"
             :url="uploadUrl"
             :multiple-size="1"
             :imgs="fileMap[products.productCode]"
