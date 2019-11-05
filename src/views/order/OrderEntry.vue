@@ -30,7 +30,7 @@
               type="button"
               class="common-btn-waring"
               @click="changeAddress(customerInfo)"
-            >更改地址
+            >添加地址
             </button>
           </div>
           <p class="orderEntry-user-address">
@@ -723,7 +723,6 @@ export default {
             // this.consignee.address = res.data.province + res.data.city + res.data.district + res.data.address;
             this.getAddressName(res.data.province, res.data.city, res.data.district);
             this.consignee.address.street = res.data.address;
-
             this.consignee.phone = res.data.consigneeUserPhone;
             this.consignee.name = res.data.consigneeUserName;
             if (res.data.sex === 1) {
@@ -732,7 +731,8 @@ export default {
               this.consignee.sexCn = '女士';
             }
             this.consignee.sex = res.data.sex;
-            this.consignee.customerId = res.data.customerId;
+            // this.consignee.customerId = res.data.customerId;
+            this.consignee.familyId = res.data.familyId
             this.queryCustomerAddressList();
             this.genarateOrderNum();
           } else {
@@ -782,6 +782,10 @@ export default {
       }
       if (!this.customerInfo.mobile) {
         Toast.failed('请添加顾客信息');
+        return;
+      }
+      if (!this.consignee.phone || this.consignee.phone == '') {
+        Toast.failed('请添加收货信息');
         return;
       }
       if (this.buyDate === '' && this.saveType == 0) {
@@ -913,7 +917,7 @@ export default {
       subInfo.userSex = this.consignee.sex;
       subInfo.consigneeName = this.consignee.name;
       subInfo.consigneePhone = this.consignee.phone;
-      subInfo.consigneeId = this.consignee.customerId;
+      subInfo.consigneeId = this.consignee.familyId;
       subInfo.microCode = this.customerInfo.microCode;
       subInfo.microName = this.customerInfo.microName;
       subInfo.channel = this.customerInfo.channel;
@@ -1040,6 +1044,7 @@ export default {
       this.consignee.phone = item.consigneeUserPhone;
       this.consignee.address = item.consignee;
       this.consignee.address.street = item.address;
+      this.consignee.familyId = item.id
       if (item.sex === 1) {
         this.consignee.sexCn = '男士';
       } else {
@@ -1091,11 +1096,11 @@ export default {
       }
     },
     editAddress(info) {
-      this.addressPopShow = false;
+      // this.addressPopShow = false;
       info.username = this.customerInfo.username;
       info.mobile = this.customerInfo.mobile;
+      delete info.familyC
       this.region = 'edit';
-
       this.$router.push({
         name: 'Order.AddAddress',
         params: {
@@ -1142,51 +1147,8 @@ export default {
     // },
     next() {
       /* 下一步 */
-      if (this.productList.length === 0) {
-        Toast.info('请选择产品');
-      }
-      for (let i = 0; i < this.productList.length; i++) {
-        if (this.productList[i].productPrice === '') {
-          Toast.failed('请输入产品价格');
-          return;
-        }
-      }
-      // 产品价格闸口判断
-      let result = 0;
-      let state = false;
-      const resultMsg = [];
-      if (this.productList.length > 0) {
-        for (let i = 0; i < this.productList.length; i++) {
-          const obj = {
-            bccPrice: '',
-            productCode: this.productList[i].productCode,
-            productPrice: this.productList[i].productPrice,
-            requestNoToast: true
-          };
-          if (this.productList[i].bccPrice) {
-            obj.bccPrice = this.productList[i].bccPrice;
-          }
-          this.orderService.checkProductPrice({}, obj).then((res) => {
-            result++;
-            if (res.code == -1) {
-              resultMsg.push(res.msg);
-              state = true;
-              this.productList[i].productPrice = '';
-            }
-            if (result == this.productList.length) {
-              if (!state) {
-                this.saveType = 0;
-                this.saveTemporary(2);
-              } else {
-                Toast.failed(resultMsg[0]);
-              }
-            }
-          });
-        }
-      } else {
-        this.saveType = 0;
-        this.saveTemporary(2);
-      }
+      this.saveType = 0;
+      this.saveTemporary(2);
     },
     saveOrder() {
 

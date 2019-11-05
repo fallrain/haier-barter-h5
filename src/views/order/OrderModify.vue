@@ -23,7 +23,7 @@
               type="button"
               class="common-btn-waring"
               @click="changeAddress(customerInfo)"
-            >更改地址
+            >添加地址
             </button>
           </div>
           <p
@@ -457,12 +457,12 @@ export default {
   //   console.log('tag', address)
   //    }
   },
-  activated() {
+  activated() {debugger;
     if (this.$route.query.temp) {
       let ID = '';
       const obj = JSON.parse(this.$route.query.temp);
       if (obj.tel) {
-        this.mobile = obj.tel;
+        this.mobile = obj.tel;debugger
         this.queryCustomerDefault();
       }
       if (obj.rightsJson) {
@@ -510,6 +510,7 @@ export default {
     }
   },
   created() {
+    debugger
     this.addressData = addressData;
     this.orderNo = this.$route.params.orderNo;
     this.orderFollowId = this.$route.params.orderFollowId;
@@ -615,6 +616,12 @@ export default {
           this.sourceSn = resData.sourceSn;
           this.recordMode = resData.recordMode;
           this.queryUserList(resData.storeId);
+          this.multBuySponsor = [
+            {
+              hmcId: resData.coupleSponsor,
+              username: resData.coupleSponsorName
+            }
+          ] // 套购发起人赋值
           this.multBuyParticipant = resData.mayEditCoupleOrderName.split(','); // 套购参与人赋值
           this.multBuyParticipantCheckIds = resData.mayEditCoupleOrderId.split(','); // 套购参与人赋值
           console.log(this.multBuyParticipant)
@@ -680,13 +687,14 @@ export default {
     // 查询客户信息及默认地址
     queryCustomerDefault() {
       this.productService.deafaultCustomerAddress(this.mobile).then((res) => {
-        if (res.code === 1) {
+        if (res.code === 1) {debugger
           if (res.data !== null) {
             this.customerInfo = res.data;
             this.getAddressName(res.data.province, res.data.city, res.data.district);
             this.consignee.address.street = res.data.address;
             this.consignee.phone = res.data.consigneeUserPhone;
             this.consignee.name = res.data.consigneeUserName;
+            this.consignee.familyId = res.data.familyId
             if (res.data.sex === 1) {
               this.consignee.sexCn = '男士';
             } else {
@@ -756,6 +764,10 @@ export default {
       }
       if (!this.customerInfo.mobile) {
         Toast.failed('请添加顾客信息');
+        return;
+      }
+      if (!this.consignee.phone || this.consignee.phone == '') {
+        Toast.failed('请添加收货信息');
         return;
       }
       if (this.buyDate === '' && this.saveType == 0) {
@@ -898,7 +910,7 @@ export default {
       subInfo.userSex = this.consignee.sex;
       subInfo.consigneeName = this.consignee.name;
       subInfo.consigneePhone = this.consignee.phone;
-      subInfo.consigneeId = this.consignee.customerId;
+      subInfo.consigneeId = this.consignee.familyId;
       subInfo.microCode = this.customerInfo.microCode;
       subInfo.microName = this.customerInfo.microName;
       subInfo.channel = this.customerInfo.channel;
@@ -1013,6 +1025,7 @@ export default {
       this.consignee.customerId = item.customerId;
       this.consignee.name = item.consigneeUserName;
       this.consignee.phone = item.consigneeUserPhone;
+      this.consignee.familyId = item.id
       this.consignee.sex = item.sex;
       if (item.sex == 1) {
         this.consignee.sexCn = '男士';
@@ -1029,7 +1042,7 @@ export default {
         params: { region: this.region, info: JSON.stringify(this.customerInfo) }
       });
     },
-    changeAddress(item) {
+    changeAddress(item) {console.log(this.addressPopShow)
       item.username = this.customerInfo.username;
       item.mobile = this.customerInfo.mobile;
       this.region = 'edit';
@@ -1043,8 +1056,11 @@ export default {
       }
     },
     editAddress(info) {
+      console.log(this.addressPopShow)
+      delete info.familyC;
       info.username = this.customerInfo.username
       info.mobile = this.customerInfo.mobile
+      delete info.familyC
       this.region = 'edit';
       this.$router.push({
         name: 'Order.AddAddress',
@@ -1067,7 +1083,7 @@ export default {
             this.multBuyParticipant = res.data;
             res.data.forEach((item, index) => {
               if (item.hmcId == this.hmcId) {
-                this.multBuySponsor.push(item);
+                // this.multBuySponsor.push(item);
                 this.multBuyParticipant.splice(index, 1);
               }
             });

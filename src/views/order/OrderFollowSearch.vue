@@ -564,6 +564,7 @@ export default {
     },
 
     searchData(page) {
+      debugger
       console.log('keyword', this.searchWord);
       return this.orderService
         .queryOrderFollowlList(
@@ -609,22 +610,19 @@ export default {
             if (result && result.length > 0) {
               const curList = result;
               this.anylizeData(curList);
-              if (!this.updateList) {
                 console.log(page);
                 if (page.num === 1) {
                   console.log(this.curScrollViewName);
                   this[this.curScrollViewName].list = [];
-
                   this[this.curScrollViewName].list = this.currentList;
                 } else {
-                  this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(this.currentList);
-                  console.log(this[this.curScrollViewName].list);
+                  if(page.num > 1 && res.data.pages === 1){
+                  }else {
+                    this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(this.currentList);
+                    console.log(this[this.curScrollViewName].list);
+                  }
                 }
-              } else {
-                this[this.curScrollViewName].list = [];
-                this[this.curScrollViewName].list = this.currentList;
-                // this.updateList = false;
-              }
+
 
               // });
             } else {
