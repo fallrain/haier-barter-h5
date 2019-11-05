@@ -2,36 +2,56 @@
   <div>
     <div class="b-multbuy-check-head">{{title}}</div>
     <div class="b-multbuy-check-par">
-      <ul class="b-multbuy-check-list">
-        <li
-          v-if="checkAll"
-          class="b-multbuy-check-item"
-          :class="{active:checkdAll}"
-          @click="checkAllClick"
+      <div v-if="persons.length">
+        <ul
+          v-if="title === '套购发起人'"
+          class="b-multbuy-check-list"
         >
-          <span>全部</span>
-        </li>
-        <li
-          v-if="title == '套购发起人'"
-          class="b-multbuy-check-item active"
-          v-for="(person,index) in persons"
-          :key="index"
+          <li
+            v-if="checkAll"
+            class="b-multbuy-check-item"
+            :class="{active:checkdAll}"
+            @click="checkAllClick"
+          >
+            <span>全部</span>
+          </li>
+          <li
+            class="b-multbuy-check-item active"
+            v-for="(person,index) in persons"
+            :key="index"
+          >
+            <span>{{person.username}}</span>
+            <span class="b-multbuy-check-item-industry">{{person.industry}}</span>
+          </li>
+        </ul>
+        <ul
+          v-else
+          class="b-multbuy-check-list"
         >
-          <span>{{person.username}}</span>
-          <span class="b-multbuy-check-item-industry">{{person.industry}}</span>
-        </li>
-        <li
-          v-if="title != '套购发起人'"
-          class="b-multbuy-check-item"
-          :class="[value.some(v=>v===person.hmcId) && 'active']"
-          v-for="(person,index) in persons"
-          :key="index"
-          @click="checkClick(person)"
-        >
-          <span>{{person.username}}</span>
-          <span class="b-multbuy-check-item-industry">{{person.industry}}</span>
-        </li>
-      </ul>
+          <li
+            v-if="checkAll"
+            class="b-multbuy-check-item"
+            :class="{active:checkdAll}"
+            @click="checkAllClick"
+          >
+            <span>全部</span>
+          </li>
+          <li
+            class="b-multbuy-check-item"
+            :class="[value.some(v=>v===person.hmcId) && 'active']"
+            v-for="(person,index) in persons"
+            :key="index"
+            @click="checkClick(person)"
+          >
+            <span>{{person.username}}</span>
+            <span class="b-multbuy-check-item-industry">{{person.industry}}</span>
+          </li>
+        </ul>
+      </div>
+      <p
+        v-else
+        class="b-multbuy-check-noPersonTips"
+      >{{noPersonTips}}</p>
       <p
         v-if="tips"
         class="b-multbuy-check-item-tips"
@@ -75,11 +95,15 @@ export default {
     type: {
       type: String,
       default: 'checkbox'
+    },
+    // 无人数的时候提示问题
+    noPersonTips: {
+      type: [String, Number],
+      default: '无可选人员'
     }
   },
   data() {
-    return {
-    };
+    return {};
   },
   computed: {
     checkdAll() {
@@ -180,5 +204,12 @@ export default {
 
   .b-multbuy-check-item-tips-title {
     color: #F4A623;
+  }
+
+  .b-multbuy-check-noPersonTips {
+    font-size: 26px;
+    color: #FF001F;
+    margin-top: 10px;
+    margin-bottom: 10px;
   }
 </style>

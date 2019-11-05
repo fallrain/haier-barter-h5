@@ -1,15 +1,14 @@
 <template>
   <div class="b-fieldset">
-    <div v-show="title === '顾客信息：'"
+    <div
+      v-show="showTitle"
       class="b-fieldset-legend"
       :class="[
         headBtmLine && 'headBtmLine'
       ]"
     >
       <span class="b-fieldset-legend-left">{{title}}</span>
-      <span class="b-fieldset-legend-right">
-        <slot name="headRight"></slot>
-      </span>
+      <span class="b-fieldset-legend-right"><slot name="headRight"></slot></span>
     </div>
     <div class="b-fieldset-default-cnt">
       <slot></slot>
@@ -21,6 +20,10 @@
 export default {
   name: 'BFieldset',
   props: {
+    showTitle: {
+      type: Boolean,
+      default: false
+    },
     title: {
       default: ''
     },
@@ -48,7 +51,8 @@ export default {
     font-size: 28px;
     padding-left: 24px;
     padding-right: 24px;
-    &.headBtmLine{
+
+    &.headBtmLine {
       border-bottom: 1px solid #F5F5F5;
     }
   }
