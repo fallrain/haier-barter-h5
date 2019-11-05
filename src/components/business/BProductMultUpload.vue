@@ -19,7 +19,7 @@
           <b-upload
             :crop="false"
             inputOfFile="file"
-            :max-file-size="1024*1024*20"
+            :max-file-size="1024*1024*5"
             :maxWidth="1280"
             :compress="70"
             :headers="headers"
