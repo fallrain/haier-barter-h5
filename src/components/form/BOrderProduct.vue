@@ -11,7 +11,8 @@
           class="b-order-product-item-price"
           type="number"
           v-model="data.productPrice"
-          v-on:blur="blur()"
+          @blur="blur"
+          v-resetInput
         ><span class="b-order-product-item-price-unit">元</span>
       </div>
 
@@ -44,15 +45,18 @@
 </template>
 <script>
 import {
-  BItem, BDatePicker
+  BDatePicker,
+  BItem
 } from '@/components/form';
 import {
   Toast
 } from 'mand-mobile';
+
 export default {
   name: 'BOrderProduct',
   components: {
-    BItem, BDatePicker,
+    BItem,
+    BDatePicker,
     [Toast.name]: Toast,
   },
   props: {
@@ -97,23 +101,22 @@ export default {
       /* 删除 */
       this.$emit('onDel', this.index);
     },
-    blur(){
-      debugger
-      this.data.productPrice = this.formatDecimal(this.data.productPrice,2)
-      if(this.data.productPrice < 0){
+    blur() {
+      this.data.productPrice = this.formatDecimal(this.data.productPrice, 2);
+      if (this.data.productPrice < 0) {
         Toast.failed('请输入正确的产品价格');
-        this.data.productPrice = ''
+        this.data.productPrice = '';
       }
     },
     formatDecimal(num, decimal) {
-      num = num.toString()
-      let index = num.indexOf('.')
+      num = num.toString();
+      const index = num.indexOf('.');
       if (index !== -1) {
-        num = num.substring(0, decimal + index + 1)
+        num = num.substring(0, decimal + index + 1);
       } else {
-        num = num.substring(0)
+        num = num.substring(0);
       }
-      return parseFloat(num).toFixed(decimal)
+      return parseFloat(num).toFixed(decimal);
     }
   }
 };
@@ -169,19 +172,22 @@ export default {
     color: #1969C6;
     font-size: 24px;
   }
+
   .orderEntry-reportInf {
     color: #3078CC !important;
     font-size: 26px;
     position: relative;
 
   }
+
   .orderEntry-date2 {
     width: 320px;
     margin-bottom: 10px;
     position: absolute;
     margin-left: 340px;
   }
-  .p-class{
+
+  .p-class {
     width: 350px;
     float: left;
     margin-top: 10px;
