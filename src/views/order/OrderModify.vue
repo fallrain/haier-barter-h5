@@ -5,7 +5,7 @@
       <i class="iconfont icon-icon-question orderEntry-header-icon"></i>
     </div>
     <div class="orderEntry-header-cus">
-            <span class="name mr16">顾客信息:{{customerInfo.username}}</span>
+            <span class="name mr16">顾客信息：{{customerInfo.username}}</span>
             <span class="name mr16">{{customerInfo.mobile}}</span>
     </div>
     <b-fieldset
@@ -423,11 +423,7 @@ export default {
     }
   },
   mounted() {
-  //
-  //    if(this.$route.query){
-  // const address = this.$route.query.temp
-  //   console.log('tag', address)
-  //    }
+
   },
   activated() {
     debugger;
@@ -501,14 +497,7 @@ export default {
     }
   },
   methods: {
-  //  haveConsignee() {
-  //   /* 存在收货人信息 */
-  //   return this.consignee && JSON.stringify(this.consignee) !== '{}';
-  // },
-  // chooseGift() {
-  //   /* 选择礼品 */
-  //   this.chooseGiftPopShow = true;
-  // },
+
     radioChange(val) {
       this.orderType = val;
     },
@@ -605,17 +594,21 @@ export default {
                 } else {
                   this.isReportInstall(item, index);
                 }
-                if (item.productBrand == 'haier') {
+                if (item.productBrand == '000') {
                   item.productBrandCN = '海尔';
-                } else {
+                } else if(item.productBrand == '051'){
                   item.productBrandCN = '卡萨帝';
+                }else if(item.productBrand == '089'){
+                  item.productBrandCN = '统帅';
+                }else {
+                  item.productBrandCN = '其他'
                 }
               });
             }
           }else {
             this.productList = this.isProductList.concat(this.productList)
           }
-          this.queryCustomerDefault();
+           this.queryCustomerDefault();
         }
       });
     },
@@ -647,9 +640,8 @@ export default {
             this.customerInfo = res.data;
             this.getAddressName(res.data.province, res.data.city, res.data.district);
             this.consignee.address.street = res.data.address;
-
-            this.consignee.phone = res.data.mobile;
-            this.consignee.name = res.data.username;
+            this.consignee.phone = res.data.consigneeUserPhone;
+            this.consignee.name = res.data.consigneeUserName;
             if (res.data.sex === 1) {
               this.consignee.sexCn = '男士';
             } else {

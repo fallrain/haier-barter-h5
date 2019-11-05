@@ -21,8 +21,8 @@
         <span class="icon iconfont icon-jiantou9 activity-tip-img activity-count-remain"
               :class="{'activity-tip-img-transform': isShowConfig}"></span>
       </div>
-      <div v-for="(item,index) in getData.configList"
-           :key="index" v-show="isShowConfig">
+      <div v-for="(item,c) in getData.configList"
+           :key="c" v-show="isShowConfig">
         <!--单品-->
         <div class="activity-common-line activity-common-border activity-common-top activity-titleItem"
              v-show="getData.rightsType == 'single'">
@@ -32,7 +32,7 @@
           </div>
           <div class="activity-item" v-show=" getData.singleProductMode == 'multi' ">
             <span class="activity-name-icon">购</span>
-            <span class="activity-common-left activity-common-product1" v-for="(pro,i) in item.rightsProductDtoList">{{pro.productModel}}&nbsp{{pro.productGroupName}}、</span>
+            <span class="activity-common-left activity-common-product1" v-for="(pro,x) in item.rightsProductDtoList">{{pro.productModel}}&nbsp{{pro.productGroupName}}、</span>
           </div>
           <div class="activity-item" v-show=" getData.singleProductMode == 'all' ">
             <span class="activity-name-icon">购</span>
@@ -109,8 +109,8 @@
 
         <div
           class="activity-common-line"
-          v-for="(model,index) in getData.limitList.model"
-          :key="index"
+          v-for="(model,i) in getData.limitList.model"
+          :key="i"
         >
           <span>
             {{model.productBrandName}}：{{model.productGroupName}}
@@ -125,16 +125,16 @@
         </div>
         <div
           class="activity-common-line"
-          v-for="(price,index) in getData.limitList.price"
-          :key="index"
+          v-for="(price,p) in getData.limitList.price"
+          :key="p"
         >
           <p>
             {{price.productBrandName}}：{{price.productGroupName}}价格在{{price.limitPriceMin}}-{{price.limitPriceMax}}之间可参与套餐</p>
         </div>
         <div
           class="activity-common-line"
-          v-for="(appoint,index) in getData.limitList.appoint"
-          :key="index"
+          v-for="(appoint,a) in getData.limitList.appoint"
+          :key="a"
         >
           <span>
             {{appoint.productBrandName}}：{{appoint.productGroupName}}

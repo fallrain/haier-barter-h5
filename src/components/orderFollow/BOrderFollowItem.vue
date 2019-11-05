@@ -19,6 +19,7 @@
     <b-pop-sort-type
       :show.sync="sortShow"
       :list="sortList"
+      :value="sortType"
       @checkClick="checkClicked"
     >
     </b-pop-sort-type>
@@ -64,6 +65,7 @@
         class="labelImage"
         v-show="followItem.businessScenarios =='RC'"
       >
+      <!--<p>{{followItem.orderNo}}</p>-->
       <div class="row-class">
         <span class="label-span">{{followItem.userName}}</span>
         <span
@@ -254,7 +256,7 @@ export default {
       buttonList: [],
       pageNum: 1,
       dataList: [],
-      sortType: '1',
+      sortType: ['1'],
       scenarioType: '',
       show: false,
       showList: [],
@@ -274,12 +276,13 @@ export default {
           icon: '@/assets/images/orderFollow-up/xiala@3x.png',
           activeIcon: '@/assets/images/orderFollow-up/shangla@3x.png'
         },
-        {
-          name: '筛选',
-          isActive: false,
-          icon: '@/assets/images/orderFollow-up/shaixuan@3x.png',
-          activeIcon: '@/assets/images/orderFollow-up/shaixuan@3x.png'
-        }
+        /*******功能未实现*******/
+        // {
+        //   name: '筛选',
+        //   isActive: false,
+        //   icon: '@/assets/images/orderFollow-up/shaixuan@3x.png',
+        //   activeIcon: '@/assets/images/orderFollow-up/shaixuan@3x.png'
+        // }
       ],
       sortList: [
         {
@@ -299,24 +302,7 @@ export default {
           name: '按成交可能性'
         }
       ],
-      scenarioList: [
-        {
-          id: '1',
-          name: '以旧换新'
-        },
-        {
-          id: '2',
-          name: '一站筑家'
-        },
-        {
-          id: '3',
-          name: '认筹'
-        },
-        {
-          id: '4',
-          name: '爱到家'
-        }
-      ],
+      scenarioList: [],
       preIndex: '',
       currentList: this.list
     };
@@ -615,10 +601,9 @@ export default {
 
   .bar-class {
     height: 72px;
-    width: 250px;
+    width: 360px;
     float: left;
     position: relative;
-
     .iconfont {
       color: #666666
     }
@@ -636,6 +621,7 @@ export default {
 
   .bar-v {
     background-color: white;
+    width: 100%;
     height: 72px;
     /*position: absolute;*/
     position: fixed;

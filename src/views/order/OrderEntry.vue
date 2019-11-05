@@ -2,7 +2,7 @@
   <div>
     <div class="orderEntry-header">
       <span class="orderEntry-header-name">门店：{{shopName}}</span>
-      <i class="iconfont icon-icon-question orderEntry-header-icon"></i>
+      <!--<i class="iconfont icon-icon-question orderEntry-header-icon"></i>-->
     </div>
     <!-- <b-item
       class="mt16"
