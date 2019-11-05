@@ -19,19 +19,19 @@
           <b-upload
             :crop="false"
             inputOfFile="file"
-            :max-file-size="1024*1024*20"
+            :max-file-size="1024*1024*5"
             :maxWidth="1280"
             :compress="70"
             :headers="headers"
             @imageuploaded="(data, fileList)=>imageuploaded(data, fileList,product)"
-            extensions="png,jpg,jpeg"
-            inputAccept="image/jpg,image/jpeg,image/png"
+            extensions="png,jpg,jpeg,gif"
+            inputAccept="image/jpg,image/jpeg,image/png,image/gif"
             :url="uploadUrl"
             :multiple-size="1"
             :imgs="fileMap[products.productCode]"
             @delFun="delImg"
             :data="dataObj"
-
+            @errorhandle="uploadError"
           >
           </b-upload>
           <p class="bProductMultUpload-item-inf">上传购机凭证,包括:发票、购机小票</p>
@@ -136,7 +136,6 @@ export default {
       /* 上传成功 */
       // todo 返回值待定
       fileList.push(data.data.invoiceUrl);
-      Toast.hide();
       if (data.code === 1) {
         this.$emit('uploadSuccess', data.data, this.fileMap, product);
       } else {
@@ -145,16 +144,16 @@ export default {
     },
     uploadError(res) {
       /* 上传错误 */
-      // const errorObj = {
-      //   'FILE IS TOO LARGER MAX FILE IS': '图片最大不能超过20M'
-      // };
-      // for (const p in errorObj) {
-      //   if (new RegExp(p).test(res)) {
-      //     Toast.failed(errorObj[p]);
-      //     return;
-      //   }
-      // }
-      Toast.failed(res.msg);
+      const errorObj = {
+        'FILE IS TOO LARGER MAX FILE IS': '图片最大不能超过5M'
+      };
+      for (const p in errorObj) {
+        if (new RegExp(p).test(res)) {
+          Toast.failed(errorObj[p]);
+          return;
+        }
+      }
+      Toast.failed(res || '上传失败');
     },
     delImg(index, fileList) {
       this.$emit('delImg', fileList);

@@ -17,10 +17,9 @@
     </div>
     <vue-core-image-upload
       v-bind="$attrs"
-      inputAccept="image/*"
       @imageuploaded="imageuploaded"
       @imageuploading="imageuploading"
-      @errorhandle="errorhandle"
+      @errorhandle="uploadError"
     >
       <div class="bUpload" v-show="imgs.length < 1">
         <i class="iconfont icon-jiahao bUpload-icon"></i>
@@ -31,24 +30,29 @@
 <script>
 import VueCoreImageUpload from 'vue-core-image-upload';
 import {
-
   Toast
 } from 'mand-mobile';
+
 export default {
   name: 'BUpload',
-  components: { VueCoreImageUpload ,Toast},
+  components: {
+    VueCoreImageUpload,
+    Toast
+  },
   props: {
     imgs: {
       type: Array,
       default: () => []
     },
-    imgObj:{
-      type:Object,
-      default:() => {}
+    imgObj: {
+      type: Object,
+      default: () => {
+      }
     }
   },
-  methods:{
+  methods: {
     imageuploaded(data) {
+      Toast.hide();
       this.$emit('imageuploaded', data, this.imgs);
     },
     delFun(index) {
@@ -57,8 +61,8 @@ export default {
     imageuploading() {
       Toast.loading('上传中');
     },
-    errorhandle() {
-      Toast.failed('上传失败');
+    uploadError(res) {
+      this.$emit('errorhandle', res);
     }
   }
 };
@@ -74,10 +78,11 @@ export default {
     text-align: center;
     border-radius: 6px;
   }
+
   /*.images{*/
-    /*background: #000;*/
-    /*width: 200px;*/
-    /*height: 200px;*/
+  /*background: #000;*/
+  /*width: 200px;*/
+  /*height: 200px;*/
   /*}*/
   .bUpload-icon {
     color: #D0D0D0;
