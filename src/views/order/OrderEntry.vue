@@ -770,9 +770,11 @@ export default {
             });
           });
           this.addressList = res.data;
+          this.bUtil.analyzeAddressList(this.addressList)
         }
       });
     },
+
     // 暂存
     saveTemporary(type) {
       console.log(2222);
@@ -834,22 +836,22 @@ export default {
       });
     },
     generateSubInfo(type) {
-      if (this.buyTime === '' && this.saveType == 0) {
+      if (this.buyTime === '' && this.saveType === 0) {
         Toast.failed('请选择购买时间');
         return;
       }
-      if (this.productList.length === 0 && this.saveType == 0) {
+      if (this.productList.length === 0 && this.saveType === 0) {
         Toast.failed('请选择产品');
         return;
       }
       for (let i = 0; i < this.productList.length; i++) {
-        if (this.productList[i].productPrice == '' && this.saveType == 0) {
+        if (this.productList[i].productPrice === '' && this.saveType === 0) {
           Toast.failed('请输入产品价格');
           return;
         }
       }
       console.log(this.productList);
-      if (this.deliveryTime === '' && this.saveType == 0) {
+      if (this.deliveryTime === '' && this.saveType === 0) {
         Toast.failed('请选择送货时间');
         return;
       }

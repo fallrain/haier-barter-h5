@@ -19,7 +19,7 @@
             :key="index"
             @click="addressClick(item)"
           >
-            <div class="b-address-checkList-item-portrait">{{item.familyItemCode}}</div>
+            <div class="b-address-checkList-item-portrait">{{item.familyC}}</div>
             <div class="b-address-checkList-item-cnt">
               <div class="b-address-checkList-item-cnt-name">
                 <span class="mr26">{{item.consigneeUserName}}</span><span>{{item.consigneeUserPhone}}</span>
@@ -84,7 +84,6 @@ export default {
     }
   },
   created(){
-
   },
   methods: {
     addressClick(item) {

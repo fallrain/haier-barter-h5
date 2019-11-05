@@ -411,19 +411,26 @@ export default {
     },
 
     checkClicked(val) {
-      this.updateList = true;
+      // this.updateList = true;
       this.sortType = parseInt(val);
       this.businessType = '';
       this.searchData({
-        num: 0,
+        num: 1,
         size: 10
       });
     },
     buttonClicked(val) {
-      this.updateList = true;
-      this.businessType = val.itemCode;
+      // debugger
+      // this.updateList = true;
+      if(val.length === 0){
+        this.businessType = ''
+      }else if(val.length === 1){
+        this.businessType = val[0]
+      }else {
+        this.businessType = val.join(',');
+      }
       this.searchData({
-        num: 0,
+        num: 1,
         size: 10
       });
     },
@@ -558,9 +565,9 @@ export default {
               if (!this.updateList) {
                 console.log(page);
                 if (page.num === 1) {
+                  debugger
                   console.log(this.curScrollViewName);
                   this[this.curScrollViewName].list = [];
-
                   this[this.curScrollViewName].list = this.currentList;
                 } else {
                   this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(this.currentList);
@@ -698,7 +705,7 @@ export default {
       this.currentList = curList;
     },
     fuzzySearch() {
-      this.updateList = true;
+      // this.updateList = true;
       const page = {
         num: 1,
         size: 10
@@ -708,10 +715,10 @@ export default {
       this.fuzzy = true;
     },
     updateOrderType(type) {
-      this.updateList = true;
+      // this.updateList = true;
       this.businessType = '';
       this.searchData({
-        num: 0,
+        num: 1,
         size: 10
       });
     },

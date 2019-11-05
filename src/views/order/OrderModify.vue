@@ -2,7 +2,7 @@
   <div>
     <div class="orderEntry-header">
       <span class="orderEntry-header-name">门店：{{shopName}}</span>
-      <i class="iconfont icon-icon-question orderEntry-header-icon"></i>
+      <!--<i class="iconfont icon-icon-question orderEntry-header-icon"></i>-->
     </div>
     <div class="orderEntry-header-cus">
             <span class="name mr16">顾客信息：{{customerInfo.username}}</span>
@@ -698,6 +698,7 @@ export default {
               }
             });
           });
+          this.bUtil.analyzeAddressList(this.addressList)
         }
       });
     },

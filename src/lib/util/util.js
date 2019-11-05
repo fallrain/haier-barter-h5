@@ -306,6 +306,24 @@ const util = {
     });
     return change;
   },
+  analyzeAddressList(list){
+    debugger
+    list.forEach(add => {
+      if(add.familyItemCode === '4'){
+        add.familyC = '自己家'
+      }else if(add.familyItemCode === '5'){
+        add.familyC = '父母家'
+      }else if(add.familyItemCode === '6'){
+        add.familyC = '朋友家'
+      }else if(add.familyItemCode === '7'){
+        add.familyC = '办公室'
+      }else if(add.familyItemCode === '8'){
+        add.familyC = '其他'
+      }else {
+        add.familyC = '其他'
+      }
+    })
+  },
 };
 
 export default util;
