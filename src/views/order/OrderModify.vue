@@ -65,14 +65,37 @@
         ></b-radio-item>
       </template>
     </b-item>
-    <div class="orderEntry-header-cus" v-show="orderType">
-      <button
-        type="button"
-        class="common-btn-primary w100per"
-        @click="selectSetBuyer()"
-      >选择套购发起人
-      </button>
-    </div>
+
+    <b-fieldset
+      v-show="orderType"
+      class="mt16"
+      :title="'套购发起人：'+(multBuySponsor[0] && multBuySponsor[0].username) || ''"
+      :showTitle="true"
+    >
+      <div>
+        <div
+          v-if="multBuyExceptHmc"
+          class="orderEntry-multBuySponsor"
+        >
+          <span class="orderEntry-multBuySponsor-tips">参与人：</span>{{multBuyExceptHmc}}
+        </div>
+        <button
+          type="button"
+          class="common-btn-primary w100per"
+          @click="selectSetBuyer"
+        >选择套购参与人
+        </button>
+      </div>
+    </b-fieldset>
+
+<!--    <div class="orderEntry-header-cus" v-show="orderType">-->
+<!--      <button-->
+<!--        type="button"-->
+<!--        class="common-btn-primary w100per"-->
+<!--        @click="selectSetBuyer()"-->
+<!--      >选择套购参与人-->
+<!--      </button>-->
+<!--    </div>-->
     <b-fieldset
       class="mt16"
       title="用户购买的产品"
@@ -382,11 +405,11 @@ export default {
       ],
       multBuySponsorCheckedIds: [],
       // 套购参与人
-      multBuyParticipant: [
-
-      ],
+      multBuyParticipant: [],
       // 参与人选中id
       multBuyParticipantCheckIds: [],
+      multBuyExceptHmc: '', // 套购参与人除去直销员本人
+      multBuyExceptHmcId: '', // 套购参与人除去直销员本人
       orderNo: '',
       title: '顾客信息：',
       mobile: '',
@@ -590,13 +613,19 @@ export default {
           this.sourceSn = resData.sourceSn;
           this.recordMode = resData.recordMode;
           this.queryUserList(resData.storeId);
-          if(!this.isDetail){
+          this.multBuyParticipant = resData.mayEditCoupleOrderName.split(','); // 套购参与人赋值
+          this.multBuyParticipantCheckIds = resData.mayEditCoupleOrderId.split(','); // 套购参与人赋值
+          // 套购参与人中去除直销员信息
+          const hmc_index = resData.mayEditCoupleOrderId.split(',').indexOf(resData.coupleSponsor);
+          let arr = resData.mayEditCoupleOrderName.split(',');
+          arr.splice(hmc_index, 1);
+          this.multBuyExceptHmc = arr.join('，');
+          if (!this.isDetail) {
             if (resData.rightName) {
               this.rightsList = resData.rightName.split(',');
-
             }
           }
-          if(!this.isProduct){
+          if (!this.isProduct) {
             if (resData.orderDetailDtoList.length !== 0) {
               this.productList = resData.orderDetailDtoList;
               this.productList.forEach((item, index) => {
@@ -612,7 +641,7 @@ export default {
                 }
               });
             }
-          }else {
+          } else {
             this.productList = this.isProductList.concat(this.productList)
           }
           this.queryCustomerDefault();
@@ -640,7 +669,7 @@ export default {
       });
     },
     // 查询客户信息及默认地址
-    queryCustomerDefault() {console.log(this.mobile)
+    queryCustomerDefault() {
       this.productService.deafaultCustomerAddress(this.mobile).then((res) => {
         if (res.code === 1) {
           if (res.data !== null) {
@@ -648,8 +677,8 @@ export default {
             this.getAddressName(res.data.province, res.data.city, res.data.district);
             this.consignee.address.street = res.data.address;
 
-            this.consignee.phone = res.data.mobile;
-            this.consignee.name = res.data.username;
+            this.consignee.phone = res.data.consigneeUserPhone;
+            this.consignee.name = res.data.consigneeUserName;
             if (res.data.sex === 1) {
               this.consignee.sexCn = '男士';
             } else {
@@ -1019,15 +1048,16 @@ export default {
         this.productService.userList(storeId).then((res) => {
           if (res.code === 1) {
             console.log(res);
-            res.data.forEach((item) => {
+            this.multBuyParticipant = res.data;
+            res.data.forEach((item, index) => {
               if (item.hmcId == this.hmcId) {
                 this.multBuySponsor.push(item);
+                this.multBuyParticipant.splice(index, 1);
               }
             });
             if (this.multBuySponsor.length == 0) {
               this.multBuySponsor.push(user);
             }
-            this.multBuyParticipant = res.data;
           }
         });
       });
@@ -1275,5 +1305,13 @@ color: #333;
   background: #fff;
   padding: 0;
 }
+.orderEntry-multBuySponsor {
+  font-size: 24px;
+  word-break: break-all;
+  margin-bottom: 14px;
+}
 
+.orderEntry-multBuySponsor-tips {
+  color: #F4A623;
+}
 </style>

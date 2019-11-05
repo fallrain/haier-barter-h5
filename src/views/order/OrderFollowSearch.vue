@@ -117,16 +117,14 @@
         </template>
       </md-tab-bar>
     </div>
-    <md-popup v-model="handEntryCon">
-      <div class="popHand">
-        您本月还有{{handCount}}个手工录单名额，超出限制后本月将不能手工录单！同时，手工录入的订单不能发放购机权益
-        <div class="pop-div">
-          <span @click="handEntryConfirm() " class="popConfirm1">确定</span>
-          <span @click="handEntryCancel()" class="popConfirm2">取消</span>
-        </div>
-
-      </div>
-    </md-popup>
+    <md-dialog
+      title=""
+      :closable="true"
+      v-model="handEntryCon"
+      :btns="basicDialog.btns"
+    >
+      您本月还有{{handCount}}个手工录单名额，超出限制后本月将不能手工录单！同时，手工录入的订单不能发放购机权益
+    </md-dialog>
   </div>
 </template>
 <script>
@@ -138,7 +136,8 @@ import {
   ScrollViewMore,
   ScrollViewRefresh,
   TabBar,
-  Toast
+  Toast,
+  Dialog
 } from 'mand-mobile';
 import {
   BPopButton,
@@ -157,6 +156,7 @@ export default {
     [ScrollViewRefresh.name]: ScrollViewRefresh,
     [ScrollViewMore.name]: ScrollViewMore,
     [Toast.name]: Toast,
+    [Dialog.name]: Dialog,
     [NoticeBar.name]: NoticeBar,
     BPopSortType,
     BPopButton,
@@ -230,7 +230,19 @@ export default {
       fuzzy: false,
       businessType: '',
       handEntryCon: false,
-      handCount: ''
+      handCount: '',
+      basicDialog: { // 模态框
+        btns: [
+          {
+            text: '取消',
+            handler: this.handEntryCancel,
+          },
+          {
+            text: '确认',
+            handler: this.handEntryConfirm,
+          },
+        ],
+      },
     };
   },
   activated() {
