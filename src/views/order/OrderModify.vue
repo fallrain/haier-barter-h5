@@ -436,9 +436,8 @@ export default {
       });
     },
     multBuyParticipantCheckIds(val) {
-      let arr = [];
       console.log(val);
-      console.log(this.multBuyParticipant);
+      let arr = [];
       for (let i = 0; i < this.multBuyParticipant.length; i++) {
         for (let j = 0; j < val.length; j++) {
           if (val[j] == this.multBuyParticipant[i].hmcId && val[j] !== this.multBuySponsorCheckedIds[0]) {
@@ -449,6 +448,10 @@ export default {
       if (arr.length > 0){
         this.multBuyExceptHmc = arr.join('、');
       }
+      if (val.length == 0) {
+        this.multBuyExceptHmc = '';
+      }
+
     }
   },
   mounted() {
