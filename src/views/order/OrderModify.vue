@@ -462,8 +462,8 @@ export default {
       let ID = '';
       const obj = JSON.parse(this.$route.query.temp);
       if (obj.tel) {
-        this.mobile = obj.tel;debugger
-        this.queryCustomerDefault();
+        this.mobile = obj.tel
+        // this.queryCustomerDefault();
       }
       if (obj.rightsJson) {
         this.rightsJson = obj.rightsJson;
@@ -587,6 +587,7 @@ export default {
           this.customerInfo.username = resData.userName;
           this.customerInfo.customerId = resData.userId;
           this.customerInfo.mobile = resData.userPhone;
+          this.customerInfo.familyId = resData.id
           this.mobile = resData.userPhone;
           this.phone = resData.userPhone;
           this.hmcId = resData.hmcId;
@@ -660,7 +661,7 @@ export default {
           } else {
             this.productList = this.isProductList.concat(this.productList)
           }
-          this.queryCustomerDefault();
+          this.queryCustomerAddressList();
         }
       });
     },
@@ -1043,8 +1044,10 @@ export default {
       });
     },
     changeAddress(item) {console.log(this.addressPopShow)
+      debugger
       item.username = this.customerInfo.username;
       item.mobile = this.customerInfo.mobile;
+      item.familyId = this.customerInfo.familyId
       this.region = 'edit';
       if (this.addressList.length < 1) {
         this.$router.push({

@@ -105,10 +105,12 @@ export default {
   data() {
     return {};
   },
+  created(){
+  },
   computed: {
     checkdAll() {
       /* 是否选中全部 */
-      return !!(this.value && this.value.length && this.value.length === this.persons.length);
+      return !!(this.value && this.value.length && (this.value.length - 1) === this.persons.length);
     }
   },
   methods: {
