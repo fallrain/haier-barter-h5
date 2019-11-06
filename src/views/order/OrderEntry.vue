@@ -147,7 +147,7 @@
       title="选择可用的购机权益活动"
       :arrow="true"
       @click.native="selectActivity"
-      v-show="!handRegion"
+      v-show="orderSource !=='SGLD'"
     >
     </b-item>
     <b-activity-list
@@ -594,6 +594,7 @@ export default {
     this.getUserStore();
 
     if (this.$route.params.customerConsigneeInfo.businessScenarios) {
+      debugger
       this.orderSource = this.$route.params.customerConsigneeInfo.businessScenarios;
     } else {
       this.orderSource = 'SGLD';
