@@ -869,6 +869,10 @@ export default {
     // },
     // 添加产品
     addProduct() {
+      if(this.productList.length === 99){
+        Toast.info('最多可以录入99件产品')
+        return
+      }
       /* 添加产品 */
       this.$router.push({
         name: 'Order.SearchProduct',
