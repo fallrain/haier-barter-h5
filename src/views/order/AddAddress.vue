@@ -528,8 +528,11 @@ export default {
   beforeRouteLeave(to, from, next) {
     const obj = {
       tel: this.customerInfo.mobile,
-      smld: this.smld
+      smld: this.smld,
+      customerInfo:this.customerInfo,
+      region:this.region
     };
+    debugger
     if (to.name === 'Order.OrderEntry' || 'Order.OrderModify') {
       to.query.temp = JSON.stringify(obj);
       if (this.$vnode && this.$vnode.data.keepAlive) {
