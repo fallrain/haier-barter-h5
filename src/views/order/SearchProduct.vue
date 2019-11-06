@@ -112,7 +112,7 @@ export default {
       let arr = [];
       this.searchList.forEach((item) => {
         const itemStr = `${item.productModel}${item.productBrandName}`
-        if (itemStr.indexOf(this.searchVal) > -1) {
+        if (itemStr.indexOf(this.searchVal.toUpperCase()) > -1) {
           arr.push(item);
         }
       });
