@@ -528,7 +528,8 @@ export default {
   beforeRouteLeave(to, from, next) {
     const obj = {
       tel: this.customerInfo.mobile,
-      smld: this.smld
+      smld: this.smld,
+      customerInfo:this.customerInfo
     };
     if (to.name === 'Order.OrderEntry' || 'Order.OrderModify') {
       to.query.temp = JSON.stringify(obj);

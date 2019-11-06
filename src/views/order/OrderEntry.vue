@@ -490,6 +490,10 @@ export default {
       console.log(obj);
       if (obj.tel) {
         this.mobile = obj.tel;
+        if(this.consignee.name){
+          this.queryCustomerAddressList()
+          return
+        }
         this.queryCustomerDefault();
       }
       if (obj.product) {

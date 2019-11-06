@@ -462,8 +462,8 @@ export default {
       let ID = '';
       const obj = JSON.parse(this.$route.query.temp);
       if (obj.tel) {
-        this.mobile = obj.tel
-        // this.queryCustomerDefault();
+        // this.mobile = obj.tel
+        this.queryCustomerAddressList();
       }
       if (obj.rightsJson) {
         this.rightsJson = obj.rightsJson;
@@ -661,7 +661,7 @@ export default {
           } else {
             this.productList = this.isProductList.concat(this.productList)
           }
-          this.queryCustomerAddressList();
+          this.queryCustomerDefault();
         }
       });
     },
@@ -691,10 +691,10 @@ export default {
         if (res.code === 1) {debugger
           if (res.data !== null) {
             this.customerInfo = res.data;
-            this.getAddressName(res.data.province, res.data.city, res.data.district);
-            this.consignee.address.street = res.data.address;
-            this.consignee.phone = res.data.consigneeUserPhone;
-            this.consignee.name = res.data.consigneeUserName;
+            // this.getAddressName(res.data.province, res.data.city, res.data.district);
+            // this.consignee.address.street = res.data.address;
+            // this.consignee.phone = res.data.consigneeUserPhone;
+            // this.consignee.name = res.data.consigneeUserName;
             this.consignee.familyId = res.data.familyId
             if (res.data.sex === 1) {
               this.consignee.sexCn = '男士';
