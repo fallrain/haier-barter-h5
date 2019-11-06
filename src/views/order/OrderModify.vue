@@ -198,6 +198,7 @@
       class="mt25"
       title="请选择套购参与人"
       :persons="multBuyParticipant"
+      :hmicId="multBuySponsorCheckedIds"
       v-model="multBuyParticipantCheckIds"
       @allCheck="particpantAll"
       @multiCheck="particpantClick"
@@ -638,6 +639,7 @@ export default {
           let arr = resData.mayEditCoupleOrderName.split(',');
           arr.splice(hmc_index, 1);
           this.multBuyExceptHmc = arr.join('、');
+          this.multBuyExceptHmcId = resData.mayEditCoupleOrderId.split(',').splice(hmc_index, 1);
           console.log(this.multBuyExceptHmc)
           if (!this.isDetail) {
             if (resData.rightName) {

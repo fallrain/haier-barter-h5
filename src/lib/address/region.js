@@ -507,7 +507,7 @@ const city = [
     pro_code: '65',
     id: '47',
     value: '双河市'
-  }, {pro_code: '65', id: '315', value: '铁门关市'}, {pro_code: '46', id: '138', value: '三沙'}, {
+  }, {pro_code: '65', id: '315', value: '铁门关市'}, {
     pro_code: '65',
     id: '346',
     value: '北屯市'
