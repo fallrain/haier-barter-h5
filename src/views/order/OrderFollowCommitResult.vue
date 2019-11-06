@@ -118,7 +118,11 @@ export default {
     // next();// 必须要有这个，否则无法跳转
   },
   beforeRouteLeave(to, from, next) {
-
+    if (to.name == 'Order.OrderConfirm') {
+      this.$router.replace({
+        name: 'Order.OrderFollowSearch',
+      });
+    }
     if (this.$vnode && this.$vnode.data.keepAlive) {
       if (this.$vnode.parent && this.$vnode.parent.componentInstance && this.$vnode.parent.componentInstance.cache) {
         if (this.$vnode.componentOptions) {
