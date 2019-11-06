@@ -224,29 +224,43 @@ export default {
       } else {
         // 套购同享
         let isReturn = false;
+        let present = []
         item.rightsSelectedGroupDtoList.shift();
-        let present = [];
         item.allowRightsConditionDtoList.forEach((rights) => {
-          if (!isReturn) {
-            if (rights.flag !== 0) {
-              rights.flag = 0;
-              item.selectedNum--;
-              present = rights.orderIdList;
-              this.$set(item, 'selectedNum', item.selectedNum);
-              this.$set(item, 'isSelected', item.selectedNum);
-              isReturn = true;
-              item.num--;
-            }
+          if (rights.flag !== 0) {
+            rights.orderIdList.forEach((ri) => {
+              if (!isReturn) {
+                if (ri.flag !== 0) {
+                  this.$set(ri, 'flag', 0);
+                  present = ri.ids
+                  ri.num--;
+                  ri.tempList = [];
+                  item.selectedNum--;
+                  this.$set(item, 'selectedNum', item.selectedNum);
+                  this.$set(item, 'isSelected', item.selectedNum);
+                  rights.num--;
+                  if (rights.num === 0) {
+                    this.$set(rights, 'flag', 0);
+                    item.num--;
+                  }
+                  isReturn = true;
+                }
+              }
+              if(ri.flag !== 0){
+                if(this.uniqueArray(present,ri.ids)){
+                  this.$set(ri, 'flag', 0);
+                  rights.num --
+                  ri.tempList = []
+                  if (rights.num === 0) {
+                    this.$set(rights, 'flag', 0);
+                    item.num--;
+                  }
+                }
+              }
+            });
           }
           if (item.isOptional === 0) {
             this.$set(item, 'isOptional', 1);
-          }
-
-          if (rights.flag !== 0) {
-            if (this.uniqueArray(rights.orderIdList, present)) {
-              this.$set(rights, 'flag', 0);
-              item.num--;
-            }
           }
         });
       }
@@ -275,51 +289,40 @@ export default {
         }
       } else {
         // 套购
-
         let isReturn = false;
-        // let present = [];
+        let present = [];
         item.allowRightsConditionDtoList.forEach((rights) => {
-          // if (!isReturn) {
-          //   if (rights.flag !== 1) {
-          //     this.$set(rights, 'flag', 1);
-          //     item.rightsSelectedGroupDtoList.push(rights);
-          //     present = rights.orderIdList;
-          //     item.selectedNum++;
-          //     this.$set(item, 'selectedNum', item.selectedNum);
-          //     this.$set(item, 'isSelected', 1);
-          //     isReturn = true;
-          //     item.num++;
-          //   }
-          // }
           if (rights.flag !== 1) {
             rights.orderIdList.forEach((ri) => {
               if (!isReturn) {
                 if (ri.flag !== 1) {
                   this.$set(ri, 'flag', 1);
-                  // present = ri.ids;
+                  present = ri.ids;
                   rights.selcted = ri.ids;
                   item.rightsSelectedGroupDtoList.push(rights);
-                  // ri.tempList =  ri.ids
-                  // ri.tempList = Array.from(new Set(ri.tempList))
                   item.selectedNum++;
                   this.$set(item, 'selectedNum', item.selectedNum);
                   this.$set(item, 'isSelected', 1);
                   rights.num++;
-                  if (rights.num == rights.orderIdList.length) {
+                  if (rights.num === rights.orderIdList.length) {
                     this.$set(rights, 'flag', 1);
                     item.num++;
                   }
                   isReturn = true;
                 }
               }
+              if(ri.flag !== 1){
+                if(this.uniqueArray(present,ri.ids)){
+                  this.$set(ri, 'flag', 1);
+                  rights.num ++
+                  if (rights.num === rights.orderIdList.length) {
+                    this.$set(rights, 'flag', 1);
+                    item.num++;
+                  }
+                }
+              }
             });
           }
-          // if (rights.flag !== 1) {
-          //   if (this.uniqueArray(rights.orderIdList, present)) {
-          //     this.$set(rights, 'flag', 1);
-          //     item.num++;
-          //   }
-          // }
         });
         if (item.num === item.allowRightsConditionDtoList.length) {
           this.$set(item, 'isOptional', 0);
@@ -557,7 +560,6 @@ export default {
         let isReturn = false;
         let present = [];
         item.allowRightsConditionDtoList.forEach((rights) => {
-          // if (!isReturn) {
           if (rights.flag !== 1) {
             rights.orderIdList.forEach((ri) => {
               if (!isReturn) {
@@ -566,8 +568,6 @@ export default {
                   present = ri.ids;
                   rights.selcted = ri.ids;
                   item.rightsSelectedGroupDtoList.push(rights);
-                  // ri.tempList =  ri.ids
-                  // ri.tempList = Array.from(new Set(ri.tempList))
                   item.selectedNum++;
                   this.$set(item, 'selectedNum', item.selectedNum);
                   this.$set(item, 'isSelected', 1);

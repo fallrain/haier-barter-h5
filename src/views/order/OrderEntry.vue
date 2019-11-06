@@ -540,7 +540,12 @@ export default {
           return;
         }
         this.isDetail = true;
-        this.rightsList = rightsPro;
+        if(rightsPro.length > 0 && rightsPro[0] !== ''){
+          this.rightsList = rightsPro;
+        }else {
+          debugger
+          this.rightsList = []
+        }
       }
     } else if (this.$route.params.region != 'hand') {
       if (localStorage.getItem('invoice') == 'true') {

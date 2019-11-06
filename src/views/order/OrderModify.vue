@@ -481,8 +481,12 @@ export default {
           return;
         }
         this.isDetail = true;
-        console.log(rightsPro);
-        this.rightsList = rightsPro;
+        if(rightsPro.length > 0 && rightsPro[0] !== ''){
+          this.rightsList = rightsPro;
+        }else {
+          debugger
+          this.rightsList = []
+        }
       }
       if (obj.product) {
         if (!obj.product.productGroupName) {
