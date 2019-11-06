@@ -729,9 +729,14 @@ export default {
       this.productService.deafaultCustomerAddress(this.mobile).then((res) => {
         if (res.code === 1) {
           if (res.data !== null) {
-            this.haveConsignee = true;
+
             // if (this.haveCustomer) {
             // } else {
+            if(res.data.consigneeUserName){
+              this.haveConsignee = true;
+            }else {
+              this.haveConsignee = false;
+            }
             this.haveCustomer = true;
             this.customerInfo = res.data;
             // }
