@@ -112,11 +112,11 @@ export default {
     }
 
     .del {
-      font-size: 18px;
+      font-size: 28px;
       position: absolute;
       color: #333;
-      right: -6px;
-      top: -6px;
+      right: -14px;
+      top: -14px;
       background: #fff;
       border-radius: 100%;
     }
