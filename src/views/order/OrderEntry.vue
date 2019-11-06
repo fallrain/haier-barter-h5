@@ -540,7 +540,12 @@ export default {
           return;
         }
         this.isDetail = true;
-        this.rightsList = rightsPro;
+        if(rightsPro.length > 0 && rightsPro[0] !== ''){
+          this.rightsList = rightsPro;
+        }else {
+          debugger
+          this.rightsList = []
+        }
       }
     } else if (this.$route.params.region != 'hand') {
       if (localStorage.getItem('invoice') == 'true') {
@@ -864,6 +869,10 @@ export default {
     // },
     // 添加产品
     addProduct() {
+      if(this.productList.length === 99){
+        Toast.info('最多可以录入99件产品')
+        return
+      }
       /* 添加产品 */
       this.$router.push({
         name: 'Order.SearchProduct',

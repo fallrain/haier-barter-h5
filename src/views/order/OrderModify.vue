@@ -482,8 +482,12 @@ export default {
           return;
         }
         this.isDetail = true;
-        console.log(rightsPro);
-        this.rightsList = rightsPro;
+        if(rightsPro.length > 0 && rightsPro[0] !== ''){
+          this.rightsList = rightsPro;
+        }else {
+          debugger
+          this.rightsList = []
+        }
       }
       if (obj.product) {
         if (!obj.product.productGroupName) {
@@ -696,7 +700,7 @@ export default {
     // 查询客户信息及默认地址
     queryCustomerDefault() {
       this.productService.deafaultCustomerAddress(this.mobile).then((res) => {
-        if (res.code === 1) {debugger
+        if (res.code === 1) {
           if (res.data !== null) {
             this.customerInfo = res.data;
             // this.getAddressName(res.data.province, res.data.city, res.data.district);
@@ -840,6 +844,10 @@ export default {
     },
     // 添加产品
     addProduct() {
+      if(this.productList.length === 99){
+        Toast.info('最多可以录入99件产品')
+        return
+      }
     /* 添加产品 */
       this.$router.push({
         name: 'Order.SearchProduct',
