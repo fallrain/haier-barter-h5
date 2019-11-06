@@ -1,27 +1,27 @@
 <template>
   <div>
-    <b-notice-bar
-      :show.sync="noticeShow"
-      content="温馨提示：点击下方的【扫描】，可扫产品能效贴自动带入产品型号。"
-    >
-    </b-notice-bar>
+<!--    <b-notice-bar-->
+<!--      :show.sync="noticeShow"-->
+<!--      content="温馨提示：点击下方的【扫描】，可扫产品能效贴自动带入产品型号。"-->
+<!--    >-->
+<!--    </b-notice-bar>-->
     <b-search-input
       v-model="searchVal"
       @search="search"
       placeholder="点击搜索型号"
       v-on:input="inputFunction()"
     >
-      <div class="searchProduct-scan-wrap" @click="scanQRCodePro()">
-        <i class="iconfont icon-saomiao"></i>
-        <span class="searchProduct-scan-inf">扫描</span>
-      </div>
+<!--      <div class="searchProduct-scan-wrap" @click="scanQRCodePro()">-->
+<!--        <i class="iconfont icon-saomiao"></i>-->
+<!--        <span class="searchProduct-scan-inf">扫描</span>-->
+<!--      </div>-->
     </b-search-input>
     <ul
       class="searchProduct-history"
     >
       <li
         class="searchProduct-history-item"
-        v-for="(item,index) in searchList"
+        v-for="(item,index) in searchListShow"
         :key="index"
         @click="onItemClick(item)"
       >{{item.productModel}}{{item.productBrandName}}
@@ -106,6 +106,18 @@ export default {
       isProductList: [],
       recordMode:''
     };
+  },
+  computed: {
+    searchListShow() {
+      let arr = [];
+      this.searchList.forEach((item) => {
+        const itemStr = `${item.productModel}${item.productBrandName}`
+        if (itemStr.indexOf(this.searchVal) > -1) {
+          arr.push(item);
+        }
+      });
+      return arr;
+    }
   },
   methods: {
     inputFunction(val) {
