@@ -177,15 +177,17 @@ export default {
   },
   methods: {
     upCallback(page) {
-      // 下载过就设置已经初始化
-      this[this.curScrollViewName].isListInit = true;
-      this.searchData(page)
-        .then(({ result, total }) => {
-          this.$nextTick(() => {
-            // 通过当前页的数据条数，和总数据量来判断是否加载完
-            this[this.curScrollViewName].mescroll.endBySize(result.length, total);
+      if(this.current === 1){
+        // 下载过就设置已经初始化
+        this[this.curScrollViewName].isListInit = true;
+        this.searchData(page)
+          .then(({ result, total }) => {
+            this.$nextTick(() => {
+              // 通过当前页的数据条数，和总数据量来判断是否加载完
+              this[this.curScrollViewName].mescroll.endBySize(result.length, total);
+            });
           });
-        });
+      }
     },
     shareRightsClick() {
       this.shareShow = !this.shareShow;

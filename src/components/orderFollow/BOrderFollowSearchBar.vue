@@ -76,12 +76,8 @@ export default {
       preIndex: '',
       sortShow: false,
       scenarioShow: false,
-      sortType: ['1'],
+      sortType: [],
       sortList: [
-        {
-          id: '1',
-          name: '智能排序'
-        },
         {
           id: '2',
           name: '按时间倒序'

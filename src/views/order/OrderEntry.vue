@@ -491,6 +491,13 @@ export default {
       if (obj.tel) {
         this.mobile = obj.tel;
         if(this.consignee.name){
+          if(obj.region === 'edit'){
+            this.consignee.name = obj.customerInfo.consigneeUserName
+            this.consignee.phone = obj.customerInfo.consigneeUserPhone
+            this.consignee.sexCn = obj.customerInfo.sex = 1?'男士':'女士'
+            this.getAddressName(obj.customerInfo.province,obj.customerInfo.city,obj.customerInfo.district)
+            this.consignee.address.street = obj.customerInfo.address
+          }
           this.queryCustomerAddressList()
           return
         }
