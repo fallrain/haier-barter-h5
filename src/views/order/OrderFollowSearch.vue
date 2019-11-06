@@ -9,14 +9,19 @@
       </md-notice-bar>
     </div>
     <div class="search-class">
-      <input
-        class="input-class"
-        confirm-type="search"
-        placeholder="搜索用户姓名、电话"
-        placeholder-style="font-size: 28px;color: #BBBBBB;margin-left: 10px;"
-        v-model="searchWord"
-        type="search"
-      />
+
+      <form action="" @submit.prevent="()=>{return false}">
+        <input
+          class="input-class"
+          confirm-type="search"
+          placeholder="搜索用户姓名、电话"
+          placeholder-style="font-size: 28px;color: #BBBBBB;margin-left: 10px;"
+          v-model="searchWord"
+          type="search"
+          @keyup.enter="fuzzySearch"
+        />
+      </form>
+
       <img
         src="@/assets/images/orderFollow-up/search@3x.png"
         class="search-image"
