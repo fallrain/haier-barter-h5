@@ -147,7 +147,8 @@ export default {
     // this.rightListTest.forEach((rights) => {
     //   rights.flag = 0;
     // });
-    this.getData();
+    this.getData(1);
+    this.getData(2);
     this.getProductGroup();
     // this.anylizeData(rightListTest);
   },
