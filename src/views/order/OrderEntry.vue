@@ -545,6 +545,7 @@ export default {
         }else {
           debugger
           this.rightsList = []
+          this.rightsJson = ''
         }
       }
     } else if (this.$route.params.region != 'hand') {
