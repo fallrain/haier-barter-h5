@@ -91,6 +91,11 @@ export default {
       type: Array,
       default: () => []
     },
+    // 选中的id
+    value: {
+      type: Array,
+      default: () => []
+    },
     // 类型 checkbox radio
     type: {
       type: String,
@@ -109,8 +114,15 @@ export default {
   },
   computed: {
     checkdAll() {
+      const hmcid = JSON.parse(localStorage.getItem('userinfo')).hmcid;
+      let lengthV = 0;
+      if (this.value.indexOf(hmcid) > -1) {
+        lengthV = this.value.length - 1;
+      } else {
+        lengthV = this.value.length;
+      }
       /* 是否选中全部 */
-      return !!(this.value && this.value.length && (this.value.length - 1) === this.persons.length);
+      return !!(this.value && this.value.length && lengthV === this.persons.length);
     }
   },
   methods: {
