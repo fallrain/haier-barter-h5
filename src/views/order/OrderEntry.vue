@@ -731,7 +731,6 @@ export default {
       this.productService.deafaultCustomerAddress(this.mobile).then((res) => {
         if (res.code === 1) {
           if (res.data !== null) {
-
             // if (this.haveCustomer) {
             // } else {
             if(res.data.consigneeUserName){
@@ -759,7 +758,7 @@ export default {
             this.queryCustomerAddressList();
             this.genarateOrderNum();
           } else {
-            if (this.$route.query.temp.smld) {
+            if (JSON.parse(this.$route.query.temp).smld) {
               this.addUserShow = true;
             } else {
 
