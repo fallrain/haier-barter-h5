@@ -49,9 +49,15 @@ ax.interceptors.response.use((response) => {
     });
   }
   if (!(response.config.params && response.config.params.requestNoToast)) {
+    debugger
     if (response.data.code !== 1 && !response.data.isSuccess) {
       if (response.config.url !== '/api/manage/reportEhub/saveEhubBarCode')
-        Toast.failed(msg || '请求失败');
+        if(response.config.url == '/api/rights/rightsManage/queryOrderOptionalShareRights' ||response.config.url == '/api/rights/rightsManage/queryOrderOptionalMutexRights'){
+          debugger
+          Toast.hide()
+        }else {
+          Toast.failed(msg || '请求失败');
+        }
     }
   }
   if (customOptions && customOptions.returnResponse) {

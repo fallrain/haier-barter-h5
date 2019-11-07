@@ -138,7 +138,13 @@ export default {
         isListInit: false
       },
       isFinished: false,
+      shareNull:false,
+      mutexNull:false,
+      shareToastInfo:'',
+      mutexToastInfo:''
     };
+
+
   },
 
   created() {
@@ -192,14 +198,22 @@ export default {
     },
     shareRightsClick() {
       this.shareShow = !this.shareShow;
-      if (!this.shareRightsList.length) {
-        this.getData(1);
+      if(this.shareShow && this.shareNull){
+        Toast.info(this.shareToastInfo)
+      }else {
+        if (!this.shareRightsList.length && !this.shareNull) {
+          this.getData(1);
+        }
       }
     },
     mutexRightsClick() {
       this.mutexShow = !this.mutexShow;
-      if (!this.mutexRightsList.length) {
-        this.getData(2);
+      if(this.mutexShow && this.mutexNull){
+        Toast.info(this.mutexToastInfo)
+      }else {
+        if (!this.mutexRightsList.length && !this.mutexNull) {
+          this.getData(2);
+        }
       }
     },
     minusCount(item) {
@@ -870,10 +884,16 @@ export default {
                   // this.shareRightsList = res.data;
                   this.anylizeData(res.data, 1);
                 } else {
-                  Toast.failed('暂无数据');
+                  Toast.failed('暂无同享权益数据');
                 }
               } else {
-                Toast.failed(res.msg);
+                debugger
+                // Toast.failed(res.msg);
+
+                if(res.msg === '未匹配到可选权益数据！'){
+                    this.shareNull = true
+                    this.shareToastInfo = '未匹配到同享权益信息'
+                }
               }
             });
         } else {
@@ -884,10 +904,14 @@ export default {
                   this.anylizeData(res.data, 2);
                   // this.mutexRightsList = res.data;
                 } else {
-                  Toast.failed('暂无数据');
+                  Toast.failed('暂无互斥权益数据');
                 }
               } else {
-                Toast.failed(res.msg);
+                // Toast.failed(res.msg);
+                if(res.msg === '未匹配到可选权益数据！'){
+                  this.mutexNull = true
+                  this.mutexToastInfo = '未匹配到互斥权益信息'
+                }
               }
             });
         }
