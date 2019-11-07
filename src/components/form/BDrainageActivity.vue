@@ -96,7 +96,10 @@
 </template>
 
 <script>
-  import {Popup, PopupTitleBar, Button, Icon} from 'mand-mobile'
+import {
+  Popup, PopupTitleBar, Button, Icon
+} from 'mand-mobile';
+
 export default {
   name: 'BDrainageActivity',
   components: {
@@ -126,20 +129,41 @@ export default {
     qrCode() {
       this.$router.push({
         name: 'Activity.ActivityQRCode',
-        params: {activityInfo: this.getData}
+        params: { activityInfo: this.getData }
       });
     },
     dataStatistics() {
       this.$router.push({
         name: 'Activity.ActivityDataAnalysis',
-        params: {activityInfo: this.getData}
+        params: { activityInfo: this.getData }
       });
     },
     drainageCancle() {
       this.isPopupShow = false;
     },
     shareWechat() {
-
+      const opstion = {
+        title: '1111', // 分享标题
+        link: `${window.location.href}?home=1`,
+        imgUrl: '', // 分享图标
+        dec: '2222',
+        success() {
+        },
+        error() {
+        }
+      };
+      wx.onMenuShareAppMessage({
+        title: opstion.title, // 分享标题
+        link: opstion.link, // 分享链接
+        imgUrl: opstion.imgUrl, // 分享图标
+        desc: opstion.dec, // 分享描述
+        success() {
+          opstion.success();
+        },
+        cancel() {
+          opstion.error();
+        }
+      });
     },
     shareImg() {
 

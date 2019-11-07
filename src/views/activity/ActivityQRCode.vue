@@ -16,7 +16,7 @@
         <div class="activityQRCode-cnt-code-corner activityQRCode-cnt-code-corner2"></div>
         <div class="activityQRCode-cnt-code-corner activityQRCode-cnt-code-corner3"></div>
         <div class="activityQRCode-cnt-code-corner activityQRCode-cnt-code-corner4"></div>
-        <img src="@/assets/images/activity/qrcode-example.png">
+        <img src="qrcodeImg">
       </div>
       <div class="activityQRCode-cnt-inf">
         活动二维码可用于展示<span class="active">给用户报名参与活动</span>或
@@ -31,8 +31,8 @@
       </button>
       <a
         download=""
-        :href="qrcodeImg"
         class="common-submit-btn-default"
+        @click="downLoadQrcode"
       >下载二维码
       </a>
     </div>
@@ -50,6 +50,8 @@ export default {
   },
   created() {
     this.activityInfo = this.$route.params.activityInfo;
+  },
+  activated() {
     this.createQrcode();
   },
   data() {
@@ -61,13 +63,36 @@ export default {
   methods: {
     createQrcode() {
       return this.activityService.generateQrcode('http://baidu.com/', '123456', '9999').then((res) => {
+        console.log(res);
+        debugger;
         const blob = new Blob([res.data]);
+        // this.qrcodeImg = window.URL.createObjectURL(blob);
         const reader = new FileReader();
         reader.readAsDataURL(blob);
         reader.onload = function (e) {
-          this.qrcodeImg = e.target.result;
+          const result = e.target.result;
+          this.qrcodeImg = `${result.substring(0, 5)}image/jpeg${result.substring(5, result.length)}`;
         };
       });
+    },
+    downLoadQrcode() {
+      return this.activityService.generateQrcode('http://baidu.com/', '123456', '9999').then((res) => {
+        this.downloadFile(res.data);
+      });
+    },
+    downloadFile(data) {
+      /* 接受二进制文件，下载文件 */
+      // 'filename=micro_model_1568343739576.xlsx';
+      const filename = 'pic.jpg';
+      const url = window.URL.createObjectURL(new Blob([data]));
+      const link = document.createElement('a');
+      link.style.display = 'none';
+      link.href = url;
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      window.URL.revokeObjectURL(link.href); // 释放URL 对象
+      document.body.removeChild(link);
     },
   },
 };

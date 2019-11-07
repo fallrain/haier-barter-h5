@@ -3,6 +3,7 @@ import qs from 'qs';
 import {
   Toast
 } from 'mand-mobile';
+
 const ax = axios.create();
 
 ax.defaults = Object.assign(
@@ -95,14 +96,13 @@ const axPost = function (url, data, params) {
   });
 };
 
-const axGetBlob = function (url, params = {}) {
+const axGetBlob = function (url) {
   return ax({
     method: 'get',
     url,
     responseType: 'blob',
     params: {
       returnResponse: true,
-      ...params
     }
   });
 };
