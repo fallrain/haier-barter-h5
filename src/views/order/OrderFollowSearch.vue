@@ -293,20 +293,20 @@ export default {
     //   // hmcid: 'a0008949',
     //   // mobile: '18561715460',
     //   // shopId: '8800136445',
-    //   // hmcid:'01467897',
-    //   // mobile: '15253269729',
-    //   // shopId: '9999999999',
+    //   hmcid:'01467897',
+    //   mobile: '15253269729',
+    //   shopId: '8700000484',
     //   // shopId:'8800117018',
-    //   hmcid: 'a0032254',
-    //   mobile: '15621017056',
-    //   shopId: '8700048360',
+    //   // hmcid: 'a0032254',
+    //   // mobile: '15621017056',
+    //   // shopId: '8700048360',
     //   //
     //   // hmcid: '18000560',
     //   // orderMode: 'Haier',
     //   // orderMode: 'Casarte',
     //   // mobile: '15621017056',
     //   // shopId: '8800266470',
-    //   token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IkEwMDMyMjU0Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MzAzNzk1NiwiZXhwIjoxNTczOTAxOTU2fQ.81ig0bFyHEhR0lMej-pGCmUbIcFQClG9TVZMiIkcJag'}
+    //   token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IjAxNDY3ODk3Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MzA1NDQ5MywiZXhwIjoxNTczOTE4NDkzfQ.S-muCQ1CljjtzgqdnzaBlN1K2VYT7TJ0m5Q54r_FtGg'}
     //   //   token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IjAxNDY3ODk3Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MzA0ODUzMywiZXhwIjoxNTczOTEyNTMzfQ.1VLWfqeyfLzBHiDd4BcxGm1erIJDQJYPSQS3qya1JVM'}
     // const Str = JSON.stringify(this.userinfo);
     // localStorage.setItem('userinfo', Str);
@@ -409,13 +409,15 @@ export default {
       });
     },
     againEntry(item) {
+      debugger
       this.$router.push({
         name: 'Order.OrderEntry',
         params: {
           customerConsigneeInfo: {
             userName: item.userName,
             mobile: item.userMobile,
-            recordMode: item.recordMode
+            recordMode: item.recordMode,
+            businessScenarios: item.businessScenarios,
           },
           region: 'new'
         }
@@ -518,7 +520,7 @@ export default {
               params: {
                 orderNo: info.orderNo,
                 orderFollowId: info.id,
-                freezeMsg,
+                businessScenarios: info.businessScenarios,
                 recordMode: info.recordMode
               }
             });

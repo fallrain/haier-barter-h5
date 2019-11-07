@@ -488,8 +488,8 @@ export default {
         if(rightsPro.length > 0 && rightsPro[0] !== ''){
           this.rightsList = rightsPro;
         }else {
-          debugger
           this.rightsList = []
+          this.rightsJson = ''
         }
       }
       if (obj.product) {

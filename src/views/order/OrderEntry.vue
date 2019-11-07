@@ -147,7 +147,7 @@
       title="选择可用的购机权益活动"
       :arrow="true"
       @click.native="selectActivity"
-      v-show="!handRegion"
+      v-show="orderSource !=='SGLD'"
     >
     </b-item>
     <b-activity-list
@@ -545,6 +545,7 @@ export default {
         }else {
           debugger
           this.rightsList = []
+          this.rightsJson = ''
         }
       }
     } else if (this.$route.params.region != 'hand') {
@@ -594,6 +595,7 @@ export default {
     this.getUserStore();
 
     if (this.$route.params.customerConsigneeInfo.businessScenarios) {
+      debugger
       this.orderSource = this.$route.params.customerConsigneeInfo.businessScenarios;
     } else {
       this.orderSource = 'SGLD';
@@ -729,7 +731,6 @@ export default {
       this.productService.deafaultCustomerAddress(this.mobile).then((res) => {
         if (res.code === 1) {
           if (res.data !== null) {
-
             // if (this.haveCustomer) {
             // } else {
             if(res.data.consigneeUserName){
@@ -757,7 +758,7 @@ export default {
             this.queryCustomerAddressList();
             this.genarateOrderNum();
           } else {
-            if (this.$route.query.temp.smld) {
+            if (JSON.parse(this.$route.query.temp).smld) {
               this.addUserShow = true;
             } else {
 
