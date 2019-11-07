@@ -126,6 +126,19 @@ export default {
   //   this.bUtil.scroviewTabChange(this.curScrollViewName, this);
   // },
   created() {
+    const userinfo = bUtil.convertQueryStingToMap();
+    if (userinfo) {
+      let userinfoOld = localStorage.getItem('userinfo');
+      // 存在某些特殊情况，存入null/undefined，导致用户缓存有误的情况
+      if (userinfoOld && userinfoOld !== 'null' && userinfoOld !== 'undefined') {
+        userinfoOld = JSON.parse(userinfoOld);
+      }
+      localStorage.setItem('userinfo', JSON.stringify({
+        ...userinfoOld,
+        ...userinfo
+      }));
+      userinfo.token && (localStorage.setItem('acces_token', userinfo.token));
+    }
   this.getProductGroup()
   this.search()
   },
