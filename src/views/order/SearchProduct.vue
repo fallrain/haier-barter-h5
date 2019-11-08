@@ -131,6 +131,10 @@ export default {
 
     search() {
       /* 搜索产品 */
+      if (this.searchVal === '') {
+        Toast.failed('请输入搜索内容！');
+        return;
+      }
       const searchStr = this.searchVal.toUpperCase().replace(/\//g, ' ');
       this.productService.list(searchStr, '1', '30').then((res) => {
         // ;
