@@ -147,7 +147,7 @@
       title="选择可用的购机权益活动"
       :arrow="true"
       @click.native="selectActivity"
-      v-show="!handRegion"
+      v-show="orderSource !=='SGLD'"
     >
     </b-item>
     <b-activity-list
@@ -490,6 +490,17 @@ export default {
       console.log(obj);
       if (obj.tel) {
         this.mobile = obj.tel;
+        if(this.consignee.name){
+          if(obj.region === 'edit'){
+            this.consignee.name = obj.customerInfo.consigneeUserName
+            this.consignee.phone = obj.customerInfo.consigneeUserPhone
+            this.consignee.sexCn = obj.customerInfo.sex = 1?'男士':'女士'
+            this.getAddressName(obj.customerInfo.province,obj.customerInfo.city,obj.customerInfo.district)
+            this.consignee.address.street = obj.customerInfo.address
+          }
+          this.queryCustomerAddressList()
+          return
+        }
         this.queryCustomerDefault();
       }
       if (obj.product) {
@@ -529,7 +540,13 @@ export default {
           return;
         }
         this.isDetail = true;
-        this.rightsList = rightsPro;
+        if(rightsPro.length > 0 && rightsPro[0] !== ''){
+          this.rightsList = rightsPro;
+        }else {
+          debugger
+          this.rightsList = []
+          this.rightsJson = ''
+        }
       }
     } else if (this.$route.params.region != 'hand') {
       if (localStorage.getItem('invoice') == 'true') {
@@ -578,6 +595,7 @@ export default {
     this.getUserStore();
 
     if (this.$route.params.customerConsigneeInfo.businessScenarios) {
+      debugger
       this.orderSource = this.$route.params.customerConsigneeInfo.businessScenarios;
     } else {
       this.orderSource = 'SGLD';
@@ -713,9 +731,13 @@ export default {
       this.productService.deafaultCustomerAddress(this.mobile).then((res) => {
         if (res.code === 1) {
           if (res.data !== null) {
-            this.haveConsignee = true;
             // if (this.haveCustomer) {
             // } else {
+            if(res.data.consigneeUserName){
+              this.haveConsignee = true;
+            }else {
+              this.haveConsignee = false;
+            }
             this.haveCustomer = true;
             this.customerInfo = res.data;
             // }
@@ -736,7 +758,7 @@ export default {
             this.queryCustomerAddressList();
             this.genarateOrderNum();
           } else {
-            if (this.$route.query.temp.smld) {
+            if (JSON.parse(this.$route.query.temp).smld) {
               this.addUserShow = true;
             } else {
 
@@ -853,6 +875,10 @@ export default {
     // },
     // 添加产品
     addProduct() {
+      if(this.productList.length === 99){
+        Toast.info('最多可以录入99件产品')
+        return
+      }
       /* 添加产品 */
       this.$router.push({
         name: 'Order.SearchProduct',

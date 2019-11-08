@@ -9,14 +9,19 @@
       </md-notice-bar>
     </div>
     <div class="search-class">
-      <input
-        class="input-class"
-        confirm-type="search"
-        placeholder="搜索用户姓名、电话"
-        placeholder-style="font-size: 28px;color: #BBBBBB;margin-left: 10px;"
-        v-model="searchWord"
-        type="search"
-      />
+
+      <form action="" @submit.prevent="()=>{return false}">
+        <input
+          class="input-class"
+          confirm-type="search"
+          placeholder="搜索用户姓名、电话"
+          placeholder-style="font-size: 28px;color: #BBBBBB;margin-left: 10px;"
+          v-model="searchWord"
+          type="search"
+          @keyup.enter="fuzzySearch"
+        />
+      </form>
+
       <img
         src="@/assets/images/orderFollow-up/search@3x.png"
         class="search-image"
@@ -290,19 +295,21 @@ export default {
     //   // shopId: '8800136445',
     //   hmcid:'01467897',
     //   mobile: '15253269729',
-    //   // shopId: '9999999999',
-    //   shopId:'8700000484',
+    //   // shopId: '8700000484',
+    //   shopId:'8800117018',
     //   // hmcid: 'a0032254',
     //   // mobile: '15621017056',
     //   // shopId: '8700048360',
-    //
+    //   //
     //   // hmcid: '18000560',
     //   // orderMode: 'Haier',
     //   // orderMode: 'Casarte',
     //   // mobile: '15621017056',
     //   // shopId: '8800266470',
-    //   token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IjAxNDY3ODk3Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3Mjk2NjEwNCwiZXhwIjoxNTczODMwMTA0fQ.Ibt94TlTLT8aHe0-EoxL1FxpMCLU05xqUquVJM74fOs'}
-    // const Str = JSON.stringify(this.userinfo);
+    //   // token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IjAxNDY3ODk3Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MzA1NDQ5MywiZXhwIjoxNTczOTE4NDkzfQ.S-muCQ1CljjtzgqdnzaBlN1K2VYT7TJ0m5Q54r_FtGg'}
+    //   token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IjAxNDY3ODk3Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MzE4MTU5MSwiZXhwIjoxNTc0MDQ1NTkxfQ.Yp5wO19b5nuJBwyoxLVlGKhKBSAG7hPAGKjmYyGXJVk'}
+    //
+    //   const Str = JSON.stringify(this.userinfo);
     // localStorage.setItem('userinfo', Str);
     // localStorage.setItem('acces_token', this.userinfo.token);
     this.getNoticeData();
@@ -403,13 +410,15 @@ export default {
       });
     },
     againEntry(item) {
+      debugger
       this.$router.push({
         name: 'Order.OrderEntry',
         params: {
           customerConsigneeInfo: {
             userName: item.userName,
             mobile: item.userMobile,
-            recordMode: item.recordMode
+            recordMode: item.recordMode,
+            businessScenarios: item.businessScenarios,
           },
           region: 'new'
         }
@@ -512,7 +521,7 @@ export default {
               params: {
                 orderNo: info.orderNo,
                 orderFollowId: info.id,
-                freezeMsg,
+                businessScenarios: info.businessScenarios,
                 recordMode: info.recordMode
               }
             });
@@ -565,6 +574,9 @@ export default {
 
     searchData(page) {
       debugger
+      if(this.curTab === 3){
+        this.sortType = 2
+      }
       console.log('keyword', this.searchWord);
       return this.orderService
         .queryOrderFollowlList(

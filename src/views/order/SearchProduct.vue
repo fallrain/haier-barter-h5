@@ -110,12 +110,14 @@ export default {
   computed: {
     searchListShow() {
       let arr = [];
-      this.searchList.forEach((item) => {
-        const itemStr = `${item.productModel}${item.productBrandName}`
-        if (itemStr.indexOf(this.searchVal) > -1) {
-          arr.push(item);
-        }
-      });
+      if (this.searchList && this.searchList.length > 0) {
+        this.searchList.forEach((item) => {
+          const itemStr = `${item.productModel}${item.productBrandName}`
+          if (itemStr.indexOf(this.searchVal.toUpperCase()) > -1) {
+            arr.push(item);
+          }
+        });
+      }
       return arr;
     }
   },

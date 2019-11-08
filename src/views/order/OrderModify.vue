@@ -198,6 +198,7 @@
       class="mt25"
       title="请选择套购参与人"
       :persons="multBuyParticipant"
+      :hmicId="multBuySponsorCheckedIds"
       v-model="multBuyParticipantCheckIds"
       @allCheck="particpantAll"
       @multiCheck="particpantClick"
@@ -435,9 +436,8 @@ export default {
       });
     },
     multBuyParticipantCheckIds(val) {
-      let arr = [];
       console.log(val);
-      console.log(this.multBuyParticipant);
+      let arr = [];
       for (let i = 0; i < this.multBuyParticipant.length; i++) {
         for (let j = 0; j < val.length; j++) {
           if (val[j] == this.multBuyParticipant[i].hmcId && val[j] !== this.multBuySponsorCheckedIds[0]) {
@@ -448,6 +448,10 @@ export default {
       if (arr.length > 0){
         this.multBuyExceptHmc = arr.join('、');
       }
+      if (val.length == 0) {
+        this.multBuyExceptHmc = '';
+      }
+
     }
   },
   mounted() {
@@ -462,8 +466,14 @@ export default {
       let ID = '';
       const obj = JSON.parse(this.$route.query.temp);
       if (obj.tel) {
-        this.mobile = obj.tel
-        // this.queryCustomerDefault();
+        if(obj.region === 'edit'){
+          this.consignee.name = obj.customerInfo.consigneeUserName
+          this.consignee.phone = obj.customerInfo.consigneeUserPhone
+          this.consignee.sexCn = obj.customerInfo.sex = 1?'男士':'女士'
+          this.getAddressName(obj.customerInfo.province,obj.customerInfo.city,obj.customerInfo.district)
+          this.consignee.address.street = obj.customerInfo.address
+        }
+        this.queryCustomerAddressList();
       }
       if (obj.rightsJson) {
         this.rightsJson = obj.rightsJson;
@@ -475,8 +485,12 @@ export default {
           return;
         }
         this.isDetail = true;
-        console.log(rightsPro);
-        this.rightsList = rightsPro;
+        if(rightsPro.length > 0 && rightsPro[0] !== ''){
+          this.rightsList = rightsPro;
+        }else {
+          this.rightsList = []
+          this.rightsJson = ''
+        }
       }
       if (obj.product) {
         if (!obj.product.productGroupName) {
@@ -632,6 +646,7 @@ export default {
           let arr = resData.mayEditCoupleOrderName.split(',');
           arr.splice(hmc_index, 1);
           this.multBuyExceptHmc = arr.join('、');
+          this.multBuyExceptHmcId = resData.mayEditCoupleOrderId.split(',').splice(hmc_index, 1);
           console.log(this.multBuyExceptHmc)
           if (!this.isDetail) {
             if (resData.rightName) {
@@ -661,7 +676,7 @@ export default {
           } else {
             this.productList = this.isProductList.concat(this.productList)
           }
-          this.queryCustomerAddressList();
+          this.queryCustomerDefault();
         }
       });
     },
@@ -688,13 +703,13 @@ export default {
     // 查询客户信息及默认地址
     queryCustomerDefault() {
       this.productService.deafaultCustomerAddress(this.mobile).then((res) => {
-        if (res.code === 1) {debugger
+        if (res.code === 1) {
           if (res.data !== null) {
             this.customerInfo = res.data;
-            this.getAddressName(res.data.province, res.data.city, res.data.district);
-            this.consignee.address.street = res.data.address;
-            this.consignee.phone = res.data.consigneeUserPhone;
-            this.consignee.name = res.data.consigneeUserName;
+            // this.getAddressName(res.data.province, res.data.city, res.data.district);
+            // this.consignee.address.street = res.data.address;
+            // this.consignee.phone = res.data.consigneeUserPhone;
+            // this.consignee.name = res.data.consigneeUserName;
             this.consignee.familyId = res.data.familyId
             if (res.data.sex === 1) {
               this.consignee.sexCn = '男士';
@@ -832,6 +847,10 @@ export default {
     },
     // 添加产品
     addProduct() {
+      if(this.productList.length === 99){
+        Toast.info('最多可以录入99件产品')
+        return
+      }
     /* 添加产品 */
       this.$router.push({
         name: 'Order.SearchProduct',

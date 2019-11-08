@@ -134,8 +134,12 @@ export default {
     imageuploaded(data, fileList, product) {
       /* 上传成功 */
       // todo 返回值待定
-      fileList.push(data.data.invoiceUrl);
+
+
       if (data.code === 1) {
+        if(data.data.invoiceUrl !== null){
+          fileList.push(data.data.invoiceUrl);
+        }
         this.$emit('uploadSuccess', data.data, this.fileMap, product);
       } else {
         this.$emit('uploadErr', data.msg);
