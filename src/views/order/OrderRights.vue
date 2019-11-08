@@ -1038,8 +1038,11 @@ export default {
     }
   },
   beforeRouteLeave(to, from, next) {
+    const right = JSON.parse(this.rightsJson);
+    if(right.rightsUserInterestsDetailsDTO.length === 0){
+      this.rightsJson = ''
+    }
     const obj = { rightsJson: this.rightsJson };
-
     if (to.name === 'Order.OrderEntry' || 'Order.OrderModify') {
       to.query.temp = JSON.stringify(obj);
       to.params.orderNo = this.subInfo.orderNo;
