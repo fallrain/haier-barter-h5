@@ -16,7 +16,7 @@
         <div class="activityQRCode-cnt-code-corner activityQRCode-cnt-code-corner2"></div>
         <div class="activityQRCode-cnt-code-corner activityQRCode-cnt-code-corner3"></div>
         <div class="activityQRCode-cnt-code-corner activityQRCode-cnt-code-corner4"></div>
-        <img src="qrcodeImg">
+        <img :src="qrcodeImg">
       </div>
       <div class="activityQRCode-cnt-inf">
         活动二维码可用于展示<span class="active">给用户报名参与活动</span>或
@@ -63,15 +63,17 @@ export default {
   methods: {
     createQrcode() {
       return this.activityService.generateQrcode('http://baidu.com/', '123456', '9999').then((res) => {
-        console.log(res);
-        debugger;
-        const blob = new Blob([res.data]);
+        const blob = new Blob([res.data], {
+          type: 'image/jpeg'
+        });
         // this.qrcodeImg = window.URL.createObjectURL(blob);
         const reader = new FileReader();
         reader.readAsDataURL(blob);
-        reader.onload = function (e) {
+        reader.onload = (e) => {
           const result = e.target.result;
-          this.qrcodeImg = `${result.substring(0, 5)}image/jpeg${result.substring(5, result.length)}`;
+          if (result) {
+            this.qrcodeImg = result;
+          }
         };
       });
     },

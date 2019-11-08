@@ -102,6 +102,7 @@ const axGetBlob = function (url) {
     url,
     responseType: 'blob',
     params: {
+      requestNoToast: true,
       returnResponse: true,
     }
   });
