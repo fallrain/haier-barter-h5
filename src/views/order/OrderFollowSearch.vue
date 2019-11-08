@@ -295,8 +295,8 @@ export default {
     //   // shopId: '8800136445',
     //   hmcid:'01467897',
     //   mobile: '15253269729',
-    //   shopId: '8700000484',
-    //   // shopId:'8800117018',
+    //   // shopId: '8700000484',
+    //   shopId:'8800117018',
     //   // hmcid: 'a0032254',
     //   // mobile: '15621017056',
     //   // shopId: '8700048360',
@@ -306,9 +306,10 @@ export default {
     //   // orderMode: 'Casarte',
     //   // mobile: '15621017056',
     //   // shopId: '8800266470',
-    //   token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IjAxNDY3ODk3Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MzA1NDQ5MywiZXhwIjoxNTczOTE4NDkzfQ.S-muCQ1CljjtzgqdnzaBlN1K2VYT7TJ0m5Q54r_FtGg'}
-    //   //   token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IjAxNDY3ODk3Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MzA0ODUzMywiZXhwIjoxNTczOTEyNTMzfQ.1VLWfqeyfLzBHiDd4BcxGm1erIJDQJYPSQS3qya1JVM'}
-    // const Str = JSON.stringify(this.userinfo);
+    //   // token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IjAxNDY3ODk3Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MzA1NDQ5MywiZXhwIjoxNTczOTE4NDkzfQ.S-muCQ1CljjtzgqdnzaBlN1K2VYT7TJ0m5Q54r_FtGg'}
+    //   token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IjAxNDY3ODk3Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MzE4MTU5MSwiZXhwIjoxNTc0MDQ1NTkxfQ.Yp5wO19b5nuJBwyoxLVlGKhKBSAG7hPAGKjmYyGXJVk'}
+    //
+    //   const Str = JSON.stringify(this.userinfo);
     // localStorage.setItem('userinfo', Str);
     // localStorage.setItem('acces_token', this.userinfo.token);
     this.getNoticeData();
