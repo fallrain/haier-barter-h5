@@ -148,6 +148,7 @@ export default {
     uploadError(res) {
       /* 上传错误 */
       const errorObj = {
+        'TYPE ERROR': '只能上传jpg/png/gif类型图片',
         'FILE IS TOO LARGER MAX FILE IS': '图片最大不能超过10M'
       };
       for (const p in errorObj) {
