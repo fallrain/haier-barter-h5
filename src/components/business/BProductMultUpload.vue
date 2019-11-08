@@ -24,7 +24,6 @@
             :compress="70"
             :headers="headers"
             @imageuploaded="(data, fileList)=>imageuploaded(data, fileList,product)"
-            extensions="png,jpg,jpeg,gif"
             :url="uploadUrl"
             :multiple-size="1"
             :imgs="fileMap[products.productCode]"
