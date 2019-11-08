@@ -476,21 +476,20 @@ export default {
         this.queryCustomerAddressList();
       }
       if (obj.rightsJson) {
-        this.rightsJson = obj.rightsJson;
         const right = JSON.parse(obj.rightsJson);
-        this.rightName = right.rightName;
-        this.rightId = right.rightId;
+        this.rightName = right.rightsName;
+        this.rightId = right.rightsId;
         const rightsPro = JSON.parse(obj.rightsJson).rightName.split(',');
-        if (!rightsPro.length) {
-          return;
-        }
+        this.rightsJson = obj.rightsJson;
         this.isDetail = true;
         if(rightsPro.length > 0 && rightsPro[0] !== ''){
           this.rightsList = rightsPro;
-        }else {
-          this.rightsList = []
-          this.rightsJson = ''
         }
+      }else {
+        this.rightsList = []
+        this.rightsJson = ''
+        this.rightName = ''
+        this.rightId = ''
       }
       if (obj.product) {
         if (!obj.product.productGroupName) {
@@ -915,7 +914,12 @@ export default {
         partId.push(this.multBuySponsor[0].hmcId);
         part.push(this.multBuySponsor[0].username);
       }
-
+      if(this.rightsJson){
+        const tempJson = JSON.parse(this.rightsJson)
+        if(tempJson.rightsUserInterestsDetailsDTO.length === 0){
+          this.rightsJson = ''
+        }
+      }
       subInfo.mayEditCoupleOrderId = partId.join(',');
       subInfo.mayEditCoupleOrderName = part.join(',');
       subInfo.orderNo = this.orderNo;

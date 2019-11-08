@@ -19,12 +19,11 @@
           <b-upload
             :crop="false"
             inputOfFile="file"
-            :max-file-size="1024*1024*5"
+            :max-file-size="1024*1024*10"
             :maxWidth="1280"
             :compress="70"
             :headers="headers"
             @imageuploaded="(data, fileList)=>imageuploaded(data, fileList,product)"
-            extensions="png,jpg,jpeg,gif"
             :url="uploadUrl"
             :multiple-size="1"
             :imgs="fileMap[products.productCode]"
@@ -134,8 +133,12 @@ export default {
     imageuploaded(data, fileList, product) {
       /* 上传成功 */
       // todo 返回值待定
-      fileList.push(data.data.invoiceUrl);
+
+
       if (data.code === 1) {
+        if(data.data.invoiceUrl !== null){
+          fileList.push(data.data.invoiceUrl);
+        }
         this.$emit('uploadSuccess', data.data, this.fileMap, product);
       } else {
         this.$emit('uploadErr', data.msg);
@@ -144,7 +147,8 @@ export default {
     uploadError(res) {
       /* 上传错误 */
       const errorObj = {
-        'FILE IS TOO LARGER MAX FILE IS': '图片最大不能超过5M'
+        'TYPE ERROR': '只能上传jpg/png/gif类型图片',
+        'FILE IS TOO LARGER MAX FILE IS': '图片最大不能超过10M'
       };
       for (const p in errorObj) {
         if (new RegExp(p).test(res)) {
