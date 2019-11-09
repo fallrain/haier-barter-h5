@@ -113,6 +113,7 @@
             :index="index"
             :content="item.isInstall"
             @onDel="onDelete"
+            @inputChange="inputChange"
           >
           </b-order-product>
         </ul>
@@ -540,12 +541,19 @@ export default {
         if(rightsPro.length > 0 && rightsPro[0] !== ''){
           this.rightsList = rightsPro;
         }
-      }else {
-        this.rightsList = []
-        this.rightsJson = ''
-        this.rightName = ''
-        this.rightId = ''
+        else {
+          this.rightsList = []
+          this.rightsJson = ''
+          this.rightName = ''
+          this.rightId = ''
+        }
       }
+      // else {
+      //   this.rightsList = []
+      //   this.rightsJson = ''
+      //   this.rightName = ''
+      //   this.rightId = ''
+      // }
     } else if (this.$route.params.region != 'hand') {
       if (localStorage.getItem('invoice') == 'true') {
         localStorage.setItem('invoice', '');
@@ -593,7 +601,6 @@ export default {
     this.getUserStore();
 
     if (this.$route.params.customerConsigneeInfo.businessScenarios) {
-      debugger
       this.orderSource = this.$route.params.customerConsigneeInfo.businessScenarios;
     } else {
       this.orderSource = 'SGLD';
@@ -833,36 +840,36 @@ export default {
             return;
           }
         }
-        // 产品价格闸口判断
-        let result = 0;
-        let state = false;
-        const resultMsg = [];
-        for (let i = 0; i < this.productList.length; i++) {
-          const obj = {
-            bccPrice: '',
-            productCode: this.productList[i].productCode,
-            productPrice: this.productList[i].productPrice,
-            requestNoToast: true
-          };
-          if (this.productList[i].bccPrice) {
-            obj.bccPrice = this.productList[i].bccPrice;
-          }
-          this.orderService.checkProductPrice({}, obj).then((res) => {
-            result++;
-            if (res.code == -1) {
-              resultMsg.push(res.msg);
-              state = true;
-              this.productList[i].productPrice = '';
-            }
-            if (result == this.productList.length) {
-              if (!state) {
-                this.generateSubInfo(1);
-              } else {
-                Toast.failed(resultMsg[0]);
-              }
-            }
-          });
-        }
+        // // 产品价格闸口判断
+        // let result = 0;
+        // let state = false;
+        // const resultMsg = [];
+        // for (let i = 0; i < this.productList.length; i++) {
+        //   const obj = {
+        //     bccPrice: '',
+        //     productCode: this.productList[i].productCode,
+        //     productPrice: this.productList[i].productPrice,
+        //     requestNoToast: true
+        //   };
+        //   if (this.productList[i].bccPrice) {
+        //     obj.bccPrice = this.productList[i].bccPrice;
+        //   }
+        //   this.orderService.checkProductPrice({}, obj).then((res) => {
+        //     result++;
+        //     if (res.code == -1) {
+        //       resultMsg.push(res.msg);
+        //       state = true;
+        //       this.productList[i].productPrice = '';
+        //     }
+        //     if (result == this.productList.length) {
+        //       if (!state) {
+        //         this.generateSubInfo(1);
+        //       } else {
+        //         Toast.failed(resultMsg[0]);
+        //       }
+        //     }
+        //   });
+        // }
       } else {
         this.generateSubInfo(1);
       }
@@ -1090,7 +1097,8 @@ export default {
         name: 'Order.AddAddress',
         params: {
           region: this.region,
-          info: JSON.stringify(this.customerInfo)
+          info: JSON.stringify(this.customerInfo),
+          businessScenarios:this.orderSource
         }
       });
     },
@@ -1102,7 +1110,8 @@ export default {
           name: 'Order.AddAddress',
           params: {
             region: this.region,
-            info: JSON.stringify(this.customerInfo)
+            info: JSON.stringify(this.customerInfo),
+            businessScenarios:this.orderSource
           }
         });
       } else {
@@ -1188,6 +1197,12 @@ export default {
       this.rightsJson = ''
       this.rightName = ''
       this.rightId = ''
+    },
+    inputChange(){
+      this.rightId = ''
+      this.rightName = ''
+      this.rightsJson = ''
+      this.rightsList = []
     },
     // 模态框确认取消处理
     onBasicCancel() {

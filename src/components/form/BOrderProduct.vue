@@ -13,6 +13,7 @@
           v-model="data.productPrice"
           @blur="blur"
           v-resetInput
+          v-on:input="inputFunction()"
         ><span class="b-order-product-item-price-unit">元</span>
       </div>
 
@@ -106,7 +107,21 @@ export default {
       if (this.data.productPrice < 0) {
         Toast.failed('请输入正确的产品价格');
         this.data.productPrice = '';
+        return
       }
+      const obj = {
+            bccPrice: '',
+            productCode: this.data.productCode,
+            productPrice: this.data.productPrice,
+            requestNoToast: true
+          };
+      this.orderService.checkProductPrice({}, obj).then((res) => {
+        debugger
+        if (res.code == -1) {
+          this.data.productPrice = ''
+          Toast.failed(res.msg)
+        }
+      });
     },
     formatDecimal(num, decimal) {
       num = num.toString();
@@ -117,6 +132,10 @@ export default {
         num = num.substring(0);
       }
       return parseFloat(num).toFixed(decimal);
+    },
+    inputFunction(val){
+
+      this.$emit('inputChange',val)
     }
   }
 };

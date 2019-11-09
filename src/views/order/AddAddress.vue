@@ -452,6 +452,9 @@ export default {
       }debugger
       if (this.region === 'add' || this.region === 'userAdd') {
         delete this.customerInfo.id;
+        if(this.$route.params.businessScenarios != ''){
+          this.customerInfo.source = this.$route.params.businessScenarios
+        }
         this.productService.addcustomerAddress(this.customerInfo, {}).then((res) => {
           if (res.code === 1) {
             Toast.succeed('地址添加成功');

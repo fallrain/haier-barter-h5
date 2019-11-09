@@ -100,6 +100,7 @@
             :index="index"
             :content="item.isInstall"
             @onDel="onDelete"
+            @inputChange="inputChange"
           >
             <template
               v-slot:default
@@ -461,7 +462,7 @@ export default {
   //   console.log('tag', address)
   //    }
   },
-  activated() {debugger;
+  activated() {
     if (this.$route.query.temp) {
       let ID = '';
       const obj = JSON.parse(this.$route.query.temp);
@@ -485,12 +486,19 @@ export default {
         if(rightsPro.length > 0 && rightsPro[0] !== ''){
           this.rightsList = rightsPro;
         }
-      }else {
-        this.rightsList = []
-        this.rightsJson = ''
-        this.rightName = ''
-        this.rightId = ''
+        else {
+          this.rightsList = []
+          this.rightsJson = ''
+          this.rightName = ''
+          this.rightId = ''
+        }
       }
+      // else {
+      //   this.rightsList = []
+      //   this.rightsJson = ''
+      //   this.rightName = ''
+      //   this.rightId = ''
+      // }
       if (obj.product) {
         if (!obj.product.productGroupName) {
           return;
@@ -810,36 +818,36 @@ export default {
             return;
           }
         }
-        // 产品价格闸口判断
-        let result = 0;
-        let state = false;
-        const resultMsg = [];
-        for (let i = 0; i < this.productList.length; i++) {
-          const obj = {
-            bccPrice: '',
-            productCode: this.productList[i].productCode,
-            productPrice: this.productList[i].productPrice,
-            requestNoToast: true
-          };
-          if (this.productList[i].bccPrice) {
-            obj.bccPrice = this.productList[i].bccPrice;
-          }
-          this.orderService.checkProductPrice({}, obj).then((res) => {
-            result++;
-            if (res.code == -1) {
-              resultMsg.push(res.msg);
-              state = true;
-              this.productList[i].productPrice = '';
-            }
-            if (result == this.productList.length) {
-              if (!state) {
-                this.generateSubInfo(1);
-              } else {
-                Toast.failed(resultMsg[0]);
-              }
-            }
-          });
-        }
+        // // 产品价格闸口判断
+        // let result = 0;
+        // let state = false;
+        // const resultMsg = [];
+        // for (let i = 0; i < this.productList.length; i++) {
+        //   const obj = {
+        //     bccPrice: '',
+        //     productCode: this.productList[i].productCode,
+        //     productPrice: this.productList[i].productPrice,
+        //     requestNoToast: true
+        //   };
+        //   if (this.productList[i].bccPrice) {
+        //     obj.bccPrice = this.productList[i].bccPrice;
+        //   }
+        //   this.orderService.checkProductPrice({}, obj).then((res) => {
+        //     result++;
+        //     if (res.code == -1) {
+        //       resultMsg.push(res.msg);
+        //       state = true;
+        //       this.productList[i].productPrice = '';
+        //     }
+        //     if (result == this.productList.length) {
+        //       if (!state) {
+        //         this.generateSubInfo(1);
+        //       } else {
+        //         Toast.failed(resultMsg[0]);
+        //       }
+        //     }
+        //   });
+        // }
       } else {
         this.generateSubInfo(1);
       }
@@ -855,6 +863,12 @@ export default {
         name: 'Order.SearchProduct',
         params:{orderNo:this.orderNo,productList:this.productList,recordMode:this.recordMode}
       });
+    },
+    inputChange(){
+      this.rightId = ''
+      this.rightName = ''
+      this.rightsJson = ''
+      this.rightsList = []
     },
     selectActivity() {
       if (this.productList.length === 0) {
@@ -1063,7 +1077,7 @@ export default {
       this.region = 'add';
       this.$router.push({
         name: 'Order.AddAddress',
-        params: { region: this.region, info: JSON.stringify(this.customerInfo) }
+        params: { region: this.region, info: JSON.stringify(this.customerInfo),businessScenarios:this.orderSource }
       });
     },
     changeAddress(item) {console.log(this.addressPopShow)
