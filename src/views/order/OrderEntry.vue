@@ -564,7 +564,7 @@ export default {
       this.buyDate = '';
       this.deliveryTime = '';
       this.rightsList = [];
-      this.customerInfo.username = this.$route.params.customerConsigneeInfo.userName;
+      this.customerInfo.username = this.$route.params.customerConsigneeInfo.username;
       this.customerInfo.mobile = this.$route.params.customerConsigneeInfo.mobile;
       this.customerInfo.userId = this.$route.params.customerConsigneeInfo.userId;
       this.userId = this.$route.params.customerConsigneeInfo.userId;
@@ -586,6 +586,16 @@ export default {
         this.handRegion = true;
       }
     }
+
+    if (this.$route.params.region === 'new') {
+      this.customerInfo = this.$route.params.customerConsigneeInfo
+      if(this.$route.params.customerConsigneeInfo.username){
+        this.haveCustomer = true
+      }
+      debugger
+      this.mobile = this.$route.params.customerConsigneeInfo.mobile
+      this.queryCustomerDefault()
+    }
     if (this.userParam.oldForNew === 1) {
       this.isYJHX = true;
       this.customerInfo.username = this.userParam.username;
@@ -597,6 +607,7 @@ export default {
       this.haveCustomer = true;
       this.haveConsignee = false;
     }
+
     this.queryUserList();
     this.getUserStore();
 
@@ -655,6 +666,7 @@ export default {
       if (this.$route.params.region === 'new') {
         this.addUserShow = false;
         this.addNew(this.customerInfo);
+         // this.address(this.customerInfo);
       }
     },
     indexOf(val) {
@@ -763,11 +775,11 @@ export default {
             this.queryCustomerAddressList();
             this.genarateOrderNum();
           } else {
-            if (JSON.parse(this.$route.query.temp).smld) {
-              this.addUserShow = true;
-            } else {
-
-            }
+            // if (this.$route.params.region === 'new' || JSON.parse(this.$route.query.temp).smld) {
+            //   this.addUserShow = true;
+            // } else {
+            //
+            // }
           }
         }
       });

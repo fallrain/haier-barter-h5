@@ -293,13 +293,13 @@ export default {
     //   // hmcid: 'a0008949',
     //   // mobile: '18561715460',
     //   // shopId: '8800136445',
-    //   hmcid:'01467897',
-    //   mobile: '15253269729',
+    //   // hmcid:'01467897',
+    //   // mobile: '15253269729',
     //   // shopId: '8700000484',
-    //   shopId:'8800117018',
-    //   // hmcid: 'a0032254',
-    //   // mobile: '15621017056',
-    //   // shopId: '8700048360',
+    //   // shopId:'8800117018',
+    //   hmcid: 'a0032254',
+    //   mobile: '15621017056',
+    //   shopId: '8700048360',
     //   //
     //   // hmcid: '18000560',
     //   // orderMode: 'Haier',
@@ -307,8 +307,8 @@ export default {
     //   // mobile: '15621017056',
     //   // shopId: '8800266470',
     //   // token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IjAxNDY3ODk3Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MzA1NDQ5MywiZXhwIjoxNTczOTE4NDkzfQ.S-muCQ1CljjtzgqdnzaBlN1K2VYT7TJ0m5Q54r_FtGg'}
-    //   token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IjAxNDY3ODk3Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MzE4MTU5MSwiZXhwIjoxNTc0MDQ1NTkxfQ.Yp5wO19b5nuJBwyoxLVlGKhKBSAG7hPAGKjmYyGXJVk'}
-    //
+    //   token: "eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IkEwMDMyMjU0Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MzI5MTcxMCwiZXhwIjoxNTc0MTU1NzEwfQ.Ctamyt5Z6I39PKC2PVXRkXDV_T_x-NitfarFOqn6nUE"
+    // }
     //   const Str = JSON.stringify(this.userinfo);
     // localStorage.setItem('userinfo', Str);
     // localStorage.setItem('acces_token', this.userinfo.token);
@@ -415,7 +415,7 @@ export default {
         name: 'Order.OrderEntry',
         params: {
           customerConsigneeInfo: {
-            userName: item.userName,
+            username: item.userName,
             mobile: item.userMobile,
             recordMode: item.recordMode,
             businessScenarios: item.businessScenarios,
@@ -498,12 +498,13 @@ export default {
               name: 'Order.OrderEntry',
               params: {
                 customerConsigneeInfo: {
-                  userName: info.userName,
+                  username: info.userName,
                   mobile: info.userMobile,
                   userId: info.userId,
                   recordMode: info.recordMode,
                   businessScenarios: info.businessScenarios,
                   sourceSn: info.sourceSn,
+                  smld:true,
                   id: info.id,
                   freezeMsg,
                 },
@@ -553,7 +554,7 @@ export default {
                   params: {
                     customerConsigneeInfo: {
                       freezeMsg,
-                      userName: info.userName,
+                      username: info.userName,
                       mobile: info.userMobile,
                       userId: info.userId,
                       // recordMode: info.recordMode,

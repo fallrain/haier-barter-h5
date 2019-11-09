@@ -9,7 +9,7 @@
             class="addAddress-form-item-ipt"
             placeholder="请输入手机号"
             v-model="customerInfo.mobile"
-            v-show="region == 'userAdd'"
+            v-show="region !== 'userAdd'"
             v-resetInput
           >
           <input
@@ -17,7 +17,7 @@
             class="addAddress-form-item-ipt"
             placeholder="请输入手机号"
             disabled="true"
-            v-show="region != 'userAdd'"
+            v-show="region === 'userAdd'"
             v-model="customerInfo.mobile"
             v-resetInput
           >
@@ -34,7 +34,7 @@
               type="text"
               class="addAddress-form-item-ipt"
               placeholder="请输入姓名"
-              v-show="region == 'userAdd'"
+              v-show="region !== 'userAdd'"
               v-model="customerInfo.username"
               @input="judgeName(customerInfo.username, 20)"
               v-resetInput
@@ -44,7 +44,7 @@
               class="addAddress-form-item-ipt"
               placeholder="请输入姓名"
               disabled="true"
-              v-show="region != 'userAdd'"
+              v-show="region === 'userAdd'"
               v-model="customerInfo.username"
               v-resetInput
             >
@@ -256,15 +256,26 @@ export default {
     };
   },
   activated() {
+    debugger
     if (this.$route.params) {
       this.region = this.$route.params.region;
       console.log(this.region);
       if (this.region === 'add' && this.$route.params.info === '{}') {
         this.confirmShow = true;
-      } else if (this.region === 'userAdd') {
+      } else if (this.region === 'userAdd' && this.$route.params.info === '{}') {
         this.confirmShow = true;
         this.searchEnd = false;
-      } else {
+
+      }
+      else if (this.region === 'userAdd' && this.$route.params.info !== '{}') {
+        debugger
+        this.confirmShow = true;
+        this.searchEnd = true;
+        this.customerInfo.username = JSON.parse(this.$route.params.info).username;
+        this.customerInfo.userId = JSON.parse(this.$route.params.info).userId;
+        this.customerInfo.mobile = JSON.parse(this.$route.params.info).mobile;
+      }
+      else {
         // this.confirmShow = false;
 
         this.searchEnd = true;
@@ -314,6 +325,7 @@ export default {
     }
   },
   created() {
+    debugger
     // 不加入双向绑定
     this.addressData = addressData;
     this.customerInfo.hmcId = JSON.parse(localStorage.getItem('userinfo')).hmcid;
