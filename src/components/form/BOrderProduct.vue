@@ -13,6 +13,7 @@
           v-model="data.productPrice"
           @blur="blur"
           v-resetInput
+          v-on:input="inputFunction(val)"
         ><span class="b-order-product-item-price-unit">元</span>
       </div>
 
@@ -38,7 +39,6 @@
         :min-date="currentDate"
         v-model="data.installTime"
         :pattern="pattern"
-        v-on:input="inputFunction(val)"
       ></b-date-picker>
 
     </div>
