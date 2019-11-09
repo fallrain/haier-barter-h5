@@ -38,6 +38,7 @@
         :min-date="currentDate"
         v-model="data.installTime"
         :pattern="pattern"
+        v-on:input="inputFunction(val)"
       ></b-date-picker>
 
     </div>
@@ -132,10 +133,10 @@ export default {
       }
       return parseFloat(num).toFixed(decimal);
     },
-    // inputFunction(val){
-    //
-    //   this.$emit('inputChange',val)
-    // }
+    inputFunction(val){
+
+      this.$emit('inputChange',val)
+    }
   }
 };
 </script>
