@@ -818,39 +818,8 @@ export default {
             return;
           }
         }
-        // // 产品价格闸口判断
-        // let result = 0;
-        // let state = false;
-        // const resultMsg = [];
-        // for (let i = 0; i < this.productList.length; i++) {
-        //   const obj = {
-        //     bccPrice: '',
-        //     productCode: this.productList[i].productCode,
-        //     productPrice: this.productList[i].productPrice,
-        //     requestNoToast: true
-        //   };
-        //   if (this.productList[i].bccPrice) {
-        //     obj.bccPrice = this.productList[i].bccPrice;
-        //   }
-        //   this.orderService.checkProductPrice({}, obj).then((res) => {
-        //     result++;
-        //     if (res.code == -1) {
-        //       resultMsg.push(res.msg);
-        //       state = true;
-        //       this.productList[i].productPrice = '';
-        //     }
-        //     if (result == this.productList.length) {
-        //       if (!state) {
-        //         this.generateSubInfo(1);
-        //       } else {
-        //         Toast.failed(resultMsg[0]);
-        //       }
-        //     }
-        //   });
-        // }
-      } else {
-        this.generateSubInfo(1);
       }
+      this.generateSubInfo(1);
     },
     // 添加产品
     addProduct() {
@@ -934,6 +903,38 @@ export default {
           this.rightsJson = ''
         }
       }
+      // // 产品价格闸口判断
+      // let result = 0;
+      // let state = false;
+      // const resultMsg = [];
+      // debugger
+      // for (let i = 0; i < this.productList.length; i++) {
+      //   const obj = {
+      //     bccPrice: '',
+      //     productCode: this.productList[i].productCode,
+      //     productPrice: this.productList[i].productPrice,
+      //     requestNoToast: true
+      //   };
+      //
+      //   if (this.productList[i].bccPrice) {
+      //     obj.bccPrice = this.productList[i].bccPrice;
+      //   }
+      //   this.orderService.checkProductPrice({}, obj).then((res) => {
+      //     result++;
+      //     if (res.code == -1) {
+      //       resultMsg.push(res.msg);
+      //       state = true;
+      //       this.productList[i].productPrice = '';
+      //     }
+      //     if (result == this.productList.length) {
+      //       if (!state) {
+      //       } else {
+      //         Toast.failed(resultMsg[0]);
+      //       }
+      //     }
+      //   });
+      // }
+      debugger
       subInfo.mayEditCoupleOrderId = partId.join(',');
       subInfo.mayEditCoupleOrderName = part.join(',');
       subInfo.orderNo = this.orderNo;

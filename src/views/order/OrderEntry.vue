@@ -840,7 +840,7 @@ export default {
             return;
           }
         }
-        // // 产品价格闸口判断
+       // // 产品价格闸口判断
         // let result = 0;
         // let state = false;
         // const resultMsg = [];
