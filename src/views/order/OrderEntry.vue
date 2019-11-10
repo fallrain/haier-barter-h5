@@ -882,7 +882,7 @@ export default {
         //     }
         //   });
         // }
-      } else {
+      // } else {
         this.generateSubInfo(1);
       }
     },
@@ -1195,7 +1195,7 @@ export default {
     // consporConfirm() {
     //   // this.saveTemporary(1);
     // },
-    next() {
+    next() {debugger
       /* 下一步 */
       this.saveType = 0;
       this.saveTemporary(2);
