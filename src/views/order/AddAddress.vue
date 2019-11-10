@@ -385,9 +385,6 @@ export default {
           } else {
             this.searchResultShow = true;
           }
-        } else {
-          // this.searchResultShow = true;
-          Toast.failed(res.msg);
         }
       });
     },

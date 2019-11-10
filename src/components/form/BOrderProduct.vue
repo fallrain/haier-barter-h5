@@ -116,10 +116,8 @@ export default {
             requestNoToast: true
           };
       this.orderService.checkProductPrice({}, obj).then((res) => {
-        debugger
         if (res.code == -1) {
           this.data.productPrice = ''
-          Toast.failed(res.msg)
         }
       });
     },

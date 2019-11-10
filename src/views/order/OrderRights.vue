@@ -832,7 +832,7 @@ export default {
                 this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(this.notOptionalList);
               }
             } else {
-              Toast.failed('暂无数据');
+              // Toast.failed('暂无数据');
             }
             // ;
             // if (res.data.result.length > 0) {
@@ -862,7 +862,6 @@ export default {
             //   Toast.info('暂无数据');
             // }
           } else {
-            Toast.failed(res.msg);
             this[this.curScrollViewName].mescroll.endErr();
           }
           return sroviewObj;
@@ -887,7 +886,6 @@ export default {
                   Toast.failed('暂无同享权益数据');
                 }
               } else {
-                debugger
                 // Toast.failed(res.msg);
 
                 if(res.msg === '未匹配到可选权益数据！'){
@@ -904,7 +902,7 @@ export default {
                   this.anylizeData(res.data, 2);
                   // this.mutexRightsList = res.data;
                 } else {
-                  Toast.failed('暂无互斥权益数据');
+                  // Toast.failed('暂无互斥权益数据');
                 }
               } else {
                 // Toast.failed(res.msg);
@@ -944,8 +942,6 @@ export default {
               } else {
                 Toast.info('暂无数据');
               }
-            } else {
-              Toast.failed(res.msg);
             }
           });
       }
@@ -972,8 +968,6 @@ export default {
         .then((res) => {
           if (res.code === 1) {
             this.productGroupName = res.data;
-          } else {
-            Toast.failed(res.msg);
           }
         });
     },
