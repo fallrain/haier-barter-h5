@@ -70,7 +70,8 @@
         <div class="addAddress-form-item">
           <label class="addAddress-form-item-name">收货人手机号</label>
           <input
-            type="number"
+            type="text"
+            oninput = "value=value.replace(/[^\d]/g,'')"
             class="addAddress-form-item-ipt"
             placeholder="请输入手机号"
             v-model="customerInfo.consigneeUserPhone"
@@ -100,11 +101,11 @@
         ></b-item>
       </li>
       <li>
-        <div class="addAddress-form-item">
-          <label class="addAddress-form-item-name">详细地址</label>
+        <div class="addAddress-form-item1">
+          <label class="addAddress-form-item-name w100per fs26 text-666 dis-block">详细地址</label>
           <input
             type="text"
-            class="addAddress-form-item-ipt"
+            class="addAddress-form-item-ipt w100"
             placeholder="省道 门牌、楼层房间号等信息"
             v-model="customerInfo.address"
             @input="judgeAddress(customerInfo.address, 30)"
@@ -406,7 +407,7 @@ export default {
       this.newAddress.regionCode = addressAy[0] + addressAy[1] + addressAy[2];
       this.addressName = addressA.join('/');
     },
-    confirm() {
+    confirm() {debugger;
       if (!(/^1[3456789]\d{9}$/.test(this.customerInfo.mobile))) {
         Toast.failed('手机号格式错误');
         this.customerInfo.mobile = '';
@@ -663,5 +664,13 @@ export default {
       color: #1969C6;
     }
   }
-
+  .fs26{
+    font-size: 26px !important;
+  }
+  .text-666{
+    color: #666;
+  }
+  .w100{
+    width: 100% !important;
+  }
 </style>
