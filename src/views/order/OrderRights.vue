@@ -1,18 +1,16 @@
 <template>
   <div>
-    <div class="activity-tab-bg activity-tab">
+    <div class="activity-tab-bg activity-tab1">
       <md-tab-bar
         v-model="current"
         :items="items"
         :hasInk="false"
       />
     </div>
-    <div v-show="current === 0">
-      <p class="right-p" @click="shareRightsClick">同享活动
-        <i class="iconfont icon-xialaactive-copy" v-show="shareShow"></i>
-        <i class="iconfont icon-jiantou9" v-show="!shareShow"></i>
-      </p>
 
+    <div v-show="current === 0">
+
+        <p v-show="shareRightsList.length === 0" class="info-Class">暂无同享活动数据</p>
       <b-activity-item
         v-for="(item,index) in shareRightsList"
         :key="index"
@@ -24,13 +22,11 @@
         :hasData="false"
         @showLimit="showLimit"
         @showConfig="showConfig"
-        v-show="shareShow"
+        v-show="shareRightsList.length !== 0"
       ></b-activity-item>
-
-      <p class="right-p" @click="mutexRightsClick">互斥活动
-        <i class="iconfont icon-xialaactive-copy" v-show="mutexShow"></i>
-        <i class="iconfont icon-jiantou9" v-show="!mutexShow"></i>
-      </p>
+    </div>
+    <div v-show="current === 2">
+      <p v-show="mutexRightsList.length === 0" class="info-Class">暂无不可同享活动数据</p>
       <b-activity-item
         v-for="(item,index) in mutexRightsList"
         :key="index"
@@ -42,20 +38,9 @@
         :hasData="false"
         @showLimit="showLimit"
         @showConfig="showConfig"
-        v-show="mutexShow"
       ></b-activity-item>
     </div>
-    <!--<div v-show="current === 1">-->
-    <!--<b-activity-item-->
-    <!--v-for="(item,index) in notOptionalList"-->
-    <!--:key="index"-->
-    <!--:getData.sync="item"-->
-    <!--:isFinish="true"-->
-    <!--:hasData="false"-->
-    <!--@showLimit="showLimit"-->
-    <!--@showConfig="showConfig"-->
-    <!--&gt;</b-activity-item>-->
-    <!--</div>-->
+
     <div class="reportInstallList-view"
          v-show="current === 1">
       <div
@@ -123,14 +108,17 @@ export default {
       orderNo: '',
       items: [{
         name: 0,
-        label: '可参与活动'
-      }, {
+        label: '可同享活动'
+      },
+        {
+          name: 2,
+          label: '不可同享活动'
+        },
+        {
         name: 1,
         label: '不可参与活动'
       }],
       rightsJson: '',
-      shareShow: false,
-      mutexShow: false,
       num: 0,
       scrollViewFinish: {
         mescroll: null,
@@ -170,9 +158,18 @@ export default {
   },
   watch: {
     current(val) {
+
       if (val === 0) {
-        // this.getData();
-      } else {
+        debugger
+        if(this.shareRightsList.length === 0){
+          this.getData(1);
+        }
+      } else if(val === 2){
+        debugger
+        if(this.mutexRightsList.length === 0){
+          this.getData(2);
+        }
+      }else {
         const viewName = 'scrollViewFinish';
         // tab切换后，创建新MeScroll对象（若无创建过），没有加载过则加载
         this.bUtil.scroviewTabChange(viewName, this);
@@ -196,26 +193,26 @@ export default {
           });
       }
     },
-    shareRightsClick() {
-      this.shareShow = !this.shareShow;
-      if(this.shareShow && this.shareNull){
-        Toast.info(this.shareToastInfo)
-      }else {
-        if (!this.shareRightsList.length && !this.shareNull) {
-          this.getData(1);
-        }
-      }
-    },
-    mutexRightsClick() {
-      this.mutexShow = !this.mutexShow;
-      if(this.mutexShow && this.mutexNull){
-        Toast.info(this.mutexToastInfo)
-      }else {
-        if (!this.mutexRightsList.length && !this.mutexNull) {
-          this.getData(2);
-        }
-      }
-    },
+    // shareRightsClick() {
+    //   this.shareShow = !this.shareShow;
+    //   if(this.shareShow && this.shareNull){
+    //     Toast.info(this.shareToastInfo)
+    //   }else {
+    //     if (!this.shareRightsList.length && !this.shareNull) {
+    //       this.getData(1);
+    //     }
+    //   }
+    // },
+    // mutexRightsClick() {
+    //   this.mutexShow = !this.mutexShow;
+    //   if(this.mutexShow && this.mutexNull){
+    //     Toast.info(this.mutexToastInfo)
+    //   }else {
+    //     if (!this.mutexRightsList.length && !this.mutexNull) {
+    //       this.getData(2);
+    //     }
+    //   }
+    // },
     minusCount(item) {
       // 单品
       if (item.rightsType === 'single') {
@@ -883,14 +880,14 @@ export default {
                   // this.shareRightsList = res.data;
                   this.anylizeData(res.data, 1);
                 } else {
-                  Toast.failed('暂无同享权益数据');
+                  Toast.failed('暂无同享活动');
                 }
               } else {
                 // Toast.failed(res.msg);
 
                 if(res.msg === '未匹配到可选权益数据！'){
                     this.shareNull = true
-                    this.shareToastInfo = '未匹配到同享权益信息'
+                    this.shareToastInfo = '暂无同享活动'
                 }
               }
             });
@@ -902,7 +899,7 @@ export default {
                   this.anylizeData(res.data, 2);
                   // this.mutexRightsList = res.data;
                 } else {
-                  // Toast.failed('暂无互斥权益数据');
+                  Toast.failed('暂无不可同享权益数据');
                 }
               } else {
                 // Toast.failed(res.msg);
@@ -1026,8 +1023,10 @@ export default {
       });
       if (type === 1) {
         this.shareRightsList = curlist;
+        debugger
       } else {
         this.mutexRightsList = curlist;
+        debugger
       }
     }
   },
@@ -1088,11 +1087,11 @@ export default {
     }
   }
 
-  .activity-tab {
+  .activity-tab1 {
     .md-tab-bar-item {
       padding: 0;
       margin: 0;
-      width: 50%;
+      width: 33%;
       font-size: 28px;
       color: #666;
       justify-content: center;
@@ -1113,7 +1112,7 @@ export default {
         background: #1969C6;
         font-size: 28px;
         height: 60px;
-        width: 50%;
+        width: 33%;
 
         &:first-child {
           border-top-left-radius: 8px;
@@ -1188,5 +1187,11 @@ export default {
 
   .bottom-height {
     height: 150px;
+  }
+  .info-Class{
+    text-align: center;
+    padding: 30px;
+    color: #666666;
+    font-size: 32px;
   }
 </style>
