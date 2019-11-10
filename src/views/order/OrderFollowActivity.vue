@@ -276,7 +276,6 @@ export default {
               this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(this.currentList);
             }
           } else {
-            Toast.failed(res.msg);
             this[this.curScrollViewName].mescroll.endErr();
           }
           return sroviewObj;
@@ -301,7 +300,6 @@ export default {
             Toast.info('暂无数据');
           }
         } else {
-          Toast.failed(res.msg);
           this[this.curScrollViewName].mescroll.endErr();
         }
         return sroviewObj;

@@ -192,8 +192,6 @@ export default {
       this.productService.industryGroup().then((res) => {
         if(res.code === 1){
           this.productGroupName = res.data
-        }else {
-          Toast.failed(res.msg)
         }
       });
     },

@@ -526,8 +526,6 @@ export default {
             pro.productPrice = '';
             pro.invoiceStatus = 0;
             this.isReportInstall(pro);
-          } else {
-            Toast.failed(res.message);
           }
         });
       }
@@ -719,8 +717,6 @@ export default {
       this.orderService.generateOrderNo({}, { recordMode: this.recordMode },).then((res) => {
         if (res.code === 1) {
           this.orderNo = res.data;
-        } else {
-          Toast.failed(res.msg);
         }
       });
     },
@@ -1115,7 +1111,7 @@ export default {
       });
     },
     addNew() {
-      if (!this.isYJHX) {
+      if (!this.isYJHX && this.orderSource !== 'SGLD') {
         /* 添加顾客信息 */
         this.region = 'userAdd';
         this.$router.push({
