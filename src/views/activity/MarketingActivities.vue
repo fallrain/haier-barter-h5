@@ -132,6 +132,8 @@ export default {
             } else {
               this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(this.currentList);
             }
+          } else {
+            this[this.curScrollViewName].mescroll.endErr();
           }
           return sroviewObj;
         });
@@ -157,6 +159,8 @@ export default {
           } else {
             this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(result);
           }
+        } else {
+          this[this.curScrollViewName].mescroll.endErr();
         }
         return sroviewObj;
       });

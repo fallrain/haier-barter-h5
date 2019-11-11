@@ -306,6 +306,20 @@ const util = {
     });
     return change;
   },
+  downloadFile(data) {
+    /* 接受二进制文件，下载文件 */
+    // 'filename=micro_model_1568343739576.xlsx';
+    const filename = 'pic.jpg';
+    const url = window.URL.createObjectURL(new Blob([data]));
+    const link = document.createElement('a');
+    link.style.display = 'none';
+    link.href = url;
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    window.URL.revokeObjectURL(link.href); // 释放URL 对象
+    document.body.removeChild(link);
+  },
 };
 
 export default util;

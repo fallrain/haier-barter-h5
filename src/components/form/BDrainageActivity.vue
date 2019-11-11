@@ -166,7 +166,9 @@ export default {
       });
     },
     shareImg() {
-
+      return this.activityService.generateQrcode('http://baidu.com/', this.getData.id, this.getData.createdBy).then((res) => {
+        this.bUtil.downloadFile(res.data);
+      });
     }
   },
 };

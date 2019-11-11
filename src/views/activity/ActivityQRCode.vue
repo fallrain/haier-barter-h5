@@ -62,11 +62,10 @@ export default {
   },
   methods: {
     createQrcode() {
-      return this.activityService.generateQrcode('http://baidu.com/', '123456', '9999').then((res) => {
+      return this.activityService.generateQrcode('http://baidu.com/', this.activityInfo.id, this.activityInfo.createdBy).then((res) => {
         const blob = new Blob([res.data], {
           type: 'image/jpeg'
         });
-        // this.qrcodeImg = window.URL.createObjectURL(blob);
         const reader = new FileReader();
         reader.readAsDataURL(blob);
         reader.onload = (e) => {
@@ -79,22 +78,8 @@ export default {
     },
     downLoadQrcode() {
       return this.activityService.generateQrcode('http://baidu.com/', '123456', '9999').then((res) => {
-        this.downloadFile(res.data);
+        this.bUtil.downloadFile(res.data);
       });
-    },
-    downloadFile(data) {
-      /* 接受二进制文件，下载文件 */
-      // 'filename=micro_model_1568343739576.xlsx';
-      const filename = 'pic.jpg';
-      const url = window.URL.createObjectURL(new Blob([data]));
-      const link = document.createElement('a');
-      link.style.display = 'none';
-      link.href = url;
-      link.setAttribute('download', filename);
-      document.body.appendChild(link);
-      link.click();
-      window.URL.revokeObjectURL(link.href); // 释放URL 对象
-      document.body.removeChild(link);
     },
   },
 };
