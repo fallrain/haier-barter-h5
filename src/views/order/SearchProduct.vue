@@ -109,7 +109,7 @@ export default {
   },
   computed: {
     searchListShow() {
-      const arr = [];
+      let arr = [];
       if (this.searchList && this.searchList.length > 0) {
         this.searchList.forEach((item) => {
           const itemStr = `${item.productModel}${item.productBrandName}`;
@@ -117,6 +117,9 @@ export default {
             arr.push(item);
           }
         });
+        if (arr.length === 0) {
+	        arr = this.searchList;
+        }
       }
       return arr;
     }
@@ -138,7 +141,7 @@ export default {
       const searchStr = this.searchVal.toUpperCase().replace(/\//g, ' ');
       this.productService.list(searchStr, '1', '30').then((res) => {
         // ;
-        if (res.code === 1) {
+        if (res.code === 1) {debugger
           this.searchList = res.data;
           if (res.data === null) {
             Toast.failed('暂无信息，请重新搜索');
