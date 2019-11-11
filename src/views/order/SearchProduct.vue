@@ -184,6 +184,7 @@ export default {
               } else {
 	              this.searchVal = result;
 	              this.search();
+              }
             }
           },
           fail: (res) => {
