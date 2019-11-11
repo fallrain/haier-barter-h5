@@ -1,20 +1,20 @@
 <template>
   <div>
-<!--    <b-notice-bar-->
-<!--      :show.sync="noticeShow"-->
-<!--      content="温馨提示：点击下方的【扫描】，可扫产品能效贴自动带入产品型号。"-->
-<!--    >-->
-<!--    </b-notice-bar>-->
+    <b-notice-bar
+      :show.sync="noticeShow"
+      content="温馨提示：点击下方的【扫描】，可扫产品能效贴自动带入产品型号。"
+    >
+    </b-notice-bar>
     <b-search-input
       v-model="searchVal"
       @search="search"
       placeholder="点击搜索型号"
       v-on:input="inputFunction()"
     >
-<!--      <div class="searchProduct-scan-wrap" @click="scanQRCodePro()">-->
-<!--        <i class="iconfont icon-saomiao"></i>-->
-<!--        <span class="searchProduct-scan-inf">扫描</span>-->
-<!--      </div>-->
+      <div class="searchProduct-scan-wrap" @click="scanQRCodePro()">
+        <i class="iconfont icon-saomiao"></i>
+        <span class="searchProduct-scan-inf">扫描</span>
+      </div>
     </b-search-input>
     <ul
       class="searchProduct-history"
@@ -82,7 +82,7 @@ export default {
   created() {
     this.orderNo = this.$route.params.orderNo;
     this.isProductList = this.$route.params.productList;
-    this.recordMode = this.$route.params.recordMode
+    this.recordMode = this.$route.params.recordMode;
     if (localStorage.getItem('productSearchHistory')) {
       this.searchHistory = JSON.parse(localStorage.getItem('productSearchHistory'));
       if (this.searchHistory.length > 30) {
@@ -104,15 +104,15 @@ export default {
       searchHistory: [],
       orderNo: '',
       isProductList: [],
-      recordMode:''
+      recordMode: ''
     };
   },
   computed: {
     searchListShow() {
-      let arr = [];
+      const arr = [];
       if (this.searchList && this.searchList.length > 0) {
         this.searchList.forEach((item) => {
-          const itemStr = `${item.productModel}${item.productBrandName}`
+          const itemStr = `${item.productModel}${item.productBrandName}`;
           if (itemStr.indexOf(this.searchVal.toUpperCase()) > -1) {
             arr.push(item);
           }
@@ -166,7 +166,7 @@ export default {
           needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
           // scanType: ['barCode','qrCode'],//qrCode // 可以指定扫二维码还是一维码，默认二者都有
           success: (res) => {
-            alert(JSON.stringify(res))
+            alert(JSON.stringify(res));
             const result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
             if (result && typeof result === 'string') {
               if (result.includes(',')) {
@@ -179,7 +179,7 @@ export default {
           },
           fail: (res) => {
             // alert(222);
-            alert(JSON.stringify(res))
+            alert(JSON.stringify(res));
           }
         });
       });
@@ -189,7 +189,7 @@ export default {
     },
     onItemClick(item) {
       // const orderMode = JSON.parse(localStorage.getItem('userinfo')).orderMode;
-      const orderMode = this.recordMode
+      const orderMode = this.recordMode;
       if (orderMode === 'Casarte') {
         if (item.productBrandName != '卡萨帝') {
           Toast.failed('当前是卡萨帝模式，只能选择卡萨帝品牌的产品，请重新选择！');
