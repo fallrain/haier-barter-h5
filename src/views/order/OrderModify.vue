@@ -532,9 +532,11 @@ export default {
     debugger
     this.addressData = addressData;
     this.orderNo = this.$route.params.orderNo;
-    this.orderFollowId = this.$route.params.orderFollowId;
-    if (!this.orderFollowId) {
-      this.orderFollowId = localStorage.getItem('orderFollowId');
+    if(this.$route.params.orderFollowId){
+      this.orderFollowId = this.$route.params.orderFollowId;
+    }else {
+      Toast.failed('异常：待办id为空')
+      return
     }
     if (this.$route.params.freezeMsg) {
       if (this.$route.params.freezeMsg == 'Y') {
@@ -1005,9 +1007,9 @@ export default {
               } else {
                 if (this.orderNo !== '') {
                   Toast.loading('保存中...');
-                  if (!this.orderFollowId) {
-                    this.orderFollowId = localStorage.getItem('orderFollowId');
-                  }
+                  // if (!this.orderFollowId) {
+                  //   this.orderFollowId = localStorage.getItem('orderFollowId');
+                  // }
                   this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
                     .then((res) => {
                       if (res.code === 1) {
@@ -1029,9 +1031,9 @@ export default {
         } else {
           if (this.orderNo !== '') {
             Toast.loading('保存中...');
-            if (!this.orderFollowId) {
-              this.orderFollowId = localStorage.getItem('orderFollowId');
-            }
+            // if (!this.orderFollowId) {
+            //   this.orderFollowId = localStorage.getItem('orderFollowId');
+            // }
             this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
               .then((res) => {
                 if (res.code === 1) {
@@ -1156,9 +1158,9 @@ export default {
     onBasicConfirm() {
       if (this.orderNo !== '') {console.log(3)
         Toast.loading('保存中...');
-        if (!this.orderFollowId) {
-          this.orderFollowId = localStorage.getItem('orderFollowId');
-        }
+        // if (!this.orderFollowId) {
+        //   this.orderFollowId = localStorage.getItem('orderFollowId');
+        // }
         this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
           .then((res) => {
             if (res.code === 1) {

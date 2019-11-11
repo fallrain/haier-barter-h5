@@ -113,7 +113,6 @@ export default {
             bccPrice: '',
             productCode: this.data.productCode,
             productPrice: this.data.productPrice,
-            requestNoToast: true
           };
       this.orderService.checkProductPrice({}, obj).then((res) => {
         if (res.code == -1) {
