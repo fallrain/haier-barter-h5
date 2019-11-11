@@ -358,18 +358,6 @@ export default {
       productList: [],
       // 活动列表
       activityList: [
-        {
-          id: 1,
-          activityName: '6月场景套权益昆明小微',
-          inf: '满10000元送7500积分',
-          num: 33
-        },
-        {
-          id: 2,
-          activityName: '6月场景套权益昆明小微',
-          inf: '满10000元送7500积分',
-          num: 21
-        }
       ],
       // 选中的活动id
       choosedActivitys: [],
@@ -481,6 +469,7 @@ export default {
 
   },
   activated() {
+    debugger
     if (this.$route.params.customerConsigneeInfo && this.$route.params.customerConsigneeInfo.id) {
       this.orderFollowId = this.$route.params.customerConsigneeInfo.id;
       localStorage.setItem('orderFollowId', this.orderFollowId);
@@ -572,6 +561,7 @@ export default {
     }
   },
   created() {
+    debugger
     this.addressData = addressData;
     this.userParam = JSON.parse(localStorage.getItem('userinfo'));
     this.shopId = this.userParam.shopId;
@@ -713,7 +703,6 @@ export default {
       if (this.recordMode == '' || !this.recordMode) {
         this.recordMode = 'Haier';
       }
-
       this.orderService.generateOrderNo({}, { recordMode: this.recordMode },).then((res) => {
         if (res.code === 1) {
           this.orderNo = res.data;
@@ -1015,9 +1004,9 @@ export default {
             } else {
               if (this.orderNo !== '') {
                 Toast.loading('保存中...');
-                if (!this.orderFollowId) {
-                  this.orderFollowId = localStorage.getItem('orderFollowId');
-                }
+                // if (!this.orderFollowId) {
+                //   this.orderFollowId = localStorage.getItem('orderFollowId');
+                // }
                 this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
                   .then((res) => {
                     if (res.code === 1) {
@@ -1060,7 +1049,6 @@ export default {
                       name: 'Order.OrderUploadInvoice',
                       params: { orderNo: this.orderNo }
                     });
-                    // this.$destroy();
                   }
                 }
               });
@@ -1219,9 +1207,9 @@ export default {
     onBasicConfirm() {
       if (this.orderNo !== '') {
         Toast.loading('保存中...');
-        if (!this.orderFollowId) {
-          this.orderFollowId = localStorage.getItem('orderFollowId');
-        }
+        // if (!this.orderFollowId) {
+        //   this.orderFollowId = localStorage.getItem('orderFollowId');
+        // }
         this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
           .then((res) => {
             if (res.code === 1) {
