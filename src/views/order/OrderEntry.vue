@@ -480,7 +480,8 @@ export default {
   mounted() {
 
   },
-  activated() {debugger
+  activated() {
+    debugger;
     if (this.$route.params.customerConsigneeInfo && this.$route.params.customerConsigneeInfo.id) {
       this.orderFollowId = this.$route.params.customerConsigneeInfo.id;
       localStorage.setItem('orderFollowId', this.orderFollowId);
@@ -491,16 +492,16 @@ export default {
       console.log(obj);
       if (obj.tel) {
         this.mobile = obj.tel;
-        if(this.consignee.name){
-          if(obj.region === 'edit'){
-            this.consignee.name = obj.customerInfo.consigneeUserName
-            this.consignee.phone = obj.customerInfo.consigneeUserPhone
-            this.consignee.sexCn = obj.customerInfo.sex = 1?'男士':'女士'
-            this.getAddressName(obj.customerInfo.province,obj.customerInfo.city,obj.customerInfo.district)
-            this.consignee.address.street = obj.customerInfo.address
+        if (this.consignee.name) {
+          if (obj.region === 'edit') {
+            this.consignee.name = obj.customerInfo.consigneeUserName;
+            this.consignee.phone = obj.customerInfo.consigneeUserPhone;
+            this.consignee.sexCn = obj.customerInfo.sex = 1 ? '男士' : '女士';
+            this.getAddressName(obj.customerInfo.province, obj.customerInfo.city, obj.customerInfo.district);
+            this.consignee.address.street = obj.customerInfo.address;
           }
-          this.queryCustomerAddressList()
-          return
+          this.queryCustomerAddressList();
+          return;
         }
         this.queryCustomerDefault();
       }
@@ -538,14 +539,13 @@ export default {
         const rightsPro = JSON.parse(obj.rightsJson).rightName.split(',');
         this.rightsJson = obj.rightsJson;
         this.isDetail = true;
-        if(rightsPro.length > 0 && rightsPro[0] !== ''){
+        if (rightsPro.length > 0 && rightsPro[0] !== '') {
           this.rightsList = rightsPro;
-        }
-        else {
-          this.rightsList = []
-          this.rightsJson = ''
-          this.rightName = ''
-          this.rightId = ''
+        } else {
+          this.rightsList = [];
+          this.rightsJson = '';
+          this.rightName = '';
+          this.rightId = '';
         }
       }
       // else {
@@ -588,13 +588,13 @@ export default {
     }
 
     if (this.$route.params.region === 'new') {
-      this.customerInfo = this.$route.params.customerConsigneeInfo
-      if(this.$route.params.customerConsigneeInfo.username){
-        this.haveCustomer = true
+      this.customerInfo = this.$route.params.customerConsigneeInfo;
+      if (this.$route.params.customerConsigneeInfo.username) {
+        this.haveCustomer = true;
       }
-      debugger
-      this.mobile = this.$route.params.customerConsigneeInfo.mobile
-      this.queryCustomerDefault()
+      debugger;
+      this.mobile = this.$route.params.customerConsigneeInfo.mobile;
+      this.queryCustomerDefault();
     }
     if (this.userParam.oldForNew === 1) {
       this.isYJHX = true;
@@ -666,7 +666,7 @@ export default {
       if (this.$route.params.region === 'new') {
         this.addUserShow = false;
         this.addNew(this.customerInfo);
-         // this.address(this.customerInfo);
+        // this.address(this.customerInfo);
       }
     },
     indexOf(val) {
@@ -750,9 +750,9 @@ export default {
           if (res.data !== null) {
             // if (this.haveCustomer) {
             // } else {
-            if(res.data.consigneeUserName){
+            if (res.data.consigneeUserName) {
               this.haveConsignee = true;
-            }else {
+            } else {
               this.haveConsignee = false;
             }
             this.haveCustomer = true;
@@ -771,7 +771,7 @@ export default {
             }
             this.consignee.sex = res.data.sex;
             // this.consignee.customerId = res.data.customerId;
-            this.consignee.familyId = res.data.familyId
+            this.consignee.familyId = res.data.familyId;
             this.queryCustomerAddressList();
             this.genarateOrderNum();
           } else {
@@ -808,12 +808,13 @@ export default {
             });
           });
           this.addressList = res.data;
-          this.bUtil.analyzeAddressList(this.addressList)
+          this.bUtil.analyzeAddressList(this.addressList);
         }
       });
     },
     // 暂存
-    saveTemporary(type) {debugger
+    saveTemporary(type) {
+      debugger;
       if (type === 1) {
         this.saveType = 1;
       } else {
@@ -852,7 +853,7 @@ export default {
             return;
           }
         }
-       // // 产品价格闸口判断
+        // // 产品价格闸口判断
         // let result = 0;
         // let state = false;
         // const resultMsg = [];
@@ -882,7 +883,7 @@ export default {
         //     }
         //   });
         // }
-      // } else {
+        // } else {
         this.generateSubInfo(1);
       } else {
 	      this.generateSubInfo(1);
@@ -894,14 +895,14 @@ export default {
     // },
     // 添加产品
     addProduct() {
-      if(this.productList.length === 99){
-        Toast.info('最多可以录入99件产品')
-        return
+      if (this.productList.length === 99) {
+        Toast.info('最多可以录入99件产品');
+        return;
       }
       /* 添加产品 */
       this.$router.push({
         name: 'Order.SearchProduct',
-        params:{recordMode:this.recordMode}
+        params: { recordMode: this.recordMode }
       });
     },
     generateSubInfo(type) {
@@ -946,10 +947,10 @@ export default {
         partId.push(this.multBuySponsor[0].hmcId);
         part.push(this.multBuySponsor[0].username);
       }
-      if(this.rightsJson){
-        const tempJson = JSON.parse(this.rightsJson)
-        if(tempJson.rightsUserInterestsDetailsDTO.length === 0){
-          this.rightsJson = ''
+      if (this.rightsJson) {
+        const tempJson = JSON.parse(this.rightsJson);
+        if (tempJson.rightsUserInterestsDetailsDTO.length === 0) {
+          this.rightsJson = '';
         }
       }
       subInfo.mayEditCoupleOrderId = partId.join(',');
@@ -1094,7 +1095,7 @@ export default {
       this.consignee.phone = item.consigneeUserPhone;
       this.consignee.address = item.consignee;
       this.consignee.address.street = item.address;
-      this.consignee.familyId = item.id
+      this.consignee.familyId = item.id;
       if (item.sex === 1) {
         this.consignee.sexCn = '男士';
       } else {
@@ -1112,7 +1113,7 @@ export default {
         params: {
           region: this.region,
           info: JSON.stringify(this.customerInfo),
-          businessScenarios:this.orderSource
+          businessScenarios: this.orderSource
         }
       });
     },
@@ -1125,7 +1126,7 @@ export default {
           params: {
             region: this.region,
             info: JSON.stringify(this.customerInfo),
-            businessScenarios:this.orderSource
+            businessScenarios: this.orderSource
           }
         });
       } else {
@@ -1151,7 +1152,7 @@ export default {
       // this.addressPopShow = false;
       info.username = this.customerInfo.username;
       info.mobile = this.customerInfo.mobile;
-      delete info.familyC
+      delete info.familyC;
       this.region = 'edit';
       this.$router.push({
         name: 'Order.AddAddress',
@@ -1207,16 +1208,16 @@ export default {
     },
     onDelete(index) {
       this.productList.splice(index, 1);
-      this.rightsList = []
-      this.rightsJson = ''
-      this.rightName = ''
-      this.rightId = ''
+      this.rightsList = [];
+      this.rightsJson = '';
+      this.rightName = '';
+      this.rightId = '';
     },
-    inputChange(){
-      this.rightId = ''
-      this.rightName = ''
-      this.rightsJson = ''
-      this.rightsList = []
+    inputChange() {
+      this.rightId = '';
+      this.rightName = '';
+      this.rightsJson = '';
+      this.rightsList = [];
     },
     // 模态框确认取消处理
     onBasicCancel() {
