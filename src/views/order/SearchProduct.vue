@@ -173,10 +173,10 @@ export default {
                 this.searchVal = result.split(',')[1];
 	              this.search();
               } else if (result.includes('http')) {
-	              this.basicService.scanQRcode(result).then((res) => {
-		              alert(res);
-		              if (res.code === 1) {
-			              this.searchVal = res.data;
+	              this.basicService.scanQRcode(result).then((res2) => {
+		              alert(JSON.stringify(res2));
+		              if (res2.code === 1) {
+			              this.searchVal = res2.data;
 			              alert(this.searchVal);
 			              this.search();
 		              }
