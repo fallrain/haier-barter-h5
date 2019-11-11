@@ -1115,7 +1115,7 @@ export default {
       });
     },
     addNew() {
-      if (!this.isYJHX) {
+      if (!this.isYJHX && this.orderSource !== 'SGLD') {
         /* 添加顾客信息 */
         this.region = 'userAdd';
         this.$router.push({
