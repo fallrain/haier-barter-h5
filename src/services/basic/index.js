@@ -15,6 +15,6 @@ export default {
   },
   scanQRcode(url) {
     /* 查询产品型号 */
-    return axGet(urls.userInfo, { url });
+    return axGet(urls.scanQRcode, { url });
   }
 };
