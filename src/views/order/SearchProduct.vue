@@ -171,14 +171,19 @@ export default {
             if (result && typeof result === 'string') {
               if (result.includes(',')) {
                 this.searchVal = result.split(',')[1];
-              } else if (result.includes('http')) {alert(111);
+	              this.search();
+              } else if (result.includes('http')) {
 	              this.basicService.scanQRcode(result).then((res) => {
 		              alert(res);
+		              if (res.code === 1) {
+			              this.searchVal = res.data;
+			              alert(this.searchVal);
+			              this.search();
+		              }
 	              });
               } else {
 	              this.searchVal = result;
-              }
-              this.search();
+	              this.search();
             }
           },
           fail: (res) => {
