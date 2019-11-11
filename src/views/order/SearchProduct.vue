@@ -178,7 +178,7 @@ export default {
             }
           },
           fail: (res) => {
-            // alert(222);
+            alert(222);
             alert(JSON.stringify(res));
           }
         });
