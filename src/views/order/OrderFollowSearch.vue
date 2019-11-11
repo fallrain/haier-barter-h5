@@ -377,8 +377,6 @@ export default {
             if (res.code === 1) {
               this.handEntryCon = true;
               this.handCount = res.data;
-            } else {
-              Toast.info('您已没有手动录单条数，请选择其他录单方式', 3000);
             }
           });
         }

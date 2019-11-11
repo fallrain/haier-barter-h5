@@ -13,7 +13,7 @@
           v-model="data.productPrice"
           @blur="blur"
           v-resetInput
-          v-on:input="inputFunction(val)"
+          v-on:input="inputFunction"
         ><span class="b-order-product-item-price-unit">元</span>
       </div>
 
@@ -131,9 +131,9 @@ export default {
       }
       return parseFloat(num).toFixed(decimal);
     },
-    inputFunction(val){
+    inputFunction(){
 
-      this.$emit('inputChange',val)
+      this.$emit('inputChange')
     }
   }
 };

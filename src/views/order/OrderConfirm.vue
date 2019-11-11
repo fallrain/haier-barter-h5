@@ -250,9 +250,7 @@ export default {
             name: 'Order.OrderFollowCommitResult',
             params: { orderInfo: res.data }
           });
-        } else if (res.code === -1) {
-          Toast.info(res.msg);
-        } else {}
+        }
       });
     },
     changeOrder() {
