@@ -141,7 +141,8 @@ export default {
       const searchStr = this.searchVal.toUpperCase().replace(/\//g, ' ');
       this.productService.list(searchStr, '1', '30').then((res) => {
         // ;
-        if (res.code === 1) {debugger
+        if (res.code === 1) {
+          debugger;
           this.searchList = res.data;
           if (res.data === null) {
             Toast.failed('暂无信息，请重新搜索');
@@ -199,7 +200,8 @@ export default {
       return !!array.find(v => v.productCode === obj.productCode);
     },
     onItemClick(item) {
-      // const orderMode = JSON.parse(localStorage.getItem('userinfo')).orderMode;
+	    this.currentClickItemData.productBrandCode = item.productBrandCode;
+	    this.currentClickItemData.productBrandName = item.productBrandName;
       const orderMode = this.recordMode;
       if (orderMode === 'Casarte') {
         if (item.productBrandName != '卡萨帝') {
@@ -216,8 +218,8 @@ export default {
           this.currentClickItemData.price = res.data.price;
           this.currentClickItemData.industryCode = res.data.industryCode;
           this.currentClickItemData.industryName = res.data.industryName;
-          this.currentClickItemData.productBrandCode = res.data.productBrandCode;
-          this.currentClickItemData.productBrandName = res.data.productBrandName;
+          // this.currentClickItemData.productBrandCode = res.data.productBrandCode;
+          // this.currentClickItemData.productBrandName = res.data.productBrandName;
           this.currentClickItemData.productCode = res.data.productCode;
           this.currentClickItemData.productGroup = res.data.productGroup;
           this.currentClickItemData.productGroupName = res.data.productGroupName;
@@ -230,7 +232,7 @@ export default {
   },
   beforeRouteLeave(to, from, next) {
     if (to.name === 'Order.OrderEntry' || to.name === 'Order.OrderModify' || to.name === 'Order.OrderSupplement') {
-      const obj = { product: this.currentClickItemData };
+      const obj = { product: this.currentClickItemData }; debugger;
       to.query.temp = JSON.stringify(obj);
       to.params.orderNo = this.orderNo;
       to.params.productList = this.isProductList;

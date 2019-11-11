@@ -480,7 +480,7 @@ export default {
   mounted() {
 
   },
-  activated() {
+  activated() {debugger
     if (this.$route.params.customerConsigneeInfo && this.$route.params.customerConsigneeInfo.id) {
       this.orderFollowId = this.$route.params.customerConsigneeInfo.id;
       localStorage.setItem('orderFollowId', this.orderFollowId);
