@@ -480,7 +480,7 @@ export default {
   mounted() {
 
   },
-  activated() {
+  activated() {debugger
     if (this.$route.params.customerConsigneeInfo && this.$route.params.customerConsigneeInfo.id) {
       this.orderFollowId = this.$route.params.customerConsigneeInfo.id;
       localStorage.setItem('orderFollowId', this.orderFollowId);
@@ -813,7 +813,7 @@ export default {
       });
     },
     // 暂存
-    saveTemporary(type) {
+    saveTemporary(type) {debugger
       if (type === 1) {
         this.saveType = 1;
       } else {
@@ -884,6 +884,8 @@ export default {
         // }
       // } else {
         this.generateSubInfo(1);
+      } else {
+	      this.generateSubInfo(1);
       }
     },
     // 暂存
