@@ -171,8 +171,12 @@ export default {
             if (result && typeof result === 'string') {
               if (result.includes(',')) {
                 this.searchVal = result.split(',')[1];
+              } else if (result.includes('http')) {alert(111);
+	              this.basicService.scanQRcode(result).then((res) => {
+		              alert(res);
+	              });
               } else {
-                this.searchVal = result;
+	              this.searchVal = result;
               }
               this.search();
             }
