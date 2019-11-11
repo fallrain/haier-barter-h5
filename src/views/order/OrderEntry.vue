@@ -882,7 +882,7 @@ export default {
         //     }
         //   });
         // }
-      } else {
+      // } else {
         this.generateSubInfo(1);
       }
     },
