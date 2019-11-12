@@ -1008,6 +1008,7 @@ export default {
           this.rightsService.queryOrderOptionalRights(this.subInfo, {
             pageNum: 0,
             pageSize: 10,
+	          requestNoToast: true
           }).then((res) => {
             if (res.code != -1 && res.data.result.length > 0) {
               this.rightsName = res.data.result[0].rightsName;
