@@ -959,6 +959,7 @@ export default {
       subInfo.userName = this.customerInfo.username;
       subInfo.userSex = this.consignee.sex;
       subInfo.consigneeName = this.consignee.name;
+      debugger
       subInfo.consigneePhone = this.consignee.phone;
       subInfo.consigneeId = this.consignee.familyId;
       subInfo.microCode = this.customerInfo.microCode;
@@ -973,7 +974,7 @@ export default {
       subInfo.dispatchCity = this.consignee.address.cityName;
       subInfo.dispatchAreaId = this.customerInfo.district;
       subInfo.dispatchArea = this.consignee.address.districtName;
-      subInfo.dispatchAdd = this.customerInfo.address;
+      subInfo.dispatchAdd = this.consignee.address.street;
       subInfo.buyTime = this.buyDate;
       const dt = this.deliveryTime.substring(0, 16);
       subInfo.deliveryTime = dt;

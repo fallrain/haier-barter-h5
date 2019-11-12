@@ -597,6 +597,9 @@ export default {
         if (response.code === 1) {
           const resData = response.data;
           this.shopName = resData.storeName;
+          this.rightId = resData.rightId
+          this.rightsJson = resData.rightsJson
+          this.rightName = resData.rightName
           this.consignee.name = resData.consigneeName;
           this.customerInfo.username = resData.userName;
           this.customerInfo.customerId = resData.userId;
@@ -891,6 +894,7 @@ export default {
         part.push(this.multBuySponsor[0].username);
       }
       if (this.rightsJson) {
+        debugger
         const tempJson = JSON.parse(this.rightsJson);
         if (tempJson.rightsUserInterestsDetailsDTO.length === 0) {
           this.rightsJson = '';
@@ -1011,6 +1015,7 @@ export default {
                           this.$router.go(-1);
                         }
                         if (this.saveType === 0) {
+                          localStorage.setItem('orderFollowId',this.orderFollowId)
                           this.$router.push({
                             name: 'Order.OrderUploadInvoice',
                             params: { orderNo: this.orderNo }
