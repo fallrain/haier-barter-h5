@@ -385,6 +385,7 @@ export default {
             this.defaultA.push(res.data.province);
             this.defaultA.push(res.data.city);
             this.defaultA.push(res.data.district);
+            this.$router.go(-1)
           } else {
             this.searchResultShow = true;
           }
