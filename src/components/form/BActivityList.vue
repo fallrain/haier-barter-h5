@@ -1,22 +1,22 @@
 <template>
   <div>
-    <ol class="bCheckbox-list">
+    <ol class="bCheckbox-list" v-for="(item,index) in data" :key="index">
       <li
         class="bCheckbox-item"
-        v-for="(item,index) in data"
-        :key="index"
       >
         <div class="bCheckbox-item-detail-cnt">
-          <p class="bActivityList-activity-name">{{item}}</p>
+          <p class="bActivityList-activity-name">{{item}}
+            <span class="state-class">已领取</span>
+            <i class="iconfont icon-xialaactive-copy gift-line" v-show="item.giftShow"></i>
+            <i class="iconfont icon-jiantou9 gift-line" v-show="!item.giftShow"></i>
+          </p>
         </div>
-        <!--<div-->
-          <!--class="bActivityList-activity-num-par"-->
-        <!--&gt;-->
-          <!--数量：<span class="bActivityList-activity-num">1</span>-->
-        <!--</div>-->
       </li>
-      <div>
-
+      <!--v-show="item.giftShow"-->
+      <div  class="gift-class">
+        <p>购机权益：</p>
+        <p>礼品有效兑换期：</p>
+        <p>礼品类型：</p>
       </div>
     </ol>
   </div>
@@ -74,7 +74,7 @@ export default {
     line-height: 1;
     color: #333;
     margin-bottom: 10px;
-    width: 500px;
+    /*width: 700px;*/
     p{
       line-height: 80px;
     }
@@ -88,6 +88,7 @@ export default {
     align-items: center;
     height: 80px;
     border-bottom: 1px dashed #D0D0D0;
+    background-color: white;
   }
 
 
@@ -103,5 +104,23 @@ export default {
     padding-left: 25px;
     padding-top: 10px;
 
+  }
+  .gift-class{
+    background-color: #F8F8F8;
+    height: 170px;
+    color: #999999;
+    font-size: 26px;
+    padding: 24px;
+  }
+  .gift-line{
+    position: absolute;
+    right: 40px;
+  }
+  .state-class{
+    padding: 8px;
+    background-color: #27AA91;
+    color: white;
+    font-size: 24px;
+    border-radius: 4px;
   }
 </style>

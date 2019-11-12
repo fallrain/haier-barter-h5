@@ -138,7 +138,7 @@
     </template>
   </b-item>
   <b-item
-    class="mt16"
+    class="mt16 select-activity"
     title="选择可用的购机权益活动"
     :arrow="true"
     v-show="orderSource !=='SGLD'"
@@ -1366,4 +1366,7 @@ export default {
 .orderEntry-multBuySponsor-tips {
   color: #F4A623;
 }
+  .select-activity{
+    border-bottom: 0.5px solid #F8F8F8;
+  }
 </style>
