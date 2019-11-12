@@ -521,7 +521,8 @@ export default {
                 orderNo: info.orderNo,
                 orderFollowId: info.id,
                 businessScenarios: info.businessScenarios,
-                recordMode: info.recordMode
+                recordMode: info.recordMode,
+                region:'continue',
               }
             });
           }
