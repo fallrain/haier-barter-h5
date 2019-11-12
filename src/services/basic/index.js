@@ -12,5 +12,9 @@ export default {
   userInfo() {
     /* 微信权限 */
     return axGet(urls.userInfo);
+  },
+  scanQRcode(url) {
+    /* 查询产品型号 */
+    return axGet(urls.scanQRcode, { url });
   }
 };

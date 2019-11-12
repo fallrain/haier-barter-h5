@@ -417,9 +417,9 @@ export default {
       sourceSn: '',
       queryInstall: false,
       isInstall: false,
-      saveType:1,
-      isProduct:false,
-      isProductList :[]
+      saveType: 1,
+      isProduct: false,
+      isProductList: []
     };
   },
   computed: {},
@@ -438,7 +438,7 @@ export default {
     },
     multBuyParticipantCheckIds(val) {
       console.log(val);
-      let arr = [];
+      const arr = [];
       for (let i = 0; i < this.multBuyParticipant.length; i++) {
         for (let j = 0; j < val.length; j++) {
           if (val[j] == this.multBuyParticipant[i].hmcId && val[j] !== this.multBuySponsorCheckedIds[0]) {
@@ -446,13 +446,12 @@ export default {
           }
         }
       }
-      if (arr.length > 0){
+      if (arr.length > 0) {
         this.multBuyExceptHmc = arr.join('、');
       }
       if (val.length == 0) {
         this.multBuyExceptHmc = '';
       }
-
     }
   },
   mounted() {
@@ -467,12 +466,12 @@ export default {
       let ID = '';
       const obj = JSON.parse(this.$route.query.temp);
       if (obj.tel) {
-        if(obj.region === 'edit'){
-          this.consignee.name = obj.customerInfo.consigneeUserName
-          this.consignee.phone = obj.customerInfo.consigneeUserPhone
-          this.consignee.sexCn = obj.customerInfo.sex = 1?'男士':'女士'
-          this.getAddressName(obj.customerInfo.province,obj.customerInfo.city,obj.customerInfo.district)
-          this.consignee.address.street = obj.customerInfo.address
+        if (obj.region === 'edit') {
+          this.consignee.name = obj.customerInfo.consigneeUserName;
+          this.consignee.phone = obj.customerInfo.consigneeUserPhone;
+          this.consignee.sexCn = obj.customerInfo.sex = 1 ? '男士' : '女士';
+          this.getAddressName(obj.customerInfo.province, obj.customerInfo.city, obj.customerInfo.district);
+          this.consignee.address.street = obj.customerInfo.address;
         }
         this.queryCustomerAddressList();
       }
@@ -483,14 +482,13 @@ export default {
         const rightsPro = JSON.parse(obj.rightsJson).rightName.split(',');
         this.rightsJson = obj.rightsJson;
         this.isDetail = true;
-        if(rightsPro.length > 0 && rightsPro[0] !== ''){
+        if (rightsPro.length > 0 && rightsPro[0] !== '') {
           this.rightsList = rightsPro;
-        }
-        else {
-          this.rightsList = []
-          this.rightsJson = ''
-          this.rightName = ''
-          this.rightId = ''
+        } else {
+          this.rightsList = [];
+          this.rightsJson = '';
+          this.rightName = '';
+          this.rightId = '';
         }
       }
       // else {
@@ -503,8 +501,8 @@ export default {
         if (!obj.product.productGroupName) {
           return;
         }
-        this.isProduct = true
-        this.isProductList = this.$route.params.productList
+        this.isProduct = true;
+        this.isProductList = this.$route.params.productList;
         this.orderService.generateOrderDetailId().then((res) => {
           if (res.code === 1) {
             ID = res.data;
@@ -529,31 +527,30 @@ export default {
     }
   },
   created() {
+    debugger;
     this.addressData = addressData;
     this.orderNo = this.$route.params.orderNo;
-    this.orderFollowId = this.$route.params.orderFollowId;
-    if (!this.orderFollowId) {
+    if (this.$route.params.orderFollowId) {
+      debugger
+      this.orderFollowId = this.$route.params.orderFollowId;
+    } else if (!this.$route.params.orderFollowId && this.$route.params.region === 'continue') {
+      Toast.failed('异常：待办id为空');
+      return
+    } else {
       this.orderFollowId = localStorage.getItem('orderFollowId');
+      debugger
     }
-    if (this.$route.params.freezeMsg) {
-      if (this.$route.params.freezeMsg == 'Y') {
-        this.handRegion = true;
-      }
-    }
+    // if (this.$route.params.freezeMsg) {
+    //   if (this.$route.params.freezeMsg == 'Y') {
+    //     this.handRegion = true;
+    //   }
+    // }
     this.userParam = JSON.parse(localStorage.getItem('userinfo'));
     if (this.orderNo) {
       this.getData();
     }
   },
   methods: {
-  //  haveConsignee() {
-  //   /* 存在收货人信息 */
-  //   return this.consignee && JSON.stringify(this.consignee) !== '{}';
-  // },
-  // chooseGift() {
-  //   /* 选择礼品 */
-  //   this.chooseGiftPopShow = true;
-  // },
     radioChange(val) {
       this.orderType = val;
     },
@@ -572,8 +569,7 @@ export default {
           storeId: this.userParam.shopId,
           productCode: pro.productCode,
           productBrand: pro.productBrand,
-          productCategoryCode: pro.productCategoryCode
-        }
+          productCategoryCode: pro.productCategoryCode }
       ];
       this.orderService.isReportInstallNew({
         microCode: this.microCode,
@@ -587,11 +583,11 @@ export default {
           pro.isInstall = false;
         }
         console.log(this.productList);
-        if (typeof(index) != 'undefined') {
+        if (typeof (index) !== 'undefined') {
           this.productList[index].isInstall = pro.isInstall;
         } else {
           this.productList.push(pro);
-          this.isProduct = true
+          this.isProduct = true;
         }
         console.log(this.productList);
       });
@@ -605,7 +601,7 @@ export default {
           this.customerInfo.username = resData.userName;
           this.customerInfo.customerId = resData.userId;
           this.customerInfo.mobile = resData.userPhone;
-          this.customerInfo.familyId = resData.id
+          this.customerInfo.familyId = resData.id;
           this.mobile = resData.userPhone;
           this.phone = resData.userPhone;
           this.hmcId = resData.hmcId;
@@ -640,18 +636,18 @@ export default {
               hmcId: resData.coupleSponsor,
               username: resData.coupleSponsorName
             }
-          ] // 套购发起人赋值
+          ]; // 套购发起人赋值
           this.multBuyParticipant = resData.mayEditCoupleOrderName.split(','); // 套购参与人赋值
           this.multBuyParticipantCheckIds = resData.mayEditCoupleOrderId.split(','); // 套购参与人赋值
-          console.log(this.multBuyParticipant)
-          console.log(this.multBuyParticipantCheckIds)
+          console.log(this.multBuyParticipant);
+          console.log(this.multBuyParticipantCheckIds);
           // 套购参与人中去除直销员信息
           const hmc_index = resData.mayEditCoupleOrderId.split(',').indexOf(resData.coupleSponsor);
-          let arr = resData.mayEditCoupleOrderName.split(',');
+          const arr = resData.mayEditCoupleOrderName.split(',');
           arr.splice(hmc_index, 1);
           this.multBuyExceptHmc = arr.join('、');
           this.multBuyExceptHmcId = resData.mayEditCoupleOrderId.split(',').splice(hmc_index, 1);
-          console.log(this.multBuyExceptHmc)
+          console.log(this.multBuyExceptHmc);
           if (!this.isDetail) {
             if (resData.rightName) {
               this.rightsList = resData.rightName.split(',');
@@ -668,17 +664,17 @@ export default {
                 }
                 if (item.productBrand == '000') {
                   item.productBrandCN = '海尔';
-                } else if(item.productBrand == '051'){
+                } else if (item.productBrand == '051') {
                   item.productBrandCN = '卡萨帝';
-                }else if(item.productBrand == '089'){
+                } else if (item.productBrand == '089') {
                   item.productBrandCN = '统帅';
-                }else {
-                  item.productBrandCN = '其他'
+                } else {
+                  item.productBrandCN = '其他';
                 }
               });
             }
           } else {
-            this.productList = this.isProductList.concat(this.productList)
+            this.productList = this.isProductList.concat(this.productList);
           }
           this.queryCustomerDefault();
         }
@@ -714,7 +710,7 @@ export default {
             // this.consignee.address.street = res.data.address;
             // this.consignee.phone = res.data.consigneeUserPhone;
             // this.consignee.name = res.data.consigneeUserName;
-            this.consignee.familyId = res.data.familyId
+            this.consignee.familyId = res.data.familyId;
             if (res.data.sex === 1) {
               this.consignee.sexCn = '男士';
             } else {
@@ -771,16 +767,16 @@ export default {
               }
             });
           });
-          this.bUtil.analyzeAddressList(this.addressList)
+          this.bUtil.analyzeAddressList(this.addressList);
         }
       });
     },
     // 暂存
     saveTemporary(type) {
-      if(type === 1){
-        this.saveType = 1
-      }else {
-        this.saveType = 0
+      if (type === 1) {
+        this.saveType = 1;
+      } else {
+        this.saveType = 0;
       }
       if (!this.customerInfo.mobile) {
         Toast.failed('请添加顾客信息');
@@ -820,21 +816,21 @@ export default {
     },
     // 添加产品
     addProduct() {
-      if(this.productList.length === 99){
-        Toast.info('最多可以录入99件产品')
-        return
+      if (this.productList.length === 99) {
+        Toast.info('最多可以录入99件产品');
+        return;
       }
-    /* 添加产品 */
+      /* 添加产品 */
       this.$router.push({
         name: 'Order.SearchProduct',
-        params:{orderNo:this.orderNo,productList:this.productList,recordMode:this.recordMode}
+        params: { orderNo: this.orderNo, productList: this.productList, recordMode: this.recordMode }
       });
     },
-    inputChange(){
-      this.rightId = ''
-      this.rightName = ''
-      this.rightsJson = ''
-      this.rightsList = []
+    inputChange() {
+      this.rightId = '';
+      this.rightName = '';
+      this.rightsJson = '';
+      this.rightsList = [];
     },
     selectActivity() {
       if (this.productList.length === 0) {
@@ -852,7 +848,7 @@ export default {
       this.generateSubInfo(2);
     },
     generateSubInfo(type) {
-      if (!this.bUtil.isReportInstallFit(this.productList,this.deliveryTime) && this.saveType == 0) {
+      if (!this.bUtil.isReportInstallFit(this.productList, this.deliveryTime) && this.saveType == 0) {
         return;
       }
       const subInfo = {};
@@ -894,16 +890,17 @@ export default {
         partId.push(this.multBuySponsor[0].hmcId);
         part.push(this.multBuySponsor[0].username);
       }
-      if(this.rightsJson){
-        const tempJson = JSON.parse(this.rightsJson)
-        if(tempJson.rightsUserInterestsDetailsDTO.length === 0){
-          this.rightsJson = ''
+      if (this.rightsJson) {
+        const tempJson = JSON.parse(this.rightsJson);
+        if (tempJson.rightsUserInterestsDetailsDTO.length === 0) {
+          this.rightsJson = '';
         }
       }
       // // 产品价格闸口判断
       // let result = 0;
       // let state = false;
       // const resultMsg = [];
+      // debugger
       // for (let i = 0; i < this.productList.length; i++) {
       //   const obj = {
       //     bccPrice: '',
@@ -930,6 +927,7 @@ export default {
       //     }
       //   });
       // }
+      debugger;
       subInfo.mayEditCoupleOrderId = partId.join(',');
       subInfo.mayEditCoupleOrderName = part.join(',');
       subInfo.orderNo = this.orderNo;
@@ -983,7 +981,7 @@ export default {
         // });
         this.$router.push({
           name: 'Order.OrderRights',
-          params: { orderInfo: info}
+          params: { orderInfo: info }
         });
         // this.$router.push({
         //   name: 'Order.ResidueGift',
@@ -1002,9 +1000,9 @@ export default {
               } else {
                 if (this.orderNo !== '') {
                   Toast.loading('保存中...');
-                  if (!this.orderFollowId) {
-                    this.orderFollowId = localStorage.getItem('orderFollowId');
-                  }
+                  // if (!this.orderFollowId) {
+                  //   this.orderFollowId = localStorage.getItem('orderFollowId');
+                  // }
                   this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
                     .then((res) => {
                       if (res.code === 1) {
@@ -1026,9 +1024,9 @@ export default {
         } else {
           if (this.orderNo !== '') {
             Toast.loading('保存中...');
-            if (!this.orderFollowId) {
-              this.orderFollowId = localStorage.getItem('orderFollowId');
-            }
+            // if (!this.orderFollowId) {
+            //   this.orderFollowId = localStorage.getItem('orderFollowId');
+            // }
             this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
               .then((res) => {
                 if (res.code === 1) {
@@ -1059,7 +1057,7 @@ export default {
       this.consignee.customerId = item.customerId;
       this.consignee.name = item.consigneeUserName;
       this.consignee.phone = item.consigneeUserPhone;
-      this.consignee.familyId = item.id
+      this.consignee.familyId = item.id;
       this.consignee.sex = item.sex;
       if (item.sex == 1) {
         this.consignee.sexCn = '男士';
@@ -1073,13 +1071,15 @@ export default {
       this.region = 'add';
       this.$router.push({
         name: 'Order.AddAddress',
-        params: { region: this.region, info: JSON.stringify(this.customerInfo),businessScenarios:this.orderSource }
+        params: { region: this.region, info: JSON.stringify(this.customerInfo), businessScenarios: this.orderSource }
       });
     },
-    changeAddress(item) {console.log(this.addressPopShow)
+    changeAddress(item) {
+      console.log(this.addressPopShow);
+      debugger;
       item.username = this.customerInfo.username;
       item.mobile = this.customerInfo.mobile;
-      item.familyId = this.customerInfo.familyId
+      item.familyId = this.customerInfo.familyId;
       this.region = 'edit';
       if (this.addressList.length < 1) {
         this.$router.push({
@@ -1091,11 +1091,11 @@ export default {
       }
     },
     editAddress(info) {
-      console.log(this.addressPopShow)
+      console.log(this.addressPopShow);
       delete info.familyC;
-      info.username = this.customerInfo.username
-      info.mobile = this.customerInfo.mobile
-      delete info.familyC
+      info.username = this.customerInfo.username;
+      info.mobile = this.customerInfo.mobile;
+      delete info.familyC;
       this.region = 'edit';
       this.$router.push({
         name: 'Order.AddAddress',
@@ -1132,7 +1132,7 @@ export default {
     },
     next() {
     /* 下一步 */
-      this.saveType = 0
+      this.saveType = 0;
       this.saveTemporary(2);
     },
     saveOrder() {
@@ -1140,21 +1140,22 @@ export default {
     },
     onDelete(index) {
       this.productList.splice(index, 1);
-      this.rightsList = []
-      this.rightsJson = ''
-      this.rightName = ''
-      this.rightId = ''
+      this.rightsList = [];
+      this.rightsJson = '';
+      this.rightName = '';
+      this.rightId = '';
     },
     // 模态框确认取消处理
     onBasicCancel() {
       this.basicDialog.open = false;
     },
     onBasicConfirm() {
-      if (this.orderNo !== '') {console.log(3)
+      if (this.orderNo !== '') {
+        console.log(3);
         Toast.loading('保存中...');
-        if (!this.orderFollowId) {
-          this.orderFollowId = localStorage.getItem('orderFollowId');
-        }
+        // if (!this.orderFollowId) {
+        //   this.orderFollowId = localStorage.getItem('orderFollowId');
+        // }
         this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
           .then((res) => {
             if (res.code === 1) {

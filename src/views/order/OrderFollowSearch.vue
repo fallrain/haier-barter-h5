@@ -519,7 +519,8 @@ export default {
                 orderNo: info.orderNo,
                 orderFollowId: info.id,
                 businessScenarios: info.businessScenarios,
-                recordMode: info.recordMode
+                recordMode: info.recordMode,
+                region:'continue',
               }
             });
           }
@@ -542,7 +543,7 @@ export default {
           if (res.code != -1) {
             const freezeMsg = res.data;
             // 生成一条新的待办
-            this.orderService.createNewOrder({}, { orderNo: info.orderNo }).then((res) => {
+            this.orderService.createNewOrder({}, { orderFollowId: info.id }).then((res) => {
               if (res.code === 1) {
                 const orderFollowId = res.data.id;
                 this.$router.push({

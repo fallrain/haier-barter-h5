@@ -273,10 +273,12 @@ export default {
         this.customerInfo.username = JSON.parse(this.$route.params.info).username;
         this.customerInfo.userId = JSON.parse(this.$route.params.info).userId;
         this.customerInfo.mobile = JSON.parse(this.$route.params.info).mobile;
+        if (JSON.parse(this.$route.params.info).customerId) {
+          this.customerInfo.customerId = JSON.parse(this.$route.params.info).customerId;
+        }
       }
       else {
         // this.confirmShow = false;
-
         this.searchEnd = true;
         if (this.region === 'add' && !JSON.parse(this.$route.params.info).address) {
           this.customerInfo.username = JSON.parse(this.$route.params.info).username;
