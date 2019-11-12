@@ -531,12 +531,14 @@ export default {
     this.addressData = addressData;
     this.orderNo = this.$route.params.orderNo;
     if (this.$route.params.orderFollowId) {
+      debugger
       this.orderFollowId = this.$route.params.orderFollowId;
     } else if (!this.$route.params.orderFollowId && this.$route.params.region === 'continue') {
       Toast.failed('异常：待办id为空');
       return
     } else {
-      this.orderFollowId = localStorage.getItem('orderfollowId');
+      this.orderFollowId = localStorage.getItem('orderFollowId');
+      debugger
     }
     // if (this.$route.params.freezeMsg) {
     //   if (this.$route.params.freezeMsg == 'Y') {

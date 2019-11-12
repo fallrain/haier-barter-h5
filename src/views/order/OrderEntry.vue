@@ -1045,8 +1045,8 @@ export default {
             // if (!this.orderFollowId) {
             //   this.orderFollowId = localStorage.getItem('orderFollowId');
             // }
-            this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
-              .then((res) => {
+            if(this.handRegion){
+              this.orderService.createOrderForSGLD(this.subInfo,{orderFollowId:''}).then(res => {
                 if (res.code === 1) {
                   if (this.saveType === 1) {
                     Toast.succeed('订单暂存成功', 1000);
@@ -1056,6 +1056,8 @@ export default {
                     }, 1000);
                   }
                   if (this.saveType === 0) {
+                    localStorage.setItem('orderFollowId',res.data)
+                    debugger
                     this.$router.push({
                       name: 'Order.OrderUploadInvoice',
                       params: { orderNo: this.orderNo }
@@ -1063,7 +1065,30 @@ export default {
                     // this.$destroy();
                   }
                 }
-              });
+
+              })
+            }else {
+              this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
+                .then((res) => {
+                  if (res.code === 1) {
+                    if (this.saveType === 1) {
+                      Toast.succeed('订单暂存成功', 1000);
+                      localStorage.setItem('confirm', 'caogao');
+                      setTimeout(() => {
+                        this.$router.go(-1);
+                      }, 1000);
+                    }
+                    if (this.saveType === 0) {
+                      this.$router.push({
+                        name: 'Order.OrderUploadInvoice',
+                        params: { orderNo: this.orderNo }
+                      });
+                      // this.$destroy();
+                    }
+                  }
+                });
+            }
+
           }
         }
       }
@@ -1114,6 +1139,7 @@ export default {
       if (!this.isYJHX && this.orderSource !== 'SGLD') {
         /* 添加顾客信息 */
         this.region = 'userAdd';
+        debugger
         this.$router.push({
           name: 'Order.AddAddress',
           params: {
@@ -1309,7 +1335,7 @@ export default {
   .orderEntry-header-cus {
     display: flex;
     align-items: center;
-
+    font-size: 28px;
     width: 100%;
     height: 80px;
     background: #fff;
