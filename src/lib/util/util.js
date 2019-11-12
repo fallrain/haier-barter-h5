@@ -153,8 +153,8 @@ const util = {
 
     // 判断是不是ios端
     /* function isOS() {
-      return navigator.userAgent.match(/ipad|iphone/i);
-    } */
+        return navigator.userAgent.match(/ipad|iphone/i);
+      } */
 
     // 创建文本元素
     function createTextArea(text) {
@@ -169,18 +169,18 @@ const util = {
       // let selection;
 
       /* if (!isOS()) {
-         range = document.createRange();
-        range.selectNodeContents(textArea);
-        selection = window.getSelection();
-        selection.removeAllRanges();
-        selection.addRange(range);
-        textArea.setSelectionRange(0, 999999);
-        textArea.select();
-        document.body.removeChild(textArea);
-      } else {
-        textArea.select();
-        textArea.setSelectionRange(0, textArea.value.length);
-      } */
+           range = document.createRange();
+          range.selectNodeContents(textArea);
+          selection = window.getSelection();
+          selection.removeAllRanges();
+          selection.addRange(range);
+          textArea.setSelectionRange(0, 999999);
+          textArea.select();
+          document.body.removeChild(textArea);
+        } else {
+          textArea.select();
+          textArea.setSelectionRange(0, textArea.value.length);
+        } */
       textArea.focus();
       textArea.select();
       textArea.setSelectionRange(0, textArea.value.length);
@@ -306,24 +306,74 @@ const util = {
     });
     return change;
   },
-  analyzeAddressList(list){
-    debugger
-    list.forEach(add => {
-      if(add.familyItemCode === '4'){
-        add.familyC = '自己家'
-      }else if(add.familyItemCode === '5'){
-        add.familyC = '父母家'
-      }else if(add.familyItemCode === '6'){
-        add.familyC = '朋友家'
-      }else if(add.familyItemCode === '7'){
-        add.familyC = '办公室'
-      }else if(add.familyItemCode === '8'){
-        add.familyC = '其他'
-      }else {
-        add.familyC = '其他'
+  analyzeAddressList(list) {
+    list.forEach((add) => {
+      if (add.familyItemCode === '4') {
+        add.familyC = '自己家';
+      } else if (add.familyItemCode === '5') {
+        add.familyC = '父母家';
+      } else if (add.familyItemCode === '6') {
+        add.familyC = '朋友家';
+      } else if (add.familyItemCode === '7') {
+        add.familyC = '办公室';
+      } else if (add.familyItemCode === '8') {
+        add.familyC = '其他';
+      } else {
+        add.familyC = '其他';
       }
-    })
+    });
   },
+  checkOverflowScreen({
+    dom,
+    btmDom
+  }) {
+    /* 检查是否溢出屏幕 */
+    /*
+    * dom:检查的dom
+    * isDomShow：底部的dom
+    * */
+    const screenHeight = document.documentElement.offsetHeight;
+    let domHeight = dom.offsetHeight;
+    let {
+      top: domY
+    } = dom.getBoundingClientRect();
+    // 隐藏元素先显示再隐藏
+    if (domHeight === 0) {
+      const {
+        top: domTop,
+        left: domLeft,
+        display: domDisplay
+      } = dom.style;
+      dom.style.position = 'absolute';
+      dom.style.left = '-9999px';
+      dom.style.display = 'block';
+      domHeight = dom.offsetHeight;
+      domY = dom.getBoundingClientRect().top;
+      // 还原之前的位置
+      if (domTop) {
+        dom.style.position = domTop;
+      } else {
+        dom.style.position = null;
+      }
+      if (domLeft) {
+        dom.style.left = domLeft;
+      } else {
+        dom.style.left = null;
+      }
+      if (domDisplay) {
+        dom.style.display = domDisplay;
+      } else {
+        dom.style.display = null;
+      }
+    }
+    let fixHeight = 0;
+    // 底部存在dom（底栏），扣除高度
+    if (btmDom) {
+      fixHeight += btmDom.offsetHeight;
+    }
+
+    return !!(domY + domHeight > screenHeight - fixHeight);
+  }
 };
 
 export default util;

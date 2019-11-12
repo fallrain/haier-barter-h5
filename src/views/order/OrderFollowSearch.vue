@@ -123,7 +123,7 @@
         @maybeBuyer="maybeBuyer"
       ></b-order-follow-item>
     </div>
-    <div class="md-example-child md-example-child-tabs md-example-child-tab-bar-4">
+    <div class="js-md-tab-bar md-example-child md-example-child-tabs md-example-child-tab-bar-4">
       <md-tab-bar
         v-model="curTab"
         :items="items"
@@ -408,7 +408,6 @@ export default {
       });
     },
     againEntry(item) {
-      debugger
       this.$router.push({
         name: 'Order.OrderEntry',
         params: {
@@ -472,7 +471,6 @@ export default {
       });
     },
     buttonClicked(val) {
-      // debugger
       // this.updateList = true;
       if (val.length === 0) {
         this.businessType = '';
@@ -572,7 +570,6 @@ export default {
     },
 
     searchData(page) {
-      debugger
       if(this.curTab === 3){
         this.sortType = 2
       }

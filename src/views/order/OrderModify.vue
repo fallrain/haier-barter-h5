@@ -529,7 +529,6 @@ export default {
     }
   },
   created() {
-    debugger
     this.addressData = addressData;
     this.orderNo = this.$route.params.orderNo;
     this.orderFollowId = this.$route.params.orderFollowId;
@@ -905,7 +904,6 @@ export default {
       // let result = 0;
       // let state = false;
       // const resultMsg = [];
-      // debugger
       // for (let i = 0; i < this.productList.length; i++) {
       //   const obj = {
       //     bccPrice: '',
@@ -932,7 +930,6 @@ export default {
       //     }
       //   });
       // }
-      debugger
       subInfo.mayEditCoupleOrderId = partId.join(',');
       subInfo.mayEditCoupleOrderName = part.join(',');
       subInfo.orderNo = this.orderNo;
@@ -1080,7 +1077,6 @@ export default {
       });
     },
     changeAddress(item) {console.log(this.addressPopShow)
-      debugger
       item.username = this.customerInfo.username;
       item.mobile = this.customerInfo.mobile;
       item.familyId = this.customerInfo.familyId

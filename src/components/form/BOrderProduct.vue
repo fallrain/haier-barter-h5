@@ -89,7 +89,6 @@ export default {
     // const d = dd.getDate() < 10 ? `0${dd.getDate()}` : dd.getDate();// 获取当前几号，不足10补0
     // const h = dd.getHours() + 1;
     // this.currentDate = `${y}-${m}-${d} ${h}:00`
-    // debugger
     // this.currentDate = Date.parse(this.currentDate)
     // this.currentDate = new Date(this.currentDate)
     // if(h >=14){

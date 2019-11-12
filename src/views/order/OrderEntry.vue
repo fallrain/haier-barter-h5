@@ -590,7 +590,6 @@ export default {
       if(this.$route.params.customerConsigneeInfo.username){
         this.haveCustomer = true
       }
-      debugger
       this.mobile = this.$route.params.customerConsigneeInfo.mobile
       this.queryCustomerDefault()
     }
@@ -918,7 +917,6 @@ export default {
         subInfo.coupleSponsor = '';
         subInfo.mayEditCoupleOrderId = '';
       }
-      debugger;
       const part = [];
       const partId = this.multBuyParticipantCheckIds;
       if (partId.length) {
@@ -1191,7 +1189,7 @@ export default {
     // consporConfirm() {
     //   // this.saveTemporary(1);
     // },
-    next() {debugger
+    next() {
       /* 下一步 */
       this.saveType = 0;
       this.saveTemporary(2);

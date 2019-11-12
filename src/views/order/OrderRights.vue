@@ -160,12 +160,10 @@ export default {
     current(val) {
 
       if (val === 0) {
-        debugger
         if(this.shareRightsList.length === 0){
           this.getData(1);
         }
       } else if(val === 2){
-        debugger
         if(this.mutexRightsList.length === 0){
           this.getData(2);
         }
@@ -1023,10 +1021,8 @@ export default {
       });
       if (type === 1) {
         this.shareRightsList = curlist;
-        debugger
       } else {
         this.mutexRightsList = curlist;
-        debugger
       }
     }
   },
