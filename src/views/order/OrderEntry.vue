@@ -509,6 +509,10 @@ export default {
         if (!obj.product.productBrandName) {
           return;
         }
+        this.rightsList = [];
+        this.rightsJson = '';
+        this.rightName = '';
+        this.rightId = '';
         this.orderService.generateOrderDetailId().then((res) => {
           if (res.code === 1) {
             ID = res.data;
@@ -892,6 +896,7 @@ export default {
         Toast.info('最多可以录入99件产品');
         return;
       }
+
       /* 添加产品 */
       this.$router.push({
         name: 'Order.SearchProduct',
