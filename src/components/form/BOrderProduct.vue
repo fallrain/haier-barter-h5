@@ -89,7 +89,6 @@ export default {
     // const d = dd.getDate() < 10 ? `0${dd.getDate()}` : dd.getDate();// 获取当前几号，不足10补0
     // const h = dd.getHours() + 1;
     // this.currentDate = `${y}-${m}-${d} ${h}:00`
-    // debugger
     // this.currentDate = Date.parse(this.currentDate)
     // this.currentDate = new Date(this.currentDate)
     // if(h >=14){
@@ -107,17 +106,22 @@ export default {
       if (this.data.productPrice < 0) {
         Toast.failed('请输入正确的产品价格');
         this.data.productPrice = '';
-        return
+        return;
+      }
+      console.log(this.data);
+      let bbcPrice = 0;
+      if (this.data.bccPrice) {
+        bbcPrice = this.data.bccPrice;
       }
       const obj = {
-            bccPrice: '',
-            productCode: this.data.productCode,
-            productPrice: this.data.productPrice,
-            requestNoToast: true
-          };
+        bccPrice: bbcPrice,
+        productCode: this.data.productCode,
+        productPrice: this.data.productPrice,
+      };
+
       this.orderService.checkProductPrice({}, obj).then((res) => {
         if (res.code == -1) {
-          this.data.productPrice = ''
+          this.data.productPrice = '';
         }
       });
     },
@@ -131,9 +135,8 @@ export default {
       }
       return parseFloat(num).toFixed(decimal);
     },
-    inputFunction(){
-
-      this.$emit('inputChange')
+    inputFunction() {
+      this.$emit('inputChange');
     }
   }
 };

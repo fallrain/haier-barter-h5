@@ -246,6 +246,7 @@ export default {
       this.orderService.createOrderSubmit({}, { orderNo: this.orderNo }).then((res) => {
         if (res.code === 1) {
           Toast.succeed(res.msg);
+          localStorage.removeItem('orderFollowId')
           this.$router.push({
             name: 'Order.OrderFollowCommitResult',
             params: { orderInfo: res.data }
@@ -271,8 +272,14 @@ export default {
             ? this.$vnode.componentOptions.Ctor.cid + (this.$vnode.componentOptions.tag ? `::${this.$vnode.componentOptions.tag}` : '')
             : this.$vnode.key;
           const cache = this.$vnode.parent.componentInstance.cache;
-
           const keys = this.$vnode.parent.componentInstance.keys;
+          if(to.name === 'Order.OrderModify'){
+            keys.forEach(k =>{
+              if(cache[k].tag.indexOf('OrderEntry') > -1){
+                delete cache[k]
+              }
+            })
+          }
           if (cache[key]) {
             if (keys.length) {
               const index = keys.indexOf(key);

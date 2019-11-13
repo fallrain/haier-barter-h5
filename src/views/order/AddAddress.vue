@@ -257,7 +257,6 @@ export default {
     };
   },
   activated() {
-    debugger
     if (this.$route.params) {
       this.region = this.$route.params.region;
       console.log(this.region);
@@ -269,16 +268,17 @@ export default {
 
       }
       else if (this.region === 'userAdd' && this.$route.params.info !== '{}') {
-        debugger
         this.confirmShow = true;
         this.searchEnd = true;
         this.customerInfo.username = JSON.parse(this.$route.params.info).username;
         this.customerInfo.userId = JSON.parse(this.$route.params.info).userId;
         this.customerInfo.mobile = JSON.parse(this.$route.params.info).mobile;
+        if (JSON.parse(this.$route.params.info).customerId) {
+          this.customerInfo.customerId = JSON.parse(this.$route.params.info).customerId;
+        }
       }
       else {
         // this.confirmShow = false;
-
         this.searchEnd = true;
         if (this.region === 'add' && !JSON.parse(this.$route.params.info).address) {
           this.customerInfo.username = JSON.parse(this.$route.params.info).username;
@@ -326,7 +326,6 @@ export default {
     }
   },
   created() {
-    debugger
     // 不加入双向绑定
     this.addressData = addressData;
     this.customerInfo.hmcId = JSON.parse(localStorage.getItem('userinfo')).hmcid;
@@ -383,6 +382,7 @@ export default {
             this.defaultA.push(res.data.province);
             this.defaultA.push(res.data.city);
             this.defaultA.push(res.data.district);
+            this.$router.go(-1)
           } else {
             this.searchResultShow = true;
           }
@@ -459,7 +459,7 @@ export default {
           this.customerInfo.familyItemCode = '';
         }
         delete this.customerInfo.tag;
-      }debugger
+      }
       if (this.region === 'add' || this.region === 'userAdd') {
         delete this.customerInfo.id;
         if(this.$route.params.businessScenarios != ''){
@@ -545,7 +545,6 @@ export default {
       customerInfo:this.customerInfo,
       region:this.region
     };
-    debugger
     if (to.name === 'Order.OrderEntry' || 'Order.OrderModify') {
       to.query.temp = JSON.stringify(obj);
       if (this.$vnode && this.$vnode.data.keepAlive) {

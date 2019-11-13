@@ -5,48 +5,48 @@
       class="label-class"
       v-for="(followItem,index) in list"
       :key="index"
-
+      @click="orderClick"
     >
       <img
         src="@/assets/images/orderFollow-up/yizhanzhujia@3x.png"
         class="labelImage"
-        v-show="followItem.businessScenarios =='YZZJ'"
+        v-show="followItem.businessScenarios ==='YZZJ'"
       >
       <img
         src="@/assets/images/orderFollow-up/yijiuhuanxin@3x.png"
         class="labelImage"
-        v-show="followItem.businessScenarios =='YJHX'"
+        v-show="followItem.businessScenarios ==='YJHX'"
       >
       <img
         src="@/assets/images/orderFollow-up/aidaojia@3x.png"
         class="labelImage"
-        v-show="followItem.businessScenarios =='ADJ'"
+        v-show="followItem.businessScenarios ==='ADJ'"
       >
       <img
         src="@/assets/images/orderFollow-up/saomaludan.png"
         class="labelImage"
-        v-show="followItem.businessScenarios =='SMLD'"
+        v-show="followItem.businessScenarios ==='SMLD'"
       >
       <img
         src="@/assets/images/orderFollow-up/SGLD.png"
         class="labelImage"
-        v-show="followItem.businessScenarios =='SGLD'"
+        v-show="followItem.businessScenarios ==='SGLD'"
       >
       <img
         src="@/assets/images/orderFollow-up/renchou@3x.png"
         class="labelImage"
-        v-show="followItem.businessScenarios =='RC'"
+        v-show="followItem.businessScenarios ==='RC'"
       >
       <!--<p>{{followItem.orderNo}}</p>-->
       <div class="row-class">
         <span class="label-span">{{followItem.userName}}</span>
         <span
           class="sex-class"
-          v-show="followItem.userSex == '1'"
+          v-show="followItem.userSex === '1'"
         >先生</span>
         <span
           class="sex-class"
-          v-show="followItem.userSex == '2'"
+          v-show="followItem.userSex === '2'"
         >女士</span>
         <span class="sex-class">
           <img
@@ -61,12 +61,12 @@
         <img
           src="@/assets/images/orderFollow-up/Haier@3x.png"
           class="brandImage"
-          v-show="followItem.recordMode =='Haier'"
+          v-show="followItem.recordMode ==='Haier'"
         >
         <img
           src="@/assets/images/orderFollow-up/Casarte@3x.png"
           class="brandImage"
-          v-show="followItem.recordMode =='Casarte'"
+          v-show="followItem.recordMode ==='Casarte'"
         >
         <span class="hand-class">{{followItem.userS}}</span>
         <span class="handred-class">{{followItem.tardinessS}}</span>
@@ -122,12 +122,16 @@
         <p>{{followItem.add2}}</p>
       </div>
       <div class="bottom-class">
-        <img
-          src="@/assets/images/orderFollow-up/dian@3x.png"
-          class="dian-Class"
-          @click="showMore(index)"
-          v-show="followItem.flowStatus != '1'"
+        <div
+          class="dian-class-par"
+          v-show="followItem.flowStatus !== '1'"
+          @click="(e)=>showMore(index,e)"
         >
+          <img
+            src="@/assets/images/orderFollow-up/dian@3x.png"
+            class="dian-class"
+          >
+        </div>
         <!--估价不显示录单操作-->
         <span v-if="followItem.businessScenarios !== 'YJHX'">
           <p
@@ -141,11 +145,13 @@
 
         <!-- <p class="bottom-button">发券</p> -->
         <div
-          class="demo"
+          class="more-pop"
+          :class="[followItem.showInTop && 'more-pop-reverse']"
+          ref="more-pop"
           v-show="followItem.show"
         >
-          <div class="out"></div>
-          <div class="in"></div>
+          <div class="more-pop-out"></div>
+          <div class="more-pop-in"></div>
           <p
             v-for="(item,index) in followItem.showList"
             :key="index"
@@ -188,18 +194,12 @@ import {
   PopupTitleBar,
   Toast
 } from 'mand-mobile';
-import {
-  BPopButton,
-  BPopSortType
-} from '@/components/form';
 
 export default {
   name: '',
   components: {
     [Icon.name]: Icon,
     [Toast.name]: Toast,
-    BPopButton,
-    BPopSortType,
     'md-popup': Popup,
     [PopupTitleBar.name]: PopupTitleBar,
     [Button.name]: Button,
@@ -269,6 +269,13 @@ export default {
       this.stopProcess();
       this.$emit('itemClick', index);
     },
+    orderClick() {
+      /* 隐藏弹出层 */
+      this.list.forEach((v) => {
+        this.$set(v, 'showInTop', false);
+        this.$set(v, 'show', false);
+      });
+    },
     gujiaClick(followItem) {
       this.stopProcess();
       this.$emit('gujiaClick', followItem);
@@ -288,16 +295,29 @@ export default {
 
       this.$emit('followButtonClick', button, item);
     },
-    showMore(index) {
+    showMore(index, e) {
       this.stopProcess();
-      console.log('currentList', this.list);
       this.ID = this.list[index].id;
       for (let i = 0; i < this.list.length; i++) {
         if (index !== i) {
           this.$set(this.list[i], 'show', false);
         }
       }
-      this.$set(this.list[index], 'show', !this.list[index].show);
+      const isShow = this.list[index].show;
+      let isOverflow = false;
+      if (!isShow) {
+        const target = e.currentTarget;
+        const morePop = target.parentNode.querySelector('.more-pop');
+        // 是否溢出显示区域
+        isOverflow = this.bUtil.checkOverflowScreen({
+          dom: morePop,
+          btmDom: document.querySelector('.js-md-tab-bar')
+        });
+      }
+
+      // 显示的时候才会设置showInTop，隐藏依然没有，防止计算屏幕溢出错误
+      this.$set(this.list[index], 'showInTop', isOverflow && !isShow);
+      this.$set(this.list[index], 'show', !isShow);
     },
     stopProcess() {
       const e = window.event;
@@ -539,16 +559,25 @@ export default {
   }
 
   .bottom-class {
+    position: relative;
     margin-top: 20px;
     padding-top: 15px;
     height: 80px;
     border-top: 1px solid #eeeeee;
   }
 
-  .dian-Class {
+  .dian-class-par {
+    position: relative;
+    display: inline-block;
     width: 36px;
+    height: 100%;
+  }
+
+  .dian-class {
+    position: absolute;
+    top: 50%;
     height: 6px;
-    margin-top: 30px;
+    transform: translateY(-50%);
   }
 
   .orderFollowItemClass {
@@ -606,40 +635,64 @@ export default {
     text-align: center;
     height: 80px;
     line-height: 80px;
-    white-space: 200px;
     border-bottom: 1px solid #999999;
+
+    &:last-of-type {
+      border-bottom: 0;
+    }
   }
 
-  .demo {
+  .more-pop {
     width: 200px;
     /*height: 200px;*/
     border: 1px solid #999999;
     background-color: white;
-    z-index: 10;
     position: absolute;
-    margin-top: 10px;
+    top: 80px;
+    z-index: 10;
     border-radius: 10px;
   }
 
-  .out,
-  .in {
+  .more-pop-reverse {
+    top: 30px;
+    transform: translateY(-100%);
+  }
+
+  .more-pop-reverse {
+    .more-pop-out {
+      border-bottom-color: transparent;
+      border-top-color: #999;
+      top: auto;
+      bottom: -39px;
+    }
+
+    .more-pop-in {
+      border-bottom-color: transparent;
+      border-top-color: #fff;
+      top: auto;
+      bottom: -34px;
+    }
+  }
+
+  .more-pop-out,
+  .more-pop-in {
     position: absolute;
     width: 0;
-    height: 0px;
+    height: 0;
   }
 
-  .out {
+  .more-pop-out {
     border: 20px solid transparent;
-    border-bottom-color: #999999; /*这里的颜色一定要跟上面demo边框颜色一样*/
-    top: -40px;
-    left: 20%;
+    border-bottom-color: #999; /*这里的颜色一定要跟上面more-pop边框颜色一样*/
+    top: -39px;
+    left: 10px;
   }
 
-  .in {
+  .more-pop-in {
     border: 18px solid transparent;
-    border-bottom-color: #fff; /*这里的颜色一定要跟demo背景颜色一样*/
-    top: -35px;
-    left: 21%;
+    border-bottom-color: #fff; /*这里的颜色一定要跟more-pop背景颜色一样*/
+    top: -34px;
+    left: 12px
   }
 
   .orderFollowItem-span-blue {
