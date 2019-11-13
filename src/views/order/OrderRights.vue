@@ -11,9 +11,8 @@
     <div v-show="current === 0">
       <div class="rights-notice" v-show="shareRightsList.length !== 0">
         <p>
-          重要提示：套购订单若包含卡萨帝产品，请在此选择卡萨帝单品权益，无需再去卡萨帝模式下重复录单，重复录单会造成权益无法领取！！！
+          <span class="important-class">重要提示：</span>套购订单若包含卡萨帝产品，请在此选择卡萨帝单品权益，无需再去卡萨帝模式下重复录单，重复录单会造成权益无法领取！！！
         </p>
-
       </div>
 
         <p v-show="shareRightsList.length === 0" class="info-Class">暂无同享活动数据</p>
@@ -1197,5 +1196,9 @@ export default {
     color: #666666;
     font-size: 28px;
     padding: 24px;
+  }
+  .important-class{
+    font-weight: 500;
+    font-size: 30px;
   }
 </style>
