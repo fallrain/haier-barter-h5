@@ -525,20 +525,19 @@ export default {
         this.rightsJson = obj.rightsJson;
         this.isDetail = true;
         if (rightsPro.length > 0 && rightsPro[0] !== '') {
-          this.rightsList = rightsPro;
+          this.getActivityList();
         } else {
           this.rightsList = [];
           this.rightsJson = '';
           this.rightName = '';
           this.rightId = '';
         }
+      } else {
+        this.rightsList = [];
+        this.rightsJson = '';
+        this.rightName = '';
+        this.rightId = '';
       }
-      // else {
-      //   this.rightsList = []
-      //   this.rightsJson = ''
-      //   this.rightName = ''
-      //   this.rightId = ''
-      // }
     } else if (this.$route.params.region != 'hand') {
       if (localStorage.getItem('invoice') == 'true') {
         localStorage.setItem('invoice', '');
@@ -559,7 +558,6 @@ export default {
     }
   },
   created() {
-    debugger
     this.addressData = addressData;
     this.userParam = JSON.parse(localStorage.getItem('userinfo'));
     this.shopId = this.userParam.shopId;
@@ -569,7 +567,7 @@ export default {
     }
     if (this.$route.params.customerConsigneeInfo.freezeMsg) {
     	this.freezeMsg = this.$route.params.customerConsigneeInfo.freezeMsg;
-      if (this.freezeMsg == 'Y') {
+      if (this.freezeMsg === 'Y') {
         this.handRegion = true;
       }
     }
@@ -613,6 +611,16 @@ export default {
     }
   },
   methods: {
+    // 获取权益列表
+    getActivityList() {
+      this.rightsService.getRightsConfigInfo(JSON.parse(this.rightsJson), {}).then((res) => {
+        if (res.code === 1) {
+          if (res.data.length !== 1) {
+            this.rightsList = res.data;
+          }
+        }
+      });
+    },
     isReportInstall(pro) {
       const orderDetailDtoList = [
         {
@@ -946,7 +954,7 @@ export default {
       subInfo.userName = this.customerInfo.username;
       subInfo.userSex = this.consignee.sex;
       subInfo.consigneeName = this.consignee.name;
-      debugger
+
       subInfo.consigneePhone = this.consignee.phone;
       subInfo.consigneeId = this.consignee.familyId;
       subInfo.microCode = this.customerInfo.microCode;
@@ -1045,7 +1053,7 @@ export default {
                   }
                   if (this.saveType === 0) {
                     localStorage.setItem('orderFollowId', res.data);
-                    debugger;
+
                     this.$router.push({
                       name: 'Order.OrderUploadInvoice',
                       params: { orderNo: this.orderNo }

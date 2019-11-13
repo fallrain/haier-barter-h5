@@ -168,7 +168,8 @@ export default {
       deliveryTime: '',
       customerString: '',
       username: '',
-      phone: ''
+      phone: '',
+      rightsJson: ''
     };
   },
   computed: {},
@@ -180,6 +181,15 @@ export default {
     }
   },
   methods: {
+    getActivityList() {
+      this.rightsService.getRightsConfigInfo(this.rightsJson, {}).then((res) => {
+        if (res.code === 1) {
+          if (res.data.length !== 1) {
+            this.activityList = res.data;
+          }
+        }
+      });
+    },
     getData() {
       this.orderService.queryOrderInfoByOrderNo({}, { orderNo: this.orderNo }).then((response) => {
         if (response.code === 1) {
@@ -190,19 +200,19 @@ export default {
           this.phone = resData.userPhone;
           this.consignee.phone = resData.consigneePhone;
           this.consignee.sex = resData.userSex;
-          if(resData.userSex === 1){
-            this.consignee.SexCn = '男士'
-          }else {
-            this.consignee.SexCn = '女士'
+          if (resData.userSex === 1) {
+            this.consignee.SexCn = '男士';
+          } else {
+            this.consignee.SexCn = '女士';
           }
           this.consignee.address = resData.dispatchProvince + resData.dispatchCity + resData.dispatchArea + resData.dispatchAdd;
           this.buyDate = resData.buyTime;
-          if(resData.orderType == 0){
-            this.orderType = '单品'
-          }else{
-            this.orderType = '套购'
+          if (resData.orderType == 0) {
+            this.orderType = '单品';
+          } else {
+            this.orderType = '套购';
           }
-          this.deliveryTime = resData.deliveryTime.replace(/-/g,'/');
+          this.deliveryTime = resData.deliveryTime.replace(/-/g, '/');
           const dt = new Date(Date.parse(this.deliveryTime));
           const y = dt.getFullYear();
           const m = dt.getMonth() + 1;
@@ -218,21 +228,20 @@ export default {
             this.productList.forEach((item) => {
               if (item.productBrand == '000') {
                 item.productBrandCN = '海尔';
-              } else if(item.productBrand == '051'){
+              } else if (item.productBrand == '051') {
                 item.productBrandCN = '卡萨帝';
-              }else if(item.productBrand == '089'){
+              } else if (item.productBrand == '089') {
                 item.productBrandCN = '统帅';
-              }else {
-                item.productBrandCN = '其他'
+              } else {
+                item.productBrandCN = '其他';
               }
             });
           }
 
-          // if (resData.rightsUserJson) {
-          //   const str = JSON.parse(resData.rightsUserJson);
-          //
-          //   this.activityList = str.rightsUserInterestsDTO;
-          // }
+          if (resData.rightsUserJson) {
+            this.rightsJson = JSON.parse(resData.rightsUserJson);
+            this.getActivityList();
+          }
           if (resData.rightName) {
             this.activityList = resData.rightName.split(',');
           }
@@ -246,7 +255,7 @@ export default {
       this.orderService.createOrderSubmit({}, { orderNo: this.orderNo }).then((res) => {
         if (res.code === 1) {
           Toast.succeed(res.msg);
-          localStorage.removeItem('orderFollowId')
+          localStorage.removeItem('orderFollowId');
           this.$router.push({
             name: 'Order.OrderFollowCommitResult',
             params: { orderInfo: res.data }
@@ -273,12 +282,12 @@ export default {
             : this.$vnode.key;
           const cache = this.$vnode.parent.componentInstance.cache;
           const keys = this.$vnode.parent.componentInstance.keys;
-          if(to.name === 'Order.OrderModify'){
-            keys.forEach(k =>{
-              if(cache[k].tag.indexOf('OrderEntry') > -1){
-                delete cache[k]
+          if (to.name === 'Order.OrderModify') {
+            keys.forEach((k) => {
+              if (cache[k].tag.indexOf('OrderEntry') > -1) {
+                delete cache[k];
               }
-            })
+            });
           }
           if (cache[key]) {
             if (keys.length) {

@@ -4,19 +4,29 @@
       <li
         class="bCheckbox-item"
       >
-        <div class="bCheckbox-item-detail-cnt">
-          <p class="bActivityList-activity-name">{{item}}
-            <span class="state-class">已领取</span>
+        <div class="bCheckbox-item-detail-cnt" >
+          <p class="bActivityList-activity-name" @click="giftShowClick(item)">{{item.rightName}}
+            <span class="state-class-1" v-show="item.receivingStatus === -1">已删除</span>
+            <span class="state-class-1" v-show="item.receivingStatus === 1">在途</span>
+            <span class="state-class-2" v-show="item.receivingStatus === 2">已激活</span>
+            <span class="state-class-3" v-show="item.receivingStatus === 3">已领取 </span>
+            <span class="state-class-4" v-show="item.receivingStatus === 4">已过期</span>
+            <span class="state-class-5" v-show="item.receivingStatus === 5">缺货</span>
+            <span class="state-class-6" v-show="item.receivingStatus === 6">已发送</span>
+            <span class="state-class-7" v-show="item.receivingStatus === 7">48小时之后激活</span>
             <i class="iconfont icon-xialaactive-copy gift-line" v-show="item.giftShow"></i>
             <i class="iconfont icon-jiantou9 gift-line" v-show="!item.giftShow"></i>
           </p>
         </div>
       </li>
       <!--v-show="item.giftShow"-->
-      <div  class="gift-class">
-        <p>购机权益：</p>
-        <p>礼品有效兑换期：</p>
-        <p>礼品类型：</p>
+      <div  class="gift-class" v-show="item.giftShow">
+        <p>购机权益：{{item.rightInfo}}</p>
+        <p>礼品有效兑换期：{{item.startTime}}至{{item.endTime}}</p>
+        <p v-show="item.giftType === 'jfmall'">礼品类型：海贝积分</p>
+        <p v-show="item.giftType === 'casarte'">礼品类型：卡萨帝积分</p>
+        <p v-show="item.giftType === 'entity'">礼品类型：实物礼品</p>
+        <p v-show="item.giftType === 'virtual'">礼品类型：尊享卡</p>
       </div>
     </ol>
   </div>
@@ -54,6 +64,9 @@ export default {
     },
     chooseGiftClick(item) {
       this.$emit('chooseGift', item);
+    },
+    giftShowClick(item) {
+      this.$set(item, 'giftShow', !item.giftShow);
     }
   }
 };
@@ -116,11 +129,55 @@ export default {
     position: absolute;
     right: 40px;
   }
-  .state-class{
+  .state-class-1{
     padding: 8px;
     background-color: #27AA91;
     color: white;
     font-size: 24px;
     border-radius: 4px;
   }
+  .state-class-2{
+    padding: 8px;
+    background-color: #27AA91;
+    color: white;
+    font-size: 24px;
+    border-radius: 4px;
+  }
+  .state-class-3{
+    padding: 8px;
+    background-color: #27AA91;
+    color: white;
+    font-size: 24px;
+    border-radius: 4px;
+  }
+  .state-class-4{
+    padding: 8px;
+    background-color: #27AA91;
+    color: white;
+    font-size: 24px;
+    border-radius: 4px;
+  }
+  .state-class-5{
+    padding: 8px;
+    background-color: #27AA91;
+    color: white;
+    font-size: 24px;
+    border-radius: 4px;
+  }
+  .state-class-6{
+    padding: 8px;
+    background-color: #27AA91;
+    color: white;
+    font-size: 24px;
+    border-radius: 4px;
+  }
+  .state-class-7{
+    padding: 8px;
+    background-color: #27AA91;
+    color: white;
+    font-size: 24px;
+    border-radius: 4px;
+  }
+
+
 </style>

@@ -480,23 +480,24 @@ export default {
         this.rightName = right.rightsName;
         this.rightId = right.rightsId;
         const rightsPro = JSON.parse(obj.rightsJson).rightName.split(',');
+
         this.rightsJson = obj.rightsJson;
         this.isDetail = true;
         if (rightsPro.length > 0 && rightsPro[0] !== '') {
-          this.rightsList = rightsPro;
+
+          this.getActivityList()
         } else {
           this.rightsList = [];
           this.rightsJson = '';
           this.rightName = '';
           this.rightId = '';
         }
+      } else {
+        this.rightsList = []
+        this.rightsJson = ''
+        this.rightName = ''
+        this.rightId = ''
       }
-      // else {
-      //   this.rightsList = []
-      //   this.rightsJson = ''
-      //   this.rightName = ''
-      //   this.rightId = ''
-      // }
       if (obj.product) {
         if (!obj.product.productGroupName) {
           return;
@@ -527,7 +528,7 @@ export default {
     }
   },
   created() {
-    debugger;
+    ;
     this.addressData = addressData;
     this.orderNo = this.$route.params.orderNo;
     if(this.$route.params.orderFollowId){
@@ -536,25 +537,19 @@ export default {
       Toast.failed('异常：待办id为空')
       return
     }
-
-
-    // if (!this.orderFollowId) {
-    //   this.orderFollowId = localStorage.getItem('orderFollowId');
-    // }
     if (this.$route.params.freezeMsg) {
       if (this.$route.params.freezeMsg == 'Y') {
         this.handRegion = true;
       }
     }
     if (this.$route.params.orderFollowId) {
-      debugger
       this.orderFollowId = this.$route.params.orderFollowId;
     } else if (!this.$route.params.orderFollowId && this.$route.params.region === 'continue') {
       Toast.failed('异常：待办id为空');
       return
     } else {
       this.orderFollowId = localStorage.getItem('orderFollowId');
-      debugger
+
     }
     // if (this.$route.params.freezeMsg) {
     //   if (this.$route.params.freezeMsg == 'Y') {
@@ -567,6 +562,16 @@ export default {
     }
   },
   methods: {
+    //获取权益列表
+    getActivityList(){
+      this.rightsService.getRightsConfigInfo(JSON.parse(this.rightsJson),{}).then(res => {
+        if(res.code === 1){
+          if(res.data.length !== 1){
+            this.rightsList = res.data
+          }
+        }
+      })
+    },
     radioChange(val) {
       this.orderType = val;
     },
@@ -668,8 +673,9 @@ export default {
           this.multBuyExceptHmcId = resData.mayEditCoupleOrderId.split(',').splice(hmc_index, 1);
           console.log(this.multBuyExceptHmc);
           if (!this.isDetail) {
-            if (resData.rightName) {
-              this.rightsList = resData.rightName.split(',');
+            if (resData.rightsUserJson) {
+              this.rightsJson = resData.rightsUserJson
+              this.getActivityList()
             }
           }
           if (!this.isProduct) {
@@ -725,10 +731,6 @@ export default {
         if (res.code === 1) {
           if (res.data !== null) {
             this.customerInfo = res.data;
-            // this.getAddressName(res.data.province, res.data.city, res.data.district);
-            // this.consignee.address.street = res.data.address;
-            // this.consignee.phone = res.data.consigneeUserPhone;
-            // this.consignee.name = res.data.consigneeUserName;
             this.consignee.familyId = res.data.familyId;
             if (res.data.sex === 1) {
               this.consignee.sexCn = '男士';
@@ -742,7 +744,6 @@ export default {
         }
       });
     },
-    // 获取门店信息
     sponsorCheck(checkid) {
 
     },
@@ -752,6 +753,7 @@ export default {
     particpantClick(checkids) {
 
     },
+    // 获取门店信息
     getUserStore() {
     // this.shopId = '8800332156';
       this.shopId = this.userParam.shopId;
@@ -910,7 +912,7 @@ export default {
         part.push(this.multBuySponsor[0].username);
       }
       if (this.rightsJson) {
-        debugger
+
         const tempJson = JSON.parse(this.rightsJson);
         if (tempJson.rightsUserInterestsDetailsDTO.length === 0) {
           this.rightsJson = '';
@@ -920,7 +922,7 @@ export default {
       // let result = 0;
       // let state = false;
       // const resultMsg = [];
-      // debugger
+      //
       // for (let i = 0; i < this.productList.length; i++) {
       //   const obj = {
       //     bccPrice: '',
@@ -947,7 +949,7 @@ export default {
       //     }
       //   });
       // }
-      debugger;
+      ;
       subInfo.mayEditCoupleOrderId = partId.join(',');
       subInfo.mayEditCoupleOrderName = part.join(',');
       subInfo.orderNo = this.orderNo;
@@ -1097,7 +1099,7 @@ export default {
     },
     changeAddress(item) {
       console.log(this.addressPopShow);
-      debugger;
+      ;
       item.username = this.customerInfo.username;
       item.mobile = this.customerInfo.mobile;
       item.familyId = this.customerInfo.familyId;

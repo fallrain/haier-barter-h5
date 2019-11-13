@@ -187,8 +187,19 @@ export default {
   created() {
     this.orderNo = this.$route.params.orderNo;
     this.getData();
+    this.getActivityList();
   },
   methods: {
+    getActivityList(){
+      this.rightsService.getRightsConfigInfoByOrderNo({orderNo:this.orderNo},{}).then(res => {
+        if(res.code === 1){
+          if(res.data.length !== 0){
+            this.activityList = res.data
+          }
+        }
+      })
+
+    },
     getData() {
       this.orderService.queryOrderInfoByOrderNo({}, { orderNo: this.orderNo }).then((response) => {
         if (response.code === 1) {
@@ -228,9 +239,9 @@ export default {
           //
           //   this.activityList = str.rightsUserInterestsDTO;
           // }
-          if (resData.rightName != '' && resData.rightName) {
-            this.activityList = resData.rightName.split(',');
-          }
+          // if (resData.rightName != '' && resData.rightName) {
+          //   this.activityList = resData.rightName.split(',');
+          // }
           if (resData.orderDetailDtoList.length !== 0) {
             this.productList = resData.orderDetailDtoList;
             this.productList.forEach((item) => {
