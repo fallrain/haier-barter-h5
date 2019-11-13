@@ -6,7 +6,7 @@
       >
         <div class="bCheckbox-item-detail-cnt" >
           <p class="bActivityList-activity-name" @click="giftShowClick(item)">{{item.rightName}}
-            <span class="state-class-1" v-show="item.receivingStatus === -1">已删除</span>
+            <span class="state-class-8" v-show="item.receivingStatus === -1">已删除</span>
             <span class="state-class-1" v-show="item.receivingStatus === 1">在途</span>
             <span class="state-class-2" v-show="item.receivingStatus === 2">已激活</span>
             <span class="state-class-3" v-show="item.receivingStatus === 3">已领取 </span>
@@ -131,7 +131,7 @@ export default {
   }
   .state-class-1{
     padding: 8px;
-    background-color: #27AA91;
+    background-color: #F4A528;
     color: white;
     font-size: 24px;
     border-radius: 4px;
@@ -145,35 +145,42 @@ export default {
   }
   .state-class-3{
     padding: 8px;
-    background-color: #27AA91;
+    background-color: #4B90E0;
     color: white;
     font-size: 24px;
     border-radius: 4px;
   }
   .state-class-4{
     padding: 8px;
-    background-color: #27AA91;
+    background-color: #BBBBBB;
     color: white;
     font-size: 24px;
     border-radius: 4px;
   }
   .state-class-5{
     padding: 8px;
-    background-color: #27AA91;
+    background-color: #EF5A4B;
     color: white;
     font-size: 24px;
     border-radius: 4px;
   }
   .state-class-6{
     padding: 8px;
-    background-color: #27AA91;
+    background-color: #1D69C4;
     color: white;
     font-size: 24px;
     border-radius: 4px;
   }
   .state-class-7{
     padding: 8px;
-    background-color: #27AA91;
+    background-color: #666666;
+    color: white;
+    font-size: 24px;
+    border-radius: 4px;
+  }
+  .state-class-8{
+    padding: 8px;
+    background-color: #FF001F;
     color: white;
     font-size: 24px;
     border-radius: 4px;
