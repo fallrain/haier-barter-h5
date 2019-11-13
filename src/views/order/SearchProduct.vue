@@ -1,63 +1,63 @@
 <template>
-	<div>
-		<b-notice-bar
-				:show.sync="noticeShow"
-				content="温馨提示：点击下方的【扫描】，可扫产品能效贴自动带入产品型号。"
-		>
-		</b-notice-bar>
-		<b-search-input
-				v-model="searchVal"
-				@search="search"
-				placeholder="点击搜索型号"
-				v-on:input="inputFunction()"
-		>
-			<div class="searchProduct-scan-wrap" @click="scanQRCodePro()">
-				<i class="iconfont icon-saomiao"></i>
-				<span class="searchProduct-scan-inf">扫描</span>
-			</div>
-		</b-search-input>
-		<ul
-				class="searchProduct-history"
-		>
-			<li
-					class="searchProduct-history-item"
-					v-for="(item,index) in searchListShow"
-					:key="index"
-					@click="onItemClick(item)"
-			>{{item.productModel}}{{item.productBrandName}}
-			</li>
-		</ul>
-		<div class="searchProduct-secret">
-			<div class="searchProduct-secret-title">搜索型号小秘诀</div>
-			<div class="searchProduct-secret-con">
-				尽量输入各型号相似度较小的特有字符串，例如： 若要搜索冰箱BCD-460WDGZ，可以在搜索框输入
-				<strong class="strong">460W</strong>
-				，而不要输入BCD，因为冰箱都是BCD开头；
-			</div>
-			<div class="searchProduct-secret-con">
-				若要搜索空调KFR-72LW/18SNA21AU1，可以在搜索框输入
-				<strong>18SN</strong>
-				，而不要输入KFR，因为空调都是KFR开头；
-			</div>
-			<div class="searchProduct-secret-con">
-				若要搜索洗衣机XQG60-QHZB1287，可以在搜索框输入
-				<strong>ZB1287</strong>
-				，而不要输入XQG，因为洗衣机都是XQG开头；
-			</div>
-			<div class="searchProduct-secret-con">
-				若要搜索热水器JSQ24-Q2(12T)，可以在搜索框输入
-				<strong>24-Q2</strong>
-				，中间横杠-可以省略
-			</div>
-			<div class="searchProduct-secret-title  searchProduct-secret-warn mt23">注意：</div>
-			<div class="searchProduct-secret-con">
-				1、大小写都行，
-				<strong>横杠"-" 或斜杠"/" 可以省略</strong>
-				，但是中文括号"（" 和英文括号"(" 不能输错
-			</div>
-			<div class="searchProduct-secret-con mb10">2、点击搜索框下面的搜索历史或搜索结果中的型号，可以直接选择完整产品型号。</div>
-		</div>
-	</div>
+  <div>
+    <b-notice-bar
+      :show.sync="noticeShow"
+      content="温馨提示：点击下方的【扫描】，可扫产品能效贴自动带入产品型号。"
+    >
+    </b-notice-bar>
+    <b-search-input
+      v-model="searchVal"
+      @search="search"
+      placeholder="点击搜索型号"
+      v-on:input="inputFunction()"
+    >
+      <div class="searchProduct-scan-wrap" @click="scanQRCodePro()">
+        <i class="iconfont icon-saomiao"></i>
+        <span class="searchProduct-scan-inf">扫描</span>
+      </div>
+    </b-search-input>
+    <ul
+      class="searchProduct-history"
+    >
+      <li
+        class="searchProduct-history-item"
+        v-for="(item,index) in searchListShow"
+        :key="index"
+        @click="onItemClick(item)"
+      >{{item.productModel}}{{item.productBrandName}}
+      </li>
+    </ul>
+    <div class="searchProduct-secret">
+      <div class="searchProduct-secret-title">搜索型号小秘诀</div>
+      <div class="searchProduct-secret-con">
+        尽量输入各型号相似度较小的特有字符串，例如： 若要搜索冰箱BCD-460WDGZ，可以在搜索框输入
+        <strong class="strong">460W</strong>
+        ，而不要输入BCD，因为冰箱都是BCD开头；
+      </div>
+      <div class="searchProduct-secret-con">
+        若要搜索空调KFR-72LW/18SNA21AU1，可以在搜索框输入
+        <strong>18SN</strong>
+        ，而不要输入KFR，因为空调都是KFR开头；
+      </div>
+      <div class="searchProduct-secret-con">
+        若要搜索洗衣机XQG60-QHZB1287，可以在搜索框输入
+        <strong>ZB1287</strong>
+        ，而不要输入XQG，因为洗衣机都是XQG开头；
+      </div>
+      <div class="searchProduct-secret-con">
+        若要搜索热水器JSQ24-Q2(12T)，可以在搜索框输入
+        <strong>24-Q2</strong>
+        ，中间横杠-可以省略
+      </div>
+      <div class="searchProduct-secret-title  searchProduct-secret-warn mt23">注意：</div>
+      <div class="searchProduct-secret-con">
+        1、大小写都行，
+        <strong>横杠"-" 或斜杠"/" 可以省略</strong>
+        ，但是中文括号"（" 和英文括号"(" 不能输错
+      </div>
+      <div class="searchProduct-secret-con mb10">2、点击搜索框下面的搜索历史或搜索结果中的型号，可以直接选择完整产品型号。</div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -175,17 +175,17 @@ export default {
             if (result && typeof result === 'string') {
               if (result.includes(',')) {
                 this.searchVal = result.split(',')[1];
-                this.search();
+	              this.search();
               } else if (result.includes('http')) {
-                this.basicService.scanQRcode(result).then((res2) => {
-                  if (res2.code === 1) {
-                    this.searchVal = res2.data;
-                    this.search();
-                  }
-                });
+	              this.basicService.scanQRcode(result).then((res2) => {
+		              if (res2.code === 1) {
+			              this.searchVal = res2.data;
+			              this.search();
+		              }
+	              });
               } else {
-                this.searchVal = result;
-                this.search();
+	              this.searchVal = result;
+	              this.search();
               }
             }
           },
@@ -200,8 +200,9 @@ export default {
       return !!array.find(v => v.productCode === obj.productCode);
     },
     onItemClick(item) {
-      this.currentClickItemData.productBrandCode = item.productBrandCode;
-      this.currentClickItemData.productBrandName = item.productBrandName;
+
+	    this.currentClickItemData.productBrandCode = item.productBrandCode;
+	    this.currentClickItemData.productBrandName = item.productBrandName;
       const orderMode = this.recordMode;
       if (orderMode === 'Casarte') {
         if (item.productBrandName != '卡萨帝') {

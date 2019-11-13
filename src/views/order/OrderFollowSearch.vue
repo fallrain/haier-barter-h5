@@ -123,7 +123,7 @@
         @maybeBuyer="maybeBuyer"
       ></b-order-follow-item>
     </div>
-    <div class="md-example-child md-example-child-tabs md-example-child-tab-bar-4">
+    <div class="js-md-tab-bar md-example-child md-example-child-tabs md-example-child-tab-bar-4">
       <md-tab-bar
         v-model="curTab"
         :items="items"
@@ -377,8 +377,6 @@ export default {
             if (res.code === 1) {
               this.handEntryCon = true;
               this.handCount = res.data;
-            } else {
-              Toast.info('您已没有手动录单条数，请选择其他录单方式', 3000);
             }
           });
         }
@@ -410,7 +408,6 @@ export default {
       });
     },
     againEntry(item) {
-      debugger
       this.$router.push({
         name: 'Order.OrderEntry',
         params: {
@@ -474,7 +471,6 @@ export default {
       });
     },
     buttonClicked(val) {
-      // debugger
       // this.updateList = true;
       if (val.length === 0) {
         this.businessType = '';
@@ -523,7 +519,8 @@ export default {
                 orderNo: info.orderNo,
                 orderFollowId: info.id,
                 businessScenarios: info.businessScenarios,
-                recordMode: info.recordMode
+                recordMode: info.recordMode,
+                region:'continue',
               }
             });
           }
@@ -546,7 +543,7 @@ export default {
           if (res.code != -1) {
             const freezeMsg = res.data;
             // 生成一条新的待办
-            this.orderService.createNewOrder({}, { orderNo: info.orderNo }).then((res) => {
+            this.orderService.createNewOrder({}, { orderFollowId: info.id }).then((res) => {
               if (res.code === 1) {
                 const orderFollowId = res.data.id;
                 this.$router.push({
@@ -574,7 +571,6 @@ export default {
     },
 
     searchData(page) {
-      debugger
       if(this.curTab === 3){
         this.sortType = 2
       }

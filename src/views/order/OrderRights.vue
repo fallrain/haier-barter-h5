@@ -1,18 +1,21 @@
 <template>
   <div>
-    <div class="activity-tab-bg activity-tab">
+    <div class="activity-tab-bg activity-tab1">
       <md-tab-bar
         v-model="current"
         :items="items"
         :hasInk="false"
       />
     </div>
-    <div v-show="current === 0">
-      <p class="right-p" @click="shareRightsClick">同享活动
-        <i class="iconfont icon-xialaactive-copy" v-show="shareShow"></i>
-        <i class="iconfont icon-jiantou9" v-show="!shareShow"></i>
-      </p>
 
+    <div v-show="current === 0">
+      <div class="rights-notice" v-show="shareRightsList.length !== 0">
+        <p>
+          <span class="important-class">重要提示：</span>套购订单若包含卡萨帝产品，请在此选择卡萨帝单品权益，无需再去卡萨帝模式下重复录单，重复录单会造成权益无法领取！！！
+        </p>
+      </div>
+
+        <p v-show="shareRightsList.length === 0" class="info-Class">暂无同享活动数据</p>
       <b-activity-item
         v-for="(item,index) in shareRightsList"
         :key="index"
@@ -24,13 +27,17 @@
         :hasData="false"
         @showLimit="showLimit"
         @showConfig="showConfig"
-        v-show="shareShow"
+        v-show="shareRightsList.length !== 0"
       ></b-activity-item>
+    </div>
+    <div v-show="current === 2">
+      <div class="rights-notice" v-show="mutexRightsList.length !== 0">
+        <p>
+          重要提示：套购订单若包含卡萨帝产品，请在此选择卡萨帝单品权益，无需再去卡萨帝模式下重复录单，重复录单会造成权益无法领取！！！
+        </p>
 
-      <p class="right-p" @click="mutexRightsClick">互斥活动
-        <i class="iconfont icon-xialaactive-copy" v-show="mutexShow"></i>
-        <i class="iconfont icon-jiantou9" v-show="!mutexShow"></i>
-      </p>
+      </div>
+      <p v-show="mutexRightsList.length === 0" class="info-Class">暂无不可同享活动数据</p>
       <b-activity-item
         v-for="(item,index) in mutexRightsList"
         :key="index"
@@ -42,20 +49,9 @@
         :hasData="false"
         @showLimit="showLimit"
         @showConfig="showConfig"
-        v-show="mutexShow"
       ></b-activity-item>
     </div>
-    <!--<div v-show="current === 1">-->
-    <!--<b-activity-item-->
-    <!--v-for="(item,index) in notOptionalList"-->
-    <!--:key="index"-->
-    <!--:getData.sync="item"-->
-    <!--:isFinish="true"-->
-    <!--:hasData="false"-->
-    <!--@showLimit="showLimit"-->
-    <!--@showConfig="showConfig"-->
-    <!--&gt;</b-activity-item>-->
-    <!--</div>-->
+
     <div class="reportInstallList-view"
          v-show="current === 1">
       <div
@@ -123,14 +119,17 @@ export default {
       orderNo: '',
       items: [{
         name: 0,
-        label: '可参与活动'
-      }, {
+        label: '可同享活动'
+      },
+      {
+        name: 2,
+        label: '不可同享活动'
+      },
+      {
         name: 1,
         label: '不可参与活动'
       }],
       rightsJson: '',
-      shareShow: false,
-      mutexShow: false,
       num: 0,
       scrollViewFinish: {
         mescroll: null,
@@ -138,13 +137,11 @@ export default {
         isListInit: false
       },
       isFinished: false,
-      shareNull:false,
-      mutexNull:false,
-      shareToastInfo:'',
-      mutexToastInfo:''
+      shareNull: false,
+      mutexNull: false,
+      shareToastInfo: '',
+      mutexToastInfo: ''
     };
-
-
   },
 
   created() {
@@ -171,7 +168,13 @@ export default {
   watch: {
     current(val) {
       if (val === 0) {
-        // this.getData();
+        if (this.shareRightsList.length === 0) {
+          this.getData(1);
+        }
+      } else if (val === 2) {
+        if (this.mutexRightsList.length === 0) {
+          this.getData(2);
+        }
       } else {
         const viewName = 'scrollViewFinish';
         // tab切换后，创建新MeScroll对象（若无创建过），没有加载过则加载
@@ -184,7 +187,7 @@ export default {
   },
   methods: {
     upCallback(page) {
-      if(this.current === 1){
+      if (this.current === 1) {
         // 下载过就设置已经初始化
         this[this.curScrollViewName].isListInit = true;
         this.searchData(page)
@@ -196,26 +199,26 @@ export default {
           });
       }
     },
-    shareRightsClick() {
-      this.shareShow = !this.shareShow;
-      if(this.shareShow && this.shareNull){
-        Toast.info(this.shareToastInfo)
-      }else {
-        if (!this.shareRightsList.length && !this.shareNull) {
-          this.getData(1);
-        }
-      }
-    },
-    mutexRightsClick() {
-      this.mutexShow = !this.mutexShow;
-      if(this.mutexShow && this.mutexNull){
-        Toast.info(this.mutexToastInfo)
-      }else {
-        if (!this.mutexRightsList.length && !this.mutexNull) {
-          this.getData(2);
-        }
-      }
-    },
+    // shareRightsClick() {
+    //   this.shareShow = !this.shareShow;
+    //   if(this.shareShow && this.shareNull){
+    //     Toast.info(this.shareToastInfo)
+    //   }else {
+    //     if (!this.shareRightsList.length && !this.shareNull) {
+    //       this.getData(1);
+    //     }
+    //   }
+    // },
+    // mutexRightsClick() {
+    //   this.mutexShow = !this.mutexShow;
+    //   if(this.mutexShow && this.mutexNull){
+    //     Toast.info(this.mutexToastInfo)
+    //   }else {
+    //     if (!this.mutexRightsList.length && !this.mutexNull) {
+    //       this.getData(2);
+    //     }
+    //   }
+    // },
     minusCount(item) {
       // 单品
       if (item.rightsType === 'single') {
@@ -239,7 +242,7 @@ export default {
       } else {
         // 套购同享
         let isReturn = false;
-        let present = []
+        let present = [];
         item.rightsSelectedGroupDtoList.shift();
         item.allowRightsConditionDtoList.forEach((rights) => {
           if (rights.flag !== 0) {
@@ -247,7 +250,7 @@ export default {
               if (!isReturn) {
                 if (ri.flag !== 0) {
                   this.$set(ri, 'flag', 0);
-                  present = ri.ids
+                  present = ri.ids;
                   ri.num--;
                   ri.tempList = [];
                   item.selectedNum--;
@@ -261,11 +264,11 @@ export default {
                   isReturn = true;
                 }
               }
-              if(ri.flag !== 0){
-                if(this.uniqueArray(present,ri.ids)){
+              if (ri.flag !== 0) {
+                if (this.uniqueArray(present, ri.ids)) {
                   this.$set(ri, 'flag', 0);
-                  rights.num --
-                  ri.tempList = []
+                  rights.num--;
+                  ri.tempList = [];
                   if (rights.num === 0) {
                     this.$set(rights, 'flag', 0);
                     item.num--;
@@ -326,10 +329,10 @@ export default {
                   isReturn = true;
                 }
               }
-              if(ri.flag !== 1){
-                if(this.uniqueArray(present,ri.ids)){
+              if (ri.flag !== 1) {
+                if (this.uniqueArray(present, ri.ids)) {
                   this.$set(ri, 'flag', 1);
-                  rights.num ++
+                  rights.num++;
                   if (rights.num === rights.orderIdList.length) {
                     this.$set(rights, 'flag', 1);
                     item.num++;
@@ -648,7 +651,7 @@ export default {
       }
       this.anylizeMCData(this.mutexRightsList);
     },
-    //判断数组是否重复
+    // 判断数组是否重复
     uniqueArray(array1, array2) {
       const a = array1.length;
       const b = array2.length;
@@ -663,31 +666,19 @@ export default {
       return array.find(v => v === obj);
     },
     showConfig(item) {
-      // if (this.subInfo.orderType === 0) {
       this.rightsService.viewGifts({}, { rightsNo: item.rightsNo },)
         .then((res) => {
           if (res.code === 1) {
             if (res.data.length > 0) {
               item.isShowConfig = true;
               this.$set(item, 'configList', res.data);
+
               // item.configList = res.data;
             } else {
               item.configList = [];
             }
           }
         });
-      // } else {
-      //   this.rightsService.queryRightsSetsByRightsNo({}, { rightsNo: item.rightsNo }).then((res) => {
-      //     if (res.code === 1) {
-      //       if (res.data.length > 0) {
-      //         item.isShowConfig = true;
-      //         item.configList = res.data;
-      //       } else {
-      //         item.configList = [];
-      //       }
-      //     }
-      //   });
-      // }
     },
     showLimit(item) {
       // item.rightsNo = 'HBR53341494705815552'
@@ -832,7 +823,7 @@ export default {
                 this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(this.notOptionalList);
               }
             } else {
-              Toast.failed('暂无数据');
+              // Toast.failed('暂无数据');
             }
             // ;
             // if (res.data.result.length > 0) {
@@ -862,7 +853,6 @@ export default {
             //   Toast.info('暂无数据');
             // }
           } else {
-            Toast.failed(res.msg);
             this[this.curScrollViewName].mescroll.endErr();
           }
           return sroviewObj;
@@ -884,15 +874,14 @@ export default {
                   // this.shareRightsList = res.data;
                   this.anylizeData(res.data, 1);
                 } else {
-                  Toast.failed('暂无同享权益数据');
+                  Toast.failed('暂无同享活动');
                 }
               } else {
-                debugger
                 // Toast.failed(res.msg);
 
-                if(res.msg === '未匹配到可选权益数据！'){
-                    this.shareNull = true
-                    this.shareToastInfo = '未匹配到同享权益信息'
+                if (res.msg === '未匹配到可选权益数据！') {
+                  this.shareNull = true;
+                  this.shareToastInfo = '暂无同享活动';
                 }
               }
             });
@@ -904,13 +893,13 @@ export default {
                   this.anylizeData(res.data, 2);
                   // this.mutexRightsList = res.data;
                 } else {
-                  Toast.failed('暂无互斥权益数据');
+                  Toast.failed('暂无不可同享权益数据');
                 }
               } else {
                 // Toast.failed(res.msg);
-                if(res.msg === '未匹配到可选权益数据！'){
-                  this.mutexNull = true
-                  this.mutexToastInfo = '未匹配到互斥权益信息'
+                if (res.msg === '未匹配到可选权益数据！') {
+                  this.mutexNull = true;
+                  this.mutexToastInfo = '未匹配到互斥权益信息';
                 }
               }
             });
@@ -944,8 +933,6 @@ export default {
               } else {
                 Toast.info('暂无数据');
               }
-            } else {
-              Toast.failed(res.msg);
             }
           });
       }
@@ -972,8 +959,6 @@ export default {
         .then((res) => {
           if (res.code === 1) {
             this.productGroupName = res.data;
-          } else {
-            Toast.failed(res.msg);
           }
         });
     },
@@ -1038,10 +1023,10 @@ export default {
     }
   },
   beforeRouteLeave(to, from, next) {
-    if(this.rightsJson){
+    if (this.rightsJson) {
       const right = JSON.parse(this.rightsJson);
-      if(right.rightsUserInterestsDetailsDTO.length === 0){
-        this.rightsJson = ''
+      if (right.rightsUserInterestsDetailsDTO.length === 0) {
+        this.rightsJson = '';
       }
     }
     const obj = { rightsJson: this.rightsJson };
@@ -1094,11 +1079,11 @@ export default {
     }
   }
 
-  .activity-tab {
+  .activity-tab1 {
     .md-tab-bar-item {
       padding: 0;
       margin: 0;
-      width: 50%;
+      width: 33%;
       font-size: 28px;
       color: #666;
       justify-content: center;
@@ -1119,7 +1104,7 @@ export default {
         background: #1969C6;
         font-size: 28px;
         height: 60px;
-        width: 50%;
+        width: 33%;
 
         &:first-child {
           border-top-left-radius: 8px;
@@ -1194,5 +1179,26 @@ export default {
 
   .bottom-height {
     height: 150px;
+  }
+  .info-Class{
+    text-align: center;
+    padding: 30px;
+    color: #666666;
+    font-size: 32px;
+  }
+  .rights-notice{
+    width: 700px;
+    margin-left: 25px;
+    margin-bottom: 25px;
+    margin-top: 25px;
+    background-color: #FDF3D8;
+    border-radius: 8px;
+    color: #666666;
+    font-size: 28px;
+    padding: 24px;
+  }
+  .important-class{
+    font-weight: 500;
+    font-size: 30px;
   }
 </style>

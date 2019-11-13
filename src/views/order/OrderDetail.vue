@@ -199,10 +199,10 @@ export default {
           this.phone = resData.userPhone;
           this.consignee.phone = resData.consigneePhone;
           this.consignee.sex = resData.userSex;
-          if(resData.userSex === 1){
-            this.consignee.sexCn = '男士'
-          }else {
-            this.consignee.sexCn = '女士'
+          if (resData.userSex === 1) {
+            this.consignee.sexCn = '男士';
+          } else {
+            this.consignee.sexCn = '女士';
           }
           this.consignee.address = resData.dispatchProvince + resData.dispatchCity + resData.dispatchArea + resData.dispatchAdd;
           this.buyDate = resData.buyTime;
@@ -236,12 +236,12 @@ export default {
             this.productList.forEach((item) => {
               if (item.productBrand == '000') {
                 item.productBrandCN = '海尔';
-              } else if(item.productBrand == '051'){
+              } else if (item.productBrand == '051') {
                 item.productBrandCN = '卡萨帝';
-              }else if(item.productBrand == '089'){
+              } else if (item.productBrand == '089') {
                 item.productBrandCN = '统帅';
-              }else {
-                item.productBrandCN = '其他'
+              } else {
+                item.productBrandCN = '其他';
               }
             });
           }

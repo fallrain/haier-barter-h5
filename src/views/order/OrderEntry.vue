@@ -481,7 +481,6 @@ export default {
 
   },
   activated() {
-    debugger;
     if (this.$route.params.customerConsigneeInfo && this.$route.params.customerConsigneeInfo.id) {
       this.orderFollowId = this.$route.params.customerConsigneeInfo.id;
       localStorage.setItem('orderFollowId', this.orderFollowId);
@@ -509,6 +508,10 @@ export default {
         if (!obj.product.productBrandName) {
           return;
         }
+        this.rightsList = [];
+        this.rightsJson = '';
+        this.rightName = '';
+        this.rightId = '';
         this.orderService.generateOrderDetailId().then((res) => {
           if (res.code === 1) {
             ID = res.data;
@@ -527,8 +530,6 @@ export default {
             pro.productPrice = '';
             pro.invoiceStatus = 0;
             this.isReportInstall(pro);
-          } else {
-            Toast.failed(res.message);
           }
         });
       }
@@ -582,7 +583,8 @@ export default {
       this.handRegion = true;
     }
     if (this.$route.params.customerConsigneeInfo.freezeMsg) {
-      if (this.$route.params.customerConsigneeInfo.freezeMsg == 'Y') {
+    	this.freezeMsg = this.$route.params.customerConsigneeInfo.freezeMsg;
+      if (this.freezeMsg == 'Y') {
         this.handRegion = true;
       }
     }
@@ -592,7 +594,6 @@ export default {
       if (this.$route.params.customerConsigneeInfo.username) {
         this.haveCustomer = true;
       }
-      debugger;
       this.mobile = this.$route.params.customerConsigneeInfo.mobile;
       this.queryCustomerDefault();
     }
@@ -719,8 +720,6 @@ export default {
       this.orderService.generateOrderNo({}, { recordMode: this.recordMode },).then((res) => {
         if (res.code === 1) {
           this.orderNo = res.data;
-        } else {
-          Toast.failed(res.msg);
         }
       });
     },
@@ -842,7 +841,7 @@ export default {
           return;
         }
       }
-      if (this.deliveryTime === '' && this.saveType == 0) {
+      if (this.deliveryTime === '' && this.saveType === 0) {
         Toast.failed('请选择送货时间');
         return;
       }
@@ -853,37 +852,6 @@ export default {
             return;
           }
         }
-        // // 产品价格闸口判断
-        // let result = 0;
-        // let state = false;
-        // const resultMsg = [];
-        // for (let i = 0; i < this.productList.length; i++) {
-        //   const obj = {
-        //     bccPrice: '',
-        //     productCode: this.productList[i].productCode,
-        //     productPrice: this.productList[i].productPrice,
-        //     requestNoToast: true
-        //   };
-        //   if (this.productList[i].bccPrice) {
-        //     obj.bccPrice = this.productList[i].bccPrice;
-        //   }
-        //   this.orderService.checkProductPrice({}, obj).then((res) => {
-        //     result++;
-        //     if (res.code == -1) {
-        //       resultMsg.push(res.msg);
-        //       state = true;
-        //       this.productList[i].productPrice = '';
-        //     }
-        //     if (result == this.productList.length) {
-        //       if (!state) {
-        //         this.generateSubInfo(1);
-        //       } else {
-        //         Toast.failed(resultMsg[0]);
-        //       }
-        //     }
-        //   });
-        // }
-        // } else {
         this.generateSubInfo(1);
       } else {
 	      this.generateSubInfo(1);
@@ -899,6 +867,7 @@ export default {
         Toast.info('最多可以录入99件产品');
         return;
       }
+
       /* 添加产品 */
       this.$router.push({
         name: 'Order.SearchProduct',
@@ -925,7 +894,6 @@ export default {
         subInfo.coupleSponsor = '';
         subInfo.mayEditCoupleOrderId = '';
       }
-      debugger;
       const part = [];
       const partId = this.multBuyParticipantCheckIds;
       if (partId.length) {
@@ -967,6 +935,7 @@ export default {
       subInfo.userName = this.customerInfo.username;
       subInfo.userSex = this.consignee.sex;
       subInfo.consigneeName = this.consignee.name;
+
       subInfo.consigneePhone = this.consignee.phone;
       subInfo.consigneeId = this.consignee.familyId;
       subInfo.microCode = this.customerInfo.microCode;
@@ -981,7 +950,7 @@ export default {
       subInfo.dispatchCity = this.consignee.address.cityName;
       subInfo.dispatchAreaId = this.customerInfo.district;
       subInfo.dispatchArea = this.consignee.address.districtName;
-      subInfo.dispatchAdd = this.customerInfo.address;
+      subInfo.dispatchAdd = this.consignee.address.street;
       subInfo.buyTime = this.buyDate;
       const dt = this.deliveryTime.substring(0, 16);
       subInfo.deliveryTime = dt;
@@ -1015,6 +984,7 @@ export default {
           this.rightsService.queryOrderOptionalRights(this.subInfo, {
             pageNum: 0,
             pageSize: 10,
+	          requestNoToast: true
           }).then((res) => {
             if (res.code != -1 && res.data.result.length > 0) {
               this.rightsName = res.data.result[0].rightsName;
@@ -1022,9 +992,9 @@ export default {
             } else {
               if (this.orderNo !== '') {
                 Toast.loading('保存中...');
-                if (!this.orderFollowId) {
-                  this.orderFollowId = localStorage.getItem('orderFollowId');
-                }
+                // if (!this.orderFollowId) {
+                //   this.orderFollowId = localStorage.getItem('orderFollowId');
+                // }
                 this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
                   .then((res) => {
                     if (res.code === 1) {
@@ -1052,8 +1022,8 @@ export default {
             // if (!this.orderFollowId) {
             //   this.orderFollowId = localStorage.getItem('orderFollowId');
             // }
-            this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
-              .then((res) => {
+            if (this.handRegion) {
+              this.orderService.createOrderForSGLD(this.subInfo, { orderFollowId: '' }).then((res) => {
                 if (res.code === 1) {
                   if (this.saveType === 1) {
                     Toast.succeed('订单暂存成功', 1000);
@@ -1063,6 +1033,8 @@ export default {
                     }, 1000);
                   }
                   if (this.saveType === 0) {
+                    localStorage.setItem('orderFollowId', res.data);
+                    ;
                     this.$router.push({
                       name: 'Order.OrderUploadInvoice',
                       params: { orderNo: this.orderNo }
@@ -1071,6 +1043,27 @@ export default {
                   }
                 }
               });
+            } else {
+              this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
+                .then((res) => {
+                  if (res.code === 1) {
+                    if (this.saveType === 1) {
+                      Toast.succeed('订单暂存成功', 1000);
+                      localStorage.setItem('confirm', 'caogao');
+                      setTimeout(() => {
+                        this.$router.go(-1);
+                      }, 1000);
+                    }
+                    if (this.saveType === 0) {
+                      this.$router.push({
+                        name: 'Order.OrderUploadInvoice',
+                        params: { orderNo: this.orderNo }
+                      });
+                      // this.$destroy();
+                    }
+                  }
+                });
+            }
           }
         }
       }
@@ -1087,6 +1080,12 @@ export default {
           return;
         }
       }
+	    if (this.freezeMsg) {
+		    if (this.freezeMsg == 'Y') {
+			    Toast.failed('您的账户被冻结，无法选择权益');
+			    return;
+		    }
+	    }
       this.generateSubInfo(2);
     },
     selectAddress(item) {
@@ -1226,9 +1225,9 @@ export default {
     onBasicConfirm() {
       if (this.orderNo !== '') {
         Toast.loading('保存中...');
-        if (!this.orderFollowId) {
-          this.orderFollowId = localStorage.getItem('orderFollowId');
-        }
+        // if (!this.orderFollowId) {
+        //   this.orderFollowId = localStorage.getItem('orderFollowId');
+        // }
         this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
           .then((res) => {
             if (res.code === 1) {
@@ -1316,7 +1315,7 @@ export default {
   .orderEntry-header-cus {
     display: flex;
     align-items: center;
-
+    font-size: 28px;
     width: 100%;
     height: 80px;
     background: #fff;
