@@ -48,6 +48,10 @@ export default {
   viewOtherLimited(data,param){
     return axPostJson(urls.viewOtherLimited,data,param)
   },
-
-
+  getRightsConfigInfo(data,param){
+    return axPostJson(urls.getRightsConfigInfo,data,param)
+  },
+  getRightsConfigInfoByOrderNo(data,param){
+    return axGet(urls.getRightsConfigInfoByOrderNo,data,param)
+  },
 };
