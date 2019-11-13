@@ -102,6 +102,10 @@ export default {
       this.$emit('onDel', this.index);
     },
     blur() {
+      if(this.data.productPrice === ''){
+        Toast.failed('请输入产品价格')
+        return
+      }
       this.data.productPrice = this.formatDecimal(this.data.productPrice, 2);
       if (this.data.productPrice < 0) {
         Toast.failed('请输入正确的产品价格');

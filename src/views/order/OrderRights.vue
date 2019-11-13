@@ -9,6 +9,12 @@
     </div>
 
     <div v-show="current === 0">
+      <div class="rights-notice" v-show="shareRightsList.length !== 0">
+        <p>
+          重要提示：套购订单若包含卡萨帝产品，请在此选择卡萨帝单品权益，无需再去卡萨帝模式下重复录单，重复录单会造成权益无法领取！！！
+        </p>
+
+      </div>
 
         <p v-show="shareRightsList.length === 0" class="info-Class">暂无同享活动数据</p>
       <b-activity-item
@@ -26,6 +32,12 @@
       ></b-activity-item>
     </div>
     <div v-show="current === 2">
+      <div class="rights-notice" v-show="mutexRightsList.length !== 0">
+        <p>
+          重要提示：套购订单若包含卡萨帝产品，请在此选择卡萨帝单品权益，无需再去卡萨帝模式下重复录单，重复录单会造成权益无法领取！！！
+        </p>
+
+      </div>
       <p v-show="mutexRightsList.length === 0" class="info-Class">暂无不可同享活动数据</p>
       <b-activity-item
         v-for="(item,index) in mutexRightsList"
@@ -665,6 +677,7 @@ export default {
             if (res.data.length > 0) {
               item.isShowConfig = true;
               this.$set(item, 'configList', res.data);
+              debugger
               // item.configList = res.data;
             } else {
               item.configList = [];
@@ -1189,5 +1202,16 @@ export default {
     padding: 30px;
     color: #666666;
     font-size: 32px;
+  }
+  .rights-notice{
+    width: 700px;
+    margin-left: 25px;
+    margin-bottom: 25px;
+    margin-top: 25px;
+    background-color: #FDF3D8;
+    border-radius: 8px;
+    color: #666666;
+    font-size: 28px;
+    padding: 24px;
   }
 </style>
