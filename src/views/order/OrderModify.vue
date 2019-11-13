@@ -531,18 +531,15 @@ export default {
     }
   },
   created() {
-    debugger;
     this.addressData = addressData;
     this.orderNo = this.$route.params.orderNo;
     if (this.$route.params.orderFollowId) {
-      debugger
       this.orderFollowId = this.$route.params.orderFollowId;
     } else if (!this.$route.params.orderFollowId && this.$route.params.region === 'continue') {
       Toast.failed('异常：待办id为空');
-      return
+      return;
     } else {
       this.orderFollowId = localStorage.getItem('orderFollowId');
-      debugger
     }
     // if (this.$route.params.freezeMsg) {
     //   if (this.$route.params.freezeMsg == 'Y') {
@@ -601,9 +598,9 @@ export default {
         if (response.code === 1) {
           const resData = response.data;
           this.shopName = resData.storeName;
-          this.rightId = resData.rightId
-          this.rightsJson = resData.rightsJson
-          this.rightName = resData.rightName
+          this.rightId = resData.rightId;
+          this.rightsJson = resData.rightsJson;
+          this.rightName = resData.rightName;
           this.consignee.name = resData.consigneeName;
           this.customerInfo.username = resData.userName;
           this.customerInfo.customerId = resData.userId;
@@ -898,7 +895,6 @@ export default {
         part.push(this.multBuySponsor[0].username);
       }
       if (this.rightsJson) {
-        debugger
         const tempJson = JSON.parse(this.rightsJson);
         if (tempJson.rightsUserInterestsDetailsDTO.length === 0) {
           this.rightsJson = '';
@@ -935,7 +931,7 @@ export default {
       //     }
       //   });
       // }
-      debugger;
+
       subInfo.mayEditCoupleOrderId = partId.join(',');
       subInfo.mayEditCoupleOrderName = part.join(',');
       subInfo.orderNo = this.orderNo;
@@ -1019,7 +1015,7 @@ export default {
                           this.$router.go(-1);
                         }
                         if (this.saveType === 0) {
-                          localStorage.setItem('orderFollowId',this.orderFollowId)
+                          localStorage.setItem('orderFollowId', this.orderFollowId);
                           this.$router.push({
                             name: 'Order.OrderUploadInvoice',
                             params: { orderNo: this.orderNo }
@@ -1085,7 +1081,7 @@ export default {
     },
     changeAddress(item) {
       console.log(this.addressPopShow);
-      debugger;
+
       item.username = this.customerInfo.username;
       item.mobile = this.customerInfo.mobile;
       item.familyId = this.customerInfo.familyId;

@@ -122,11 +122,11 @@ export default {
         name: 0,
         label: '可同享活动'
       },
-        {
-          name: 2,
-          label: '不可同享活动'
-        },
-        {
+      {
+        name: 2,
+        label: '不可同享活动'
+      },
+      {
         name: 1,
         label: '不可参与活动'
       }],
@@ -138,13 +138,11 @@ export default {
         isListInit: false
       },
       isFinished: false,
-      shareNull:false,
-      mutexNull:false,
-      shareToastInfo:'',
-      mutexToastInfo:''
+      shareNull: false,
+      mutexNull: false,
+      shareToastInfo: '',
+      mutexToastInfo: ''
     };
-
-
   },
 
   created() {
@@ -170,16 +168,15 @@ export default {
   },
   watch: {
     current(val) {
-
       if (val === 0) {
-        if(this.shareRightsList.length === 0){
+        if (this.shareRightsList.length === 0) {
           this.getData(1);
         }
-      } else if(val === 2){
-        if(this.mutexRightsList.length === 0){
+      } else if (val === 2) {
+        if (this.mutexRightsList.length === 0) {
           this.getData(2);
         }
-      }else {
+      } else {
         const viewName = 'scrollViewFinish';
         // tab切换后，创建新MeScroll对象（若无创建过），没有加载过则加载
         this.bUtil.scroviewTabChange(viewName, this);
@@ -191,7 +188,7 @@ export default {
   },
   methods: {
     upCallback(page) {
-      if(this.current === 1){
+      if (this.current === 1) {
         // 下载过就设置已经初始化
         this[this.curScrollViewName].isListInit = true;
         this.searchData(page)
@@ -246,7 +243,7 @@ export default {
       } else {
         // 套购同享
         let isReturn = false;
-        let present = []
+        let present = [];
         item.rightsSelectedGroupDtoList.shift();
         item.allowRightsConditionDtoList.forEach((rights) => {
           if (rights.flag !== 0) {
@@ -254,7 +251,7 @@ export default {
               if (!isReturn) {
                 if (ri.flag !== 0) {
                   this.$set(ri, 'flag', 0);
-                  present = ri.ids
+                  present = ri.ids;
                   ri.num--;
                   ri.tempList = [];
                   item.selectedNum--;
@@ -268,11 +265,11 @@ export default {
                   isReturn = true;
                 }
               }
-              if(ri.flag !== 0){
-                if(this.uniqueArray(present,ri.ids)){
+              if (ri.flag !== 0) {
+                if (this.uniqueArray(present, ri.ids)) {
                   this.$set(ri, 'flag', 0);
-                  rights.num --
-                  ri.tempList = []
+                  rights.num--;
+                  ri.tempList = [];
                   if (rights.num === 0) {
                     this.$set(rights, 'flag', 0);
                     item.num--;
@@ -333,10 +330,10 @@ export default {
                   isReturn = true;
                 }
               }
-              if(ri.flag !== 1){
-                if(this.uniqueArray(present,ri.ids)){
+              if (ri.flag !== 1) {
+                if (this.uniqueArray(present, ri.ids)) {
                   this.$set(ri, 'flag', 1);
-                  rights.num ++
+                  rights.num++;
                   if (rights.num === rights.orderIdList.length) {
                     this.$set(rights, 'flag', 1);
                     item.num++;
@@ -655,7 +652,7 @@ export default {
       }
       this.anylizeMCData(this.mutexRightsList);
     },
-    //判断数组是否重复
+    // 判断数组是否重复
     uniqueArray(array1, array2) {
       const a = array1.length;
       const b = array2.length;
@@ -670,32 +667,19 @@ export default {
       return array.find(v => v === obj);
     },
     showConfig(item) {
-      // if (this.subInfo.orderType === 0) {
       this.rightsService.viewGifts({}, { rightsNo: item.rightsNo },)
         .then((res) => {
           if (res.code === 1) {
             if (res.data.length > 0) {
               item.isShowConfig = true;
               this.$set(item, 'configList', res.data);
-              debugger
+
               // item.configList = res.data;
             } else {
               item.configList = [];
             }
           }
         });
-      // } else {
-      //   this.rightsService.queryRightsSetsByRightsNo({}, { rightsNo: item.rightsNo }).then((res) => {
-      //     if (res.code === 1) {
-      //       if (res.data.length > 0) {
-      //         item.isShowConfig = true;
-      //         item.configList = res.data;
-      //       } else {
-      //         item.configList = [];
-      //       }
-      //     }
-      //   });
-      // }
     },
     showLimit(item) {
       // item.rightsNo = 'HBR53341494705815552'
@@ -896,9 +880,9 @@ export default {
               } else {
                 // Toast.failed(res.msg);
 
-                if(res.msg === '未匹配到可选权益数据！'){
-                    this.shareNull = true
-                    this.shareToastInfo = '暂无同享活动'
+                if (res.msg === '未匹配到可选权益数据！') {
+                  this.shareNull = true;
+                  this.shareToastInfo = '暂无同享活动';
                 }
               }
             });
@@ -914,9 +898,9 @@ export default {
                 }
               } else {
                 // Toast.failed(res.msg);
-                if(res.msg === '未匹配到可选权益数据！'){
-                  this.mutexNull = true
-                  this.mutexToastInfo = '未匹配到互斥权益信息'
+                if (res.msg === '未匹配到可选权益数据！') {
+                  this.mutexNull = true;
+                  this.mutexToastInfo = '未匹配到互斥权益信息';
                 }
               }
             });
@@ -1040,10 +1024,10 @@ export default {
     }
   },
   beforeRouteLeave(to, from, next) {
-    if(this.rightsJson){
+    if (this.rightsJson) {
       const right = JSON.parse(this.rightsJson);
-      if(right.rightsUserInterestsDetailsDTO.length === 0){
-        this.rightsJson = ''
+      if (right.rightsUserInterestsDetailsDTO.length === 0) {
+        this.rightsJson = '';
       }
     }
     const obj = { rightsJson: this.rightsJson };

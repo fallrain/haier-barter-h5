@@ -481,7 +481,7 @@ export default {
 
   },
   activated() {
-    debugger;
+    ;
     if (this.$route.params.customerConsigneeInfo && this.$route.params.customerConsigneeInfo.id) {
       this.orderFollowId = this.$route.params.customerConsigneeInfo.id;
       localStorage.setItem('orderFollowId', this.orderFollowId);
@@ -964,7 +964,7 @@ export default {
       subInfo.userName = this.customerInfo.username;
       subInfo.userSex = this.consignee.sex;
       subInfo.consigneeName = this.consignee.name;
-      debugger
+
       subInfo.consigneePhone = this.consignee.phone;
       subInfo.consigneeId = this.consignee.familyId;
       subInfo.microCode = this.customerInfo.microCode;
@@ -1063,7 +1063,7 @@ export default {
                   }
                   if (this.saveType === 0) {
                     localStorage.setItem('orderFollowId', res.data);
-                    debugger;
+                    ;
                     this.$router.push({
                       name: 'Order.OrderUploadInvoice',
                       params: { orderNo: this.orderNo }

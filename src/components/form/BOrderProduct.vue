@@ -46,12 +46,12 @@
 </template>
 <script>
 import {
+  Toast
+} from 'mand-mobile';
+import {
   BDatePicker,
   BItem
 } from '@/components/form';
-import {
-  Toast
-} from 'mand-mobile';
 
 export default {
   name: 'BOrderProduct',
@@ -102,9 +102,9 @@ export default {
       this.$emit('onDel', this.index);
     },
     blur() {
-      if(this.data.productPrice === ''){
-        Toast.failed('请输入产品价格')
-        return
+      if (this.data.productPrice === '') {
+        Toast.failed('请输入产品价格');
+        return;
       }
       this.data.productPrice = this.formatDecimal(this.data.productPrice, 2);
       if (this.data.productPrice < 0 || this.data.productPrice > 990000) {
