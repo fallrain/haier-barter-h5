@@ -502,6 +502,10 @@ export default {
         if (!obj.product.productGroupName) {
           return;
         }
+        this.rightsList = [];
+        this.rightsJson = '';
+        this.rightName = '';
+        this.rightId = '';
         this.isProduct = true;
         this.isProductList = this.$route.params.productList;
         this.orderService.generateOrderDetailId().then((res) => {
