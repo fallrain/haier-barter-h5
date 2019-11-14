@@ -511,7 +511,7 @@ export default {
             pro.industryCode = obj.product.industryCode;
             pro.productBrand = obj.product.productBrandCode;
             pro.productCategoryCode = obj.product.productGroup;
-            pro.productCategoryName = obj.product.productGroupNae;
+            pro.productCategoryName = obj.product.productGroupName;
             pro.productCode = obj.product.productCode;
             pro.productModel = obj.product.productModel;
             pro.installTime = '';
