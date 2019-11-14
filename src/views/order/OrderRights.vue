@@ -672,8 +672,6 @@ export default {
             if (res.data.length > 0) {
               item.isShowConfig = true;
               this.$set(item, 'configList', res.data);
-
-              // item.configList = res.data;
             } else {
               item.configList = [];
             }
@@ -681,7 +679,6 @@ export default {
         });
     },
     showLimit(item) {
-      // item.rightsNo = 'HBR53341494705815552'
       this.rightsService.viewOtherLimited({}, { rightsNo: item.rightsNo })
         .then((res) => {
           if (res.code === 1) {

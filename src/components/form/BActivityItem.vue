@@ -49,11 +49,11 @@
           <div class="activity-item" v-show="getData.setsCombineMode === 1">
             <span class="activity-name-icon">购</span>
             <span class="activity-product" v-for="(rightsSetsCombine ,j) in item.rightsSetsCombineDtoList">
-            <span v-show="rightsSetsCombine.rightsProductDtoList === null">{{rightsSetsCombine.productBrandName}}{{rightsSetsCombine.industryName}}所有型号
+            <span v-show="rightsSetsCombine.rightsProductDtoList == null">{{rightsSetsCombine.productBrandName}}{{rightsSetsCombine.industryName}}所有型号
             <span v-show="item.productCombineSymbols === 'and' && j !== item.rightsSetsCombineDtoList.length - 1">+</span>
             <span v-show="item.productCombineSymbols === 'or' && j !== item.rightsSetsCombineDtoList.length - 1">/</span>
             </span>
-             <span v-show="rightsSetsCombine.rightsProductDtoList !== null">
+             <span v-show="rightsSetsCombine.rightsProductDtoList != null">
               <span v-for="(rightsSetsPro ,l) in rightsSetsCombine.rightsProductDtoList">
                 {{rightsSetsPro.productBrandName}}{{rightsSetsPro.productGroupName}}{{rightsSetsPro.productModel}}
                 <span v-show="l !== rightsSetsCombine.rightsProductDtoList.length - 1">、</span>
@@ -76,13 +76,13 @@
         <div class="activity-common-line activity-item activity-item-gift">
           <span class="activity-name-icon">送</span>
           <span class="activity-common-product activity-common-left activity-item-gift-desc"
-                v-show="getData.giveGiftMode == 'designated'">{{item.giftName}}</span>
+                v-show="getData.giveGiftMode === 'designated'">{{item.giftName}}</span>
           <span class="activity-common-product activity-common-left activity-item-gift-desc"
-                v-show="getData.giveGiftMode == 'fixed'">{{item.giveIntegralValue}}积分</span>
+                v-show="getData.giveGiftMode === 'fixed'">{{item.giveIntegralValue}}积分</span>
           <span class="activity-common-product activity-common-left activity-item-gift-desc"
-                v-show="getData.giveGiftMode == 'ratio'">{{item.integralPriceRatio}}</span>
+                v-show="getData.giveGiftMode === 'ratio'">{{item.integralPriceRatio}}</span>
           <span class="activity-common-product activity-common-left activity-item-gift-desc"
-                v-show="getData.giftType == 'virtual'">{{item.virtualGiftName}}</span>
+                v-show="getData.giftType === 'virtual'">{{item.virtualGiftName}}</span>
         </div>
       </div>
       <div class="activity-common-line activity-titleItem activity-common-top activity-common-border" @click="setShowLimit">
