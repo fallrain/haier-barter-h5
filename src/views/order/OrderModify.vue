@@ -462,7 +462,7 @@ export default {
   //   console.log('tag', address)
   //    }
   },
-  activated() {
+  activated() {debugger
     if (this.$route.query.temp) {
       let ID = '';
       const obj = JSON.parse(this.$route.query.temp);
@@ -532,7 +532,7 @@ export default {
       }
     }
   },
-  created() {
+  created() {debugger
     this.addressData = addressData;
     this.orderNo = this.$route.params.orderNo;
     if(this.$route.params.orderFollowId){

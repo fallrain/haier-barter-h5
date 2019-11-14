@@ -1012,7 +1012,7 @@ export default {
                       if (this.saveType === 0) {
                         this.$router.push({
                           name: 'Order.OrderUploadInvoice',
-                          params: { orderNo: this.orderNo }
+                          params: { orderNo: this.orderNo, orderFollowId: this.orderFollowId }
                         });
                       }
                     }
@@ -1040,7 +1040,7 @@ export default {
                     localStorage.setItem('orderFollowId', res.data);
                     this.$router.push({
                       name: 'Order.OrderUploadInvoice',
-                      params: { orderNo: this.orderNo }
+                      params: { orderNo: this.orderNo, orderFollowId: this.orderFollowId }
                     });
                   }
                 }
@@ -1059,7 +1059,7 @@ export default {
                     if (this.saveType === 0) {
                       this.$router.push({
                         name: 'Order.OrderUploadInvoice',
-                        params: { orderNo: this.orderNo }
+                        params: { orderNo: this.orderNo, orderFollowId: this.orderFollowId }
                       });
                       // this.$destroy();
                     }
@@ -1243,7 +1243,7 @@ export default {
               if (this.saveType === 0) {
                 this.$router.push({
                   name: 'Order.OrderUploadInvoice',
-                  params: { orderNo: this.orderNo }
+                  params: { orderNo: this.orderNo, orderFollowId: this.orderFollowId }
                 });
               }
             }
