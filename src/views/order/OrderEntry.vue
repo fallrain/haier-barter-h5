@@ -322,6 +322,7 @@ export default {
       // 是否详情模式
       isDetail: false,
       orderSource: '',
+      orderInfo:{},
       sourceSn: '',
       orderFollowId: '',
       rightsList: [],
@@ -510,7 +511,7 @@ export default {
             pro.industryCode = obj.product.industryCode;
             pro.productBrand = obj.product.productBrandCode;
             pro.productCategoryCode = obj.product.productGroup;
-            pro.productCategoryName = obj.product.productGroupName;
+            pro.productCategoryName = obj.product.productGroupNae;
             pro.productCode = obj.product.productCode;
             pro.productModel = obj.product.productModel;
             pro.installTime = '';
@@ -617,10 +618,17 @@ export default {
   methods: {
     // 获取权益列表
     getActivityList() {
-      this.rightsService.getRightsConfigInfo(JSON.parse(this.rightsJson), {}).then((res) => {
+      const obj = {
+        orderDetailSaveQoList :this.productList,
+        orderNo:this.orderNo,
+        rightsUserJson:this.rightsJson
+      }
+      this.rightsService.getRightsConfigInfo(obj, {}).then((res) => {
         if (res.code === 1) {
-          if (res.data.length !== 1) {
+          if (res.data.length !== 0) {
             this.rightsList = res.data;
+            ri.startTime = ri.startTime.substring(0,10)
+            ri.endTime = ri.endTime.substring(0,10)
           }
         }
       });

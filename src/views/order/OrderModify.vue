@@ -247,6 +247,7 @@ import {
   BMultbuyCheck
 } from '@/components/business';
 import addressData from '@/lib/address';
+import rightListTest from '../../lib/address/rightsJson';
 
 export default {
   name: 'OrderModify',
@@ -568,10 +569,19 @@ export default {
   methods: {
     //获取权益列表
     getActivityList(){
-      this.rightsService.getRightsConfigInfo(JSON.parse(this.rightsJson),{}).then(res => {
+      const obj = {
+        orderDetailSaveQoList :this.productList,
+        orderNo:this.orderNo,
+        rightsUserJson:this.rightsJson
+      }
+      this.rightsService.getRightsConfigInfo(obj,{}).then(res => {
         if(res.code === 1){
-          if(res.data.length !== 1){
+          if(res.data.length !== 0){
             this.rightsList = res.data
+            this.rightsList.forEach(ri => {
+              ri.startTime = ri.startTime.substring(0,10)
+              ri.endTime = ri.endTime.substring(0,10)
+            })
           }
         }
       })
@@ -676,12 +686,6 @@ export default {
           this.multBuyExceptHmc = arr.join('、');
           this.multBuyExceptHmcId = resData.mayEditCoupleOrderId.split(',').splice(hmc_index, 1);
           console.log(this.multBuyExceptHmc);
-          if (!this.isDetail) {
-            if (resData.rightsUserJson) {
-              this.rightsJson = resData.rightsUserJson
-              this.getActivityList()
-            }
-          }
           if (!this.isProduct) {
             if (resData.orderDetailDtoList.length !== 0) {
               this.productList = resData.orderDetailDtoList;
@@ -704,6 +708,12 @@ export default {
             }
           } else {
             this.productList = this.isProductList.concat(this.productList);
+          }
+          if (!this.isDetail) {
+            if (resData.rightsUserJson) {
+              this.rightsJson = resData.rightsUserJson
+              this.getActivityList()
+            }
           }
           this.queryCustomerDefault();
         }

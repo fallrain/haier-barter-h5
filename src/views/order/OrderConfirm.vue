@@ -169,7 +169,8 @@ export default {
       customerString: '',
       username: '',
       phone: '',
-      rightsJson: ''
+      rightsJson: '',
+      orderInfo:{}
     };
   },
   computed: {},
@@ -182,18 +183,37 @@ export default {
   },
   methods: {
     getActivityList() {
-      this.rightsService.getRightsConfigInfo(this.rightsJson, {}).then((res) => {
-        if (res.code === 1) {
-          if (res.data.length !== 1) {
-            this.activityList = res.data;
+      // this.rightsService.getRightsConfigInfoByOrderNo({orderNo:this.orderNo}, {}).then((res) => {
+      //   if (res.code === 1) {
+      //     if (res.data.length !== 0) {
+      //       this.activityList = res.data;
+      //       ri.startTime = ri.startTime.substring(0,10)
+      //       ri.endTime = ri.endTime.substring(0,10)
+      //     }
+      //   }
+      // });
+      const obj = {
+        orderDetailSaveQoList :this.productList,
+        orderNo:this.orderNo,
+        rightsUserJson:this.rightsJson
+      }
+      this.rightsService.getRightsConfigInfo(obj,{}).then(res => {
+        if(res.code === 1){
+          if(res.data.length !== 0){
+            this.activityList = res.data
+            this.activityList.forEach(ri => {
+              ri.startTime = ri.startTime.substring(0,10)
+              ri.endTime = ri.endTime.substring(0,10)
+            })
           }
         }
-      });
+      })
     },
     getData() {
       this.orderService.queryOrderInfoByOrderNo({}, { orderNo: this.orderNo }).then((response) => {
         if (response.code === 1) {
           const resData = response.data;
+          this.orderInfo = resData
           this.shopName = resData.storeName;
           this.consignee.name = resData.consigneeName;
           this.username = resData.userName;
@@ -242,9 +262,9 @@ export default {
             this.rightsJson = JSON.parse(resData.rightsUserJson);
             this.getActivityList();
           }
-          if (resData.rightName) {
-            this.activityList = resData.rightName.split(',');
-          }
+          // if (resData.rightName) {
+          //   this.activityList = resData.rightName.split(',');
+          // }
         }
       });
     },
