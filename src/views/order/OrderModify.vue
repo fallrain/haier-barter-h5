@@ -501,6 +501,10 @@ export default {
         if (!obj.product.productGroupName) {
           return;
         }
+        this.rightsList = [];
+        this.rightsJson = '';
+        this.rightName = '';
+        this.rightId = '';
         this.isProduct = true;
         this.isProductList = this.$route.params.productList;
         this.orderService.generateOrderDetailId().then((res) => {
@@ -527,18 +531,15 @@ export default {
     }
   },
   created() {
-    debugger;
     this.addressData = addressData;
     this.orderNo = this.$route.params.orderNo;
     if (this.$route.params.orderFollowId) {
-      debugger
       this.orderFollowId = this.$route.params.orderFollowId;
     } else if (!this.$route.params.orderFollowId && this.$route.params.region === 'continue') {
       Toast.failed('异常：待办id为空');
-      return
+      return;
     } else {
       this.orderFollowId = localStorage.getItem('orderFollowId');
-      debugger
     }
     // if (this.$route.params.freezeMsg) {
     //   if (this.$route.params.freezeMsg == 'Y') {
@@ -597,9 +598,10 @@ export default {
         if (response.code === 1) {
           const resData = response.data;
           this.shopName = resData.storeName;
-          this.rightId = resData.rightId
-          this.rightsJson = resData.rightsJson
-          this.rightName = resData.rightName
+          this.rightId = resData.rightId;
+          this.rightsJson = resData.rightsUserJson;
+          debugger
+          this.rightName = resData.rightName;
           this.consignee.name = resData.consigneeName;
           this.customerInfo.username = resData.userName;
           this.customerInfo.customerId = resData.userId;
@@ -931,7 +933,7 @@ export default {
       //     }
       //   });
       // }
-      debugger;
+
       subInfo.mayEditCoupleOrderId = partId.join(',');
       subInfo.mayEditCoupleOrderName = part.join(',');
       subInfo.orderNo = this.orderNo;
@@ -974,6 +976,7 @@ export default {
       subInfo.sourceSn = this.sourceSn; // 来源编码，记录来源ID
       subInfo.remark = ''; // 备注，记录订单创建、订单修改原因等信息
       subInfo.rightsUserJson = this.rightsJson;
+      debugger
       subInfo.orderDetailSaveQoList = this.productList;
       this.subInfo = subInfo;
       if (type === 2) {
@@ -1015,7 +1018,7 @@ export default {
                           this.$router.go(-1);
                         }
                         if (this.saveType === 0) {
-                          localStorage.setItem('orderFollowId',this.orderFollowId)
+                          localStorage.setItem('orderFollowId', this.orderFollowId);
                           this.$router.push({
                             name: 'Order.OrderUploadInvoice',
                             params: { orderNo: this.orderNo }
@@ -1081,7 +1084,7 @@ export default {
     },
     changeAddress(item) {
       console.log(this.addressPopShow);
-      debugger;
+
       item.username = this.customerInfo.username;
       item.mobile = this.customerInfo.mobile;
       item.familyId = this.customerInfo.familyId;
@@ -1208,15 +1211,20 @@ export default {
               : this.$vnode.key;
             const cache = this.$vnode.parent.componentInstance.cache;
             const keys = this.$vnode.parent.componentInstance.keys;
-            if (cache[key]) {
-              if (keys.length) {
-                const index = keys.indexOf(key);
-                if (index > -1) {
-                  keys.splice(index, 1);
-                }
-              }
-              delete cache[key];
+
+            for(let i = 0;i < keys.length;i ++){
+              delete cache[keys[i]];
             }
+
+            // if (cache[key]) {
+            //   if (keys.length) {
+            //     const index = keys.indexOf(key);
+            //     if (index > -1) {
+            //       keys.splice(index, 1);
+            //     }
+            //   }
+            //   delete cache[key];
+            // }
           }
         }
       }
