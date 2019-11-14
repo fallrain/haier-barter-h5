@@ -86,11 +86,9 @@ export default {
     font-size: 28px;
     line-height: 1;
     color: #333;
-    margin-bottom: 10px;
-    /*width: 700px;*/
-    p{
-      line-height: 80px;
-    }
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 500px;
   }
 
   .bCheckbox-list {
@@ -99,8 +97,12 @@ export default {
   .bCheckbox-item {
     display: flex;
     align-items: center;
-    height: 80px;
+    min-height: 80px;
+    max-height: 160px;
+    overflow: hidden;
     border-bottom: 1px dashed #D0D0D0;
+    padding-top: 10px;
+    padding-bottom: 10px;
     background-color: white;
   }
 
@@ -113,10 +115,10 @@ export default {
   }
 
   .bCheckbox-item-detail-cnt {
+    max-height: 140px;
+    overflow: auto;
     border-left: 6px solid #1969C6;
     padding-left: 25px;
-    padding-top: 10px;
-
   }
   .gift-class{
     background-color: #F8F8F8;
