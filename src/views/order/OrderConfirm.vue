@@ -274,14 +274,13 @@ export default {
           const cache = this.$vnode.parent.componentInstance.cache;
           const keys = this.$vnode.parent.componentInstance.keys;
           if(to.name === 'Order.OrderModify'){debugger
-            let k_index = 0;
             keys.forEach((k,index) =>{
-              if(cache[k].tag.indexOf('OrderEntry') > -1){
-                delete cache[k];
-                k_index = index;
+              if (cache[k]) {
+                if(cache[k].tag.indexOf('OrderEntry') > -1){
+                  delete cache[k];
+                }
               }
             })
-            keys.splice(k_index, 1);
           }
           if (cache[key]) {
             if (keys.length) {
