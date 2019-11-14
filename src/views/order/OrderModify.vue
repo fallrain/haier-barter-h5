@@ -1211,15 +1211,20 @@ export default {
               : this.$vnode.key;
             const cache = this.$vnode.parent.componentInstance.cache;
             const keys = this.$vnode.parent.componentInstance.keys;
-            if (cache[key]) {
-              if (keys.length) {
-                const index = keys.indexOf(key);
-                if (index > -1) {
-                  keys.splice(index, 1);
-                }
-              }
-              delete cache[key];
+
+            for(let i = 0;i < keys.length;i ++){
+              delete cache[keys[i]];
             }
+
+            // if (cache[key]) {
+            //   if (keys.length) {
+            //     const index = keys.indexOf(key);
+            //     if (index > -1) {
+            //       keys.splice(index, 1);
+            //     }
+            //   }
+            //   delete cache[key];
+            // }
           }
         }
       }
