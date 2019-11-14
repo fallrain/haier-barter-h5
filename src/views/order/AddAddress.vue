@@ -480,7 +480,7 @@ export default {
       });
     },
     stopScrolling(event) {
-      event.defalut
+      event.preventDefault();
     }
   },
   mounted() {
