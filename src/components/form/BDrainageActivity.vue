@@ -1,5 +1,5 @@
 <template>
-  <div class="drainage-activity-bg">
+  <div class="drainage-activity-bg" @click="showActivityDetail">
 
     <div class="drainage-activity-contains">
 
@@ -28,7 +28,7 @@
       <button
         type="button"
         class="common-btn-primary"
-        @click="share">
+        @click.stop="share">
         分享
       </button>
       <button
@@ -41,14 +41,14 @@
         type="button"
         class="common-btn-primary"
         style="margin-left:15px"
-        @click="qrCode">
+        @click.stop="qrCode">
         活动二维码
       </button>
       <button
         type="button"
         class="common-btn-primary"
         style="margin-left:15px"
-        @click="dataStatistics">
+        @click.stop="dataStatistics">
         数据统计
       </button>
     </div>
@@ -168,6 +168,12 @@ export default {
     shareImg() {
       return this.activityService.generateQrcode('http://baidu.com/', this.getData.id, this.getData.createdBy).then((res) => {
         this.bUtil.downloadFile(res.data);
+      });
+    },
+    showActivityDetail() {
+      this.$router.push({
+        name: 'Activity.ActivityDetail',
+        params: { activityInfo: this.getData }
       });
     }
   },

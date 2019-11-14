@@ -1,14 +1,49 @@
 <template>
   <div class="activityDetail">
-    <div class="activityDetail-detail-title-bg">
-      <img src="@/assets/images/activity/detail-example.png" alt="">
+    <div class="activity-detail-container">
+      <div class="activityDetail-detail-title-bg">
+        <img src="@/assets/images/activity/detail-example.png" alt="">
+      </div>
+      <activity-name-time
+        title="海尔国潮家电节|海尔智慧厨房"
+        startDate="2019-06-01"
+        endDate="2019-06-18"
+        address="青岛市崂山区海尔路10号海尔专卖店"
+      ></activity-name-time>
+      <div class="activityDetail-detail-title-bg">
+        <img src="@/assets/images/activity/detail-example.png" alt="">
+      </div>
+      <div class="activity-detail-tip">
+        活动说明
+      </div>
+      <div class="activity-detail-content">
+        <span class="activity-detail-content-text">
+          预存20元购买认筹券，活动当天现场可享受5重好礼;<br>
+          一重礼：入场超值 礼品（鲁花1.25L花生油）<br>
+          二重礼：累计消费2000抵100，满10000抵1000<br>
+          三重礼：购买单品满1999元，获10-200元不等红包一个<br>
+          四重礼：凡现场购物，凭发票9.9元超值秒杀<br>
+          五重礼：消费满4000元，获幸运大转盘一次100%中将<br>
+        </span>
+      </div>
+      <div class="activity-detail-tip">
+        联系人
+      </div>
+      <div class="activity-detail-content">
+        <div class="activity-detail-content1">
+          <img src="../../assets/images/edit-delete.png" alt="" class="activity-detail-img">
+          <div>
+            <span class="activity-detail-seller-name"> 陆梦飞</span><span class="activity-detail-seller-store">巴拉巴拉巴拉拉</span>
+            <div class="activity-detail-content1">
+              <button class="activity-detail-btn"> <i class="iconfont icon-weixin icon-img"><span class="activity-detail-seller-store">1234567890</span></i></button>
+              <button class="activity-detail-btn ml16"> <i class="iconfont icon-dianhua icon-img1"><span class="activity-detail-seller-store">1234567890</span></i></button>
+            </div>
+            <span class="activity-detail-seller-store mt20">加微信好友备注：双十一啊</span>
+          </div>
+        </div>
+
+      </div>
     </div>
-    <activity-name-time
-      title="海尔国潮家电节|海尔智慧厨房"
-      startDate="2019-06-01"
-      endDate="2019-06-18"
-      address="青岛市崂山区海尔路10号海尔专卖店"
-    ></activity-name-time>
     <div class="activityDetail-btm-btns">
       <button
         type="button"
@@ -17,6 +52,7 @@
       </button>
       <button
         type="button"
+        @click="registerDialog"
         class="common-submit-btn-default activityDetail-btm-btn"
       >我要报名参加
       </button>
@@ -54,6 +90,7 @@
         <div class="activityDetail-register-item">
           <md-check-group
             class="md-check-group-inline activityDetail-checkbox"
+            v-model="checkboxType"
           >
             <md-check name="self">预约认筹</md-check>
             <md-check name="couple">预约服务</md-check>
@@ -100,7 +137,7 @@
     <md-dialog
       class="activityDetail-register-dialog"
       :closable="true"
-      v-model="registerDialogShow"
+      v-model="qrcodeDialogShow"
     >
       <div class="activityDetail-qrcode-body">
         <div class="activityDetail-qrcode-title">
@@ -162,6 +199,9 @@ export default {
       },
       // 注册对话框显示隐藏
       registerDialogShow: true,
+      // 扫码识别二维码
+      qrcodeDialogShow: false,
+      checkboxType: [],
       // 注册对话框显示隐藏
       isShowProductCatagory: false,
       productCatagoryList: [
@@ -199,6 +239,9 @@ export default {
     showProductCatagory() {
       /* 显示产品类别 */
       this.isShowProductCatagory = true;
+    },
+    registerDialog() {
+      this.registerDialogShow = true;
     }
   }
 };
@@ -230,6 +273,7 @@ export default {
     left: 0;
     right: 0;
     padding: 24px;
+    background: rgba(245, 245, 245, 1);
 
     .activityDetail-btm-btn {
       width: 45%;
@@ -388,6 +432,7 @@ export default {
 
   .activityDetail-qrcode-title {
     text-align: center;
+
     p:nth-child(1) {
       color: #666;
       font-size: 26px;
@@ -397,5 +442,81 @@ export default {
       color: #333;
       font-size: 32px;
     }
+  }
+
+  .activity-detail-container {
+    padding-bottom: 132px;
+  }
+
+  .activity-detail-tip {
+    color: rgba(51, 51, 51, 1);
+    font-weight: bold;
+    font-size: 30px;
+    width: 100vw;
+    height: 76px;
+    background: rgba(245, 245, 245, 1);
+    padding-left: 26px;
+    line-height: 76px;
+  }
+
+  .activity-detail-content {
+    background: #ffffff;
+    width: 100vw;
+    padding: 24px 30px;
+  }
+
+  .activity-detail-content-text {
+    color: rgba(102, 102, 102, 1);
+    font-size: 24px;
+  }
+
+  .activity-detail-content1 {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .activity-detail-img {
+    width: 120px;
+    height: 120px;
+    margin-right: 37px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+  }
+
+  .activity-detail-content2 {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .activity-detail-btn {
+    width:216px;
+    height:48px;
+    border:1px solid rgba(102,102,102,1);
+    border-radius:8px;
+    background: #ffffff;
+    margin-top: 12px;
+    text-align: center;
+  }
+
+  .activity-detail-seller-name {
+    font-size:32px;
+    font-weight:bold;
+    color:rgba(51,51,51,1);
+    margin-right: 20px;
+  }
+
+  .activity-detail-seller-store {
+    font-size:24px;
+    color:rgba(153,153,153,1);
+  }
+
+  .icon-img {
+    font-size:22px;
+    color:#00cd00;
+  }
+
+  .icon-img1 {
+    font-size:22px;
+    color:#4A90E2;
   }
 </style>
