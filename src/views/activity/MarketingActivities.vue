@@ -1,5 +1,5 @@
 <template>
-  <div class="h100vh">
+  <div class="activity-bg h100vh">
     <b-search-input
       v-model="searchVal"
       @search="searchByCondition"
@@ -46,11 +46,52 @@
           <b-drainage-activity
             v-for="(item,index) in scrollViewDrainageActivity.list"
             :key="index"
-            :getData.sync="item"></b-drainage-activity>
+            :getData.sync="item"
+            @shareClick="shareClick">
+          </b-drainage-activity>
         </div>
       </div>
 
     </div>
+
+    <md-popup
+      v-model="isPopupShow"
+      position="bottom"
+      class="md-popup-class"
+    >
+      <md-popup-title-bar
+        large-radius
+        @confirm="hidePopUp('bottom')"
+        @cancel="hidePopUp('bottom')"
+      ></md-popup-title-bar>
+      <div class="drainage-popup-items">
+        <div class="drainage-popup-item" @click="shareWechat">
+
+          <i class="iconfont icon-weixin drainage-popup-img"/>
+          <div>
+            <span class="drainage-popup-title">分享微信好友</span>
+          </div>
+          <div>
+            <span class="drainage-popup-tip">转发到聊天</span>
+          </div>
+
+        </div>
+        <div class="drainage-popup-item" @click="shareImg">
+
+          <i class="iconfont icon-weixin drainage-popup-img"/>
+          <div>
+            <span class="drainage-popup-title">生成分享图片</span>
+          </div>
+          <div>
+            <span class="drainage-popup-tip">长按保存图片可分享</span>
+          </div>
+
+        </div>
+      </div>
+      <div class="popup-cancle" @click="drainageCancle">
+        <span class="popup-cancle-text">取消</span>
+      </div>
+    </md-popup>
   </div>
 </template>
 
@@ -69,18 +110,27 @@ import {
   BDrainageActivity
 } from '@/components/form';
 
+import {
+  Popup, PopupTitleBar, Button, Icon
+} from 'mand-mobile';
+
 export default {
   name: 'MarketingActivities',
   components: {
     [TabBar.name]: TabBar,
     BSearchInput,
     BActivityItem,
-    BDrainageActivity
+    BDrainageActivity,
+    [Popup.name]: Popup,
+    [PopupTitleBar.name]: PopupTitleBar,
+    [Button.name]: Button,
+    [Icon.name]: Icon,
   },
   data() {
     return {
       current: 0,
       orderNo: '',
+      isPopupShow: false,
       items: [{
         name: 0,
         label: '购机权益活动'
@@ -202,6 +252,41 @@ export default {
       });
       this.currentList = curlist;
     },
+    drainageCancle() {
+      this.isPopupShow = false;
+    },
+    shareClick(item) {
+      this.isPopupShow = true;
+    },
+    shareWechat() {
+      const opstion = {
+        title: '1111', // 分享标题
+        link: `${window.location.href}?home=1`,
+        imgUrl: '', // 分享图标
+        dec: '2222',
+        success() {
+        },
+        error() {
+        }
+      };
+      wx.onMenuShareAppMessage({
+        title: opstion.title, // 分享标题
+        link: opstion.link, // 分享链接
+        imgUrl: opstion.imgUrl, // 分享图标
+        desc: opstion.dec, // 分享描述
+        success() {
+          opstion.success();
+        },
+        cancel() {
+          opstion.error();
+        }
+      });
+    },
+    shareImg() {
+      return this.activityService.generateQrcode('http://baidu.com/', this.getData.id, this.getData.createdBy).then((res) => {
+        this.bUtil.downloadFile(res.data);
+      });
+    },
   },
   computed: {
     curScrollViewName() {
@@ -290,5 +375,49 @@ export default {
     }
   }
 
+  .activity-bg {
+    .md-popup-class {
+      .md-popup-box {
+        background: #fff;
+      }
 
+      .md-popup-title-bar {
+        background: #fff;
+        height: 15px;
+      }
+    }
+  }
+
+  .drainage-popup-items {
+    width: 100%;
+    height: 284px;
+    background: #fff;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .drainage-popup-item {
+    /*width: 170px;*/
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+    margin-left: 58px;
+  }
+
+  .drainage-popup-title {
+    font-size: 28px;
+    color: #333;
+  }
+
+  .drainage-popup-tip {
+    font-size: 20px;
+    color: #999;
+  }
+
+  .drainage-popup-img {
+    font-size: 80px;
+    color: #00cd00;
+  }
 </style>

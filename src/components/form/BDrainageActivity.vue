@@ -53,60 +53,14 @@
       </button>
     </div>
 
-    <md-popup
-      v-model="isPopupShow"
-      position="bottom"
-      class="md-popup-class"
-    >
-      <md-popup-title-bar
-        large-radius
-        @confirm="hidePopUp('bottom')"
-        @cancel="hidePopUp('bottom')"
-      ></md-popup-title-bar>
-      <div class="drainage-popup-items">
-        <div class="drainage-popup-item" @click="shareWechat">
-
-          <i class="iconfont icon-weixin drainage-popup-img"/>
-          <div>
-            <span class="drainage-popup-title">分享微信好友</span>
-          </div>
-          <div>
-            <span class="drainage-popup-tip">转发到聊天</span>
-          </div>
-
-        </div>
-        <div class="drainage-popup-item" @click="shareImg">
-
-          <i class="iconfont icon-weixin drainage-popup-img"/>
-          <div>
-            <span class="drainage-popup-title">生成分享图片</span>
-          </div>
-          <div>
-            <span class="drainage-popup-tip">长按保存图片可分享</span>
-          </div>
-
-        </div>
-      </div>
-      <div class="popup-cancle" @click="drainageCancle">
-        <span class="popup-cancle-text">取消</span>
-      </div>
-    </md-popup>
-
   </div>
 </template>
 
 <script>
-import {
-  Popup, PopupTitleBar, Button, Icon
-} from 'mand-mobile';
 
 export default {
   name: 'BDrainageActivity',
   components: {
-    [Popup.name]: Popup,
-    [PopupTitleBar.name]: PopupTitleBar,
-    [Button.name]: Button,
-    [Icon.name]: Icon,
   },
   data() {
     return {
@@ -124,7 +78,7 @@ export default {
   },
   methods: {
     share() {
-      this.isPopupShow = true;
+      this.$emit('shareClick', this.getData);
     },
     qrCode() {
       this.$router.push({
@@ -136,38 +90,6 @@ export default {
       this.$router.push({
         name: 'Activity.ActivityDataAnalysis',
         params: { activityInfo: this.getData }
-      });
-    },
-    drainageCancle() {
-      this.isPopupShow = false;
-    },
-    shareWechat() {
-      const opstion = {
-        title: '1111', // 分享标题
-        link: `${window.location.href}?home=1`,
-        imgUrl: '', // 分享图标
-        dec: '2222',
-        success() {
-        },
-        error() {
-        }
-      };
-      wx.onMenuShareAppMessage({
-        title: opstion.title, // 分享标题
-        link: opstion.link, // 分享链接
-        imgUrl: opstion.imgUrl, // 分享图标
-        desc: opstion.dec, // 分享描述
-        success() {
-          opstion.success();
-        },
-        cancel() {
-          opstion.error();
-        }
-      });
-    },
-    shareImg() {
-      return this.activityService.generateQrcode('http://baidu.com/', this.getData.id, this.getData.createdBy).then((res) => {
-        this.bUtil.downloadFile(res.data);
       });
     },
     showActivityDetail() {
@@ -191,17 +113,6 @@ export default {
     padding: 24px 24px 0 24px;
     margin-top: 16px;
     margin-bottom: 40px;
-
-    .md-popup-class {
-      .md-popup-box {
-        background: #fff;
-      }
-
-      .md-popup-title-bar {
-        background: #fff;
-        height: 15px;
-      }
-    }
   }
 
   .drainage-activity-contains {
@@ -281,36 +192,4 @@ export default {
     color: #333;
   }
 
-  .drainage-popup-items {
-    width: 100%;
-    height: 284px;
-    background: #fff;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-  }
-
-  .drainage-popup-item {
-    /*width: 170px;*/
-    display: flex;
-    flex-direction: column;
-    align-content: center;
-    align-items: center;
-    margin-left: 58px;
-  }
-
-  .drainage-popup-title {
-    font-size: 28px;
-    color: #333;
-  }
-
-  .drainage-popup-tip {
-    font-size: 20px;
-    color: #999;
-  }
-
-  .drainage-popup-img {
-    font-size: 80px;
-    color: #00cd00;
-  }
 </style>
