@@ -287,31 +287,31 @@ export default {
       this.curTab = 4;
       localStorage.setItem('confirm', '');
     }
-    // const userinfostr = localStorage.getItem('userinfo');
-    // this.userinfo = JSON.parse(userinfostr);
-    this.userinfo = {
-      // hmcid: 'a0008949',
-      // mobile: '18561715460',
-      // shopId: '8800136445',
-      hmcid:'01467897',
-      mobile: '15253269729',
-      shopId: '8700000484',
-      // shopId:'8800117018',
-      // hmcid: 'a0032254',
-      // mobile: '15621017056',
-      // shopId: '8700048360',
-      //
-      // hmcid: '18000560',
-      // orderMode: 'Haier',
-      // orderMode: 'Casarte',
-      // mobile: '15621017056',
-      // shopId: '8800266470',
-      // token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IjAxNDY3ODk3Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MzA1NDQ5MywiZXhwIjoxNTczOTE4NDkzfQ.S-muCQ1CljjtzgqdnzaBlN1K2VYT7TJ0m5Q54r_FtGg'}
-      token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IjAxNDY3ODk3Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MzUyNjA4NCwiZXhwIjoxNTc0MzkwMDg0fQ.ZjbXfLSWiTjDIOn2xlWGj9SNcG7M6HnoM1zgNHLrk-c'
-    }
-      const Str = JSON.stringify(this.userinfo);
-    localStorage.setItem('userinfo', Str);
-    localStorage.setItem('acces_token', this.userinfo.token);
+    const userinfostr = localStorage.getItem('userinfo');
+    this.userinfo = JSON.parse(userinfostr);
+    // this.userinfo = {
+    //   // hmcid: 'a0008949',
+    //   // mobile: '18561715460',
+    //   // shopId: '8800136445',
+    //   hmcid:'01467897',
+    //   mobile: '15253269729',
+    //   shopId: '8700000484',
+    //   // shopId:'8800117018',
+    //   // hmcid: 'a0032254',
+    //   // mobile: '15621017056',
+    //   // shopId: '8700048360',
+    //   //
+    //   // hmcid: '18000560',
+    //   // orderMode: 'Haier',
+    //   // orderMode: 'Casarte',
+    //   // mobile: '15621017056',
+    //   // shopId: '8800266470',
+    //   // token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IjAxNDY3ODk3Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MzA1NDQ5MywiZXhwIjoxNTczOTE4NDkzfQ.S-muCQ1CljjtzgqdnzaBlN1K2VYT7TJ0m5Q54r_FtGg'}
+    //   token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IjAxNDY3ODk3Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MzUyNjA4NCwiZXhwIjoxNTc0MzkwMDg0fQ.ZjbXfLSWiTjDIOn2xlWGj9SNcG7M6HnoM1zgNHLrk-c'
+    // }
+    //   const Str = JSON.stringify(this.userinfo);
+    // localStorage.setItem('userinfo', Str);
+    // localStorage.setItem('acces_token', this.userinfo.token);
     this.getNoticeData();
     this.getScenarioList();
   },
