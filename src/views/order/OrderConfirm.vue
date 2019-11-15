@@ -168,41 +168,72 @@ export default {
       deliveryTime: '',
       customerString: '',
       username: '',
-      phone: ''
+      phone: '',
+      rightsJson: '',
+      orderInfo:{}
     };
   },
   computed: {},
-  created() {
+  created() {debugger
     this.orderNo = this.$route.params.orderNo;
+    this.orderFollowId = this.$route.params.orderFollowId;
     // this.orderNo = 'Z15645424968056668';
     if (this.orderNo) {
       this.getData();
     }
   },
   methods: {
+    getActivityList() {
+      // this.rightsService.getRightsConfigInfoByOrderNo({orderNo:this.orderNo}, {}).then((res) => {
+      //   if (res.code === 1) {
+      //     if (res.data.length !== 0) {
+      //       this.activityList = res.data;
+      //       ri.startTime = ri.startTime.substring(0,10)
+      //       ri.endTime = ri.endTime.substring(0,10)
+      //     }
+      //   }
+      // });
+      const obj = {
+        orderDetailSaveQoList :this.productList,
+        orderNo:this.orderNo,
+        rightsUserJson:this.rightsJson
+      }
+      this.rightsService.getRightsConfigInfo(obj,{}).then(res => {
+        if(res.code === 1){
+          if(res.data.length !== 0){
+            this.activityList = res.data
+            this.activityList.forEach(ri => {
+              ri.startTime = ri.startTime.substring(0,10)
+              ri.endTime = ri.endTime.substring(0,10)
+            })
+          }
+        }
+      })
+    },
     getData() {
       this.orderService.queryOrderInfoByOrderNo({}, { orderNo: this.orderNo }).then((response) => {
         if (response.code === 1) {
           const resData = response.data;
+          this.orderInfo = resData
           this.shopName = resData.storeName;
           this.consignee.name = resData.consigneeName;
           this.username = resData.userName;
           this.phone = resData.userPhone;
           this.consignee.phone = resData.consigneePhone;
           this.consignee.sex = resData.userSex;
-          if(resData.userSex === 1){
-            this.consignee.SexCn = '男士'
-          }else {
-            this.consignee.SexCn = '女士'
+          if (resData.userSex === 1) {
+            this.consignee.SexCn = '男士';
+          } else {
+            this.consignee.SexCn = '女士';
           }
           this.consignee.address = resData.dispatchProvince + resData.dispatchCity + resData.dispatchArea + resData.dispatchAdd;
           this.buyDate = resData.buyTime;
-          if(resData.orderType == 0){
-            this.orderType = '单品'
-          }else{
-            this.orderType = '套购'
+          if (resData.orderType == 0) {
+            this.orderType = '单品';
+          } else {
+            this.orderType = '套购';
           }
-          this.deliveryTime = resData.deliveryTime.replace(/-/g,'/');
+          this.deliveryTime = resData.deliveryTime.replace(/-/g, '/');
           const dt = new Date(Date.parse(this.deliveryTime));
           const y = dt.getFullYear();
           const m = dt.getMonth() + 1;
@@ -218,24 +249,23 @@ export default {
             this.productList.forEach((item) => {
               if (item.productBrand == '000') {
                 item.productBrandCN = '海尔';
-              } else if(item.productBrand == '051'){
+              } else if (item.productBrand == '051') {
                 item.productBrandCN = '卡萨帝';
-              }else if(item.productBrand == '089'){
+              } else if (item.productBrand == '089') {
                 item.productBrandCN = '统帅';
-              }else {
-                item.productBrandCN = '其他'
+              } else {
+                item.productBrandCN = '其他';
               }
             });
           }
 
-          // if (resData.rightsUserJson) {
-          //   const str = JSON.parse(resData.rightsUserJson);
-          //
-          //   this.activityList = str.rightsUserInterestsDTO;
-          // }
-          if (resData.rightName) {
-            this.activityList = resData.rightName.split(',');
+          if (resData.rightsUserJson) {
+            this.rightsJson = JSON.parse(resData.rightsUserJson);
+            this.getActivityList();
           }
+          // if (resData.rightName) {
+          //   this.activityList = resData.rightName.split(',');
+          // }
         }
       });
     },
@@ -246,7 +276,7 @@ export default {
       this.orderService.createOrderSubmit({}, { orderNo: this.orderNo }).then((res) => {
         if (res.code === 1) {
           Toast.succeed(res.msg);
-          localStorage.removeItem('orderFollowId')
+          localStorage.removeItem('orderFollowId');
           this.$router.push({
             name: 'Order.OrderFollowCommitResult',
             params: { orderInfo: res.data }
@@ -257,7 +287,7 @@ export default {
     changeOrder() {
       this.$router.push({
         name: 'Order.OrderModify',
-        params: { orderNo: this.orderNo }
+        params: { orderNo: this.orderNo, orderFollowId: this.orderFollowId }
       });
     },
     saveOrder() {
@@ -273,14 +303,14 @@ export default {
             : this.$vnode.key;
           const cache = this.$vnode.parent.componentInstance.cache;
           const keys = this.$vnode.parent.componentInstance.keys;
-          if(to.name === 'Order.OrderModify'){debugger
+          if(to.name === 'Order.OrderModify'){
             keys.forEach((k,index) =>{
               if (cache[k]) {
                 if(cache[k].tag.indexOf('OrderEntry') > -1){
                   delete cache[k];
                 }
               }
-            })
+            });
           }
           if (cache[key]) {
             if (keys.length) {

@@ -322,6 +322,7 @@ export default {
       // 是否详情模式
       isDetail: false,
       orderSource: '',
+      orderInfo: {},
       sourceSn: '',
       orderFollowId: '',
       rightsList: [],
@@ -358,18 +359,6 @@ export default {
       productList: [],
       // 活动列表
       activityList: [
-        {
-          id: 1,
-          activityName: '6月场景套权益昆明小微',
-          inf: '满10000元送7500积分',
-          num: 33
-        },
-        {
-          id: 2,
-          activityName: '6月场景套权益昆明小微',
-          inf: '满10000元送7500积分',
-          num: 21
-        }
       ],
       // 选中的活动id
       choosedActivitys: [],
@@ -481,7 +470,6 @@ export default {
 
   },
   activated() {
-    ;
     if (this.$route.params.customerConsigneeInfo && this.$route.params.customerConsigneeInfo.id) {
       this.orderFollowId = this.$route.params.customerConsigneeInfo.id;
       localStorage.setItem('orderFollowId', this.orderFollowId);
@@ -542,20 +530,19 @@ export default {
         this.rightsJson = obj.rightsJson;
         this.isDetail = true;
         if (rightsPro.length > 0 && rightsPro[0] !== '') {
-          this.rightsList = rightsPro;
+          this.getActivityList();
         } else {
           this.rightsList = [];
           this.rightsJson = '';
           this.rightName = '';
           this.rightId = '';
         }
+      } else {
+        this.rightsList = [];
+        this.rightsJson = '';
+        this.rightName = '';
+        this.rightId = '';
       }
-      // else {
-      //   this.rightsList = []
-      //   this.rightsJson = ''
-      //   this.rightName = ''
-      //   this.rightId = ''
-      // }
     } else if (this.$route.params.region != 'hand') {
       if (localStorage.getItem('invoice') == 'true') {
         localStorage.setItem('invoice', '');
@@ -585,7 +572,7 @@ export default {
     }
     if (this.$route.params.customerConsigneeInfo.freezeMsg) {
     	this.freezeMsg = this.$route.params.customerConsigneeInfo.freezeMsg;
-      if (this.freezeMsg == 'Y') {
+      if (this.freezeMsg === 'Y') {
         this.handRegion = true;
       }
     }
@@ -629,6 +616,23 @@ export default {
     }
   },
   methods: {
+    // 获取权益列表
+    getActivityList() {
+      const obj = {
+        orderDetailSaveQoList: this.productList,
+        orderNo: this.orderNo,
+        rightsUserJson: this.rightsJson
+      };
+      this.rightsService.getRightsConfigInfo(obj, {}).then((res) => {
+        if (res.code === 1) {
+          if (res.data.length !== 0) {
+            this.rightsList = res.data;
+            ri.startTime = ri.startTime.substring(0, 10);
+            ri.endTime = ri.endTime.substring(0, 10);
+          }
+        }
+      });
+    },
     isReportInstall(pro) {
       const orderDetailDtoList = [
         {
@@ -717,7 +721,6 @@ export default {
       if (this.recordMode == '' || !this.recordMode) {
         this.recordMode = 'Haier';
       }
-
       this.orderService.generateOrderNo({}, { recordMode: this.recordMode },).then((res) => {
         if (res.code === 1) {
           this.orderNo = res.data;
@@ -841,50 +844,21 @@ export default {
           return;
         }
       }
-      if (this.deliveryTime === '' && this.saveType == 0) {
+      if (this.deliveryTime === '' && this.saveType === 0) {
         Toast.failed('请选择送货时间');
         return;
       }
       if (this.productList.length > 0) {
-	      for (let i = 0; i < this.productList.length; i++) {
-		      if (this.productList[i].productPrice === '') {
-			      Toast.failed('请输入产品价格');
-			      return;
-		      }
-	      }
+        for (let i = 0; i < this.productList.length; i++) {
+          if (this.productList[i].productPrice === '') {
+            Toast.failed('请输入产品价格');
+            return;
+          }
+        }
+        this.generateSubInfo(1);
+      } else {
+	      this.generateSubInfo(1);
       }
-	    this.generateSubInfo(1);
-      // // 产品价格闸口判断
-      // let result = 0;
-      // let state = false;
-      // const resultMsg = [];
-      // for (let i = 0; i < this.productList.length; i++) {
-      //   const obj = {
-      //     bccPrice: '',
-      //     productCode: this.productList[i].productCode,
-      //     productPrice: this.productList[i].productPrice,
-      //     requestNoToast: true
-      //   };
-      //   if (this.productList[i].bccPrice) {
-      //     obj.bccPrice = this.productList[i].bccPrice;
-      //   }
-      //   this.orderService.checkProductPrice({}, obj).then((res) => {
-      //     result++;
-      //     if (res.code == -1) {
-      //       resultMsg.push(res.msg);
-      //       state = true;
-      //       this.productList[i].productPrice = '';
-      //     }
-      //     if (result == this.productList.length) {
-      //       if (!state) {
-      //         this.generateSubInfo(1);
-      //       } else {
-      //         Toast.failed(resultMsg[0]);
-      //       }
-      //     }
-      //   });
-      // }
-      // } else {
     },
     // 暂存
     // saveTemporary(type) {
@@ -1037,7 +1011,7 @@ export default {
                       if (this.saveType === 0) {
                         this.$router.push({
                           name: 'Order.OrderUploadInvoice',
-                          params: { orderNo: this.orderNo }
+                          params: { orderNo: this.orderNo, orderFollowId: this.orderFollowId }
                         });
                       }
                     }
@@ -1063,12 +1037,10 @@ export default {
                   }
                   if (this.saveType === 0) {
                     localStorage.setItem('orderFollowId', res.data);
-                    ;
                     this.$router.push({
                       name: 'Order.OrderUploadInvoice',
-                      params: { orderNo: this.orderNo }
+                      params: { orderNo: this.orderNo, orderFollowId: this.orderFollowId }
                     });
-                    // this.$destroy();
                   }
                 }
               });
@@ -1086,7 +1058,7 @@ export default {
                     if (this.saveType === 0) {
                       this.$router.push({
                         name: 'Order.OrderUploadInvoice',
-                        params: { orderNo: this.orderNo }
+                        params: { orderNo: this.orderNo, orderFollowId: this.orderFollowId }
                       });
                       // this.$destroy();
                     }
@@ -1270,7 +1242,7 @@ export default {
               if (this.saveType === 0) {
                 this.$router.push({
                   name: 'Order.OrderUploadInvoice',
-                  params: { orderNo: this.orderNo }
+                  params: { orderNo: this.orderNo, orderFollowId: this.orderFollowId }
                 });
               }
             }
@@ -1302,17 +1274,19 @@ export default {
               ? this.$vnode.componentOptions.Ctor.cid + (this.$vnode.componentOptions.tag ? `::${this.$vnode.componentOptions.tag}` : '')
               : this.$vnode.key;
             const cache = this.$vnode.parent.componentInstance.cache;
-
             const keys = this.$vnode.parent.componentInstance.keys;
-            if (cache[key]) {
-              if (keys.length) {
-                const index = keys.indexOf(key);
-                if (index > -1) {
-                  keys.splice(index, 1);
-                }
-              }
-              delete cache[key];
+            for (let i = 0; i < keys.length; i++) {
+              delete cache[keys[i]];
             }
+            // if (cache[key]) {
+            //   if (keys.length) {
+            //     const index = keys.indexOf(key);
+            //     if (index > -1) {
+            //       keys.splice(index, 1);
+            //     }
+            //   }
+            //   delete cache[key];
+            // }
           }
         }
       }

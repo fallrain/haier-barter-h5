@@ -118,7 +118,7 @@ export default {
           }
         });
         if (arr.length === 0) {
-	        arr = this.searchList;
+          arr = this.searchList;
         }
       }
       return arr;
@@ -142,6 +142,7 @@ export default {
       this.productService.list(searchStr, '1', '30').then((res) => {
         // ;
         if (res.code === 1) {
+
           this.searchList = res.data;
           if (res.data === null) {
             Toast.failed('暂无信息，请重新搜索');
@@ -150,19 +151,6 @@ export default {
         }
       });
     },
-    // indexOf(val) {
-    //
-    //   for (let i = 0; i < this.searchHistory.length; i++) {
-    //     if (this.searchHistory[i] == val) return i;
-    //   }
-    //   return -1;
-    // },
-    // remove (val) {
-    //   var index = this.indexOf(val);
-    //   if (index > -1) {
-    //     this.splice(index, 1);
-    //   }
-    // },
     scanQRCodePro() {
       wx.ready(() => {
         wx.scanQRCode({
@@ -199,8 +187,15 @@ export default {
       return !!array.find(v => v.productCode === obj.productCode);
     },
     onItemClick(item) {
-	    this.currentClickItemData.productBrandCode = item.productBrandCode;
-	    this.currentClickItemData.productBrandName = item.productBrandName;
+      debugger
+      if(item.productGroup === null || item.productGroupName === null){
+        Toast.info('产品组名称不能为空')
+        return
+      }
+	    this.currentClickItemData.productGroup = item.productGroup;
+	    this.currentClickItemData.productGroupName = item.productGroupName;
+      this.currentClickItemData.productBrandCode = item.productBrandCode;
+      this.currentClickItemData.productBrandName = item.productBrandName;
       const orderMode = this.recordMode;
       if (orderMode === 'Casarte') {
         if (item.productBrandName != '卡萨帝') {
@@ -217,11 +212,9 @@ export default {
           this.currentClickItemData.price = res.data.price;
           this.currentClickItemData.industryCode = res.data.industryCode;
           this.currentClickItemData.industryName = res.data.industryName;
-          // this.currentClickItemData.productBrandCode = res.data.productBrandCode;
-          // this.currentClickItemData.productBrandName = res.data.productBrandName;
           this.currentClickItemData.productCode = res.data.productCode;
-          this.currentClickItemData.productGroup = res.data.productGroup;
-          this.currentClickItemData.productGroupName = res.data.productGroupName;
+          // this.currentClickItemData.productGroup = res.data.productGroup;
+          // this.currentClickItemData.productGroupName = res.data.productGroupName;
           this.currentClickItemData.productModel = res.data.productModel;
           this.$router.go(-1);
         }
@@ -243,68 +236,68 @@ export default {
 </script>
 
 <style lang="scss">
-  .md-toast-text{
-    white-space: normal !important;
-  }
-  .searchProduct-notice-bar-title {
-    color: #E89748;
-  }
+.md-toast-text{
+	white-space: normal !important;
+}
+.searchProduct-notice-bar-title {
+	color: #E89748;
+}
 
-  .searchProduct-history {
-    padding-left: 24px;
-    padding-right: 24px;
-    padding-bottom: 4px;
-    background: #fff;
-  }
+.searchProduct-history {
+	padding-left: 24px;
+	padding-right: 24px;
+	padding-bottom: 4px;
+	background: #fff;
+}
 
-  .searchProduct-history-item {
-    border-bottom: 1px solid #CCC;
-    padding-left: 30px;
-    padding-right: 30px;
-    height: 78px;
-    line-height: 78px;
-    color: #666;
-    font-size: 28px;
-  }
+.searchProduct-history-item {
+	border-bottom: 1px solid #CCC;
+	padding-left: 30px;
+	padding-right: 30px;
+	height: 78px;
+	line-height: 78px;
+	color: #666;
+	font-size: 28px;
+}
 
-  .searchProduct-secret {
-    padding: 24px;
+.searchProduct-secret {
+	padding: 24px;
 
-    strong {
-      color: #1969C6;
-    }
-  }
+	strong {
+		color: #1969C6;
+	}
+}
 
-  .searchProduct-secret-title {
-    font-size: 28px;
-    color: #666;
-    margin-bottom: 20px;
-  }
+.searchProduct-secret-title {
+	font-size: 28px;
+	color: #666;
+	margin-bottom: 20px;
+}
 
-  .searchProduct-secret-warn {
-    color: #F5A623;
-  }
+.searchProduct-secret-warn {
+	color: #F5A623;
+}
 
-  .searchProduct-secret-con {
-    color: #333;
-    font-size: 24px;
-    line-height: 40px;
-  }
+.searchProduct-secret-con {
+	color: #333;
+	font-size: 24px;
+	line-height: 40px;
+}
 
-  .searchProduct-scan-wrap {
-    display: flex;
-    align-items: center;
-    color: #1969C6;
+.searchProduct-scan-wrap {
+	display: flex;
+	align-items: center;
+	color: #1969C6;
 
-    .icon-saomiao {
-      font-size: 40px;
-    }
-  }
+	.icon-saomiao {
+		font-size: 40px;
+	}
+}
 
-  .searchProduct-scan-inf {
-    line-height: 1;
-    margin-left: 12px;
-    font-size: 20px;
-    writing-mode: vertical-lr;
-  }
+.searchProduct-scan-inf {
+	line-height: 1;
+	margin-left: 12px;
+	font-size: 20px;
+	writing-mode: vertical-lr;
+}
 </style>
