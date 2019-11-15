@@ -600,7 +600,7 @@ export default {
           this.shopName = resData.storeName;
           this.rightId = resData.rightId;
           this.rightsJson = resData.rightsUserJson;
-          debugger
+          debugger;
           this.rightName = resData.rightName;
           this.consignee.name = resData.consigneeName;
           this.customerInfo.username = resData.userName;
@@ -896,7 +896,7 @@ export default {
         part.push(this.multBuySponsor[0].username);
       }
       if (this.rightsJson) {
-        debugger
+        debugger;
         const tempJson = JSON.parse(this.rightsJson);
         if (tempJson.rightsUserInterestsDetailsDTO.length === 0) {
           this.rightsJson = '';
@@ -976,7 +976,7 @@ export default {
       subInfo.sourceSn = this.sourceSn; // 来源编码，记录来源ID
       subInfo.remark = ''; // 备注，记录订单创建、订单修改原因等信息
       subInfo.rightsUserJson = this.rightsJson;
-      debugger
+      debugger;
       subInfo.orderDetailSaveQoList = this.productList;
       this.subInfo = subInfo;
       if (type === 2) {
@@ -1041,7 +1041,11 @@ export default {
                   if (this.saveType === 1) {
                     Toast.succeed('订单暂存成功');
                     localStorage.setItem('confirm', 'caogao');
-                    this.$router.go(-1);
+                    // this.$router.go(-1);
+                    this.$router.push({
+                      name: 'Order.OrderFollowSearch',
+                      params: { }
+                    });
                   }
                   if (this.saveType === 0) {
                     this.$router.push({
