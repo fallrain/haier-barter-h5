@@ -1036,7 +1036,8 @@ export default {
                     }, 1000);
                   }
                   if (this.saveType === 0) {
-                    localStorage.setItem('orderFollowId', res.data);
+                    // localStorage.setItem('orderFollowId', res.data);
+                    this.orderFollowId = res.data;
                     this.$router.push({
                       name: 'Order.OrderUploadInvoice',
                       params: { orderNo: this.orderNo, orderFollowId: this.orderFollowId }

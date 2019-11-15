@@ -532,6 +532,7 @@ export default {
     }
   },
   created() {
+    debugger;
     this.addressData = addressData;
     this.orderNo = this.$route.params.orderNo;
     if (this.$route.params.orderFollowId) {
@@ -1011,7 +1012,7 @@ export default {
                       if (res.code === 1) {
                         if (this.saveType === 1) {
                           Toast.succeed('订单暂存成功');
-                          this.$router.push({
+                          this.$router.replace({
                             name: 'Order.OrderFollowSearch',
                             params: { }
                           });
@@ -1042,7 +1043,7 @@ export default {
                     Toast.succeed('订单暂存成功');
                     localStorage.setItem('confirm', 'caogao');
                     // this.$router.go(-1);
-                    this.$router.push({
+                    this.$router.replace({
                       name: 'Order.OrderFollowSearch',
                       params: { }
                     });
@@ -1171,7 +1172,7 @@ export default {
               if (this.saveType === 1) {
                 Toast.succeed('订单暂存成功');
                 localStorage.setItem('confirm', 'caogao');
-                this.$router.push({
+                this.$router.replace({
                   name: 'Order.OrderFollowSearch',
                   params: { }
                 });
