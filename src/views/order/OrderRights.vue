@@ -727,13 +727,13 @@ export default {
                 this.rightsUserDto.push(r);
               });
             } else {
-              const r = {
-                rightsId: item.rightsNo,
-                rightsGroup: '',
-                configId: ''
-              };
               let timestamp = '';
               item.rightsSelectedGroupDtoList.forEach((sel) => {
+                const r = {
+                  rightsId: item.rightsNo,
+                  rightsGroup: '',
+                  configId: ''
+                };
                 timestamp = new Date().getTime();
                 let Num = 0;
                 for (let i = 0; i < 6; i++) {
