@@ -322,7 +322,7 @@ export default {
       // 是否详情模式
       isDetail: false,
       orderSource: '',
-      orderInfo:{},
+      orderInfo: {},
       sourceSn: '',
       orderFollowId: '',
       rightsList: [],
@@ -511,7 +511,7 @@ export default {
             pro.industryCode = obj.product.industryCode;
             pro.productBrand = obj.product.productBrandCode;
             pro.productCategoryCode = obj.product.productGroup;
-            pro.productCategoryName = obj.product.productGroupNae;
+            pro.productCategoryName = obj.product.productGroupName;
             pro.productCode = obj.product.productCode;
             pro.productModel = obj.product.productModel;
             pro.installTime = '';
@@ -619,16 +619,16 @@ export default {
     // 获取权益列表
     getActivityList() {
       const obj = {
-        orderDetailSaveQoList :this.productList,
-        orderNo:this.orderNo,
-        rightsUserJson:this.rightsJson
-      }
+        orderDetailSaveQoList: this.productList,
+        orderNo: this.orderNo,
+        rightsUserJson: this.rightsJson
+      };
       this.rightsService.getRightsConfigInfo(obj, {}).then((res) => {
         if (res.code === 1) {
           if (res.data.length !== 0) {
             this.rightsList = res.data;
-            ri.startTime = ri.startTime.substring(0,10)
-            ri.endTime = ri.endTime.substring(0,10)
+            ri.startTime = ri.startTime.substring(0, 10);
+            ri.endTime = ri.endTime.substring(0, 10);
           }
         }
       });
@@ -817,7 +817,6 @@ export default {
     },
     // 暂存
     saveTemporary(type) {
-      debugger;
       if (type === 1) {
         this.saveType = 1;
       } else {
@@ -1012,7 +1011,7 @@ export default {
                       if (this.saveType === 0) {
                         this.$router.push({
                           name: 'Order.OrderUploadInvoice',
-                          params: { orderNo: this.orderNo }
+                          params: { orderNo: this.orderNo, orderFollowId: this.orderFollowId }
                         });
                       }
                     }
@@ -1040,7 +1039,7 @@ export default {
                     localStorage.setItem('orderFollowId', res.data);
                     this.$router.push({
                       name: 'Order.OrderUploadInvoice',
-                      params: { orderNo: this.orderNo }
+                      params: { orderNo: this.orderNo, orderFollowId: this.orderFollowId }
                     });
                   }
                 }
@@ -1059,7 +1058,7 @@ export default {
                     if (this.saveType === 0) {
                       this.$router.push({
                         name: 'Order.OrderUploadInvoice',
-                        params: { orderNo: this.orderNo }
+                        params: { orderNo: this.orderNo, orderFollowId: this.orderFollowId }
                       });
                       // this.$destroy();
                     }
@@ -1243,7 +1242,7 @@ export default {
               if (this.saveType === 0) {
                 this.$router.push({
                   name: 'Order.OrderUploadInvoice',
-                  params: { orderNo: this.orderNo }
+                  params: { orderNo: this.orderNo, orderFollowId: this.orderFollowId }
                 });
               }
             }
@@ -1276,7 +1275,7 @@ export default {
               : this.$vnode.key;
             const cache = this.$vnode.parent.componentInstance.cache;
             const keys = this.$vnode.parent.componentInstance.keys;
-            for(let i = 0;i < keys.length;i ++){
+            for (let i = 0; i < keys.length; i++) {
               delete cache[keys[i]];
             }
             // if (cache[key]) {

@@ -485,8 +485,7 @@ export default {
         this.rightsJson = obj.rightsJson;
         this.isDetail = true;
         if (rightsPro.length > 0 && rightsPro[0] !== '') {
-
-          this.getActivityList()
+          this.getActivityList();
         } else {
           this.rightsList = [];
           this.rightsJson = '';
@@ -494,10 +493,10 @@ export default {
           this.rightId = '';
         }
       } else {
-        this.rightsList = []
-        this.rightsJson = ''
-        this.rightName = ''
-        this.rightId = ''
+        this.rightsList = [];
+        this.rightsJson = '';
+        this.rightName = '';
+        this.rightId = '';
       }
       if (obj.product) {
         if (!obj.product.productGroupName) {
@@ -535,11 +534,11 @@ export default {
   created() {
     this.addressData = addressData;
     this.orderNo = this.$route.params.orderNo;
-    if(this.$route.params.orderFollowId){
+    if (this.$route.params.orderFollowId) {
       this.orderFollowId = this.$route.params.orderFollowId;
-    }else {
-      Toast.failed('异常：待办id为空')
-      return
+    } else {
+      Toast.failed('异常：待办id为空');
+      return;
     }
     if (this.$route.params.freezeMsg) {
       if (this.$route.params.freezeMsg == 'Y') {
@@ -565,24 +564,24 @@ export default {
     }
   },
   methods: {
-    //获取权益列表
-    getActivityList(){
+    // 获取权益列表
+    getActivityList() {
       const obj = {
-        orderDetailSaveQoList :this.productList,
-        orderNo:this.orderNo,
-        rightsUserJson:this.rightsJson
-      }
-      this.rightsService.getRightsConfigInfo(obj,{}).then(res => {
-        if(res.code === 1){
-          if(res.data.length !== 0){
-            this.rightsList = res.data
-            this.rightsList.forEach(ri => {
-              ri.startTime = ri.startTime.substring(0,10)
-              ri.endTime = ri.endTime.substring(0,10)
-            })
+        orderDetailSaveQoList: this.productList,
+        orderNo: this.orderNo,
+        rightsUserJson: this.rightsJson
+      };
+      this.rightsService.getRightsConfigInfo(obj, {}).then((res) => {
+        if (res.code === 1) {
+          if (res.data.length !== 0) {
+            this.rightsList = res.data;
+            this.rightsList.forEach((ri) => {
+              ri.startTime = ri.startTime.substring(0, 10);
+              ri.endTime = ri.endTime.substring(0, 10);
+            });
           }
         }
-      })
+      });
     },
     radioChange(val) {
       this.orderType = val;
@@ -632,7 +631,7 @@ export default {
           this.shopName = resData.storeName;
           this.rightId = resData.rightId;
           this.rightsJson = resData.rightsUserJson;
-          debugger
+
           this.rightName = resData.rightName;
           this.consignee.name = resData.consigneeName;
           this.customerInfo.username = resData.userName;
@@ -710,8 +709,8 @@ export default {
           }
           if (!this.isDetail) {
             if (resData.rightsUserJson) {
-              this.rightsJson = resData.rightsUserJson
-              this.getActivityList()
+              this.rightsJson = resData.rightsUserJson;
+              this.getActivityList();
             }
           }
           this.queryCustomerDefault();
@@ -925,7 +924,6 @@ export default {
         part.push(this.multBuySponsor[0].username);
       }
       if (this.rightsJson) {
-
         const tempJson = JSON.parse(this.rightsJson);
         if (tempJson.rightsUserInterestsDetailsDTO.length === 0) {
           this.rightsJson = '';
@@ -974,7 +972,7 @@ export default {
       subInfo.sourceSn = this.sourceSn; // 来源编码，记录来源ID
       subInfo.remark = ''; // 备注，记录订单创建、订单修改原因等信息
       subInfo.rightsUserJson = this.rightsJson;
-      debugger
+
       subInfo.orderDetailSaveQoList = this.productList;
       this.subInfo = subInfo;
       if (type === 2) {
@@ -1207,7 +1205,7 @@ export default {
             const cache = this.$vnode.parent.componentInstance.cache;
             const keys = this.$vnode.parent.componentInstance.keys;
 
-            for(let i = 0;i < keys.length;i ++){
+            for (let i = 0; i < keys.length; i++) {
               delete cache[keys[i]];
             }
 
