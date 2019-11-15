@@ -720,23 +720,23 @@ export default {
                 r.rightsGroup = timestamp;
                 this.rightsDetailList.push(a);
                 r.configId = sel.configId;
-
                 this.rightsUserDto.push(r);
               });
             } else {
-              const r = {
-                rightsId: item.rightsNo,
-                rightsGroup: '',
-                configId: ''
-              };
               let timestamp = '';
               item.rightsSelectedGroupDtoList.forEach((sel) => {
+                const r = {
+                  rightsId: item.rightsNo,
+                  rightsGroup: '',
+                  configId: ''
+                };
                 timestamp = new Date().getTime();
                 let Num = 0;
                 for (let i = 0; i < 6; i++) {
                   Num += Math.pow(10, i) * Math.floor(Math.random() * 10);
                 }
                 timestamp += Num;
+                debugger
                 sel.selcted.forEach((val) => {
                   const a = {};
                   a.orderDetailId = val;
@@ -767,7 +767,7 @@ export default {
         }
         rightJson.rightsUserInterestsDTO = this.rightsUserDto;
         this.rightsJson = JSON.stringify(rightJson);
-
+        debugger
         this.$router.go(-1);
       }
     },

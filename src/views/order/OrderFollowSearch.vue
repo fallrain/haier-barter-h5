@@ -293,9 +293,9 @@ export default {
     //   // hmcid: 'a0008949',
     //   // mobile: '18561715460',
     //   // shopId: '8800136445',
-    //   hmcid: '01467897',
-    //   mobile: '15253269729',
-    //   shopId: '8700000484',
+    //   // hmcid: '01467897',
+    //   // mobile: '15253269729',
+    //   // shopId: '8700000484',
     //   // shopId:'8800117018',
     //   // hmcid: 'a0032254',
     //   // mobile: '15621017056',
@@ -305,8 +305,12 @@ export default {
     //   // orderMode: 'Casarte',
     //   // mobile: '15621017056',
     //   // shopId: '8800266470',
-    //   // token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IjAxNDY3ODk3Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MzA1NDQ5MywiZXhwIjoxNTczOTE4NDkzfQ.S-muCQ1CljjtzgqdnzaBlN1K2VYT7TJ0m5Q54r_FtGg'}
-    //   token: 'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IjAxNDY3ODk3Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MzUyNjA4NCwiZXhwIjoxNTc0MzkwMDg0fQ.ZjbXfLSWiTjDIOn2xlWGj9SNcG7M6HnoM1zgNHLrk-c'
+    //   hmcid: 'A0032188',
+    //   mobile: '15006480711',
+    //   shopId: '8800007470',
+    //   token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IkEwMDMyMTg4Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MzgxNjg2MCwiZXhwIjoxNTc0NjgwODYwfQ.SPGg7u7zqyz3prpSrpSSB7HTWPrHlIjNpC1mkmeTuCA'
+    //
+    //   // token: 'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IjAxNDY3ODk3Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MzUyNjA4NCwiZXhwIjoxNTc0MzkwMDg0fQ.ZjbXfLSWiTjDIOn2xlWGj9SNcG7M6HnoM1zgNHLrk-c'
     // }
     //   const Str = JSON.stringify(this.userinfo);
     // localStorage.setItem('userinfo', Str);
