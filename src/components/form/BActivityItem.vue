@@ -38,8 +38,11 @@
             <span class="activity-name-icon">购</span>
             <span class="activity-common-left activity-common-product">全部型号</span>
           </div>
-          <span class="activity-common-product activity-common-left activity-float">共<span
+          <span class="activity-common-product activity-common-left activity-float" v-show="getData.giveGiftMode !== 'ratio'">共<span
             class="activity-type-text">{{item.rightsGiftTotal}}</span>份，剩余<span class="activity-count-remain">{{item.rightsGiftSurplus}}</span>份</span>
+          <span v-show="getData.giveGiftMode === 'ratio'" class="activity-common-product activity-common-left activity-float activity-type-text">
+            剩余多份
+          </span>
         </div>
 
         <!--套购-->
@@ -80,7 +83,7 @@
           <span class="activity-common-product activity-common-left activity-item-gift-desc"
                 v-show="getData.giveGiftMode === 'fixed'">{{item.giveIntegralValue}}积分</span>
           <span class="activity-common-product activity-common-left activity-item-gift-desc"
-                v-show="getData.giveGiftMode === 'ratio'">{{item.integralPriceRatio}}</span>
+                v-show="getData.giveGiftMode === 'ratio'">{{item.integralPriceRatio}}%比例积分</span>
           <span class="activity-common-product activity-common-left activity-item-gift-desc"
                 v-show="getData.giftType === 'virtual'">{{item.virtualGiftName}}</span>
         </div>

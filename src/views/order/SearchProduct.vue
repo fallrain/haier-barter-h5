@@ -187,9 +187,15 @@ export default {
       return !!array.find(v => v.productCode === obj.productCode);
     },
     onItemClick(item) {
-
-	    this.currentClickItemData.productBrandCode = item.productBrandCode;
-	    this.currentClickItemData.productBrandName = item.productBrandName;
+      debugger
+      if(item.productGroup === null || item.productGroupName === null){
+        Toast.info('产品组名称不能为空')
+        return
+      }
+	    this.currentClickItemData.productGroup = item.productGroup;
+	    this.currentClickItemData.productGroupName = item.productGroupName;
+      this.currentClickItemData.productBrandCode = item.productBrandCode;
+      this.currentClickItemData.productBrandName = item.productBrandName;
       const orderMode = this.recordMode;
       if (orderMode === 'Casarte') {
         if (item.productBrandName != '卡萨帝') {
@@ -206,11 +212,9 @@ export default {
           this.currentClickItemData.price = res.data.price;
           this.currentClickItemData.industryCode = res.data.industryCode;
           this.currentClickItemData.industryName = res.data.industryName;
-          // this.currentClickItemData.productBrandCode = res.data.productBrandCode;
-          // this.currentClickItemData.productBrandName = res.data.productBrandName;
           this.currentClickItemData.productCode = res.data.productCode;
-          this.currentClickItemData.productGroup = res.data.productGroup;
-          this.currentClickItemData.productGroupName = res.data.productGroupName;
+          // this.currentClickItemData.productGroup = res.data.productGroup;
+          // this.currentClickItemData.productGroupName = res.data.productGroupName;
           this.currentClickItemData.productModel = res.data.productModel;
           this.$router.go(-1);
         }
