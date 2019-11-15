@@ -40,8 +40,11 @@
           </div>
           <span class="activity-common-product activity-common-left activity-float" v-show="getData.giveGiftMode !== 'ratio'">共<span
             class="activity-type-text">{{item.rightsGiftTotal}}</span>份，剩余<span class="activity-count-remain">{{item.rightsGiftSurplus}}</span>份</span>
-          <span v-show="getData.giveGiftMode === 'ratio'" class="activity-common-product activity-common-left activity-float activity-type-text">
+          <span v-show="getData.giveGiftMode === 'ratio' && item.rightsGiftSurplus !== 0" class="activity-common-product activity-common-left activity-float activity-type-text">
             剩余多份
+          </span>
+          <span v-show="getData.giveGiftMode === 'ratio' && item.rightsGiftSurplus === 0" class="activity-common-product activity-common-left activity-float activity-type-text">
+            积分已领完
           </span>
         </div>
 
