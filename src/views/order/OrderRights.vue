@@ -672,8 +672,6 @@ export default {
             if (res.data.length > 0) {
               item.isShowConfig = true;
               this.$set(item, 'configList', res.data);
-
-              // item.configList = res.data;
             } else {
               item.configList = [];
             }
@@ -681,7 +679,6 @@ export default {
         });
     },
     showLimit(item) {
-      // item.rightsNo = 'HBR53341494705815552'
       this.rightsService.viewOtherLimited({}, { rightsNo: item.rightsNo })
         .then((res) => {
           if (res.code === 1) {
@@ -723,7 +720,6 @@ export default {
                 r.rightsGroup = timestamp;
                 this.rightsDetailList.push(a);
                 r.configId = sel.configId;
-
                 this.rightsUserDto.push(r);
               });
             } else {
@@ -740,6 +736,7 @@ export default {
                   Num += Math.pow(10, i) * Math.floor(Math.random() * 10);
                 }
                 timestamp += Num;
+                debugger
                 sel.selcted.forEach((val) => {
                   const a = {};
                   a.orderDetailId = val;
@@ -770,7 +767,7 @@ export default {
         }
         rightJson.rightsUserInterestsDTO = this.rightsUserDto;
         this.rightsJson = JSON.stringify(rightJson);
-
+        debugger
         this.$router.go(-1);
       }
     },

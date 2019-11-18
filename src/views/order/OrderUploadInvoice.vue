@@ -111,6 +111,7 @@ export default {
     console.log('tag', this.$route.params);
     if (this.$route.params.orderNo) {
       this.orderNo = this.$route.params.orderNo;
+      this.orderFollowId = this.$route.params.orderFollowId;
       this.getData();
     }
   },
@@ -120,7 +121,7 @@ export default {
     skipUpload() {
       this.$router.push({
         name: 'Order.OrderConfirm',
-        params: { orderNo: this.orderNo }
+        params: { orderNo: this.orderNo, orderFollowId: this.orderFollowId }
       });
     },
     uploadSuccess(data, fileMap, product) {
@@ -165,7 +166,7 @@ export default {
           setTimeout(() => {
             this.$router.push({
               name: 'Order.OrderConfirm',
-              params: { orderNo: this.orderNo }
+              params: { orderNo: this.orderNo, orderFollowId: this.orderFollowId }
             });
           }, 800);
         }

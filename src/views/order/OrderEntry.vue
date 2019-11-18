@@ -322,6 +322,7 @@ export default {
       // 是否详情模式
       isDetail: false,
       orderSource: '',
+      orderInfo: {},
       sourceSn: '',
       orderFollowId: '',
       rightsList: [],
@@ -358,18 +359,6 @@ export default {
       productList: [],
       // 活动列表
       activityList: [
-        {
-          id: 1,
-          activityName: '6月场景套权益昆明小微',
-          inf: '满10000元送7500积分',
-          num: 33
-        },
-        {
-          id: 2,
-          activityName: '6月场景套权益昆明小微',
-          inf: '满10000元送7500积分',
-          num: 21
-        }
       ],
       // 选中的活动id
       choosedActivitys: [],
@@ -541,20 +530,19 @@ export default {
         this.rightsJson = obj.rightsJson;
         this.isDetail = true;
         if (rightsPro.length > 0 && rightsPro[0] !== '') {
-          this.rightsList = rightsPro;
+          this.getActivityList();
         } else {
           this.rightsList = [];
           this.rightsJson = '';
           this.rightName = '';
           this.rightId = '';
         }
+      } else {
+        this.rightsList = [];
+        this.rightsJson = '';
+        this.rightName = '';
+        this.rightId = '';
       }
-      // else {
-      //   this.rightsList = []
-      //   this.rightsJson = ''
-      //   this.rightName = ''
-      //   this.rightId = ''
-      // }
     } else if (this.$route.params.region != 'hand') {
       if (localStorage.getItem('invoice') == 'true') {
         localStorage.setItem('invoice', '');
@@ -584,7 +572,7 @@ export default {
     }
     if (this.$route.params.customerConsigneeInfo.freezeMsg) {
     	this.freezeMsg = this.$route.params.customerConsigneeInfo.freezeMsg;
-      if (this.freezeMsg == 'Y') {
+      if (this.freezeMsg === 'Y') {
         this.handRegion = true;
       }
     }
@@ -628,6 +616,23 @@ export default {
     }
   },
   methods: {
+    // 获取权益列表
+    getActivityList() {
+      const obj = {
+        orderDetailSaveQoList: this.productList,
+        orderNo: this.orderNo,
+        rightsUserJson: this.rightsJson
+      };
+      this.rightsService.getRightsConfigInfo(obj, {}).then((res) => {
+        if (res.code === 1) {
+          if (res.data.length !== 0) {
+            this.rightsList = res.data;
+            ri.startTime = ri.startTime.substring(0, 10);
+            ri.endTime = ri.endTime.substring(0, 10);
+          }
+        }
+      });
+    },
     isReportInstall(pro) {
       const orderDetailDtoList = [
         {
@@ -716,7 +721,6 @@ export default {
       if (this.recordMode == '' || !this.recordMode) {
         this.recordMode = 'Haier';
       }
-
       this.orderService.generateOrderNo({}, { recordMode: this.recordMode },).then((res) => {
         if (res.code === 1) {
           this.orderNo = res.data;
@@ -813,7 +817,6 @@ export default {
     },
     // 暂存
     saveTemporary(type) {
-      debugger;
       if (type === 1) {
         this.saveType = 1;
       } else {
@@ -1008,7 +1011,7 @@ export default {
                       if (this.saveType === 0) {
                         this.$router.push({
                           name: 'Order.OrderUploadInvoice',
-                          params: { orderNo: this.orderNo }
+                          params: { orderNo: this.orderNo, orderFollowId: this.orderFollowId }
                         });
                       }
                     }
@@ -1033,13 +1036,12 @@ export default {
                     }, 1000);
                   }
                   if (this.saveType === 0) {
-                    localStorage.setItem('orderFollowId', res.data);
-                    ;
+                    // localStorage.setItem('orderFollowId', res.data);
+                    this.orderFollowId = res.data;
                     this.$router.push({
                       name: 'Order.OrderUploadInvoice',
-                      params: { orderNo: this.orderNo }
+                      params: { orderNo: this.orderNo, orderFollowId: this.orderFollowId }
                     });
-                    // this.$destroy();
                   }
                 }
               });
@@ -1057,7 +1059,7 @@ export default {
                     if (this.saveType === 0) {
                       this.$router.push({
                         name: 'Order.OrderUploadInvoice',
-                        params: { orderNo: this.orderNo }
+                        params: { orderNo: this.orderNo, orderFollowId: this.orderFollowId }
                       });
                       // this.$destroy();
                     }
@@ -1241,7 +1243,7 @@ export default {
               if (this.saveType === 0) {
                 this.$router.push({
                   name: 'Order.OrderUploadInvoice',
-                  params: { orderNo: this.orderNo }
+                  params: { orderNo: this.orderNo, orderFollowId: this.orderFollowId }
                 });
               }
             }
@@ -1274,7 +1276,7 @@ export default {
               : this.$vnode.key;
             const cache = this.$vnode.parent.componentInstance.cache;
             const keys = this.$vnode.parent.componentInstance.keys;
-            for(let i = 0;i < keys.length;i ++){
+            for (let i = 0; i < keys.length; i++) {
               delete cache[keys[i]];
             }
             // if (cache[key]) {
