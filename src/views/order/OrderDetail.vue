@@ -195,6 +195,10 @@ export default {
         if(res.code === 1){
           if(res.data.length !== 0){
             this.activityList = res.data
+            this.activityList.forEach(ri => {
+              ri.startTime = ri.startTime.substring(0, 10);
+              ri.endTime = ri.endTime.substring(0, 10);
+            })
           }
         }
       })
