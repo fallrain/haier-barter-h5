@@ -411,6 +411,7 @@ export default {
             });
           });
           this.addressAllList = res.data;
+          this.bUtil.analyzeAddressList(this.addressAllList);
           this.addressPopShow = true;
         }
       });
