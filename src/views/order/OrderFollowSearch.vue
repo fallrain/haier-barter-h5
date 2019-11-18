@@ -9,13 +9,19 @@
       </md-notice-bar>
     </div>
     <div class="search-class">
-      <input
-        class="input-class"
-        confirm-type="search"
-        placeholder="搜索用户姓名、电话"
-        placeholder-style="font-size: 28px;color: #BBBBBB;margin-left: 10px;"
-        v-model="searchWord"
-      />
+
+      <form action="" @submit.prevent="()=>{return false}">
+        <input
+          class="input-class"
+          confirm-type="search"
+          placeholder="搜索用户姓名、电话"
+          placeholder-style="font-size: 28px;color: #BBBBBB;margin-left: 10px;"
+          v-model="searchWord"
+          type="search"
+          @keyup.enter="fuzzySearch"
+        />
+      </form>
+
       <img
         src="@/assets/images/orderFollow-up/search@3x.png"
         class="search-image"
@@ -23,6 +29,12 @@
       >
       <p class="orderFollowButton-search" @click="handEntry()">手动录单</p>
     </div>
+    <b-order-follow-search-bar
+      v-show="curScrollViewName==='scrollView'"
+      :scenarioList="scenarioList"
+      @checkClick="checkClicked"
+      @popButtonClicked="buttonClicked"
+    ></b-order-follow-search-bar>
     <div
       id="scrollView"
       ref="scrollView"
@@ -42,6 +54,12 @@
         @maybeBuyer="maybeBuyer"
       ></b-order-follow-item>
     </div>
+    <b-order-follow-search-bar
+      v-show="curScrollViewName==='scrollViewFinished'"
+      :scenarioList="scenarioList"
+      @checkClick="checkClicked"
+      @popButtonClicked="buttonClicked"
+    ></b-order-follow-search-bar>
     <div
       id="scrollViewFinished"
       ref="scrollViewFinished"
@@ -61,6 +79,12 @@
         @maybeBuyer="maybeBuyer"
       ></b-order-follow-item>
     </div>
+    <b-order-follow-search-bar
+      v-show="curScrollViewName==='scrollViewOdd'"
+      :scenarioList="scenarioList"
+      @checkClick="checkClicked"
+      @popButtonClicked="buttonClicked"
+    ></b-order-follow-search-bar>
     <div
       id="scrollViewOdd"
       ref="scrollViewOdd"
@@ -77,6 +101,12 @@
         @gujiaClick="gujiaClick"
       ></b-order-follow-item>
     </div>
+    <b-order-follow-search-bar
+      v-show="curScrollViewName==='scrollViewProgress'"
+      :scenarioList="scenarioList"
+      @checkClick="checkClicked"
+      @popButtonClicked="buttonClicked"
+    ></b-order-follow-search-bar>
     <div
       id="scrollViewProgress"
       ref="scrollViewProgress"
@@ -85,8 +115,6 @@
     >
       <b-order-follow-item
         :list="scrollViewProgress.list"
-        @checkClick="checkClicked"
-        @popButtonClicked="buttonClicked"
         @updateOrderType="updateOrderType"
         @followButtonClick="followButtonClicked"
         @userService="userService"
@@ -95,8 +123,7 @@
         @maybeBuyer="maybeBuyer"
       ></b-order-follow-item>
     </div>
-    <div style="height:60px"></div>
-    <div class="md-example-child md-example-child-tabs md-example-child-tab-bar-4">
+    <div class="js-md-tab-bar md-example-child md-example-child-tabs md-example-child-tab-bar-4">
       <md-tab-bar
         v-model="curTab"
         :items="items"
@@ -117,16 +144,14 @@
         </template>
       </md-tab-bar>
     </div>
-    <md-popup v-model="handEntryCon">
-      <div class="popHand">
-        您本月还有{{handCount}}个手工录单名额，超出限制后本月将不能手工录单！同时，手工录入的订单不能发放购机权益
-        <div class="pop-div">
-          <span @click="handEntryConfirm() " class="popConfirm1">确定</span>
-          <span @click="handEntryCancel()" class="popConfirm2">取消</span>
-        </div>
-
-      </div>
-    </md-popup>
+    <md-dialog
+      title=""
+      :closable="true"
+      v-model="handEntryCon"
+      :btns="basicDialog.btns"
+    >
+      您本月还有{{handCount}}个手工录单名额，超出限制后本月将不能手工录单！同时，手工录入的订单不能发放购机权益
+    </md-dialog>
   </div>
 </template>
 <script>
@@ -138,7 +163,8 @@ import {
   ScrollViewMore,
   ScrollViewRefresh,
   TabBar,
-  Toast
+  Toast,
+  Dialog
 } from 'mand-mobile';
 import {
   BPopButton,
@@ -147,16 +173,19 @@ import {
 import {
   BOrderFollowItem
 } from '@/components/orderFollow';
+import BOrderFollowSearchBar from '../../components/orderFollow/BOrderFollowSearchBar';
 
 export default {
   name: '',
   components: {
+    BOrderFollowSearchBar,
     [TabBar.name]: TabBar,
     [Icon.name]: Icon,
     [ScrollView.name]: ScrollView,
     [ScrollViewRefresh.name]: ScrollViewRefresh,
     [ScrollViewMore.name]: ScrollViewMore,
     [Toast.name]: Toast,
+    [Dialog.name]: Dialog,
     [NoticeBar.name]: NoticeBar,
     BPopSortType,
     BPopButton,
@@ -196,7 +225,7 @@ export default {
           icon: 'chengjiao'
         }
       ],
-      sortType: '',
+      sortType: 1,
       preIndex: '',
       currentScrollView: {},
       currentList: [],
@@ -230,7 +259,21 @@ export default {
       fuzzy: false,
       businessType: '',
       handEntryCon: false,
-      handCount: ''
+      handCount: '',
+      basicDialog: { // 模态框
+        btns: [
+          {
+            text: '取消',
+            handler: this.handEntryCancel,
+          },
+          {
+            text: '确认',
+            handler: this.handEntryConfirm,
+          },
+        ],
+      },
+      // 业务场景下拉数据
+      scenarioList: []
     };
   },
   activated() {
@@ -250,22 +293,30 @@ export default {
     //   // hmcid: 'a0008949',
     //   // mobile: '18561715460',
     //   // shopId: '8800136445',
-    //   // hmcid:'01467897',
+    //   // hmcid: '01467897',
     //   // mobile: '15253269729',
     //   // shopId: '8700000484',
-    //   hmcid: 'a0032254',
-    //   mobile: '15621017056',
-    //   shopId: '8700048360',
+    //   // shopId:'8800117018',
+    //   // hmcid: 'a0032254',
+    //   // mobile: '15621017056',
+    //   // shopId: '8700048360',
     //   // hmcid: '18000560',
     //   // orderMode: 'Haier',
     //   // orderMode: 'Casarte',
     //   // mobile: '15621017056',
     //   // shopId: '8800266470',
-    //   token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IkEwMDMyMjU0Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MTk3MjMwNywiZXhwIjoxNTcyODM2MzA3fQ.pSgDmSsv-CQypYKOi3qCFyN_SY3FC3whHGYV7faM-I8'}
-    // const Str = JSON.stringify(this.userinfo);
+    //   hmcid: 'A0032188',
+    //   mobile: '15006480711',
+    //   shopId: '8800007470',
+    //   token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IkEwMDMyMTg4Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MzgxNjg2MCwiZXhwIjoxNTc0NjgwODYwfQ.SPGg7u7zqyz3prpSrpSSB7HTWPrHlIjNpC1mkmeTuCA'
+    //
+    //   // token: 'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IjAxNDY3ODk3Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MzUyNjA4NCwiZXhwIjoxNTc0MzkwMDg0fQ.ZjbXfLSWiTjDIOn2xlWGj9SNcG7M6HnoM1zgNHLrk-c'
+    // }
+    //   const Str = JSON.stringify(this.userinfo);
     // localStorage.setItem('userinfo', Str);
     // localStorage.setItem('acces_token', this.userinfo.token);
     this.getNoticeData();
+    this.getScenarioList();
   },
   computed: {
     curScrollViewName() {
@@ -296,12 +347,15 @@ export default {
     this.bUtil.scroviewTabChange(this.curScrollViewName, this);
   },
   methods: {
-    getQueryString(name) {
-      const reg = new RegExp(`(^|&)${name}=([^&]*)(&|$)`, 'i');
-      const r = window.location.search.substr(1).match(reg);
-      if (r != null) return unescape(r[2]);
-      return null;
+    getScenarioList() {
+      /* 获取业务场景下拉数据 */
+      this.productService.commonTypeQuery('BUSINESS_SCENARIOS').then((res) => {
+        if (res.code === 1) {
+          this.scenarioList = res.data;
+        }
+      });
     },
+    // 获取消息
     getNoticeData() {
       this.orderService
         .queryOverTwentyFourHourOrder().then((res) => {
@@ -313,6 +367,7 @@ export default {
     change(item, index, prevIndex) {
       this.curTab = index;
     },
+    // 手工录单
     handEntry() {
       this.orderService.checkCreateOrder().then((res) => { // 判断店铺是否冻结
         if (res.code != -1) {
@@ -325,8 +380,6 @@ export default {
             if (res.code === 1) {
               this.handEntryCon = true;
               this.handCount = res.data;
-            } else {
-              Toast.info('您已没有手动录单条数，请选择其他录单方式', 3000);
             }
           });
         }
@@ -354,22 +407,18 @@ export default {
     gujiaClick(item) {
       wx.miniProgram.navigateTo({
         // url: `/pages/userService/userService?userId=${item.userId}&userName=${item.userName}&mobile=${item.userMobile}&workFlowId=${item.workFlowId}&flowStatus=${item.flowStatus}&domainName=${item.domainName}&id=${item.id}` });
-        url: `/pages/message/valuationInfo/valuationInfo?odlfornewdbId=${item.sourceSn}&workFlowId=${item.id}`
+        url: `/pages/message/valuationInfo/valuationInfo?odlfornewdbId=${item.sourceSn}&workFlowId=${item.id}&storeId=${item.storeId}`
       });
     },
     againEntry(item) {
-      // this.orderService.createNewOrder({}, { orderNo: item.orderNo }).then((res) => {
-      //   if (res.code === 1) {
-      //     Toast.succeed(res.msg);
-      //   }
-      // });
       this.$router.push({
         name: 'Order.OrderEntry',
         params: {
           customerConsigneeInfo: {
-            userName: item.userName,
+            username: item.userName,
             mobile: item.userMobile,
-            recordMode: item.recordMode
+            recordMode: item.recordMode,
+            businessScenarios: item.businessScenarios,
           },
           region: 'new'
         }
@@ -378,32 +427,16 @@ export default {
     // 入户服务
     userService(item) {
       wx.miniProgram.navigateTo({
-        // url: `/pages/userService/userService?userId=${item.userId}&userName=${item.userName}&mobile=${item.userMobile}&workFlowId=${item.workFlowId}&flowStatus=${item.flowStatus}&domainName=${item.domainName}&id=${item.id}` });
         url: `/pages/userService/userService?userId=${item.userId}&userName=${item.userName}&mobile=${item.userMobile}&flowStatus=${item.flowStatus}&workFlowId=${item.id}&hmcId=${this.userinfo.hmcid}`
       });
     },
     // 潜在客户
     maybeBuyer(item) {
-      // url: '/pages/mabyByuser/mabyByuser?userId=' + userId + '&userName=' + userName + '&mobile=' + mobile + '&workFlowId=' + workFlowId + '&flowStatus=' + flowStatus + '&domainName=' + domainName + '&id=' + id,
-      wx.miniProgram.navigateTo({ url: `/pages/userService/userService?userId=${item.userId}&userName=${item.userName}&mobile=${item.userMobile}&flowStatus=${item.flowStatus}&workFlowId=${item.id}&domainName=${item.recordMode}` });
+      wx.miniProgram.navigateTo({
+        url: `/pages/mabyByuser/mabyByuser?userId=${item.userId}&userName=${item.userName}&mobile=${item.userMobile}&flowStatus=${item.flowStatus}&workFlowId=${item.id}&domainName=${item.recordMode}`
+      });
     },
-    // searchProduct(item) {
-    //   this.orderService.queryOrderInfoByOrderNo({}, { orderNo: item.orderNo }).then((response) => {
-    //     if (response.code === 1) {
-    //       const resData = response.data;
-    //       if (resData.orderDetailDtoList.length !== 0) {
-    //         item.productList = resData.orderDetailDtoList;
-    //         item.productList.forEach((val) => {
-    //           if (val.productBrand === 'haier') {
-    //             val.productBrandCN = '海尔';
-    //           } else {
-    //             val.productBrandCN = '卡萨帝';
-    //           }
-    //         });
-    //       }
-    //     }
-    //   });
-    // },
+
     headSwitch(index) {
       if (index === this.preIndex) {
         this.headList[index].isActive = false;
@@ -422,7 +455,7 @@ export default {
     upCallback(page) {
       // 下载过就设置已经初始化
       this[this.curScrollViewName].isListInit = true;
-      this.businessType = '';
+      // this.businessType = '';
       this.searchData(page).then(({ result, pages }) => {
         this.$nextTick(() => {
           // 通过当前页的数据条数，和总页数来判断是否加载完
@@ -432,23 +465,30 @@ export default {
     },
 
     checkClicked(val) {
-      this.updateList = true;
-      this.sortType = val;
+      // this.updateList = true;
+      this.sortType = parseInt(val);
       this.businessType = '';
       this.searchData({
-        num: 0,
+        num: 1,
         size: 10
       });
     },
     buttonClicked(val) {
-      this.updateList = true;
-      this.businessType = val.itemCode;
+      // this.updateList = true;
+      if (val.length === 0) {
+        this.businessType = '';
+      } else if (val.length === 1) {
+        this.businessType = val[0];
+      } else {
+        this.businessType = val.join(',');
+      }
       this.searchData({
-        num: 0,
+        num: 1,
         size: 10
       });
     },
     followButtonClicked(val, info) {
+      console.log(info);
       if (val.name === '成交录单') {
         this.orderService.checkCreateOrder().then((res) => { // 判断店铺是否冻结
           if (res.code != -1) {
@@ -457,14 +497,15 @@ export default {
               name: 'Order.OrderEntry',
               params: {
                 customerConsigneeInfo: {
-                  userName: info.userName,
+                  username: info.userName,
                   mobile: info.userMobile,
                   userId: info.userId,
                   recordMode: info.recordMode,
                   businessScenarios: info.businessScenarios,
                   sourceSn: info.sourceSn,
+                  smld:true,
                   id: info.id,
-                  freezeMsg: freezeMsg,
+                  freezeMsg,
                 },
                 region: 'new'
               }
@@ -480,7 +521,9 @@ export default {
               params: {
                 orderNo: info.orderNo,
                 orderFollowId: info.id,
-                freezeMsg: freezeMsg,
+                businessScenarios: info.businessScenarios,
+                recordMode: info.recordMode,
+                region:'continue',
               }
             });
           }
@@ -503,18 +546,19 @@ export default {
           if (res.code != -1) {
             const freezeMsg = res.data;
             // 生成一条新的待办
-            this.orderService.createNewOrder({}, { orderNo: info.orderNo }).then((res) => {
+            this.orderService.createNewOrder({}, { orderFollowId: info.id }).then((res) => {
               if (res.code === 1) {
                 const orderFollowId = res.data.id;
                 this.$router.push({
                   name: 'Order.OrderEntry',
                   params: {
                     customerConsigneeInfo: {
-                      freezeMsg: freezeMsg,
-                      userName: info.userName,
+                      freezeMsg,
+                      username: info.userName,
                       mobile: info.userMobile,
                       userId: info.userId,
-                      recordMode: info.recordMode,
+                      // recordMode: info.recordMode,
+                      recordMode: res.data.recordMode,
                       businessScenarios: info.businessScenarios,
                       sourceSn: info.sourceSn,
                       id: orderFollowId,
@@ -530,6 +574,9 @@ export default {
     },
 
     searchData(page) {
+      if(this.curTab === 3){
+        this.sortType = 2
+      }
       console.log('keyword', this.searchWord);
       return this.orderService
         .queryOrderFollowlList(
@@ -575,22 +622,19 @@ export default {
             if (result && result.length > 0) {
               const curList = result;
               this.anylizeData(curList);
-              if (!this.updateList) {
                 console.log(page);
                 if (page.num === 1) {
                   console.log(this.curScrollViewName);
                   this[this.curScrollViewName].list = [];
-
                   this[this.curScrollViewName].list = this.currentList;
                 } else {
-                  this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(this.currentList);
-                  console.log(this[this.curScrollViewName].list);
+                  if(page.num > 1 && res.data.pages === 1){
+                  }else {
+                    this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(this.currentList);
+                    console.log(this[this.curScrollViewName].list);
+                  }
                 }
-              } else {
-                this[this.curScrollViewName].list = [];
-                this[this.curScrollViewName].list = this.currentList;
-                // this.updateList = false;
-              }
+
 
               // });
             } else {
@@ -718,7 +762,7 @@ export default {
       this.currentList = curList;
     },
     fuzzySearch() {
-      this.updateList = true;
+      // this.updateList = true;
       const page = {
         num: 1,
         size: 10
@@ -728,10 +772,10 @@ export default {
       this.fuzzy = true;
     },
     updateOrderType(type) {
-      this.updateList = true;
+      // this.updateList = true;
       this.businessType = '';
       this.searchData({
-        num: 0,
+        num: 1,
         size: 10
       });
     },
@@ -764,11 +808,16 @@ export default {
 
 <style scoped lang="scss">
   .mescroll {
-    padding: 21.6vw 0 0 0 !important;
+    /*padding: 21.6vw 0 0 0 !important;*/
+    /*position: fixed;
+    top: 21.6vw;*/
+    // 90 72 50
+    height: calc(100vh - 212px);
   }
 
   .md-notice-bar {
     position: absolute;
+    height: 80px;
     width: 100%;
   }
 
@@ -776,9 +825,6 @@ export default {
     width: 100%;
     height: 90px;
     background-color: #f5f5f5;
-    position: fixed;
-    top: 0;
-    z-index: 12;
   }
 
   .orderFollowButton-search {
@@ -846,12 +892,15 @@ export default {
 
   .page-class {
     background-color: #f5f5f5;
-    height: 1330px;
 
     .md-notice-bar {
       color: #E89748;
       background-color: #FDF0CE;
+      height: 80px;
     }
+  }
+  .notice-bar{
+    height: 80px;
   }
 
   .md-example-child-tab-bar-4 {

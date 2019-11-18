@@ -40,7 +40,6 @@ new Vue({
 
 (function getuserInfo() {
   const userinfo = bUtil.convertQueryStingToMap();
-  debugger
   if (userinfo) {
     let userinfoOld = localStorage.getItem('userinfo');
     // 存在某些特殊情况，存入null/undefined，导致用户缓存有误的情况

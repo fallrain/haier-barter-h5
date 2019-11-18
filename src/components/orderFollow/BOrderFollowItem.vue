@@ -1,78 +1,52 @@
 <template>
   <div class="orderFollowItemClass">
-    <div class="bar-v">
-      <div
-        class="bar-class"
-        v-for="(item,index) in headList"
-        :key="index"
-      >
-        <p
-          class="order-span"
-          v-bind:class="{active:item.isActive}"
-          @click="headSwitch(index)"
-        >{{item.name}}
-          <i class="iconfont icon-jiantou9" v-show="!item.isActive"></i>
-          <i class="iconfont2 icon-xialaactive-copy" v-show="item.isActive"></i>
-        </p>
-      </div>
-    </div>
-    <b-pop-sort-type
-      :show.sync="sortShow"
-      :list="sortList"
-      @checkClick="checkClicked"
-    >
-    </b-pop-sort-type>
-    <b-pop-button
-      :show.sync="scenarioShow"
-      :list="scenarioList"
-      @popButtonClicked="buttonClicked"
-    ></b-pop-button>
     <!--    <div style="height: 82px;"></div>-->
     <div
       class="label-class"
       v-for="(followItem,index) in list"
       :key="index"
-
+      @click="orderClick"
     >
       <img
         src="@/assets/images/orderFollow-up/yizhanzhujia@3x.png"
         class="labelImage"
-        v-show="followItem.businessScenarios =='YZZJ'"
+        v-show="followItem.businessScenarios ==='YZZJ'"
       >
       <img
         src="@/assets/images/orderFollow-up/yijiuhuanxin@3x.png"
         class="labelImage"
-        v-show="followItem.businessScenarios =='YJHX'"
+        v-show="followItem.businessScenarios ==='YJHX'"
       >
       <img
         src="@/assets/images/orderFollow-up/aidaojia@3x.png"
         class="labelImage"
-        v-show="followItem.businessScenarios =='ADJ'"
+        v-show="followItem.businessScenarios ==='ADJ'"
       >
       <img
         src="@/assets/images/orderFollow-up/saomaludan.png"
         class="labelImage"
-        v-show="followItem.businessScenarios =='SMLD'"
+        v-show="followItem.businessScenarios ==='SMLD'"
       >
       <img
         src="@/assets/images/orderFollow-up/SGLD.png"
         class="labelImage"
-        v-show="followItem.businessScenarios =='SGLD'"
+        v-show="followItem.businessScenarios ==='SGLD'"
       >
       <img
         src="@/assets/images/orderFollow-up/renchou@3x.png"
         class="labelImage"
-        v-show="followItem.businessScenarios =='RC'"
+        v-show="followItem.businessScenarios ==='RC'"
       >
+      <!--<p>{{followItem.orderNo}}</p>-->
       <div class="row-class">
         <span class="label-span">{{followItem.userName}}</span>
         <span
           class="sex-class"
-          v-show="followItem.userSex == '1'"
+          v-show="followItem.userSex === '1'"
         >先生</span>
         <span
           class="sex-class"
-          v-show="followItem.userSex == '2'"
+          v-show="followItem.userSex === '2'"
         >女士</span>
         <span class="sex-class">
           <img
@@ -87,12 +61,12 @@
         <img
           src="@/assets/images/orderFollow-up/Haier@3x.png"
           class="brandImage"
-          v-show="followItem.recordMode =='Haier'"
+          v-show="followItem.recordMode ==='Haier'"
         >
         <img
           src="@/assets/images/orderFollow-up/Casarte@3x.png"
           class="brandImage"
-          v-show="followItem.recordMode =='Casarte'"
+          v-show="followItem.recordMode ==='Casarte'"
         >
         <span class="hand-class">{{followItem.userS}}</span>
         <span class="handred-class">{{followItem.tardinessS}}</span>
@@ -148,12 +122,16 @@
         <p>{{followItem.add2}}</p>
       </div>
       <div class="bottom-class">
-        <img
-          src="@/assets/images/orderFollow-up/dian@3x.png"
-          class="dian-Class"
-          @click="showMore(index)"
-          v-show="followItem.flowStatus != '1'"
+        <div
+          class="dian-class-par"
+          v-show="followItem.flowStatus !== '1'"
+          @click="(e)=>showMore(index,e)"
         >
+          <img
+            src="@/assets/images/orderFollow-up/dian@3x.png"
+            class="dian-class"
+          >
+        </div>
         <!--估价不显示录单操作-->
         <span v-if="followItem.businessScenarios !== 'YJHX'">
           <p
@@ -167,11 +145,13 @@
 
         <!-- <p class="bottom-button">发券</p> -->
         <div
-          class="demo"
+          class="more-pop"
+          :class="[followItem.showInTop && 'more-pop-reverse']"
+          ref="more-pop"
           v-show="followItem.show"
         >
-          <div class="out"></div>
-          <div class="in"></div>
+          <div class="more-pop-out"></div>
+          <div class="more-pop-in"></div>
           <p
             v-for="(item,index) in followItem.showList"
             :key="index"
@@ -214,18 +194,12 @@ import {
   PopupTitleBar,
   Toast
 } from 'mand-mobile';
-import {
-  BPopButton,
-  BPopSortType
-} from '@/components/form';
 
 export default {
   name: '',
   components: {
     [Icon.name]: Icon,
     [Toast.name]: Toast,
-    BPopButton,
-    BPopSortType,
     'md-popup': Popup,
     [PopupTitleBar.name]: PopupTitleBar,
     [Button.name]: Button,
@@ -249,84 +223,17 @@ export default {
     return {
       popShow: false,
       remark: '',
-      sortShow: false,
-      scenarioShow: false,
       buttonList: [],
       pageNum: 1,
       dataList: [],
-      sortType: '1',
       scenarioType: '',
       show: false,
       showList: [],
-      checkedsortId: '',
-      checkedButtonId: '',
       ID: '',
-      headList: [
-        {
-          name: '排序',
-          isActive: false,
-          icon: '@/assets/images/orderFollow-up/xiala@3x.png',
-          activeIcon: '@/assets/images/orderFollow-up/shangla@3x.png'
-        },
-        {
-          name: '业务场景',
-          isActive: false,
-          icon: '@/assets/images/orderFollow-up/xiala@3x.png',
-          activeIcon: '@/assets/images/orderFollow-up/shangla@3x.png'
-        },
-        {
-          name: '筛选',
-          isActive: false,
-          icon: '@/assets/images/orderFollow-up/shaixuan@3x.png',
-          activeIcon: '@/assets/images/orderFollow-up/shaixuan@3x.png'
-        }
-      ],
-      sortList: [
-        {
-          id: '1',
-          name: '智能排序'
-        },
-        {
-          id: '2',
-          name: '按时间倒序'
-        },
-        {
-          id: '3',
-          name: '按品牌'
-        },
-        {
-          id: '4',
-          name: '按成交可能性'
-        }
-      ],
-      scenarioList: [
-        {
-          id: '1',
-          name: '以旧换新'
-        },
-        {
-          id: '2',
-          name: '一站筑家'
-        },
-        {
-          id: '3',
-          name: '认筹'
-        },
-        {
-          id: '4',
-          name: '爱到家'
-        }
-      ],
-      preIndex: '',
       currentList: this.list
     };
   },
   created() {
-    this.productService.commonTypeQuery('BUSINESS_SCENARIOS').then((res) => {
-      if (res.code === 1) {
-        this.scenarioList = res.data;
-      }
-    });
   },
   methods: {
     hidePopUp() {
@@ -362,55 +269,18 @@ export default {
       this.stopProcess();
       this.$emit('itemClick', index);
     },
+    orderClick() {
+      /* 隐藏弹出层 */
+      this.list.forEach((v) => {
+        this.$set(v, 'showInTop', false);
+        this.$set(v, 'show', false);
+      });
+    },
     gujiaClick(followItem) {
       this.stopProcess();
       this.$emit('gujiaClick', followItem);
     },
-    headSwitch(index) {
-      if (index === this.preIndex) {
-        this.headList[index].isActive = false;
-        this.preIndex = '';
-        this.sortShow = false;
-        this.scenarioShow = false;
-        return;
-      }
-      for (let i = 0; i < this.headList.length; i++) {
-        if (i === index) {
-          this.preIndex = index;
-          this.headList[i].isActive = true;
-        } else {
-          this.headList[i].isActive = false;
-        }
-      }
-      if (index === 0) {
-        this.sortShow = true;
-        this.scenarioShow = false;
-      } else if (index === 1) {
-        this.sortShow = false;
-        this.scenarioShow = true;
-      } else {
-        this.sortShow = false;
-        this.scenarioShow = false;
-      }
-    },
     preparation() {
-    },
-    checkClicked(val) {
-      this.checkedsortId = val[0];
-      for (let i = 0; i < this.headList.length; i++) {
-        this.headList[i].isActive = false;
-      }
-      this.$emit('checkClick', this.checkedsortId);
-    },
-
-
-    buttonClicked(val) {
-      this.stopProcess();
-      this.checkedButtonId = val[0];
-      for (let i = 0; i < this.headList.length; i++) {
-        this.headList[i].isActive = false;
-      }
-      this.$emit('popButtonClicked', val);
     },
     followButtonClick(button, item) {
       console.log(item);
@@ -425,16 +295,29 @@ export default {
 
       this.$emit('followButtonClick', button, item);
     },
-    showMore(index) {
+    showMore(index, e) {
       this.stopProcess();
-      console.log('currentList', this.list);
       this.ID = this.list[index].id;
       for (let i = 0; i < this.list.length; i++) {
         if (index !== i) {
           this.$set(this.list[i], 'show', false);
         }
       }
-      this.$set(this.list[index], 'show', !this.list[index].show);
+      const isShow = this.list[index].show;
+      let isOverflow = false;
+      if (!isShow) {
+        const target = e.currentTarget;
+        const morePop = target.parentNode.querySelector('.more-pop');
+        // 是否溢出显示区域
+        isOverflow = this.bUtil.checkOverflowScreen({
+          dom: morePop,
+          btmDom: document.querySelector('.js-md-tab-bar')
+        });
+      }
+
+      // 显示的时候才会设置showInTop，隐藏依然没有，防止计算屏幕溢出错误
+      this.$set(this.list[index], 'showInTop', isOverflow && !isShow);
+      this.$set(this.list[index], 'show', !isShow);
     },
     stopProcess() {
       const e = window.event;
@@ -550,26 +433,6 @@ export default {
     margin-left: 10px;
   }
 
-  .bar-class .order-span.active {
-    color: #1969c6;
-  }
-
-  .order-span {
-    display: inline-block;
-    color: #666666;
-    font-size: 28px;
-    padding-left: 56px;
-    line-height: 72px;
-  }
-
-  .order-span-blue {
-    display: inline-block;
-    color: #1969c6;
-    font-size: 28px;
-    padding-left: 56px;
-    line-height: 72px;
-  }
-
   .xialaimage {
     width: 36px;
     height: 36px;
@@ -611,36 +474,6 @@ export default {
     margin-left: 40px;
     display: inline-block;
     width: 300px;
-  }
-
-  .bar-class {
-    height: 72px;
-    width: 250px;
-    float: left;
-    position: relative;
-
-    .iconfont {
-      color: #666666
-    }
-
-    .iconfont2 {
-      color: #1969c6;
-      font-family: "iconfont" !important;
-      font-size: 16px;
-      font-style: normal;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
-  }
-
-  .bar-v {
-    background-color: white;
-    height: 72px;
-    /*position: absolute;*/
-    position: fixed;
-    top: 90px;
-    z-index: 15;
   }
 
   .label-class {
@@ -726,16 +559,25 @@ export default {
   }
 
   .bottom-class {
+    position: relative;
     margin-top: 20px;
     padding-top: 15px;
     height: 80px;
     border-top: 1px solid #eeeeee;
   }
 
-  .dian-Class {
+  .dian-class-par {
+    position: relative;
+    display: inline-block;
     width: 36px;
+    height: 100%;
+  }
+
+  .dian-class {
+    position: absolute;
+    top: 50%;
     height: 6px;
-    margin-top: 30px;
+    transform: translateY(-50%);
   }
 
   .orderFollowItemClass {
@@ -793,40 +635,64 @@ export default {
     text-align: center;
     height: 80px;
     line-height: 80px;
-    white-space: 200px;
     border-bottom: 1px solid #999999;
+
+    &:last-of-type {
+      border-bottom: 0;
+    }
   }
 
-  .demo {
+  .more-pop {
     width: 200px;
     /*height: 200px;*/
     border: 1px solid #999999;
     background-color: white;
-    z-index: 10;
     position: absolute;
-    margin-top: 10px;
+    top: 80px;
+    z-index: 10;
     border-radius: 10px;
   }
 
-  .out,
-  .in {
+  .more-pop-reverse {
+    top: 30px;
+    transform: translateY(-100%);
+  }
+
+  .more-pop-reverse {
+    .more-pop-out {
+      border-bottom-color: transparent;
+      border-top-color: #999;
+      top: auto;
+      bottom: -39px;
+    }
+
+    .more-pop-in {
+      border-bottom-color: transparent;
+      border-top-color: #fff;
+      top: auto;
+      bottom: -34px;
+    }
+  }
+
+  .more-pop-out,
+  .more-pop-in {
     position: absolute;
     width: 0;
-    height: 0px;
+    height: 0;
   }
 
-  .out {
+  .more-pop-out {
     border: 20px solid transparent;
-    border-bottom-color: #999999; /*这里的颜色一定要跟上面demo边框颜色一样*/
-    top: -40px;
-    left: 20%;
+    border-bottom-color: #999; /*这里的颜色一定要跟上面more-pop边框颜色一样*/
+    top: -39px;
+    left: 10px;
   }
 
-  .in {
+  .more-pop-in {
     border: 18px solid transparent;
-    border-bottom-color: #fff; /*这里的颜色一定要跟demo背景颜色一样*/
-    top: -35px;
-    left: 21%;
+    border-bottom-color: #fff; /*这里的颜色一定要跟more-pop背景颜色一样*/
+    top: -34px;
+    left: 12px
   }
 
   .orderFollowItem-span-blue {

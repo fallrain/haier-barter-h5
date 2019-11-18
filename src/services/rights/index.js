@@ -47,8 +47,16 @@ export default {
   viewOtherLimited(data, param) {
     return axPostJson(urls.viewOtherLimited, data, param);
   },
+  getRightsConfigInfo(data, param) {
+    return axPostJson(urls.getRightsConfigInfo, data, param);
+  },
+  getRightsConfigInfoByOrderNo(data, param) {
+    return axGet(urls.getRightsConfigInfoByOrderNo, data, param);
+  },
   queryRightsActivityList(data) {
     return axPostJson(`${urls.queryRightsActivityList}?keyword=${data}&rightsType=`);
   },
-
+  // getRightsConfigInfoByOrderNo(orderNo){
+  //   return axGet(urls.getRightsConfigInfoByOrderNo(orderNo))
+  // },
 };

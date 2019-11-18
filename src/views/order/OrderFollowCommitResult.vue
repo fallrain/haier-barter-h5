@@ -91,8 +91,9 @@ export default {
       routerData: routerData.data
     };
   },
-  activated() {debugger
+  activated() {
     this.orderNo = this.$route.params.orderInfo;
+    console.log(this.$router);
   },
   created() {
   },
@@ -115,7 +116,31 @@ export default {
       name: 'Order.OrderFollowSearch',
     });
     // next();// 必须要有这个，否则无法跳转
-  }
+  },
+  beforeRouteLeave(to, from, next) {
+    if (to.name == 'Order.OrderConfirm') {
+      this.$router.replace({
+        name: 'Order.OrderFollowSearch',
+      });
+    }
+    if (this.$vnode && this.$vnode.data.keepAlive) {
+      if (this.$vnode.parent && this.$vnode.parent.componentInstance && this.$vnode.parent.componentInstance.cache) {
+        if (this.$vnode.componentOptions) {
+          const key = this.$vnode.key == null
+            ? this.$vnode.componentOptions.Ctor.cid + (this.$vnode.componentOptions.tag ? `::${this.$vnode.componentOptions.tag}` : '')
+            : this.$vnode.key;
+          const cache = this.$vnode.parent.componentInstance.cache;
+          const keys = this.$vnode.parent.componentInstance.keys;
+          for(let i = 0;i < keys.length;i ++){
+            delete cache[keys[i]];
+          }
+        }
+      }
+    }
+    this.$destroy();
+
+    next();
+  },
 };
 </script>
 

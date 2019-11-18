@@ -21,7 +21,7 @@
     >
       <li
         class="searchProduct-history-item"
-        v-for="(item,index) in searchList"
+        v-for="(item,index) in searchListShow"
         :key="index"
         @click="onItemClick(item)"
       >{{item.productModel}}{{item.productBrandName}}
@@ -82,6 +82,7 @@ export default {
   created() {
     this.orderNo = this.$route.params.orderNo;
     this.isProductList = this.$route.params.productList;
+    this.recordMode = this.$route.params.recordMode;
     if (localStorage.getItem('productSearchHistory')) {
       this.searchHistory = JSON.parse(localStorage.getItem('productSearchHistory'));
       if (this.searchHistory.length > 30) {
@@ -102,8 +103,26 @@ export default {
       // 搜索历史
       searchHistory: [],
       orderNo: '',
-      isProductList: []
+      isProductList: [],
+      recordMode: ''
     };
+  },
+  computed: {
+    searchListShow() {
+      let arr = [];
+      if (this.searchList && this.searchList.length > 0) {
+        this.searchList.forEach((item) => {
+          const itemStr = `${item.productModel}${item.productBrandName}`;
+          if (itemStr.indexOf(this.searchVal.toUpperCase()) > -1) {
+            arr.push(item);
+          }
+        });
+        if (arr.length === 0) {
+          arr = this.searchList;
+        }
+      }
+      return arr;
+    }
   },
   methods: {
     inputFunction(val) {
@@ -115,10 +134,15 @@ export default {
 
     search() {
       /* 搜索产品 */
+      if (this.searchVal === '') {
+        Toast.failed('请输入搜索内容！');
+        return;
+      }
       const searchStr = this.searchVal.toUpperCase().replace(/\//g, ' ');
       this.productService.list(searchStr, '1', '30').then((res) => {
         // ;
         if (res.code === 1) {
+
           this.searchList = res.data;
           if (res.data === null) {
             Toast.failed('暂无信息，请重新搜索');
@@ -127,34 +151,34 @@ export default {
         }
       });
     },
-    // indexOf(val) {
-    //
-    //   for (let i = 0; i < this.searchHistory.length; i++) {
-    //     if (this.searchHistory[i] == val) return i;
-    //   }
-    //   return -1;
-    // },
-    // remove (val) {
-    //   var index = this.indexOf(val);
-    //   if (index > -1) {
-    //     this.splice(index, 1);
-    //   }
-    // },
     scanQRCodePro() {
       wx.ready(() => {
         wx.scanQRCode({
           needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
           // scanType: ['barCode','qrCode'],//qrCode // 可以指定扫二维码还是一维码，默认二者都有
           success: (res) => {
+            // alert(JSON.stringify(res));
             const result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
             if (result && typeof result === 'string') {
               if (result.includes(',')) {
                 this.searchVal = result.split(',')[1];
+	              this.search();
+              } else if (result.includes('http')) {
+	              this.basicService.scanQRcode(result).then((res2) => {
+		              if (res2.code === 1) {
+			              this.searchVal = res2.data;
+			              this.search();
+		              }
+	              });
               } else {
-                this.searchVal = result;
+	              this.searchVal = result;
+	              this.search();
               }
-              this.search();
             }
+          },
+          fail: (res) => {
+            // alert(222);
+            alert(JSON.stringify(res));
           }
         });
       });
@@ -163,8 +187,17 @@ export default {
       return !!array.find(v => v.productCode === obj.productCode);
     },
     onItemClick(item) {
-      const orderMode = JSON.parse(localStorage.getItem('userinfo')).orderMode;
-      if (orderMode == 'Casarte') {
+      debugger
+      if(item.productGroup === null || item.productGroupName === null){
+        Toast.info('产品组名称不能为空')
+        return
+      }
+	    this.currentClickItemData.productGroup = item.productGroup;
+	    this.currentClickItemData.productGroupName = item.productGroupName;
+      this.currentClickItemData.productBrandCode = item.productBrandCode;
+      this.currentClickItemData.productBrandName = item.productBrandName;
+      const orderMode = this.recordMode;
+      if (orderMode === 'Casarte') {
         if (item.productBrandName != '卡萨帝') {
           Toast.failed('当前是卡萨帝模式，只能选择卡萨帝品牌的产品，请重新选择！');
           return;
@@ -179,11 +212,9 @@ export default {
           this.currentClickItemData.price = res.data.price;
           this.currentClickItemData.industryCode = res.data.industryCode;
           this.currentClickItemData.industryName = res.data.industryName;
-          this.currentClickItemData.productBrandCode = res.data.productBrandCode;
-          this.currentClickItemData.productBrandName = res.data.productBrandName;
           this.currentClickItemData.productCode = res.data.productCode;
-          this.currentClickItemData.productGroup = res.data.productGroup;
-          this.currentClickItemData.productGroupName = res.data.productGroupName;
+          // this.currentClickItemData.productGroup = res.data.productGroup;
+          // this.currentClickItemData.productGroupName = res.data.productGroupName;
           this.currentClickItemData.productModel = res.data.productModel;
           this.$router.go(-1);
         }
@@ -205,68 +236,68 @@ export default {
 </script>
 
 <style lang="scss">
-  .md-toast-text{
-    white-space: normal !important;
-  }
-  .searchProduct-notice-bar-title {
-    color: #E89748;
-  }
+.md-toast-text{
+	white-space: normal !important;
+}
+.searchProduct-notice-bar-title {
+	color: #E89748;
+}
 
-  .searchProduct-history {
-    padding-left: 24px;
-    padding-right: 24px;
-    padding-bottom: 4px;
-    background: #fff;
-  }
+.searchProduct-history {
+	padding-left: 24px;
+	padding-right: 24px;
+	padding-bottom: 4px;
+	background: #fff;
+}
 
-  .searchProduct-history-item {
-    border-bottom: 1px solid #CCC;
-    padding-left: 30px;
-    padding-right: 30px;
-    height: 78px;
-    line-height: 78px;
-    color: #666;
-    font-size: 28px;
-  }
+.searchProduct-history-item {
+	border-bottom: 1px solid #CCC;
+	padding-left: 30px;
+	padding-right: 30px;
+	height: 78px;
+	line-height: 78px;
+	color: #666;
+	font-size: 28px;
+}
 
-  .searchProduct-secret {
-    padding: 24px;
+.searchProduct-secret {
+	padding: 24px;
 
-    strong {
-      color: #1969C6;
-    }
-  }
+	strong {
+		color: #1969C6;
+	}
+}
 
-  .searchProduct-secret-title {
-    font-size: 28px;
-    color: #666;
-    margin-bottom: 20px;
-  }
+.searchProduct-secret-title {
+	font-size: 28px;
+	color: #666;
+	margin-bottom: 20px;
+}
 
-  .searchProduct-secret-warn {
-    color: #F5A623;
-  }
+.searchProduct-secret-warn {
+	color: #F5A623;
+}
 
-  .searchProduct-secret-con {
-    color: #333;
-    font-size: 24px;
-    line-height: 40px;
-  }
+.searchProduct-secret-con {
+	color: #333;
+	font-size: 24px;
+	line-height: 40px;
+}
 
-  .searchProduct-scan-wrap {
-    display: flex;
-    align-items: center;
-    color: #1969C6;
+.searchProduct-scan-wrap {
+	display: flex;
+	align-items: center;
+	color: #1969C6;
 
-    .icon-saomiao {
-      font-size: 40px;
-    }
-  }
+	.icon-saomiao {
+		font-size: 40px;
+	}
+}
 
-  .searchProduct-scan-inf {
-    line-height: 1;
-    margin-left: 12px;
-    font-size: 20px;
-    writing-mode: vertical-lr;
-  }
+.searchProduct-scan-inf {
+	line-height: 1;
+	margin-left: 12px;
+	font-size: 20px;
+	writing-mode: vertical-lr;
+}
 </style>

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import qs from 'qs';
 import {
+  Dialog,
   Toast
 } from 'mand-mobile';
 
@@ -21,6 +22,20 @@ function closeLoading() {
     loadingIns.hide();
   }
   loadingAy.length--;
+}
+let isShowError = false;
+function showError(msg) {
+  if (isShowError) {
+    return;
+  }
+  isShowError = true;
+  Dialog.alert({
+    content: msg || '请求失败',
+    confirmText: '确定',
+    onConfirm() {
+      isShowError = false;
+    }
+  });
 }
 ax.interceptors.request.use((config) => {
   if (!config.params) {
@@ -43,15 +58,22 @@ ax.interceptors.response.use((response) => {
   if (!response.config.params.noLoading) {
     closeLoading();
   }
-  const { msg } = response.data;
-  if (msg === '用户未登陆') {
-    router.replace({
-      name: 'Login'
+  const { code, msg } = response.data;
+  if (code === 7111) {
+    wx.miniProgram.reLaunch({
+      url: '/pages/login/login'
     });
+    return;
   }
   if (!(response.config.params && response.config.params.requestNoToast)) {
     if (response.data.code !== 1 && !response.data.isSuccess) {
-      if (response.config.url !== '/api/manage/reportEhub/saveEhubBarCode') Toast.failed(msg || '请求失败');
+      if (response.config.url !== '/api/manage/reportEhub/saveEhubBarCode') {
+        if (response.config.url === '/api/rights/rightsManage/queryOrderOptionalShareRights' || response.config.url === '/api/rights/rightsManage/queryOrderOptionalMutexRights') {
+          Toast.hide();
+        } else {
+          showError(msg);
+        }
+      }
     }
   }
   if (customOptions && customOptions.returnResponse) {
@@ -62,7 +84,7 @@ ax.interceptors.response.use((response) => {
   if (!error.config.params.noLoading) {
     closeLoading();
   }
-  Toast.failed('请求失败');
+  showError();
   error.response.data = {
     data: {
       code: -1
@@ -70,6 +92,7 @@ ax.interceptors.response.use((response) => {
   };
   return error.response.data;
 });
+
 const axGet = function (url, params) {
   return ax({
     headers: { 'content-type': 'application/x-www-form-urlencoded,charset=UTF-8', },

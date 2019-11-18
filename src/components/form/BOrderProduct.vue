@@ -11,6 +11,9 @@
           class="b-order-product-item-price"
           type="number"
           v-model="data.productPrice"
+          @blur="blur"
+          v-resetInput
+          v-on:input="inputFunction"
         ><span class="b-order-product-item-price-unit">元</span>
       </div>
 
@@ -25,8 +28,7 @@
       v-if="content"
       class="b-order-product-item-cnt"
     >
-
-      <p class="p-class">产品需要代报装,请选择时间:</p>
+      <p class="p-class">请选择代报装时间：</p>
       <b-date-picker
         class="orderEntry-date2"
         slot="right"
@@ -44,15 +46,18 @@
 </template>
 <script>
 import {
-  BItem, BDatePicker
-} from '@/components/form';
-import {
   Toast
 } from 'mand-mobile';
+import {
+  BDatePicker,
+  BItem
+} from '@/components/form';
+
 export default {
   name: 'BOrderProduct',
   components: {
-    BItem, BDatePicker,
+    BItem,
+    BDatePicker,
     [Toast.name]: Toast,
   },
   props: {
@@ -84,7 +89,6 @@ export default {
     // const d = dd.getDate() < 10 ? `0${dd.getDate()}` : dd.getDate();// 获取当前几号，不足10补0
     // const h = dd.getHours() + 1;
     // this.currentDate = `${y}-${m}-${d} ${h}:00`
-    // debugger
     // this.currentDate = Date.parse(this.currentDate)
     // this.currentDate = new Date(this.currentDate)
     // if(h >=14){
@@ -97,20 +101,46 @@ export default {
       /* 删除 */
       this.$emit('onDel', this.index);
     },
-    checkProductPrice() { // 价格闸口判断 失去焦点触发
-      const obj = {
-        bccPrice: '',
-        productCode: this.data.productCode,
-        productPrice: this.data.productPrice
-      };
-      if (this.data.bccPrice) {
-        obj.bccPrice = this.data.bccPrice;
+    blur() {
+      if(this.data.productPrice === ''){
+        Toast.failed('请输入产品价格')
+        return
       }
+      this.data.productPrice = this.formatDecimal(this.data.productPrice, 2);
+      if (this.data.productPrice < 0 || this.data.productPrice > 990000) {
+        Toast.failed('请输入正确的产品价格');
+        this.data.productPrice = '';
+        return;
+      }
+      console.log(this.data);
+      let bbcPrice = 0;
+      if (this.data.bccPrice) {
+        bbcPrice = this.data.bccPrice;
+      }
+      const obj = {
+        bccPrice: bbcPrice,
+        productCode: this.data.productCode,
+        productPrice: this.data.productPrice,
+      };
+
       this.orderService.checkProductPrice({}, obj).then((res) => {
         if (res.code == -1) {
           this.data.productPrice = '';
         }
       });
+    },
+    formatDecimal(num, decimal) {
+      num = num.toString();
+      const index = num.indexOf('.');
+      if (index !== -1) {
+        num = num.substring(0, decimal + index + 1);
+      } else {
+        num = num.substring(0);
+      }
+      return parseFloat(num).toFixed(decimal);
+    },
+    inputFunction() {
+      this.$emit('inputChange');
     }
   }
 };
@@ -166,19 +196,22 @@ export default {
     color: #1969C6;
     font-size: 24px;
   }
+
   .orderEntry-reportInf {
     color: #3078CC !important;
     font-size: 26px;
     position: relative;
 
   }
+
   .orderEntry-date2 {
     width: 320px;
     margin-bottom: 10px;
     position: absolute;
     margin-left: 340px;
   }
-  .p-class{
+
+  .p-class {
     width: 350px;
     float: left;
     margin-top: 10px;

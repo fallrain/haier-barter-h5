@@ -247,12 +247,10 @@ export default {
   computed: {},
   activated() {
     if (this.$route.query.temp) {
-      debugger;
       let ID = '';
       const obj = JSON.parse(this.$route.query.temp)
       if (obj.rightsJson) {
         this.rightsJson = obj.rightsJson;
-        debugger;
         const right = JSON.parse(obj.rightsJson);
 
         this.rightName = right.rightsName;
@@ -264,7 +262,6 @@ export default {
         this.isDetail = true;
         this.rightsList = rightsPro;
       }
-      debugger
       if (obj.product) {
         if (!obj.product.productGroupName) {
           return;
@@ -287,8 +284,6 @@ export default {
             pro.productPrice = '';
             pro.invoiceStatus = 0;
             this.isReportInstall(pro);
-          } else {
-            Toast.failed(res.msg);
           }
         });
       }
@@ -297,7 +292,6 @@ export default {
   created() {
     this.orderNo = this.$route.params.orderNo;
     this.orderFollowId = this.$route.params.orderFollowId;
-    debugger
     this.getData();
   },
   methods: {
@@ -357,10 +351,14 @@ export default {
               if (item.installTime !== '') {
                 this.isInstall = true;
               }
-              if (item.productBrand == 'haier') {
+              if (item.productBrand == '000') {
                 item.productBrandCN = '海尔';
-              } else {
+              } else if(item.productBrand == '051'){
                 item.productBrandCN = '卡萨帝';
+              }else if(item.productBrand == '089'){
+                item.productBrandCN = '统帅';
+              }else {
+                item.productBrandCN = '其他'
               }
             });
           }

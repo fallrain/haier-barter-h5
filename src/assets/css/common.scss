@@ -438,8 +438,9 @@
 .app-container {
   .mescroll-downwarp .downwarp-tip,
   .mescroll-upwarp .upwarp-nodata,
-  .mescroll-upwarp .upwarp-tip
-  .mescroll-upwarp .upwarp-empty {
+  .mescroll-upwarp .upwarp-tip,
+  .mescroll-upwarp .upwarp-empty
+  {
     font-size: 24px;
   }
 
@@ -479,6 +480,12 @@
 
 .md-toast-text {
   white-space: normal;
+}
+
+.md-dialog-body {
+  overflow: auto;
+  max-height: 300px;
+  word-break: break-all;
 }
 
 .md-check-group-inline {

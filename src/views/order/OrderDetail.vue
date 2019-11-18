@@ -56,7 +56,7 @@
             :key="index"
             :data="item"
             :index="index"
-            :content="item.installTime != ''"
+            :content="item.installTime"
           >
           </b-order-product-confirm>
         </ul>
@@ -187,8 +187,19 @@ export default {
   created() {
     this.orderNo = this.$route.params.orderNo;
     this.getData();
+    this.getActivityList();
   },
   methods: {
+    getActivityList(){
+      this.rightsService.getRightsConfigInfoByOrderNo({orderNo:this.orderNo},{}).then(res => {
+        if(res.code === 1){
+          if(res.data.length !== 0){
+            this.activityList = res.data
+          }
+        }
+      })
+
+    },
     getData() {
       this.orderService.queryOrderInfoByOrderNo({}, { orderNo: this.orderNo }).then((response) => {
         if (response.code === 1) {
@@ -199,10 +210,10 @@ export default {
           this.phone = resData.userPhone;
           this.consignee.phone = resData.consigneePhone;
           this.consignee.sex = resData.userSex;
-          if(resData.userSex === 1){
-            this.consignee.sexCn = '男士'
-          }else {
-            this.consignee.sexCn = '女士'
+          if (resData.userSex === 1) {
+            this.consignee.sexCn = '男士';
+          } else {
+            this.consignee.sexCn = '女士';
           }
           this.consignee.address = resData.dispatchProvince + resData.dispatchCity + resData.dispatchArea + resData.dispatchAdd;
           this.buyDate = resData.buyTime;
@@ -228,16 +239,20 @@ export default {
           //
           //   this.activityList = str.rightsUserInterestsDTO;
           // }
-          if (resData.rightName != '') {
-            this.activityList = resData.rightName.split(',');
-          }
+          // if (resData.rightName != '' && resData.rightName) {
+          //   this.activityList = resData.rightName.split(',');
+          // }
           if (resData.orderDetailDtoList.length !== 0) {
             this.productList = resData.orderDetailDtoList;
             this.productList.forEach((item) => {
-              if (item.productBrand == 'haier') {
+              if (item.productBrand == '000') {
                 item.productBrandCN = '海尔';
-              } else {
+              } else if (item.productBrand == '051') {
                 item.productBrandCN = '卡萨帝';
+              } else if (item.productBrand == '089') {
+                item.productBrandCN = '统帅';
+              } else {
+                item.productBrandCN = '其他';
               }
             });
           }

@@ -9,15 +9,17 @@
             class="addAddress-form-item-ipt"
             placeholder="请输入手机号"
             v-model="customerInfo.mobile"
-            v-show="region == 'userAdd'"
+            v-show="region !== 'userAdd'"
+            v-resetInput
           >
           <input
             type="number"
             class="addAddress-form-item-ipt"
             placeholder="请输入手机号"
             disabled="true"
-            v-show="region != 'userAdd'"
+            v-show="region === 'userAdd'"
             v-model="customerInfo.mobile"
+            v-resetInput
           >
         </div>
       </li>
@@ -32,16 +34,19 @@
               type="text"
               class="addAddress-form-item-ipt"
               placeholder="请输入姓名"
-              v-show="region == 'userAdd'"
+              v-show="region !== 'userAdd'"
               v-model="customerInfo.username"
+              @input="judgeName(customerInfo.username, 20)"
+              v-resetInput
             >
             <input
               type="text"
               class="addAddress-form-item-ipt"
               placeholder="请输入姓名"
               disabled="true"
-              v-show="region != 'userAdd'"
+              v-show="region === 'userAdd'"
               v-model="customerInfo.username"
+              v-resetInput
             >
           </div>
         </li>
@@ -56,6 +61,8 @@
             class="addAddress-form-item-ipt"
             placeholder="请输入姓名"
             v-model="customerInfo.consigneeUserName"
+            @input="judgeName1(customerInfo.consigneeUserName, 20)"
+            v-resetInput
           >
         </div>
       </li>
@@ -63,10 +70,12 @@
         <div class="addAddress-form-item">
           <label class="addAddress-form-item-name">收货人手机号</label>
           <input
-            type="number"
+            type="text"
+            oninput = "value=value.replace(/[^\d]/g,'')"
             class="addAddress-form-item-ipt"
             placeholder="请输入手机号"
             v-model="customerInfo.consigneeUserPhone"
+            v-resetInput
           >
         </div>
       </li>
@@ -77,6 +86,7 @@
             :inline="true"
             :list="sexTypes"
             v-model="customerInfo.sex"
+            @radioChange="radioChange"
           ></b-radio-item>
         </div>
       </li>
@@ -91,13 +101,15 @@
         ></b-item>
       </li>
       <li>
-        <div class="addAddress-form-item">
-          <label class="addAddress-form-item-name">详细地址</label>
+        <div class="addAddress-form-item1">
+          <label class="addAddress-form-item-name w100per fs26 text-666 dis-block">详细地址</label>
           <input
             type="text"
-            class="addAddress-form-item-ipt"
+            class="addAddress-form-item-ipt w100"
             placeholder="省道 门牌、楼层房间号等信息"
             v-model="customerInfo.address"
+            @input="judgeAddress(customerInfo.address, 30)"
+            v-resetInput
           >
         </div>
       </li>
@@ -250,12 +262,23 @@ export default {
       console.log(this.region);
       if (this.region === 'add' && this.$route.params.info === '{}') {
         this.confirmShow = true;
-      } else if (this.region === 'userAdd') {
+      } else if (this.region === 'userAdd' && this.$route.params.info === '{}') {
         this.confirmShow = true;
         this.searchEnd = false;
-      } else {
-        // this.confirmShow = false;
 
+      }
+      else if (this.region === 'userAdd' && this.$route.params.info !== '{}') {
+        this.confirmShow = true;
+        this.searchEnd = true;
+        this.customerInfo.username = JSON.parse(this.$route.params.info).username;
+        this.customerInfo.userId = JSON.parse(this.$route.params.info).userId;
+        this.customerInfo.mobile = JSON.parse(this.$route.params.info).mobile;
+        if (JSON.parse(this.$route.params.info).customerId) {
+          this.customerInfo.customerId = JSON.parse(this.$route.params.info).customerId;
+        }
+      }
+      else {
+        // this.confirmShow = false;
         this.searchEnd = true;
         if (this.region === 'add' && !JSON.parse(this.$route.params.info).address) {
           this.customerInfo.username = JSON.parse(this.$route.params.info).username;
@@ -266,6 +289,7 @@ export default {
           }
           this.smld = true;
         } else if (this.region === 'edit') {
+          console.log(JSON.parse(this.$route.params.info))
           this.customerInfo = JSON.parse(this.$route.params.info);
           // this.customerInfo.username = JSON.parse(this.$route.params.info).username;
           // this.customerInfo.mobile = JSON.parse(this.$route.params.info).mobile;
@@ -282,6 +306,7 @@ export default {
           this.customerInfo.userId = JSON.parse(this.$route.params.info).userId;
           // this.customerInfo = JSON.parse(this.$route.params.info);
           this.customerInfo.hmcId = JSON.parse(localStorage.getItem('userinfo')).hmcid;
+          // this.customerInfo.familyId = JSON.parse(this.$route.params.info).familyId;
         }
         if (this.customerInfo.familyItemCode) {
           const a = [];
@@ -334,9 +359,12 @@ export default {
       /* 展示地址pop */
       this.addressPopShow = true;
     },
+    radioChange(val) {
+      this.customerInfo.sex = val;
+    },
     search() {
       // this.searchEnd = true;
-      if (!(/^1[34578]\d{9}$/.test(this.customerInfo.mobile))) {
+      if (!(/^1[3456789]\d{9}$/.test(this.customerInfo.mobile))) {
         Toast.failed('手机格式错误');
         this.customerInfo.mobile = '';
         return;
@@ -354,12 +382,10 @@ export default {
             this.defaultA.push(res.data.province);
             this.defaultA.push(res.data.city);
             this.defaultA.push(res.data.district);
+            this.$router.go(-1)
           } else {
             this.searchResultShow = true;
           }
-        } else {
-          // this.searchResultShow = true;
-          Toast.failed(res.msg);
         }
       });
     },
@@ -382,24 +408,24 @@ export default {
       this.addressName = addressA.join('/');
     },
     confirm() {
-      if (!(/^1[34578]\d{9}$/.test(this.customerInfo.mobile))) {
+      if (!(/^1[3456789]\d{9}$/.test(this.customerInfo.mobile))) {
         Toast.failed('手机号格式错误');
         this.customerInfo.mobile = '';
         return;
       }
-      if (this.customerInfo.username === '') {
+      if (this.customerInfo.username === '' || !this.customerInfo.username) {
         Toast.failed('顾客姓名不能为空');
         return;
       }
-      if (this.customerInfo.consigneeUserName === '') {
-        Toast.failed('收件人姓名不能为空');
+      if (this.customerInfo.consigneeUserName === '' || !this.customerInfo.consigneeUserName) {
+        Toast.failed('收货人姓名不能为空');
         return;
       }
-      if (this.customerInfo.consigneeUserPhone === '') {
-        Toast.failed('收件人手机号不能为空');
+      if (this.customerInfo.consigneeUserPhone === '' || !this.customerInfo.consigneeUserPhone) {
+        Toast.failed('收货人手机号不能为空');
         return;
       }
-      if (!(/^1[34578]\d{9}$/.test(this.customerInfo.consigneeUserPhone))) {
+      if (!(/^1[3456789]\d{9}$/.test(this.customerInfo.consigneeUserPhone))) {
         Toast.failed('手机号格式错误');
         this.customerInfo.consigneeUserPhone = '';
         return;
@@ -418,7 +444,7 @@ export default {
         return;
       }
       if (this.customerInfo.address === '') {
-        Toast.failed('地址不能为空');
+        Toast.failed('详细地址不能为空');
         return;
       }
       if (this.customerInfo.consignee) {
@@ -434,9 +460,11 @@ export default {
         }
         delete this.customerInfo.tag;
       }
-      debugger
       if (this.region === 'add' || this.region === 'userAdd') {
         delete this.customerInfo.id;
+        if(this.$route.params.businessScenarios != ''){
+          this.customerInfo.source = this.$route.params.businessScenarios
+        }
         this.productService.addcustomerAddress(this.customerInfo, {}).then((res) => {
           if (res.code === 1) {
             Toast.succeed('地址添加成功');
@@ -445,7 +473,7 @@ export default {
           }
         });
       } else {
-        delete this.customerInfo.hmcId;
+         delete this.customerInfo.hmcId;
         this.productService.updateCustomerAddress(this.customerInfo, {}).then((res) => {
           if (res.code === 1) {
             Toast.succeed('地址修改成功');
@@ -481,6 +509,27 @@ export default {
     },
     stopScrolling(event) {
       event.preventDefault();
+    },
+    judgeName(str, max) {
+      let strResult = String(str);
+      if (strResult.length > max) {
+        Toast.failed('对多可输入20个字符！')
+        this.customerInfo.username = strResult.slice(0, max);
+      }
+    },
+    judgeName1(str, max) {
+      let strResult = String(str);
+      if (strResult.length > max) {
+        Toast.failed('对多可输入20个字符！')
+        this.customerInfo.consigneeUserName = strResult.slice(0, max);
+      }
+    },
+    judgeAddress(str, max) {
+      let strResult = String(str);
+      if (strResult.length > max) {
+        Toast.failed('对多可输入30个字符！')
+        this.customerInfo.address = strResult.slice(0, max);
+      }
     }
   },
   mounted() {
@@ -492,7 +541,9 @@ export default {
   beforeRouteLeave(to, from, next) {
     const obj = {
       tel: this.customerInfo.mobile,
-      smld: this.smld
+      smld: this.smld,
+      customerInfo:this.customerInfo,
+      region:this.region
     };
     if (to.name === 'Order.OrderEntry' || 'Order.OrderModify') {
       to.query.temp = JSON.stringify(obj);
@@ -612,5 +663,13 @@ export default {
       color: #1969C6;
     }
   }
-
+  .fs26{
+    font-size: 26px !important;
+  }
+  .text-666{
+    color: #666;
+  }
+  .w100{
+    width: 100% !important;
+  }
 </style>

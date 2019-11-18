@@ -7,15 +7,18 @@
     >
       <div class="b-pop-checkList-cnt1">
         <ul>
-          <div style="background-color:white;height: 50px;">
+          <div style="background-color:white;height: 70px;">
         <p
           class="b-pop-checkList-item1"
            :class="[checkIds.some(v=>v===item.id) && 'active']"
             v-for="(item,index) in list"
             :key="index"
-            @click="checkboxClick(item)"
+          @click="checkboxClick(item)"
         ><span class="b-pop-checkList-item-name">{{item.itemName}}</span></p>
       </div>
+          <div>
+            <p class="confirmbtn" @click="checkboxClickConfirm()">确定</p>
+          </div>
         </ul>
       </div>
     </md-popup>
@@ -41,7 +44,7 @@ export default {
       type: String,
       default: 'checkbox'
     },
-    value: {
+    defalutIds: {
       type: Array,
       default: () => []
     },
@@ -59,7 +62,8 @@ export default {
   data() {
     return {
       popupShow: this.show,
-      checkIds: JSON.parse(JSON.stringify(this.value))
+      checkIds: JSON.parse(JSON.stringify(this.defalutIds)),
+      tempC :[]
     };
   },
   watch: {
@@ -72,12 +76,18 @@ export default {
   },
   methods: {
     checkboxClick(item) {
-
-      this.checkIds = [];
-      this.checkIds.push(item.id)
-      this.$emit('popButtonClicked', item);
+      const index = this.checkIds.findIndex(id => id === item.id)
+      if(index === -1){
+        this.checkIds.push(item.id)
+        this.tempC.push(item.itemCode)
+      }else {
+        this.checkIds.splice(index,1)
+        this.tempC.splice(index,1)
+      }
+    },
+    checkboxClickConfirm() {
+      this.$emit('popButtonClicked', this.tempC);
       this.popupShow = false;
-
     },
     chooseGiftClick(item) {
       this.$emit('chooseGift', item);
@@ -122,7 +132,7 @@ export default {
   .b-pop-checkList-cnt1 {
     background: #fff;
     padding-bottom: 24px;
-    height: 150px;
+    height: 240px;
   }
 
   .b-pop-checkList-item1 {
@@ -151,6 +161,17 @@ export default {
   .b-pop-checkList-icon {
     font-size: 32px;
     color: #1969C6;
+  }
+    .confirmbtn{
+    font-size: 32px;
+    color: white;
+      background-color: #1969C6;
+      text-align: center;
+      padding: 15px;
+      margin-left: 600px;
+      border-radius: 20px;
+      width: 120px;
+      margin-top: 10px;
   }
 
   .b-pop-checkList-item-name {

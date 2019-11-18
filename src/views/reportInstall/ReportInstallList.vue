@@ -128,7 +128,6 @@ export default {
   methods: {
     removeBySessionIndex() {
       /* 删除一条记录，通过存在session里的列表index */
-      debugger;
       const itemIndex = sessionStorage.getItem('reportInstallList.itemIndex');
       if (itemIndex) {
         sessionStorage.removeItem('reportInstallList.itemIndex');
