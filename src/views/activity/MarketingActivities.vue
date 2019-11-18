@@ -78,7 +78,7 @@
         </div>
         <div class="drainage-popup-item" @click="shareImg">
 
-          <i class="iconfont icon-weixin drainage-popup-img"/>
+          <i class="iconfont icon-tupian drainage-popup-img1"/>
           <div>
             <span class="drainage-popup-title">生成分享图片</span>
           </div>
@@ -102,7 +102,8 @@ import {
 
 import {
   TabBar,
-  Toast
+  Toast,
+  Popup, PopupTitleBar, Button, Icon
 } from 'mand-mobile';
 
 import {
@@ -110,9 +111,6 @@ import {
   BDrainageActivity
 } from '@/components/form';
 
-import {
-  Popup, PopupTitleBar, Button, Icon
-} from 'mand-mobile';
 
 export default {
   name: 'MarketingActivities',
@@ -390,7 +388,7 @@ export default {
 
   .drainage-popup-items {
     width: 100%;
-    height: 284px;
+    height: 234px;
     background: #fff;
     display: flex;
     flex-direction: row;
@@ -417,7 +415,26 @@ export default {
   }
 
   .drainage-popup-img {
-    font-size: 80px;
-    color: #00cd00;
+    font-size: 66px;
+    color: #ffffff;
+    border-radius: 50%;
+    background: #00cd00;
+    width: 100px;
+    height: 100px;
+    text-align: center;
+    line-height: 100px;
+    margin-bottom: 20px;
+  }
+
+  .drainage-popup-img1 {
+    font-size: 66px;
+    color: #ffffff;
+    border-radius: 50%;
+    background: rgb(255, 204, 0);
+    width: 100px;
+    height: 100px;
+    text-align: center;
+    line-height: 100px;
+    margin-bottom: 20px;
   }
 </style>

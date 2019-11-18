@@ -198,7 +198,7 @@ export default {
         productCatagoryList: []
       },
       // 注册对话框显示隐藏
-      registerDialogShow: true,
+      registerDialogShow: false,
       // 扫码识别二维码
       qrcodeDialogShow: false,
       checkboxType: [],
