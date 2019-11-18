@@ -407,7 +407,7 @@ export default {
       this.newAddress.regionCode = addressAy[0] + addressAy[1] + addressAy[2];
       this.addressName = addressA.join('/');
     },
-    confirm(){
+    confirm() {
       if (!(/^1[3456789]\d{9}$/.test(this.customerInfo.mobile))) {
         Toast.failed('手机号格式错误');
         this.customerInfo.mobile = '';

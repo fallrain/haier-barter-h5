@@ -11,9 +11,8 @@
     <div v-show="current === 0">
       <div class="rights-notice" v-show="shareRightsList.length !== 0">
         <p>
-          重要提示：套购订单若包含卡萨帝产品，请在此选择卡萨帝单品权益，无需再去卡萨帝模式下重复录单，重复录单会造成权益无法领取！！！
+          <span class="important-class">重要提示：</span>套购订单若包含卡萨帝产品，请在此选择卡萨帝单品权益，无需再去卡萨帝模式下重复录单，重复录单会造成权益无法领取！！！
         </p>
-
       </div>
 
         <p v-show="shareRightsList.length === 0" class="info-Class">暂无同享活动数据</p>
@@ -721,23 +720,23 @@ export default {
                 r.rightsGroup = timestamp;
                 this.rightsDetailList.push(a);
                 r.configId = sel.configId;
-
                 this.rightsUserDto.push(r);
               });
             } else {
-              const r = {
-                rightsId: item.rightsNo,
-                rightsGroup: '',
-                configId: ''
-              };
               let timestamp = '';
               item.rightsSelectedGroupDtoList.forEach((sel) => {
+                const r = {
+                  rightsId: item.rightsNo,
+                  rightsGroup: '',
+                  configId: ''
+                };
                 timestamp = new Date().getTime();
                 let Num = 0;
                 for (let i = 0; i < 6; i++) {
                   Num += Math.pow(10, i) * Math.floor(Math.random() * 10);
                 }
                 timestamp += Num;
+                debugger
                 sel.selcted.forEach((val) => {
                   const a = {};
                   a.orderDetailId = val;
@@ -768,7 +767,7 @@ export default {
         }
         rightJson.rightsUserInterestsDTO = this.rightsUserDto;
         this.rightsJson = JSON.stringify(rightJson);
-
+        debugger
         this.$router.go(-1);
       }
     },
@@ -1194,5 +1193,9 @@ export default {
     color: #666666;
     font-size: 28px;
     padding: 24px;
+  }
+  .important-class{
+    font-weight: 500;
+    font-size: 30px;
   }
 </style>

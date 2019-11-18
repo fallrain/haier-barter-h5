@@ -485,8 +485,7 @@ export default {
         this.rightsJson = obj.rightsJson;
         this.isDetail = true;
         if (rightsPro.length > 0 && rightsPro[0] !== '') {
-
-          this.getActivityList()
+          this.getActivityList();
         } else {
           this.rightsList = [];
           this.rightsJson = '';
@@ -494,10 +493,10 @@ export default {
           this.rightId = '';
         }
       } else {
-        this.rightsList = []
-        this.rightsJson = ''
-        this.rightName = ''
-        this.rightId = ''
+        this.rightsList = [];
+        this.rightsJson = '';
+        this.rightName = '';
+        this.rightId = '';
       }
       if (obj.product) {
         if (!obj.product.productGroupName) {
@@ -533,14 +532,14 @@ export default {
     }
   },
   created() {
-    ;
+    debugger;
     this.addressData = addressData;
     this.orderNo = this.$route.params.orderNo;
-    if(this.$route.params.orderFollowId){
+    if (this.$route.params.orderFollowId) {
       this.orderFollowId = this.$route.params.orderFollowId;
-    }else {
-      Toast.failed('异常：待办id为空')
-      return
+    } else {
+      Toast.failed('异常：待办id为空');
+      return;
     }
     if (this.$route.params.freezeMsg) {
       if (this.$route.params.freezeMsg == 'Y') {
@@ -551,10 +550,9 @@ export default {
       this.orderFollowId = this.$route.params.orderFollowId;
     } else if (!this.$route.params.orderFollowId && this.$route.params.region === 'continue') {
       Toast.failed('异常：待办id为空');
-      return
+      return;
     } else {
       this.orderFollowId = localStorage.getItem('orderFollowId');
-
     }
     // if (this.$route.params.freezeMsg) {
     //   if (this.$route.params.freezeMsg == 'Y') {
@@ -567,24 +565,24 @@ export default {
     }
   },
   methods: {
-    //获取权益列表
-    getActivityList(){
+    // 获取权益列表
+    getActivityList() {
       const obj = {
-        orderDetailSaveQoList :this.productList,
-        orderNo:this.orderNo,
-        rightsUserJson:this.rightsJson
-      }
-      this.rightsService.getRightsConfigInfo(obj,{}).then(res => {
-        if(res.code === 1){
-          if(res.data.length !== 0){
-            this.rightsList = res.data
-            this.rightsList.forEach(ri => {
-              ri.startTime = ri.startTime.substring(0,10)
-              ri.endTime = ri.endTime.substring(0,10)
-            })
+        orderDetailSaveQoList: this.productList,
+        orderNo: this.orderNo,
+        rightsUserJson: this.rightsJson
+      };
+      this.rightsService.getRightsConfigInfo(obj, {}).then((res) => {
+        if (res.code === 1) {
+          if (res.data.length !== 0) {
+            this.rightsList = res.data;
+            this.rightsList.forEach((ri) => {
+              ri.startTime = ri.startTime.substring(0, 10);
+              ri.endTime = ri.endTime.substring(0, 10);
+            });
           }
         }
-      })
+      });
     },
     radioChange(val) {
       this.orderType = val;
@@ -632,9 +630,10 @@ export default {
         if (response.code === 1) {
           const resData = response.data;
           this.shopName = resData.storeName;
-          this.rightId = resData.rightId
-          this.rightsJson = resData.rightsJson
-          this.rightName = resData.rightName
+          this.rightId = resData.rightId;
+          this.rightsJson = resData.rightsUserJson;
+
+          this.rightName = resData.rightName;
           this.consignee.name = resData.consigneeName;
           this.customerInfo.username = resData.userName;
           this.customerInfo.customerId = resData.userId;
@@ -711,8 +710,8 @@ export default {
           }
           if (!this.isDetail) {
             if (resData.rightsUserJson) {
-              this.rightsJson = resData.rightsUserJson
-              this.getActivityList()
+              this.rightsJson = resData.rightsUserJson;
+              this.getActivityList();
             }
           }
           this.queryCustomerDefault();
@@ -926,44 +925,12 @@ export default {
         part.push(this.multBuySponsor[0].username);
       }
       if (this.rightsJson) {
-
         const tempJson = JSON.parse(this.rightsJson);
         if (tempJson.rightsUserInterestsDetailsDTO.length === 0) {
           this.rightsJson = '';
         }
       }
-      // // 产品价格闸口判断
-      // let result = 0;
-      // let state = false;
-      // const resultMsg = [];
-      //
-      // for (let i = 0; i < this.productList.length; i++) {
-      //   const obj = {
-      //     bccPrice: '',
-      //     productCode: this.productList[i].productCode,
-      //     productPrice: this.productList[i].productPrice,
-      //     requestNoToast: true
-      //   };
-      //
-      //   if (this.productList[i].bccPrice) {
-      //     obj.bccPrice = this.productList[i].bccPrice;
-      //   }
-      //   this.orderService.checkProductPrice({}, obj).then((res) => {
-      //     result++;
-      //     if (res.code == -1) {
-      //       resultMsg.push(res.msg);
-      //       state = true;
-      //       this.productList[i].productPrice = '';
-      //     }
-      //     if (result == this.productList.length) {
-      //       if (!state) {
-      //       } else {
-      //         Toast.failed(resultMsg[0]);
-      //       }
-      //     }
-      //   });
-      // }
-      ;
+
       subInfo.mayEditCoupleOrderId = partId.join(',');
       subInfo.mayEditCoupleOrderName = part.join(',');
       subInfo.orderNo = this.orderNo;
@@ -1006,6 +973,7 @@ export default {
       subInfo.sourceSn = this.sourceSn; // 来源编码，记录来源ID
       subInfo.remark = ''; // 备注，记录订单创建、订单修改原因等信息
       subInfo.rightsUserJson = this.rightsJson;
+
       subInfo.orderDetailSaveQoList = this.productList;
       this.subInfo = subInfo;
       if (type === 2) {
@@ -1044,10 +1012,14 @@ export default {
                       if (res.code === 1) {
                         if (this.saveType === 1) {
                           Toast.succeed('订单暂存成功');
-                          this.$router.go(-1);
+                          this.$router.replace({
+                            name: 'Order.OrderFollowSearch',
+                            params: { }
+                          });
+                          // this.$router.go(-1);
                         }
                         if (this.saveType === 0) {
-                          localStorage.setItem('orderFollowId',this.orderFollowId)
+                          localStorage.setItem('orderFollowId', this.orderFollowId);
                           this.$router.push({
                             name: 'Order.OrderUploadInvoice',
                             params: { orderNo: this.orderNo }
@@ -1070,7 +1042,11 @@ export default {
                   if (this.saveType === 1) {
                     Toast.succeed('订单暂存成功');
                     localStorage.setItem('confirm', 'caogao');
-                    this.$router.go(-1);
+                    // this.$router.go(-1);
+                    this.$router.replace({
+                      name: 'Order.OrderFollowSearch',
+                      params: { }
+                    });
                   }
                   if (this.saveType === 0) {
                     this.$router.push({
@@ -1112,8 +1088,6 @@ export default {
       });
     },
     changeAddress(item) {
-      console.log(this.addressPopShow);
-      ;
       item.username = this.customerInfo.username;
       item.mobile = this.customerInfo.mobile;
       item.familyId = this.customerInfo.familyId;
@@ -1198,7 +1172,11 @@ export default {
               if (this.saveType === 1) {
                 Toast.succeed('订单暂存成功');
                 localStorage.setItem('confirm', 'caogao');
-                this.$router.go(-1);
+                this.$router.replace({
+                  name: 'Order.OrderFollowSearch',
+                  params: { }
+                });
+                // this.$router.go(-1);
               }
               if (this.saveType === 0) {
                 this.$router.push({
@@ -1239,14 +1217,9 @@ export default {
               : this.$vnode.key;
             const cache = this.$vnode.parent.componentInstance.cache;
             const keys = this.$vnode.parent.componentInstance.keys;
-            if (cache[key]) {
-              if (keys.length) {
-                const index = keys.indexOf(key);
-                if (index > -1) {
-                  keys.splice(index, 1);
-                }
-              }
-              delete cache[key];
+
+            for (let i = 0; i < keys.length; i++) {
+              delete cache[keys[i]];
             }
           }
         }

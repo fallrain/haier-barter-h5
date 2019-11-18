@@ -174,8 +174,9 @@ export default {
     };
   },
   computed: {},
-  created() {
+  created() {debugger
     this.orderNo = this.$route.params.orderNo;
+    this.orderFollowId = this.$route.params.orderFollowId;
     // this.orderNo = 'Z15645424968056668';
     if (this.orderNo) {
       this.getData();
@@ -286,7 +287,7 @@ export default {
     changeOrder() {
       this.$router.push({
         name: 'Order.OrderModify',
-        params: { orderNo: this.orderNo }
+        params: { orderNo: this.orderNo, orderFollowId: this.orderFollowId }
       });
     },
     saveOrder() {
@@ -302,10 +303,12 @@ export default {
             : this.$vnode.key;
           const cache = this.$vnode.parent.componentInstance.cache;
           const keys = this.$vnode.parent.componentInstance.keys;
-          if (to.name === 'Order.OrderModify') {
-            keys.forEach((k) => {
-              if (cache[k].tag.indexOf('OrderEntry') > -1) {
-                delete cache[k];
+          if(to.name === 'Order.OrderModify'){
+            keys.forEach((k,index) =>{
+              if (cache[k]) {
+                if(cache[k].tag.indexOf('OrderEntry') > -1){
+                  delete cache[k];
+                }
               }
             });
           }
