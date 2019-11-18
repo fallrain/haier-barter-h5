@@ -138,7 +138,7 @@
     </template>
   </b-item>
   <b-item
-    class="mt16"
+    class="mt16 select-activity"
     title="选择可用的购机权益活动"
     :arrow="true"
     v-show="orderSource !=='SGLD'"
@@ -247,6 +247,7 @@ import {
   BMultbuyCheck
 } from '@/components/business';
 import addressData from '@/lib/address';
+import rightListTest from '../../lib/address/rightsJson';
 
 export default {
   name: 'OrderModify',
@@ -480,23 +481,23 @@ export default {
         this.rightName = right.rightsName;
         this.rightId = right.rightsId;
         const rightsPro = JSON.parse(obj.rightsJson).rightName.split(',');
+
         this.rightsJson = obj.rightsJson;
         this.isDetail = true;
         if (rightsPro.length > 0 && rightsPro[0] !== '') {
-          this.rightsList = rightsPro;
+          this.getActivityList();
         } else {
           this.rightsList = [];
           this.rightsJson = '';
           this.rightName = '';
           this.rightId = '';
         }
+      } else {
+        this.rightsList = [];
+        this.rightsJson = '';
+        this.rightName = '';
+        this.rightId = '';
       }
-      // else {
-      //   this.rightsList = []
-      //   this.rightsJson = ''
-      //   this.rightName = ''
-      //   this.rightId = ''
-      // }
       if (obj.product) {
         if (!obj.product.productGroupName) {
           return;
@@ -531,8 +532,20 @@ export default {
     }
   },
   created() {
+    debugger;
     this.addressData = addressData;
     this.orderNo = this.$route.params.orderNo;
+    if (this.$route.params.orderFollowId) {
+      this.orderFollowId = this.$route.params.orderFollowId;
+    } else {
+      Toast.failed('异常：待办id为空');
+      return;
+    }
+    if (this.$route.params.freezeMsg) {
+      if (this.$route.params.freezeMsg == 'Y') {
+        this.handRegion = true;
+      }
+    }
     if (this.$route.params.orderFollowId) {
       this.orderFollowId = this.$route.params.orderFollowId;
     } else if (!this.$route.params.orderFollowId && this.$route.params.region === 'continue') {
@@ -552,6 +565,25 @@ export default {
     }
   },
   methods: {
+    // 获取权益列表
+    getActivityList() {
+      const obj = {
+        orderDetailSaveQoList: this.productList,
+        orderNo: this.orderNo,
+        rightsUserJson: this.rightsJson
+      };
+      this.rightsService.getRightsConfigInfo(obj, {}).then((res) => {
+        if (res.code === 1) {
+          if (res.data.length !== 0) {
+            this.rightsList = res.data;
+            this.rightsList.forEach((ri) => {
+              ri.startTime = ri.startTime.substring(0, 10);
+              ri.endTime = ri.endTime.substring(0, 10);
+            });
+          }
+        }
+      });
+    },
     radioChange(val) {
       this.orderType = val;
     },
@@ -600,7 +632,7 @@ export default {
           this.shopName = resData.storeName;
           this.rightId = resData.rightId;
           this.rightsJson = resData.rightsUserJson;
-          debugger
+
           this.rightName = resData.rightName;
           this.consignee.name = resData.consigneeName;
           this.customerInfo.username = resData.userName;
@@ -653,11 +685,6 @@ export default {
           this.multBuyExceptHmc = arr.join('、');
           this.multBuyExceptHmcId = resData.mayEditCoupleOrderId.split(',').splice(hmc_index, 1);
           console.log(this.multBuyExceptHmc);
-          if (!this.isDetail) {
-            if (resData.rightName) {
-              this.rightsList = resData.rightName.split(',');
-            }
-          }
           if (!this.isProduct) {
             if (resData.orderDetailDtoList.length !== 0) {
               this.productList = resData.orderDetailDtoList;
@@ -680,6 +707,12 @@ export default {
             }
           } else {
             this.productList = this.isProductList.concat(this.productList);
+          }
+          if (!this.isDetail) {
+            if (resData.rightsUserJson) {
+              this.rightsJson = resData.rightsUserJson;
+              this.getActivityList();
+            }
           }
           this.queryCustomerDefault();
         }
@@ -711,10 +744,6 @@ export default {
         if (res.code === 1) {
           if (res.data !== null) {
             this.customerInfo = res.data;
-            // this.getAddressName(res.data.province, res.data.city, res.data.district);
-            // this.consignee.address.street = res.data.address;
-            // this.consignee.phone = res.data.consigneeUserPhone;
-            // this.consignee.name = res.data.consigneeUserName;
             this.consignee.familyId = res.data.familyId;
             if (res.data.sex === 1) {
               this.consignee.sexCn = '男士';
@@ -728,7 +757,6 @@ export default {
         }
       });
     },
-    // 获取门店信息
     sponsorCheck(checkid) {
 
     },
@@ -738,6 +766,7 @@ export default {
     particpantClick(checkids) {
 
     },
+    // 获取门店信息
     getUserStore() {
     // this.shopId = '8800332156';
       this.shopId = this.userParam.shopId;
@@ -896,43 +925,11 @@ export default {
         part.push(this.multBuySponsor[0].username);
       }
       if (this.rightsJson) {
-        debugger
         const tempJson = JSON.parse(this.rightsJson);
         if (tempJson.rightsUserInterestsDetailsDTO.length === 0) {
           this.rightsJson = '';
         }
       }
-      // // 产品价格闸口判断
-      // let result = 0;
-      // let state = false;
-      // const resultMsg = [];
-      // debugger
-      // for (let i = 0; i < this.productList.length; i++) {
-      //   const obj = {
-      //     bccPrice: '',
-      //     productCode: this.productList[i].productCode,
-      //     productPrice: this.productList[i].productPrice,
-      //     requestNoToast: true
-      //   };
-      //
-      //   if (this.productList[i].bccPrice) {
-      //     obj.bccPrice = this.productList[i].bccPrice;
-      //   }
-      //   this.orderService.checkProductPrice({}, obj).then((res) => {
-      //     result++;
-      //     if (res.code == -1) {
-      //       resultMsg.push(res.msg);
-      //       state = true;
-      //       this.productList[i].productPrice = '';
-      //     }
-      //     if (result == this.productList.length) {
-      //       if (!state) {
-      //       } else {
-      //         Toast.failed(resultMsg[0]);
-      //       }
-      //     }
-      //   });
-      // }
 
       subInfo.mayEditCoupleOrderId = partId.join(',');
       subInfo.mayEditCoupleOrderName = part.join(',');
@@ -976,7 +973,7 @@ export default {
       subInfo.sourceSn = this.sourceSn; // 来源编码，记录来源ID
       subInfo.remark = ''; // 备注，记录订单创建、订单修改原因等信息
       subInfo.rightsUserJson = this.rightsJson;
-      debugger
+
       subInfo.orderDetailSaveQoList = this.productList;
       this.subInfo = subInfo;
       if (type === 2) {
@@ -1015,7 +1012,11 @@ export default {
                       if (res.code === 1) {
                         if (this.saveType === 1) {
                           Toast.succeed('订单暂存成功');
-                          this.$router.go(-1);
+                          this.$router.replace({
+                            name: 'Order.OrderFollowSearch',
+                            params: { }
+                          });
+                          // this.$router.go(-1);
                         }
                         if (this.saveType === 0) {
                           localStorage.setItem('orderFollowId', this.orderFollowId);
@@ -1041,7 +1042,11 @@ export default {
                   if (this.saveType === 1) {
                     Toast.succeed('订单暂存成功');
                     localStorage.setItem('confirm', 'caogao');
-                    this.$router.go(-1);
+                    // this.$router.go(-1);
+                    this.$router.replace({
+                      name: 'Order.OrderFollowSearch',
+                      params: { }
+                    });
                   }
                   if (this.saveType === 0) {
                     this.$router.push({
@@ -1083,8 +1088,6 @@ export default {
       });
     },
     changeAddress(item) {
-      console.log(this.addressPopShow);
-
       item.username = this.customerInfo.username;
       item.mobile = this.customerInfo.mobile;
       item.familyId = this.customerInfo.familyId;
@@ -1159,7 +1162,6 @@ export default {
     },
     onBasicConfirm() {
       if (this.orderNo !== '') {
-        console.log(3);
         Toast.loading('保存中...');
         // if (!this.orderFollowId) {
         //   this.orderFollowId = localStorage.getItem('orderFollowId');
@@ -1170,7 +1172,11 @@ export default {
               if (this.saveType === 1) {
                 Toast.succeed('订单暂存成功');
                 localStorage.setItem('confirm', 'caogao');
-                this.$router.go(-1);
+                this.$router.replace({
+                  name: 'Order.OrderFollowSearch',
+                  params: { }
+                });
+                // this.$router.go(-1);
               }
               if (this.saveType === 0) {
                 this.$router.push({
@@ -1212,19 +1218,9 @@ export default {
             const cache = this.$vnode.parent.componentInstance.cache;
             const keys = this.$vnode.parent.componentInstance.keys;
 
-            for(let i = 0;i < keys.length;i ++){
+            for (let i = 0; i < keys.length; i++) {
               delete cache[keys[i]];
             }
-
-            // if (cache[key]) {
-            //   if (keys.length) {
-            //     const index = keys.indexOf(key);
-            //     if (index > -1) {
-            //       keys.splice(index, 1);
-            //     }
-            //   }
-            //   delete cache[key];
-            // }
           }
         }
       }
@@ -1369,4 +1365,7 @@ export default {
 .orderEntry-multBuySponsor-tips {
   color: #F4A623;
 }
+  .select-activity{
+    border-bottom: 0.5px solid #F8F8F8;
+  }
 </style>
