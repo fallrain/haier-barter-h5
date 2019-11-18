@@ -19,6 +19,7 @@ const urls = {
   queryOrderOptionalMutexRights: '/rightsManage/queryOrderOptionalMutexRights', // 互斥
   getRightsConfigInfo: '/rightsConfigInfo/getRightsConfigInfo', // 获取权益配置信息
   getRightsConfigInfoByOrderNo:'/rightsConfigInfo/getRightsConfigInfoByOrderNo',
+  queryRightsActivityList: '/rightsManage/queryRightsActivityList',
   // getRightsConfigInfoByOrderNo(orderNo) {
   //   return `/rightsConfigInfo/getRightsConfigInfoByOrderNo/${orderNo}`;//订单页获取权益配置
   // }
