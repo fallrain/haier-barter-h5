@@ -627,10 +627,10 @@ export default {
         if (res.code === 1) {
           if (res.data.length !== 0) {
             this.rightsList = res.data;
-            this.rightsList.forEach(ri => {
+            this.rightsList.forEach((ri) => {
               ri.startTime = ri.startTime.substring(0, 10);
               ri.endTime = ri.endTime.substring(0, 10);
-            })
+            });
           }
         }
       });
