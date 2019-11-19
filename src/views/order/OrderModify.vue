@@ -594,15 +594,15 @@ export default {
       this.multBuyPopShow = false;
     },
     confirmDeliveryTime(date) {
-      debugger
-      let time  = date
-      time = time.substring(0,10)
-      const deT = new Date(time).getTime()
-      const buyT = new Date(this.buyDate).getTime()
-      if(deT < buyT) {
-        Toast.info('送货时间不能早于购买时间')
-        this.deliveryTime = ''
-        return
+      debugger;
+      let time = date;
+      time = time.substring(0, 10).replace(/-/g, '/');
+      const deT = new Date(time).getTime();
+      const buyT = new Date(this.buyDate).getTime();
+      if (deT < buyT) {
+        Toast.info('送货时间不能早于购买时间');
+        this.deliveryTime = '';
+        return;
       }
       this.deliveryTime = date;
     },
@@ -848,14 +848,14 @@ export default {
         Toast.failed('请选择送货时间');
         return;
       }
-      let time  = this.deliveryTime
-      time = time.substring(0,10)
-      const deT = new Date(time).getTime()
-      const buyT = new Date(this.buyDate).getTime()
-      if(deT < buyT) {
-        Toast.info('送货时间不能早于购买时间')
-        this.deliveryTime = ''
-        return
+      let time = this.deliveryTime;
+      time = time.substring(0, 10).replace(/-/g, '/');
+      const deT = new Date(time).getTime();
+      const buyT = new Date(this.buyDate).getTime();
+      if (deT < buyT) {
+        Toast.info('送货时间不能早于购买时间');
+        this.deliveryTime = '';
+        return;
       }
       if (this.productList.length > 0) {
         for (let i = 0; i < this.productList.length; i++) {

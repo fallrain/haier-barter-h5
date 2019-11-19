@@ -627,10 +627,10 @@ export default {
         if (res.code === 1) {
           if (res.data.length !== 0) {
             this.rightsList = res.data;
-            this.rightsList.forEach(ri => {
+            this.rightsList.forEach((ri) => {
               ri.startTime = ri.startTime.substring(0, 10);
               ri.endTime = ri.endTime.substring(0, 10);
-            })
+            });
           }
         }
       });
@@ -707,13 +707,13 @@ export default {
 
     },
     confirmDeliveryTime(date) {
-        let time  = date
-        time = time.substring(0,10)
-        const deT = new Date(time).getTime()
-      const buyT = new Date(this.buyDate).getTime()
-      if(deT > buyT) {
-        Toast.info('送货时间不能早于购买时间')
-        return
+      let time = date;
+      time = time.substring(0, 10).replace(/-/g, '/');
+      const deT = new Date(time).getTime();
+      const buyT = new Date(this.buyDate).getTime();
+      if (deT > buyT) {
+        Toast.info('送货时间不能早于购买时间');
+        return;
       }
       this.deliveryTime = date;
     },
@@ -858,14 +858,14 @@ export default {
         Toast.failed('请选择送货时间');
         return;
       }
-      let time  = this.deliveryTime
-      time = time.substring(0,10)
-      const deT = new Date(time).getTime()
-      const buyT = new Date(this.buyDate).getTime()
-      if(deT < buyT) {
-        Toast.info('送货时间不能早于购买时间')
-        this.deliveryTime = ''
-        return
+      let time = this.deliveryTime;
+      time = time.substring(0, 10).replace(/-/g, '/');
+      const deT = new Date(time).getTime();
+      const buyT = new Date(this.buyDate).getTime();
+      if (deT < buyT) {
+        Toast.info('送货时间不能早于购买时间').replace(/-/g, '/');
+        this.deliveryTime = '';
+        return;
       }
       if (this.productList.length > 0) {
         for (let i = 0; i < this.productList.length; i++) {
