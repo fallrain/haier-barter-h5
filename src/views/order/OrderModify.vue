@@ -598,7 +598,9 @@ export default {
       let time = date;
       time = time.substring(0, 10).replace(/-/g, '/');
       const deT = new Date(time).getTime();
-      const buyT = new Date(this.buyDate).getTime();
+      let buytime = this.buyDate;
+      buytime = buytime.substring(0, 10).replace(/-/g, '/');
+      const buyT = new Date(buytime).getTime();
       if (deT < buyT) {
         Toast.info('送货时间不能早于购买时间');
         this.deliveryTime = '';
@@ -851,7 +853,9 @@ export default {
       let time = this.deliveryTime;
       time = time.substring(0, 10).replace(/-/g, '/');
       const deT = new Date(time).getTime();
-      const buyT = new Date(this.buyDate).getTime();
+      let buytime = this.buyDate;
+      buytime = buytime.substring(0, 10).replace(/-/g, '/');
+      const buyT = new Date(buytime).getTime();
       if (deT < buyT) {
         Toast.info('送货时间不能早于购买时间');
         this.deliveryTime = '';
