@@ -106,7 +106,7 @@
           <input
             type="text"
             class="addAddress-form-item-ipt w100"
-            placeholder="省道 门牌、楼层房间号等信息"
+            placeholder="街道 门牌、楼层房间号等信息"
             v-model="customerInfo.address"
             @input="judgeAddress(customerInfo.address, 30)"
             v-resetInput

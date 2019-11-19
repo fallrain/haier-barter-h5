@@ -47,13 +47,13 @@
       <div class="searchProduct-secret-con">
         若要搜索热水器JSQ24-Q2(12T)，可以在搜索框输入
         <strong>24-Q2</strong>
-        ，中间横杠-可以省略
+        ，中间横杠-可以省略。
       </div>
       <div class="searchProduct-secret-title  searchProduct-secret-warn mt23">注意：</div>
       <div class="searchProduct-secret-con">
         1、大小写都行，
         <strong>横杠"-" 或斜杠"/" 可以省略</strong>
-        ，但是中文括号"（" 和英文括号"(" 不能输错
+        ，但是中文括号"（" 和英文括号"(" 不能输错。
       </div>
       <div class="searchProduct-secret-con mb10">2、点击搜索框下面的搜索历史或搜索结果中的型号，可以直接选择完整产品型号。</div>
     </div>
