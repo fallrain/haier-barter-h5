@@ -447,6 +447,7 @@ export default {
         Toast.failed('详细地址不能为空');
         return;
       }
+      this.customerInfo.address = this.customerInfo.address.replace(/[\r\n]/g,"")
       if (this.customerInfo.consignee) {
         delete this.customerInfo.consignee;
       }
