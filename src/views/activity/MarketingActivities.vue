@@ -149,6 +149,7 @@ export default {
       // 搜索值
       searchVal: '',
       currentList: [],
+      productGroupName: [],
     };
   },
   methods: {
@@ -238,7 +239,28 @@ export default {
     },
     anylizeData(curlist) {
       curlist.forEach((item) => {
-        this.$set(item, 'minesGray', true);
+        const ProductCategoryNameAy = [];
+        this.productGroupName.forEach((v) => {
+          const reg = new RegExp(v.groupCode);
+          if (reg.test(item.rightsProductCategory)) {
+            ProductCategoryNameAy.push(v.groupName);
+          }
+        });
+        item.rightsProductCategory = ProductCategoryNameAy.join('、');
+        item.num = 0;
+        const brands = [];
+        const a = item.rightsBrand.split(',');
+        a.forEach((i) => {
+          if (i === '000') {
+            brands.push('海尔');
+          } else if (i === '051') {
+            brands.push('卡萨帝');
+          } else {
+            brands.push('统帅');
+          }
+        });
+        item.rightsBrandC = brands.join(',');
+        // this.$set(item, 'minesGray', true);
         if (item.isOptional === 1) {
           this.$set(item, 'addGray', false);
         } else {
@@ -246,6 +268,8 @@ export default {
         }
         if (item.selectedNum !== 0) {
           this.$set(item, 'minesGray', false);
+        } else {
+          this.$set(item, 'minesGray', true);
         }
       });
       this.currentList = curlist;
@@ -285,6 +309,17 @@ export default {
         this.bUtil.downloadFile(res.data);
       });
     },
+    getProductGroup() {
+      this.productService.industryGroup()
+        .then((res) => {
+          if (res.code === 1) {
+            this.productGroupName = res.data;
+          }
+        });
+    },
+  },
+  created() {
+    this.getProductGroup();
   },
   computed: {
     curScrollViewName() {

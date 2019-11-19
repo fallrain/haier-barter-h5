@@ -151,7 +151,7 @@
         </div>
 
       </div>
-      <img class="activity-img" v-if="isFinish && !hasData" src="../../assets/images/orderFollow-up/activity-img.png"/>
+      <img class="activity-img" v-if="isFinish && !hasData  && isShowImg" src="../../assets/images/orderFollow-up/activity-img.png"/>
       <div class="activity-number" v-if="!isFinish && !residueGift">
         <span class="activity-number-minus activity-number-common" @click="minusCount"
               v-show="!getData.minesGray">-</span>
@@ -202,6 +202,11 @@ export default {
     residueGift: false,
     hasData: false,
     rightsType: '',
+    // 活动里边也需要用这个组建  但是不需要显示图片，这个字段用来判断是否显示图片
+    isShowImg: {
+      type: Boolean,
+      default: true
+    },
 
   },
   created() {
