@@ -713,7 +713,7 @@ export default {
       let buytime = this.buyDate;
       buytime = buytime.substring(0, 10).replace(/-/g, '/');
       const buyT = new Date(buytime).getTime();
-      if (deT < buyT) {
+      if (deT <= buyT) {
         Toast.info('送货时间不能早于购买时间');
         return;
       }
@@ -866,7 +866,7 @@ export default {
       let buytime = this.buyDate;
       buytime = buytime.substring(0, 10).replace(/-/g, '/');
       const buyT = new Date(buytime).getTime();
-      if (deT < buyT) {
+      if (deT <= buyT) {
         Toast.info('送货时间不能早于购买时间');
         this.deliveryTime = '';
         return;
