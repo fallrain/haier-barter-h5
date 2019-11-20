@@ -633,9 +633,6 @@ export default {
                     console.log(this[this.curScrollViewName].list);
                   }
                 }
-
-
-              // });
             } else {
               Toast.failed('暂无数据');
               this[this.curScrollViewName].list = [];
@@ -647,6 +644,7 @@ export default {
         });
     },
     anylizeData(curList) {
+      console.log(curList);
       curList.forEach((item) => {
         /*
           0-跟进中  1-已完成  2-草稿  3-暂不跟进 4-取消 5-异常
