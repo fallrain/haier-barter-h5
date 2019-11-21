@@ -1,6 +1,7 @@
 import urls from '../url/order.url';
 import {
-  axPostJson, axPost, axGet,
+  axPostJson,
+  axPost
 } from '@/lib/ajax';
 
 export default {
@@ -56,10 +57,10 @@ export default {
   simpleUpload() {
     return axPost(urls.simpleUpload);
   },
-  isReportInstallNew(data,params){
-    return axPostJson(urls.isReportInstallNew,data,params)
+  isReportInstallNew(data, params) {
+    return axPostJson(urls.isReportInstallNew, data, params);
   },
-  checkUpperLimitForSGLD(){
+  checkUpperLimitForSGLD() {
     return axPost(urls.checkUpperLimitForSGLD);
   },
   checkProductPrice(data, param) {
@@ -70,5 +71,9 @@ export default {
   },
   checkCreateOrder() {
     return axPostJson(urls.checkCreateOrder, {}, {});
+  },
+  ifUploadInvoice(params) {
+    /* 检查是否可以跳过上传发票 */
+    return axPostJson(urls.ifUploadInvoice, null, params);
   },
 };

@@ -48,6 +48,7 @@
     </div>
     <div class="orderEntry-btns-par">
       <button
+        v-if="!isMustUploadInvoice"
         type="button"
         class="common-submit-btn-primary"
         @click="skipUpload"
@@ -69,18 +70,21 @@ import {
 } from 'mand-mobile';
 
 import {
-  BRadioItem
-} from '@/components/form';
-
-import {
   BProductMultUpload
 } from '@/components/business';
+
+import {
+  mapGetters
+} from 'vuex';
+
+import {
+  GET_USER
+} from '@/store/mutationsTypes';
 
 export default {
   name: 'OrderUploadInvoice',
   components: {
     BProductMultUpload,
-    BRadioItem
   },
   data() {
     return {
@@ -100,12 +104,17 @@ export default {
       // 上传类型
       uploadType: 2,
       // 产品
-      products: [
-      ],
+      products: [],
       // 发票图片地址
       invoiceImg: [],
       orderNo: '',
+      // 必须上传发票
+      isMustUploadInvoice: true
     };
+  },
+  created() {
+    // 第一次进去才查询是否可以上传发票
+    this.checkMustUploadInvoice();
   },
   activated() {
     console.log('tag', this.$route.params);
@@ -115,13 +124,28 @@ export default {
       this.getData();
     }
   },
-  created() {
+  computed: {
+    ...mapGetters([
+      GET_USER
+    ])
   },
   methods: {
+    async checkMustUploadInvoice() {
+      /* 检查是否必须上传发票 */
+      const { code, data } = await this.orderService.ifUploadInvoice({
+        hmcId: this[GET_USER].hmcid
+      });
+      if (code === 1) {
+        this.isMustUploadInvoice = data;
+      }
+    },
     skipUpload() {
       this.$router.push({
         name: 'Order.OrderConfirm',
-        params: { orderNo: this.orderNo, orderFollowId: this.orderFollowId }
+        params: {
+          orderNo: this.orderNo,
+          orderFollowId: this.orderFollowId
+        }
       });
     },
     uploadSuccess(data, fileMap, product) {
@@ -166,7 +190,10 @@ export default {
           setTimeout(() => {
             this.$router.push({
               name: 'Order.OrderConfirm',
-              params: { orderNo: this.orderNo, orderFollowId: this.orderFollowId }
+              params: {
+                orderNo: this.orderNo,
+                orderFollowId: this.orderFollowId
+              }
             });
           }, 800);
         }
