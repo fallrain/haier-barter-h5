@@ -170,11 +170,12 @@ export default {
       username: '',
       phone: '',
       rightsJson: '',
-      orderInfo:{}
+      orderInfo: {}
     };
   },
   computed: {},
-  created() {debugger
+  created() {
+    debugger;
     this.orderNo = this.$route.params.orderNo;
     this.orderFollowId = this.$route.params.orderFollowId;
     // this.orderNo = 'Z15645424968056668';
@@ -194,27 +195,27 @@ export default {
       //   }
       // });
       const obj = {
-        orderDetailSaveQoList :this.productList,
-        orderNo:this.orderNo,
-        rightsUserJson:this.rightsJson
-      }
-      this.rightsService.getRightsConfigInfo(obj,{}).then(res => {
-        if(res.code === 1){
-          if(res.data.length !== 0){
-            this.activityList = res.data
-            this.activityList.forEach(ri => {
-              ri.startTime = ri.startTime.substring(0,10)
-              ri.endTime = ri.endTime.substring(0,10)
-            })
+        orderDetailSaveQoList: this.productList,
+        orderNo: this.orderNo,
+        rightsUserJson: this.rightsJson
+      };
+      this.rightsService.getRightsConfigInfo(obj, {}).then((res) => {
+        if (res.code === 1) {
+          if (res.data.length !== 0) {
+            this.activityList = res.data;
+            this.activityList.forEach((ri) => {
+              ri.startTime = ri.startTime.substring(0, 10);
+              ri.endTime = ri.endTime.substring(0, 10);
+            });
           }
         }
-      })
+      });
     },
     getData() {
       this.orderService.queryOrderInfoByOrderNo({}, { orderNo: this.orderNo }).then((response) => {
         if (response.code === 1) {
           const resData = response.data;
-          this.orderInfo = resData
+          this.orderInfo = resData;
           this.shopName = resData.storeName;
           this.consignee.name = resData.consigneeName;
           this.username = resData.userName;
@@ -303,10 +304,10 @@ export default {
             : this.$vnode.key;
           const cache = this.$vnode.parent.componentInstance.cache;
           const keys = this.$vnode.parent.componentInstance.keys;
-          if(to.name === 'Order.OrderModify'){
-            keys.forEach((k,index) =>{
+          if (to.name === 'Order.OrderModify') {
+            keys.forEach((k, index) => {
               if (cache[k]) {
-                if(cache[k].tag.indexOf('OrderEntry') > -1){
+                if (cache[k].tag.indexOf('OrderEntry') > -1) {
                   delete cache[k];
                 }
               }

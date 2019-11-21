@@ -142,7 +142,6 @@ export default {
       this.productService.list(searchStr, '1', '30').then((res) => {
         // ;
         if (res.code === 1) {
-
           this.searchList = res.data;
           if (res.data === null) {
             Toast.failed('暂无信息，请重新搜索');
@@ -187,10 +186,10 @@ export default {
       return !!array.find(v => v.productCode === obj.productCode);
     },
     onItemClick(item) {
-      debugger
-      if(item.productGroup === null || item.productGroupName === null){
-        Toast.info('产品组名称不能为空')
-        return
+      debugger;
+      if (item.productGroup === null || item.productGroupName === null) {
+        Toast.info('产品组名称不能为空');
+        return;
       }
 	    this.currentClickItemData.productGroup = item.productGroup;
 	    this.currentClickItemData.productGroupName = item.productGroupName;

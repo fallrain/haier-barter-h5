@@ -502,7 +502,7 @@ export default {
                   recordMode: info.recordMode,
                   businessScenarios: info.businessScenarios,
                   sourceSn: info.sourceSn,
-                  smld:true,
+                  smld: true,
                   id: info.id,
                   freezeMsg,
                 },
@@ -522,7 +522,7 @@ export default {
                 orderFollowId: info.id,
                 businessScenarios: info.businessScenarios,
                 recordMode: info.recordMode,
-                region:'continue',
+                region: 'continue',
               }
             });
           }
@@ -573,8 +573,8 @@ export default {
     },
 
     searchData(page) {
-      if(this.curTab === 3){
-        this.sortType = 2
+      if (this.curTab === 3) {
+        this.sortType = 2;
       }
       console.log('keyword', this.searchWord);
       return this.orderService
@@ -621,18 +621,18 @@ export default {
             if (result && result.length > 0) {
               const curList = result;
               this.anylizeData(curList);
-                console.log(page);
-                if (page.num === 1) {
-                  console.log(this.curScrollViewName);
-                  this[this.curScrollViewName].list = [];
-                  this[this.curScrollViewName].list = this.currentList;
+              console.log(page);
+              if (page.num === 1) {
+                console.log(this.curScrollViewName);
+                this[this.curScrollViewName].list = [];
+                this[this.curScrollViewName].list = this.currentList;
+              } else {
+                if (page.num > 1 && res.data.pages === 1) {
                 } else {
-                  if(page.num > 1 && res.data.pages === 1){
-                  }else {
-                    this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(this.currentList);
-                    console.log(this[this.curScrollViewName].list);
-                  }
+                  this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(this.currentList);
+                  console.log(this[this.curScrollViewName].list);
                 }
+              }
             } else {
               Toast.failed('暂无数据');
               this[this.curScrollViewName].list = [];
@@ -644,7 +644,6 @@ export default {
         });
     },
     anylizeData(curList) {
-      console.log(curList);
       curList.forEach((item) => {
         /*
           0-跟进中  1-已完成  2-草稿  3-暂不跟进 4-取消 5-异常
