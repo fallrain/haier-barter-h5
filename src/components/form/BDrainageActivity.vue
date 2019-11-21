@@ -69,11 +69,6 @@ export default {
   },
   props: {
     getData: {
-      name: '',
-      giftUrl: '',
-      time: '',
-      scope: '',
-      people: ''
     }
   },
   methods: {
