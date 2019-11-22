@@ -24,8 +24,8 @@ module.exports = {
         secure: false
       },
       '/api': {
-        target: 'https://testdb.haier.net/',
-        // target: 'https://barter.haier.net/',
+        // target: 'https://testdb.haier.net/',
+        target: 'https://barter.haier.net/',
         changeOrigin: true,
         // pathRewrite: {
         //   '^/api': ''

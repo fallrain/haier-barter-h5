@@ -635,6 +635,7 @@ export default {
         }
       });
     },
+    //是否代报装
     isReportInstall(pro) {
       const orderDetailDtoList = [
         {
@@ -689,7 +690,6 @@ export default {
         this.splice(index, 1);
       }
     },
-    // 获取门店信息
     sponsorCheck(checkid) {
       // ;
       // this.multBuyParticipant = this.buyerList;
@@ -706,6 +706,7 @@ export default {
     particpantClick(checkids) {
 
     },
+    //确认送达时间
     confirmDeliveryTime(date) {
       let time = date;
       time = time.substring(0, 10).replace(/-/g, '/');
@@ -719,6 +720,7 @@ export default {
       }
       this.deliveryTime = date;
     },
+    //获取门店
     getUserStore() {
       // this.shopId = '8800332156';
       this.productService.storeInfo(this.shopId).then((res) => {

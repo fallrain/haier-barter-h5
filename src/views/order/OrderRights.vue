@@ -143,17 +143,19 @@ export default {
       mutexToastInfo: ''
     };
   },
-
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      // 通过 `vm` 访问组件实例
+      vm.getData(1);
+      vm.getData(2);
+      vm.getProductGroup();
+    });
+  },
   created() {
-    // this.rightListTest = rightListTest;
-    // this.residueRightsList = rightListTest;
-    // this.rightListTest.forEach((rights) => {
-    //   rights.flag = 0;
-    // });
-    this.getData(1);
-    this.getData(2);
-    this.getProductGroup();
-    // this.anylizeData(rightListTest);
+    // debugger
+    // this.getData(1);
+    // this.getData(2);
+    // this.getProductGroup();
   },
   computed: {
     curScrollViewName() {
@@ -736,7 +738,7 @@ export default {
                   Num += Math.pow(10, i) * Math.floor(Math.random() * 10);
                 }
                 timestamp += Num;
-                debugger
+                debugger;
                 sel.selcted.forEach((val) => {
                   const a = {};
                   a.orderDetailId = val;
@@ -767,7 +769,7 @@ export default {
         }
         rightJson.rightsUserInterestsDTO = this.rightsUserDto;
         this.rightsJson = JSON.stringify(rightJson);
-        debugger
+        debugger;
         this.$router.go(-1);
       }
     },
@@ -1020,6 +1022,7 @@ export default {
     }
   },
   beforeRouteLeave(to, from, next) {
+    debugger;
     if (this.rightsJson) {
       const right = JSON.parse(this.rightsJson);
       if (right.rightsUserInterestsDetailsDTO.length === 0) {
@@ -1047,6 +1050,7 @@ export default {
                 }
               }
               delete cache[key];
+              debugger;
             }
           }
         }

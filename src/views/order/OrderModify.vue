@@ -478,8 +478,6 @@ export default {
       }
       if (obj.rightsJson) {
         const right = JSON.parse(obj.rightsJson);
-        this.rightName = right.rightsName;
-        this.rightId = right.rightsId;
         const rightsPro = JSON.parse(obj.rightsJson).rightName.split(',');
 
         this.rightsJson = obj.rightsJson;
