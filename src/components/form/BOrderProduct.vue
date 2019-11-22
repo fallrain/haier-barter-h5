@@ -46,12 +46,12 @@
 </template>
 <script>
 import {
+  Toast
+} from 'mand-mobile';
+import {
   BDatePicker,
   BItem
 } from '@/components/form';
-import {
-  Toast
-} from 'mand-mobile';
 
 export default {
   name: 'BOrderProduct',
@@ -102,21 +102,30 @@ export default {
       this.$emit('onDel', this.index);
     },
     blur() {
+      if (this.data.productPrice === '') {
+        Toast.failed('请输入产品价格');
+        return;
+      }
       this.data.productPrice = this.formatDecimal(this.data.productPrice, 2);
-      if (this.data.productPrice < 0) {
+      if (this.data.productPrice <= 0 || this.data.productPrice > 990000) {
         Toast.failed('请输入正确的产品价格');
         this.data.productPrice = '';
-        return
+        return;
+      }
+      console.log(this.data);
+      let bbcPrice = 0;
+      if (this.data.bccPrice) {
+        bbcPrice = this.data.bccPrice;
       }
       const obj = {
-            bccPrice: '',
-            productCode: this.data.productCode,
-            productPrice: this.data.productPrice,
-            requestNoToast: true
-          };
+        bccPrice: bbcPrice,
+        productCode: this.data.productCode,
+        productPrice: this.data.productPrice,
+      };
+
       this.orderService.checkProductPrice({}, obj).then((res) => {
         if (res.code == -1) {
-          this.data.productPrice = ''
+          this.data.productPrice = '';
         }
       });
     },
@@ -130,9 +139,8 @@ export default {
       }
       return parseFloat(num).toFixed(decimal);
     },
-    inputFunction(){
-
-      this.$emit('inputChange')
+    inputFunction() {
+      this.$emit('inputChange');
     }
   }
 };

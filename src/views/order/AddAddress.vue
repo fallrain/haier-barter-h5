@@ -273,10 +273,12 @@ export default {
         this.customerInfo.username = JSON.parse(this.$route.params.info).username;
         this.customerInfo.userId = JSON.parse(this.$route.params.info).userId;
         this.customerInfo.mobile = JSON.parse(this.$route.params.info).mobile;
+        if (JSON.parse(this.$route.params.info).customerId) {
+          this.customerInfo.customerId = JSON.parse(this.$route.params.info).customerId;
+        }
       }
       else {
         // this.confirmShow = false;
-
         this.searchEnd = true;
         if (this.region === 'add' && !JSON.parse(this.$route.params.info).address) {
           this.customerInfo.username = JSON.parse(this.$route.params.info).username;
@@ -380,6 +382,7 @@ export default {
             this.defaultA.push(res.data.province);
             this.defaultA.push(res.data.city);
             this.defaultA.push(res.data.district);
+            this.$router.go(-1)
           } else {
             this.searchResultShow = true;
           }
@@ -404,7 +407,7 @@ export default {
       this.newAddress.regionCode = addressAy[0] + addressAy[1] + addressAy[2];
       this.addressName = addressA.join('/');
     },
-    confirm() {debugger;
+    confirm() {
       if (!(/^1[3456789]\d{9}$/.test(this.customerInfo.mobile))) {
         Toast.failed('手机号格式错误');
         this.customerInfo.mobile = '';

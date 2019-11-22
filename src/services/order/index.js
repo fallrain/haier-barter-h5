@@ -26,6 +26,9 @@ export default {
   createOrder(data, param) {
     return axPostJson(urls.createOrder, data, param);
   },
+  createOrderForSGLD(data, param) {
+    return axPostJson(urls.createOrderForSGLD, data, param);
+  },
   createOrderSubmit(data, param) {
     return axPostJson(urls.createOrderSubmit, data, param);
   },
