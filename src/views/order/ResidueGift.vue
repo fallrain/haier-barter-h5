@@ -126,8 +126,8 @@ export default {
   //   this.bUtil.scroviewTabChange(this.curScrollViewName, this);
   // },
   created() {
-  this.getProductGroup()
-  this.search()
+    this.getProductGroup();
+    this.search();
   },
   methods: {
     // upCallback(page) {
@@ -163,7 +163,7 @@ export default {
     },
     search() {
       // todo
-      this.rightsService.queryRightsResidue({},{}).then((res) => {
+      this.rightsService.queryRightsResidue({}, {}).then((res) => {
         // pageNum: page.num,
         //   pageSize: page.size,
         // const sroviewObj = {};
@@ -176,9 +176,9 @@ export default {
           // sroviewObj.result = result;
           // if (result && result.length > 0) {
           //   const list = result;
-            if(res.data.length > 0){
-              this.anylizeData(res.data);
-            }
+          if (res.data.length > 0) {
+            this.anylizeData(res.data);
+          }
 
           // }
           // this[this.curScrollViewName].list = this.currentList;
@@ -190,14 +190,14 @@ export default {
     },
     getProductGroup() {
       this.productService.industryGroup().then((res) => {
-        if(res.code === 1){
-          this.productGroupName = res.data
+        if (res.code === 1) {
+          this.productGroupName = res.data;
         }
       });
     },
     anylizeData(curlist) {
       curlist.forEach((item) => {
-        const ProductCategoryNameAy = []
+        const ProductCategoryNameAy = [];
         this.productGroupName.forEach((v) => {
           const reg = new RegExp(v.groupCode);
           if (reg.test(item.rightsProductCategory)) {
@@ -231,7 +231,7 @@ export default {
         // } else {
         //   item.rightsBrandC = '统帅';
         // }
-      })
+      });
       this.currentList = curlist;
     }
   },
