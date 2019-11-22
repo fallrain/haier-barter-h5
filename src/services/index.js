@@ -1,4 +1,6 @@
 import Vue from 'vue';
+// base
+import baseService from '@/services/base';
 // basic
 import basicService from '@/services/basic';
 // 订单
@@ -13,6 +15,7 @@ import product from '@/services/product';
 import rights from '@/services/rights';
 
 Vue.prototype.basicService = basicService;
+Vue.prototype.baseService = baseService;
 Vue.prototype.orderService = orderService;
 Vue.prototype.reportInstallService = reportInstall;
 Vue.prototype.salesService = sales;
