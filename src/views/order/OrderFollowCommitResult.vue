@@ -102,7 +102,6 @@ export default {
       this.$router.replace({
         name: 'Order.OrderFollowSearch',
       });
-
     },
     checkOrder() {
       localStorage.setItem('confirm', 'list');
@@ -131,7 +130,7 @@ export default {
             : this.$vnode.key;
           const cache = this.$vnode.parent.componentInstance.cache;
           const keys = this.$vnode.parent.componentInstance.keys;
-          for(let i = 0;i < keys.length;i ++){
+          for (let i = 0; i < keys.length; i++) {
             delete cache[keys[i]];
           }
         }

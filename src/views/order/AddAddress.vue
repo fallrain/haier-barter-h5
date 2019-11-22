@@ -265,9 +265,7 @@ export default {
       } else if (this.region === 'userAdd' && this.$route.params.info === '{}') {
         this.confirmShow = true;
         this.searchEnd = false;
-
-      }
-      else if (this.region === 'userAdd' && this.$route.params.info !== '{}') {
+      } else if (this.region === 'userAdd' && this.$route.params.info !== '{}') {
         this.confirmShow = true;
         this.searchEnd = true;
         this.customerInfo.username = JSON.parse(this.$route.params.info).username;
@@ -276,8 +274,7 @@ export default {
         if (JSON.parse(this.$route.params.info).customerId) {
           this.customerInfo.customerId = JSON.parse(this.$route.params.info).customerId;
         }
-      }
-      else {
+      } else {
         // this.confirmShow = false;
         this.searchEnd = true;
         if (this.region === 'add' && !JSON.parse(this.$route.params.info).address) {
@@ -289,7 +286,7 @@ export default {
           }
           this.smld = true;
         } else if (this.region === 'edit') {
-          console.log(JSON.parse(this.$route.params.info))
+          console.log(JSON.parse(this.$route.params.info));
           this.customerInfo = JSON.parse(this.$route.params.info);
           // this.customerInfo.username = JSON.parse(this.$route.params.info).username;
           // this.customerInfo.mobile = JSON.parse(this.$route.params.info).mobile;
@@ -382,7 +379,7 @@ export default {
             this.defaultA.push(res.data.province);
             this.defaultA.push(res.data.city);
             this.defaultA.push(res.data.district);
-            this.$router.go(-1)
+            this.$router.go(-1);
           } else {
             this.searchResultShow = true;
           }
@@ -447,7 +444,7 @@ export default {
         Toast.failed('详细地址不能为空');
         return;
       }
-      this.customerInfo.address = this.customerInfo.address.replace(/[\r\n]/g,"")
+      this.customerInfo.address = this.customerInfo.address.replace(/[\r\n]/g, '');
       if (this.customerInfo.consignee) {
         delete this.customerInfo.consignee;
       }
@@ -463,8 +460,8 @@ export default {
       }
       if (this.region === 'add' || this.region === 'userAdd') {
         delete this.customerInfo.id;
-        if(this.$route.params.businessScenarios != ''){
-          this.customerInfo.source = this.$route.params.businessScenarios
+        if (this.$route.params.businessScenarios != '') {
+          this.customerInfo.source = this.$route.params.businessScenarios;
         }
         this.productService.addcustomerAddress(this.customerInfo, {}).then((res) => {
           if (res.code === 1) {
@@ -474,7 +471,7 @@ export default {
           }
         });
       } else {
-         delete this.customerInfo.hmcId;
+        delete this.customerInfo.hmcId;
         this.productService.updateCustomerAddress(this.customerInfo, {}).then((res) => {
           if (res.code === 1) {
             Toast.succeed('地址修改成功');
@@ -512,23 +509,23 @@ export default {
       event.preventDefault();
     },
     judgeName(str, max) {
-      let strResult = String(str);
+      const strResult = String(str);
       if (strResult.length > max) {
-        Toast.failed('对多可输入20个字符！')
+        Toast.failed('对多可输入20个字符！');
         this.customerInfo.username = strResult.slice(0, max);
       }
     },
     judgeName1(str, max) {
-      let strResult = String(str);
+      const strResult = String(str);
       if (strResult.length > max) {
-        Toast.failed('对多可输入20个字符！')
+        Toast.failed('对多可输入20个字符！');
         this.customerInfo.consigneeUserName = strResult.slice(0, max);
       }
     },
     judgeAddress(str, max) {
-      let strResult = String(str);
+      const strResult = String(str);
       if (strResult.length > max) {
-        Toast.failed('对多可输入30个字符！')
+        Toast.failed('对多可输入30个字符！');
         this.customerInfo.address = strResult.slice(0, max);
       }
     }
@@ -543,8 +540,8 @@ export default {
     const obj = {
       tel: this.customerInfo.mobile,
       smld: this.smld,
-      customerInfo:this.customerInfo,
-      region:this.region
+      customerInfo: this.customerInfo,
+      region: this.region
     };
     if (to.name === 'Order.OrderEntry' || 'Order.OrderModify') {
       to.query.temp = JSON.stringify(obj);

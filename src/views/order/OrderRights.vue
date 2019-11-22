@@ -146,11 +146,11 @@ export default {
   beforeRouteEnter(to, from, next) {
     next((vm) => {
       // 通过 `vm` 访问组件实例
-      //请求同享列表
+      // 请求同享列表
       vm.getData(1);
-      //请求互斥列表
+      // 请求互斥列表
       vm.getData(2);
-      //获取产品组信息
+      // 获取产品组信息
       vm.getProductGroup();
     });
   },
@@ -354,7 +354,7 @@ export default {
 
       this.anylizeMCData(this.shareRightsList);
     },
-    //互斥减
+    // 互斥减
     minusMCount(item) {
       /** **************互斥********************** */
       // 单品
@@ -518,7 +518,7 @@ export default {
 
       this.anylizeMCData(this.mutexRightsList);
     },
-    //互斥添加
+    // 互斥添加
     addMCount(item) {
       /** ************互斥***************** */
       // 单品
@@ -672,7 +672,7 @@ export default {
     array_contain(array, obj) {
       return array.find(v => v === obj);
     },
-    //查看礼品
+    // 查看礼品
     showConfig(item) {
       this.rightsService.viewGifts({}, { rightsNo: item.rightsNo },)
         .then((res) => {
@@ -686,7 +686,7 @@ export default {
           }
         });
     },
-    //其他限制
+    // 其他限制
     showLimit(item) {
       this.rightsService.viewOtherLimited({}, { rightsNo: item.rightsNo })
         .then((res) => {
@@ -700,7 +700,7 @@ export default {
       this.jsonRightsList(this.shareRightsList,);
       this.jsonRightsList(this.mutexRightsList,);
     },
-    //字符串列表
+    // 字符串列表
     jsonRightsList(list) {
       if (list.length === 0) {
         this.num++;
@@ -782,7 +782,7 @@ export default {
         this.$router.go(-1);
       }
     },
-    //不可参与活动
+    // 不可参与活动
     searchData(page) {
       return this.rightsService.queryOrderNotOptionalRights(this.subInfo, {
         pageNum: page.num,

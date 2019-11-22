@@ -216,6 +216,8 @@ export default {
           // this.currentClickItemData.productGroupName = res.data.productGroupName;
           this.currentClickItemData.productModel = res.data.productModel;
           this.$router.go(-1);
+        } else {
+          this.currentClickItemData = {};
         }
       });
     },
