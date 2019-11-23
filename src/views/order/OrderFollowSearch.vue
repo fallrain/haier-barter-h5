@@ -97,7 +97,7 @@
         @popButtonClicked="buttonClicked"
         @updateOrderType="updateOrderType"
         @followButtonClick="followButtonClicked"
-        @itemClick="itemClick()"
+        @itemClick="itemClick"
         @gujiaClick="gujiaClick"
       ></b-order-follow-item>
     </div>
@@ -118,7 +118,7 @@
         @updateOrderType="updateOrderType"
         @followButtonClick="followButtonClicked"
         @userService="userService"
-        @itemClick="itemClick()"
+        @itemClick="itemClick"
         @gujiaClick="gujiaClick"
         @maybeBuyer="maybeBuyer"
       ></b-order-follow-item>
@@ -398,10 +398,12 @@ export default {
     handEntryCancel() {
       this.handEntryCon = false;
     },
-    itemClick(index) {
+    itemClick(followItem) {
       this.$router.push({
         name: 'Order.OrderDetail',
-        params: { orderNo: this.currentList[index % 10].orderNo }
+        params: {
+          orderNo: followItem.orderNo
+        }
       });
     },
     gujiaClick(item) {
