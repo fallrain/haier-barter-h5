@@ -7,38 +7,14 @@
       :key="index"
       @click="orderClick"
     >
-      <img
-        src="@/assets/images/orderFollow-up/yizhanzhujia@3x.png"
-        class="labelImage"
-        v-show="followItem.businessScenarios ==='YZZJ'"
-      >
-      <img
-        src="@/assets/images/orderFollow-up/yijiuhuanxin@3x.png"
-        class="labelImage"
-        v-show="followItem.businessScenarios ==='YJHX'"
-      >
-      <img
-        src="@/assets/images/orderFollow-up/aidaojia@3x.png"
-        class="labelImage"
-        v-show="followItem.businessScenarios ==='ADJ'"
-      >
-      <img
-        src="@/assets/images/orderFollow-up/saomaludan.png"
-        class="labelImage"
-        v-show="followItem.businessScenarios ==='SMLD'"
-      >
-      <img
-        src="@/assets/images/orderFollow-up/SGLD.png"
-        class="labelImage"
-        v-show="followItem.businessScenarios ==='SGLD'"
-      >
-      <img
-        src="@/assets/images/orderFollow-up/renchou@3x.png"
-        class="labelImage"
-        v-show="followItem.businessScenarios ==='RC'"
-      >
+      <b-order-follow-item-type-tag
+        :businessScenarios="followItem.businessScenarios"
+      ></b-order-follow-item-type-tag>
       <!--<p>{{followItem.orderNo}}</p>-->
-      <div class="row-class">
+      <div
+        class="row-class"
+        :class="['pl44']"
+      >
         <span class="label-span">{{followItem.userName}}</span>
         <span
           class="sex-class"
@@ -194,10 +170,12 @@ import {
   PopupTitleBar,
   Toast
 } from 'mand-mobile';
+import BOrderFollowItemTypeTag from './BOrderFollowItemTypeTag';
 
 export default {
   name: '',
   components: {
+    BOrderFollowItemTypeTag,
     [Icon.name]: Icon,
     [Toast.name]: Toast,
     'md-popup': Popup,
@@ -478,6 +456,7 @@ export default {
   }
 
   .label-class {
+    position: relative;
     margin-top: 16px;
     // height: 290px;
     background-color: white;
@@ -750,6 +729,5 @@ export default {
     font-size: 28px;
     padding-right: 50px !important;
   }
-
 
 </style>
