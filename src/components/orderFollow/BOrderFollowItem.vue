@@ -13,7 +13,7 @@
       <!--<p>{{followItem.orderNo}}</p>-->
       <div
         class="row-class"
-        :class="['pl44']"
+        :class="[['YZZJ','YJHX', 'ADJ', 'SMLD', 'SGLD', 'RC',].includes(followItem.businessScenarios) && 'pl88']"
       >
         <span class="label-span">{{followItem.userName}}</span>
         <span
