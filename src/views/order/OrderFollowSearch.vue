@@ -470,10 +470,8 @@ export default {
       // this.updateList = true;
       this.sortType = parseInt(val);
       this.businessType = '';
-      this.searchData({
-        num: 1,
-        size: 10
-      });
+      // 刷新页面、重置页码
+      this[this.curScrollViewName].mescroll.resetUpScroll();
     },
     buttonClicked(val) {
       // this.updateList = true;
@@ -484,10 +482,8 @@ export default {
       } else {
         this.businessType = val.join(',');
       }
-      this.searchData({
-        num: 1,
-        size: 10
-      });
+      // 刷新页面
+      this[this.curScrollViewName].mescroll.resetUpScroll();
     },
     followButtonClicked(val, info) {
       console.log(info);
@@ -574,7 +570,6 @@ export default {
         });
       }
     },
-
     searchData(page) {
       if (this.curTab === 3) {
         this.sortType = 2;
@@ -761,22 +756,16 @@ export default {
       this.currentList = curList;
     },
     fuzzySearch() {
-      // this.updateList = true;
-      const page = {
-        num: 1,
-        size: 10
-      };
       this.businessType = '';
-      this.searchData(page);
+      // 刷新页面、重置页码
+      this[this.curScrollViewName].mescroll.resetUpScroll();
       this.fuzzy = true;
     },
     updateOrderType(type) {
       // this.updateList = true;
       this.businessType = '';
-      this.searchData({
-        num: 1,
-        size: 10
-      });
+      // 刷新页面、重置页码
+      this[this.curScrollViewName].mescroll.resetUpScroll();
     },
 
   },

@@ -3,7 +3,7 @@
     <!--    <div style="height: 82px;"></div>-->
     <div
       class="label-class"
-      v-for="(followItem,index) in list"
+      v-for="(followItem) in list"
       :key="followItem.id"
       @click="orderClick"
     >
@@ -61,7 +61,7 @@
         <span class="time-label">{{followItem.updatedTime}}</span>
         <span
           v-show="followItem.flowStatus !== 1 && followItem.flowStatus !== 0 && followItem.flowStatus !== 3&& followItem.flowStatus !== 2&& (followItem.add1 !=null || followItem.add2 !=null)"
-          @click="detailHide(index,followItem)">
+          @click="detailHide(followItem)">
           <span class="information-class">详细信息</span>
           </span>
         <span v-show="followItem.businessScenarios === 'YJHX'" @click="gujiaClick(followItem)">
@@ -106,7 +106,7 @@
         <div
           class="dian-class-par"
           v-show="followItem.flowStatus !== 1"
-          @click="(e)=>showMore(index,e)"
+          @click="(e)=>showMore(followItem,e)"
         >
           <img
             src="@/assets/images/orderFollow-up/dian@3x.png"
@@ -279,15 +279,13 @@ export default {
 
       this.$emit('followButtonClick', button, item);
     },
-    showMore(index, e) {
+    showMore(item, e) {
       this.stopProcess();
-      this.ID = this.list[index].id;
+      this.ID = item.id;
+      const isShow = item.show;
       for (let i = 0; i < this.list.length; i++) {
-        if (index !== i) {
-          this.$set(this.list[i], 'show', false);
-        }
+        this.$set(this.list[i], 'show', false);
       }
-      const isShow = this.list[index].show;
       let isOverflow = false;
       if (!isShow) {
         const target = e.currentTarget;
@@ -300,8 +298,8 @@ export default {
       }
 
       // 显示的时候才会设置showInTop，隐藏依然没有，防止计算屏幕溢出错误
-      this.$set(this.list[index], 'showInTop', isOverflow && !isShow);
-      this.$set(this.list[index], 'show', !isShow);
+      this.$set(item, 'showInTop', isOverflow && !isShow);
+      this.$set(item, 'show', !isShow);
     },
     stopProcess() {
       const e = window.event;
@@ -312,10 +310,10 @@ export default {
         e.cancelBubble = true; // ie兼容
       }
     },
-    detailHide(index, item) {
+    detailHide(item) {
       this.stopProcess();
-      this.$set(this.list[index], 'detailShow', !this.list[index].detailShow);
-      if (this.list[index].detailShow) {
+      this.$set(item, 'detailShow', !item.detailShow);
+      if (item.detailShow) {
         this.$emit('searchProduct', item);
       }
     },
