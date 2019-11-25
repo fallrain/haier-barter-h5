@@ -69,7 +69,7 @@
             class="information-class-de"
           >估价详情</span>
         </span>
-        <span v-show="followItem.flowStatus === 1" @click="itemClick(index)">
+        <span v-show="followItem.flowStatus === 1" @click="itemClick(followItem)">
           <span class="information-class-de">查看详情</span>
           <!--<img-->
           <!--src="@/assets/images/orderFollow-up/xialablue@3x.png"-->
@@ -249,9 +249,9 @@ export default {
           }
         });
     },
-    itemClick(index) {
+    itemClick(followItem) {
       this.stopProcess();
-      this.$emit('itemClick', index);
+      this.$emit('itemClick', followItem);
     },
     orderClick() {
       /* 隐藏弹出层 */
