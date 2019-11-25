@@ -4,13 +4,18 @@
     <div
       class="label-class"
       v-for="(followItem,index) in list"
-      :key="index"
+      :key="followItem.id"
       @click="orderClick"
     >
       <b-order-follow-item-type-tag
         :businessScenarios="followItem.businessScenarios"
       ></b-order-follow-item-type-tag>
       <!--<p>{{followItem.orderNo}}</p>-->
+      <div
+        class="order-follow-item-del"
+        @click="orderDelete(followItem)"
+      ><i class="iconfont icon-shanchu"></i>删除
+      </div>
       <div
         class="row-class"
         :class="[['YZZJ','YJHX', 'ADJ', 'SMLD', 'SGLD', 'RC',].includes(followItem.businessScenarios) && 'pl88']"
@@ -358,6 +363,9 @@ export default {
             this.$emit('updateOrderType', type);
           }
         });
+    },
+    orderDelete(item) {
+      /* 订单删除 */
     }
   }
 };
@@ -730,4 +738,17 @@ export default {
     padding-right: 50px !important;
   }
 
+  .order-follow-item-del {
+    position: absolute;
+    top: 0;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    height: 60px;
+    color: #666;
+    font-size: 24px;
+    .iconfont{
+      margin-right: 6px;
+    }
+  }
 </style>
