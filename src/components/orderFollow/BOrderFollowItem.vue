@@ -3,7 +3,7 @@
     <!--    <div style="height: 82px;"></div>-->
     <div
       class="label-class"
-      v-for="(followItem) in list"
+      v-for="(followItem,index) in list"
       :key="followItem.id"
       @click="orderClick"
     >
@@ -13,7 +13,7 @@
       <!--<p>{{followItem.orderNo}}</p>-->
       <div
         class="order-follow-item-del"
-        @click="orderDelete(followItem)"
+        @click="showOrderDelDialog(followItem,index)"
       ><i class="iconfont icon-shanchu"></i>删除
       </div>
       <div
@@ -161,8 +161,13 @@
       </div>
 
     </md-popup>
-
-
+    <md-dialog
+      :closable="true"
+      v-model="orderDelDialog.open"
+      :btns="orderDelDialog.btns"
+    >
+      {{orderDelDialog.text}}
+    </md-dialog>
   </div>
 </template>
 
@@ -170,6 +175,7 @@
 <script>
 import {
   Button,
+  Dialog,
   Icon,
   Popup,
   PopupTitleBar,
@@ -183,6 +189,7 @@ export default {
     BOrderFollowItemTypeTag,
     [Icon.name]: Icon,
     [Toast.name]: Toast,
+    'md-dialog': Dialog,
     'md-popup': Popup,
     [PopupTitleBar.name]: PopupTitleBar,
     [Button.name]: Button,
@@ -213,7 +220,25 @@ export default {
       show: false,
       showList: [],
       ID: '',
-      currentList: this.list
+      currentList: this.list,
+      // 订单删除对话框
+      orderDelDialog: {
+        open: false,
+        text: '',
+        btns: [
+          {
+            text: '取消'
+          },
+          {
+            text: '确定',
+            handler: this.orderDelete,
+          },
+        ],
+      },
+      // 将被删除的订单id
+      curBeDelOrderId: '',
+      // 将被删除的订单index
+      curBeDelOrderIndex: NaN
     };
   },
   created() {
@@ -362,8 +387,26 @@ export default {
           }
         });
     },
-    orderDelete(item) {
+    orderDelete() {
       /* 订单删除 */
+      // todo 订单删除接口
+      return new Promise((r) => {
+        r({
+          code: 1,
+        });
+      }).then(({ code }) => {
+        if (code === 1) {
+          this.orderDelDialog.open = false;
+          this.list.splice(this.curBeDelOrderIndex, 1);
+        }
+      });
+    },
+    showOrderDelDialog(item, index) {
+      /* 订单删除对话框 */
+      this.curBeDelOrderId = item.id;
+      this.curBeDelOrderIndex = index;
+      this.orderDelDialog.text = `确定删除订单号为${item.id}，客户姓名为${item.userName}的订单吗？`;
+      this.orderDelDialog.open = true;
     }
   }
 };

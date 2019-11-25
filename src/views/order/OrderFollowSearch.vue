@@ -167,10 +167,6 @@ import {
   Dialog
 } from 'mand-mobile';
 import {
-  BPopButton,
-  BPopSortType
-} from '@/components/form';
-import {
   BOrderFollowItem
 } from '@/components/orderFollow';
 import BOrderFollowSearchBar from '../../components/orderFollow/BOrderFollowSearchBar';
@@ -187,8 +183,6 @@ export default {
     [Toast.name]: Toast,
     [Dialog.name]: Dialog,
     [NoticeBar.name]: NoticeBar,
-    BPopSortType,
-    BPopButton,
     BOrderFollowItem,
     [Popup.name]: Popup
   },
@@ -767,7 +761,6 @@ export default {
       // 刷新页面、重置页码
       this[this.curScrollViewName].mescroll.resetUpScroll();
     },
-
   },
   beforeRouteEnter(to, from, next) {
     if (from.name === 'Order.OrderFollowCommitResult' || from.name === 'Order.OrderConfirm' || from.name === 'Order.OrderEntry' || from.name === 'Order.OrderModify') {
