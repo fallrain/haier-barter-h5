@@ -288,6 +288,7 @@ export default {
 
     .md-dialog-body {
       padding: 36px;
+      max-height: 800px;
     }
   }
 
