@@ -17,7 +17,7 @@
       ><i class="iconfont icon-shanchu"></i>删除
       </div>
       <div
-        class="row-class"
+        class="row-class pt10"
         :class="[['YZZJ','YJHX', 'ADJ', 'SMLD', 'SGLD', 'RC',].includes(followItem.businessScenarios) && 'pl88']"
       >
         <span class="label-span">{{followItem.userName}}</span>
