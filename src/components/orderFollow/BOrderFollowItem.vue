@@ -162,11 +162,35 @@
 
     </md-popup>
     <md-dialog
+      title="确定要删除该订单？"
       :closable="true"
       v-model="orderDelDialog.open"
       :btns="orderDelDialog.btns"
     >
-      {{orderDelDialog.text}}
+      <div class="bOrderFollowItem-del-dialog-item">
+        <span class="bOrderFollowItem-del-dialog-item-name">订单号：</span>
+        {{orderDelDialog.id}}
+      </div>
+      <div class="bOrderFollowItem-del-dialog-item">
+        <span class="bOrderFollowItem-del-dialog-item-name">客户姓名：</span>
+        {{orderDelDialog.userName}} {{orderDelDialog.userSexName}}
+      </div>
+    </md-dialog>
+    <md-dialog
+      :closable="false"
+      v-model="orderDelSucDialog.open"
+      :btns="orderDelSucDialog.btns"
+    >
+      <div class="bOrderFollowItem-del-dialog-success">
+        <i class="iconfont icon-duihao1"></i>订单已删除
+      </div>
+    </md-dialog>
+    <md-dialog
+      :closable="false"
+      v-model="orderDelApplyDialog.open"
+      :btns="orderDelApplyDialog.btns"
+    >
+      订单{{orderDelApplyDialog.id}}绑了定了相关权益，您无权删除，请填写删除理由后转至营销经理审批。
     </md-dialog>
   </div>
 </template>
@@ -184,7 +208,7 @@ import {
 import BOrderFollowItemTypeTag from './BOrderFollowItemTypeTag';
 
 export default {
-  name: '',
+  name: 'BOrderFollowItem',
   components: {
     BOrderFollowItemTypeTag,
     [Icon.name]: Icon,
@@ -223,20 +247,44 @@ export default {
       currentList: this.list,
       // 订单删除对话框
       orderDelDialog: {
+        // 是否打开
         open: false,
-        text: '',
+        // 性别
+        userSex: '',
+        // 编号
+        id: '',
+        // 姓名
+        userName: '',
         btns: [
           {
             text: '取消'
           },
           {
-            text: '确定',
+            text: '确定删除',
             handler: this.orderDelete,
           },
         ],
       },
-      // 将被删除的订单id
-      curBeDelOrderId: '',
+      orderDelSucDialog: {
+        open: false,
+        btns: [
+          {
+            text: '关闭'
+          },
+        ],
+      },
+      orderDelApplyDialog: {
+        open: false,
+        btns: [
+          {
+            text: '取消'
+          },
+          {
+            text: '去申请',
+            handler: this.applyDeleteOrder,
+          }
+        ],
+      },
       // 将被删除的订单index
       curBeDelOrderIndex: NaN
     };
@@ -387,26 +435,50 @@ export default {
           }
         });
     },
+    showOrderDelDialog(item, index) {
+      /* 订单删除对话框 */
+      this.curBeDelOrderIndex = index;
+      const {
+        id
+      } = item;
+      // todo 测试代码，待删除 0代表有权益占用
+      if (index === 0) {
+        this.orderDelApplyDialog.id = id;
+        this.orderDelApplyDialog.open = true;
+      } else {
+        // 无权益占用直接删除
+        this.orderDelDialog.id = id;
+        this.orderDelDialog.userName = item.userName;
+        this.orderDelDialog.userSexName = {
+          1: '先生',
+          2: '女士'
+        }[item.userName] || '';
+        this.orderDelDialog.open = true;
+      }
+    },
     orderDelete() {
       /* 订单删除 */
       // todo 订单删除接口
+      // 先关闭dialog
+      this.orderDelDialog.open = false;
       return new Promise((r) => {
         r({
           code: 1,
         });
       }).then(({ code }) => {
         if (code === 1) {
-          this.orderDelDialog.open = false;
+          // 打开正确提示
+          this.orderDelSucDialog.open = true;
           this.list.splice(this.curBeDelOrderIndex, 1);
         }
       });
     },
-    showOrderDelDialog(item, index) {
-      /* 订单删除对话框 */
-      this.curBeDelOrderId = item.id;
-      this.curBeDelOrderIndex = index;
-      this.orderDelDialog.text = `确定删除订单号为${item.id}，客户姓名为${item.userName}的订单吗？`;
-      this.orderDelDialog.open = true;
+    applyDeleteOrder() {
+      /* 申请订单删除 */
+      this.orderDelApplyDialog.open = false;
+      this.$router.push({
+        name: 'Order.ApplyDeleteOrder'
+      });
     }
   }
 };
@@ -788,8 +860,33 @@ export default {
     height: 60px;
     color: #666;
     font-size: 24px;
-    .iconfont{
+
+    .iconfont {
       margin-right: 6px;
+    }
+  }
+
+  .bOrderFollowItem-del-dialog-item {
+    font-size: 28px;
+    line-height: 48px;
+    color: #333;
+  }
+
+  .bOrderFollowItem-del-dialog-item-name {
+    color: #666;
+  }
+
+  .bOrderFollowItem-del-dialog-success {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    font-size: 30px;
+
+    .iconfont {
+      margin-right: 32px;
+      font-size: 52px;
+      color: #27AA91;
     }
   }
 </style>
