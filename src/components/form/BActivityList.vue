@@ -15,7 +15,7 @@
           </p>
         </div>
         <span class="bActivityList-activity-state state-class-8" v-show="item.receivingStatus === -1">已删除</span>
-        <span class="bActivityList-activity-state state-class-1" v-show="item.receivingStatus === 1">在途</span>
+        <span class="bActivityList-activity-state state-class-1" v-show="item.receivingStatus === 1">待扫码激活</span>
         <span class="bActivityList-activity-state state-class-2" v-show="item.receivingStatus === 2">已激活</span>
         <span class="bActivityList-activity-state state-class-3" v-show="item.receivingStatus === 3">已领取 </span>
         <span class="bActivityList-activity-state state-class-4" v-show="item.receivingStatus === 4">已过期</span>
