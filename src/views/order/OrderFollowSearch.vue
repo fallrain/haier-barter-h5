@@ -361,6 +361,7 @@ export default {
       });
     },
     handEntryConfirm() {
+      /* 手工录单弹窗确认 */
       this.handEntryCon = false;
       this.$router.push({
         name: 'Order.OrderEntry',
@@ -465,7 +466,10 @@ export default {
       });
     },
     followButtonClicked(val, info) {
+      /* 订单按钮点击操作，包括继续录单、录新订单等等 */
       console.log(info);
+      // 是否是以旧换新
+      const oldForNew = info.businessScenarios === 'YJHX' ? 1 : undefined;
       if (val.name === '成交录单') {
         this.orderService.checkCreateOrder().then((res) => { // 判断店铺是否冻结
           if (res.code != -1) {
@@ -483,6 +487,7 @@ export default {
                   smld: true,
                   id: info.id,
                   freezeMsg,
+                  oldForNew
                 },
                 region: 'new'
               }
@@ -501,6 +506,7 @@ export default {
                 businessScenarios: info.businessScenarios,
                 recordMode: info.recordMode,
                 region: 'continue',
+                oldForNew
               }
             });
           }
@@ -512,7 +518,8 @@ export default {
               name: 'Order.OrderSupplement',
               params: {
                 orderNo: info.orderNo,
-                orderFollowId: info.id
+                orderFollowId: info.id,
+                oldForNew
               }
             });
           }
@@ -539,6 +546,7 @@ export default {
                       businessScenarios: info.businessScenarios,
                       sourceSn: info.sourceSn,
                       id: orderFollowId,
+                      oldForNew
                     },
                     region: 'new'
                   }

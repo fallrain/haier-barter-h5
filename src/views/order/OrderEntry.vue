@@ -148,7 +148,7 @@
       title="选择可用的购机权益活动"
       :arrow="true"
       @click.native="selectActivity"
-      v-show="orderSource !=='SGLD'"
+      v-if="orderSource !=='SGLD' && orderSource !=='YJHX'"
     >
     </b-item>
     <b-activity-list
@@ -358,8 +358,7 @@ export default {
       // 产品列表
       productList: [],
       // 活动列表
-      activityList: [
-      ],
+      activityList: [],
       // 选中的活动id
       choosedActivitys: [],
       // 选择礼品pop显示隐藏
@@ -484,7 +483,7 @@ export default {
           if (obj.region === 'edit') {
             this.consignee.name = obj.customerInfo.consigneeUserName;
             this.consignee.phone = obj.customerInfo.consigneeUserPhone;
-            this.consignee.sexCn = obj.customerInfo.sex = 1 ? '男士' : '女士';
+            this.consignee.sexCn = obj.customerInfo.sex === 1 ? '男士' : '女士';
             this.getAddressName(obj.customerInfo.province, obj.customerInfo.city, obj.customerInfo.district);
             this.consignee.address.street = obj.customerInfo.address;
           }
@@ -571,7 +570,7 @@ export default {
       this.handRegion = true;
     }
     if (this.$route.params.customerConsigneeInfo.freezeMsg) {
-    	this.freezeMsg = this.$route.params.customerConsigneeInfo.freezeMsg;
+      this.freezeMsg = this.$route.params.customerConsigneeInfo.freezeMsg;
       if (this.freezeMsg === 'Y') {
         this.handRegion = true;
       }
@@ -585,6 +584,7 @@ export default {
       this.mobile = this.$route.params.customerConsigneeInfo.mobile;
       this.queryCustomerDefault();
     }
+
     if (this.userParam.oldForNew === 1) {
       this.isYJHX = true;
       this.customerInfo.username = this.userParam.username;
@@ -882,7 +882,7 @@ export default {
         }
         this.generateSubInfo(1);
       } else {
-	      this.generateSubInfo(1);
+        this.generateSubInfo(1);
       }
     },
     // 暂存
@@ -1012,7 +1012,7 @@ export default {
           this.rightsService.queryOrderOptionalRights(this.subInfo, {
             pageNum: 0,
             pageSize: 10,
-	          requestNoToast: true
+            requestNoToast: true
           }).then((res) => {
             if (res.code != -1 && res.data.result.length > 0) {
               this.rightsName = res.data.result[0].rightsName;
@@ -1036,7 +1036,10 @@ export default {
                       if (this.saveType === 0) {
                         this.$router.push({
                           name: 'Order.OrderUploadInvoice',
-                          params: { orderNo: this.orderNo, orderFollowId: this.orderFollowId }
+                          params: {
+                            orderNo: this.orderNo,
+                            orderFollowId: this.orderFollowId
+                          }
                         });
                       }
                     }
@@ -1065,7 +1068,10 @@ export default {
                     this.orderFollowId = res.data;
                     this.$router.push({
                       name: 'Order.OrderUploadInvoice',
-                      params: { orderNo: this.orderNo, orderFollowId: this.orderFollowId }
+                      params: {
+                        orderNo: this.orderNo,
+                        orderFollowId: this.orderFollowId
+                      }
                     });
                   }
                 }
@@ -1084,7 +1090,10 @@ export default {
                     if (this.saveType === 0) {
                       this.$router.push({
                         name: 'Order.OrderUploadInvoice',
-                        params: { orderNo: this.orderNo, orderFollowId: this.orderFollowId }
+                        params: {
+                          orderNo: this.orderNo,
+                          orderFollowId: this.orderFollowId
+                        }
                       });
                       // this.$destroy();
                     }
@@ -1107,12 +1116,12 @@ export default {
           return;
         }
       }
-	    if (this.freezeMsg) {
-		    if (this.freezeMsg == 'Y') {
-			    Toast.failed('您的账户被冻结，无法选择权益');
-			    return;
-		    }
-	    }
+      if (this.freezeMsg) {
+        if (this.freezeMsg == 'Y') {
+          Toast.failed('您的账户被冻结，无法选择权益');
+          return;
+        }
+      }
       this.generateSubInfo(2);
     },
     selectAddress(item) {
@@ -1268,7 +1277,10 @@ export default {
               if (this.saveType === 0) {
                 this.$router.push({
                   name: 'Order.OrderUploadInvoice',
-                  params: { orderNo: this.orderNo, orderFollowId: this.orderFollowId }
+                  params: {
+                    orderNo: this.orderNo,
+                    orderFollowId: this.orderFollowId
+                  }
                 });
               }
             }
@@ -1352,7 +1364,8 @@ export default {
     padding-right: 25px;
     color: #333;
     margin-top: 20px;
-    .name-ellipse{
+
+    .name-ellipse {
       width: 36vw;
       text-overflow: ellipsis;
       overflow: hidden;

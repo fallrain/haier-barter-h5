@@ -133,7 +133,8 @@
           >
         </div>
         <!--估价不显示录单操作-->
-        <span v-if="followItem.businessScenarios !== 'YJHX' && followItem.businessScenarios !== 'ADJ'">
+        <!--<span v-if="followItem.businessScenarios !== 'YJHX' && followItem.businessScenarios !== 'ADJ'">-->
+        <span v-if="followItem.businessScenarios !== 'ADJ'">
           <p
             class="bottom-button"
             v-for="(button,index) in followItem.buttonList"
@@ -281,13 +282,11 @@ export default {
       this.stopProcess();
       this.$emit('gujiaClick', followItem);
     },
-    preparation() {
-    },
     followButtonClick(button, item) {
       console.log(item);
       const orderMode = JSON.parse(localStorage.getItem('userinfo')).orderMode;
-      if (orderMode == 'Casarte') {
-        if (item.businessScenarios == 'SGLD') {
+      if (orderMode === 'Casarte') {
+        if (item.businessScenarios === 'SGLD') {
           Toast.failed('卡萨帝模式，不支持手工录单');
           return;
         }
