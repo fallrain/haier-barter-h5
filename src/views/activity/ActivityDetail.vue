@@ -47,6 +47,7 @@
     <div class="activityDetail-btm-btns">
       <button
         type="button"
+        @click="share"
         class="common-submit-btn-waring activityDetail-btm-btn"
       >分享有好礼
       </button>
@@ -163,6 +164,10 @@
         </p>
       </div>
     </md-dialog>
+    <div class="popContainer" v-if="isShowPopContainer" @click="closeShare">
+
+      <img src="@/assets/images/activity/activity-share.png" alt="" class="activity-detail-share">
+    </div>
   </div>
 </template>
 
@@ -222,7 +227,8 @@ export default {
           name: '刘能'
         }
       ],
-      isRead: 0
+      isRead: 0,
+      isShowPopContainer: false,
     };
   },
   computed: {
@@ -242,6 +248,12 @@ export default {
     },
     registerDialog() {
       this.registerDialogShow = true;
+    },
+    share() {
+      this.isShowPopContainer = true;
+    },
+    closeShare() {
+      this.isShowPopContainer = false;
     }
   }
 };
@@ -519,5 +531,21 @@ export default {
   .icon-img1 {
     font-size:22px;
     color:#4A90E2;
+  }
+
+  .popContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .activity-detail-share {
+    position: fixed;
+    right: 128px;
+    width: 493px;
+    height: 694px;
   }
 </style>
