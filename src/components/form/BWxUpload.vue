@@ -23,7 +23,6 @@
   </div>
 </template>
 <script>
-import VueCoreImageUpload from 'vue-core-image-upload';
 import {
   Toast
 } from 'mand-mobile';
@@ -31,7 +30,6 @@ import {
 export default {
   name: 'BUpload',
   components: {
-    VueCoreImageUpload,
   },
   props: {
     imgs: {
@@ -55,17 +53,34 @@ export default {
     imageuploading() {
       Toast.loading('上传中');
     },
-    uploadError(res) {
-      this.$emit('errorhandle', res);
-    },
     chooseImg() {
-      /* 选择图片 */
+      /* 选择图片,并上传 */
+      alert();
       wx.chooseImage({
         count: 1, // 默认9
         sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
         sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
         success: (res) => {
-          const localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+          const localId = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+          // Android6.2之前会有无法调用uploadImage的bug
+          setTimeout(() => {
+            wx.uploadImage({
+              localId, // 需要上传的图片的本地ID，由chooseImage接口获得
+              isShowProgressTips: 1, // 默认为1，显示进度提示
+              success: (uploadImageRes) => {
+                const serverId = uploadImageRes.serverId; // 返回图片的服务器端ID
+                alert(serverId);
+              },
+              fail(uploadError) {
+                this.$emit('errorhandle', uploadError);
+                alert(JSON.stringify(uploadError));
+              }
+            });
+          }, 100);
+        },
+        fail(error) {
+          this.$emit('errorhandle', error);
+          alert(JSON.stringify(error));
         }
       });
     }
