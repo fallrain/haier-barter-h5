@@ -72,37 +72,43 @@
         <span class="handred-class">{{followItem.tardinessS}}</span>
         <span class="handgray-class">{{followItem.flowS}}</span>
       </div>
-      <div class="row-class">
+      <div class="row-class bOrderFollowItem-row-time">
         <img
           src="@/assets/images/orderFollow-up/time@3x.png"
           class="timeImage"
         >
         <span class="time-label">{{followItem.updatedTime}}</span>
-        <span
-          v-show="followItem.flowStatus !== 1 && followItem.flowStatus !== 0 && followItem.flowStatus !== 3&& followItem.flowStatus !== 2&& (followItem.add1 !=null || followItem.add2 !=null)"
-          @click="detailHide(index,followItem)">
-          <span class="information-class">详细信息</span>
-          </span>
-        <span v-show="followItem.businessScenarios === 'YJHX'" @click="gujiaClick(followItem)">
+        <div class="bOrderFollowItem-row-time-right">
           <span
-            class="information-class-de"
-          >估价详情</span>
+            v-show="followItem.flowStatus !== 1 && followItem.flowStatus !== 0 && followItem.flowStatus !== 3&& followItem.flowStatus !== 2&& (followItem.add1 !=null || followItem.add2 !=null)"
+            @click="detailHide(index,followItem)"
+            class="information-class bOrderFollowItem-textBtn"
+          >详细信息
         </span>
-        <span v-show="followItem.flowStatus === 1" @click="itemClick(followItem)">
-          <span class="information-class-de">查看详情</span>
-          <!--<img-->
-          <!--src="@/assets/images/orderFollow-up/xialablue@3x.png"-->
-          <!--class="information-xiala"-->
+          <span
+            v-show="followItem.businessScenarios === 'YJHX'"
+            @click="gujiaClick(followItem)"
+            class="information-class-de bOrderFollowItem-textBtn"
+          >估价详情
+        </span>
+          <span
+            v-show="followItem.flowStatus === 1"
+            @click="itemClick(followItem)"
+            class="information-class-de bOrderFollowItem-textBtn"
+          >查看详情
+            <!--<img-->
+            <!--src="@/assets/images/orderFollow-up/xialablue@3x.png"-->
+            <!--class="information-xiala"-->
 
-          <!--v-show="!followItem.detailShow"-->
-          <!--&gt;-->
-          <!--<img-->
-          <!--src="@/assets/images/orderFollow-up/shangla@3x.png"-->
-          <!--class="information-xiala"-->
-          <!--v-show="followItem.detailShow"-->
-          <!--&gt;-->
+            <!--v-show="!followItem.detailShow"-->
+            <!--&gt;-->
+            <!--<img-->
+            <!--src="@/assets/images/orderFollow-up/shangla@3x.png"-->
+            <!--class="information-xiala"-->
+            <!--v-show="followItem.detailShow"-->
+            <!--&gt;-->
           </span>
-
+        </div>
       </div>
       <!--<div-->
       <!--v-show="followItem.detailShow && followItem.showDetail"-->
@@ -197,7 +203,7 @@ import {
 } from 'mand-mobile';
 
 export default {
-  name: '',
+  name: 'BOrderFollowItem',
   components: {
     [Icon.name]: Icon,
     [Toast.name]: Toast,
@@ -524,15 +530,17 @@ export default {
   }
 
   .information-class {
-    color: #1969c6;
-    font-size: 28px;
-    margin-left: 200px;
+    // margin-left: 200px;
   }
 
   .information-class-de {
-    color: #1969c6;
+    // margin-left: 230px;
+  }
+
+  .bOrderFollowItem-textBtn {
     font-size: 28px;
-    margin-left: 230px;
+    color: #1969c6;
+    white-space: nowrap;
   }
 
   .label-class {
@@ -621,6 +629,14 @@ export default {
     margin-bottom: 10px;
   }
 
+  .bOrderFollowItem-row-time {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .bOrderFollowItem-row-time-right{
+    margin-left: auto;
+  }
   .show-class {
     // position: absolute;
     // height: 140px;
