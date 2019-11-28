@@ -144,11 +144,11 @@
       </template>
     </b-item>
     <b-item
+      v-if="orderSource !=='SGLD' && orderSource !=='YJHX'"
       class="mt16"
       title="选择可用的购机权益活动"
       :arrow="true"
       @click.native="selectActivity"
-      v-if="orderSource !=='SGLD' && orderSource !=='YJHX'"
     >
     </b-item>
     <b-activity-list
@@ -566,6 +566,7 @@ export default {
     this.userParam = JSON.parse(localStorage.getItem('userinfo'));
     this.shopId = this.userParam.shopId;
     // 处理权益是否可选
+    debugger
     if (this.$route.params.region === 'hand') {
       this.handRegion = true;
     }
@@ -844,24 +845,27 @@ export default {
         Toast.failed('请添加收货信息');
         return;
       }
-      if (this.buyDate === '' && this.saveType == 0) {
-        Toast.failed('请选择购买时间');
-        return;
-      }
-      if (this.productList.length === 0 && this.saveType == 0) {
-        Toast.failed('请选择产品');
-        return;
-      }
-      for (let i = 0; i < this.productList.length; i++) {
-        if (this.productList[i].productPrice == '' && this.saveType == 0) {
-          Toast.failed('请输入产品价格');
+      if (this.saveType === 0) {
+        if (this.buyDate === '') {
+          Toast.failed('请选择购买时间');
+          return;
+        }
+        if (this.productList.length === 0) {
+          Toast.failed('请选择产品');
+          return;
+        }
+        for (let i = 0; i < this.productList.length; i++) {
+          if (this.productList[i].productPrice == '') {
+            Toast.failed('请输入产品价格');
+            return;
+          }
+        }
+        if (this.deliveryTime === '') {
+          Toast.failed('请选择送货时间');
           return;
         }
       }
-      if (this.deliveryTime === '' && this.saveType === 0) {
-        Toast.failed('请选择送货时间');
-        return;
-      }
+
       let time = this.deliveryTime;
       time = time.substring(0, 10).replace(/-/g, '/');
       const deT = new Date(time).getTime();
@@ -880,10 +884,8 @@ export default {
             return;
           }
         }
-        this.generateSubInfo(1);
-      } else {
-        this.generateSubInfo(1);
       }
+      this.generateSubInfo(1);
     },
     // 暂存
     // saveTemporary(type) {
@@ -903,6 +905,11 @@ export default {
       });
     },
     generateSubInfo(type) {
+      /* 生成订单信息 */
+      /*
+      * @type 1:生成订单信息并保存 2：生成订单信息并跳转选择权益界面，查询权益
+      *
+      * */
       if (!this.bUtil.isReportInstallFit(this.productList, this.deliveryTime) && this.saveType == 0) {
         return;
       }
@@ -1105,6 +1112,7 @@ export default {
       }
     },
     selectActivity() {
+      /* 选择权益 */
       if (this.productList.length === 0) {
         Toast.info('请选择产品');
         return;
@@ -1235,7 +1243,6 @@ export default {
     // },
     next() {
       /* 下一步 */
-      this.saveType = 0;
       this.saveTemporary(2);
     },
     saveOrder() {

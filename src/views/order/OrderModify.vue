@@ -138,11 +138,11 @@
     </template>
   </b-item>
   <b-item
+    v-if="orderSource !=='SGLD' && orderSource !=='YJHX'"
     class="mt16 select-activity"
     title="选择可用的购机权益活动"
     :arrow="true"
-    v-show="orderSource !=='SGLD'"
-    @click.native="selectActivity()"
+    @click.native="selectActivity"
   >
   </b-item>
   <b-activity-list
@@ -906,6 +906,11 @@ export default {
       this.generateSubInfo(2);
     },
     generateSubInfo(type) {
+      /* 生成订单信息 */
+      /*
+      * @type 1:生成订单信息并保存 2：生成订单信息并跳转选择权益界面，查询权益
+      *
+      * */
       if (!this.bUtil.isReportInstallFit(this.productList, this.deliveryTime) && this.saveType == 0) {
         return;
       }
