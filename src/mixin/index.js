@@ -5,7 +5,37 @@ import {
 export default {
   async beforeRouteEnter(to, from, next) {
     next((vm) => {
-      // alert(window.location.href.split('#')[0]);
+      const jsApiList = [
+        'scanQRCode',
+        'miniProgram.switchTab',
+        'miniProgram.navigateTo',
+        'miniProgram.reLaunch',
+        'switchTab',
+        'navigateTo',
+        'reLaunch'
+      ]; // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+      /* if (true) { // process.env.NODE_ENV === 'production'
+        const timestamp = `${new Date().getTime()}`.substr(0, 10);
+        const appId = 'wx2409ae17ef4a9f34';
+        vm.baseService.jsSign({
+          appId,
+          noncestr: timestamp,
+          timestamp,
+          url: encodeURIComponent(window.location.href.split('#')[0])
+        }).then(({ isSuccess, data }) => {
+          alert(JSON.stringify(data));
+          if (isSuccess) {
+            wx.config({
+              // debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+              appId,
+              timestamp, // 必填，生成签名的时间戳
+              nonceStr: timestamp, // 必填，生成签名的随机串
+              signature: data.jsSignature, // 必填，签名，见附录1
+              jsApiList
+            });
+          }
+        });
+      } else { */
       vm.basicService.jsSign(encodeURIComponent(window.location.href.split('#')[0])).then(({ code, data }) => {
         if (code === 1) {
           wx.config({
@@ -14,18 +44,11 @@ export default {
             timestamp: data.timestamp, // 必填，生成签名的时间戳
             nonceStr: data.nonceStr, // 必填，生成签名的随机串
             signature: data.signature, // 必填
-            jsApiList: [
-              'scanQRCode',
-              'miniProgram.switchTab',
-              'miniProgram.navigateTo',
-              'miniProgram.reLaunch',
-              'switchTab',
-              'navigateTo',
-              'reLaunch'
-            ] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+            jsApiList
           });
         }
       });
+      // }
     });
   },
   data() {

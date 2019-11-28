@@ -43,7 +43,9 @@ module.exports = {
         'ImportDeclaration': 'always'
       }
     ],
-    'no-continue': 0
+    'no-continue': 0,
+    'import/no-dynamic-require': 0,
+    'global-require': 0
   },
   parserOptions: {
     parser: 'babel-eslint',

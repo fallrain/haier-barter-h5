@@ -124,7 +124,7 @@
       <div class="bottom-class">
         <div
           class="dian-class-par"
-          v-show="followItem.flowStatus !== '1'"
+          v-show="followItem.flowStatus !== 1"
           @click="(e)=>showMore(index,e)"
         >
           <img
@@ -234,6 +234,7 @@ export default {
     };
   },
   created() {
+    console.log(this.currentList);
   },
   methods: {
     hidePopUp() {
