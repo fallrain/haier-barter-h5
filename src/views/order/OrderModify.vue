@@ -418,6 +418,7 @@ export default {
       sourceSn: '',
       queryInstall: false,
       isInstall: false,
+      // 保存类型，1:暂存 0:下一步
       saveType: 1,
       isProduct: false,
       isProductList: []
@@ -478,8 +479,6 @@ export default {
       }
       if (obj.rightsJson) {
         const right = JSON.parse(obj.rightsJson);
-        this.rightName = right.rightsName;
-        this.rightId = right.rightsId;
         const rightsPro = JSON.parse(obj.rightsJson).rightName.split(',');
 
         this.rightsJson = obj.rightsJson;
@@ -532,7 +531,6 @@ export default {
     }
   },
   created() {
-    debugger;
     this.addressData = addressData;
     this.orderNo = this.$route.params.orderNo;
     if (this.$route.params.orderFollowId) {
@@ -594,6 +592,17 @@ export default {
       this.multBuyPopShow = false;
     },
     confirmDeliveryTime(date) {
+      let time = date;
+      time = time.substring(0, 10).replace(/-/g, '/');
+      const deT = new Date(time).getTime();
+      let buytime = this.buyDate;
+      buytime = buytime.substring(0, 10).replace(/-/g, '/');
+      const buyT = new Date(buytime).getTime();
+      if (deT < buyT) {
+        Toast.info('送货时间不能早于购买时间');
+        this.deliveryTime = '';
+        return;
+      }
       this.deliveryTime = date;
     },
     isReportInstall(pro, index) {
@@ -820,22 +829,37 @@ export default {
         Toast.failed('请添加收货信息');
         return;
       }
-      if (this.buyDate === '' && this.saveType == 0) {
-        Toast.failed('请选择购买时间');
-        return;
-      }
-      if (this.productList.length === 0 && this.saveType == 0) {
-        Toast.failed('请选择产品');
-        return;
-      }
-      for (let i = 0; i < this.productList.length; i++) {
-        if (this.productList[i].productPrice == '' && this.saveType == 0) {
-          Toast.failed('请输入产品价格');
+      // 下一步需要验证
+      if (this.saveType === 0) {
+        if (this.buyDate === '') {
+          Toast.failed('请选择购买时间');
+          return;
+        }
+        if (this.productList.length === 0) {
+          Toast.failed('请选择产品');
+          return;
+        }
+        for (let i = 0; i < this.productList.length; i++) {
+          if (this.productList[i].productPrice == '') {
+            Toast.failed('请输入产品价格');
+            return;
+          }
+        }
+        if (this.deliveryTime === '') {
+          Toast.failed('请选择送货时间');
           return;
         }
       }
-      if (this.deliveryTime === '' && this.saveType == 0) {
-        Toast.failed('请选择送货时间');
+
+      let time = this.deliveryTime;
+      time = time.substring(0, 10).replace(/-/g, '/');
+      const deT = new Date(time).getTime();
+      let buytime = this.buyDate;
+      buytime = buytime.substring(0, 10).replace(/-/g, '/');
+      const buyT = new Date(buytime).getTime();
+      if (deT < buyT) {
+        Toast.info('送货时间不能早于购买时间');
+        this.deliveryTime = '';
         return;
       }
       if (this.productList.length > 0) {
@@ -1143,8 +1167,7 @@ export default {
     },
     next() {
     /* 下一步 */
-      this.saveType = 0;
-      this.saveTemporary(2);
+      this.saveTemporary(0);
     },
     saveOrder() {
 

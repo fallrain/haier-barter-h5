@@ -287,34 +287,34 @@ export default {
       this.curTab = 4;
       localStorage.setItem('confirm', '');
     }
-    const userinfostr = localStorage.getItem('userinfo');
-    this.userinfo = JSON.parse(userinfostr);
-    // this.userinfo = {
-    //   // hmcid: 'a0008949',
-    //   // mobile: '18561715460',
-    //   // shopId: '8800136445',
-    //   // hmcid: '01467897',
-    //   // mobile: '15253269729',
-    //   // shopId: '8700000484',
-    //   // shopId:'8800117018',
-    //   // hmcid: 'a0032254',
-    //   // mobile: '15621017056',
-    //   // shopId: '8700048360',
-    //   // hmcid: '18000560',
-    //   // orderMode: 'Haier',
-    //   // orderMode: 'Casarte',
-    //   // mobile: '15621017056',
-    //   // shopId: '8800266470',
-    //   hmcid: 'A0032188',
-    //   mobile: '15006480711',
-    //   shopId: '8800007470',
-    //   token:'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IkEwMDMyMTg4Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MzgxNjg2MCwiZXhwIjoxNTc0NjgwODYwfQ.SPGg7u7zqyz3prpSrpSSB7HTWPrHlIjNpC1mkmeTuCA'
-    //
-    //   // token: 'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IjAxNDY3ODk3Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MzUyNjA4NCwiZXhwIjoxNTc0MzkwMDg0fQ.ZjbXfLSWiTjDIOn2xlWGj9SNcG7M6HnoM1zgNHLrk-c'
-    // }
-    //   const Str = JSON.stringify(this.userinfo);
-    // localStorage.setItem('userinfo', Str);
-    // localStorage.setItem('acces_token', this.userinfo.token);
+    // const userinfostr = localStorage.getItem('userinfo');
+    // this.userinfo = JSON.parse(userinfostr);
+    this.userinfo = {
+      // hmcid: 'a0008949',
+      // mobile: '18561715460',
+      // shopId: '8800136445',
+      hmcid: '01467897',
+      mobile: '15253269729',
+      shopId: '8700000484',
+      // shopId:'8800117018',
+      // hmcid: 'a0032254',
+      // mobile: '15621017056',
+      // shopId: '8700048360',
+      // hmcid: '18000560',
+      // orderMode: 'Haier',
+      // orderMode: 'Casarte',
+      // mobile: '15621017056',
+      // shopId: '8800266470',
+      // hmcid: 'A0032188',
+      // mobile: '15006480711',
+      // shopId: '8800007470',
+      token: 'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IjAxNDY3ODk3Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3NDE0NTExNywiZXhwIjoxNTc1MDA5MTE3fQ.xg-_u9DgTvzLPBn4fIhWG91xnad0dAy_xaQIGtNm2YQ'
+      // token: 'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IjAxNDY3ODk3Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MzUyNjA4NCwiZXhwIjoxNTc0MzkwMDg0fQ.ZjbXfLSWiTjDIOn2xlWGj9SNcG7M6HnoM1zgNHLrk-c'
+    };
+    const Str = JSON.stringify(this.userinfo);
+    localStorage.setItem('userinfo', Str);
+    localStorage.setItem('acces_token', this.userinfo.token);
+
     this.getNoticeData();
     this.getScenarioList();
   },
@@ -427,13 +427,13 @@ export default {
     // 入户服务
     userService(item) {
       wx.miniProgram.navigateTo({
-        url: `/pages/userService/userService?userId=${item.userId}&userName=${item.userName}&mobile=${item.userMobile}&flowStatus=${item.flowStatus}&workFlowId=${item.id}&hmcId=${this.userinfo.hmcid}`
+        url: `/pages/userService/userService?userId=${item.userId}&userName=${item.userName}&mobile=${item.userMobile}&flowStatus=${item.flowStatus}&workFlowId=${item.id}&hmcId=${this.userinfo.hmcid}&orderNo=${item.orderNo}`
       });
     },
     // 潜在客户
     maybeBuyer(item) {
       wx.miniProgram.navigateTo({
-        url: `/pages/mabyByuser/mabyByuser?userId=${item.userId}&userName=${item.userName}&mobile=${item.userMobile}&flowStatus=${item.flowStatus}&workFlowId=${item.id}&domainName=${item.recordMode}`
+        url: `/pages/mabyByuser/mabyByuser?userId=${item.userId}&userName=${item.userName}&mobile=${item.userMobile}&flowStatus=${item.flowStatus}&workFlowId=${item.id}&domainName=${item.recordMode}&orderNo=${item.orderNo}`
       });
     },
 
@@ -503,7 +503,7 @@ export default {
                   recordMode: info.recordMode,
                   businessScenarios: info.businessScenarios,
                   sourceSn: info.sourceSn,
-                  smld:true,
+                  smld: true,
                   id: info.id,
                   freezeMsg,
                 },
@@ -523,7 +523,7 @@ export default {
                 orderFollowId: info.id,
                 businessScenarios: info.businessScenarios,
                 recordMode: info.recordMode,
-                region:'continue',
+                region: 'continue',
               }
             });
           }
@@ -574,8 +574,8 @@ export default {
     },
 
     searchData(page) {
-      if(this.curTab === 3){
-        this.sortType = 2
+      if (this.curTab === 3) {
+        this.sortType = 2;
       }
       console.log('keyword', this.searchWord);
       return this.orderService
@@ -622,21 +622,18 @@ export default {
             if (result && result.length > 0) {
               const curList = result;
               this.anylizeData(curList);
-                console.log(page);
-                if (page.num === 1) {
-                  console.log(this.curScrollViewName);
-                  this[this.curScrollViewName].list = [];
-                  this[this.curScrollViewName].list = this.currentList;
+              console.log(page);
+              if (page.num === 1) {
+                console.log(this.curScrollViewName);
+                this[this.curScrollViewName].list = [];
+                this[this.curScrollViewName].list = this.currentList;
+              } else {
+                if (page.num > 1 && res.data.pages === 1) {
                 } else {
-                  if(page.num > 1 && res.data.pages === 1){
-                  }else {
-                    this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(this.currentList);
-                    console.log(this[this.curScrollViewName].list);
-                  }
+                  this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(this.currentList);
+                  console.log(this[this.curScrollViewName].list);
                 }
-
-
-              // });
+              }
             } else {
               Toast.failed('暂无数据');
               this[this.curScrollViewName].list = [];

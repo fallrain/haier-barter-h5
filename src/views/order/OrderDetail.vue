@@ -190,15 +190,18 @@ export default {
     this.getActivityList();
   },
   methods: {
-    getActivityList(){
-      this.rightsService.getRightsConfigInfoByOrderNo({orderNo:this.orderNo},{}).then(res => {
-        if(res.code === 1){
-          if(res.data.length !== 0){
-            this.activityList = res.data
+    getActivityList() {
+      this.rightsService.getRightsConfigInfoByOrderNo({ orderNo: this.orderNo }, {}).then((res) => {
+        if (res.code === 1) {
+          if (res.data.length !== 0) {
+            this.activityList = res.data;
+            this.activityList.forEach((ri) => {
+              ri.startTime = ri.startTime.substring(0, 10);
+              ri.endTime = ri.endTime.substring(0, 10);
+            });
           }
         }
-      })
-
+      });
     },
     getData() {
       this.orderService.queryOrderInfoByOrderNo({}, { orderNo: this.orderNo }).then((response) => {

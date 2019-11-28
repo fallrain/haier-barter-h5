@@ -124,7 +124,7 @@
       <div class="bottom-class">
         <div
           class="dian-class-par"
-          v-show="followItem.flowStatus !== '1'"
+          v-show="followItem.flowStatus !== 1"
           @click="(e)=>showMore(index,e)"
         >
           <img
@@ -133,7 +133,7 @@
           >
         </div>
         <!--估价不显示录单操作-->
-        <span v-if="followItem.businessScenarios !== 'YJHX'">
+        <span v-if="followItem.businessScenarios !== 'YJHX' && followItem.businessScenarios !== 'ADJ'">
           <p
             class="bottom-button"
             v-for="(button,index) in followItem.buttonList"
@@ -234,6 +234,7 @@ export default {
     };
   },
   created() {
+    console.log(this.currentList);
   },
   methods: {
     hidePopUp() {

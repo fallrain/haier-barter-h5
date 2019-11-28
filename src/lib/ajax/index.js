@@ -11,7 +11,8 @@ ax.defaults = Object.assign(
   ax.defaults,
   {
     baseURL: process.env.VUE_APP_BASE_URL,
-    method: 'post'
+    method: 'post',
+    timeout: 60 * 1000
   }
 );
 const loadingAy = [];
@@ -19,7 +20,9 @@ function closeLoading() {
 // 关闭遮罩
   if (loadingAy.length === 1) {
     const loadingIns = loadingAy[0];
-    loadingIns.hide();
+    setTimeout(() => {
+      loadingIns.hide();
+    });
   }
   loadingAy.length--;
 }

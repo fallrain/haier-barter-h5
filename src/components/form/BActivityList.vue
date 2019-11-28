@@ -1,26 +1,32 @@
 <template>
   <div>
-    <ol class="bCheckbox-list" v-for="(item,index) in data" :key="index">
+    <ol
+      class="bCheckbox-list"
+      v-for="(item,index) in data"
+      :key="index"
+    >
       <li
         class="bCheckbox-item"
+        @click="giftShowClick(item)"
       >
-        <div class="bCheckbox-item-detail-cnt" >
-          <p class="bActivityList-activity-name" @click="giftShowClick(item)">{{item.rightName}}
-            <span class="state-class-8" v-show="item.receivingStatus === -1">已删除</span>
-            <span class="state-class-1" v-show="item.receivingStatus === 1">在途</span>
-            <span class="state-class-2" v-show="item.receivingStatus === 2">已激活</span>
-            <span class="state-class-3" v-show="item.receivingStatus === 3">已领取 </span>
-            <span class="state-class-4" v-show="item.receivingStatus === 4">已过期</span>
-            <span class="state-class-5" v-show="item.receivingStatus === 5">缺货</span>
-            <span class="state-class-6" v-show="item.receivingStatus === 6">已发送</span>
-            <span class="state-class-7" v-show="item.receivingStatus === 7">48小时之后激活</span>
-            <i class="iconfont icon-xialaactive-copy gift-line" v-show="item.giftShow"></i>
-            <i class="iconfont icon-jiantou9 gift-line" v-show="!item.giftShow"></i>
+        <div class="bCheckbox-item-detail-cnt">
+          <p class="bActivityList-activity-name">
+            {{item.rightName}}
           </p>
         </div>
+        <span class="bActivityList-activity-state state-class-8" v-show="item.receivingStatus === -1">已删除</span>
+        <span class="bActivityList-activity-state state-class-1" v-show="item.receivingStatus === 1">在途</span>
+        <span class="bActivityList-activity-state state-class-2" v-show="item.receivingStatus === 2">已激活</span>
+        <span class="bActivityList-activity-state state-class-3" v-show="item.receivingStatus === 3">已领取 </span>
+        <span class="bActivityList-activity-state state-class-4" v-show="item.receivingStatus === 4">已过期</span>
+        <span class="bActivityList-activity-state state-class-5" v-show="item.receivingStatus === 5">缺货</span>
+        <span class="bActivityList-activity-state state-class-6" v-show="item.receivingStatus === 6">已发送</span>
+        <span class="bActivityList-activity-state state-class-7" v-show="item.receivingStatus === 7">48小时之后激活</span>
+        <i class="iconfont icon-xialaactive-copy gift-line" v-show="item.giftShow"></i>
+        <i class="iconfont icon-jiantou9 gift-line" v-show="!item.giftShow"></i>
       </li>
       <!--v-show="item.giftShow"-->
-      <div  class="gift-class" v-show="item.giftShow">
+      <div class="gift-class" v-show="item.giftShow">
         <p>购机权益：{{item.rightInfo}}</p>
         <p>礼品有效兑换期：{{item.startTime}}至{{item.endTime}}</p>
         <p v-show="item.giftType === 'jfmall'">礼品类型：海贝积分</p>
@@ -89,12 +95,14 @@ export default {
     margin-top: 5px;
     margin-bottom: 5px;
     width: 500px;
+    word-break: break-all;
   }
 
   .bCheckbox-list {
   }
 
   .bCheckbox-item {
+    position: relative;
     display: flex;
     align-items: center;
     min-height: 80px;
@@ -120,72 +128,64 @@ export default {
     border-left: 6px solid #1969C6;
     padding-left: 25px;
   }
-  .gift-class{
+
+  .gift-class {
     background-color: #F8F8F8;
     height: 170px;
     color: #999999;
     font-size: 26px;
     padding: 24px;
   }
-  .gift-line{
+
+  .gift-line {
     position: absolute;
-    right: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 30px;
+    font-size: 22px;
   }
-  .state-class-1{
+
+  .bActivityList-activity-state {
+    position: absolute;
+    top: 50%;
+    right: 66px;
+    transform: translateY(-50%);
     padding: 8px;
+    font-size: 18px;
+    border-radius: 4px;
+    color: #fff;
+  }
+
+  .state-class-1 {
     background-color: #F4A528;
-    color: white;
-    font-size: 24px;
-    border-radius: 4px;
   }
-  .state-class-2{
-    padding: 8px;
+
+  .state-class-2 {
     background-color: #27AA91;
-    color: white;
-    font-size: 24px;
-    border-radius: 4px;
   }
-  .state-class-3{
-    padding: 8px;
+
+  .state-class-3 {
     background-color: #4B90E0;
-    color: white;
-    font-size: 24px;
-    border-radius: 4px;
   }
-  .state-class-4{
-    padding: 8px;
+
+  .state-class-4 {
     background-color: #BBBBBB;
-    color: white;
-    font-size: 24px;
-    border-radius: 4px;
   }
-  .state-class-5{
-    padding: 8px;
+
+  .state-class-5 {
     background-color: #EF5A4B;
-    color: white;
-    font-size: 24px;
-    border-radius: 4px;
   }
-  .state-class-6{
-    padding: 8px;
+
+  .state-class-6 {
     background-color: #1D69C4;
-    color: white;
-    font-size: 24px;
-    border-radius: 4px;
   }
-  .state-class-7{
-    padding: 8px;
+
+  .state-class-7 {
     background-color: #666666;
-    color: white;
-    font-size: 24px;
-    border-radius: 4px;
   }
-  .state-class-8{
-    padding: 8px;
+
+  .state-class-8 {
     background-color: #FF001F;
-    color: white;
-    font-size: 24px;
-    border-radius: 4px;
   }
 
 

@@ -141,7 +141,7 @@ import {
   BPop,
   BPopAddressList,
   BPopCheckList,
-  BRadioItem, BTimeSectionPicker,BOrderProductConfirm
+  BRadioItem, BTimeSectionPicker, BOrderProductConfirm
 } from '@/components/form';
 import {
   BMultbuyCheck
@@ -161,7 +161,8 @@ export default {
     BPopAddressList,
     BPopCheckList,
     BRadioItem,
-    BTimeSectionPicker,BOrderProductConfirm
+    BTimeSectionPicker,
+    BOrderProductConfirm
   },
   data() {
     return {
@@ -175,7 +176,7 @@ export default {
 
       // 产品列表
       productList: [],
-      supplementProductList:[],
+      supplementProductList: [],
       // 活动列表
       // 选中的活动id
       choosedActivitys: [],
@@ -248,7 +249,7 @@ export default {
   activated() {
     if (this.$route.query.temp) {
       let ID = '';
-      const obj = JSON.parse(this.$route.query.temp)
+      const obj = JSON.parse(this.$route.query.temp);
       if (obj.rightsJson) {
         this.rightsJson = obj.rightsJson;
         const right = JSON.parse(obj.rightsJson);
@@ -332,10 +333,10 @@ export default {
         if (response.code === 1) {
           const resData = response.data;
           this.orderData = response.data;
-          if(this.orderData.orderType === 1){
-            this.orderData.orderTypeCn = '单品'
-          }else {
-            this.orderData.orderTypeCn = '套购'
+          if (this.orderData.orderType === 1) {
+            this.orderData.orderTypeCn = '单品';
+          } else {
+            this.orderData.orderTypeCn = '套购';
           }
           if (this.orderData.userSex === 1) {
             this.consignee.sexCn = '男士';
@@ -353,12 +354,12 @@ export default {
               }
               if (item.productBrand == '000') {
                 item.productBrandCN = '海尔';
-              } else if(item.productBrand == '051'){
+              } else if (item.productBrand == '051') {
                 item.productBrandCN = '卡萨帝';
-              }else if(item.productBrand == '089'){
+              } else if (item.productBrand == '089') {
                 item.productBrandCN = '统帅';
-              }else {
-                item.productBrandCN = '其他'
+              } else {
+                item.productBrandCN = '其他';
               }
             });
           }
@@ -479,11 +480,11 @@ export default {
       } else {
         if (this.orderNo !== '') {
           Toast.loading('保存中...');
-          const sub = {}
+          const sub = {};
           sub.orderDetailSaveQoList = this.supplementProductList;
-          sub.rightsUserJson = this.rightsJson
-          sub.rightName = this.rightName
-          sub.rightId = this.rightId
+          sub.rightsUserJson = this.rightsJson;
+          sub.rightName = this.rightName;
+          sub.rightId = this.rightId;
           this.orderService.supplementOrderSubmit(sub, { orderFollowId: this.orderFollowId })
             .then((res) => {
               if (res.code === 1) {

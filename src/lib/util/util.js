@@ -3,6 +3,10 @@ import {
   Toast
 } from 'mand-mobile';
 import MeScroll from 'mescroll.js';
+import store from '@/store';
+import {
+  UPDATE_USER
+} from '@/store/mutationsTypes';
 
 const util = {
   getUrlVal(name) {
@@ -388,6 +392,24 @@ const util = {
     window.URL.revokeObjectURL(link.href); // 释放URL 对象
     document.body.removeChild(link);
   },
+  getUserInfo() {
+    const userInfo = this.convertQueryStingToMap();
+    if (userInfo) {
+      let userInfoOld = localStorage.getItem('userinfo');
+      // 存在某些特殊情况，存入null/undefined，导致用户缓存有误的情况
+      if (userInfoOld && userInfoOld !== 'null' && userInfoOld !== 'undefined') {
+        userInfoOld = JSON.parse(userInfoOld);
+      }
+      const userinfoStorage = {
+        ...userInfoOld,
+        ...userInfo
+      };
+      localStorage.setItem('userinfo', JSON.stringify(userinfoStorage));
+      // 更新store
+      store.commit(UPDATE_USER, userinfoStorage);
+      userInfo.token && (localStorage.setItem('acces_token', userInfo.token));
+    }
+  }
 };
 
 export default util;

@@ -143,17 +143,22 @@ export default {
       mutexToastInfo: ''
     };
   },
-
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      // 通过 `vm` 访问组件实例
+      // 请求同享列表
+      vm.getData(1);
+      // 请求互斥列表
+      vm.getData(2);
+      // 获取产品组信息
+      vm.getProductGroup();
+    });
+  },
   created() {
-    // this.rightListTest = rightListTest;
-    // this.residueRightsList = rightListTest;
-    // this.rightListTest.forEach((rights) => {
-    //   rights.flag = 0;
-    // });
-    this.getData(1);
-    this.getData(2);
-    this.getProductGroup();
-    // this.anylizeData(rightListTest);
+    // debugger
+    // this.getData(1);
+    // this.getData(2);
+    // this.getProductGroup();
   },
   computed: {
     curScrollViewName() {
@@ -349,6 +354,7 @@ export default {
 
       this.anylizeMCData(this.shareRightsList);
     },
+    // 互斥减
     minusMCount(item) {
       /** **************互斥********************** */
       // 单品
@@ -512,6 +518,7 @@ export default {
 
       this.anylizeMCData(this.mutexRightsList);
     },
+    // 互斥添加
     addMCount(item) {
       /** ************互斥***************** */
       // 单品
@@ -665,6 +672,7 @@ export default {
     array_contain(array, obj) {
       return array.find(v => v === obj);
     },
+    // 查看礼品
     showConfig(item) {
       this.rightsService.viewGifts({}, { rightsNo: item.rightsNo },)
         .then((res) => {
@@ -678,6 +686,7 @@ export default {
           }
         });
     },
+    // 其他限制
     showLimit(item) {
       this.rightsService.viewOtherLimited({}, { rightsNo: item.rightsNo })
         .then((res) => {
@@ -686,10 +695,12 @@ export default {
           }
         });
     },
+
     btmConfirmClick() {
       this.jsonRightsList(this.shareRightsList,);
       this.jsonRightsList(this.mutexRightsList,);
     },
+    // 字符串列表
     jsonRightsList(list) {
       if (list.length === 0) {
         this.num++;
@@ -736,7 +747,7 @@ export default {
                   Num += Math.pow(10, i) * Math.floor(Math.random() * 10);
                 }
                 timestamp += Num;
-                debugger
+                debugger;
                 sel.selcted.forEach((val) => {
                   const a = {};
                   a.orderDetailId = val;
@@ -767,10 +778,11 @@ export default {
         }
         rightJson.rightsUserInterestsDTO = this.rightsUserDto;
         this.rightsJson = JSON.stringify(rightJson);
-        debugger
+        debugger;
         this.$router.go(-1);
       }
     },
+    // 不可参与活动
     searchData(page) {
       return this.rightsService.queryOrderNotOptionalRights(this.subInfo, {
         pageNum: page.num,
@@ -1020,6 +1032,7 @@ export default {
     }
   },
   beforeRouteLeave(to, from, next) {
+    debugger;
     if (this.rightsJson) {
       const right = JSON.parse(this.rightsJson);
       if (right.rightsUserInterestsDetailsDTO.length === 0) {
@@ -1047,6 +1060,7 @@ export default {
                 }
               }
               delete cache[key];
+              debugger;
             }
           }
         }

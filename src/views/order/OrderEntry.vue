@@ -627,12 +627,15 @@ export default {
         if (res.code === 1) {
           if (res.data.length !== 0) {
             this.rightsList = res.data;
-            ri.startTime = ri.startTime.substring(0, 10);
-            ri.endTime = ri.endTime.substring(0, 10);
+            this.rightsList.forEach((ri) => {
+              ri.startTime = ri.startTime.substring(0, 10);
+              ri.endTime = ri.endTime.substring(0, 10);
+            });
           }
         }
       });
     },
+    // 是否代报装
     isReportInstall(pro) {
       const orderDetailDtoList = [
         {
@@ -687,7 +690,6 @@ export default {
         this.splice(index, 1);
       }
     },
-    // 获取门店信息
     sponsorCheck(checkid) {
       // ;
       // this.multBuyParticipant = this.buyerList;
@@ -704,9 +706,21 @@ export default {
     particpantClick(checkids) {
 
     },
+    // 确认送达时间
     confirmDeliveryTime(date) {
+      let time = date;
+      time = time.substring(0, 10).replace(/-/g, '/');
+      const deT = new Date(time).getTime();
+      let buytime = this.buyDate;
+      buytime = buytime.substring(0, 10).replace(/-/g, '/');
+      const buyT = new Date(buytime).getTime();
+      if (deT < buyT) {
+        Toast.info('送货时间不能早于购买时间');
+        return;
+      }
       this.deliveryTime = date;
     },
+    // 获取门店
     getUserStore() {
       // this.shopId = '8800332156';
       this.productService.storeInfo(this.shopId).then((res) => {
@@ -846,6 +860,17 @@ export default {
       }
       if (this.deliveryTime === '' && this.saveType === 0) {
         Toast.failed('请选择送货时间');
+        return;
+      }
+      let time = this.deliveryTime;
+      time = time.substring(0, 10).replace(/-/g, '/');
+      const deT = new Date(time).getTime();
+      let buytime = this.buyDate;
+      buytime = buytime.substring(0, 10).replace(/-/g, '/');
+      const buyT = new Date(buytime).getTime();
+      if (deT < buyT) {
+        Toast.info('送货时间不能早于购买时间');
+        this.deliveryTime = '';
         return;
       }
       if (this.productList.length > 0) {
