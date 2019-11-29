@@ -376,7 +376,6 @@ export default {
           if (res.code === 1) {
             this.remark = '';
             console.log('this.list', this.list);
-            Toast.succeed(res.msg);
             this.$emit('updateOrderType', type);
           }
         });
