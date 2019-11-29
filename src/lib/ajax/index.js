@@ -19,11 +19,10 @@ const loadingAy = [];
 
 function closeLoading() {
 // 关闭遮罩
-  if (loadingAy.length === 1) {
-    setTimeout(() => {
-      Toast.hide();
-    });
-  }
+  /* if (loadingAy.length === 1) {
+    Toast.hide();
+  } */
+  Toast.hide();
   loadingAy.length--;
 }
 
@@ -83,6 +82,7 @@ ax.interceptors.request.use((config) => {
 });
 
 ax.interceptors.response.use((response) => {
+  debugger;
   const customOptions = response.config.params;
   // 关闭遮罩
   if (!response.config.params.noLoading) {
