@@ -23,7 +23,7 @@ function closeLoading() {
   /* if (loadingAy.length === 1) {
     Toast.hide();
   } */
-  Vue.nextTick(() => {
+  setTimeout(() => {
     Toast.hide();
   });
 
