@@ -9,6 +9,7 @@
         </router-view>
       </keep-alive>
     </div>
+    <b-loading></b-loading>
   </div>
 </template>
 
@@ -16,9 +17,13 @@
 import {
   mapState
 } from 'vuex';
+import BLoading from '@/components/form/BLoading';
 
 export default {
   name: 'App',
+  components: {
+    BLoading
+  },
   computed: mapState([
     'aliveExclude',
   ])
