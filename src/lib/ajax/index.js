@@ -1,5 +1,6 @@
 import axios from 'axios';
 import qs from 'qs';
+import Vue from 'vue';
 import {
   Dialog,
   Toast
@@ -22,7 +23,10 @@ function closeLoading() {
   /* if (loadingAy.length === 1) {
     Toast.hide();
   } */
-  Toast.hide();
+  Vue.nextTick(() => {
+    Toast.hide();
+  });
+
   loadingAy.length--;
 }
 
