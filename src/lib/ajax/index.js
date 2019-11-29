@@ -19,12 +19,14 @@ const loadingAy = [];
 function closeLoading() {
 // 关闭遮罩
   if (loadingAy.length === 1) {
-    const loadingIns = loadingAy[0];
-    setTimeout(() => {
-      loadingIns.hide();
-    });
+    document.querySelector('.js-b-loading').style = 'display:none;';
   }
   loadingAy.length--;
+}
+function showLoading() {
+  /* 打开遮罩 */
+  document.querySelector('.js-b-loading').style = 'display:block;';
+  return new Date().getTime();
 }
 let isShowError = false;
 function showError(msg) {
@@ -48,7 +50,7 @@ ax.interceptors.request.use((config) => {
     config.headers.Authorization = `Bearer  ${localStorage.getItem('acces_token')}`;
   }
   if (!config.params.noLoading) {
-    loadingAy.push(Toast.loading('加载中...'));
+    loadingAy.push(showLoading());
     // Toast.loading('加载中...')
     // Toast.hide()
   }
