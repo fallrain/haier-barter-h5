@@ -82,7 +82,6 @@ ax.interceptors.request.use((config) => {
 });
 
 ax.interceptors.response.use((response) => {
-  debugger;
   const customOptions = response.config.params;
   // 关闭遮罩
   if (!response.config.params.noLoading) {
