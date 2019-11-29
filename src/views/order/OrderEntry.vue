@@ -428,6 +428,7 @@ export default {
       addUserShow: false,
       queryInstall: false,
       multyBuy: false,
+      // 0：下一步 1：暂存
       saveType: 1,
       isYJHX: false
 
@@ -566,7 +567,6 @@ export default {
     this.userParam = JSON.parse(localStorage.getItem('userinfo'));
     this.shopId = this.userParam.shopId;
     // 处理权益是否可选
-    debugger
     if (this.$route.params.region === 'hand') {
       this.handRegion = true;
     }
@@ -1015,24 +1015,20 @@ export default {
           params: { orderInfo: info }
         });
       } else {
-        if (this.rightsList.length == 0 && this.saveType == 0 && this.subInfo.orderSource != 'SGLD') {
+        if (this.rightsList.length === 0 && this.saveType === 0 && this.subInfo.orderSource !== 'SGLD') {
           this.rightsService.queryOrderOptionalRights(this.subInfo, {
             pageNum: 0,
             pageSize: 10,
             requestNoToast: true
           }).then((res) => {
-            if (res.code != -1 && res.data.result.length > 0) {
+            if (res.code === 1 && res.data.result.length > 0) {
               this.rightsName = res.data.result[0].rightsName;
               this.basicDialog.open = true;
             } else {
               if (this.orderNo !== '') {
-                Toast.loading('保存中...');
-                // if (!this.orderFollowId) {
-                //   this.orderFollowId = localStorage.getItem('orderFollowId');
-                // }
                 this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
-                  .then((res) => {
-                    if (res.code === 1) {
+                  .then((createOrderRes) => {
+                    if (createOrderRes.code === 1) {
                       if (this.saveType === 1) {
                         Toast.succeed('订单暂存成功', 1000);
                         localStorage.setItem('confirm', 'caogao');
@@ -1056,11 +1052,11 @@ export default {
           });
         } else {
           if (this.orderNo !== '') {
-            Toast.loading('保存中...');
             // if (!this.orderFollowId) {
             //   this.orderFollowId = localStorage.getItem('orderFollowId');
             // }
-            if (this.handRegion) {
+            // 手工录单且没有orderFollowId（订单的id）的时候，走createOrderForSGLD接口
+            if (this.handRegion && !this.orderFollowId) {
               this.orderService.createOrderForSGLD(this.subInfo, { orderFollowId: '' }).then((res) => {
                 if (res.code === 1) {
                   if (this.saveType === 1) {
@@ -1267,7 +1263,6 @@ export default {
     },
     onBasicConfirm() {
       if (this.orderNo !== '') {
-        Toast.loading('保存中...');
         // if (!this.orderFollowId) {
         //   this.orderFollowId = localStorage.getItem('orderFollowId');
         // }

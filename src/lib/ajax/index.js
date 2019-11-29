@@ -16,30 +16,49 @@ ax.defaults = Object.assign(
   }
 );
 const loadingAy = [];
+
 function closeLoading() {
 // 关闭遮罩
   if (loadingAy.length === 1) {
-    const loadingIns = loadingAy[0];
     setTimeout(() => {
-      loadingIns.hide();
+      Toast.hide();
     });
   }
   loadingAy.length--;
 }
+
 let isShowError = false;
+
 function showError(msg) {
   if (isShowError) {
     return;
   }
   isShowError = true;
+  let errorMsg;
+  // 无错误返回请求失败
+  // 对象类型解析错误
+  if (msg) {
+    if (typeof msg === 'string') {
+      errorMsg = msg;
+    } else {
+      // 以后存在不只是通过message来判断的情况
+      if (msg.message) {
+        const errorMessage = msg.message;
+        if (/^timeout of/.test(errorMessage)) {
+          errorMsg = '请求超时';
+        }
+      }
+    }
+  }
   Dialog.alert({
-    content: msg || '请求失败',
+    content: errorMsg || '请求失败',
     confirmText: '确定',
     onConfirm() {
       isShowError = false;
     }
   });
 }
+
 ax.interceptors.request.use((config) => {
   if (!config.params) {
     config.params = {};
@@ -53,6 +72,14 @@ ax.interceptors.request.use((config) => {
     // Toast.hide()
   }
   return config;
+}, (error) => {
+  if (!error.config.params.noLoading) {
+    closeLoading();
+  }
+  showError(error);
+  return {
+    code: -1
+  };
 });
 
 ax.interceptors.response.use((response) => {
@@ -87,13 +114,10 @@ ax.interceptors.response.use((response) => {
   if (!error.config.params.noLoading) {
     closeLoading();
   }
-  showError();
-  error.response.data = {
-    data: {
-      code: -1
-    }
+  showError(error);
+  return {
+    code: -1
   };
-  return error.response.data;
 });
 
 const axGet = function (url, params) {
@@ -132,4 +156,9 @@ const axPostJson = function (url, data, params) {
 };
 export default ax;
 
-export { axGet, axPost, axPostJson, axGetUrl };
+export {
+  axGet,
+  axPost,
+  axPostJson,
+  axGetUrl
+};
