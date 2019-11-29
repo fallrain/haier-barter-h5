@@ -9,6 +9,43 @@
       :endDate="activityInfo.activityEndTime"
       address="青岛市崂山区海尔路10号海尔专卖店"
     ></activity-name-time>
+
+    <b-item
+      class="mt16"
+      title="开始日期："
+    >
+      <template
+        v-slot:right=""
+      >
+        <b-date-picker
+          class="orderEntry-date"
+          slot="right"
+          type="date"
+          title="请选择日期"
+          :defaultDate="startDate"
+          v-model="startDate"
+          :max-date="currentDate"
+        ></b-date-picker>
+      </template>
+    </b-item>
+    <b-item
+      class="mt16"
+      title="结束日期："
+    >
+      <template
+        v-slot:right=""
+      >
+        <b-date-picker
+          class="orderEntry-date"
+          slot="right"
+          type="date"
+          title="请选择日期"
+          :defaultDate="endDate"
+          v-model="endDate"
+          :max-date="currentDate"
+        ></b-date-picker>
+      </template>
+    </b-item>
     <b-item
       class="activityDataAnalysis-b-item"
       title="数据分析"
@@ -70,21 +107,57 @@
 
 <script>
 import ActivityNameTime from '../../components/business/activity/ActivityNameTime';
-import BItem from '../../components/form/BItem';
+import {
+  BDatePicker,
+  BItem,
+} from '@/components/form';
 
 export default {
   name: 'ActivityDataAnalysis',
   components: {
     BItem,
+    BDatePicker,
     ActivityNameTime
   },
   created() {
-    this.activityInfo = this.$route.params.activityInfo;
+    // this.activityInfo = this.$route.params.activityInfo;
   },
   data() {
     return {
-      activityInfo: {},
+      activityInfo: {
+        activityTitle: '',
+        activityStartTime: '',
+        activityEndTime: ''
+      },
+      startDate: '',
+      endDate: '',
+      currentDate: new Date(),
     };
+  },
+  methods: {
+    getAnalysisData() {
+      this.activityService.detailCount({
+        activityId: this.activityInfo.activityId,
+        countDateStart: this.startDate,
+        countDateEnd: this.endDate
+      }).then((res) => {
+
+      });
+    },
+  },
+  watch: {
+    startDate() {
+      if (!this.endDate) {
+        return;
+      }
+      this.getAnalysisData();
+    },
+    endDate() {
+      if (!this.startDate) {
+        return;
+      }
+      this.getAnalysisData();
+    },
   }
 };
 </script>
@@ -137,4 +210,9 @@ export default {
       margin-bottom: 24px;
     }
   }
+
+  .orderEntry-date {
+    width: 320px;
+  }
+
 </style>

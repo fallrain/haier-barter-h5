@@ -69,6 +69,7 @@
           <input
             class="activityDetail-register-ipt"
             type="text"
+            v-if="form.userNickname"
             placeholder="请输入您的姓名"
           >
         </div>
@@ -76,6 +77,7 @@
           <input
             class="activityDetail-register-ipt"
             type="text"
+            v-model="form.mobile"
             placeholder="请输入手机号码"
           >
         </div>
@@ -122,6 +124,7 @@
           </button>
           <button
             type="button"
+            @click="joinActivity"
             class="common-submit-btn-default activityDetail-register-btn"
           >确定
           </button>
@@ -165,7 +168,6 @@
       </div>
     </md-dialog>
     <div class="popContainer" v-if="isShowPopContainer" @click="closeShare">
-
       <img src="@/assets/images/activity/activity-share.png" alt="" class="activity-detail-share">
     </div>
   </div>
@@ -200,7 +202,11 @@ export default {
   data() {
     return {
       form: {
-        productCatagoryList: []
+        productCatagoryList: [],
+        userNickname: '',
+        mobile: '',
+        appointType: '',
+        productType:''
       },
       // 注册对话框显示隐藏
       registerDialogShow: false,
@@ -254,7 +260,14 @@ export default {
     },
     closeShare() {
       this.isShowPopContainer = false;
-    }
+    },
+    joinActivity() {
+      this.activityService.saveJoiner({
+        ...this.form
+      }).then((res) => {
+
+      });
+    },
   }
 };
 </script>

@@ -15,4 +15,12 @@ export default {
     /* 营销活动之引流活动 */
     return axGetBlob(`${urls.generateQrcode}?redirectUrl=${data}&activityId=${data2}&hmcId=${data3}`);
   },
+  detailCount(data) {
+    /* 数据详情分析 */
+    return axPostJson(urls.detailCount, data, null);
+  },
+  saveJoiner(data) {
+    /* 数据详情分析 */
+    return axPostJson(urls.saveJoiner, data, null);
+  },
 };
