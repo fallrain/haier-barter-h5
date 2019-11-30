@@ -568,7 +568,6 @@ export default {
     // line-height: 40px;
     p {
       line-height: 50px;
-      height: 50px;
     }
   }
 
