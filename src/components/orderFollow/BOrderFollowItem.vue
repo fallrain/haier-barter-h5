@@ -89,7 +89,7 @@
             @click="detailHide(index,followItem)"
             class="information-class bOrderFollowItem-textBtn"
           >
-            <span class="information-class">详细信息</span>
+            <span class="information-class">详细信息 </span>
           </span>
           <span
             v-show="followItem.businessScenarios === 'YJHX'"
