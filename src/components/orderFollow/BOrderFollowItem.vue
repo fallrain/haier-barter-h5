@@ -84,35 +84,35 @@
         >
         <span class="time-label">{{followItem.updatedTime}}</span>
         <div class="bOrderFollowItem-row-time-right">
-        <span
-          v-show="(followItem.flowStatus === 4 || followItem.flowStatus === 5 || followItem.businessScenarios === 'YYFW' || followItem.businessScenarios === 'ADJ') && (followItem.add1 !=null || followItem.add2 !=null)"
-          @click="detailHide(index,followItem)"
+          <span
+            v-show="followItem.flowStatus === 4 || followItem.flowStatus === 5 || followItem.businessScenarios === 'YYFW' || followItem.businessScenarios === 'ADJ'"
+            @click="detailHide(index,followItem)"
             class="information-class bOrderFollowItem-textBtn"
-        >
-          <span class="information-class">详细信息 </span>
-        </span>
+          >
+            <span class="information-class">详细信息 </span>
+          </span>
           <span
             v-show="followItem.businessScenarios === 'YJHX'"
             @click="gujiaClick(followItem)"
             class="information-class-de bOrderFollowItem-textBtn"
-            >估价详情
-        </span>
+          >估价详情
+          </span>
           <span
             v-show="followItem.flowStatus === 1"
             @click="itemClick(followItem)"
             class="information-class-de bOrderFollowItem-textBtn"
           >查看详情
-          <!--<img-->
-          <!--src="@/assets/images/orderFollow-up/xialablue@3x.png"-->
-          <!--class="information-xiala"-->
+            <!--<img-->
+            <!--src="@/assets/images/orderFollow-up/xialablue@3x.png"-->
+            <!--class="information-xiala"-->
 
-          <!--v-show="!followItem.detailShow"-->
-          <!--&gt;-->
-          <!--<img-->
-          <!--src="@/assets/images/orderFollow-up/shangla@3x.png"-->
-          <!--class="information-xiala"-->
-          <!--v-show="followItem.detailShow"-->
-          <!--&gt;-->
+            <!--v-show="!followItem.detailShow"-->
+            <!--&gt;-->
+            <!--<img-->
+            <!--src="@/assets/images/orderFollow-up/shangla@3x.png"-->
+            <!--class="information-xiala"-->
+            <!--v-show="followItem.detailShow"-->
+            <!--&gt;-->
           </span>
         </div>
       </div>
@@ -126,13 +126,41 @@
       <!--<span class="orderFollowItem-span-blue">￥{{item.bccPrice}}</span>-->
       <!--</p>-->
       <!--</div>-->
+
+      <!--爱获客、预约服务且订单正常下的详细信息-->
       <div
+        v-if="
+          (followItem.businessScenarios === 'YYFW' || followItem.businessScenarios === 'ADJ')
+          && (followItem.flowStatus !== 4 && followItem.flowStatus !== 5)
+        "
         class="information-p"
         v-show="followItem.detailShow"
       >
+        <p>
+          <strong>报名编号：</strong>{{followItem.sourceSn}}
+        </p>
         <p
-          v-if="followItem.businessScenarios === 'YYFW' || followItem.businessScenarios === 'ADJ'"
-        >{{followItem.sourceSn}}</p>
+          v-if="followItem.add1"
+        >
+          <strong> 活动名称：</strong>{{followItem.add1}}
+        </p>
+        <p
+          v-if="followItem.add2"
+        >
+          <strong>预约服务名称：</strong>{{followItem.add2}}
+        </p>
+        <p
+          v-if="followItem.add3"
+        >
+          <strong>用户地址：</strong>{{followItem.add3}}
+        </p>
+      </div>
+      <!--其他类型（只有取消、异常状态才显示）详细信息-->
+      <div
+        v-else
+        class="information-p"
+        v-show="followItem.detailShow"
+      >
         <p v-if="followItem.add1">{{followItem.add1}}</p>
         <p v-if="followItem.add2">{{followItem.add2}}</p>
         <p v-if="followItem.add3">{{followItem.add3}}</p>
