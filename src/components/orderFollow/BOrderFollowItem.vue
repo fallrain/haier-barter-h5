@@ -130,6 +130,9 @@
         class="information-p"
         v-show="followItem.detailShow"
       >
+        <p
+          v-if="followItem.businessScenarios === 'YYFW' || followItem.businessScenarios === 'ADJ'"
+        >{{followItem.sourceSn}}</p>
         <p v-if="followItem.add1">{{followItem.add1}}</p>
         <p v-if="followItem.add2">{{followItem.add2}}</p>
         <p v-if="followItem.add3">{{followItem.add3}}</p>
