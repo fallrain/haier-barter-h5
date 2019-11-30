@@ -37,6 +37,11 @@
         class="labelImage"
         v-show="followItem.businessScenarios ==='RC'"
       >
+      <img
+        src="@/assets/images/orderFollow-up/yyfw@2x.png"
+        class="labelImage"
+        v-show="followItem.businessScenarios ==='YYFW'"
+      >
       <!--<p>{{followItem.orderNo}}</p>-->
       <div class="row-class">
         <span class="label-span">{{followItem.userName}}</span>
@@ -79,10 +84,11 @@
         >
         <span class="time-label">{{followItem.updatedTime}}</span>
         <span
-          v-show="followItem.flowStatus !== 1 && followItem.flowStatus !== 0 && followItem.flowStatus !== 3&& followItem.flowStatus !== 2&& (followItem.add1 !=null || followItem.add2 !=null)"
-          @click="detailHide(index,followItem)">
+          v-show="(followItem.flowStatus === 4 || followItem.flowStatus === 5 || followItem.businessScenarios === 'YYFW') && (followItem.add1 !=null || followItem.add2 !=null)"
+          @click="detailHide(index,followItem)"
+        >
           <span class="information-class">详细信息</span>
-          </span>
+        </span>
         <span v-show="followItem.businessScenarios === 'YJHX'" @click="gujiaClick(followItem)">
           <span
             class="information-class-de"
@@ -118,8 +124,9 @@
         class="information-p"
         v-show="followItem.detailShow"
       >
-        <p>{{followItem.add1}}</p>
-        <p>{{followItem.add2}}</p>
+        <p v-if="followItem.add1">{{followItem.add1}}</p>
+        <p v-if="followItem.add2">{{followItem.add2}}</p>
+        <p v-if="followItem.add3">{{followItem.add3}}</p>
       </div>
       <div class="bottom-class">
         <div
