@@ -84,7 +84,7 @@
         >
         <span class="time-label">{{followItem.updatedTime}}</span>
         <span
-          v-show="(followItem.flowStatus === 4 || followItem.flowStatus === 5 || followItem.businessScenarios === 'YYFW') && (followItem.add1 !=null || followItem.add2 !=null)"
+          v-show="(followItem.flowStatus === 4 || followItem.flowStatus === 5 || followItem.businessScenarios === 'YYFW' || followItem.businessScenarios === 'ADJ') && (followItem.add1 !=null || followItem.add2 !=null)"
           @click="detailHide(index,followItem)"
         >
           <span class="information-class">详细信息 </span>
