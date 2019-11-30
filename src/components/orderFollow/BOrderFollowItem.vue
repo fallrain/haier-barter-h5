@@ -87,7 +87,7 @@
           v-show="(followItem.flowStatus === 4 || followItem.flowStatus === 5 || followItem.businessScenarios === 'YYFW') && (followItem.add1 !=null || followItem.add2 !=null)"
           @click="detailHide(index,followItem)"
         >
-          <span class="information-class">详细信息</span>
+          <span class="information-class">详细信息 </span>
         </span>
         <span v-show="followItem.businessScenarios === 'YJHX'" @click="gujiaClick(followItem)">
           <span
