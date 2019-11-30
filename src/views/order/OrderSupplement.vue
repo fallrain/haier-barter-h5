@@ -479,6 +479,7 @@ export default {
         });
       } else {
         if (this.orderNo !== '') {
+          // Toast.loading('保存中...');
           const sub = {};
           sub.orderDetailSaveQoList = this.supplementProductList;
           sub.rightsUserJson = this.rightsJson;

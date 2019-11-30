@@ -1052,6 +1052,7 @@ export default {
           });
         } else {
           if (this.orderNo !== '') {
+            // Toast.loading('保存中...');
             // if (!this.orderFollowId) {
             //   this.orderFollowId = localStorage.getItem('orderFollowId');
             // }
@@ -1263,6 +1264,7 @@ export default {
     },
     onBasicConfirm() {
       if (this.orderNo !== '') {
+        // Toast.loading('保存中...');
         // if (!this.orderFollowId) {
         //   this.orderFollowId = localStorage.getItem('orderFollowId');
         // }

@@ -101,6 +101,7 @@ ax.interceptors.response.use((response) => {
     if (response.data.code !== 1 && !response.data.isSuccess) {
       if (response.config.url !== '/api/manage/reportEhub/saveEhubBarCode') {
         if (response.config.url === '/api/rights/rightsManage/queryOrderOptionalShareRights' || response.config.url === '/api/rights/rightsManage/queryOrderOptionalMutexRights') {
+          closeLoading();
           Toast.hide();
         } else {
           showError(msg);

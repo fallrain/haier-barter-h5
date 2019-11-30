@@ -37,6 +37,11 @@
         class="labelImage"
         v-show="followItem.businessScenarios ==='RC'"
       >
+      <img
+        src="@/assets/images/orderFollow-up/yyfw@2x.png"
+        class="labelImage"
+        v-show="followItem.businessScenarios ==='YYFW'"
+      >
       <!--<p>{{followItem.orderNo}}</p>-->
       <div class="row-class">
         <span class="label-span">{{followItem.userName}}</span>
@@ -80,17 +85,18 @@
         <span class="time-label">{{followItem.updatedTime}}</span>
         <div class="bOrderFollowItem-row-time-right">
           <span
-            v-show="followItem.flowStatus !== 1 && followItem.flowStatus !== 0 && followItem.flowStatus !== 3&& followItem.flowStatus !== 2&& (followItem.add1 !=null || followItem.add2 !=null)"
+            v-show="(followItem.flowStatus === 4 || followItem.flowStatus === 5 || followItem.businessScenarios === 'YYFW') && (followItem.add1 !=null || followItem.add2 !=null)"
             @click="detailHide(index,followItem)"
             class="information-class bOrderFollowItem-textBtn"
-          >详细信息
-        </span>
+          >
+            <span class="information-class">详细信息</span>
+          </span>
           <span
             v-show="followItem.businessScenarios === 'YJHX'"
             @click="gujiaClick(followItem)"
             class="information-class-de bOrderFollowItem-textBtn"
-          >估价详情
-        </span>
+            >估价详情
+          </span>
           <span
             v-show="followItem.flowStatus === 1"
             @click="itemClick(followItem)"
@@ -124,8 +130,9 @@
         class="information-p"
         v-show="followItem.detailShow"
       >
-        <p>{{followItem.add1}}</p>
-        <p>{{followItem.add2}}</p>
+        <p v-if="followItem.add1">{{followItem.add1}}</p>
+        <p v-if="followItem.add2">{{followItem.add2}}</p>
+        <p v-if="followItem.add3">{{followItem.add3}}</p>
       </div>
       <div class="bottom-class">
         <div
@@ -381,7 +388,6 @@ export default {
           if (res.code === 1) {
             this.remark = '';
             console.log('this.list', this.list);
-            Toast.succeed(res.msg);
             this.$emit('updateOrderType', type);
           }
         });
@@ -634,9 +640,10 @@ export default {
     flex-wrap: wrap;
   }
 
-  .bOrderFollowItem-row-time-right{
+  .bOrderFollowItem-row-time-right {
     margin-left: auto;
   }
+
   .show-class {
     // position: absolute;
     // height: 140px;
