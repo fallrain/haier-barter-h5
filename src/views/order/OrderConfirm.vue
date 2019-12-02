@@ -175,7 +175,6 @@ export default {
   },
   computed: {},
   created() {
-    debugger;
     this.orderNo = this.$route.params.orderNo;
     this.orderFollowId = this.$route.params.orderFollowId;
     // this.orderNo = 'Z15645424968056668';

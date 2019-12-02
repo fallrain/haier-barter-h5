@@ -1015,7 +1015,8 @@ export default {
           params: { orderInfo: info }
         });
       } else {
-        if (this.rightsList.length === 0 && this.saveType === 0 && this.subInfo.orderSource !== 'SGLD') {
+        const orderSource = this.subInfo.orderSource;
+        if (this.rightsList.length === 0 && this.saveType === 0 && orderSource !== 'SGLD' && orderSource !== 'YJHX') {
           this.rightsService.queryOrderOptionalRights(this.subInfo, {
             pageNum: 0,
             pageSize: 10,
