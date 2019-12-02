@@ -1015,7 +1015,8 @@ export default {
           params: { orderInfo: info }
         });
       } else {
-        if (this.rightsList.length === 0 && this.saveType === 0 && this.subInfo.orderSource !== 'SGLD') {
+        const orderSource = this.subInfo.orderSource;
+        if (this.rightsList.length === 0 && this.saveType === 0 && orderSource !== 'SGLD' && orderSource !== 'YJHX') {
           this.rightsService.queryOrderOptionalRights(this.subInfo, {
             pageNum: 0,
             pageSize: 10,
@@ -1052,7 +1053,6 @@ export default {
           });
         } else {
           if (this.orderNo !== '') {
-            // Toast.loading('保存中...');
             // if (!this.orderFollowId) {
             //   this.orderFollowId = localStorage.getItem('orderFollowId');
             // }
@@ -1264,7 +1264,6 @@ export default {
     },
     onBasicConfirm() {
       if (this.orderNo !== '') {
-        // Toast.loading('保存中...');
         // if (!this.orderFollowId) {
         //   this.orderFollowId = localStorage.getItem('orderFollowId');
         // }
