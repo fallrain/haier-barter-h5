@@ -276,7 +276,6 @@ export default {
       /* 下一步 */
       this.orderService.createOrderSubmit({}, { orderNo: this.orderNo }).then((res) => {
         if (res.code === 1) {
-          Toast.succeed(res.msg);
           localStorage.removeItem('orderFollowId');
           this.$router.push({
             name: 'Order.OrderFollowCommitResult',

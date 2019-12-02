@@ -1,6 +1,5 @@
 import axios from 'axios';
 import qs from 'qs';
-import Vue from 'vue';
 import {
   Dialog,
   Toast
@@ -20,16 +19,16 @@ const loadingAy = [];
 
 function closeLoading() {
 // 关闭遮罩
-  /* if (loadingAy.length === 1) {
-    Toast.hide();
-  } */
-  setTimeout(() => {
-    Toast.hide();
-  });
-
+  if (loadingAy.length === 1) {
+    document.querySelector('.js-b-loading').style = 'display:none;';
+  }
   loadingAy.length--;
 }
-
+function showLoading() {
+  /* 打开遮罩 */
+  document.querySelector('.js-b-loading').style = 'display:block;';
+  return new Date().getTime();
+}
 let isShowError = false;
 
 function showError(msg) {
@@ -70,7 +69,7 @@ ax.interceptors.request.use((config) => {
     config.headers.Authorization = `Bearer  ${localStorage.getItem('acces_token')}`;
   }
   if (!config.params.noLoading) {
-    loadingAy.push(Toast.loading('加载中...'));
+    loadingAy.push(showLoading());
     // Toast.loading('加载中...')
     // Toast.hide()
   }
@@ -102,6 +101,7 @@ ax.interceptors.response.use((response) => {
     if (response.data.code !== 1 && !response.data.isSuccess) {
       if (response.config.url !== '/api/manage/reportEhub/saveEhubBarCode') {
         if (response.config.url === '/api/rights/rightsManage/queryOrderOptionalShareRights' || response.config.url === '/api/rights/rightsManage/queryOrderOptionalMutexRights') {
+          closeLoading();
           Toast.hide();
         } else {
           showError(msg);
