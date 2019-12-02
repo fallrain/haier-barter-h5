@@ -907,9 +907,9 @@ export default {
     generateSubInfo(type) {
       /* 生成订单信息 */
       /*
-      * @type 1:生成订单信息并保存 2：生成订单信息并跳转选择权益界面，查询权益
-      *
-      * */
+        * @type 1:生成订单信息并保存 2：生成订单信息并跳转选择权益界面，查询权益
+        *
+        * */
       if (!this.bUtil.isReportInstallFit(this.productList, this.deliveryTime) && this.saveType == 0) {
         return;
       }
