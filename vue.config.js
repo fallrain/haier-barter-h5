@@ -28,7 +28,7 @@ module.exports = {
         target: 'http://10.153.71.158:8080/',
         changeOrigin: true,
         pathRewrite: {
-          '^/api': ''
+          '^/api/activity': ''
         },
         secure: false
       },
