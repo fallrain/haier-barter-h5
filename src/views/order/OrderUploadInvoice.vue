@@ -149,23 +149,24 @@ export default {
       });
     },
     uploadSuccess(data, fileMap, product) {
-      data.orderNo = this.orderNo;
-      data.orderDetailId = product.id;
-      data.invoiceUpload = 1;
-      delete data.id;
-      this.invoiceList.push(data);
+      const dataTemp = JSON.parse(JSON.stringify(data));
+      dataTemp.orderNo = this.orderNo;
+      dataTemp.orderDetailId = product.id;
+      dataTemp.invoiceUpload = 1;
+      delete dataTemp.id;
+      this.invoiceList.push(dataTemp);
     },
-    uploadErr(msg) {
-      Toast.failed(msg);
+    uploadErr() {
+      // Toast.failed(msg);
     },
-    delImg(fileList) {
-      this.invoiceList.forEach((val) => {
-        if (fileList === val) {
-          this.invoiceList.remove(fileList);
-        }
-      });
+    delImg(fileList, product) {
+      /* 删除invoiceList里已经有发票图片的id */
+      const {
+        id
+      } = product;
+      const delIndex = this.invoiceList.findIndex(v => v.orderDetailId === id);
+      this.invoiceList.splice(delIndex, 1);
     },
-
     indexOf(val) {
       for (let i = 0; i < this.length; i++) {
         if (this[i] == val) return i;
@@ -180,7 +181,7 @@ export default {
     },
 
     updateSubmit() {
-      if (this.invoiceList.length == 0) {
+      if (!this.invoiceList.length) {
         Toast.failed('请上传凭证！');
         return;
       }

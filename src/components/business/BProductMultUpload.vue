@@ -23,28 +23,20 @@
             :maxWidth="1280"
             :compress="70"
             :headers="headers"
-            @imageuploaded="(data, fileList)=>imageuploaded(data, fileList,product)"
+            @imageuploaded="(data, fileList)=>imageuploaded(data, fileList, product)"
             :url="uploadUrl"
             :multiple-size="1"
             :imgs="fileMap[products.productCode]"
-            @delFun="delImg"
+            @delFun="(index, fileList)=>delImg(index, fileList, product)"
             :data="dataObj"
             @errorhandle="uploadError"
           >
           </b-upload>-->
           <b-wx-upload
-            :crop="false"
-            inputOfFile="file"
-            :max-file-size="1024*1024*10"
-            :maxWidth="1280"
-            :compress="70"
-            :headers="headers"
-            @imageuploaded="(data, fileList)=>imageuploaded(data, fileList,product)"
-            :url="uploadUrl"
-            :multiple-size="1"
+            @imageuploaded="(data)=>imageuploaded(data, fileMap[products.productCode],product)"
+            :uploadFn="uploadImg"
             :imgs="fileMap[products.productCode]"
             @delFun="delImg"
-            :data="dataObj"
             @errorhandle="uploadError"
           ></b-wx-upload>
           <p class="bProductMultUpload-item-inf">上传购机凭证,包括:发票、购机小票</p>
@@ -86,7 +78,6 @@ import {
 } from 'mand-mobile';
 
 import {
-  BUpload,
   BWxUpload,
 } from '@/components/form';
 
@@ -116,7 +107,6 @@ export default {
     }
   },
   components: {
-    BUpload,
     BWxUpload,
     [Toast.name]: Toast
   },
@@ -124,16 +114,9 @@ export default {
     return {
       fileMap: {},
       fileList: [],
-      dataObj: { recordMode: 'Haier' },
-      // 上传的地址
-      uploadUrl: '/api/manage/orderManage/checkInvoice',
-      headers: {
-        Authorization: ''
-      }
     };
   },
   created() {
-    this.headers.Authorization = `Bearer  ${localStorage.getItem('acces_token')}`;
     this.genFileMap();
   },
   methods: {
@@ -144,16 +127,18 @@ export default {
         });
       });
     },
-    imageChanged(res) {
-
+    uploadImg(mediaId) {
+      /* 上传发票 */
+      return this.orderService.checkInvoiceByMediaId({
+        mediaId,
+        recordMode: 'Haier'
+      });
     },
     imageuploaded(data, fileList, product) {
       /* 上传成功 */
-      // todo 返回值待定
-
-
       if (data.code === 1) {
         if (data.data.invoiceUrl !== null) {
+          // 显示图片
           fileList.push(data.data.invoiceUrl);
         }
         this.$emit('uploadSuccess', data.data, this.fileMap, product);
@@ -163,7 +148,7 @@ export default {
     },
     uploadError(res) {
       /* 上传错误 */
-      const errorObj = {
+      /* const errorObj = {
         'TYPE ERROR': '只能上传jpg/png/gif类型图片',
         'FILE IS TOO LARGER MAX FILE IS': '图片最大不能超过10M'
       };
@@ -172,12 +157,13 @@ export default {
           Toast.failed(errorObj[p]);
           return;
         }
-      }
-      Toast.failed(res || '上传失败');
+      } */
+      console.log(res);
+      Toast.failed('上传失败');
     },
-    delImg(index, fileList) {
-      this.$emit('delImg', fileList);
+    delImg(index, fileList, product) {
       fileList.splice(index, 1);
+      this.$emit('delImg', fileList, product);
     }
   }
 };
