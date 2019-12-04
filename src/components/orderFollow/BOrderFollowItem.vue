@@ -37,6 +37,11 @@
         class="labelImage"
         v-show="followItem.businessScenarios ==='RC'"
       >
+      <img
+        src="@/assets/images/orderFollow-up/yyfw@2x.png"
+        class="labelImage"
+        v-show="followItem.businessScenarios ==='YYFW'"
+      >
       <!--<p>{{followItem.orderNo}}</p>-->
       <div class="row-class">
         <span class="label-span">{{followItem.userName}}</span>
@@ -72,37 +77,44 @@
         <span class="handred-class">{{followItem.tardinessS}}</span>
         <span class="handgray-class">{{followItem.flowS}}</span>
       </div>
-      <div class="row-class">
+      <div class="row-class bOrderFollowItem-row-time">
         <img
           src="@/assets/images/orderFollow-up/time@3x.png"
           class="timeImage"
         >
         <span class="time-label">{{followItem.updatedTime}}</span>
-        <span
-          v-show="followItem.flowStatus !== 1 && followItem.flowStatus !== 0 && followItem.flowStatus !== 3&& followItem.flowStatus !== 2&& (followItem.add1 !=null || followItem.add2 !=null)"
-          @click="detailHide(index,followItem)">
-          <span class="information-class">详细信息</span>
-          </span>
-        <span v-show="followItem.businessScenarios === 'YJHX'" @click="gujiaClick(followItem)">
+        <div class="bOrderFollowItem-row-time-right">
           <span
-            class="information-class-de"
-          >估价详情</span>
-        </span>
-        <span v-show="followItem.flowStatus === 1" @click="itemClick(followItem)">
-          <span class="information-class-de">查看详情</span>
-          <!--<img-->
-          <!--src="@/assets/images/orderFollow-up/xialablue@3x.png"-->
-          <!--class="information-xiala"-->
-
-          <!--v-show="!followItem.detailShow"-->
-          <!--&gt;-->
-          <!--<img-->
-          <!--src="@/assets/images/orderFollow-up/shangla@3x.png"-->
-          <!--class="information-xiala"-->
-          <!--v-show="followItem.detailShow"-->
-          <!--&gt;-->
+            v-show="followItem.flowStatus === 4 || followItem.flowStatus === 5 || followItem.businessScenarios === 'YYFW' || followItem.businessScenarios === 'ADJ'"
+            @click="detailHide(index,followItem)"
+            class="information-class bOrderFollowItem-textBtn"
+          >
+            <span class="information-class">详细信息 </span>
           </span>
+          <span
+            v-show="followItem.businessScenarios === 'YJHX'"
+            @click="gujiaClick(followItem)"
+            class="information-class-de bOrderFollowItem-textBtn"
+          >估价详情
+          </span>
+          <span
+            v-show="followItem.flowStatus === 1"
+            @click="itemClick(followItem)"
+            class="information-class-de bOrderFollowItem-textBtn"
+          >查看详情
+            <!--<img-->
+            <!--src="@/assets/images/orderFollow-up/xialablue@3x.png"-->
+            <!--class="information-xiala"-->
 
+            <!--v-show="!followItem.detailShow"-->
+            <!--&gt;-->
+            <!--<img-->
+            <!--src="@/assets/images/orderFollow-up/shangla@3x.png"-->
+            <!--class="information-xiala"-->
+            <!--v-show="followItem.detailShow"-->
+            <!--&gt;-->
+          </span>
+        </div>
       </div>
       <!--<div-->
       <!--v-show="followItem.detailShow && followItem.showDetail"-->
@@ -114,12 +126,44 @@
       <!--<span class="orderFollowItem-span-blue">￥{{item.bccPrice}}</span>-->
       <!--</p>-->
       <!--</div>-->
+
+      <!--爱获客、预约服务且订单正常下的详细信息-->
       <div
+        v-if="
+          (followItem.businessScenarios === 'YYFW' || followItem.businessScenarios === 'ADJ')
+          && (followItem.flowStatus !== 4 && followItem.flowStatus !== 5)
+        "
         class="information-p"
         v-show="followItem.detailShow"
       >
-        <p>{{followItem.add1}}</p>
-        <p>{{followItem.add2}}</p>
+        <p>
+          <strong>报名编号：</strong>{{followItem.sourceSn}}
+        </p>
+        <p
+          v-if="followItem.add1"
+        >
+          <strong> 活动名称：</strong>{{followItem.add1}}
+        </p>
+        <p
+          v-if="followItem.add2"
+        >
+          <strong>预约服务名称：</strong>{{followItem.add2}}
+        </p>
+        <p
+          v-if="followItem.add3"
+        >
+          <strong>用户地址：</strong>{{followItem.add3}}
+        </p>
+      </div>
+      <!--其他类型（只有取消、异常状态才显示）详细信息-->
+      <div
+        v-else
+        class="information-p"
+        v-show="followItem.detailShow"
+      >
+        <p v-if="followItem.add1">{{followItem.add1}}</p>
+        <p v-if="followItem.add2">{{followItem.add2}}</p>
+        <p v-if="followItem.add3">{{followItem.add3}}</p>
       </div>
       <div class="bottom-class">
         <div
@@ -133,7 +177,8 @@
           >
         </div>
         <!--估价不显示录单操作-->
-        <span v-if="followItem.businessScenarios !== 'YJHX' && followItem.businessScenarios !== 'ADJ'">
+        <!--<span v-if="followItem.businessScenarios !== 'YJHX' && followItem.businessScenarios !== 'ADJ'">-->
+        <span v-if="followItem.businessScenarios !== 'ADJ'">
           <p
             class="bottom-button"
             v-for="(button,index) in followItem.buttonList"
@@ -196,7 +241,7 @@ import {
 } from 'mand-mobile';
 
 export default {
-  name: '',
+  name: 'BOrderFollowItem',
   components: {
     [Icon.name]: Icon,
     [Toast.name]: Toast,
@@ -281,13 +326,11 @@ export default {
       this.stopProcess();
       this.$emit('gujiaClick', followItem);
     },
-    preparation() {
-    },
     followButtonClick(button, item) {
       console.log(item);
       const orderMode = JSON.parse(localStorage.getItem('userinfo')).orderMode;
-      if (orderMode == 'Casarte') {
-        if (item.businessScenarios == 'SGLD') {
+      if (orderMode === 'Casarte') {
+        if (item.businessScenarios === 'SGLD') {
           Toast.failed('卡萨帝模式，不支持手工录单');
           return;
         }
@@ -376,7 +419,6 @@ export default {
           if (res.code === 1) {
             this.remark = '';
             console.log('this.list', this.list);
-            Toast.succeed(res.msg);
             this.$emit('updateOrderType', type);
           }
         });
@@ -525,15 +567,17 @@ export default {
   }
 
   .information-class {
-    color: #1969c6;
-    font-size: 28px;
-    margin-left: 200px;
+    // margin-left: 200px;
   }
 
   .information-class-de {
-    color: #1969c6;
+    // margin-left: 230px;
+  }
+
+  .bOrderFollowItem-textBtn {
     font-size: 28px;
-    margin-left: 230px;
+    color: #1969c6;
+    white-space: nowrap;
   }
 
   .label-class {
@@ -555,7 +599,6 @@ export default {
     // line-height: 40px;
     p {
       line-height: 50px;
-      height: 50px;
     }
   }
 
@@ -620,6 +663,15 @@ export default {
 
   .row-class {
     margin-bottom: 10px;
+  }
+
+  .bOrderFollowItem-row-time {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .bOrderFollowItem-row-time-right {
+    margin-left: auto;
   }
 
   .show-class {
