@@ -33,14 +33,9 @@
           >
           </b-upload>-->
           <b-wx-upload
-            :crop="false"
-            inputOfFile="file"
-            :max-file-size="1024*1024*10"
-            :maxWidth="1280"
-            :compress="70"
             :headers="headers"
             @imageuploaded="(data, fileList)=>imageuploaded(data, fileList,product)"
-            :url="uploadUrl"
+            :uploadFn="upload"
             :multiple-size="1"
             :imgs="fileMap[products.productCode]"
             @delFun="delImg"
@@ -144,14 +139,9 @@ export default {
         });
       });
     },
-    imageChanged(res) {
-
-    },
     imageuploaded(data, fileList, product) {
       /* 上传成功 */
       // todo 返回值待定
-
-
       if (data.code === 1) {
         if (data.data.invoiceUrl !== null) {
           fileList.push(data.data.invoiceUrl);
@@ -163,7 +153,7 @@ export default {
     },
     uploadError(res) {
       /* 上传错误 */
-      const errorObj = {
+      /* const errorObj = {
         'TYPE ERROR': '只能上传jpg/png/gif类型图片',
         'FILE IS TOO LARGER MAX FILE IS': '图片最大不能超过10M'
       };
@@ -172,12 +162,13 @@ export default {
           Toast.failed(errorObj[p]);
           return;
         }
-      }
-      Toast.failed(res || '上传失败');
+      } */
+      console.log(res);
+      Toast.failed('上传失败');
     },
     delImg(index, fileList) {
-      this.$emit('delImg', fileList);
       fileList.splice(index, 1);
+      this.$emit('delImg', fileList);
     }
   }
 };

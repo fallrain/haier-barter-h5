@@ -40,6 +40,12 @@ export default {
       type: Object,
       default: () => {
       }
+    },
+    // 用来上传的函数
+    uploadFn: {
+      type: Function,
+      default: () => function () {},
+      required: true
     }
   },
   methods: {
@@ -63,37 +69,29 @@ export default {
           success: (res) => {
             const localId = res.localIds.join(''); // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
             // Android6.2之前会有无法调用uploadImage的bug
-            this.imgs.push(localId);
-            alert(JSON.stringify(res));
             setTimeout(() => {
               wx.uploadImage({
                 localId, // 需要上传的图片的本地ID，由chooseImage接口获得
                 isShowProgressTips: 1, // 默认为1，显示进度提示
                 success: (uploadImageRes) => {
                   const serverId = uploadImageRes.serverId; // 返回图片的服务器端ID
-                  alert(JSON.stringify(uploadImageRes));
+                  this.imageuploaded();
+                  this.uploadFn(serverId).then((data) => {
+                    // this.imgs.push(localId);
+                    this.imageuploaded(data);
+                  });
                 },
                 fail(uploadError) {
                   this.$emit('errorhandle', uploadError);
-                  alert(222);
                 }
               });
             }, 100);
           },
           fail(error) {
             this.$emit('errorhandle', error);
-            alert(111);
           }
         });
       });
-    },
-    checkImg(localId) {
-      const img = new Image();
-      // 改变图片的src
-      img.src = localId;
-      // 加载完成执行
-      img.onload = function () {
-      };
     }
   }
 };
