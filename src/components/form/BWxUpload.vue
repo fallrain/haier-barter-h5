@@ -75,14 +75,14 @@ export default {
                 },
                 fail(uploadError) {
                   this.$emit('errorhandle', uploadError);
-                  alert(JSON.stringify(uploadError));
+                  alert(222);
                 }
               });
             }, 100);
           },
           fail(error) {
             this.$emit('errorhandle', error);
-            alert(JSON.stringify(error));
+            alert(111);
           }
         });
       });
