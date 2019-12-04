@@ -16,7 +16,7 @@
           v-if="!merge"
           class="bProductMultUpload-item-cnt"
         >
-          <b-upload
+          <!--<b-upload
             :crop="false"
             inputOfFile="file"
             :max-file-size="1024*1024*10"
@@ -31,7 +31,22 @@
             :data="dataObj"
             @errorhandle="uploadError"
           >
-          </b-upload>
+          </b-upload>-->
+          <b-wx-upload
+            :crop="false"
+            inputOfFile="file"
+            :max-file-size="1024*1024*10"
+            :maxWidth="1280"
+            :compress="70"
+            :headers="headers"
+            @imageuploaded="(data, fileList)=>imageuploaded(data, fileList,product)"
+            :url="uploadUrl"
+            :multiple-size="1"
+            :imgs="fileMap[products.productCode]"
+            @delFun="delImg"
+            :data="dataObj"
+            @errorhandle="uploadError"
+          ></b-wx-upload>
           <p class="bProductMultUpload-item-inf">上传购机凭证,包括:发票、购机小票</p>
         </div>
       </li>
@@ -71,7 +86,8 @@ import {
 } from 'mand-mobile';
 
 import {
-  BUpload
+  BUpload,
+  BWxUpload,
 } from '@/components/form';
 
 export default {
@@ -101,6 +117,7 @@ export default {
   },
   components: {
     BUpload,
+    BWxUpload,
     [Toast.name]: Toast
   },
   data() {
@@ -136,7 +153,7 @@ export default {
 
 
       if (data.code === 1) {
-        if(data.data.invoiceUrl !== null){
+        if (data.data.invoiceUrl !== null) {
           fileList.push(data.data.invoiceUrl);
         }
         this.$emit('uploadSuccess', data.data, this.fileMap, product);
