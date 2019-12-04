@@ -23,11 +23,11 @@
             :maxWidth="1280"
             :compress="70"
             :headers="headers"
-            @imageuploaded="(data, fileList)=>imageuploaded(data, fileList,product)"
+            @imageuploaded="(data, fileList)=>imageuploaded(data, fileList, product)"
             :url="uploadUrl"
             :multiple-size="1"
             :imgs="fileMap[products.productCode]"
-            @delFun="delImg"
+            @delFun="(index, fileList)=>delImg(index, fileList, product)"
             :data="dataObj"
             @errorhandle="uploadError"
           >
@@ -166,9 +166,9 @@ export default {
       console.log(res);
       Toast.failed('上传失败');
     },
-    delImg(index, fileList) {
+    delImg(index, fileList, product) {
       fileList.splice(index, 1);
-      this.$emit('delImg', fileList);
+      this.$emit('delImg', fileList, product);
     }
   }
 };
