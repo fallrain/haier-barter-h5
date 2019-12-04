@@ -61,9 +61,9 @@ export default {
           sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
           sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
           success: (res) => {
-            const localId = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+            const localId = res.localIds.join(''); // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
             // Android6.2之前会有无法调用uploadImage的bug
-            imgs.push(localId);
+            this.imgs.push(localId);
             alert(JSON.stringify(res));
             setTimeout(() => {
               wx.uploadImage({
@@ -71,7 +71,7 @@ export default {
                 isShowProgressTips: 1, // 默认为1，显示进度提示
                 success: (uploadImageRes) => {
                   const serverId = uploadImageRes.serverId; // 返回图片的服务器端ID
-                  alert(serverId);
+                  alert(JSON.stringify(uploadImageRes));
                 },
                 fail(uploadError) {
                   this.$emit('errorhandle', uploadError);
