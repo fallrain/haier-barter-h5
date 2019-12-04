@@ -34,12 +34,10 @@
           </b-upload>-->
           <b-wx-upload
             :headers="headers"
-            @imageuploaded="(data, fileList)=>imageuploaded(data, fileList,product)"
-            :uploadFn="upload"
-            :multiple-size="1"
+            @imageuploaded="(data)=>imageuploaded(data, fileMap[products.productCode],product)"
+            :uploadFn="uploadImg"
             :imgs="fileMap[products.productCode]"
             @delFun="delImg"
-            :data="dataObj"
             @errorhandle="uploadError"
           ></b-wx-upload>
           <p class="bProductMultUpload-item-inf">上传购机凭证,包括:发票、购机小票</p>
@@ -81,7 +79,6 @@ import {
 } from 'mand-mobile';
 
 import {
-  BUpload,
   BWxUpload,
 } from '@/components/form';
 
@@ -111,7 +108,6 @@ export default {
     }
   },
   components: {
-    BUpload,
     BWxUpload,
     [Toast.name]: Toast
   },
@@ -139,11 +135,15 @@ export default {
         });
       });
     },
+    uploadImg(serverId) {
+      /* 上传发票 */
+      console.log(serverId);
+    },
     imageuploaded(data, fileList, product) {
       /* 上传成功 */
-      // todo 返回值待定
       if (data.code === 1) {
         if (data.data.invoiceUrl !== null) {
+          // 显示图片
           fileList.push(data.data.invoiceUrl);
         }
         this.$emit('uploadSuccess', data.data, this.fileMap, product);

@@ -75,7 +75,6 @@ export default {
                 isShowProgressTips: 1, // 默认为1，显示进度提示
                 success: (uploadImageRes) => {
                   const serverId = uploadImageRes.serverId; // 返回图片的服务器端ID
-                  this.imageuploaded();
                   this.uploadFn(serverId).then((data) => {
                     // this.imgs.push(localId);
                     this.imageuploaded(data);
