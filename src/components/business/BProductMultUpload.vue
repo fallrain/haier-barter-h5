@@ -33,7 +33,6 @@
           >
           </b-upload>-->
           <b-wx-upload
-            :headers="headers"
             @imageuploaded="(data)=>imageuploaded(data, fileMap[products.productCode],product)"
             :uploadFn="uploadImg"
             :imgs="fileMap[products.productCode]"
@@ -115,16 +114,9 @@ export default {
     return {
       fileMap: {},
       fileList: [],
-      dataObj: { recordMode: 'Haier' },
-      // 上传的地址
-      uploadUrl: '/api/manage/orderManage/checkInvoice',
-      headers: {
-        Authorization: ''
-      }
     };
   },
   created() {
-    this.headers.Authorization = `Bearer  ${localStorage.getItem('acces_token')}`;
     this.genFileMap();
   },
   methods: {
@@ -135,9 +127,12 @@ export default {
         });
       });
     },
-    uploadImg(serverId) {
+    uploadImg(mediaId) {
       /* 上传发票 */
-      console.log(serverId);
+      return this.orderService.checkInvoiceByMediaId({
+        mediaId,
+        recordMode: 'Haier'
+      });
     },
     imageuploaded(data, fileList, product) {
       /* 上传成功 */

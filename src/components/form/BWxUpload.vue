@@ -77,6 +77,7 @@ export default {
                   const serverId = uploadImageRes.serverId; // 返回图片的服务器端ID
                   this.uploadFn(serverId).then((data) => {
                     // this.imgs.push(localId);
+                    alert(JSON.stringify(data));
                     this.imageuploaded(data);
                   });
                 },
