@@ -97,7 +97,7 @@
         @popButtonClicked="buttonClicked"
         @updateOrderType="updateOrderType"
         @followButtonClick="followButtonClicked"
-        @itemClick="itemClick()"
+        @itemClick="itemClick"
         @gujiaClick="gujiaClick"
       ></b-order-follow-item>
     </div>
@@ -118,7 +118,7 @@
         @updateOrderType="updateOrderType"
         @followButtonClick="followButtonClicked"
         @userService="userService"
-        @itemClick="itemClick()"
+        @itemClick="itemClick"
         @gujiaClick="gujiaClick"
         @maybeBuyer="maybeBuyer"
       ></b-order-follow-item>
@@ -221,7 +221,7 @@ export default {
         },
         {
           name: 3,
-          label: '订单',
+          label: '已成交',
           icon: 'chengjiao'
         }
       ],
@@ -287,33 +287,8 @@ export default {
       this.curTab = 4;
       localStorage.setItem('confirm', '');
     }
-    // const userinfostr = localStorage.getItem('userinfo');
-    // this.userinfo = JSON.parse(userinfostr);
-    this.userinfo = {
-      // hmcid: 'a0008949',
-      // mobile: '18561715460',
-      // shopId: '8800136445',
-      hmcid: '01467897',
-      mobile: '15253269729',
-      shopId: '8700000484',
-      // shopId:'8800117018',
-      // hmcid: 'a0032254',
-      // mobile: '15621017056',
-      // shopId: '8700048360',
-      // hmcid: '18000560',
-      // orderMode: 'Haier',
-      // orderMode: 'Casarte',
-      // mobile: '15621017056',
-      // shopId: '8800266470',
-      // hmcid: 'A0032188',
-      // mobile: '15006480711',
-      // shopId: '8800007470',
-      token: 'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IjAxNDY3ODk3Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3NDE0NTExNywiZXhwIjoxNTc1MDA5MTE3fQ.xg-_u9DgTvzLPBn4fIhWG91xnad0dAy_xaQIGtNm2YQ'
-      // token: 'eyJhbGciOiJIUzI1NiJ9.eyJBdXRob3JpdGllcyI6WyJST0xFX1NFTExFUiIsIlJPTEVfQVBQIl0sInN1YiI6IjAxNDY3ODk3Iiwia2luZCI6MSwicG9pbnQiOjEsImlhdCI6MTU3MzUyNjA4NCwiZXhwIjoxNTc0MzkwMDg0fQ.ZjbXfLSWiTjDIOn2xlWGj9SNcG7M6HnoM1zgNHLrk-c'
-    };
-    const Str = JSON.stringify(this.userinfo);
-    localStorage.setItem('userinfo', Str);
-    localStorage.setItem('acces_token', this.userinfo.token);
+    const userinfostr = localStorage.getItem('userinfo');
+    this.userinfo = JSON.parse(userinfostr);
 
     this.getNoticeData();
     this.getScenarioList();
@@ -386,6 +361,7 @@ export default {
       });
     },
     handEntryConfirm() {
+      /* 手工录单弹窗确认 */
       this.handEntryCon = false;
       this.$router.push({
         name: 'Order.OrderEntry',
@@ -398,10 +374,12 @@ export default {
     handEntryCancel() {
       this.handEntryCon = false;
     },
-    itemClick(index) {
+    itemClick(followItem) {
       this.$router.push({
         name: 'Order.OrderDetail',
-        params: { orderNo: this.currentList[index % 10].orderNo }
+        params: {
+          orderNo: followItem.orderNo
+        }
       });
     },
     gujiaClick(item) {
@@ -488,7 +466,10 @@ export default {
       });
     },
     followButtonClicked(val, info) {
+      /* 订单按钮点击操作，包括继续录单、录新订单等等 */
       console.log(info);
+      // 是否是以旧换新
+      const oldForNew = info.businessScenarios === 'YJHX' ? 1 : undefined;
       if (val.name === '成交录单') {
         this.orderService.checkCreateOrder().then((res) => { // 判断店铺是否冻结
           if (res.code != -1) {
@@ -506,6 +487,7 @@ export default {
                   smld: true,
                   id: info.id,
                   freezeMsg,
+                  oldForNew
                 },
                 region: 'new'
               }
@@ -524,6 +506,7 @@ export default {
                 businessScenarios: info.businessScenarios,
                 recordMode: info.recordMode,
                 region: 'continue',
+                oldForNew
               }
             });
           }
@@ -535,7 +518,8 @@ export default {
               name: 'Order.OrderSupplement',
               params: {
                 orderNo: info.orderNo,
-                orderFollowId: info.id
+                orderFollowId: info.id,
+                oldForNew
               }
             });
           }
@@ -562,6 +546,7 @@ export default {
                       businessScenarios: info.businessScenarios,
                       sourceSn: info.sourceSn,
                       id: orderFollowId,
+                      oldForNew
                     },
                     region: 'new'
                   }
@@ -691,44 +676,42 @@ export default {
         } else if (this.curTab === 1 || this.curTab === 4) {
           if (item.userStatus === 1) {
             item.userS = '高潜';
-            item.showList = [];
-            item.showList.push({
-              id: '7',
-              name: '取消高潜'
-            }, {
-              id: '3',
-              name: '暂不跟进'
-            });
+            item.showList = [
+              {
+                id: '7',
+                name: '取消高潜'
+              },
+              {
+                id: '3',
+                name: '暂不跟进'
+              }
+            ];
           } else {
             item.userS = '';
-            item.showList = [];
-            item.showList.push({
-              id: '6',
-              name: '设为高潜'
-            }, {
-              id: '3',
-              name: '暂不跟进'
-            });
+            item.showList = [
+              {
+                id: '6',
+                name: '设为高潜'
+              },
+              {
+                id: '3',
+                name: '暂不跟进'
+              }
+            ];
           }
-          if (item.businessScenarios === 'SMLD') {
+          // 扫码录单 爱到家添加入户服务、潜在顾客
+          if (item.businessScenarios === 'SMLD' || item.businessScenarios === 'ADJ') {
             item.showList.push({
               id: '20',
               name: '入户服务'
-            }, {
+            },
+            {
               id: '21',
               name: '潜在客户'
             });
           }
         } else if (this.curTab === 3) {
           item.showList = [];
-          // item.showList.push({
-          //   id: '10',
-          //   name: '重新录单'
-          // }, {
-          //   id: '11',
-          //   name: '直接取消'
-          // });
-        } else {
         }
         if (item.orderNo !== '') {
           item.showDetail = true;

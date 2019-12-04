@@ -16,30 +16,51 @@ ax.defaults = Object.assign(
   }
 );
 const loadingAy = [];
+
 function closeLoading() {
 // 关闭遮罩
   if (loadingAy.length === 1) {
-    const loadingIns = loadingAy[0];
-    setTimeout(() => {
-      loadingIns.hide();
-    });
+    document.querySelector('.js-b-loading').style = 'display:none;';
   }
   loadingAy.length--;
 }
+function showLoading() {
+  /* 打开遮罩 */
+  document.querySelector('.js-b-loading').style = 'display:block;';
+  return new Date().getTime();
+}
 let isShowError = false;
+
 function showError(msg) {
   if (isShowError) {
     return;
   }
   isShowError = true;
+  let errorMsg;
+  // 无错误返回请求失败
+  // 对象类型解析错误
+  if (msg) {
+    if (typeof msg === 'string') {
+      errorMsg = msg;
+    } else {
+      // 以后存在不只是通过message来判断的情况
+      if (msg.message) {
+        const errorMessage = msg.message;
+        if (/^timeout of/.test(errorMessage)) {
+          errorMsg = '请求超时';
+        }
+      }
+    }
+  }
   Dialog.alert({
-    content: msg || '请求失败',
+    content: errorMsg || '请求失败',
     confirmText: '确定',
     onConfirm() {
       isShowError = false;
     }
   });
 }
+
 ax.interceptors.request.use((config) => {
   if (!config.params) {
     config.params = {};
@@ -48,11 +69,19 @@ ax.interceptors.request.use((config) => {
     config.headers.Authorization = `Bearer  ${localStorage.getItem('acces_token')}`;
   }
   if (!config.params.noLoading) {
-    loadingAy.push(Toast.loading('加载中...'));
+    loadingAy.push(showLoading());
     // Toast.loading('加载中...')
     // Toast.hide()
   }
   return config;
+}, (error) => {
+  if (!error.config.params.noLoading) {
+    closeLoading();
+  }
+  showError(error);
+  return {
+    code: -1
+  };
 });
 
 ax.interceptors.response.use((response) => {
@@ -72,6 +101,7 @@ ax.interceptors.response.use((response) => {
     if (response.data.code !== 1 && !response.data.isSuccess) {
       if (response.config.url !== '/api/manage/reportEhub/saveEhubBarCode') {
         if (response.config.url === '/api/rights/rightsManage/queryOrderOptionalShareRights' || response.config.url === '/api/rights/rightsManage/queryOrderOptionalMutexRights') {
+          closeLoading();
           Toast.hide();
         } else {
           showError(msg);
@@ -87,21 +117,19 @@ ax.interceptors.response.use((response) => {
   if (!error.config.params.noLoading) {
     closeLoading();
   }
-  showError();
-  error.response.data = {
-    data: {
-      code: -1
-    }
+  showError(error);
+  return {
+    code: -1
   };
-  return error.response.data;
 });
 
-const axGet = function (url, params) {
+const axGet = function (url, params, options) {
   return ax({
     headers: { 'content-type': 'application/x-www-form-urlencoded,charset=UTF-8', },
     method: 'get',
     url,
     params,
+    ...options
   });
 };
 
@@ -113,34 +141,30 @@ const axGetUrl = function (url, appendUrl) {
   });
 };
 
-const axPost = function (url, data, params) {
+const axPost = function (url, data, params, options) {
   return ax({
     method: 'post',
     url,
     data: qs.stringify(data),
     params,
+    ...options
   });
 };
 
-const axGetBlob = function (url) {
-  return ax({
-    method: 'get',
-    url,
-    responseType: 'blob',
-    params: {
-      requestNoToast: true,
-      returnResponse: true,
-    }
-  });
-};
-const axPostJson = function (url, data, params) {
+const axPostJson = function (url, data, params, options) {
   return ax({
     method: 'post',
     url,
     data,
     params,
+    ...options
   });
 };
 export default ax;
 
-export { axGet, axPost, axPostJson, axGetUrl, axGetBlob };
+export {
+  axGet,
+  axPost,
+  axPostJson,
+  axGetUrl
+};

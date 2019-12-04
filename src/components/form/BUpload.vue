@@ -63,6 +63,7 @@ export default {
       Toast.loading('上传中');
     },
     uploadError(res) {
+      Toast.hide();
       this.$emit('errorhandle', res);
     }
   }

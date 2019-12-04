@@ -109,12 +109,12 @@ export default {
       invoiceImg: [],
       orderNo: '',
       // 必须上传发票
-      isMustUploadInvoice: true
+      isMustUploadInvoice: false
     };
   },
   created() {
     // 第一次进去才查询是否可以上传发票
-    this.checkMustUploadInvoice();
+    // this.checkMustUploadInvoice();
   },
   activated() {
     console.log('tag', this.$route.params);
