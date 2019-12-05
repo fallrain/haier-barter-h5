@@ -155,7 +155,7 @@ export default {
       if (invoiceObj) {
         invoiceObj.invoiceUrl = data.invoiceUrl;
       } else {
-        this.addInvoiceList(dataTemp);
+        this.addInvoiceList(dataTemp, orderDetailId);
       }
     },
     addInvoiceList(data, id) {
@@ -170,7 +170,10 @@ export default {
       /* 再次编辑的时候，生成发票列表 */
       if (products) {
         products.forEach((v) => {
-          this.addInvoiceList(v, v.id);
+          // 只有有发票图片的才加进数据（发票上传一张即可）
+          if (v.invoiceUrl) {
+            this.addInvoiceList(v, v.id);
+          }
         });
       }
     },
@@ -183,7 +186,9 @@ export default {
         id
       } = product;
       const delIndex = this.invoiceList.findIndex(v => v.orderDetailId === id);
-      this.invoiceList.splice(delIndex, 1);
+      if (delIndex > -1) {
+        this.invoiceList.splice(delIndex, 1);
+      }
     },
     indexOf(val) {
       // todo 毫无意义的代码，以后删除
