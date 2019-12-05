@@ -182,11 +182,10 @@ export default {
     },
     delImg(fileList, product) {
       /* 删除invoiceList里已经有发票图片的id */
-      alert(JSON.stringify(product));
       const {
-        id
+        orderDetailId
       } = product;
-      const delIndex = this.invoiceList.findIndex(v => v.orderDetailId === id);
+      const delIndex = this.invoiceList.findIndex(v => v.orderDetailId === orderDetailId);
       if (delIndex > -1) {
         this.invoiceList.splice(delIndex, 1);
       }
