@@ -13,7 +13,6 @@
         <img
           :src="item" class="images"
         >
-        {{item}}111111
       </div>
     </div>
     <div @click="chooseImg">
@@ -52,7 +51,6 @@ export default {
   methods: {
     imageuploaded(data) {
       Toast.hide();
-      alert('imageuploaded');
       this.$emit('imageuploaded', data, this.imgs);
     },
     delFun(index) {
@@ -79,7 +77,6 @@ export default {
                   const serverId = uploadImageRes.serverId; // 返回图片的服务器端ID
                   this.uploadFn(serverId).then((data) => {
                     // this.imgs.push(localId);
-                    alert(JSON.stringify(data));
                     this.imageuploaded(data);
                   });
                 },
