@@ -149,7 +149,7 @@ export default {
     },
     uploadSuccess(data, fileMap, product) {
       const dataTemp = JSON.parse(JSON.stringify(data));
-      const orderDetailId = product.id;
+      const orderDetailId = product.id || product.orderDetailId;
       // 存在即更新，不存在才添加
       const invoiceObj = this.invoiceList.find(v => v.orderDetailId === orderDetailId);
       if (invoiceObj) {
@@ -160,11 +160,12 @@ export default {
     },
     addInvoiceList(data, id) {
       /* 发票数据添加进发票list */
-      data.orderNo = this.orderNo;
-      data.orderDetailId = id;
-      data.invoiceUpload = 1;
-      delete data.id;
-      this.invoiceList.push(data);
+      const dataTemp = JSON.parse(JSON.stringify(data));
+      dataTemp.orderNo = this.orderNo;
+      dataTemp.orderDetailId = id;
+      dataTemp.invoiceUpload = 1;
+      delete dataTemp.id;
+      this.invoiceList.push(dataTemp);
     },
     genInvoiceList(products) {
       /* 再次编辑的时候，生成发票列表 */
@@ -172,7 +173,7 @@ export default {
         products.forEach((v) => {
           // 只有有发票图片的才加进数据（发票上传一张即可）
           if (v.invoiceUrl) {
-            this.addInvoiceList(v, v.id);
+            this.addInvoiceList(v, v.id || v.orderDetailId);
           }
         });
       }
