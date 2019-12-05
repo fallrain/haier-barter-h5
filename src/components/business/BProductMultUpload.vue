@@ -33,9 +33,9 @@
           >
           </b-upload>-->
           <b-wx-upload
-            @imageuploaded="(data)=>imageuploaded(data, fileMap[products.productCode],product)"
+            @imageuploaded="(data)=>imageuploaded(data, fileMap[product.productCode],product)"
             :uploadFn="uploadImg"
-            :imgs="fileMap[products.productCode]"
+            :imgs="fileMap[product.productCode]"
             @delFun="delImg"
             @errorhandle="uploadError"
           ></b-wx-upload>
@@ -119,13 +119,19 @@ export default {
   created() {
     this.genFileMap();
   },
+  watch: {
+    products() {
+      this.genFileMap();
+    }
+  },
   methods: {
     genFileMap() {
-      setTimeout(() => {
-        this.products.forEach((v) => {
-          this.$set(this.fileMap, v.productCode, []);
-        });
+      /* 构建产品code和相应的发票的object */
+      const fileMap = {};
+      this.products.forEach((v) => {
+        fileMap[v.productCode] = [];
       });
+      this.fileMap = Object.assign({}, this.fileMap, fileMap);
     },
     uploadImg(mediaId) {
       /* 上传发票 */
@@ -136,7 +142,7 @@ export default {
     },
     imageuploaded(data, fileList, product) {
       /* 上传成功 */
-      alert(JSON.stringify(data));
+      alert(JSON.stringify(fileList));
       if (data.code === 1) {
         if (data.data.invoiceUrl !== null) {
           // 显示图片
