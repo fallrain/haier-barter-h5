@@ -129,9 +129,15 @@ export default {
       /* 构建产品code和相应的发票的object */
       const fileMap = {};
       this.products.forEach((v) => {
-        fileMap[v.productCode] = [];
+        const invoiceUrls = v.invoiceUrl;
+        // 将来可能有多个发票的情况
+        if (invoiceUrls) {
+          fileMap[v.productCode] = invoiceUrls.split(',');
+        } else {
+          fileMap[v.productCode] = [];
+        }
       });
-      this.fileMap = Object.assign({}, this.fileMap, fileMap);
+      this.fileMap = fileMap;
     },
     uploadImg(mediaId) {
       /* 上传发票 */
@@ -142,13 +148,10 @@ export default {
     },
     imageuploaded(data, fileList, product) {
       /* 上传成功 */
-      alert(JSON.stringify(fileList));
       if (data.code === 1) {
         if (data.data.invoiceUrl !== null) {
           // 显示图片
           fileList.push(data.data.invoiceUrl);
-          alert(1);
-          alert(JSON.stringify(data.data));
         }
         this.$emit('uploadSuccess', data.data, this.fileMap, product);
       } else {

@@ -14,7 +14,6 @@
         @uploadSuccess="uploadSuccess"
         @uploadErr="uploadErr"
         @delImg="delImg"
-
       ></b-product-mult-upload>
     </div>
     <div class="orderUploadInvoice-tips mt16">
@@ -150,11 +149,30 @@ export default {
     },
     uploadSuccess(data, fileMap, product) {
       const dataTemp = JSON.parse(JSON.stringify(data));
-      dataTemp.orderNo = this.orderNo;
-      dataTemp.orderDetailId = product.id;
-      dataTemp.invoiceUpload = 1;
-      delete dataTemp.id;
-      this.invoiceList.push(dataTemp);
+      const orderDetailId = product.id;
+      // 存在即更新，不存在才添加
+      const invoiceObj = this.invoiceList.find(v => v.orderDetailId === orderDetailId);
+      if (invoiceObj) {
+        invoiceObj.invoiceUrl = data.invoiceUrl;
+      } else {
+        this.addInvoiceList(dataTemp);
+      }
+    },
+    addInvoiceList(data, id) {
+      /* 发票数据添加进发票list */
+      data.orderNo = this.orderNo;
+      data.orderDetailId = id;
+      data.invoiceUpload = 1;
+      delete data.id;
+      this.invoiceList.push(data);
+    },
+    genInvoiceList(products) {
+      /* 再次编辑的时候，生成发票列表 */
+      if (products) {
+        products.forEach((v) => {
+          this.addInvoiceList(v, v.id);
+        });
+      }
     },
     uploadErr() {
       // Toast.failed(msg);
@@ -168,6 +186,7 @@ export default {
       this.invoiceList.splice(delIndex, 1);
     },
     indexOf(val) {
+      // todo 毫无意义的代码，以后删除
       for (let i = 0; i < this.length; i++) {
         if (this[i] == val) return i;
       }
@@ -201,9 +220,11 @@ export default {
       });
     },
     getData() {
-      this.orderService.queryOrderDetailAndInvoice({}, { orderNo: this.orderNo }).then((res) => {
-        if (res.code === 1) {
-          this.products = res.data;
+      this.orderService.queryOrderDetailAndInvoice({}, { orderNo: this.orderNo }).then(({ code, data }) => {
+        if (code === 1) {
+          this.products = data;
+          // 生成发票
+          this.genInvoiceList(data);
         }
       });
     },
