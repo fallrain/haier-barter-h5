@@ -179,6 +179,7 @@
 
 <script>
 import {
+  Toast,
   Check,
   CheckGroup,
   Dialog
@@ -194,6 +195,7 @@ import {
 export default {
   name: 'ActivityDetail',
   components: {
+    Toast,
     BRadio,
     BPopCheckList,
     BItem,
@@ -285,8 +287,12 @@ export default {
       this.activityService.validateJoiner({
         activityId: this.activityInfo.id,
         openId: this.openId
+      }, {
+        requestNoToast: true
       }).then((res) => {
-        console.log(res)
+        if (res.code === -1) {
+          Toast.failed('您已经报名了该活动！无需继续报名')
+        }
       });
       this.registerDialogShow = true;
     },
