@@ -52,6 +52,7 @@ export default {
   methods: {
     imageuploaded(data) {
       Toast.hide();
+      alert('imageuploaded');
       this.$emit('imageuploaded', data, this.imgs);
     },
     delFun(index) {

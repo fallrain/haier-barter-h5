@@ -136,6 +136,7 @@ export default {
     },
     imageuploaded(data, fileList, product) {
       /* 上传成功 */
+      alert(JSON.stringify(data));
       if (data.code === 1) {
         if (data.data.invoiceUrl !== null) {
           // 显示图片
