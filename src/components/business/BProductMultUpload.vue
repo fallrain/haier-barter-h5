@@ -175,7 +175,6 @@ export default {
     },
     delImg(index, fileList, product) {
       fileList.splice(index, 1);
-      alert(JSON.stringify(product));
       this.$emit('delImg', fileList, product);
     }
   }
