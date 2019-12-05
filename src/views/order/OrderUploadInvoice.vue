@@ -182,6 +182,7 @@ export default {
     },
     delImg(fileList, product) {
       /* 删除invoiceList里已经有发票图片的id */
+      alert(JSON.stringify(product));
       const {
         id
       } = product;
