@@ -13,6 +13,7 @@
         <img
           :src="item" class="images"
         >
+        {{item}}111111
       </div>
     </div>
     <div @click="chooseImg">
