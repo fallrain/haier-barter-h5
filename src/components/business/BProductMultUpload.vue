@@ -140,6 +140,8 @@ export default {
         if (data.data.invoiceUrl !== null) {
           // 显示图片
           fileList.push(data.data.invoiceUrl);
+          alert(1);
+          alert(JSON.stringify(data.data));
         }
         this.$emit('uploadSuccess', data.data, this.fileMap, product);
       } else {
