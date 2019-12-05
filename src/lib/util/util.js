@@ -273,7 +273,8 @@ const util = {
     }
   },
   /** *****判断代报装时间是否符合要求******** */
-  isReportInstallFit(productlist, deliveryTime) {debugger;
+  isReportInstallFit(productlist, deliveryTime) {
+    debugger;
     let change = true;
     // const now = new Date()
     const deT = Date.parse(deliveryTime.substring(0, 16).replace(/-/g, '/'));
@@ -381,7 +382,8 @@ const util = {
   downloadFile(data) {
     /* 接受二进制文件，下载文件 */
     // 'filename=micro_model_1568343739576.xlsx';
-    const filename = 'pic.jpg';
+    debugger
+    const filename = 'pic.png';
     const url = window.URL.createObjectURL(new Blob([data]));
     const link = document.createElement('a');
     link.style.display = 'none';
@@ -389,8 +391,8 @@ const util = {
     link.setAttribute('download', filename);
     document.body.appendChild(link);
     link.click();
-    window.URL.revokeObjectURL(link.href); // 释放URL 对象
-    document.body.removeChild(link);
+    //window.URL.revokeObjectURL(link.href); // 释放URL 对象
+    // document.body.removeChild(link);
   },
   getUserInfo() {
     const userInfo = this.convertQueryStingToMap();

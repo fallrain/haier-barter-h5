@@ -89,7 +89,7 @@
         </div>
       </div>
       <div class="popup-cancle" @click="drainageCancle">
-        <span class="popup-cancle-text">取消</span>
+        取消
       </div>
     </md-popup>
   </div>
@@ -126,7 +126,9 @@ export default {
   },
   data() {
     return {
+      userInfo: {},
       current: 0,
+      currentActivity: {},
       orderNo: '',
       isPopupShow: false,
       items: [{
@@ -189,7 +191,13 @@ export default {
       }
       return this.activityService.queryActivityInfoListForHmc({
         activityType: '',
-        keyWord: this.searchVal
+        keyWord: this.searchVal,
+        microCode: '12A02',
+        channelType: 'E'
+        // microCode: this.userInfo.storeInfo.microCode,
+        // channelType: this.userInfo.storeInfo.mchannel,
+        // storeId: this.userInfo.storeInfo.storeId,
+        // productGroup: this.userInfo.productGroups,
       }, {
         pageNum: page.num,
         pageSize: page.size,
@@ -278,6 +286,7 @@ export default {
       this.isPopupShow = false;
     },
     shareClick(item) {
+      this.currentActivity = item;
       this.isPopupShow = true;
     },
     shareWechat() {
@@ -305,9 +314,15 @@ export default {
       });
     },
     shareImg() {
-      return this.activityService.generateQrcode('http://baidu.com/', this.getData.id, this.getData.createdBy).then((res) => {
+      // console.log(this.currentActivity);
+      this.activityService.qrCodeCreate({
+        activityId: this.currentActivity.id
+      }).then((res) => {
         this.bUtil.downloadFile(res.data);
       });
+      // return this.activityService.generateQrcode('http://baidu.com/', this.getData.id, this.getData.createdBy).then((res) => {
+      //   this.bUtil.downloadFile(res.data);
+      // });
     },
     getProductGroup() {
       this.productService.industryGroup()
@@ -320,6 +335,11 @@ export default {
   },
   created() {
     this.getProductGroup();
+    this.baseService.userInfo().then((res) => {
+      if (res.code === 1) {
+        this.userInfo = res.data;
+      }
+    });
   },
   computed: {
     curScrollViewName() {
@@ -471,5 +491,14 @@ export default {
     text-align: center;
     line-height: 100px;
     margin-bottom: 20px;
+  }
+  .popup-cancle {
+    width: 100%;
+    height: 100px;
+    line-height: 100px;
+    background: #F5F5F5;
+    text-align: center;
+    font-size: 32px;
+    color: #333;
   }
 </style>

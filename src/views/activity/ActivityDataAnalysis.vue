@@ -1,13 +1,13 @@
 <template>
   <div class="activityDataAnalysis">
     <div class="activityDataAnalysis-bg">
-      <img src="@/assets/images/activity/data-analysis-example.png" alt="">
+      <img v-if="detailInfo.activityInfoPoster.posterUrl1" :src="detailInfo.activityInfoPoster.posterUrl1" alt="">
     </div>
     <activity-name-time
       :title="activityInfo.activityTitle"
       :startDate="activityInfo.activityStartTime"
       :endDate="activityInfo.activityEndTime"
-      address="青岛市崂山区海尔路10号海尔专卖店"
+      :address="activityInfo.storeName"
     ></activity-name-time>
 
     <b-item
@@ -52,37 +52,9 @@
     >
     </b-item>
     <ul class="activityDataAnalysis-data-grid">
-      <li class="activityDataAnalysis-data-grid-item">
-        <div class="activityDataAnalysis-data-grid-item-num">2121</div>
-        <div class="activityDataAnalysis-data-grid-item-user">浏览人数</div>
-      </li>
-      <li class="activityDataAnalysis-data-grid-item">
-        <div class="activityDataAnalysis-data-grid-item-num">423</div>
-        <div class="activityDataAnalysis-data-grid-item-user">分享人数</div>
-      </li>
-      <li class="activityDataAnalysis-data-grid-item">
-        <div class="activityDataAnalysis-data-grid-item-num">3132</div>
-        <div class="activityDataAnalysis-data-grid-item-user">领券人数</div>
-      </li>
-      <li class="activityDataAnalysis-data-grid-item">
-        <div class="activityDataAnalysis-data-grid-item-num">423</div>
-        <div class="activityDataAnalysis-data-grid-item-user">核销人数</div>
-      </li>
-      <li class="activityDataAnalysis-data-grid-item">
-        <div class="activityDataAnalysis-data-grid-item-num">534534</div>
-        <div class="activityDataAnalysis-data-grid-item-user">转化人数</div>
-      </li>
-      <li class="activityDataAnalysis-data-grid-item">
-        <div class="activityDataAnalysis-data-grid-item-num">33%</div>
-        <div class="activityDataAnalysis-data-grid-item-user">
-          转化率
-        </div>
-      </li>
-      <li class="activityDataAnalysis-data-grid-item">
-        <div class="activityDataAnalysis-data-grid-item-num">3232.55</div>
-        <div class="activityDataAnalysis-data-grid-item-user">
-          转化金额
-        </div>
+      <li class="activityDataAnalysis-data-grid-item" v-for="(item, index) in count" :key="index">
+        <div class="activityDataAnalysis-data-grid-item-num">{{item.quantity}}</div>
+        <div class="activityDataAnalysis-data-grid-item-user">{{typeName[item.counterTypeCode]}}</div>
       </li>
     </ul>
     <div class="activityDataAnalysis-btn-par">
@@ -120,15 +92,35 @@ export default {
     ActivityNameTime
   },
   created() {
-    // this.activityInfo = this.$route.params.activityInfo;
+    this.getDate();
+    if (this.$route.params.activityInfo) {
+      this.activityInfo = this.$route.params.activityInfo;
+      console.log(this.activityInfo);
+      // 活动详情查询
+      this.activityService.queryActivityInfoDetails({}, {
+        activityId: this.activityInfo.id,
+      }).then((res) => {
+        if (res.code === 1) {
+          this.detailInfo = res.data;
+        }
+      });
+      this.getAnalysisData();
+    }
   },
   data() {
     return {
+      typeName: {
+        single_reading_count: '浏览',
+        single_share_count: '分享',
+        single_forword_count: '转发',
+      },
+      detailInfo: {},
       activityInfo: {
         activityTitle: '',
         activityStartTime: '',
         activityEndTime: ''
       },
+      count: {},
       startDate: '',
       endDate: '',
       currentDate: new Date(),
@@ -136,14 +128,22 @@ export default {
   },
   methods: {
     getAnalysisData() {
-      this.activityService.detailCount({
-        activityId: this.activityInfo.activityId,
+      this.activityService.detailCount({}, {
+        activityId: this.activityInfo.id,
         countDateStart: this.startDate,
         countDateEnd: this.endDate
       }).then((res) => {
-
+        if (res.code === 1) {
+          this.count = res.data;
+        }
       });
     },
+    getDate() {
+      const myDate = new Date();
+      this.startDate = `${myDate.getFullYear()}-${myDate.getMonth() + 1}-${myDate.getDate()}`;
+      myDate.setMonth(myDate.getMonth() - 1);
+      this.endDate = `${myDate.getFullYear()}-${myDate.getMonth() + 1}-${myDate.getDate()}`;
+    }
   },
   watch: {
     startDate() {
@@ -158,6 +158,10 @@ export default {
       }
       this.getAnalysisData();
     },
+  },
+  beforeRouteLeave(to, from, next) {
+    this.$destroy();
+    next();
   }
 };
 </script>

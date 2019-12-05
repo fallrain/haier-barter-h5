@@ -4,8 +4,9 @@
     <div class="drainage-activity-contains">
 
       <div class="drainage-activity-left">
-        <img src="../../assets/images/edit-delete.png" class="drainage-activity-img"/>
-        <span class="drainage-activity-status">11111</span>
+        <img :src=getData.posterUrl1 class="drainage-activity-img"/>
+        <div v-show="getData.participateCount !== 0" class="drainage-activity-status bg-primary">已参与{{getData.participateCount}}人</div>
+        <div v-show="getData.participateCount === 0" class="drainage-activity-status bg-danger">未参与</div>
       </div>
 
       <div class="drainage-activity-right">
@@ -17,8 +18,8 @@
             <span class="drainage-activity-time">{{getData.microName}}</span>
           </div>
           <div>
-            <i class="iconfont icon-yanjing"/>
-            <span class="drainage-activity-time">{{getData.allowShare}}</span>
+            <i class="iconfont icon-yanjing fs38 mr16"/>
+            <span class="drainage-activity-time">{{getData.singleReadingCount}}</span>
           </div>
         </div>
 
@@ -97,7 +98,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 
   .drainage-activity-bg {
     width: 100%;
@@ -136,8 +137,10 @@ export default {
 
   .drainage-activity-status {
     position: absolute;
-    right: 0px;
+    top: 0px;
     left: 0px;
+    font-size: 24px;
+    line-height: 32px;
   }
 
   .drainage-activity-left {
@@ -172,19 +175,15 @@ export default {
     width: 100%;
   }
 
-  .popup-cancle {
-    width: 100%;
-    height: 100px;
-    background: #F5F5F5;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
+  .bg-primary{
+    background: #4A90E2;
+    color: #fff;
   }
-
-  .popup-cancle-text {
-    font-size: 32px;
-    color: #333;
+  .bg-danger{
+    background: #FF001F;
+    color: #fff;
   }
-
+  .fs38{
+    font-size: 28px;
+  }
 </style>
