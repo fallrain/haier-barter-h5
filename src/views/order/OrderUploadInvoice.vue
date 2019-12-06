@@ -148,14 +148,11 @@ export default {
       });
     },
     uploadSuccess(data, fileMap, product) {
-      const dataTemp = JSON.parse(JSON.stringify(data));
       const orderDetailId = product.id || product.orderDetailId;
-      // 存在即更新，不存在才添加
+      // 存在更新invoiceUrl
       const invoiceObj = this.invoiceList.find(v => v.orderDetailId === orderDetailId);
       if (invoiceObj) {
         invoiceObj.invoiceUrl = data.invoiceUrl;
-      } else {
-        this.addInvoiceList(dataTemp, orderDetailId);
       }
     },
     addInvoiceList(data, id) {
@@ -172,10 +169,7 @@ export default {
       this.invoiceList = [];
       if (products) {
         products.forEach((v) => {
-          // 只有有发票图片的才加进数据（发票上传一张即可）
-          if (v.invoiceUrl) {
-            this.addInvoiceList(v, v.id || v.orderDetailId);
-          }
+          this.addInvoiceList(v, v.id || v.orderDetailId);
         });
       }
     },
@@ -183,12 +177,10 @@ export default {
       // Toast.failed(msg);
     },
     delImg(fileList, product) {
-      /* 删除invoiceList里已经有发票图片的id */
+      /* invoiceList里已经有发票图片重置为null */
       const orderDetailId = product.id || product.orderDetailId;
-      const delIndex = this.invoiceList.findIndex(v => v.orderDetailId === orderDetailId);
-      if (delIndex > -1) {
-        this.invoiceList.splice(delIndex, 1);
-      }
+      const delInvoice = this.invoiceList.find(v => v.orderDetailId === orderDetailId);
+      delInvoice.invoiceUrl = null;
     },
     indexOf(val) {
       // todo 毫无意义的代码，以后删除
@@ -205,7 +197,7 @@ export default {
     },
 
     updateSubmit() {
-      if (!this.invoiceList.length) {
+      if (!this.invoiceList.find(v => v.invoiceUrl)) {
         Toast.failed('请上传凭证！');
         return;
       }

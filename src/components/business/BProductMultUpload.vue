@@ -36,7 +36,7 @@
             @imageuploaded="(data)=>imageuploaded(data, fileMap[product.id],product)"
             :uploadFn="uploadImg"
             :imgs="fileMap[product.id]"
-            @delFun="(delIndex, delFileList)=>delImg(delIndex, delFileList, product)"
+            @delFun="(delIndex)=>delImg(delIndex, fileMap[product.id], product)"
             @errorhandle="uploadError"
           ></b-wx-upload>
           <p class="bProductMultUpload-item-inf">上传购机凭证,包括:发票、购机小票</p>
