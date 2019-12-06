@@ -149,9 +149,11 @@ export default {
     imageuploaded(data, id, product) {
       /* 上传成功 */
       if (data.code === 1) {
-        if (data.data.invoiceUrl !== null) {
+        if (data.data.invoiceUrl) {
           // 显示图片
+          alert(id);
           this.fileMap[id] = [data.data.invoiceUrl];
+          alert(JSON.stringify(this.fileMap));
         }
         this.$emit('uploadSuccess', data.data, this.fileMap, product);
       } else {
