@@ -151,7 +151,7 @@ export default {
       if (data.code === 1) {
         if (data.data.invoiceUrl !== null) {
           // 显示图片
-          fileList.push(data.data.invoiceUrl);
+          fileList = [data.data.invoiceUrl];
         }
         this.$emit('uploadSuccess', data.data, this.fileMap, product);
       } else {
