@@ -140,9 +140,9 @@ export default {
     },
     getDate() {
       const myDate = new Date();
-      this.startDate = `${myDate.getFullYear()}-${myDate.getMonth() + 1}-${myDate.getDate()}`;
+      this.startDate = `${myDate.getFullYear()}-${myDate.getMonth() + 1}-${myDate.getDate()} 00:00:00`;
       myDate.setMonth(myDate.getMonth() - 1);
-      this.endDate = `${myDate.getFullYear()}-${myDate.getMonth() + 1}-${myDate.getDate()}`;
+      this.endDate = `${myDate.getFullYear()}-${myDate.getMonth() + 1}-${myDate.getDate()} 00:00:00`;
     }
   },
   watch: {

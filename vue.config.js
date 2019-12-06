@@ -24,14 +24,6 @@ module.exports = {
         },
         secure: false
       },
-      '/api/activity': {
-        target: 'http://10.153.71.158:8080/',
-        changeOrigin: true,
-        pathRewrite: {
-          '^/api/activity': ''
-        },
-        secure: false
-      },
       '/api': {
         target: 'https://testdb.haier.net/',
         // target: 'https://barter.haier.net/',

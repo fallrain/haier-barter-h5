@@ -11,9 +11,16 @@ export default {
     /* 营销活动之引流活动 */
     return axPostJson(urls.queryActivityInfoListForHmc, data, param);
   },
-  generateQrcode(data, data2, data3) {
+  generateQrcode(data) {
     /* 营销活动之引流活动 */
-    return axGetBlob(`${urls.generateQrcode}?redirectUrl=${data}&activityId=${data2}&hmcId=${data3}`);
+    // return axGetBlob(`${urls.generateQrcode}?redirectUrl=${data}&activityId=${data2}&hmcId=${data3}`);
+    return axGet(urls.qrCodeCreate, data, {
+      returnResponse: true,
+      requestNoToast: true
+    },
+    {
+      responseType: 'blob'
+    });
   },
   detailCount(data, param) {
     /* 数据详情分析 */

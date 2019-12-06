@@ -50,6 +50,7 @@ export default {
   },
   created() {
     this.activityInfo = this.$route.params.activityInfo;
+    console.log(this.activityInfo);
   },
   activated() {
     this.createQrcode();
@@ -62,7 +63,12 @@ export default {
   },
   methods: {
     createQrcode() {
-      return this.activityService.generateQrcode('http://baidu.com/', this.activityInfo.id, this.activityInfo.createdBy).then((res) => {
+      return this.activityService.generateQrcode({
+        activityId: '55751116321980416',
+        redirectUrl: 'http://www.baidu.com',
+        hmcId: '01467897',
+
+      }).then((res) => {
         const blob = new Blob([res.data], {
           type: 'image/jpeg'
         });
