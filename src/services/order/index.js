@@ -76,4 +76,8 @@ export default {
     /* 检查是否可以跳过上传发票 */
     return axPostJson(urls.ifUploadInvoice, null, params);
   },
+  checkInvoiceByMediaId(data) {
+    /* 上传发票并校验 */
+    return axPost(urls.checkInvoiceByMediaId, data);
+  },
 };

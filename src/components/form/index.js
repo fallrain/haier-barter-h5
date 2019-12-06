@@ -23,6 +23,7 @@ import BPopButton from './BPopButton';
 import BOrderProductConfirm from './BOrderProductConfirm';
 import BTimeSectionPicker from './BTimeSectionPicker';
 import BDrainageActivity from './BDrainageActivity';
+import BWxUpload from './BWxUpload';
 /* eslint-disable import/prefer-default-export */
 export {
   BActivityList,
@@ -49,5 +50,7 @@ export {
   BPopButton,
   BOrderProductConfirm,
   BTimeSectionPicker,
-  BDrainageActivity
+  BDrainageActivity,
+  BTimeSectionPicker,
+  BWxUpload
 };

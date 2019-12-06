@@ -14,7 +14,6 @@
         @uploadSuccess="uploadSuccess"
         @uploadErr="uploadErr"
         @delImg="delImg"
-
       ></b-product-mult-upload>
     </div>
     <div class="orderUploadInvoice-tips mt16">
@@ -149,24 +148,42 @@ export default {
       });
     },
     uploadSuccess(data, fileMap, product) {
-      data.orderNo = this.orderNo;
-      data.orderDetailId = product.id;
-      data.invoiceUpload = 1;
-      delete data.id;
-      this.invoiceList.push(data);
+      const orderDetailId = product.id || product.orderDetailId;
+      // 存在更新invoiceUrl
+      const invoiceObj = this.invoiceList.find(v => v.orderDetailId === orderDetailId);
+      if (invoiceObj) {
+        invoiceObj.invoiceUrl = data.invoiceUrl;
+      }
     },
-    uploadErr(msg) {
-      Toast.failed(msg);
+    addInvoiceList(data, id) {
+      /* 发票数据添加进发票list */
+      const dataTemp = JSON.parse(JSON.stringify(data));
+      dataTemp.orderNo = this.orderNo;
+      dataTemp.orderDetailId = id;
+      dataTemp.invoiceUpload = 1;
+      delete dataTemp.id;
+      this.invoiceList.push(dataTemp);
     },
-    delImg(fileList) {
-      this.invoiceList.forEach((val) => {
-        if (fileList === val) {
-          this.invoiceList.remove(fileList);
-        }
-      });
+    genInvoiceList(products) {
+      /* 再次编辑的时候，生成发票列表 */
+      this.invoiceList = [];
+      if (products) {
+        products.forEach((v) => {
+          this.addInvoiceList(v, v.id || v.orderDetailId);
+        });
+      }
     },
-
+    uploadErr() {
+      // Toast.failed(msg);
+    },
+    delImg(fileList, product) {
+      /* invoiceList里已经有发票图片重置为null */
+      const orderDetailId = product.id || product.orderDetailId;
+      const delInvoice = this.invoiceList.find(v => v.orderDetailId === orderDetailId);
+      delInvoice.invoiceUrl = null;
+    },
     indexOf(val) {
+      // todo 毫无意义的代码，以后删除
       for (let i = 0; i < this.length; i++) {
         if (this[i] == val) return i;
       }
@@ -180,7 +197,7 @@ export default {
     },
 
     updateSubmit() {
-      if (this.invoiceList.length == 0) {
+      if (!this.invoiceList.find(v => v.invoiceUrl)) {
         Toast.failed('请上传凭证！');
         return;
       }
@@ -200,9 +217,11 @@ export default {
       });
     },
     getData() {
-      this.orderService.queryOrderDetailAndInvoice({}, { orderNo: this.orderNo }).then((res) => {
-        if (res.code === 1) {
-          this.products = res.data;
+      this.orderService.queryOrderDetailAndInvoice({}, { orderNo: this.orderNo }).then(({ code, data }) => {
+        if (code === 1) {
+          this.products = data;
+          // 生成发票
+          this.genInvoiceList(data);
         }
       });
     },
