@@ -151,7 +151,9 @@ export default {
       const dataTemp = JSON.parse(JSON.stringify(data));
       const orderDetailId = product.id || product.orderDetailId;
       // 存在即更新，不存在才添加
+      alert(orderDetailId);
       const invoiceObj = this.invoiceList.find(v => v.orderDetailId === orderDetailId);
+      alert(JSON.stringify(invoiceObj));
       if (invoiceObj) {
         invoiceObj.invoiceUrl = data.invoiceUrl;
       } else {
