@@ -33,9 +33,9 @@
           >
           </b-upload>-->
           <b-wx-upload
-            @imageuploaded="(data)=>imageuploaded(data, fileMap[product.productCode],product)"
+            @imageuploaded="(data)=>imageuploaded(data, fileMap[product.id],product)"
             :uploadFn="uploadImg"
-            :imgs="fileMap[product.productCode]"
+            :imgs="fileMap[product.id]"
             @delFun="(delIndex, delFileList)=>delImg(delIndex, delFileList, product)"
             @errorhandle="uploadError"
           ></b-wx-upload>
@@ -132,9 +132,9 @@ export default {
         const invoiceUrls = v.invoiceUrl;
         // 将来可能有多个发票的情况
         if (invoiceUrls) {
-          fileMap[v.productCode] = invoiceUrls.split(',');
+          fileMap[v.id] = invoiceUrls.split(',');
         } else {
-          fileMap[v.productCode] = [];
+          fileMap[v.id] = [];
         }
       });
       this.fileMap = fileMap;

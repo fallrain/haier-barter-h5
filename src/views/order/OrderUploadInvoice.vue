@@ -151,9 +151,7 @@ export default {
       const dataTemp = JSON.parse(JSON.stringify(data));
       const orderDetailId = product.id || product.orderDetailId;
       // 存在即更新，不存在才添加
-      alert(orderDetailId);
       const invoiceObj = this.invoiceList.find(v => v.orderDetailId === orderDetailId);
-      alert(JSON.stringify(invoiceObj));
       if (invoiceObj) {
         invoiceObj.invoiceUrl = data.invoiceUrl;
       } else {
@@ -171,6 +169,7 @@ export default {
     },
     genInvoiceList(products) {
       /* 再次编辑的时候，生成发票列表 */
+      this.invoiceList = [];
       if (products) {
         products.forEach((v) => {
           // 只有有发票图片的才加进数据（发票上传一张即可）
