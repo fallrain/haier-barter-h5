@@ -175,7 +175,6 @@ export default {
   },
   computed: {},
   created() {
-    debugger;
     this.orderNo = this.$route.params.orderNo;
     this.orderFollowId = this.$route.params.orderFollowId;
     // this.orderNo = 'Z15645424968056668';
@@ -276,7 +275,6 @@ export default {
       /* 下一步 */
       this.orderService.createOrderSubmit({}, { orderNo: this.orderNo }).then((res) => {
         if (res.code === 1) {
-          Toast.succeed(res.msg);
           localStorage.removeItem('orderFollowId');
           this.$router.push({
             name: 'Order.OrderFollowCommitResult',
