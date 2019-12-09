@@ -123,12 +123,13 @@ ax.interceptors.response.use((response) => {
   };
 });
 
-const axGet = function (url, params) {
+const axGet = function (url, params, options) {
   return ax({
     headers: { 'content-type': 'application/x-www-form-urlencoded,charset=UTF-8', },
     method: 'get',
     url,
     params,
+    ...options
   });
 };
 
@@ -140,21 +141,23 @@ const axGetUrl = function (url, appendUrl) {
   });
 };
 
-const axPost = function (url, data, params) {
+const axPost = function (url, data, params, options) {
   return ax({
     method: 'post',
     url,
     data: qs.stringify(data),
     params,
+    ...options
   });
 };
 
-const axPostJson = function (url, data, params) {
+const axPostJson = function (url, data, params, options) {
   return ax({
     method: 'post',
     url,
     data,
     params,
+    ...options
   });
 };
 export default ax;
