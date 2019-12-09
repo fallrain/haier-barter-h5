@@ -186,7 +186,6 @@ export default {
       return !!array.find(v => v.productCode === obj.productCode);
     },
     onItemClick(item) {
-      debugger;
       if (item.productGroup === null || item.productGroupName === null) {
         Toast.info('产品组名称不能为空');
         return;

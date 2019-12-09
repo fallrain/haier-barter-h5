@@ -144,11 +144,11 @@
       </template>
     </b-item>
     <b-item
+      v-if="orderSource !=='SGLD' && orderSource !=='YJHX'"
       class="mt16"
       title="选择可用的购机权益活动"
       :arrow="true"
       @click.native="selectActivity"
-      v-show="orderSource !=='SGLD'"
     >
     </b-item>
     <b-activity-list
@@ -358,8 +358,7 @@ export default {
       // 产品列表
       productList: [],
       // 活动列表
-      activityList: [
-      ],
+      activityList: [],
       // 选中的活动id
       choosedActivitys: [],
       // 选择礼品pop显示隐藏
@@ -429,6 +428,7 @@ export default {
       addUserShow: false,
       queryInstall: false,
       multyBuy: false,
+      // 0：下一步 1：暂存
       saveType: 1,
       isYJHX: false
 
@@ -484,7 +484,7 @@ export default {
           if (obj.region === 'edit') {
             this.consignee.name = obj.customerInfo.consigneeUserName;
             this.consignee.phone = obj.customerInfo.consigneeUserPhone;
-            this.consignee.sexCn = obj.customerInfo.sex = 1 ? '男士' : '女士';
+            this.consignee.sexCn = obj.customerInfo.sex === 1 ? '男士' : '女士';
             this.getAddressName(obj.customerInfo.province, obj.customerInfo.city, obj.customerInfo.district);
             this.consignee.address.street = obj.customerInfo.address;
           }
@@ -571,7 +571,7 @@ export default {
       this.handRegion = true;
     }
     if (this.$route.params.customerConsigneeInfo.freezeMsg) {
-    	this.freezeMsg = this.$route.params.customerConsigneeInfo.freezeMsg;
+      this.freezeMsg = this.$route.params.customerConsigneeInfo.freezeMsg;
       if (this.freezeMsg === 'Y') {
         this.handRegion = true;
       }
@@ -585,6 +585,7 @@ export default {
       this.mobile = this.$route.params.customerConsigneeInfo.mobile;
       this.queryCustomerDefault();
     }
+
     if (this.userParam.oldForNew === 1) {
       this.isYJHX = true;
       this.customerInfo.username = this.userParam.username;
@@ -844,24 +845,27 @@ export default {
         Toast.failed('请添加收货信息');
         return;
       }
-      if (this.buyDate === '' && this.saveType == 0) {
-        Toast.failed('请选择购买时间');
-        return;
-      }
-      if (this.productList.length === 0 && this.saveType == 0) {
-        Toast.failed('请选择产品');
-        return;
-      }
-      for (let i = 0; i < this.productList.length; i++) {
-        if (this.productList[i].productPrice == '' && this.saveType == 0) {
-          Toast.failed('请输入产品价格');
+      if (this.saveType === 0) {
+        if (this.buyDate === '') {
+          Toast.failed('请选择购买时间');
+          return;
+        }
+        if (this.productList.length === 0) {
+          Toast.failed('请选择产品');
+          return;
+        }
+        for (let i = 0; i < this.productList.length; i++) {
+          if (this.productList[i].productPrice == '') {
+            Toast.failed('请输入产品价格');
+            return;
+          }
+        }
+        if (this.deliveryTime === '') {
+          Toast.failed('请选择送货时间');
           return;
         }
       }
-      if (this.deliveryTime === '' && this.saveType === 0) {
-        Toast.failed('请选择送货时间');
-        return;
-      }
+
       let time = this.deliveryTime;
       time = time.substring(0, 10).replace(/-/g, '/');
       const deT = new Date(time).getTime();
@@ -880,10 +884,8 @@ export default {
             return;
           }
         }
-        this.generateSubInfo(1);
-      } else {
-	      this.generateSubInfo(1);
       }
+      this.generateSubInfo(1);
     },
     // 暂存
     // saveTemporary(type) {
@@ -903,6 +905,11 @@ export default {
       });
     },
     generateSubInfo(type) {
+      /* 生成订单信息 */
+      /*
+        * @type 1:生成订单信息并保存 2：生成订单信息并跳转选择权益界面，查询权益
+        *
+        * */
       if (!this.bUtil.isReportInstallFit(this.productList, this.deliveryTime) && this.saveType == 0) {
         return;
       }
@@ -1008,24 +1015,21 @@ export default {
           params: { orderInfo: info }
         });
       } else {
-        if (this.rightsList.length == 0 && this.saveType == 0 && this.subInfo.orderSource != 'SGLD') {
+        const orderSource = this.subInfo.orderSource;
+        if (this.rightsList.length === 0 && this.saveType === 0 && orderSource !== 'SGLD' && orderSource !== 'YJHX') {
           this.rightsService.queryOrderOptionalRights(this.subInfo, {
             pageNum: 0,
             pageSize: 10,
-	          requestNoToast: true
+            requestNoToast: true
           }).then((res) => {
-            if (res.code != -1 && res.data.result.length > 0) {
+            if (res.code === 1 && res.data.result.length > 0) {
               this.rightsName = res.data.result[0].rightsName;
               this.basicDialog.open = true;
             } else {
               if (this.orderNo !== '') {
-                Toast.loading('保存中...');
-                // if (!this.orderFollowId) {
-                //   this.orderFollowId = localStorage.getItem('orderFollowId');
-                // }
                 this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
-                  .then((res) => {
-                    if (res.code === 1) {
+                  .then((createOrderRes) => {
+                    if (createOrderRes.code === 1) {
                       if (this.saveType === 1) {
                         Toast.succeed('订单暂存成功', 1000);
                         localStorage.setItem('confirm', 'caogao');
@@ -1036,7 +1040,10 @@ export default {
                       if (this.saveType === 0) {
                         this.$router.push({
                           name: 'Order.OrderUploadInvoice',
-                          params: { orderNo: this.orderNo, orderFollowId: this.orderFollowId }
+                          params: {
+                            orderNo: this.orderNo,
+                            orderFollowId: this.orderFollowId
+                          }
                         });
                       }
                     }
@@ -1046,11 +1053,11 @@ export default {
           });
         } else {
           if (this.orderNo !== '') {
-            Toast.loading('保存中...');
             // if (!this.orderFollowId) {
             //   this.orderFollowId = localStorage.getItem('orderFollowId');
             // }
-            if (this.handRegion) {
+            // 手工录单且没有orderFollowId（订单的id）的时候，走createOrderForSGLD接口
+            if (this.handRegion && !this.orderFollowId) {
               this.orderService.createOrderForSGLD(this.subInfo, { orderFollowId: '' }).then((res) => {
                 if (res.code === 1) {
                   if (this.saveType === 1) {
@@ -1065,7 +1072,10 @@ export default {
                     this.orderFollowId = res.data;
                     this.$router.push({
                       name: 'Order.OrderUploadInvoice',
-                      params: { orderNo: this.orderNo, orderFollowId: this.orderFollowId }
+                      params: {
+                        orderNo: this.orderNo,
+                        orderFollowId: this.orderFollowId
+                      }
                     });
                   }
                 }
@@ -1084,7 +1094,10 @@ export default {
                     if (this.saveType === 0) {
                       this.$router.push({
                         name: 'Order.OrderUploadInvoice',
-                        params: { orderNo: this.orderNo, orderFollowId: this.orderFollowId }
+                        params: {
+                          orderNo: this.orderNo,
+                          orderFollowId: this.orderFollowId
+                        }
                       });
                       // this.$destroy();
                     }
@@ -1096,6 +1109,7 @@ export default {
       }
     },
     selectActivity() {
+      /* 选择权益 */
       if (this.productList.length === 0) {
         Toast.info('请选择产品');
         return;
@@ -1107,12 +1121,12 @@ export default {
           return;
         }
       }
-	    if (this.freezeMsg) {
-		    if (this.freezeMsg == 'Y') {
-			    Toast.failed('您的账户被冻结，无法选择权益');
-			    return;
-		    }
-	    }
+      if (this.freezeMsg) {
+        if (this.freezeMsg == 'Y') {
+          Toast.failed('您的账户被冻结，无法选择权益');
+          return;
+        }
+      }
       this.generateSubInfo(2);
     },
     selectAddress(item) {
@@ -1226,7 +1240,6 @@ export default {
     // },
     next() {
       /* 下一步 */
-      this.saveType = 0;
       this.saveTemporary(2);
     },
     saveOrder() {
@@ -1251,7 +1264,6 @@ export default {
     },
     onBasicConfirm() {
       if (this.orderNo !== '') {
-        Toast.loading('保存中...');
         // if (!this.orderFollowId) {
         //   this.orderFollowId = localStorage.getItem('orderFollowId');
         // }
@@ -1268,7 +1280,10 @@ export default {
               if (this.saveType === 0) {
                 this.$router.push({
                   name: 'Order.OrderUploadInvoice',
-                  params: { orderNo: this.orderNo, orderFollowId: this.orderFollowId }
+                  params: {
+                    orderNo: this.orderNo,
+                    orderFollowId: this.orderFollowId
+                  }
                 });
               }
             }
@@ -1352,7 +1367,8 @@ export default {
     padding-right: 25px;
     color: #333;
     margin-top: 20px;
-    .name-ellipse{
+
+    .name-ellipse {
       width: 36vw;
       text-overflow: ellipsis;
       overflow: hidden;
