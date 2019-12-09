@@ -114,7 +114,7 @@ const data = [
     name: `${module}.OrderFollowActivity`,
     component: OrderFollowActivity,
     meta: {
-      title: '订单huodong'
+      title: '订单活动'
     }
   },
   {
@@ -122,7 +122,7 @@ const data = [
     name: `${module}.OrderRights`,
     component: OrderRights,
     meta: {
-      title: '订单quanyi'
+      title: '订单权益'
     }
   },
   {
@@ -134,9 +134,10 @@ const data = [
     }
   },
   {
-    path: `${prefix}/applyDeleteOrder`,
+    path: `${prefix}/applyDeleteOrder/:orderNo`,
     name: `${module}.ApplyDeleteOrder`,
     component: ApplyDeleteOrder,
+    props: true,
     meta: {
       title: '订单删除'
     }

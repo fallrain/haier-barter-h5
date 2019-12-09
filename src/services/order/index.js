@@ -76,4 +76,12 @@ export default {
     /* 检查是否可以跳过上传发票 */
     return axPostJson(urls.ifUploadInvoice, null, params);
   },
+  deleteOrderByHmc(params) {
+    /* 检查是否可以跳过上传发票 */
+    return axPostJson(urls.deleteOrderByHmc, null, params);
+  },
+  orderDeletionApprovalApply(data) {
+    /* 订单删除申请 */
+    return axPostJson(urls.orderDeletionApprovalApply, data);
+  }
 };

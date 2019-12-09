@@ -32,7 +32,7 @@ export default {
           className: 'orderFollowItem-type-tag-yjhx'
         },
         ADJ: {
-          name: '爱到家',
+          name: '爱获客',
           className: 'orderFollowItem-type-tag-adj'
         },
         SMLD: {
@@ -46,6 +46,10 @@ export default {
         RC: {
           name: '认筹',
           className: 'orderFollowItem-type-tag-rc'
+        },
+        YYFW: {
+          name: '预约服务',
+          className: 'orderFollowItem-type-tag-adj'
         }
       }[this.businessScenarios];
     },

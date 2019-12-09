@@ -23,7 +23,12 @@ const urls = {
   isAccordDeadline: '/reportEhub/isAccordDeadline', // 校验 购买日期与其当月销量闸口是否关闭
   checkCreateOrder: '/orderManage/checkCreateOrder', // 校验 订单录入校验
   createOrderForSGLD: '/orderManage/createOrderForSGLD', // 手工录单接口
-  ifUploadInvoice: '/orderManage/ifUploadInvoice'// 检查是否可以跳过上传发票
+  // 检查是否可以跳过上传发票
+  ifUploadInvoice: '/orderManage/ifUploadInvoice',
+  // 删除订单
+  deleteOrderByHmc: '/orderManage/deleteOrderByHmc',
+  // 有权益的时候，删除订单申请
+  orderDeletionApprovalApply: '/orderDeletionApproval/apply',
 };
 
 Object.entries(urls).forEach(([key, value]) => {

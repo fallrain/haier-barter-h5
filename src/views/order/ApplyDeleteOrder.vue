@@ -34,6 +34,12 @@ export default {
   components: {
     'md-dialog': Dialog,
   },
+  props: {
+    // 订单号
+    orderNo: {
+      type: String
+    }
+  },
   data() {
     return {
       form: {
@@ -76,6 +82,10 @@ export default {
     submit() {
       /* 提交删除申请 */
       if (this.vdt.valid()) {
+        this.orderService.orderDeletionApprovalApply({
+          orderNo: this.orderNo,
+          applyReason: this.form.reason
+        });
         this.orderDelDialog.open = true;
       }
     },
