@@ -2,6 +2,7 @@
   <div class="page-class">
     <div class="">
       <md-notice-bar
+        v-if="noticeNum"
         mode="closable"
         :time="4000"
       >
