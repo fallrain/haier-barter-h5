@@ -204,6 +204,7 @@ export default {
       }).then((res) => {
         const sroviewObj = {};
         if (res.code === 1) {
+          console.log('res.data',res.data);
           const {
             result,
             pages
@@ -338,6 +339,8 @@ export default {
         this.userInfo = res.data;
       }
     });
+    // var vConsole = new VConsole(option);
+    // vConsole.setOption('maxLogNumber', 5000);
   },
   computed: {
     curScrollViewName() {

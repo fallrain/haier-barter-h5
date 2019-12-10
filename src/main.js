@@ -16,6 +16,9 @@ import {
 import BValidate from '@/lib/bValidate/BValidate';
 import 'mescroll.js/mescroll.min.css';
 
+import Vconsole from 'vconsole';
+let vConsole = new Vconsole();
+
 Vue.config.productionTip = false;
 Vue.prototype.bUtil = bUtil;
 Vue.prototype.axPost = axPost;

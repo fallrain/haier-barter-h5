@@ -128,10 +128,11 @@ export default {
   },
   methods: {
     getAnalysisData() {
+      console.log('this.startDate', this.startDate);
       this.activityService.detailCount({}, {
         activityId: this.activityInfo.id,
-        countDateStart: this.startDate,
-        countDateEnd: this.endDate
+        countDateStart: this.startDate+ ' 00:00:00',
+        countDateEnd: this.endDate+ ' 23:59:59'
       }).then((res) => {
         if (res.code === 1) {
           this.count = res.data;
@@ -140,9 +141,9 @@ export default {
     },
     getDate() {
       const myDate = new Date();
-      this.startDate = `${myDate.getFullYear()}-${myDate.getMonth() + 1}-${myDate.getDate()} 00:00:00`;
+      this.startDate = `${myDate.getFullYear()}-${myDate.getMonth() + 1}-${myDate.getDate()}`;
       myDate.setMonth(myDate.getMonth() - 1);
-      this.endDate = `${myDate.getFullYear()}-${myDate.getMonth() + 1}-${myDate.getDate()} 00:00:00`;
+      this.endDate = `${myDate.getFullYear()}-${myDate.getMonth() + 1}-${myDate.getDate()}`;
     }
   },
   watch: {
