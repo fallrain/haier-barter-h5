@@ -207,7 +207,12 @@ export default {
   },
   data() {
     return {
-      detailInfo: {},
+      detailInfo: {
+        activityInfoPoster: {
+          posterUrl1: '',
+          posterUrl2: '',
+        }
+      },
       activityInfo: {},
       form: {
         productCatagoryList: [],
@@ -284,17 +289,24 @@ export default {
       this.isShowProductCatagory = true;
     },
     registerDialog() {
-      this.activityService.validateJoiner({
-        activityId: this.activityInfo.id,
-        openId: this.openId
-      }, {
-        requestNoToast: true
-      }).then((res) => {
-        if (res.code === -1) {
-          Toast.failed('您已经报名了该活动！无需继续报名')
+      this.basicService.authorizedUrl({ frontUrl: 'https://testdb.haier.net/activity/activityDetail' }).then((res) => {
+        if (res.code === 1) {
+          if (res.data) {
+            window.open(res.data);
+          }
         }
       });
-      this.registerDialogShow = true;
+      // this.activityService.validateJoiner({
+      //   activityId: this.activityInfo.id,
+      //   openId: this.openId
+      // }, {
+      //   requestNoToast: true
+      // }).then((res) => {
+      //   if (res.code === -1) {
+      //     Toast.failed('您已经报名了该活动！无需继续报名')
+      //   }
+      // });
+      // this.registerDialogShow = true;
     },
     share() {
       this.isShowPopContainer = true;
@@ -308,12 +320,12 @@ export default {
         mobile: '18512341234',
         productType: 'AA',
       }).then((res) => {
-        console.log(res)
+        console.log(res);
       });
     },
   },
   beforeRouteLeave(to, from, next) {
-    this.$destroy()
+    this.$destroy();
     next();
   }
 };

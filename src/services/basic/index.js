@@ -1,6 +1,7 @@
 import urls from '../url/basic.url';
 import {
   axGet,
+  axPost,
 } from '@/lib/ajax';
 
 
@@ -16,5 +17,9 @@ export default {
   scanQRcode(url) {
     /* 查询产品型号 */
     return axGet(urls.scanQRcode, { url });
+  },
+  authorizedUrl(data) {
+    /* 查询产品型号 */
+    return axPost(urls.authorizedUrl, data);
   }
 };

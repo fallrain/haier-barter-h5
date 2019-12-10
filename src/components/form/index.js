@@ -51,6 +51,5 @@ export {
   BOrderProductConfirm,
   BTimeSectionPicker,
   BDrainageActivity,
-  BTimeSectionPicker,
   BWxUpload
 };

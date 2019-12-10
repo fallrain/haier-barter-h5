@@ -3,7 +3,9 @@ const urls = {
   // 微信权限
   jsSign: '/common/weixin/jssign',
   userInfo: '/user/info',
-  scanQRcode: '/product/scan-qrcode'
+  scanQRcode: '/product/scan-qrcode',
+  // 构建微信授权URL给前端
+  authorizedUrl: '/customer/oauth2/authorizedUrl'
 };
 
 Object.entries(urls).forEach(([key, value]) => {

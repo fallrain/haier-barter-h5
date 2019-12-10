@@ -192,8 +192,8 @@ export default {
       return this.activityService.queryActivityInfoListForHmc({
         activityType: '',
         keyWord: this.searchVal,
-        microCode: '12A02',
-        channelType: 'E'
+        microCode: '',
+        channelType: ''
         // microCode: this.userInfo.storeInfo.microCode,
         // channelType: this.userInfo.storeInfo.mchannel,
         // storeId: this.userInfo.storeInfo.storeId,
@@ -315,9 +315,7 @@ export default {
     },
     shareImg() {
       // console.log(this.currentActivity);
-      this.activityService.qrCodeCreate({
-        activityId: this.currentActivity.id
-      }).then((res) => {
+      this.activityService.generateQrcode('http://baidu.com/', '123456', '9999').then((res) => {
         this.bUtil.downloadFile(res.data);
       });
       // return this.activityService.generateQrcode('http://baidu.com/', this.getData.id, this.getData.createdBy).then((res) => {
