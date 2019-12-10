@@ -134,13 +134,13 @@ export default {
           // 无权益占用删除成功
           // 打开正确提示
           this.orderDelSucDialog.open = true;
-          // 传递父组件删除item
-          this.$emit('delSuccess', this.index);
         } else {
           // 订单有权益占用，提示跳转申请页面弹框
           this.orderDelApplyDialog.open = true;
         }
       }
+      // 传递父组件删除item
+      this.$emit('delSuccess', this.index);
     },
     applyDeleteOrder() {
       /* 订单删除申请 */
