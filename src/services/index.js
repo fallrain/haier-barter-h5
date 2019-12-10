@@ -13,6 +13,8 @@ import sales from '@/services/sales';
 import product from '@/services/product';
 // 权益
 import rights from '@/services/rights';
+// 活动
+import campaignService from '@/services/campaign';
 
 Vue.prototype.basicService = basicService;
 Vue.prototype.baseService = baseService;
@@ -21,3 +23,4 @@ Vue.prototype.reportInstallService = reportInstall;
 Vue.prototype.salesService = sales;
 Vue.prototype.productService = product;
 Vue.prototype.rightsService = rights;
+Vue.prototype.campaignService = campaignService;
