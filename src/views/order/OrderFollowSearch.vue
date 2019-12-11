@@ -441,7 +441,6 @@ export default {
     upCallback(page) {
       // 下载过就设置已经初始化
       this[this.curScrollViewName].isListInit = true;
-      // this.businessType = '';
       this.searchData(page).then(({ result, pages }) => {
         this.$nextTick(() => {
           // 通过当前页的数据条数，和总页数来判断是否加载完
@@ -453,7 +452,6 @@ export default {
     checkClicked(val) {
       // this.updateList = true;
       this.sortType = val * 1;
-      this.businessType = '';
       // 刷新页面、重置页码
       this[this.curScrollViewName].mescroll.resetUpScroll();
     },
@@ -575,7 +573,7 @@ export default {
         searchData = {
           keyWord: this.searchWord,
           sortType: this.sortType,
-          status: 2
+          status: ''
         };
       } else {
         queryServiceName = 'queryOrderFollowList';
@@ -613,17 +611,8 @@ export default {
             } = res.data;
             sroviewObj.pages = pages;
             sroviewObj.result = result;
-            if (this.fuzzy) {
-              if (result.length === 0) {
-                this[this.curScrollViewName].list = [];
-                Toast.failed('搜索结果不存在');
-                this.fuzzy = false;
-                return;
-              }
-            }
             if (result && result.length > 0) {
-              const curList = result;
-              this.anylizeData(curList);
+              this.anylizeData(result);
               console.log(page);
               if (page.num === 1) {
                 console.log(this.curScrollViewName);
@@ -648,9 +637,9 @@ export default {
     },
     anylizeData(curList) {
       curList.forEach((item) => {
-        /*
-            0-跟进中  1-已完成  2-草稿  3-暂不跟进 4-取消 5-异常
-            */
+        /**
+         0-跟进中  1-已完成  2-草稿  3-暂不跟进 4-取消 5-异常
+         * */
         if (item.flowStatus === 1) {
           // item.buttonList = [{ name: '录新订单' }, { name: '退货' }, { name: '换货' }];// 已完成
           // item.buttonList = [{ name: '录新订单' },{ name: '补录订单' }];// 已完成
@@ -759,14 +748,12 @@ export default {
       this.currentList = curList;
     },
     fuzzySearch() {
-      this.businessType = '';
       // 刷新页面、重置页码
       this[this.curScrollViewName].mescroll.resetUpScroll();
       this.fuzzy = true;
     },
     updateOrderType(type) {
       // this.updateList = true;
-      this.businessType = '';
       // 刷新页面、重置页码
       this[this.curScrollViewName].mescroll.resetUpScroll();
     },
