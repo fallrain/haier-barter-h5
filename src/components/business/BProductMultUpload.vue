@@ -151,9 +151,7 @@ export default {
       if (data.code === 1) {
         if (data.data.invoiceUrl) {
           // 显示图片
-          alert(id);
           this.fileMap[id] = [data.data.invoiceUrl];
-          alert(JSON.stringify(this.fileMap));
         }
         this.$emit('uploadSuccess', data.data, this.fileMap, product);
       } else {
