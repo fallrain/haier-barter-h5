@@ -20,13 +20,14 @@
     <b-pop-sort-type
       :show.sync="sortShow"
       :list="sortList"
-      :value="sortType"
+      v-model="sortTypeTemp"
       @checkClick="checkClicked"
     >
     </b-pop-sort-type>
     <b-pop-button
       :show.sync="scenarioShow"
       :list="scenarioList"
+      v-model="businessTypeTemp"
       @popButtonClicked="buttonClicked"
     ></b-pop-button>
   </div>
@@ -50,10 +51,18 @@ export default {
       type: Array,
       default: () => []
     },
+    // 场景类型
+    businessType: {
+      type: String
+    },
     // 排序类型id
     sortArray: {
       type: Array,
       default: () => []
+    },
+    // 排序类型
+    sortType: {
+      type: String
     },
     // 是否显示业务场景
     isShowScenario: {
@@ -86,10 +95,10 @@ export default {
         //   activeIcon: '@/assets/images/orderFollow-up/shaixuan@3x.png'
         // }
       ],
+      businessTypeTemp: [],
       preIndex: '',
       sortShow: false,
       scenarioShow: false,
-      sortType: [],
       // 所有的排序类型
       sortListTemp: [
         {
@@ -101,12 +110,29 @@ export default {
           name: '按时间倒序'
         },
       ],
+      sortTypeTemp: this.sortType.split(',') || [],
       checkedsortId: '',
       checkedButtonId: '',
     };
   },
   created() {
     this.setSearchOptions();
+  },
+  watch: {
+    sortType(val) {
+      this.sortTypeTemp = val.split(',');
+    },
+    sortTypeTemp(val) {
+      // 更新排序id
+      this.$emit('update:sortType', val.join(','));
+    },
+    businessType(val) {
+      this.businessTypeTemp = val.split(',');
+    },
+    businessTypeTemp(val) {
+      // 更新场景id
+      this.$emit('update:businessType', val.join(','));
+    },
   },
   methods: {
     setSearchOptions() {
@@ -118,7 +144,6 @@ export default {
       } else {
         this.sortList = this.sortListTemp;
       }
-      this.sortType = [(this.sortList[0] && this.sortList[0].id) || ''];
     },
     headSwitch(index) {
       if (index === this.preIndex) {

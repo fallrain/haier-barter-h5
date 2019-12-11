@@ -8,14 +8,14 @@
       <div class="b-pop-checkList-cnt1">
         <ul>
           <div style="background-color:white;height: 70px;">
-        <p
-          class="b-pop-checkList-item1"
-           :class="[checkIds.some(v=>v===item.id) && 'active']"
-            v-for="(item,index) in list"
-            :key="index"
-          @click="checkboxClick(item)"
-        ><span class="b-pop-checkList-item-name">{{item.itemName}}</span></p>
-      </div>
+            <p
+              class="b-pop-checkList-item1"
+              :class="[checkIds.some(v=>v===item.itemCode) && 'active']"
+              v-for="(item,index) in list"
+              :key="index"
+              @click="checkboxClick(item)"
+            ><span class="b-pop-checkList-item-name">{{item.itemName}}</span></p>
+          </div>
           <div>
             <p class="confirmbtn" @click="checkboxClickConfirm()">确定</p>
           </div>
@@ -28,7 +28,6 @@
 <script>
 import {
   Popup,
-  PopupTitleBar
 } from 'mand-mobile';
 
 export default {
@@ -36,7 +35,6 @@ export default {
   inheritAttrs: true,
   components: {
     'md-popup': Popup,
-    'md-popup-title-bar': PopupTitleBar
   },
   props: {
     // 类型：checkbox radio
@@ -44,7 +42,7 @@ export default {
       type: String,
       default: 'checkbox'
     },
-    defalutIds: {
+    value: {
       type: Array,
       default: () => []
     },
@@ -62,13 +60,19 @@ export default {
   data() {
     return {
       popupShow: this.show,
-      checkIds: JSON.parse(JSON.stringify(this.defalutIds)),
-      tempC :[]
+      checkIds: JSON.parse(JSON.stringify(this.value)),
     };
   },
   watch: {
+    value(val) {
+      this.checkIds = JSON.parse(JSON.stringify(val));
+    },
     show(newVal) {
       this.popupShow = newVal;
+      // 重新打开的时候刷新checkIds（点击了，未确定的情况）
+      if (newVal) {
+        this.checkIds = JSON.parse(JSON.stringify(this.value));
+      }
     },
     popupShow(newVal) {
       this.$emit('update:show', newVal);
@@ -76,27 +80,18 @@ export default {
   },
   methods: {
     checkboxClick(item) {
-      const index = this.checkIds.findIndex(id => id === item.id)
-      if(index === -1){
-        this.checkIds.push(item.id)
-        this.tempC.push(item.itemCode)
-      }else {
-        this.checkIds.splice(index,1)
-        this.tempC.splice(index,1)
+      const index = this.checkIds.findIndex(itemCode => itemCode === item.itemCode);
+      if (index === -1) {
+        this.checkIds.push(item.itemCode);
+      } else {
+        this.checkIds.splice(index, 1);
       }
     },
     checkboxClickConfirm() {
-      this.$emit('popButtonClicked', this.tempC);
-      this.popupShow = false;
-    },
-    chooseGiftClick(item) {
-      this.$emit('chooseGift', item);
-    },
-    confirm() {
-      /* 确定 */
       this.$emit('input', this.checkIds);
+      this.$emit('popButtonClicked', this.checkIds);
       this.popupShow = false;
-    }
+    },
   }
 };
 </script>
@@ -123,10 +118,11 @@ export default {
         color: #1969C6;
       }
     }
-     .md-popup-mask{
-    height: 1160px;
-    top: 180px;
-  }
+
+    .md-popup-mask {
+      height: 1160px;
+      top: 180px;
+    }
   }
 
   .b-pop-checkList-cnt1 {
@@ -137,22 +133,23 @@ export default {
 
   .b-pop-checkList-item1 {
     padding-left: 24px;
-  padding-right: 24px;
-  height: 60px;
-  line-height: 60px;
-  text-align: center;
-  color: #666666;
-  border: 1px #cccccc solid;
-  font-size: 24px;
-  // width: 180px;
-  border-radius: 30px;
-  float: left;
-  margin-top: 10px;
-  margin-left: 24px;
+    padding-right: 24px;
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+    color: #666666;
+    border: 1px #cccccc solid;
+    font-size: 24px;
+    // width: 180px;
+    border-radius: 30px;
+    float: left;
+    margin-top: 10px;
+    margin-left: 24px;
 
     &.active {
-       border-color: #1969C6;
-      .b-pop-checkList-item-name{
+      border-color: #1969C6;
+
+      .b-pop-checkList-item-name {
         color: #1969C6;
       }
     }
@@ -162,16 +159,17 @@ export default {
     font-size: 32px;
     color: #1969C6;
   }
-    .confirmbtn{
+
+  .confirmbtn {
     font-size: 32px;
     color: white;
-      background-color: #1969C6;
-      text-align: center;
-      padding: 15px;
-      margin-left: 600px;
-      border-radius: 20px;
-      width: 120px;
-      margin-top: 10px;
+    background-color: #1969C6;
+    text-align: center;
+    padding: 15px;
+    margin-left: 600px;
+    border-radius: 20px;
+    width: 120px;
+    margin-top: 10px;
   }
 
   .b-pop-checkList-item-name {
@@ -189,7 +187,8 @@ export default {
     width: 320px;
     padding-right: 10px;
   }
-  .md-popup-box{
+
+  .md-popup-box {
     margin-top: 160px !important;
   }
 
