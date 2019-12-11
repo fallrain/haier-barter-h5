@@ -81,6 +81,8 @@
     </div>
     <b-order-follow-search-bar
       v-show="curScrollViewName==='scrollViewOdd'"
+      :sortArray="oddOrderSortList"
+      :isShowScenario="false"
       :scenarioList="scenarioList"
       @checkClick="checkClicked"
       @popButtonClicked="buttonClicked"
@@ -92,6 +94,7 @@
       v-show="curScrollViewName==='scrollViewOdd'"
     >
       <b-order-follow-item
+        type="odd"
         :list="scrollViewOdd.list"
         @checkClick="checkClicked"
         @popButtonClicked="buttonClicked"
@@ -156,6 +159,7 @@
 </template>
 <script>
 import {
+  Dialog,
   Icon,
   NoticeBar,
   Popup,
@@ -163,8 +167,7 @@ import {
   ScrollViewMore,
   ScrollViewRefresh,
   TabBar,
-  Toast,
-  Dialog
+  Toast
 } from 'mand-mobile';
 import {
   BOrderFollowItem
@@ -267,7 +270,18 @@ export default {
         ],
       },
       // 业务场景下拉数据
-      scenarioList: []
+      scenarioList: [],
+      // 异常订单-排序方式
+      oddOrderSortList: [
+        {
+          id: '1',
+          name: '按照更新时间降序'
+        },
+        {
+          id: '2',
+          name: '按照创建时间降序'
+        }
+      ]
     };
   },
   activated() {
@@ -438,7 +452,7 @@ export default {
 
     checkClicked(val) {
       // this.updateList = true;
-      this.sortType = parseInt(val);
+      this.sortType = val * 1;
       this.businessType = '';
       // 刷新页面、重置页码
       this[this.curScrollViewName].mescroll.resetUpScroll();
@@ -548,34 +562,48 @@ export default {
       }
     },
     searchData(page) {
+      /* 搜索订单 */
       if (this.curTab === 3) {
         this.sortType = 2;
       }
       console.log('keyword', this.searchWord);
-      return this.orderService
-        .queryOrderFollowlList(
-          {
-            hmcId: this.userinfo.hmcid,
-            storeId: this.userinfo.shopId,
-            queryType: this.curTab,
-            sortType: this.sortType,
-            recordMode: '',
-            userStatus: '',
-            orderFollowStatus: '',
-            flowType: '',
-            flowStatus: '',
-            orderFollowSource: '',
-            businessScenarios: this.businessType,
-            sourceSystem: '',
-            orderFollowStartDate: '',
-            orderFollowEndDate: '',
-            keyWord: this.searchWord
-          },
-          {
-            pageNum: page.num,
-            pageSize: page.size,
-          }
-        )
+      let queryServiceName;
+      let searchData;
+      // 异常订单是单独的接口
+      if (this.curScrollViewName === 'scrollViewOdd') {
+        queryServiceName = 'queryRightsReviewList';
+        searchData = {
+          keyWord: this.searchWord,
+          sortType: this.sortType,
+          status: 2
+        };
+      } else {
+        queryServiceName = 'queryOrderFollowList';
+        searchData = {
+          hmcId: this.userinfo.hmcid,
+          storeId: this.userinfo.shopId,
+          queryType: this.curTab,
+          sortType: this.sortType,
+          recordMode: '',
+          userStatus: '',
+          orderFollowStatus: '',
+          flowType: '',
+          flowStatus: '',
+          orderFollowSource: '',
+          businessScenarios: this.businessType,
+          sourceSystem: '',
+          orderFollowStartDate: '',
+          orderFollowEndDate: '',
+          keyWord: this.searchWord
+        };
+      }
+      return this.orderService[queryServiceName](
+        searchData,
+        {
+          pageNum: page.num,
+          pageSize: page.size,
+        }
+      )
         .then((res) => {
           const sroviewObj = {};
           if (res.code === 1) {
@@ -621,8 +649,8 @@ export default {
     anylizeData(curList) {
       curList.forEach((item) => {
         /*
-          0-跟进中  1-已完成  2-草稿  3-暂不跟进 4-取消 5-异常
-          */
+            0-跟进中  1-已完成  2-草稿  3-暂不跟进 4-取消 5-异常
+            */
         if (item.flowStatus === 1) {
           // item.buttonList = [{ name: '录新订单' }, { name: '退货' }, { name: '换货' }];// 已完成
           // item.buttonList = [{ name: '录新订单' },{ name: '补录订单' }];// 已完成
@@ -861,7 +889,8 @@ export default {
       height: 80px;
     }
   }
-  .notice-bar{
+
+  .notice-bar {
     height: 80px;
   }
 

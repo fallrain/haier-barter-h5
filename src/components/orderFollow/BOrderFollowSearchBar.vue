@@ -5,6 +5,7 @@
         class="bar-class"
         v-for="(item,index) in headList"
         :key="index"
+        v-show="item.show"
       >
         <p
           class="order-span"
@@ -48,18 +49,30 @@ export default {
     scenarioList: {
       type: Array,
       default: () => []
+    },
+    // 排序类型id
+    sortArray: {
+      type: Array,
+      default: () => []
+    },
+    // 是否显示业务场景
+    isShowScenario: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
     return {
       headList: [
         {
+          show: true,
           name: '排序',
           isActive: false,
           icon: '@/assets/images/orderFollow-up/xiala@3x.png',
           activeIcon: '@/assets/images/orderFollow-up/shangla@3x.png'
         },
         {
+          show: this.isShowScenario,
           name: '业务场景',
           isActive: false,
           icon: '@/assets/images/orderFollow-up/xiala@3x.png',
@@ -76,8 +89,9 @@ export default {
       preIndex: '',
       sortShow: false,
       scenarioShow: false,
-      sortType: ['1'],
-      sortList: [
+      sortType: [],
+      // 所有的排序类型
+      sortListTemp: [
         {
           id: '1',
           name: '智能排序'
@@ -91,7 +105,21 @@ export default {
       checkedButtonId: '',
     };
   },
+  created() {
+    this.setSearchOptions();
+  },
   methods: {
+    setSearchOptions() {
+      /* 设置搜索参数 */
+      // sortIds
+      // 排序方式，有传入用传入，无传入用默认的
+      if (this.sortArray.length) {
+        this.sortList = this.sortArray;
+      } else {
+        this.sortList = this.sortListTemp;
+      }
+      this.sortType = [(this.sortList[0] && this.sortList[0].id) || ''];
+    },
     headSwitch(index) {
       if (index === this.preIndex) {
         this.headList[index].isActive = false;

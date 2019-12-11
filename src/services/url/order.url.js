@@ -1,7 +1,7 @@
 const baseURL = 'manage';
 const urls = {
   // 订单列表
-  queryOrderFollowlList: '/orderFollow/queryOrderFollowList', // 订单跟进列表
+  queryOrderFollowList: '/orderFollow/queryOrderFollowList', // 订单跟进列表
   fuzzySearchOrderFollowList: '/orderFollow/fuzzySearchOrderFollowList', // 模糊搜索列表
   updateOrderFollowByType: '/orderFollow/updateOrderFollowByType', // 修改状态
   generateOrderNo: '/orderManage/generateOrderNo', // 生成订单编号
@@ -29,6 +29,8 @@ const urls = {
   deleteOrderByHmc: '/orderManage/deleteOrderByHmc',
   // 有权益的时候，删除订单申请
   orderDeletionApprovalApply: '/orderDeletionApproval/apply',
+  // 查询需要删除的订单的列表
+  queryRightsReviewList: '/orderDeletionApproval/queryRightsReviewList',
 };
 
 Object.entries(urls).forEach(([key, value]) => {

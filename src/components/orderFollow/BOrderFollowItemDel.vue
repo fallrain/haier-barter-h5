@@ -13,28 +13,12 @@
     >
       <div class="bOrderFollowItem-del-dialog-item">
         <span class="bOrderFollowItem-del-dialog-item-name">订单号：</span>
-        {{orderDelDialog.id}}
+        {{orderDelDialog.orderNo}}
       </div>
       <div class="bOrderFollowItem-del-dialog-item">
         <span class="bOrderFollowItem-del-dialog-item-name">客户姓名：</span>
         {{orderDelDialog.userName}} {{orderDelDialog.userSexName}}
       </div>
-    </md-dialog>
-    <md-dialog
-      :closable="false"
-      v-model="orderDelSucDialog.open"
-      :btns="orderDelSucDialog.btns"
-    >
-      <div class="bOrderFollowItem-del-dialog-success">
-        <i class="iconfont icon-duihao1"></i>订单已删除
-      </div>
-    </md-dialog>
-    <md-dialog
-      :closable="false"
-      v-model="orderDelApplyDialog.open"
-      :btns="orderDelApplyDialog.btns"
-    >
-      订单{{orderDelApplyDialog.id}}绑了定了相关权益，您无权删除，请填写删除理由后转至营销经理审批。
     </md-dialog>
   </div>
 </template>
@@ -63,12 +47,12 @@ export default {
     return {
       // 订单删除对话框
       orderDelDialog: {
-      // 是否打开
+        // 是否打开
         open: false,
         // 性别
         userSex: '',
         // 编号
-        id: '',
+        orderNo: '',
         // 姓名
         userName: '',
         btns: [
@@ -80,37 +64,17 @@ export default {
             handler: this.orderDelete,
           },
         ],
-      },
-      orderDelSucDialog: {
-        open: false,
-        btns: [
-          {
-            text: '关闭'
-          },
-        ],
-      },
-      orderDelApplyDialog: {
-        open: false,
-        btns: [
-          {
-            text: '取消'
-          },
-          {
-            text: '去申请',
-            handler: this.applyDeleteOrder,
-          }
-        ],
-      },
+      }
     };
   },
   methods: {
     showOrderDelDialog() {
       /* 订单删除对话框 */
       const {
-        id
+        orderNo
       } = this.followItem;
-      // 显示对话框订单id、姓名
-      this.orderDelDialog.id = id;
+        // 显示对话框订单id、姓名
+      this.orderDelDialog.orderNo = orderNo;
       this.orderDelDialog.userName = this.followItem.userName;
       this.orderDelDialog.userSexName = {
         1: '先生',
@@ -125,32 +89,18 @@ export default {
       const {
         orderNo
       } = this.followItem;
-      // 删除订单
+        // 删除订单
       const { code, data } = await this.orderService.deleteOrderByHmc({
         orderNo
       });
       if (code === 1) {
-        if (data) {
-          // 无权益占用删除成功
-          // 打开正确提示
-          this.orderDelSucDialog.open = true;
-        } else {
-          // 订单有权益占用，提示跳转申请页面弹框
-          this.orderDelApplyDialog.open = true;
-        }
+        // 传递父组件删除item
+        this.$emit('delSuccess', {
+          index: this.index,
+          data,
+          orderNo
+        });
       }
-      // 传递父组件删除item
-      this.$emit('delSuccess', this.index);
-    },
-    applyDeleteOrder() {
-      /* 订单删除申请 */
-      this.orderDelApplyDialog.open = false;
-      this.$router.push({
-        name: 'Order.ApplyDeleteOrder',
-        params: {
-          orderNo: this.followItem.orderNo
-        }
-      });
     }
   }
 };
@@ -169,6 +119,30 @@ export default {
 
     .iconfont {
       margin-right: 6px;
+    }
+  }
+
+  .bOrderFollowItem-del-dialog-item {
+    font-size: 28px;
+    line-height: 48px;
+    color: #333;
+  }
+
+  .bOrderFollowItem-del-dialog-item-name {
+    color: #666;
+  }
+
+  .bOrderFollowItem-del-dialog-success {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    font-size: 30px;
+
+    .iconfont {
+      margin-right: 32px;
+      font-size: 52px;
+      color: #27AA91;
     }
   }
 </style>

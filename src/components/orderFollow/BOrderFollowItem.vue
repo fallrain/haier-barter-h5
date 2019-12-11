@@ -7,59 +7,67 @@
       :key="followItem.id"
       @click="orderClick"
     >
-      <b-order-follow-item-type-tag
-        :businessScenarios="followItem.businessScenarios"
-      ></b-order-follow-item-type-tag>
-      <b-order-follow-item-del
-        v-if="followItem.flowStatus===1"
-        :followItem="followItem"
-        :index="index"
-        @delSuccess="orderDelSuccess"
-      ></b-order-follow-item-del>
+      <b-order-follow-item-odd
+        v-if="type==='odd'"
+        :order="followItem"
+      ></b-order-follow-item-odd>
       <div
-        class="row-class pt10"
-        :class="[['YZZJ','YJHX', 'ADJ', 'SMLD', 'SGLD', 'RC','YYFW'].includes(followItem.businessScenarios) && 'pl88']"
+        v-else
+        class="orderFollowItem-normal"
       >
-        <span class="label-span">{{followItem.userName}}</span>
-        <span
-          class="sex-class"
-          v-show="followItem.userSex === '1'"
-        >先生</span>
-        <span
-          class="sex-class"
-          v-show="followItem.userSex === '2'"
-        >女士</span>
-        <span class="sex-class">
+        <b-order-follow-item-type-tag
+          :businessScenarios="followItem.businessScenarios"
+        ></b-order-follow-item-type-tag>
+        <b-order-follow-item-del
+          v-if="followItem.flowStatus===1"
+          :followItem="followItem"
+          :index="index"
+          @delSuccess="orderDelSuccess"
+        ></b-order-follow-item-del>
+        <div
+          class="row-class pt10"
+          :class="[['YZZJ','YJHX', 'ADJ', 'SMLD', 'SGLD', 'RC','YYFW'].includes(followItem.businessScenarios) && 'pl88']"
+        >
+          <span class="label-span">{{followItem.userName}}</span>
+          <span
+            class="sex-class"
+            v-show="followItem.userSex === '1'"
+          >先生</span>
+          <span
+            class="sex-class"
+            v-show="followItem.userSex === '2'"
+          >女士</span>
+          <span class="sex-class">
           <img
             src="@/assets/images/orderFollow-up/tel@3x.png"
             class="telImage"
           >
         </span>
-        <span class="sex-class-tel"> <a :href="'tel:' + followItem.userMobile" class="telClass"
-                                        id="manual_bind_click_way">{{followItem.userMobile}}</a></span>
-      </div>
-      <div class="row-class">
-        <img
-          src="@/assets/images/orderFollow-up/Haier@3x.png"
-          class="brandImage"
-          v-show="followItem.recordMode ==='Haier'"
-        >
-        <img
-          src="@/assets/images/orderFollow-up/Casarte@3x.png"
-          class="brandImage"
-          v-show="followItem.recordMode ==='Casarte'"
-        >
-        <span class="hand-class">{{followItem.userS}}</span>
-        <span class="handred-class">{{followItem.tardinessS}}</span>
-        <span class="handgray-class">{{followItem.flowS}}</span>
-      </div>
-      <div class="row-class bOrderFollowItem-row-time">
-        <img
-          src="@/assets/images/orderFollow-up/time@3x.png"
-          class="timeImage"
-        >
-        <span class="time-label">{{followItem.updatedTime}}</span>
-        <div class="bOrderFollowItem-row-time-right">
+          <span class="sex-class-tel"> <a :href="'tel:' + followItem.userMobile" class="telClass"
+                                          id="manual_bind_click_way">{{followItem.userMobile}}</a></span>
+        </div>
+        <div class="row-class">
+          <img
+            src="@/assets/images/orderFollow-up/Haier@3x.png"
+            class="brandImage"
+            v-show="followItem.recordMode ==='Haier'"
+          >
+          <img
+            src="@/assets/images/orderFollow-up/Casarte@3x.png"
+            class="brandImage"
+            v-show="followItem.recordMode ==='Casarte'"
+          >
+          <span class="hand-class">{{followItem.userS}}</span>
+          <span class="handred-class">{{followItem.tardinessS}}</span>
+          <span class="handgray-class">{{followItem.flowS}}</span>
+        </div>
+        <div class="row-class bOrderFollowItem-row-time">
+          <img
+            src="@/assets/images/orderFollow-up/time@3x.png"
+            class="timeImage"
+          >
+          <span class="time-label">{{followItem.updatedTime}}</span>
+          <div class="bOrderFollowItem-row-time-right">
           <span
             v-show="followItem.flowStatus === 4 || followItem.flowStatus === 5 || followItem.businessScenarios === 'YYFW' || followItem.businessScenarios === 'ADJ'"
             @click="detailHide(index,followItem)"
@@ -67,94 +75,94 @@
           >
             <span class="information-class">详细信息 </span>
           </span>
-          <span
-            v-show="followItem.businessScenarios === 'YJHX'"
-            @click="gujiaClick(followItem)"
-            class="information-class-de bOrderFollowItem-textBtn"
-          >估价详情
+            <span
+              v-show="followItem.businessScenarios === 'YJHX'"
+              @click="gujiaClick(followItem)"
+              class="information-class-de bOrderFollowItem-textBtn"
+            >估价详情
           </span>
-          <span
-            v-show="followItem.flowStatus === 1"
-            @click="itemClick(followItem)"
-            class="information-class-de bOrderFollowItem-textBtn"
-          >查看详情
-            <!--<img-->
-            <!--src="@/assets/images/orderFollow-up/xialablue@3x.png"-->
-            <!--class="information-xiala"-->
+            <span
+              v-show="followItem.flowStatus === 1"
+              @click="itemClick(followItem)"
+              class="information-class-de bOrderFollowItem-textBtn"
+            >查看详情
+              <!--<img-->
+              <!--src="@/assets/images/orderFollow-up/xialablue@3x.png"-->
+              <!--class="information-xiala"-->
 
-            <!--v-show="!followItem.detailShow"-->
-            <!--&gt;-->
-            <!--<img-->
-            <!--src="@/assets/images/orderFollow-up/shangla@3x.png"-->
-            <!--class="information-xiala"-->
-            <!--v-show="followItem.detailShow"-->
-            <!--&gt;-->
+              <!--v-show="!followItem.detailShow"-->
+              <!--&gt;-->
+              <!--<img-->
+              <!--src="@/assets/images/orderFollow-up/shangla@3x.png"-->
+              <!--class="information-xiala"-->
+              <!--v-show="followItem.detailShow"-->
+              <!--&gt;-->
           </span>
+          </div>
         </div>
-      </div>
-      <!--<div-->
-      <!--v-show="followItem.detailShow && followItem.showDetail"-->
-      <!--v-for="(item,index) in followItem.productList"-->
-      <!--:key="index"-->
-      <!--&gt;-->
-      <!--<p>-->
-      <!--<span class="orderFollowItem-span">{{item.productBrandCN}}/{{item.productCategoryName}}，{{item.productModel}}</span>-->
-      <!--<span class="orderFollowItem-span-blue">￥{{item.bccPrice}}</span>-->
-      <!--</p>-->
-      <!--</div>-->
+        <!--<div-->
+        <!--v-show="followItem.detailShow && followItem.showDetail"-->
+        <!--v-for="(item,index) in followItem.productList"-->
+        <!--:key="index"-->
+        <!--&gt;-->
+        <!--<p>-->
+        <!--<span class="orderFollowItem-span">{{item.productBrandCN}}/{{item.productCategoryName}}，{{item.productModel}}</span>-->
+        <!--<span class="orderFollowItem-span-blue">￥{{item.bccPrice}}</span>-->
+        <!--</p>-->
+        <!--</div>-->
 
-      <!--爱获客、预约服务且订单正常下的详细信息-->
-      <div
-        v-if="
+        <!--爱获客、预约服务且订单正常下的详细信息-->
+        <div
+          v-if="
           (followItem.businessScenarios === 'YYFW' || followItem.businessScenarios === 'ADJ')
           && (followItem.flowStatus !== 4 && followItem.flowStatus !== 5)
         "
-        class="information-p"
-        v-show="followItem.detailShow"
-      >
-        <p>
-          <strong>报名编号：</strong>{{followItem.sourceSn}}
-        </p>
-        <p
-          v-if="followItem.add1"
+          class="information-p"
+          v-show="followItem.detailShow"
         >
-          <strong> 活动名称：</strong>{{followItem.add1}}
-        </p>
-        <p
-          v-if="followItem.add2"
-        >
-          <strong>预约服务名称：</strong>{{followItem.add2}}
-        </p>
-        <p
-          v-if="followItem.add3"
-        >
-          <strong>用户地址：</strong>{{followItem.add3}}
-        </p>
-      </div>
-      <!--其他类型（只有取消、异常状态才显示）详细信息-->
-      <div
-        v-else
-        class="information-p"
-        v-show="followItem.detailShow"
-      >
-        <p v-if="followItem.add1">{{followItem.add1}}</p>
-        <p v-if="followItem.add2">{{followItem.add2}}</p>
-        <p v-if="followItem.add3">{{followItem.add3}}</p>
-      </div>
-      <div class="bottom-class">
-        <div
-          class="dian-class-par"
-          v-show="followItem.flowStatus !== 1"
-          @click="(e)=>showMore(followItem,e)"
-        >
-          <img
-            src="@/assets/images/orderFollow-up/dian@3x.png"
-            class="dian-class"
+          <p>
+            <strong>报名编号：</strong>{{followItem.sourceSn}}
+          </p>
+          <p
+            v-if="followItem.add1"
           >
+            <strong> 活动名称：</strong>{{followItem.add1}}
+          </p>
+          <p
+            v-if="followItem.add2"
+          >
+            <strong>预约服务名称：</strong>{{followItem.add2}}
+          </p>
+          <p
+            v-if="followItem.add3"
+          >
+            <strong>用户地址：</strong>{{followItem.add3}}
+          </p>
         </div>
-        <!--估价不显示录单操作-->
-        <!--<span v-if="followItem.businessScenarios !== 'YJHX' && followItem.businessScenarios !== 'ADJ'">-->
-        <span v-if="followItem.businessScenarios !== 'ADJ'">
+        <!--其他类型（只有取消、异常状态才显示）详细信息-->
+        <div
+          v-else
+          class="information-p"
+          v-show="followItem.detailShow"
+        >
+          <p v-if="followItem.add1">{{followItem.add1}}</p>
+          <p v-if="followItem.add2">{{followItem.add2}}</p>
+          <p v-if="followItem.add3">{{followItem.add3}}</p>
+        </div>
+        <div class="bottom-class">
+          <div
+            class="dian-class-par"
+            v-show="followItem.flowStatus !== 1"
+            @click="(e)=>showMore(followItem,e)"
+          >
+            <img
+              src="@/assets/images/orderFollow-up/dian@3x.png"
+              class="dian-class"
+            >
+          </div>
+          <!--估价不显示录单操作-->
+          <!--<span v-if="followItem.businessScenarios !== 'YJHX' && followItem.businessScenarios !== 'ADJ'">-->
+          <span v-if="followItem.businessScenarios !== 'ADJ'">
           <p
             class="bottom-button"
             v-for="(button,index) in followItem.buttonList"
@@ -164,31 +172,30 @@
           </p>
         </span>
 
-        <!-- <p class="bottom-button">发券</p> -->
-        <div
-          class="more-pop"
-          :class="[followItem.showInTop && 'more-pop-reverse']"
-          ref="more-pop"
-          v-show="followItem.show"
-        >
-          <div class="more-pop-out"></div>
-          <div class="more-pop-in"></div>
-          <p
-            v-for="(item,index) in followItem.showList"
-            :key="index"
-            @click="updateOrderType(item.id,followItem)"
-            class="show-p"
-          >{{item.name}}</p>
-        </div>
+          <!-- <p class="bottom-button">发券</p> -->
+          <div
+            class="more-pop"
+            :class="[followItem.showInTop && 'more-pop-reverse']"
+            ref="more-pop"
+            v-show="followItem.show"
+          >
+            <div class="more-pop-out"></div>
+            <div class="more-pop-in"></div>
+            <p
+              v-for="(item,index) in followItem.showList"
+              :key="index"
+              @click="updateOrderType(item.id,followItem)"
+              class="show-p"
+            >{{item.name}}</p>
+          </div>
 
+        </div>
       </div>
     </div>
-
     <md-popup
       v-model="popShow"
       position="center"
     >
-
       <div class="popInput">
         <p class="pop-p">暂不跟进原因</p>
         <input
@@ -199,8 +206,23 @@
         />
         <p class="pop-con" @click="confirmRemark">确认</p>
       </div>
-
     </md-popup>
+    <md-dialog
+      :closable="false"
+      v-model="orderDelSucDialog.open"
+      :btns="orderDelSucDialog.btns"
+    >
+      <div class="bOrderFollowItem-del-dialog-success">
+        <i class="iconfont icon-duihao1"></i>订单已删除
+      </div>
+    </md-dialog>
+    <md-dialog
+      :closable="false"
+      v-model="orderDelApplyDialog.open"
+      :btns="orderDelApplyDialog.btns"
+    >
+      订单{{orderDelApplyDialog.orderNo}}绑了定了相关权益，您无权删除，请填写删除理由后转至营销经理审批。
+    </md-dialog>
   </div>
 </template>
 
@@ -208,6 +230,7 @@
 <script>
 import {
   Button,
+  Dialog,
   Icon,
   Popup,
   PopupTitleBar,
@@ -215,14 +238,17 @@ import {
 } from 'mand-mobile';
 import BOrderFollowItemDel from './BOrderFollowItemDel';
 import BOrderFollowItemTypeTag from './BOrderFollowItemTypeTag';
+import BOrderFollowItemOdd from './BOrderFollowItemOdd';
 
 export default {
   name: 'BOrderFollowItem',
   components: {
+    BOrderFollowItemOdd,
     BOrderFollowItemDel,
     BOrderFollowItemTypeTag,
     [Icon.name]: Icon,
     [Toast.name]: Toast,
+    'md-dialog': Dialog,
     'md-popup': Popup,
     [PopupTitleBar.name]: PopupTitleBar,
     [Button.name]: Button,
@@ -235,6 +261,11 @@ export default {
     list: {
       type: Array,
       require: true
+    },
+    // 类型,普通订单：normal，异常：odd，其他类型以后也许还有
+    type: {
+      type: String,
+      default: 'normal'
     }
     // handleList:{
     //   type: Array,
@@ -253,6 +284,28 @@ export default {
       showList: [],
       ID: '',
       currentList: this.list,
+      // 订单删除成功对话框
+      orderDelSucDialog: {
+        open: false,
+        btns: [
+          {
+            text: '关闭'
+          },
+        ],
+      },
+      //
+      orderDelApplyDialog: {
+        open: false,
+        btns: [
+          {
+            text: '取消'
+          },
+          {
+            text: '去申请',
+            handler: this.applyDeleteOrder,
+          }
+        ],
+      },
     };
   },
   created() {
@@ -398,9 +451,28 @@ export default {
           }
         });
     },
-    orderDelSuccess(index) {
+    orderDelSuccess({ index, data, orderNo }) {
       /* 订单删除成功回调（直接删除无权益占用的情况） */
       this.list.splice(index, 1);
+      if (data) {
+        // 无权益占用删除成功
+        // 打开正确提示
+        this.orderDelSucDialog.open = true;
+      } else {
+        // 订单有权益占用，提示跳转申请页面弹框
+        this.orderDelApplyDialog.open = true;
+        this.orderDelApplyDialog.orderNo = orderNo;
+      }
+    },
+    applyDeleteOrder() {
+      /* 订单删除申请 */
+      this.orderDelApplyDialog.open = false;
+      this.$router.push({
+        name: 'Order.ApplyDeleteOrder',
+        params: {
+          orderNo: this.orderDelApplyDialog.orderNo
+        }
+      });
     }
   }
 };
@@ -502,8 +574,7 @@ export default {
     position: relative;
     margin-top: 16px;
     // height: 290px;
-    background-color: white;
-    padding: 24px;
+    background-color: #fff;
   }
 
   .label-span {
@@ -783,28 +854,7 @@ export default {
     padding-right: 50px !important;
   }
 
-
-  .bOrderFollowItem-del-dialog-item {
-    font-size: 28px;
-    line-height: 48px;
-    color: #333;
-  }
-
-  .bOrderFollowItem-del-dialog-item-name {
-    color: #666;
-  }
-
-  .bOrderFollowItem-del-dialog-success {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #333;
-    font-size: 30px;
-
-    .iconfont {
-      margin-right: 32px;
-      font-size: 52px;
-      color: #27AA91;
-    }
+  .orderFollowItem-normal {
+    padding: 24px;
   }
 </style>
