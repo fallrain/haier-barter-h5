@@ -50,6 +50,7 @@ export default {
   },
   created() {
     this.activityInfo = this.$route.params.activityInfo;
+    this.userInfo = this.$route.params.userInfo;
     console.log(this.activityInfo);
   },
   activated() {
@@ -59,15 +60,19 @@ export default {
     return {
       qrcodeImg: '',
       activityInfo: {},
+      userInfo: {},
     };
   },
   methods: {
     createQrcode() {
+      const protocol = `${window.location.protocol}//`;
+      const host = window.location.host;
+      const pathname = '/activity/activityDetail';
+      const url = `${protocol + host + pathname}?activityId=${this.activityInfo.id}`;
       return this.activityService.generateQrcode({
-        activityId: '55751116321980416',
-        redirectUrl: 'http://www.baidu.com',
-        hmcId: '01467897',
-
+        activityId: this.activityInfo.id,
+        redirectUrl: url,
+        hmcId: this.userInfo.hmcId,
       }).then((res) => {
         const blob = new Blob([res.data], {
           type: 'image/jpeg'

@@ -90,8 +90,11 @@
             class="activityDetail-register-ipt"
             type="text"
             placeholder="请输入验证码"
+            v-model="form.verifyCode"
           >
           <b-verificationcode
+            :phone="form.mobile"
+            :type="1"
           ></b-verificationcode>
         </div>
         <div class="activityDetail-register-item">
@@ -219,7 +222,8 @@ export default {
         userNickname: '',
         mobile: '',
         appointType: '',
-        productType: ''
+        productType: '',
+        verifyCode: ''
       },
       // 注册对话框显示隐藏
       registerDialogShow: false,
@@ -289,17 +293,24 @@ export default {
       this.isShowProductCatagory = true;
     },
     registerDialog() {
-      // this.activityService.validateJoiner({
-      //   activityId: this.activityInfo.id,
-      //   openId: this.openId
-      // }, {
-      //   requestNoToast: true
-      // }).then((res) => {
-      //   if (res.code === -1) {
-      //     Toast.failed('您已经报名了该活动！无需继续报名')
-      //   }
-      // });
-      // this.registerDialogShow = true;
+      this.activityService.validateJoiner({
+        activityId: this.activityInfo.id,
+        openId: this.openId
+      }, {
+        requestNoToast: true
+      }).then((res) => {
+        if (res.code === -1) {
+          Toast.failed('您已经报名了该活动！无需继续报名');
+        }
+      });
+      this.registerDialogShow = true;
+    },
+    getProductGroup() {
+      this.productService.industryGroup().then((res) => {
+        if (res.code === 1) {
+          this.productGroupName = res.data;
+        }
+      });
     },
     share() {
       this.basicService.authorizedUrl({ frontUrl: 'https://testdb.haier.net/activity/activityDetail' }).then((res) => {

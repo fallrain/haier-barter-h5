@@ -47,6 +47,7 @@
             v-for="(item,index) in scrollViewDrainageActivity.list"
             :key="index"
             :getData.sync="item"
+            :userData.sync="userInfo"
             @shareClick="shareClick">
           </b-drainage-activity>
         </div>
@@ -204,7 +205,6 @@ export default {
       }).then((res) => {
         const sroviewObj = {};
         if (res.code === 1) {
-          console.log('res.data',res.data);
           const {
             result,
             pages

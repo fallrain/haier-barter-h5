@@ -70,7 +70,10 @@ export default {
   },
   props: {
     getData: {
-    }
+    },
+    userData: {
+
+    },
   },
   methods: {
     share() {
@@ -79,13 +82,15 @@ export default {
     qrCode() {
       this.$router.push({
         name: 'Activity.ActivityQRCode',
-        params: { activityInfo: this.getData }
+        params: { activityInfo: this.getData,
+          userInfo: this.userData }
       });
     },
     dataStatistics() {
       this.$router.push({
         name: 'Activity.ActivityDataAnalysis',
-        params: { activityInfo: this.getData }
+        params: { activityInfo: this.getData,
+          userInfo: this.userData }
       });
     },
     showActivityDetail() {

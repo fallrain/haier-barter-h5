@@ -39,32 +39,37 @@ export default {
       if (this.beforeSend && !this.beforeSend()) {
         return;
       }
-      this.$nextTick(() => {
-        const url = this.type === 1 ? `v1/send_code/${this.areaCode}/` : 'v1/send_code_by_email/';
-        this.axGet(`${url}${this.phone}`).then(({ status }) => {
-          if (status === '02') {
-            if (this.callBack) {
-              this.callBack();
-            }
-          } else if (this.errorCallBack) {
-            this.errorCallBack();
-          }
-        });
+      this.basicService.sendSms({ mobile : this.phone }).then((res) => {
+        if (res.code === 1) {
+          this.$nextTick(() => {
+            const url = this.type === 1 ? `v1/send_code/${this.areaCode}/` : 'v1/send_code_by_email/';
+            this.axGet(`${url}${this.phone}`).then(({ status }) => {
+              if (status === '02') {
+                if (this.callBack) {
+                  this.callBack();
+                }
+              } else if (this.errorCallBack) {
+                this.errorCallBack();
+              }
+            });
 
-        if (this.afterSend) {
-          this.afterSend();
+            if (this.afterSend) {
+              this.afterSend();
+            }
+            let time = this.trueTime;
+            this.disabled = true;
+            this.btnText = `${time}秒后可重发`;
+            const interval = setInterval(() => {
+              this.btnText = `${--time}秒后可重发`;
+              if (time < 1) {
+                this.btnText = '获取验证码';
+                this.disabled = false;
+                clearInterval(interval);
+              }
+            }, 1000);
+          });
+
         }
-        let time = this.trueTime;
-        this.disabled = true;
-        this.btnText = `${time}秒后可重发`;
-        const interval = setInterval(() => {
-          this.btnText = `${--time}秒后可重发`;
-          if (time < 1) {
-            this.btnText = '获取验证码';
-            this.disabled = false;
-            clearInterval(interval);
-          }
-        }, 1000);
       });
     }
   }

@@ -21,5 +21,9 @@ export default {
   authorizedUrl(data) {
     /* 查询产品型号 */
     return axPost(urls.authorizedUrl, data);
-  }
+  },
+  sendSms(data) {
+    /* 查询产品型号 */
+    return axPost(urls.sendSms, data);
+  },
 };
