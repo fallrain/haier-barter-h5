@@ -854,6 +854,7 @@ export default {
     padding-right: 50px !important;
   }
 
+  //常规订单
   .orderFollowItem-normal {
     padding: 24px;
   }
