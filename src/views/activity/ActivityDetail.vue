@@ -289,13 +289,6 @@ export default {
       this.isShowProductCatagory = true;
     },
     registerDialog() {
-      this.basicService.authorizedUrl({ frontUrl: 'https://testdb.haier.net/activity/activityDetail' }).then((res) => {
-        if (res.code === 1) {
-          if (res.data) {
-            window.open(res.data);
-          }
-        }
-      });
       // this.activityService.validateJoiner({
       //   activityId: this.activityInfo.id,
       //   openId: this.openId
@@ -309,7 +302,29 @@ export default {
       // this.registerDialogShow = true;
     },
     share() {
-      this.isShowPopContainer = true;
+      this.basicService.authorizedUrl({ frontUrl: 'https://testdb.haier.net/activity/activityDetail' }).then((res) => {
+        if (res.code === 1) {
+          if (res.data) {
+            wx.ready(() => { // 需在用户可能点击分享按钮前就先调用
+              wx.updateAppMessageShareData({
+                title: '', // 分享标题
+                desc: '', // 分享描述
+                link: res.data, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                imgUrl: '', // 分享图标
+                success: (res)=> {
+                  // 设置成功
+                  console.log('success');
+                  alert(JSON.stringify(res));
+                  this.isShowPopContainer = true;
+                },
+                fail: (res)=> {
+                  alert(JSON.stringify(res));
+                }
+              });
+            });
+          }
+        }
+      });
     },
     closeShare() {
       this.isShowPopContainer = false;
