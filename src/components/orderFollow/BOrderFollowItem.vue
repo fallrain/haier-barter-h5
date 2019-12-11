@@ -43,8 +43,11 @@
             class="telImage"
           >
         </span>
-          <span class="sex-class-tel"> <a :href="'tel:' + followItem.userMobile" class="telClass"
-                                          id="manual_bind_click_way">{{followItem.userMobile}}</a></span>
+        <span class="sex-class-tel">
+          <a
+            :href="'tel:' + followItem.userMobile" class="telClass"
+            @click="recordCall(followItem)"
+          >{{followItem.userMobile}}</a></span>
         </div>
         <div class="row-class">
           <img
@@ -450,6 +453,20 @@ export default {
             this.$emit('updateOrderType', type);
           }
         });
+    },
+    recordCall(item) {
+      /* 记录以旧换新打电话 */
+      const {
+        businessScenarios,
+        sourceSn: id
+      } = item;
+      // 现在只统计以旧换新
+      if (businessScenarios === 'YJHX') {
+        this.campaignService.recordFrequency({
+          id,
+          type: 1
+        });
+      }
     },
     orderDelSuccess({ index, data, orderNo }) {
       /* 订单删除成功回调（直接删除无权益占用的情况） */
