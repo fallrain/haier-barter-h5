@@ -22,6 +22,7 @@
         :getData.sync="item"
         :isFinish="false"
         :residueGift="false"
+        :autoChooseMax="true"
         @minusCount="minusCount"
         @addCount="addCount"
         :hasData="false"
@@ -522,6 +523,7 @@ export default {
     addMCount(item) {
       /** ************互斥***************** */
       // 单品
+      debugger
       if (item.rightsType === 'single') {
         let isReturn = false;
         let rightid = '';

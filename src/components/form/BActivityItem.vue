@@ -1,14 +1,20 @@
 <template>
-  <div class="activity-item-bg">
+  <div
+    class="activity-item-bg bActivityItem"
+    :class="{'active':isChose}"
+  >
     <!--<div v-show="!hasData">-->
     <!--<p>暂无权益活动可选</p>-->
     <!--</div>-->
     <div>
       <div class="activity-gift">
-        <i class="iconfont icon-liwu activity-gift-img"/>
+        <i class="iconfont icon-liwu activity-gift-img"></i>
         <span class="activity-gift-title">{{getData.rightsName}}</span>
       </div>
-      <div class="activity-common-line activity-common-text activity-reason-text" v-if="getData.reason && isFinish">
+      <div
+        v-if="getData.reason && isFinish"
+        class="activity-common-line activity-common-text activity-reason-text"
+      >
         不可参与原因：{{getData.reason}}
       </div>
       <div class="activity-common-line activity-common-text">活动品牌：{{getData.rightsBrandC}}</div>
@@ -16,34 +22,61 @@
       <div class="activity-common-line activity-common-text">
         活动日期：<span class="activity-data-text">{{getData.activityStartDate}}至{{getData.activityEndDate}}</span>
       </div>
-      <div class="activity-common-line activity-titleItem activity-common-top activity-common-border" @click="setShowConfig">
+      <div
+        class="activity-common-line activity-titleItem activity-common-top activity-common-border"
+        @click="setShowConfig"
+      >
         <span class="activity-tip-text activity-count-remain">查看礼品</span>
-        <span class="icon iconfont icon-jiantou9 activity-tip-img activity-count-remain"
-              :class="{'activity-tip-img-transform': isShowConfig}"></span>
+        <span
+          class="icon iconfont icon-jiantou9 activity-tip-img activity-count-remain"
+          :class="{'activity-tip-img-transform': isShowConfig}"
+        ></span>
       </div>
-      <div v-for="(item,c) in getData.configList"
-           :key="c" v-show="isShowConfig">
+      <div
+        v-for="(item,c) in getData.configList"
+        :key="c"
+        v-show="isShowConfig"
+      >
         <!--单品-->
-        <div class="activity-common-line activity-common-border activity-common-top activity-titleItem"
-             v-show="getData.rightsType == 'single'">
-          <div class="activity-item" v-show=" item.singleProductMode == 'single'">
+        <div
+          class="activity-common-line activity-common-border activity-common-top activity-titleItem"
+          v-show="getData.rightsType === 'single'"
+        >
+          <div
+            class="activity-item"
+            v-show="item.singleProductMode === 'single'"
+          >
             <span class="activity-name-icon">购</span>
-            <span class="activity-common-left activity-common-product">{{item.productModel}}&nbsp{{item.productGroupName}}</span>
+            <span class="activity-common-left activity-common-product">{{item.productModel}}&nbsp;{{item.productGroupName}}</span>
           </div>
-          <div class="activity-item" v-show=" item.singleProductMode == 'multi' ">
+          <div class="activity-item" v-show="item.singleProductMode === 'multi' ">
             <span class="activity-name-icon">购</span>
-            <span class="activity-common-left activity-common-product1" v-for="(pro,x) in item.rightsProductDtoList">{{pro.productModel}}&nbsp{{pro.productGroupName}}、</span>
+            <span
+              class="activity-common-left activity-common-product1"
+              v-for="(pro,x) in item.rightsProductDtoList"
+              :key="x"
+            >{{pro.productModel}}&nbsp;{{pro.productGroupName}}、</span>
           </div>
-          <div class="activity-item" v-show=" item.singleProductMode == 'all' ">
+          <div class="activity-item" v-show="item.singleProductMode === 'all' ">
             <span class="activity-name-icon">购</span>
             <span class="activity-common-left activity-common-product">全部型号</span>
           </div>
-          <span class="activity-common-product activity-common-left activity-float" v-show="getData.giveGiftMode !== 'ratio'">共<span
-            class="activity-type-text">{{item.rightsGiftTotal}}</span>份，剩余<span class="activity-count-remain">{{item.rightsGiftSurplus}}</span>份</span>
-          <span v-show="getData.giveGiftMode === 'ratio' && item.rightsGiftSurplus !== 0" class="activity-common-product activity-common-left activity-float activity-type-text">
+          <span
+            class="activity-common-product activity-common-left activity-float"
+            v-show="getData.giveGiftMode !== 'ratio'"
+          >
+            共<span class="activity-type-text">{{item.rightsGiftTotal}}</span>份，剩余<span class="activity-count-remain">{{item.rightsGiftSurplus}}</span>份
+          </span>
+          <span
+            v-show="getData.giveGiftMode === 'ratio' && item.rightsGiftSurplus !== 0"
+            class="activity-common-product activity-common-left activity-float activity-type-text"
+          >
             剩余多份
           </span>
-          <span v-show="getData.giveGiftMode === 'ratio' && item.rightsGiftSurplus === 0" class="activity-common-product activity-common-left activity-float activity-type-text">
+          <span
+            v-show="getData.giveGiftMode === 'ratio' && item.rightsGiftSurplus === 0"
+            class="activity-common-product activity-common-left activity-float activity-type-text"
+          >
             积分已领完
           </span>
         </div>
@@ -54,18 +87,29 @@
           <!--按特定型号组合-->
           <div class="activity-item" v-show="getData.setsCombineMode === 1">
             <span class="activity-name-icon">购</span>
-            <span class="activity-product" v-for="(rightsSetsCombine ,j) in item.rightsSetsCombineDtoList">
+            <span
+              class="activity-product"
+              v-for="(rightsSetsCombine ,j) in item.rightsSetsCombineDtoList"
+              :key="j"
+            >
             <span v-show="rightsSetsCombine.rightsProductDtoList == null">{{rightsSetsCombine.productBrandName}}{{rightsSetsCombine.industryName}}所有型号
-            <span v-show="item.productCombineSymbols === 'and' && j !== item.rightsSetsCombineDtoList.length - 1">+</span>
-            <span v-show="item.productCombineSymbols === 'or' && j !== item.rightsSetsCombineDtoList.length - 1">/</span>
+            <span
+              v-show="item.productCombineSymbols === 'and' && j !== item.rightsSetsCombineDtoList.length - 1">+</span>
+            <span
+              v-show="item.productCombineSymbols === 'or' && j !== item.rightsSetsCombineDtoList.length - 1">/</span>
             </span>
              <span v-show="rightsSetsCombine.rightsProductDtoList != null">
-              <span v-for="(rightsSetsPro ,l) in rightsSetsCombine.rightsProductDtoList">
+              <span
+                v-for="(rightsSetsPro ,l) in rightsSetsCombine.rightsProductDtoList"
+                :key="l"
+              >
                 {{rightsSetsPro.productBrandName}}{{rightsSetsPro.productGroupName}}{{rightsSetsPro.productModel}}
                 <span v-show="l !== rightsSetsCombine.rightsProductDtoList.length - 1">、</span>
               </span>
-              <span v-show="item.productCombineSymbols === 'and' && j !== item.rightsSetsCombineDtoList.length - 1">+</span>
-              <span v-show="item.productCombineSymbols === 'or' && j !== item.rightsSetsCombineDtoList.length - 1">/</span>
+              <span
+                v-show="item.productCombineSymbols === 'and' && j !== item.rightsSetsCombineDtoList.length - 1">+</span>
+              <span
+                v-show="item.productCombineSymbols === 'or' && j !== item.rightsSetsCombineDtoList.length - 1">/</span>
             </span>
             </span>
           </div>
@@ -91,7 +135,8 @@
                 v-show="getData.giftType === 'virtual'">{{item.virtualGiftName}}</span>
         </div>
       </div>
-      <div class="activity-common-line activity-titleItem activity-common-top activity-common-border" @click="setShowLimit">
+      <div class="activity-common-line activity-titleItem activity-common-top activity-common-border"
+           @click="setShowLimit">
         <span class="activity-tip-text activity-count-remain">其他限制</span>
         <span class="icon iconfont icon-jiantou9 activity-tip-img activity-count-remain"
               :class="{'activity-tip-img-transform': isShowLimit}"></span>
@@ -152,14 +197,41 @@
 
       </div>
       <img class="activity-img" v-if="isFinish && !hasData" src="../../assets/images/orderFollow-up/activity-img.png"/>
-      <div class="activity-number" v-if="!isFinish && !residueGift">
-        <span class="activity-number-minus activity-number-common" @click="minusCount"
-              v-show="!getData.minesGray">-</span>
+      <div
+        v-if="autoChooseMax"
+        class="bActivityItem-choose-rights-btn-par"
+      >
+        <button
+          v-show="!isChose"
+          class="bActivityItem-choose-rights-btn"
+          type="button"
+          @click="chooseMaxnumRights"
+        >选择此权益
+        </button>
+        <img
+          v-show="isChose"
+          class="bActivityItem-choose-rights-chose-icon"
+          src="@/assets/images/orderFollow-up/chosedRightsIcon.png"
+          @click="calcelChooseMaxnumRights"
+        >
+      </div>
+      <div class="activity-number" v-if="!isFinish && !residueGift && !autoChooseMax">
+        <span
+          class="activity-number-minus activity-number-common" @click="minusCount"
+          v-show="!getData.minesGray"
+        >-</span>
         <span class="activity-number-minus activity-number-common-no" v-show="getData.minesGray">-</span>
 
         <span class="activity-number-count">{{getData.selectedNum}}</span>
-        <span class="activity-number-add activity-number-common" @click="addCount" v-show="!getData.addGray">+</span>
-        <span class="activity-number-add activity-number-common-no" v-show="getData.addGray">+</span>
+        <span
+          class="activity-number-add activity-number-common"
+          @click="addCount"
+          v-show="!getData.addGray"
+        >+</span>
+        <span
+          class="activity-number-add activity-number-common-no"
+          v-show="getData.addGray"
+        >+</span>
       </div>
     </div>
   </div>
@@ -169,40 +241,34 @@
 <script>
 export default {
   name: 'BActivityItem',
-  data() {
-    return {
-      isShowLimit: false,
-      isShowConfig: false
-    };
-  },
   props: {
+    // 权益item
     getData: {
-      title: '',
-      reason: '',
-      brand: '',
-      scope: '',
-      data: '',
-      data2: '',
-      type: '',
-      count: {
-        type: Number,
-        default: () => 0
-      },
-      product: {
-        type: Array,
-        default: () => [{
-          name: '',
-          gift: '',
-          count: '',
-          remain: '',
-        }]
-      }
+      type: Object
     },
     isFinish: false,
+    // 是否剩余礼品页面（不可选权益）
     residueGift: false,
     hasData: false,
     rightsType: '',
-
+    // 自动选择最大数量的权益（不再加减去数量，直接选择，数量选择最大）
+    autoChooseMax: {
+      type: Boolean,
+      default: false
+    },
+    // 已选择的权益，autoChooseMax为true的时候起效
+    choseRights: {
+      type: Array,
+      default: () => []
+    }
+  },
+  data() {
+    return {
+      isShowLimit: false,
+      isShowConfig: false,
+      // 已经选中
+      isChose: false
+    };
   },
   created() {
     // this.rightsType = this.getData.rightsType;
@@ -226,9 +292,37 @@ export default {
     addCount() {
       this.$emit('addCount', this.getData);
     },
+    chooseMaxnumRights() {
+      /* 选择最大数量的权益 （直接选择，没有加减数量，默认数量最大） */
+      const {
+        // 允许所选的权益
+        allowRightsConditionDtoList
+      } = this.getData;
+        // 有可选的权益才可选
+      if (allowRightsConditionDtoList && allowRightsConditionDtoList.length) {
+        allowRightsConditionDtoList.forEach(() => {
+          this.$emit('addCount', this.getData);
+        });
+        // 设置选中状态
+        this.isChose = true;
+      }
+    },
+    calcelChooseMaxnumRights() {
+      /* 取消选中 */
+      const {
+        // 允许所选的权益
+        allowRightsConditionDtoList
+      } = this.getData;
+      // 有可选的权益才可选
+      allowRightsConditionDtoList.forEach(() => {
+        this.$emit('minusCount', this.getData);
+      });
+      // 设置选中状态
+      this.isChose = false;
+    }
   },
   watch: {
-    getData(newVal, oldVal) {
+    getData(newVal) {
       this.data = newVal;
     }
   }
@@ -236,6 +330,12 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  .bActivityItem {
+    &.active {
+      border: 1px solid #F5A623;
+    }
+  }
+
   .activity-item-bg {
     position: relative;
     margin-top: 16px;
@@ -246,7 +346,7 @@ export default {
     padding-right: 24px;
     padding-bottom: 20px;
     padding-left: 24px;
-    border-radius: 15px;
+    border-radius: 16px;
     margin-bottom: 40px;
   }
 
@@ -399,6 +499,7 @@ export default {
     font-size: 24px;
     color: #666;
   }
+
   .activity-common-product1 {
     font-size: 24px;
     color: #666;
@@ -480,5 +581,35 @@ export default {
 
   .activity-tip-img-transform {
     transform: scaleY(-1);
+  }
+
+  .bActivityItem-choose-rights-btn-par {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
+  .bActivityItem-choose-rights-btn {
+    position: absolute;
+    white-space: nowrap;
+    top: 24px;
+    right: 24px;
+    border: 1px solid #196AC6;
+    height: 42px;
+    vertical-align: middle;
+    border-radius: 8px;
+    background: #fff;
+    color: #196AC6;
+    font-size: 24px;
+    padding-left: 13px;
+    padding-right: 13px;
+  }
+
+  .bActivityItem-choose-rights-chose-icon {
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    width: 56px;
+    height: 55px;
   }
 </style>
