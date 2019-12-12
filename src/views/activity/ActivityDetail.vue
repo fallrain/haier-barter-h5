@@ -216,7 +216,8 @@ export default {
           posterUrl2: '',
         }
       },
-      activityInfo: {},
+      // activityInfo: {},
+      activityId: '',
       form: {
         productCatagoryList: [],
         userNickname: 'mage',
@@ -239,20 +240,19 @@ export default {
   created() {
     // this.openId = JSON.parse(localStorage.getItem('userinfo')).openId;
     // this.userinfo = JSON.parse(localStorage.getItem('userinfo'));
-    this.getUserInfo = this.$route.params.userInfo;
-    if (this.$route.params.activityInfo) {
-      this.activityInfo = this.$route.params.activityInfo;
-      console.log(this.activityInfo);
+    debugger
+    this.activityId = this.$route.query.activityId || this.$route.params.activityId;
+    if (this.activityId) {
       // 浏览计数增加接口
       this.activityService.shareCount({}, {
-        activityId: this.activityInfo.id,
+        activityId: this.activityId,
         counterTypeCode: 'single_reading_count'
       }).then((res) => {
         console.log(res);
       });
       // 活动详情查询
       this.activityService.queryActivityInfoDetails({}, {
-        activityId: this.activityInfo.id,
+        activityId: this.activityId,
       }).then((res) => {
         if (res.code === 1) {
           this.detailInfo = res.data;
@@ -278,7 +278,7 @@ export default {
     },
     registerDialog() {
       this.activityService.validateJoiner({
-        activityId: this.activityInfo.id,
+        activityId: this.activityId,
         openId: this.openId
       }, {
         requestNoToast: true
@@ -344,7 +344,7 @@ export default {
     },
     joinActivity() {
       let getData = {
-        activityId: this.activityInfo.id,
+        activityId: this.activityId,
         mobile: this.getUserInfo.mobile,
         hmcId: this.getUserInfo.hmcId,
         openId: 'this.getUserInfo.mobile',
