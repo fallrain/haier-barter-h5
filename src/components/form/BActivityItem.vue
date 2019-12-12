@@ -214,6 +214,11 @@
           src="@/assets/images/orderFollow-up/chosedRightsIcon.png"
           @click="calcelChooseMaxnumRights"
         >
+        <div
+          v-show="isChose"
+          class="bActivityItem-choose-rights-maxnum-par"
+        >数量 <span class="bActivityItem-choose-rights-maxnum">{{getData.allowRightsConditionDtoList.length}}</span>
+        </div>
       </div>
       <div class="activity-number" v-if="!isFinish && !residueGift && !autoChooseMax">
         <span
@@ -313,7 +318,7 @@ export default {
         // 允许所选的权益
         allowRightsConditionDtoList
       } = this.getData;
-      // 有可选的权益才可选
+        // 有可选的权益才可选
       allowRightsConditionDtoList.forEach(() => {
         this.$emit('minusCount', this.getData);
       });
@@ -611,5 +616,22 @@ export default {
     right: -1px;
     width: 56px;
     height: 55px;
+  }
+
+  .bActivityItem-choose-rights-maxnum-par {
+    position: absolute;
+    top: 68px;
+    right: 23px;
+    color: #666;
+    font-size: 24px;
+    white-space: nowrap;
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .bActivityItem-choose-rights-maxnum {
+    color: #000;
+    font-size: 26px;
   }
 </style>
