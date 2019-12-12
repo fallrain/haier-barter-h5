@@ -255,7 +255,7 @@ const util = {
         callback: _this.upCallback,
         empty: {
           warpId: _this.curScrollViewName,
-          tip: '<p class="upwarp-empty" style="color: #999999;font-size: 13px">\暂无相关数据~\</p>'
+          tip: '<p class="upwarp-empty" style="color: #999999;font-size: 13px">暂无相关数据</p>'
         },
       }
     });
