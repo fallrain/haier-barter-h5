@@ -47,7 +47,7 @@
             v-for="(item,index) in scrollViewDrainageActivity.list"
             :key="index"
             :getData.sync="item"
-            :userData.sync="userInfo"
+            :userData.sync="getUserInfo"
             @shareClick="shareClick">
           </b-drainage-activity>
         </div>
@@ -127,7 +127,7 @@ export default {
   },
   data() {
     return {
-      userInfo: {},
+      getUserInfo: {},
       current: 0,
       currentActivity: {},
       orderNo: '',
@@ -336,7 +336,7 @@ export default {
     this.getProductGroup();
     this.baseService.userInfo().then((res) => {
       if (res.code === 1) {
-        this.userInfo = res.data;
+        this.getUserInfo = res.data;
       }
     });
     // var vConsole = new VConsole(option);

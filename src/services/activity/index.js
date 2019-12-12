@@ -14,7 +14,8 @@ export default {
   generateQrcode(data) {
     /* 营销活动之引流活动 */
     // return axGetBlob(`${urls.generateQrcode}?redirectUrl=${data}&activityId=${data2}&hmcId=${data3}`);
-    return axGet(urls.qrCodeCreate, data, {
+    return axGet(urls.qrCodeCreate, {
+      ...data,
       returnResponse: true,
       requestNoToast: true
     },

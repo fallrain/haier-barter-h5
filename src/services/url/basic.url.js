@@ -8,6 +8,8 @@ const urls = {
   authorizedUrl: '/customer/oauth2/authorizedUrl',
   // 发送短信验证码给客户
   sendSms: '/customer/oauth2/send/sms',
+  // 获取微信用户信息
+  wxUserInfo: '/customer/oauth2/wxUserInfo',
 
 };
 

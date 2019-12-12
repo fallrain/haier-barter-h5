@@ -322,18 +322,31 @@ export default {
                 desc: '', // 分享描述
                 link: res.data, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
                 imgUrl: '', // 分享图标
-                success: (res)=> {
+                success: (res) => {
                   // 设置成功
                   console.log('success');
                   alert(JSON.stringify(res));
                   this.isShowPopContainer = true;
                 },
-                fail: (res)=> {
+                fail: (res) => {
                   alert(JSON.stringify(res));
                 }
               });
             });
           }
+        }
+      });
+    },
+    getWxUserInfo() {
+      this.basicService.wxUserInfo(
+        { code: '',
+          encryptedData: '',
+          iv: '',
+          rawData: '',
+          signature: '' }
+      ).then((res) => {
+        if (res.code === 1) {
+
         }
       });
     },

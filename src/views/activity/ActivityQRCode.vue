@@ -50,8 +50,7 @@ export default {
   },
   created() {
     this.activityInfo = this.$route.params.activityInfo;
-    this.userInfo = this.$route.params.userInfo;
-    console.log(this.activityInfo);
+    this.getUserInfo = this.$route.params.userInfo;
   },
   activated() {
     this.createQrcode();
@@ -60,7 +59,7 @@ export default {
     return {
       qrcodeImg: '',
       activityInfo: {},
-      userInfo: {},
+      getUserInfo: {},
     };
   },
   methods: {
@@ -72,14 +71,16 @@ export default {
       return this.activityService.generateQrcode({
         activityId: this.activityInfo.id,
         redirectUrl: url,
-        hmcId: this.userInfo.hmcId,
+        hmcId: this.getUserInfo.hmcId,
       }).then((res) => {
         const blob = new Blob([res.data], {
-          type: 'image/jpeg'
+          type: 'image/png'
         });
+        debugger
         const reader = new FileReader();
         reader.readAsDataURL(blob);
         reader.onload = (e) => {
+          debugger
           const result = e.target.result;
           if (result) {
             this.qrcodeImg = result;
@@ -88,7 +89,15 @@ export default {
       });
     },
     downLoadQrcode() {
-      return this.activityService.generateQrcode('http://baidu.com/', '123456', '9999').then((res) => {
+      const protocol = `${window.location.protocol}//`;
+      const host = window.location.host;
+      const pathname = '/activity/activityDetail';
+      const url = `${protocol + host + pathname}?activityId=${this.activityInfo.id}`;
+      return this.activityService.generateQrcode({
+        activityId: this.activityInfo.id,
+        redirectUrl: url,
+        hmcId: this.getUserInfo.hmcId,
+      }).then((res) => {
         this.bUtil.downloadFile(res.data);
       });
     },
