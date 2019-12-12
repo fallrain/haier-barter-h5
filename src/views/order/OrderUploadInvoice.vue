@@ -87,6 +87,7 @@ export default {
   },
   data() {
     return {
+      isUpload: false, // 是否必须上传发票标识
       invoiceList: [],
       fileMap: {},
       // 上传类型类型单选
@@ -122,6 +123,14 @@ export default {
       this.orderFollowId = this.$route.params.orderFollowId;
       this.getData();
     }
+    if (this.$route.params.subInfo) {
+      const subInfo = this.$route.params.subInfo;
+      if (subInfo.rightsUserJson !== '' && subInfo.orderType === 1) {
+        this.isUpload = true;
+      } else {
+        this.isUpload = false;
+      }
+    }
   },
   computed: {
     ...mapGetters([
@@ -139,6 +148,10 @@ export default {
       }
     },
     skipUpload() {
+      if (this.isUpload) {
+        Toast.failed('此单为套购且已选权益，请上传购机凭证!');
+        return;
+      }
       this.$router.push({
         name: 'Order.OrderConfirm',
         params: {

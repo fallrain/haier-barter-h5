@@ -1042,7 +1042,8 @@ export default {
                           name: 'Order.OrderUploadInvoice',
                           params: {
                             orderNo: this.orderNo,
-                            orderFollowId: this.orderFollowId
+                            orderFollowId: this.orderFollowId,
+                            subInfo: this.subInfo
                           }
                         });
                       }
@@ -1074,7 +1075,8 @@ export default {
                       name: 'Order.OrderUploadInvoice',
                       params: {
                         orderNo: this.orderNo,
-                        orderFollowId: this.orderFollowId
+                        orderFollowId: this.orderFollowId,
+                        subInfo: this.subInfo
                       }
                     });
                   }
@@ -1096,7 +1098,8 @@ export default {
                         name: 'Order.OrderUploadInvoice',
                         params: {
                           orderNo: this.orderNo,
-                          orderFollowId: this.orderFollowId
+                          orderFollowId: this.orderFollowId,
+                          subInfo: this.subInfo
                         }
                       });
                       // this.$destroy();
@@ -1282,7 +1285,8 @@ export default {
                   name: 'Order.OrderUploadInvoice',
                   params: {
                     orderNo: this.orderNo,
-                    orderFollowId: this.orderFollowId
+                    orderFollowId: this.orderFollowId,
+                    subInfo: this.subInfo
                   }
                 });
               }
