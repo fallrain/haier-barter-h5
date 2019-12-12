@@ -1159,11 +1159,6 @@ export default {
     color: #666666;
   }
 
-  .iconfont {
-    font-size: 40px;
-    float: right;
-  }
-
   .bottom-btn {
     width: 100%;
     padding: 20px 0;
