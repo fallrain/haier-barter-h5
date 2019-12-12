@@ -96,7 +96,8 @@ export default {
     showActivityDetail() {
       this.$router.push({
         name: 'Activity.ActivityDetail',
-        params: { activityInfo: this.getData }
+        params: { activityInfo: this.getData,
+          userInfo: this.userData }
       });
     }
   },

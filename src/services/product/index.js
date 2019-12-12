@@ -40,5 +40,8 @@ export default {
   },
   industryGroup(){
     return axGet(urls.industryGroup)
-  }
+  },
+  industryGroupList(){
+    return axGet(urls.industryGroupList)
+  },
 };

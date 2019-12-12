@@ -113,6 +113,10 @@ export default {
         single_reading_count: '浏览',
         single_share_count: '分享',
         single_forword_count: '转发',
+        single_join_count: '参加',
+        single_conversion_count: '转化订单',
+        single_conversion_amount_sum: '转化金额',
+        single_receive_coupon_count: '领劵',
       },
       detailInfo: {},
       activityInfo: {
@@ -128,7 +132,6 @@ export default {
   },
   methods: {
     getAnalysisData() {
-      console.log('this.startDate', this.startDate);
       this.activityService.detailCount({}, {
         activityId: this.activityInfo.id,
         countDateStart: `${this.startDate} 00:00:00`,

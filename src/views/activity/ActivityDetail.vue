@@ -102,9 +102,9 @@
             class="md-check-group-inline activityDetail-checkbox"
             v-model="checkboxType"
           >
-            <md-check name="self">预约认筹</md-check>
-            <md-check name="couple">预约服务</md-check>
-            <md-check name="parent">预约设计</md-check>
+            <md-check name="1">预约认筹</md-check>
+            <md-check name="2">预约服务</md-check>
+            <md-check name="3">预约设计</md-check>
           </md-check-group>
         </div>
         <b-item
@@ -219,11 +219,9 @@ export default {
       activityInfo: {},
       form: {
         productCatagoryList: [],
-        userNickname: '',
-        mobile: '',
-        appointType: '',
-        productType: '',
-        verifyCode: ''
+        userNickname: 'mage',
+        mobile: '17734561661',
+        verifyCode: '234'
       },
       // 注册对话框显示隐藏
       registerDialogShow: false,
@@ -232,31 +230,16 @@ export default {
       checkboxType: [],
       // 注册对话框显示隐藏
       isShowProductCatagory: false,
-      productCatagoryList: [
-        {
-          id: 1,
-          name: '冰箱'
-        },
-        {
-          id: 2,
-          name: '彩电'
-        },
-        {
-          id: 3,
-          name: '厕所'
-        },
-        {
-          id: 4,
-          name: '刘能'
-        }
-      ],
+      productCatagoryList: [],
       isRead: 0,
       isShowPopContainer: false,
+      getUserInfo: {}
     };
   },
   created() {
-    this.openId = JSON.parse(localStorage.getItem('userinfo')).openId;
-    this.userinfo = JSON.parse(localStorage.getItem('userinfo'));
+    // this.openId = JSON.parse(localStorage.getItem('userinfo')).openId;
+    // this.userinfo = JSON.parse(localStorage.getItem('userinfo'));
+    this.getUserInfo = this.$route.params.userInfo;
     if (this.$route.params.activityInfo) {
       this.activityInfo = this.$route.params.activityInfo;
       console.log(this.activityInfo);
@@ -276,6 +259,7 @@ export default {
         }
       });
     }
+    this.getProductGroup();
   },
   computed: {
     productCatagoryName() {
@@ -288,7 +272,7 @@ export default {
     }
   },
   methods: {
-    showProductCatagory() {
+    showProductCatagory(item) {
       /* 显示产品类别 */
       this.isShowProductCatagory = true;
     },
@@ -306,11 +290,16 @@ export default {
       this.registerDialogShow = true;
     },
     getProductGroup() {
-      this.productService.industryGroup().then((res) => {
-        if (res.code === 1) {
-          this.productGroupName = res.data;
-        }
-      });
+      this.productService.industryGroupList()
+        .then((res) => {
+          if (res.code === 1) {
+            res.data.forEach((item) => {
+              item.name = item.groupName;
+              item.id = item.groupCode;
+            });
+            this.productCatagoryList = res.data;
+          }
+        });
     },
     share() {
       this.basicService.authorizedUrl({ frontUrl: 'https://testdb.haier.net/activity/activityDetail' }).then((res) => {
@@ -337,28 +326,50 @@ export default {
         }
       });
     },
-    getWxUserInfo() {
-      this.basicService.wxUserInfo(
-        { code: '',
-          encryptedData: '',
-          iv: '',
-          rawData: '',
-          signature: '' }
-      ).then((res) => {
-        if (res.code === 1) {
-
-        }
-      });
-    },
+    // getWxUserInfo() {
+    //   this.basicService.wxUserInfo(
+    //     { code: '',
+    //       encryptedData: '',
+    //       iv: '',
+    //       rawData: '',
+    //       signature: '' }
+    //   ).then((res) => {
+    //     if (res.code === 1) {
+    //
+    //     }
+    //   });
+    // },
     closeShare() {
       this.isShowPopContainer = false;
     },
     joinActivity() {
-      this.activityService.saveJoiner({
+      let getData = {
         activityId: this.activityInfo.id,
-        mobile: '18512341234',
-        productType: 'AA',
-      }).then((res) => {
+        mobile: this.getUserInfo.mobile,
+        hmcId: this.getUserInfo.hmcId,
+        openId: 'this.getUserInfo.mobile',
+        productType: this.form.productCatagoryList[0],
+        ...this.form,
+      };
+      this.checkboxType.forEach((item) => {
+        if (item == 1) {
+          getData = {
+            ...getData,
+            identifyFlag: 1,
+          };
+        } else if (item == 2) {
+          getData = {
+            ...getData,
+            serviceFlag: 1,
+          };
+        } else if (item == 3) {
+          getData = {
+            ...getData,
+            designFlag: 1,
+          };
+        }
+      });
+      this.activityService.saveJoiner(getData).then((res) => {
         console.log(res);
       });
     },
