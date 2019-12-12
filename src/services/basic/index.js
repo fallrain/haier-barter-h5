@@ -26,8 +26,4 @@ export default {
     /* 发送短信验证码给客户 */
     return axPost(urls.sendSms, data);
   },
-  wxUserInfo(data) {
-    /* 获取微信用户信息 */
-    return axPost(urls.wxUserInfo, data);
-  },
 };

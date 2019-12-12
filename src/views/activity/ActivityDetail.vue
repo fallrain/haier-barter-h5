@@ -329,23 +329,14 @@ export default {
         }
       });
     },
-    // getWxUserInfo() {
-    //   this.basicService.wxUserInfo(
-    //     { code: '',
-    //       encryptedData: '',
-    //       iv: '',
-    //       rawData: '',
-    //       signature: '' }
-    //   ).then((res) => {
-    //     if (res.code === 1) {
-    //
-    //     }
-    //   });
-    // },
     closeShare() {
       this.isShowPopContainer = false;
     },
     joinActivity() {
+      if (!this.isRead) {
+        Toast.info('请阅读阅读并同意隐私协议');
+        return;
+      }
       let getData = {
         activityId: this.activityId,
         mobile: this.getUserInfo.mobile,
