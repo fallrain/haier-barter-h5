@@ -67,7 +67,7 @@ export default {
       const protocol = `${window.location.protocol}//`;
       const host = window.location.host;
       const pathname = '/activity/activityDetail';
-      const url = `${protocol + host + pathname}?activityId=${this.activityInfo.id}`;
+      const url = `${protocol + host + pathname}?activityId=${this.activityInfo.id}&unionId=${this.getUserInfo.unionId}`;
       return this.activityService.generateQrcode({
         activityId: this.activityInfo.id,
         redirectUrl: url,
@@ -76,11 +76,9 @@ export default {
         const blob = new Blob([res.data], {
           type: 'image/png'
         });
-        debugger
         const reader = new FileReader();
         reader.readAsDataURL(blob);
         reader.onload = (e) => {
-          debugger
           const result = e.target.result;
           if (result) {
             this.qrcodeImg = result;

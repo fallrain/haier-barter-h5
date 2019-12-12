@@ -153,6 +153,7 @@ export default {
       searchVal: '',
       currentList: [],
       productGroupName: [],
+      unionId: '',
     };
   },
   methods: {
@@ -334,9 +335,16 @@ export default {
   },
   created() {
     this.getProductGroup();
+    // unionId=oe6Qqv0hQ-tQ5HixncpxsZhD8FH0
+    this.unionId = this.$route.query.unionId;
+    console.log('maActivity', this.unionId);
     this.baseService.userInfo().then((res) => {
       if (res.code === 1) {
         this.getUserInfo = res.data;
+        this.getUserInfo = {
+          ...this.getUserInfo,
+          unionId: this.unionId,
+        };
       }
     });
     // var vConsole = new VConsole(option);

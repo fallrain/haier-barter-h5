@@ -234,14 +234,17 @@ export default {
       productCatagoryList: [],
       isRead: 0,
       isShowPopContainer: false,
-      getUserInfo: {}
+      getUserInfo: {},
+      unionId: '',
     };
   },
   created() {
     // this.openId = JSON.parse(localStorage.getItem('userinfo')).openId;
     // this.userinfo = JSON.parse(localStorage.getItem('userinfo'));
-    debugger
+    this.getUserInfo = this.$route.params.userInfo;
     this.activityId = this.$route.query.activityId || this.$route.params.activityId;
+    this.unionId = this.$route.query.unionId || this.getUserInfo.unionId;
+    console.log('activityDetail', this.unionId);
     if (this.activityId) {
       // 浏览计数增加接口
       this.activityService.shareCount({}, {
@@ -347,7 +350,7 @@ export default {
         activityId: this.activityId,
         mobile: this.getUserInfo.mobile,
         hmcId: this.getUserInfo.hmcId,
-        openId: 'this.getUserInfo.mobile',
+        openId: this.unionId,
         productType: this.form.productCatagoryList[0],
         ...this.form,
       };
