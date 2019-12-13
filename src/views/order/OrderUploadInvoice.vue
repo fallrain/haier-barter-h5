@@ -125,7 +125,7 @@ export default {
     }
     if (this.$route.params.subInfo) {
       const subInfo = this.$route.params.subInfo;
-      if (subInfo.rightsUserJson !== '' && subInfo.orderType === 1) {
+      if (subInfo.rightsUserJson !== '' || subInfo.orderType === 1) {
         this.isUpload = true;
       } else {
         this.isUpload = false;
