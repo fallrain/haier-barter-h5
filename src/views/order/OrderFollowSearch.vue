@@ -157,6 +157,7 @@
 </template>
 <script>
 import {
+  Dialog,
   Icon,
   NoticeBar,
   Popup,
@@ -164,8 +165,7 @@ import {
   ScrollViewMore,
   ScrollViewRefresh,
   TabBar,
-  Toast,
-  Dialog
+  Toast
 } from 'mand-mobile';
 import {
   BPopButton,
@@ -405,8 +405,26 @@ export default {
     },
     // 入户服务
     userService(item) {
+      const {
+        businessScenarios
+      } = item;
+      const args = {
+        userId: item.userId,
+        userName: item.userName,
+        mobile: item.userMobile,
+        flowStatus: item.flowStatus,
+        workFlowId: item.id,
+        hmcId: this.userinfo.hmcid,
+        orderNo: item.orderNo,
+        businessScenarios
+      };
+      // 爱到家需要传add4，add4是预留字段，由其他系统传递而来
+      if (businessScenarios === 'ADJ') {
+        args.add4 = item.add4;
+      }
+      const argsStr = this.bUtil.genQueryStringByObj(args);
       wx.miniProgram.navigateTo({
-        url: `/pages/userService/userService?userId=${item.userId}&userName=${item.userName}&mobile=${item.userMobile}&flowStatus=${item.flowStatus}&workFlowId=${item.id}&hmcId=${this.userinfo.hmcid}&orderNo=${item.orderNo}`
+        url: `/pages/userService/userService${argsStr}`
       });
     },
     // 潜在客户
@@ -415,7 +433,6 @@ export default {
         url: `/pages/mabyByuser/mabyByuser?userId=${item.userId}&userName=${item.userName}&mobile=${item.userMobile}&flowStatus=${item.flowStatus}&workFlowId=${item.id}&domainName=${item.recordMode}&orderNo=${item.orderNo}`
       });
     },
-
     headSwitch(index) {
       if (index === this.preIndex) {
         this.headList[index].isActive = false;
@@ -633,8 +650,8 @@ export default {
     anylizeData(curList) {
       curList.forEach((item) => {
         /*
-          0-跟进中  1-已完成  2-草稿  3-暂不跟进 4-取消 5-异常
-          */
+            0-跟进中  1-已完成  2-草稿  3-暂不跟进 4-取消 5-异常
+            */
         if (item.flowStatus === 1) {
           // item.buttonList = [{ name: '录新订单' }, { name: '退货' }, { name: '换货' }];// 已完成
           // item.buttonList = [{ name: '录新订单' },{ name: '补录订单' }];// 已完成
@@ -768,7 +785,8 @@ export default {
       // this.$router.go(0);
       // window.location.reload();
       // let href = window.location.href;
-      // href += (href.indexOf('?') > -1 ? '&' : '?') + `_t=${(Math.random() + '').replace('.', '')}`;
+      // href += (href.indexOf('?') > -1 ? '&' : '?') + `
+      // _t =${(Math.random() + '').replace('.', '')}`;
       // window.location.replace(href);
     } else {
       next();
@@ -880,7 +898,8 @@ export default {
       height: 80px;
     }
   }
-  .notice-bar{
+
+  .notice-bar {
     height: 80px;
   }
 
