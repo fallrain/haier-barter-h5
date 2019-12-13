@@ -149,7 +149,7 @@ export default {
     },
     skipUpload() {
       if (this.isUpload) {
-        Toast.failed('此单为套购且已选权益，请上传购机凭证!');
+        Toast.failed('此单为套购或已选择权益，请上传购机凭证!');
         return;
       }
       this.$router.push({
