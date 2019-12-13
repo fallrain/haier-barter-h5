@@ -3,6 +3,7 @@ import Test from '@/views/home/Test';
 import orderRoutes from '@/router/order';
 import salesRoutes from '@/router/sales';
 import reportInstallRoutes from '@/router/reportInstall';
+import haierhouseRoutes from '@/router/haierhouse';
 
 const data = [
   {
@@ -15,7 +16,8 @@ const data = [
   },
   ...orderRoutes,
   ...salesRoutes,
-  ...reportInstallRoutes
+  ...reportInstallRoutes,
+  ...haierhouseRoutes
 ];
 if (process.env.NODE_ENV !== 'production') {
   data.unshift({

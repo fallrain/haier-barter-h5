@@ -15,6 +15,8 @@ import product from '@/services/product';
 import rights from '@/services/rights';
 // 活动
 import campaignService from '@/services/campaign';
+// 一站筑家
+import haierhouseService from '@/services/haierhouse';
 
 Vue.prototype.basicService = basicService;
 Vue.prototype.baseService = baseService;
@@ -24,3 +26,4 @@ Vue.prototype.salesService = sales;
 Vue.prototype.productService = product;
 Vue.prototype.rightsService = rights;
 Vue.prototype.campaignService = campaignService;
+Vue.prototype.haierhouseService = haierhouseService;
