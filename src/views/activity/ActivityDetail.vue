@@ -282,15 +282,16 @@ export default {
     registerDialog() {
       this.activityService.validateJoiner({
         activityId: this.activityId,
-        openId: this.openId
+        openId: this.unionId
       }, {
         requestNoToast: true
       }).then((res) => {
         if (res.code === -1) {
           Toast.failed('您已经报名了该活动！无需继续报名');
+        } else {
+          this.registerDialogShow = true;
         }
       });
-      this.registerDialogShow = true;
     },
     getProductGroup() {
       this.productService.industryGroupList()

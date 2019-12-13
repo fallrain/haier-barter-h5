@@ -68,22 +68,29 @@ export default {
       const host = window.location.host;
       const pathname = '/activity/activityDetail';
       const url = `${protocol + host + pathname}?activityId=${this.activityInfo.id}&unionId=${this.getUserInfo.unionId}`;
-      return this.activityService.generateQrcode({
-        activityId: this.activityInfo.id,
-        redirectUrl: url,
-        hmcId: this.getUserInfo.hmcId,
-      }).then((res) => {
-        const blob = new Blob([res.data], {
-          type: 'image/png'
-        });
-        const reader = new FileReader();
-        reader.readAsDataURL(blob);
-        reader.onload = (e) => {
-          const result = e.target.result;
-          if (result) {
-            this.qrcodeImg = result;
+      this.basicService.authorizedUrl({ frontUrl: url }).then((res) => {
+        if (res.code === 1) {
+          if (res.data) {
+            return this.activityService.generateQrcode({
+              activityId: this.activityInfo.id,
+              redirectUrl: res.data,
+              hmcId: this.getUserInfo.hmcId,
+            }).then((res1) => {
+              const blob = new Blob([res1.data], {
+                type: 'image/png'
+              });
+              const reader = new FileReader();
+              reader.readAsDataURL(blob);
+              reader.onload = (e) => {
+                const result = e.target.result;
+                if (result) {
+                  this.qrcodeImg = result;
+                }
+              };
+            });
           }
-        };
+          Toast.info('请阅读阅读并同意隐私协议');
+        }
       });
     },
     downLoadQrcode() {
