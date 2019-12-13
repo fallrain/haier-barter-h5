@@ -26,7 +26,7 @@
         ></b-order-follow-item-del>
         <div
           class="row-class pt10"
-          :class="[['YZZJ','YJHX', 'ADJ', 'SMLD', 'SGLD', 'RC','YYFW'].includes(followItem.businessScenarios) && 'pl88']"
+          :class="[['YZZJ','YJHX', 'ADJ', 'SMLD', 'SGLD', 'RC','YYFW'].includes(followItem.businessScenarios) && 'pl56']"
         >
           <span class="label-span">{{followItem.userName}}</span>
           <span
@@ -37,40 +37,39 @@
             class="sex-class"
             v-show="followItem.userSex === '2'"
           >女士</span>
-          <span class="sex-class">
+        <span class="sex-class-tel">
           <img
             src="@/assets/images/orderFollow-up/tel@3x.png"
             class="telImage"
           >
-        </span>
-        <span class="sex-class-tel">
           <a
             :href="'tel:' + followItem.userMobile" class="telClass"
             @click="recordCall(followItem)"
           >{{followItem.userMobile}}</a></span>
         </div>
-        <div class="row-class">
-          <img
-            src="@/assets/images/orderFollow-up/Haier@3x.png"
-            class="brandImage"
-            v-show="followItem.recordMode ==='Haier'"
-          >
-          <img
-            src="@/assets/images/orderFollow-up/Casarte@3x.png"
-            class="brandImage"
-            v-show="followItem.recordMode ==='Casarte'"
-          >
-          <span class="hand-class">{{followItem.userS}}</span>
-          <span class="handred-class">{{followItem.tardinessS}}</span>
-          <span class="handgray-class">{{followItem.flowS}}</span>
-        </div>
-        <div class="row-class bOrderFollowItem-row-time">
-          <img
-            src="@/assets/images/orderFollow-up/time@3x.png"
-            class="timeImage"
-          >
-          <span class="time-label">{{followItem.updatedTime}}</span>
-          <div class="bOrderFollowItem-row-time-right">
+        <div :class="[['YZZJ','YJHX', 'ADJ', 'SMLD', 'SGLD', 'RC','YYFW'].includes(followItem.businessScenarios) && 'pl56']">
+          <div class="row-class">
+            <img
+              src="@/assets/images/orderFollow-up/Haier@3x.png"
+              class="brandImage"
+              v-show="followItem.recordMode ==='Haier'"
+            >
+            <img
+              src="@/assets/images/orderFollow-up/Casarte@3x.png"
+              class="brandImage"
+              v-show="followItem.recordMode ==='Casarte'"
+            >
+            <span class="hand-class">{{followItem.userS}}</span>
+            <span class="handred-class">{{followItem.tardinessS}}</span>
+            <span class="handgray-class">{{followItem.flowS}}</span>
+          </div>
+          <div class="row-class bOrderFollowItem-row-time">
+            <img
+              src="@/assets/images/orderFollow-up/time@3x.png"
+              class="timeImage"
+            >
+            <span class="time-label">{{followItem.updatedTime}}</span>
+            <div class="bOrderFollowItem-row-time-right">
           <span
             v-show="followItem.flowStatus === 4 || followItem.flowStatus === 5 || followItem.businessScenarios === 'YYFW' || followItem.businessScenarios === 'ADJ'"
             @click="detailHide(index,followItem)"
@@ -78,29 +77,30 @@
           >
             <span class="information-class">详细信息 </span>
           </span>
-            <span
-              v-show="followItem.businessScenarios === 'YJHX'"
-              @click="gujiaClick(followItem)"
-              class="information-class-de bOrderFollowItem-textBtn"
-            >估价详情
+              <span
+                v-show="followItem.businessScenarios === 'YJHX'"
+                @click="gujiaClick(followItem)"
+                class="information-class-de bOrderFollowItem-textBtn"
+              >估价详情
           </span>
-            <span
-              v-show="followItem.flowStatus === 1"
-              @click="itemClick(followItem)"
-              class="information-class-de bOrderFollowItem-textBtn"
-            >查看详情
-              <!--<img-->
-              <!--src="@/assets/images/orderFollow-up/xialablue@3x.png"-->
-              <!--class="information-xiala"-->
+              <span
+                v-show="followItem.flowStatus === 1"
+                @click="itemClick(followItem)"
+                class="information-class-de bOrderFollowItem-textBtn"
+              >查看详情
+                <!--<img-->
+                <!--src="@/assets/images/orderFollow-up/xialablue@3x.png"-->
+                <!--class="information-xiala"-->
 
-              <!--v-show="!followItem.detailShow"-->
-              <!--&gt;-->
-              <!--<img-->
-              <!--src="@/assets/images/orderFollow-up/shangla@3x.png"-->
-              <!--class="information-xiala"-->
-              <!--v-show="followItem.detailShow"-->
-              <!--&gt;-->
+                <!--v-show="!followItem.detailShow"-->
+                <!--&gt;-->
+                <!--<img-->
+                <!--src="@/assets/images/orderFollow-up/shangla@3x.png"-->
+                <!--class="information-xiala"-->
+                <!--v-show="followItem.detailShow"-->
+                <!--&gt;-->
           </span>
+            </div>
           </div>
         </div>
         <!--<div-->
@@ -560,7 +560,7 @@ export default {
   .telImage {
     height: 32px;
     width: 32px;
-    margin-left: 10px;
+    margin-right: 10px;
     padding-bottom: 2px;
     top: 0;
   }
@@ -595,21 +595,29 @@ export default {
   }
 
   .label-span {
-    // display: inline;
+    display: inline-block;
     color: #333333;
     font-size: 36px;
+    max-width: 480px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+    margin-right: 10px;
   }
 
   .sex-class {
     color: #999999;
     font-size: 28px;
     margin-left: 10px;
+    vertical-align: middle;
   }
 
   .sex-class-tel {
+    display: inline-block;
     color: #999999;
     font-size: 28px;
-    margin-left: 10px;
+    vertical-align: middle;
 
     a {
       color: #999999;

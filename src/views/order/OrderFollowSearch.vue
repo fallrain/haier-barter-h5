@@ -82,9 +82,10 @@
     <b-order-follow-search-bar
       v-show="curScrollViewName==='scrollViewOdd'"
       :sortArray="oddOrderSortList"
-      :isShowScenario="false"
-      :scenarioList="scenarioList"
+      :scenarioList="oddScenarioList"
       :businessType.sync="scrollViewOdd.businessType"
+      businessCheckType="radio"
+      :businessTypeRadioCancel="true"
       :sortType.sync="scrollViewOdd.sortType"
       @checkClick="checkClicked"
       @popButtonClicked="buttonClicked"
@@ -288,6 +289,25 @@ export default {
       },
       // 业务场景下拉数据
       scenarioList: [],
+      // 异常订单场景
+      oddScenarioList: [
+        {
+          itemCode: '0',
+          itemName: '待审核'
+        },
+        {
+          itemCode: '1',
+          itemName: '审核通过'
+        },
+        {
+          itemCode: '2',
+          itemName: '审核驳回'
+        },
+        {
+          itemCode: '3',
+          itemName: '人工处理'
+        }
+      ],
       // 异常订单-排序方式
       oddOrderSortList: [
         {
@@ -578,7 +598,7 @@ export default {
         searchData = {
           keyWord: this.searchWord,
           sortType: this[this.curScrollViewName].sortType * 1,
-          status: ''
+          status: this[this.curScrollViewName].businessType || '',
         };
       } else {
         queryServiceName = 'queryOrderFollowList';

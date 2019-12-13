@@ -72,15 +72,15 @@ export default {
 
   .orderFollowItem-type-tag {
     width: 200px;
-    height: 40px;
-    line-height: 40px;
+    height: 32px;
+    line-height: 32px;
     color: #fff;
-    font-size: 24px;
+    font-size: 20px;
     text-align: center;
     background: red;
-    transform: rotateZ(-40deg);
+    transform: rotateZ(-45deg);
     margin-top: 26px;
-    margin-left: -46px;
+    margin-left: -52px;
   }
 
   .orderFollowItem-type-tag-yzzj {

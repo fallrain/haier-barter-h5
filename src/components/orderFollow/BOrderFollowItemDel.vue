@@ -109,15 +109,16 @@ export default {
 <style lang="scss">
   .order-follow-item-del {
     position: absolute;
-    top: 0;
+    top: 16px;
     right: 20px;
     display: flex;
     align-items: center;
     height: 60px;
     color: #666;
-    font-size: 24px;
+    font-size: 28px;
 
     .iconfont {
+      font-size: 34px;
       margin-right: 6px;
     }
   }

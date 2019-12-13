@@ -25,6 +25,8 @@
     >
     </b-pop-sort-type>
     <b-pop-button
+      :type="businessCheckType"
+      :radioCancel="businessTypeRadioCancel"
       :show.sync="scenarioShow"
       :list="scenarioList"
       v-model="businessTypeTemp"
@@ -54,6 +56,15 @@ export default {
     // 场景类型
     businessType: {
       type: String
+    },
+    // 业务场景选择类型:radio checkbox
+    businessCheckType: {
+      type: String
+    },
+    // 业务场景选择类型radios是否可取消
+    businessTypeRadioCancel: {
+      type: Boolean,
+      default: false
     },
     // 排序类型id
     sortArray: {

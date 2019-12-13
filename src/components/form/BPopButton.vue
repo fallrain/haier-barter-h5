@@ -1,25 +1,30 @@
 <template>
-  <div class="b-pop-checkList1">
+  <div class="b-pop-button">
     <md-popup
       v-model="popupShow"
       position="top"
       transition="fade"
     >
-      <div class="b-pop-checkList-cnt1">
-        <ul>
-          <div style="background-color:white;height: 70px;">
-            <p
-              class="b-pop-checkList-item1"
-              :class="[checkIds.some(v=>v===item.itemCode) && 'active']"
-              v-for="(item,index) in list"
-              :key="index"
-              @click="checkboxClick(item)"
-            ><span class="b-pop-checkList-item-name">{{item.itemName}}</span></p>
-          </div>
-          <div>
-            <p class="confirmbtn" @click="checkboxClickConfirm()">确定</p>
-          </div>
+      <div class="b-pop-button-cnt">
+        <ul class="b-pop-button-cnt-list">
+          <li
+            class="b-pop-button-cnt-list-item"
+            :class="[checkIds.some(v=>v===item.itemCode) && 'active']"
+            v-for="(item,index) in list"
+            :key="index"
+            @click="checkboxClick(item)"
+          >
+            <span class="b-pop-button-cnt-list-item-name">{{item.itemName}}</span>
+          </li>
         </ul>
+        <div>
+          <button
+            type="button"
+            class="confirmbtn"
+            @click="checkboxClickConfirm()"
+          >确定
+          </button>
+        </div>
       </div>
     </md-popup>
   </div>
@@ -41,6 +46,11 @@ export default {
     type: {
       type: String,
       default: 'checkbox'
+    },
+    // 是否在radio状态下也可通过再次点击取消选中状态
+    radioCancel: {
+      type: Boolean,
+      default: false
     },
     value: {
       type: Array,
@@ -81,10 +91,21 @@ export default {
   methods: {
     checkboxClick(item) {
       const index = this.checkIds.findIndex(itemCode => itemCode === item.itemCode);
-      if (index === -1) {
-        this.checkIds.push(item.itemCode);
+      // 多选添加数组添加id
+      if (this.type === 'checkbox') {
+        if (index === -1) {
+          this.checkIds.push(item.itemCode);
+        } else {
+          this.checkIds.splice(index, 1);
+        }
       } else {
-        this.checkIds.splice(index, 1);
+        // 单选重置数组
+        // 可取消radio的选中状态的话，则重置为空
+        if (this.radioCancel && index > -1) {
+          this.checkIds = [];
+        } else {
+          this.checkIds = [item.itemCode];
+        }
       }
     },
     checkboxClickConfirm() {
@@ -97,7 +118,7 @@ export default {
 </script>
 
 <style lang="scss">
-  .b-pop-checkList1 {
+  .b-pop-button {
     .md-popup-title-bar {
       // height: 100px;
 
@@ -125,31 +146,39 @@ export default {
     }
   }
 
-  .b-pop-checkList-cnt1 {
+  .b-pop-button-cnt {
     background: #fff;
-    padding-bottom: 24px;
-    height: 240px;
+    padding-bottom: 16px;
   }
 
-  .b-pop-checkList-item1 {
+  .b-pop-button-cnt-list {
+    &:after {
+      content: '';
+      display: block;
+      clear: both;
+    }
+  }
+
+  .b-pop-button-cnt-list-item {
+    // width: 180px;
+    height: 60px;
+    margin-top: 10px;
+    margin-left: 24px;
     padding-left: 24px;
     padding-right: 24px;
-    height: 60px;
     line-height: 60px;
+    background: #fff;
     text-align: center;
     color: #666666;
     border: 1px #cccccc solid;
     font-size: 24px;
-    // width: 180px;
     border-radius: 30px;
     float: left;
-    margin-top: 10px;
-    margin-left: 24px;
 
     &.active {
       border-color: #1969C6;
 
-      .b-pop-checkList-item-name {
+      .b-pop-button-cnt-list-item-name {
         color: #1969C6;
       }
     }
@@ -161,18 +190,18 @@ export default {
   }
 
   .confirmbtn {
-    font-size: 32px;
+    width: 120px;
+    font-size: 28px;
     color: white;
     background-color: #1969C6;
     text-align: center;
-    padding: 15px;
+    padding: 10px 15px;
     margin-left: 600px;
-    border-radius: 20px;
-    width: 120px;
-    margin-top: 10px;
+    border-radius: 30px;
+    margin-top: 16px;
   }
 
-  .b-pop-checkList-item-name {
+  .b-pop-button-cnt-list-item-name {
     font-size: 28px;
     color: #666;
   }

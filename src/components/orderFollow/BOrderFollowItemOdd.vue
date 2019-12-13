@@ -91,6 +91,7 @@ export default {
   }
 
   .bOrderFollowItemOdd-cnt-item-val {
+    word-break: break-all;
     margin-left: 10px;
     flex-grow: 1;
   }
