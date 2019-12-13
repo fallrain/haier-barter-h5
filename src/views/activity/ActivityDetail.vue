@@ -243,7 +243,11 @@ export default {
     // this.userinfo = JSON.parse(localStorage.getItem('userinfo'));
     this.getUserInfo = this.$route.params.userInfo;
     this.activityId = this.$route.query.activityId || this.$route.params.activityId;
-    this.unionId = this.$route.query.unionId || this.getUserInfo.unionId;
+    if (this.getUserInfo) {
+      this.unionId = this.getUserInfo.unionId;
+    } else {
+      this.unionId = this.$route.query.unionId;
+    }
     console.log('activityDetail', this.unionId);
     if (this.activityId) {
       // 浏览计数增加接口
