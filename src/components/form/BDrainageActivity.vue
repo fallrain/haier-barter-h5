@@ -29,12 +29,14 @@
       <button
         type="button"
         class="common-btn-primary"
+        v-show="false"
         @click.stop="share">
         分享
       </button>
       <button
         type="button"
         class="common-btn-primary"
+        v-show="false"
         style="margin-left:15px">
         认筹营销
       </button>

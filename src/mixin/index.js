@@ -10,6 +10,7 @@ export default {
         'miniProgram.switchTab',
         'miniProgram.navigateTo',
         'miniProgram.reLaunch',
+        'miniProgram.getEnv',
         'switchTab',
         'navigateTo',
         'reLaunch',

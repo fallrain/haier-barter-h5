@@ -267,6 +267,10 @@ export default {
       });
     }
     this.getProductGroup();
+    wx.miniProgram.getEnv((res) => {
+      debugger;
+      console.log(res.miniprogram);
+    });
   },
   computed: {
     productCatagoryName() {
@@ -284,7 +288,10 @@ export default {
       this.isShowProductCatagory = true;
     },
     openLink() {
-      window.open("https://account.haier.com/html/privacypolicy.html");
+      // window.open('https://account.haier.com/html/privacypolicy.html');
+      wx.miniProgram.reLaunch({
+        url: 'https://account.haier.com/html/privacypolicy.html'
+      });
     },
     registerDialog() {
       this.activityService.validateJoiner({
