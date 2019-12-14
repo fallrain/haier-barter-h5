@@ -11,6 +11,10 @@
 import {
   mapState
 } from 'vuex';
+import {
+  Toast,
+} from 'mand-mobile';
+
 
 export default {
   name: 'WVerificationcode',
@@ -23,6 +27,9 @@ export default {
     'phone', // 手机号
     'type'// 验证码发送类型，1:手机，2邮箱
   ],
+  components: {
+    Toast,
+  },
   data() {
     return {
       btnText: '获取验证码',
@@ -39,37 +46,33 @@ export default {
       if (this.beforeSend && !this.beforeSend()) {
         return;
       }
-      this.basicService.sendSms({ mobile : this.phone }).then((res) => {
-        if (res.code === 1) {
-          this.$nextTick(() => {
-            const url = this.type === 1 ? `v1/send_code/${this.areaCode}/` : 'v1/send_code_by_email/';
-            this.axGet(`${url}${this.phone}`).then(({ status }) => {
-              if (status === '02') {
-                if (this.callBack) {
-                  this.callBack();
-                }
-              } else if (this.errorCallBack) {
-                this.errorCallBack();
-              }
-            });
-
-            if (this.afterSend) {
-              this.afterSend();
+      this.$nextTick(() => {
+        this.basicService.sendSms({ mobile: this.phone }, {}).then((res) => {
+          if (res.code === 1) {
+            debugger;
+            Toast.info('验证码发送成功');
+            if (this.callBack) {
+              this.callBack();
             }
-            let time = this.trueTime;
-            this.disabled = true;
-            this.btnText = `${time}秒后可重发`;
-            const interval = setInterval(() => {
-              this.btnText = `${--time}秒后可重发`;
-              if (time < 1) {
-                this.btnText = '获取验证码';
-                this.disabled = false;
-                clearInterval(interval);
-              }
-            }, 1000);
-          });
+          } else if (this.errorCallBack) {
+            this.errorCallBack();
+          }
+        });
 
+        if (this.afterSend) {
+          this.afterSend();
         }
+        let time = this.trueTime;
+        this.disabled = true;
+        this.btnText = `${time}秒后可重发`;
+        const interval = setInterval(() => {
+          this.btnText = `${--time}秒后可重发`;
+          if (time < 1) {
+            this.btnText = '获取验证码';
+            this.disabled = false;
+            clearInterval(interval);
+          }
+        }, 1000);
       });
     }
   }

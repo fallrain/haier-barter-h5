@@ -31,18 +31,18 @@
             <span class="activity-detail-seller-name"> {{detailInfo.activityLinkmanName}}</span>
 <!--            <span class="activity-detail-seller-store">巴拉巴拉巴拉拉</span>-->
             <div class="activity-detail-content1">
-              <button class="activity-detail-btn">
+              <button class="activity-detail-btn" v-show="detailInfo.activityLinkmanWechat">
                 <i class="iconfont icon-weixin icon-img">
                   <span class="activity-detail-seller-store">{{detailInfo.activityLinkmanWechat}}</span>
                 </i>
               </button>
-              <button class="activity-detail-btn ml16">
+              <button class="activity-detail-btn ml16" v-show="detailInfo.activityLinkmanPhone">
                 <i class="iconfont icon-dianhua icon-img1">
                   <span class="activity-detail-seller-store">{{detailInfo.activityLinkmanPhone}}</span>
                 </i>
               </button>
             </div>
-            <span class="activity-detail-seller-store mt20">加微信好友备注：双十一啊</span>
+            <span class="activity-detail-seller-store mt20" v-show="false">加微信好友备注：双十一啊</span>
           </div>
         </div>
 
@@ -121,7 +121,7 @@
             v-model="isRead"
           >
           </b-radio>
-          <span class="activityDetail-register-protocol-href">《用户信息收集隐私协议》</span>
+          <span class="activityDetail-register-protocol-href" @click="openLink">《用户信息收集隐私协议》</span>
         </div>
         <div class="activityDetail-register-btns">
           <button
@@ -220,9 +220,9 @@ export default {
       activityId: '',
       form: {
         productCatagoryList: [],
-        userNickname: 'mage',
-        mobile: '17734561661',
-        verifyCode: '234'
+        userNickname: '',
+        mobile: '',
+        verifyCode: ''
       },
       // 注册对话框显示隐藏
       registerDialogShow: false,
@@ -279,9 +279,12 @@ export default {
     }
   },
   methods: {
-    showProductCatagory(item) {
+    showProductCatagory() {
       /* 显示产品类别 */
       this.isShowProductCatagory = true;
+    },
+    openLink() {
+      window.open("https://account.haier.com/html/privacypolicy.html");
     },
     registerDialog() {
       this.activityService.validateJoiner({
@@ -369,7 +372,10 @@ export default {
         }
       });
       this.activityService.saveJoiner(getData).then((res) => {
-        console.log(res);
+        if (res.code === 1) {
+          Toast.info('报名成功');
+          this.registerDialogShow = false;
+        }
       });
     },
   },
