@@ -50,8 +50,10 @@
     </div>
     <div class="activityDetail-btm-btns">
       <button
+        style="margin-right: 30px"
         type="button"
         @click="share"
+        v-show="isShowShare"
         class="common-submit-btn-waring activityDetail-btm-btn"
       >分享有好礼
       </button>
@@ -236,12 +238,15 @@ export default {
       isShowPopContainer: false,
       getUserInfo: {},
       unionId: '',
+      // 判断是否显示分享按钮，小程序打开不显示
+      isShowShare: true,
     };
   },
   created() {
     // this.openId = JSON.parse(localStorage.getItem('userinfo')).openId;
     // this.userinfo = JSON.parse(localStorage.getItem('userinfo'));
     this.getUserInfo = this.$route.params.userInfo;
+    // 扫码打开的页面query里有activityId，跳转的params里有activityId
     this.activityId = this.$route.query.activityId || this.$route.params.activityId;
     if (this.getUserInfo) {
       this.unionId = this.getUserInfo.unionId;
@@ -249,14 +254,16 @@ export default {
       this.unionId = this.$route.query.unionId;
     }
     console.log('activityDetail', this.unionId);
-    if (this.activityId) {
+    if (this.$route.query.activityId) {
       // 浏览计数增加接口
       this.activityService.shareCount({}, {
         activityId: this.activityId,
         counterTypeCode: 'single_reading_count'
       }).then((res) => {
-        console.log(res);
+        console.log('shareCount', res);
       });
+    }
+    if (this.activityId) {
       // 活动详情查询
       this.activityService.queryActivityInfoDetails({}, {
         activityId: this.activityId,
@@ -270,6 +277,11 @@ export default {
     wx.miniProgram.getEnv((res) => {
       debugger;
       console.log(res.miniprogram);
+      if (res.miniprogram) {
+        this.isShowShare = false;
+      } else {
+        this.isShowShare = true;
+      }
     });
   },
   computed: {
@@ -289,9 +301,7 @@ export default {
     },
     openLink() {
       // window.open('https://account.haier.com/html/privacypolicy.html');
-      wx.miniProgram.reLaunch({
-        url: 'https://account.haier.com/html/privacypolicy.html'
-      });
+      window.location.href = 'https://account.haier.com/html/privacypolicy.html';
     },
     registerDialog() {
       this.activityService.validateJoiner({
@@ -349,7 +359,7 @@ export default {
     },
     joinActivity() {
       if (!this.isRead) {
-        Toast.info('请阅读阅读并同意隐私协议');
+        Toast.info('请阅读并同意隐私协议');
         return;
       }
       let getData = {
@@ -422,7 +432,7 @@ export default {
     background: rgba(245, 245, 245, 1);
 
     .activityDetail-btm-btn {
-      width: 45%;
+      /*width: 45%;*/
     }
   }
 

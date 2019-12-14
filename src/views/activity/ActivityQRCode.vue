@@ -42,10 +42,14 @@
 <script>
 import ActivityNameTime from '../../components/business/activity/ActivityNameTime';
 // import qrcodeImg from '@/assets/images/activity/qrcode-example.png';
+import {
+  Toast,
+} from 'mand-mobile';
 
 export default {
   name: 'ActivityQRCode',
   components: {
+    Toast,
     ActivityNameTime
   },
   created() {
@@ -89,7 +93,7 @@ export default {
               };
             });
           }
-          Toast.info('请阅读阅读并同意隐私协议');
+          Toast.info('授权失败');
         }
       });
     },
