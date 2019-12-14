@@ -100,7 +100,7 @@
 
 <script>
 import {
-  Toast
+  Toast, Dialog
 } from 'mand-mobile';
 import {
   BActivityList,
@@ -122,6 +122,8 @@ import {
 export default {
   name: 'OrderModify',
   components: {
+    Toast,
+    [Dialog.name]: Dialog,
     BActivityList,
     BDatePicker,
     BFieldset,
@@ -177,6 +179,7 @@ export default {
   created() {
     this.orderNo = this.$route.params.orderNo;
     this.orderFollowId = this.$route.params.orderFollowId;
+    this.isUpload = this.$route.params.isUpload;
     // this.orderNo = 'Z15645424968056668';
     if (this.orderNo) {
       this.getData();
@@ -273,15 +276,36 @@ export default {
 
     next() {
       /* 下一步 */
-      this.orderService.createOrderSubmit({}, { orderNo: this.orderNo }).then((res) => {
-        if (res.code === 1) {
-          localStorage.removeItem('orderFollowId');
-          this.$router.push({
-            name: 'Order.OrderFollowCommitResult',
-            params: { orderInfo: res.data }
-          });
-        }
-      });
+      if (this.isUpload) {
+        Dialog.confirm({
+          content: '请务必上传真实、清晰、完整的发票。否则，将影响用户权益的领取，而且将影响您的工资核算与发放！',
+          confirmText: '继续',
+          onConfirm: () => {
+            this.orderService.createOrderSubmit({}, { orderNo: this.orderNo }).then((res) => {
+              if (res.code === 1) {
+                localStorage.removeItem('orderFollowId');
+                this.$router.push({
+                  name: 'Order.OrderFollowCommitResult',
+                  params: { orderInfo: res.data }
+                });
+              }
+            });
+          },
+          onCancel: () => {
+            this.$router.go(-1);
+          }
+        });
+      } else {
+        this.orderService.createOrderSubmit({}, { orderNo: this.orderNo }).then((res) => {
+          if (res.code === 1) {
+            localStorage.removeItem('orderFollowId');
+            this.$router.push({
+              name: 'Order.OrderFollowCommitResult',
+              params: { orderInfo: res.data }
+            });
+          }
+        });
+      }
     },
     changeOrder() {
       this.$router.push({
