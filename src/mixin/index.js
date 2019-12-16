@@ -11,6 +11,7 @@ export default {
         'miniProgram.navigateTo',
         'miniProgram.reLaunch',
         'miniProgram.getEnv',
+        'miniProgram.postMessage',
         'switchTab',
         'navigateTo',
         'reLaunch',

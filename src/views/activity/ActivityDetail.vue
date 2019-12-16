@@ -299,7 +299,6 @@ export default {
       this.isShowProductCatagory = true;
     },
     openLink() {
-      // window.open('https://account.haier.com/html/privacypolicy.html');
       window.location.href = 'https://account.haier.com/html/privacypolicy.html';
     },
     registerDialog() {
@@ -330,6 +329,19 @@ export default {
     },
     share() {
       this.isShowPopContainer = true;
+      // 传值给小程序
+      const protocol = `${window.location.protocol}//`;
+      const host = window.location.host;
+      const pathname = '/activity/activityDetail';
+      const url = `${protocol + host + pathname}?activityId=${this.activityId}`;
+      wx.ready(() => {
+        wx.miniProgram.postMessage({
+          data: {
+            shareUrl: url
+          }
+        });
+      });
+
       // this.basicService.authorizedUrl({ frontUrl: 'https://testdb.haier.net/activity/activityDetail' }).then((res) => {
       //   if (res.code === 1) {
       //     if (res.data) {
