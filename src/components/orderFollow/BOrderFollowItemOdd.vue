@@ -23,7 +23,7 @@
         <label class="bOrderFollowItemOdd-cnt-item-name">订单状态：</label>
         <span
           class="bOrderFollowItemOdd-cnt-item-val bOrderFollowItemOdd-cnt-item-status"
-        >{{order.status | orderDeleteStatus}}</span>
+        >{{order.status | orderDeleteStatus}}{{order.status===2?'：'+order.remark:''}}</span>
       </li>
     </ol>
   </div>
