@@ -14,7 +14,7 @@
       </md-swiper>
     </div>
     <ul class="bt2-house-menu mt16">
-      <li class="bt2-house-menu-item" @click="jump('/pages/haierHouse/HaierHouseApply')">
+      <li class="bt2-house-menu-item" @click="homeApply">
         <img src="@/assets/images/haierHouse/apply@2x.png" class="icon-class">
         <p class="bt2-house-menu-item-cnt">筑家申请</p>
       </li>
@@ -34,8 +34,8 @@
       <b-title cnt="我的一站筑家">
       </b-title>
       <div class="bt2-myhouse-card" v-for="(item, index) in myAreaList" :key="index">
-<!--        <img :src="myInfoImg" class="bt2-myhouse-card-portrait" v-show="!imgNull">-->
-        <img src="@/assets/images/haierHouse/Group@3x.png" class="bt2-myhouse-card-portrait"/>
+        <img v-if="item.imageUrl" :src="item.imageUrl" class="bt2-myhouse-card-portrait">
+        <img v-else src="@/assets/images/haierHouse/Group@3x.png" class="bt2-myhouse-card-portrait"/>
         <div class="bt2-myhouse-card-cnt">
           <p class="title">{{item.buildAreaName}}</p>
           <p class="cnt">入驻产业：{{item.industryNameScope}}</p>
@@ -62,11 +62,22 @@
     </div>
     <div class="bt2-myhouse mt16">
       <b-title cnt="优秀门店展示"></b-title>
-      <ul class="bt2-shopShow-par">
-        <!-- <li class="bt2-shopShow-item" v-for="(item,index) in shopList" :key="index">
-          <image :src="item.pic" :mode='fillMode' @click="showPic(item)" class="main-img-class"></image>
-          <p class="cnt">{{item.name}}</p>
-        </li> -->
+      <ul class="bt2-shopShow-par mt16">
+        <md-scroll-view
+          ref="scrollView"
+          :scrolling-y="false"
+          :touch-angle="80"
+          :is-prevent="false"
+          :bouncing="true"
+          :auto-reflow="true"
+        >
+          <div ref="scrollWidth" class="scroll-view-list">
+            <li class="mr16" v-for="(item,index) in shopList" :key="index">
+              <img :src="item.imageUrl" @click="showPic(item)" class="main-img-class">
+              <p class="cnt text-center text-666 fs22">{{item.districtName}}</p>
+            </li>
+          </div>
+        </md-scroll-view>
       </ul>
     </div>
     <div class="bt2-myhouse mt16">
@@ -93,7 +104,7 @@
       :h5-top="h5top"
     >
       <div class="pop-class">
-        <image :src="areaImg" alt="" :mode='imageMode' class="pop-img-class"></image>
+        <img :src="areaImg" alt="" :mode='imageMode' class="pop-img-class">
         <p class="pop-p">{{this.areaName}}</p>
       </div>
     </uni-popup>
@@ -107,7 +118,7 @@ import {
   uniPopup
 } from '@/components/haierHouse';
 import {
-  Toast, Swiper, SwiperItem
+  Toast, Swiper, SwiperItem, ScrollView
 } from 'mand-mobile';
 
 export default {
@@ -115,6 +126,7 @@ export default {
     Toast,
     [Swiper.name]: Swiper,
     [SwiperItem.name]: SwiperItem,
+    [ScrollView.name]: ScrollView,
     BTitle,
     MescrollUni,
     uniPopup
@@ -175,13 +187,15 @@ export default {
     this.mescroll && this.mescroll.onPageScroll(e);
   },
   activated() {
+    // 获取我的一站筑家
     this.getDatalist();
+    // 获取优秀门店
+    this.getStoreList();
   },
   created() {
     this.userInfo = JSON.parse(localStorage.getItem('userinfo'));
   },
   methods: {
-
     mescrollInit(mescroll) {
       this.mescroll = mescroll;
     },
@@ -202,40 +216,15 @@ export default {
       this.alert = false;
     },
     getStoreList() {
-      // this.hmcid = this.getQueryString('hmcid')
-      // this.hmcid = 'Z0000001'
-      // this.hmcid = 'a0008949',
-      // this.hmcid = 'a0031395',
-      // this.hmcid = '01467897',
-      this.hGet('buildHouse/findGoodShopList', {
-        hmcId: this.hmcid,
-      }).then((data) => {
-        if (!data.data) {
-          Toast.failed('请求失败');
-          return;
+      this.haierhouseService.querGoodShopList({
+        rowNum: 10
+      }).then((res) => {
+        if (res.code === 1) {
+          this.shopList = res.data;
+          // 设置优秀门店列表宽度
+          this.$refs.scrollWidth.style.width = `${this.shopList.length * 160}px`;
+          this.$refs.scrollView.reflowScroller();
         }
-        if (data.data.length == 0) {
-          Toast.failed('暂无优秀门店信息');
-          return;
-        }
-        if (data.data.length > 10) {
-          var temp = data.data.splice(0, 10);
-        } else {
-          var temp = data.data;
-        }
-
-        debugger;
-        temp.forEach((item) => {
-          const p = JSON.parse(item.inIndustryPic);
-          debugger;
-          const a = {
-            name: item.buildAreaName,
-            pic: p[0].imgs[0],
-            pics: p
-          };
-          this.shopList.push(a);
-          console.log('tag', this.shopList);
-        });
       });
     },
     getDatalist() {
@@ -244,7 +233,6 @@ export default {
         // adminId: this.userInfo.hmcid,
         rowNum: 3
       }).then((res) => {
-        debugger;
         console.log(res);
         if (res.code === 1) {
           if (res.data.length === 0) {
@@ -253,6 +241,13 @@ export default {
           }
           this.myAreaList = res.data;
         }
+      });
+    },
+    // 筑家申请
+    homeApply() {
+      this.$router.push({
+        name: 'Haierhouse.HaierhouseApply',
+        params: {}
       });
     },
     showAl() {
@@ -274,22 +269,12 @@ export default {
       });
     },
     activity() {
-      // uni.navigateTo({
-      // 	url: '/pages/haierHouse/ChangeInformation?shopId=' + this.myAreaList.id
-      // });
       this.showAl();
     },
     showMoreList() {
       const data = JSON.stringify(this.allList);
       // uni.navigateTo({
       //   url: `/pages/haierHouse/HaierHouseApplyBuildList?id=${data}&hmcid=${this.hmcid}`,
-      // });
-    },
-
-    jump(url) {
-      const u = `${url}?hmcid=${this.hmcid}`;
-      // uni.navigateTo({
-      //   url: u,
       // });
     },
     getQueryString(name) {
@@ -316,6 +301,31 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  .text-666{
+    color: #666;
+  }
+  .fs22{
+    font-size: 22px;
+  }
+  .main-img-class{
+    width: 280px;
+    height: 134px;
+  }
+  .md-scroll-view{
+    display: flex;
+    align-items: center;
+    .scroll-view-list{
+      display: flex;
+      padding: 0 20px;
+      width: 1000px;
+      .scroll-view-item{
+        flex: 1;
+        text-align: center;
+        font-family: DINAlternate-Bold;
+        border-right: .5px solid #efefef;
+      }
+    }
+  }
   .mr24{
     margin-right: 24px;
   }

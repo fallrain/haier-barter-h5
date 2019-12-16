@@ -3,33 +3,33 @@
 </template>
 
 <script>
-	export default {
-		name: 'UniIcon',
-		props: {
-			/**
+export default {
+  name: 'UniIcon',
+  props: {
+    /**
 			 * 图标类型
 			 */
-			type: String,
-			/**
+    type: String,
+    /**
 			 * 图标颜色
 			 */
-			color: String,
-			/**
+    color: String,
+    /**
 			 * 图标大小
 			 */
-			size: [Number, String]
-		},
-		computed: {
-			fontSize() {
-				return `${this.size}px`
-			}
-		},
-		methods: {
-			onClick() {
-				this.$emit('click')
-			}
-		}
-	}
+    size: [Number, String]
+  },
+  computed: {
+    fontSize() {
+      return `${this.size}px`;
+    }
+  },
+  methods: {
+    onClick() {
+      this.$emit('click');
+    }
+  }
+};
 </script>
 
 <style>
