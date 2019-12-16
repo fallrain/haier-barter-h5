@@ -196,7 +196,7 @@
         </div>
 
       </div>
-      <img class="activity-img" v-if="isFinish && !hasData" src="../../assets/images/orderFollow-up/activity-img.png"/>
+      <img class="activity-img" v-if="isFinish && !hasData && isShowImg" src="../../assets/images/orderFollow-up/activity-img.png"/>
       <div
         v-if="autoChooseMax"
         class="bActivityItem-choose-rights-btn-par"
@@ -265,7 +265,12 @@ export default {
     choseRights: {
       type: Array,
       default: () => []
-    }
+    },
+    // 活动里边也需要用这个组建  但是不需要显示图片，这个字段用来判断是否显示图片
+    isShowImg: {
+      type: Boolean,
+      default: true
+    },
   },
   data() {
     return {
