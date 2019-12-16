@@ -149,7 +149,7 @@ export default {
     },
     skipUpload() {
       if (this.isUpload) {
-        Toast.failed('此单为套购或已选择权益，请上传购机凭证!');
+        Toast.failed('套购订单及权益订单必须上传发票，不能“跳过”，否则将无法提交订单和发放权益!');
         return;
       }
       this.$router.push({
@@ -222,7 +222,8 @@ export default {
               name: 'Order.OrderConfirm',
               params: {
                 orderNo: this.orderNo,
-                orderFollowId: this.orderFollowId
+                orderFollowId: this.orderFollowId,
+                isUpload: this.isUpload
               }
             });
           }, 800);
