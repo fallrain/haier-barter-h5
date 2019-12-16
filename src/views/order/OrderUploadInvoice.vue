@@ -222,8 +222,7 @@ export default {
               name: 'Order.OrderConfirm',
               params: {
                 orderNo: this.orderNo,
-                orderFollowId: this.orderFollowId,
-                isUpload: this.isUpload
+                orderFollowId: this.orderFollowId
               }
             });
           }, 800);
