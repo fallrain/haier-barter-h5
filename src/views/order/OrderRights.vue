@@ -523,7 +523,7 @@ export default {
     addMCount(item) {
       /** ************互斥***************** */
       // 单品
-      debugger
+      debugger;
       if (item.rightsType === 'single') {
         let isReturn = false;
         let rightid = '';
@@ -720,13 +720,7 @@ export default {
                   rightsGroup: '',
                   configId: ''
                 };
-                let timestamp = new Date().getTime();
-                // let timestamp = 0
-                let Num = 0;
-                for (let i = 0; i < 6; i++) {
-                  Num += Math.pow(10, i) * Math.floor(Math.random() * 10);
-                }
-                timestamp += Num;
+                const timestamp = new Date().getTime();
                 const a = {};
                 a.orderDetailId = sel.orderId;
                 a.rightsGroup = timestamp;
@@ -744,12 +738,6 @@ export default {
                   configId: ''
                 };
                 timestamp = new Date().getTime();
-                let Num = 0;
-                for (let i = 0; i < 6; i++) {
-                  Num += Math.pow(10, i) * Math.floor(Math.random() * 10);
-                }
-                timestamp += Num;
-                debugger;
                 sel.selcted.forEach((val) => {
                   const a = {};
                   a.orderDetailId = val;
@@ -878,7 +866,7 @@ export default {
           return;
         }
         if (type === 1) {
-          this.rightsService.queryOrderOptionalShareRights(this.subInfo, {requestNoToast: true})
+          this.rightsService.queryOrderOptionalShareRights(this.subInfo, { requestNoToast: true })
             .then((res) => {
               if (res.code === 1) {
                 if (res.data.length > 0) {
@@ -897,7 +885,7 @@ export default {
               }
             });
         } else {
-          this.rightsService.queryOrderOptionalMutexRights(this.subInfo, {requestNoToast: true})
+          this.rightsService.queryOrderOptionalMutexRights(this.subInfo, { requestNoToast: true })
             .then((res) => {
               if (res.code === 1) {
                 if (res.data.length > 0) {
