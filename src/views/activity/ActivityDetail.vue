@@ -53,7 +53,6 @@
         style="margin-right: 30px"
         type="button"
         @click="share"
-        v-show="isShowShare"
         class="common-submit-btn-waring activityDetail-btm-btn"
       >分享有好礼
       </button>
@@ -239,7 +238,7 @@ export default {
       getUserInfo: {},
       unionId: '',
       // 判断是否显示分享按钮，小程序打开不显示
-      isShowShare: true,
+      // isShowShare: true,
     };
   },
   created() {
@@ -274,15 +273,15 @@ export default {
       });
     }
     this.getProductGroup();
-    wx.miniProgram.getEnv((res) => {
-      debugger;
-      console.log(res.miniprogram);
-      if (res.miniprogram) {
-        this.isShowShare = false;
-      } else {
-        this.isShowShare = true;
-      }
-    });
+    // wx.miniProgram.getEnv((res) => {
+    //   debugger;
+    //   console.log(res.miniprogram);
+    //   if (res.miniprogram) {
+    //     this.isShowShare = false;
+    //   } else {
+    //     this.isShowShare = true;
+    //   }
+    // });
   },
   computed: {
     productCatagoryName() {
@@ -330,29 +329,30 @@ export default {
         });
     },
     share() {
-      this.basicService.authorizedUrl({ frontUrl: 'https://testdb.haier.net/activity/activityDetail' }).then((res) => {
-        if (res.code === 1) {
-          if (res.data) {
-            wx.ready(() => { // 需在用户可能点击分享按钮前就先调用
-              wx.updateAppMessageShareData({
-                title: '', // 分享标题
-                desc: '', // 分享描述
-                link: res.data, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-                imgUrl: '', // 分享图标
-                success: (res) => {
-                  // 设置成功
-                  console.log('success');
-                  alert(JSON.stringify(res));
-                  this.isShowPopContainer = true;
-                },
-                fail: (res) => {
-                  alert(JSON.stringify(res));
-                }
-              });
-            });
-          }
-        }
-      });
+      this.isShowPopContainer = true;
+      // this.basicService.authorizedUrl({ frontUrl: 'https://testdb.haier.net/activity/activityDetail' }).then((res) => {
+      //   if (res.code === 1) {
+      //     if (res.data) {
+      //       wx.ready(() => { // 需在用户可能点击分享按钮前就先调用
+      //         wx.updateAppMessageShareData({
+      //           title: '', // 分享标题
+      //           desc: '', // 分享描述
+      //           link: res.data, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+      //           imgUrl: '', // 分享图标
+      //           success: (res) => {
+      //             // 设置成功
+      //             console.log('success');
+      //             alert(JSON.stringify(res));
+      //
+      //           },
+      //           fail: (res) => {
+      //             alert(JSON.stringify(res));
+      //           }
+      //         });
+      //       });
+      //     }
+      //   }
+      // });
     },
     closeShare() {
       this.isShowPopContainer = false;

@@ -93,6 +93,9 @@
         取消
       </div>
     </md-popup>
+    <div class="popContainer" v-if="isShowPopContainer" @click="closeShare" style="z-index: 100000">
+      <img src="@/assets/images/activity/activity-share.png" alt="" class="activity-detail-share">
+    </div>
   </div>
 </template>
 
@@ -154,6 +157,7 @@ export default {
       currentList: [],
       productGroupName: [],
       unionId: '',
+      isShowPopContainer: false,
     };
   },
   methods: {
@@ -292,31 +296,14 @@ export default {
       this.isPopupShow = true;
     },
     shareWechat() {
-      const opstion = {
-        title: '1111', // 分享标题
-        link: `${window.location.href}?home=1`,
-        imgUrl: '', // 分享图标
-        dec: '2222',
-        success() {
-        },
-        error() {
-        }
-      };
-      wx.onMenuShareAppMessage({
-        title: opstion.title, // 分享标题
-        link: opstion.link, // 分享链接
-        imgUrl: opstion.imgUrl, // 分享图标
-        desc: opstion.dec, // 分享描述
-        success() {
-          opstion.success();
-        },
-        cancel() {
-          opstion.error();
-        }
-      });
+      this.isPopupShow = false;
+      this.isShowPopContainer = true;
+    },
+    closeShare() {
+      this.isShowPopContainer = false;
     },
     shareImg() {
-      // console.log(this.currentActivity);
+      this.isPopupShow = false;
       this.activityService.generateQrcode('http://baidu.com/', '123456', '9999').then((res) => {
         this.bUtil.downloadFile(res.data);
       });
@@ -509,5 +496,12 @@ export default {
     text-align: center;
     font-size: 32px;
     color: #333;
+  }
+
+  .activity-detail-share {
+    position: fixed;
+    right: 128px;
+    width: 493px;
+    height: 694px;
   }
 </style>

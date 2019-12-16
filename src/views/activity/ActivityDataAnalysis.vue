@@ -78,6 +78,9 @@
 </template>
 
 <script>
+import {
+  Toast,
+} from 'mand-mobile';
 import ActivityNameTime from '../../components/business/activity/ActivityNameTime';
 import {
   BDatePicker,
@@ -89,6 +92,7 @@ export default {
   components: {
     BItem,
     BDatePicker,
+    Toast,
     ActivityNameTime
   },
   created() {
@@ -139,6 +143,10 @@ export default {
       }).then((res) => {
         if (res.code === 1) {
           this.count = res.data;
+          debugger
+          if (!res.data) {
+            Toast.info('暂无数据');
+          }
         }
       });
     },

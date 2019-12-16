@@ -29,7 +29,6 @@
       <button
         type="button"
         class="common-btn-primary"
-        v-show="false"
         @click.stop="share">
         分享
       </button>
