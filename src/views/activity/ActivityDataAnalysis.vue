@@ -144,7 +144,7 @@ export default {
         if (res.code === 1) {
           this.count = res.data;
           debugger
-          if (!res.data) {
+          if (!res.data || res.data.length == 0) {
             Toast.info('暂无数据');
           }
         }
