@@ -87,6 +87,7 @@ export default {
   },
   data() {
     return {
+      isUpload: false, // 是否必须上传发票标识
       invoiceList: [],
       fileMap: {},
       // 上传类型类型单选
@@ -122,6 +123,14 @@ export default {
       this.orderFollowId = this.$route.params.orderFollowId;
       this.getData();
     }
+    if (this.$route.params.subInfo) {
+      const subInfo = this.$route.params.subInfo;
+      if (subInfo.rightsUserJson !== '' || subInfo.orderType === 1) {
+        this.isUpload = true;
+      } else {
+        this.isUpload = false;
+      }
+    }
   },
   computed: {
     ...mapGetters([
@@ -139,6 +148,10 @@ export default {
       }
     },
     skipUpload() {
+      if (this.isUpload) {
+        Toast.failed('套购订单及权益订单必须上传发票，不能“跳过”，否则将无法提交订单和发放权益!');
+        return;
+      }
       this.$router.push({
         name: 'Order.OrderConfirm',
         params: {
@@ -209,7 +222,8 @@ export default {
               name: 'Order.OrderConfirm',
               params: {
                 orderNo: this.orderNo,
-                orderFollowId: this.orderFollowId
+                orderFollowId: this.orderFollowId,
+                isUpload: this.isUpload
               }
             });
           }, 800);

@@ -100,7 +100,7 @@
 
 <script>
 import {
-  Toast
+  Toast, Dialog
 } from 'mand-mobile';
 import {
   BActivityList,
@@ -122,6 +122,7 @@ import {
 export default {
   name: 'OrderModify',
   components: {
+    [Dialog.name]: Dialog,
     BActivityList,
     BDatePicker,
     BFieldset,
@@ -181,6 +182,7 @@ export default {
     if (this.orderNo) {
       this.getData();
     }
+    this.isUpload = this.$route.params.isUpload;
   },
   methods: {
     getActivityList() {
@@ -272,16 +274,34 @@ export default {
 
 
     next() {
-      /* 下一步 */
-      this.orderService.createOrderSubmit({}, { orderNo: this.orderNo }).then((res) => {
-        if (res.code === 1) {
-          localStorage.removeItem('orderFollowId');
-          this.$router.push({
-            name: 'Order.OrderFollowCommitResult',
-            params: { orderInfo: res.data }
-          });
-        }
-      });
+      if (this.isUpload) {
+        Dialog.confirm({
+          content: '请务必上传真实、清晰、完整的发票。否则，将影响用户权益的领取，而且将影响您的工资核算与发放！',
+          confirmText: '确定',
+          onConfirm: () => {
+            this.orderService.createOrderSubmit({}, { orderNo: this.orderNo }).then((res) => {
+              if (res.code === 1) {
+                localStorage.removeItem('orderFollowId');
+                this.$router.push({
+                  name: 'Order.OrderFollowCommitResult',
+                  params: { orderInfo: res.data }
+                });
+              }
+            });
+          },
+        });
+      } else {
+        /* 下一步 */
+        this.orderService.createOrderSubmit({}, { orderNo: this.orderNo }).then((res) => {
+          if (res.code === 1) {
+            localStorage.removeItem('orderFollowId');
+            this.$router.push({
+              name: 'Order.OrderFollowCommitResult',
+              params: { orderInfo: res.data }
+            });
+          }
+        });
+      }
     },
     changeOrder() {
       this.$router.push({
