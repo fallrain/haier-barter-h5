@@ -26,9 +26,9 @@
       </div>
       <div class="activity-detail-content">
         <div class="activity-detail-content1">
-          <img :src="detailInfo.activityLinkmanHeadUrl" alt="" class="activity-detail-img">
+          <img class="activity-detail-img" :src='detailInfo.activityLinkmanHeadUrl || defaultImg'>
           <div>
-            <span class="activity-detail-seller-name"> {{detailInfo.activityLinkmanName}}</span>
+            <span class="activity-detail-seller-name"> {{detailInfo.activityLinkmanName || getUserInfo.username}}</span>
 <!--            <span class="activity-detail-seller-store">巴拉巴拉巴拉拉</span>-->
             <div class="activity-detail-content1">
               <button class="activity-detail-btn" v-show="detailInfo.activityLinkmanWechat">
@@ -36,9 +36,9 @@
                   <span class="activity-detail-seller-store">{{detailInfo.activityLinkmanWechat}}</span>
                 </i>
               </button>
-              <button class="activity-detail-btn ml16" v-show="detailInfo.activityLinkmanPhone">
+              <button class="activity-detail-btn ml16" v-show="detailInfo.activityLinkmanPhone || getUserInfo.mobile">
                 <i class="iconfont icon-dianhua icon-img1">
-                  <span class="activity-detail-seller-store">{{detailInfo.activityLinkmanPhone}}</span>
+                  <span class="activity-detail-seller-store">{{detailInfo.activityLinkmanPhone || getUserInfo.mobile}}</span>
                 </i>
               </button>
             </div>
@@ -239,11 +239,13 @@ export default {
       openId: '',
       // 判断是不是在小程序里打开,1 =>小程序，0=>h5
       isMiniProgram: 0,
+      defaultImg: `this.src="${require('../../assets/images/activity/portrait-icon.png')}"`,
     };
   },
   created() {
     // this.openId = JSON.parse(localStorage.getItem('userinfo')).openId;
     // this.userinfo = JSON.parse(localStorage.getItem('userinfo'));
+    console.log('detailInfo.activityLinkmanHeadUrl',this.detailInfo.activityLinkmanHeadUrl);
     this.getUserInfo = this.$route.params.userInfo;
     // 扫码打开的页面query里有activityId，跳转的params里有activityId
     this.activityId = this.$route.query.activityId || this.$route.params.activityId;
@@ -328,19 +330,6 @@ export default {
     },
     share() {
       this.isShowPopContainer = true;
-      // 传值给小程序
-      const protocol = `${window.location.protocol}//`;
-      const host = window.location.host;
-      const pathname = '/activity/activityDetail';
-      const url = `${protocol + host + pathname}?activityId=${this.activityId}`;
-      wx.ready(() => {
-        wx.miniProgram.postMessage({
-          data: {
-            shareUrl: url
-          }
-        });
-      });
-
       // this.basicService.authorizedUrl({ frontUrl: 'https://testdb.haier.net/activity/activityDetail' }).then((res) => {
       //   if (res.code === 1) {
       //     if (res.data) {

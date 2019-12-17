@@ -27,6 +27,7 @@
       <button
         class="common-submit-btn-primary"
         type="button"
+        @click="goBack"
       >取消
       </button>
       <a
@@ -98,6 +99,9 @@ export default {
           Toast.info('授权失败');
         }
       });
+    },
+    goBack() {
+      this.$router.go(-1);
     },
     downLoadQrcode() {
       // const protocol = `${window.location.protocol}//`;

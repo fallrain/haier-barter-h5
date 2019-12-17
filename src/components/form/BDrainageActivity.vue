@@ -50,6 +50,7 @@
         type="button"
         class="common-btn-primary"
         style="margin-left:15px"
+        v-show="getData.participateCount !== 0"
         @click.stop="dataStatistics">
         数据统计
       </button>
@@ -110,6 +111,18 @@ export default {
       });
     },
     showActivityDetail() {
+      // 传值给小程序
+      const protocol = `${window.location.protocol}//`;
+      const host = window.location.host;
+      const pathname = '/activity/activityDetail';
+      const url = `${protocol + host + pathname}?activityId=${this.activityId}`;
+      wx.ready(() => {
+        wx.miniProgram.postMessage({
+          data: {
+            shareUrl: url
+          }
+        });
+      });
       this.$router.push({
         name: 'Activity.ActivityDetail',
         params: { activityId: this.getData.id,
@@ -180,6 +193,7 @@ export default {
 
   .drainage-activity-title {
     height: 88px;
+    width: 433px;
     font-size: 28px;
     color: #333;
     overflow: hidden;

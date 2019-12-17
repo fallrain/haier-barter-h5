@@ -3,7 +3,7 @@
     <b-search-input
       v-model="searchVal"
       @search="searchByCondition"
-      placeholder="输入产品型号进行搜索"
+      placeholder="输入活动名称进行查询"
     >
     </b-search-input>
     <div class="activity-tab-bg activity-tab">
@@ -123,6 +123,7 @@ export default {
     BSearchInput,
     BActivityItem,
     BDrainageActivity,
+    Toast,
     [Popup.name]: Popup,
     [PopupTitleBar.name]: PopupTitleBar,
     [Button.name]: Button,
@@ -182,6 +183,11 @@ export default {
             sroviewObj.result = res.data;
             if (res.data && res.data.length > 0) {
               this.anylizeData(res.data);
+            }
+            debugger
+            if (!res.data || res.data.length == 0) {
+              Toast.info('暂无数据');
+              this.currentList = [];
             }
             if (page.num === 1) {
               this[this.curScrollViewName].list = [];
