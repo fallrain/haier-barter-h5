@@ -177,6 +177,14 @@ import {
 } from '@/components/orderFollow';
 import BOrderFollowSearchBar from '../../components/orderFollow/BOrderFollowSearchBar';
 
+import {
+  mapGetters
+} from 'vuex';
+
+import {
+  GET_USER
+} from '@/store/mutationsTypes';
+
 export default {
   name: '',
   components: {
@@ -339,6 +347,9 @@ export default {
     this.getScenarioList();
   },
   computed: {
+    ...mapGetters([
+      GET_USER
+    ]),
     curScrollViewName() {
       // 当前tab下的scrollView的ref名字
       return {
@@ -599,6 +610,7 @@ export default {
           keyWord: this.searchWord,
           sortType: this[this.curScrollViewName].sortType * 1,
           status: this[this.curScrollViewName].businessType || '',
+          hmcId: this[GET_USER].hmcid
         };
       } else {
         queryServiceName = 'queryOrderFollowList';
