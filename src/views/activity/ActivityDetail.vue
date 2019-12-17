@@ -304,7 +304,6 @@ export default {
       this.activityService.validateJoiner({
         activityId: this.activityId,
         openId: this.openId,
-        isMiniProgram: this.isMiniProgram,
       }, {
         requestNoToast: true
       }).then((res) => {
