@@ -55,44 +55,44 @@
 
     </div>
 
-    <md-popup
-      v-model="isPopupShow"
-      position="bottom"
-      class="md-popup-class"
-    >
-      <md-popup-title-bar
-        large-radius
-        @confirm="hidePopUp('bottom')"
-        @cancel="hidePopUp('bottom')"
-      ></md-popup-title-bar>
-      <div class="drainage-popup-items">
-        <div class="drainage-popup-item" @click="shareWechat">
+<!--    <md-popup-->
+<!--      v-model="isPopupShow"-->
+<!--      position="bottom"-->
+<!--      class="md-popup-class"-->
+<!--    >-->
+<!--      <md-popup-title-bar-->
+<!--        large-radius-->
+<!--        @confirm="hidePopUp('bottom')"-->
+<!--        @cancel="hidePopUp('bottom')"-->
+<!--      ></md-popup-title-bar>-->
+<!--      <div class="drainage-popup-items">-->
+<!--        <div class="drainage-popup-item" @click="shareWechat">-->
 
-          <i class="iconfont icon-weixin drainage-popup-img"/>
-          <div>
-            <span class="drainage-popup-title">分享微信好友</span>
-          </div>
-          <div>
-            <span class="drainage-popup-tip">转发到聊天</span>
-          </div>
+<!--          <i class="iconfont icon-weixin drainage-popup-img"/>-->
+<!--          <div>-->
+<!--            <span class="drainage-popup-title">分享微信好友</span>-->
+<!--          </div>-->
+<!--          <div>-->
+<!--            <span class="drainage-popup-tip">转发到聊天</span>-->
+<!--          </div>-->
 
-        </div>
-        <div class="drainage-popup-item" @click="shareImg">
+<!--        </div>-->
+<!--        <div class="drainage-popup-item" @click="shareImg">-->
 
-          <i class="iconfont icon-tupian drainage-popup-img1"/>
-          <div>
-            <span class="drainage-popup-title">生成分享图片</span>
-          </div>
-          <div>
-            <span class="drainage-popup-tip">长按保存图片可分享</span>
-          </div>
+<!--          <i class="iconfont icon-tupian drainage-popup-img1"/>-->
+<!--          <div>-->
+<!--            <span class="drainage-popup-title">生成分享图片</span>-->
+<!--          </div>-->
+<!--          <div>-->
+<!--            <span class="drainage-popup-tip">长按保存图片可分享</span>-->
+<!--          </div>-->
 
-        </div>
-      </div>
-      <div class="popup-cancle" @click="drainageCancle">
-        取消
-      </div>
-    </md-popup>
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="popup-cancle" @click="drainageCancle">-->
+<!--        取消-->
+<!--      </div>-->
+<!--    </md-popup>-->
     <div class="popContainer" v-if="isShowPopContainer" @click="closeShare" style="z-index: 100000">
       <img src="@/assets/images/activity/activity-share.png" alt="" class="activity-detail-share">
     </div>
@@ -156,7 +156,7 @@ export default {
       searchVal: '',
       currentList: [],
       productGroupName: [],
-      unionId: '',
+      openId: '',
       isShowPopContainer: false,
     };
   },
@@ -293,7 +293,8 @@ export default {
     },
     shareClick(item) {
       this.currentActivity = item;
-      this.isPopupShow = true;
+      // this.isPopupShow = true;
+      this.isShowPopContainer = true;
     },
     shareWechat() {
       this.isPopupShow = false;
@@ -303,10 +304,10 @@ export default {
       this.isShowPopContainer = false;
     },
     shareImg() {
-      this.isPopupShow = false;
-      this.activityService.generateQrcode('http://baidu.com/', '123456', '9999').then((res) => {
-        this.bUtil.downloadFile(res.data);
-      });
+      // this.isPopupShow = false;
+      // this.activityService.generateQrcode('http://baidu.com/', '123456', '9999').then((res) => {
+      //   this.bUtil.downloadFile(res.data);
+      // });
       // return this.activityService.generateQrcode('http://baidu.com/', this.getData.id, this.getData.createdBy).then((res) => {
       //   this.bUtil.downloadFile(res.data);
       // });
@@ -323,14 +324,14 @@ export default {
   created() {
     this.getProductGroup();
     // unionId=oe6Qqv0hQ-tQ5HixncpxsZhD8FH0
-    this.unionId = this.$route.query.unionId;
+    this.openId = this.$route.query.openId;
     console.log('maActivity', this.unionId);
     this.baseService.userInfo().then((res) => {
       if (res.code === 1) {
         this.getUserInfo = res.data;
         this.getUserInfo = {
           ...this.getUserInfo,
-          unionId: this.unionId,
+          openId: this.openId,
         };
       }
     });

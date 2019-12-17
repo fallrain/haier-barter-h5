@@ -44,12 +44,14 @@ import ActivityNameTime from '../../components/business/activity/ActivityNameTim
 // import qrcodeImg from '@/assets/images/activity/qrcode-example.png';
 import {
   Toast,
+  Dialog,
 } from 'mand-mobile';
 
 export default {
   name: 'ActivityQRCode',
   components: {
     Toast,
+    Dialog,
     ActivityNameTime
   },
   created() {
@@ -98,16 +100,20 @@ export default {
       });
     },
     downLoadQrcode() {
-      const protocol = `${window.location.protocol}//`;
-      const host = window.location.host;
-      const pathname = '/activity/activityDetail';
-      const url = `${protocol + host + pathname}?activityId=${this.activityInfo.id}`;
-      return this.activityService.generateQrcode({
-        activityId: this.activityInfo.id,
-        redirectUrl: url,
-        hmcId: this.getUserInfo.hmcId,
-      }).then((res) => {
-        this.bUtil.downloadFile(res.data);
+      // const protocol = `${window.location.protocol}//`;
+      // const host = window.location.host;
+      // const pathname = '/activity/activityDetail';
+      // const url = `${protocol + host + pathname}?activityId=${this.activityInfo.id}`;
+      // return this.activityService.generateQrcode({
+      //   activityId: this.activityInfo.id,
+      //   redirectUrl: url,
+      //   hmcId: this.getUserInfo.hmcId,
+      // }).then((res) => {
+      //   this.bUtil.downloadFile(res.data);
+      // });
+      Dialog.alert({
+        content: '长按页面二维码保存图片',
+        confirmText: '确定',
       });
     },
   },

@@ -236,9 +236,9 @@ export default {
       isRead: 0,
       isShowPopContainer: false,
       getUserInfo: {},
-      unionId: '',
-      // 判断是否显示分享按钮，小程序打开不显示
-      // isShowShare: true,
+      openId: '',
+      // 判断是不是在小程序里打开,1 =>小程序，0=>h5
+      isMiniProgram: 0,
     };
   },
   created() {
@@ -248,11 +248,11 @@ export default {
     // 扫码打开的页面query里有activityId，跳转的params里有activityId
     this.activityId = this.$route.query.activityId || this.$route.params.activityId;
     if (this.getUserInfo) {
-      this.unionId = this.getUserInfo.unionId;
+      this.openId = this.getUserInfo.openId;
     } else {
-      this.unionId = this.$route.query.unionId;
+      this.openId = this.$route.query.openId;
     }
-    console.log('activityDetail', this.unionId);
+    console.log('activityDetail', this.openId);
     if (this.$route.query.activityId) {
       // 浏览计数增加接口
       this.activityService.shareCount({}, {
@@ -273,15 +273,14 @@ export default {
       });
     }
     this.getProductGroup();
-    // wx.miniProgram.getEnv((res) => {
-    //   debugger;
-    //   console.log(res.miniprogram);
-    //   if (res.miniprogram) {
-    //     this.isShowShare = false;
-    //   } else {
-    //     this.isShowShare = true;
-    //   }
-    // });
+    wx.miniProgram.getEnv((res) => {
+      console.log(res.miniprogram);
+      if (res.miniprogram) {
+        this.isMiniProgram = 1;
+      } else {
+        this.isMiniProgram = 0;
+      }
+    });
   },
   computed: {
     productCatagoryName() {
@@ -304,7 +303,8 @@ export default {
     registerDialog() {
       this.activityService.validateJoiner({
         activityId: this.activityId,
-        openId: this.unionId
+        openId: this.openId,
+        isMiniProgram: this.isMiniProgram,
       }, {
         requestNoToast: true
       }).then((res) => {
@@ -378,7 +378,8 @@ export default {
         activityId: this.activityId,
         mobile: this.getUserInfo.mobile,
         hmcId: this.getUserInfo.hmcId,
-        openId: this.unionId,
+        openId: this.openId,
+        isMiniProgram: this.isMiniProgram,
         productType: this.form.productCatagoryList[0],
         ...this.form,
       };

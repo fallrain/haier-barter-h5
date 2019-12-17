@@ -10,8 +10,8 @@
       </div>
 
       <div class="drainage-activity-right">
-        <span class="drainage-activity-title">{{getData.activityTitle}}</span>
-        <span class="drainage-activity-time">{{getData.activityStartTime}}至{{getData.activityEndTime}}</span>
+        <span class="drainage-activity-title">{{getData.activityTitle}}把啊垃圾佛你哦哦发您覅让你飞把啊垃圾佛你哦哦发您覅让你飞把啊垃圾佛你哦哦发您覅让你飞把啊垃圾佛你哦哦发您覅让你飞</span>
+        <span class="drainage-activity-time">{{activityStartTime}}至{{activityEndTime}}</span>
 
         <div class="drainage-activity-container">
           <div>
@@ -67,6 +67,8 @@ export default {
   data() {
     return {
       isPopupShow: false,
+      activityStartTime: '',
+      activityEndTime: '',
     };
   },
   props: {
@@ -75,6 +77,19 @@ export default {
     userData: {
 
     },
+  },
+  created() {
+    // 活动日期，截取到日
+    if (this.getData) {
+      if (this.getData.activityEndTime) {
+        const index = this.getData.activityEndTime.indexOf(' ');
+        this.activityEndTime = this.getData.activityEndTime.substring(0, index);
+      }
+      if (this.getData.activityStartTime) {
+        const index = this.getData.activityStartTime.indexOf(' ');
+        this.activityStartTime = this.getData.activityStartTime.substring(0, index);
+      }
+    }
   },
   methods: {
     share() {
@@ -164,15 +179,20 @@ export default {
   }
 
   .drainage-activity-title {
-    height: 63px;
+    height: 88px;
     font-size: 28px;
     color: #333;
-    margin-bottom: 20px;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    display:-webkit-box;
+    -webkit-line-clamp:2;//想要的行数
+    -webkit-box-orient:vertical;
   }
 
   .drainage-activity-time {
     font-size: 24px;
     color: #999;
+    margin-top: 10px;
   }
 
   .drainage-activity-container {
