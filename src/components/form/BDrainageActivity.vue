@@ -10,7 +10,7 @@
       </div>
 
       <div class="drainage-activity-right">
-        <span class="drainage-activity-title">{{getData.activityTitle}}把啊垃圾佛你哦哦发您覅让你飞把啊垃圾佛你哦哦发您覅让你飞把啊垃圾佛你哦哦发您覅让你飞把啊垃圾佛你哦哦发您覅让你飞</span>
+        <span class="drainage-activity-title">{{getData.activityTitle}}</span>
         <span class="drainage-activity-time">{{activityStartTime}}至{{activityEndTime}}</span>
 
         <div class="drainage-activity-container">
