@@ -2,6 +2,7 @@
   <div class="page-class">
     <div class="">
       <md-notice-bar
+        v-if="noticeNum"
         mode="closable"
         :time="4000"
       >
@@ -460,8 +461,26 @@ export default {
     },
     // 入户服务
     userService(item) {
+      const {
+        businessScenarios
+      } = item;
+      const args = {
+        userId: item.userId,
+        userName: item.userName,
+        mobile: item.userMobile,
+        flowStatus: item.flowStatus,
+        workFlowId: item.id,
+        hmcId: this.userinfo.hmcid,
+        orderNo: item.orderNo,
+        businessScenarios
+      };
+      // 爱到家需要传add4，add4是预留字段，由其他系统传递而来
+      if (businessScenarios === 'ADJ') {
+        args.add4 = item.add4;
+      }
+      const argsStr = this.bUtil.genQueryStringByObj(args);
       wx.miniProgram.navigateTo({
-        url: `/pages/userService/userService?userId=${item.userId}&userName=${item.userName}&mobile=${item.userMobile}&flowStatus=${item.flowStatus}&workFlowId=${item.id}&hmcId=${this.userinfo.hmcid}&orderNo=${item.orderNo}`
+        url: `/pages/userService/userService${argsStr}`
       });
     },
     // 潜在客户
@@ -470,7 +489,6 @@ export default {
         url: `/pages/mabyByuser/mabyByuser?userId=${item.userId}&userName=${item.userName}&mobile=${item.userMobile}&flowStatus=${item.flowStatus}&workFlowId=${item.id}&domainName=${item.recordMode}&orderNo=${item.orderNo}`
       });
     },
-
     headSwitch(index) {
       if (index === this.preIndex) {
         this.headList[index].isActive = false;
@@ -802,7 +820,8 @@ export default {
       // this.$router.go(0);
       // window.location.reload();
       // let href = window.location.href;
-      // href += (href.indexOf('?') > -1 ? '&' : '?') + `_t=${(Math.random() + '').replace('.', '')}`;
+      // href += (href.indexOf('?') > -1 ? '&' : '?') + `
+      // _t =${(Math.random() + '').replace('.', '')}`;
       // window.location.replace(href);
     } else {
       next();
