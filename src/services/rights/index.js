@@ -45,6 +45,10 @@ export default {
   viewGifts(data, param) {
     return axPostJson(urls.viewGifts, data, param);
   },
+  viewGiftsNoLoading(param) {
+    /* 查看权益对应的子权益 */
+    return axPostJson(urls.viewGifts, null, { ...param, noLoading1: true });
+  },
   viewOtherLimited(data, param) {
     return axPostJson(urls.viewOtherLimited, data, param);
   },

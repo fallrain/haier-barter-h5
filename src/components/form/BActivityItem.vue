@@ -196,7 +196,8 @@
         </div>
 
       </div>
-      <img class="activity-img" v-if="isFinish && !hasData && isShowImg" src="../../assets/images/orderFollow-up/activity-img.png"/>
+      <img class="activity-img" v-if="isFinish && !hasData && isShowImg"
+           src="../../assets/images/orderFollow-up/activity-img.png"/>
       <div
         v-if="autoChooseMax"
         class="bActivityItem-choose-rights-btn-par"
@@ -217,7 +218,7 @@
         <div
           v-show="isChose"
           class="bActivityItem-choose-rights-maxnum-par"
-        >数量 <span class="bActivityItem-choose-rights-maxnum">{{getData.allowRightsConditionDtoList.length}}</span>
+        >数量 <span class="bActivityItem-choose-rights-maxnum">{{maxRightsNum}}</span>
         </div>
       </div>
       <div class="activity-number" v-if="!isFinish && !residueGift && !autoChooseMax">
@@ -277,7 +278,9 @@ export default {
       isShowLimit: false,
       isShowConfig: false,
       // 已经选中
-      isChose: false
+      isChose: false,
+      // 最大可选的权益数量
+      maxRightsNum: 0
     };
   },
   created() {
@@ -302,7 +305,34 @@ export default {
     addCount() {
       this.$emit('addCount', this.getData);
     },
-    chooseMaxnumRights() {
+    genRightsNumMap(allowRightsConditionDtoList) {
+      /* 生成权益和数量的映射 */
+      const map = new Map();
+      allowRightsConditionDtoList.forEach((v) => {
+        if (map.get(v.configId)) {
+          map.set(v.configId, map.get(v.configId) + 1);
+        } else {
+          map.set(v.configId, 1);
+        }
+      });
+      return map;
+    },
+    updateRightsNumOverload(rightsNumMap, rightsList) {
+      /* 是否超过了权益的剩余数量 */
+      /**
+         * @rightsNumMap 订单对应的权益、数量的映射
+         * @rightsList 权益包含的子权益信息（包含数量）
+         */
+      rightsNumMap.forEach((number, configId) => {
+        const rightsConfig = rightsList.find(right => configId === right.configId);
+        const rightsGiftSurplus = rightsConfig.rightsGiftSurplus;
+        // 检查订单符合的权益是否超过权益的剩余数量，超过则选剩余数量
+        if (number > rightsGiftSurplus) {
+          rightsNumMap.set(configId, rightsGiftSurplus);
+        }
+      });
+    },
+    async chooseMaxnumRights() {
       /* 选择最大数量的权益 （直接选择，没有加减数量，默认数量最大） */
       const {
         // 允许所选的权益
@@ -310,11 +340,24 @@ export default {
       } = this.getData;
         // 有可选的权益才可选
       if (allowRightsConditionDtoList && allowRightsConditionDtoList.length) {
-        allowRightsConditionDtoList.forEach(() => {
-          this.$emit('addCount', this.getData);
+        // 权益对应的数量映射
+        const rightsNumMap = this.genRightsNumMap(allowRightsConditionDtoList);
+        // 查询实际使用的权益的
+        const { code, data } = await this.rightsService.viewGiftsNoLoading({
+          rightsNo: this.getData.rightsNo
         });
-        // 设置选中状态
-        this.isChose = true;
+        if (code === 1) {
+          this.updateRightsNumOverload(rightsNumMap, data);
+          // 依次添加权益 todo 将来依然存在把数量添加按钮加回来的可能，所以保留单个添加权益的逻辑
+          const rightsLength = [...rightsNumMap.values()].reduce((cur, all) => cur + all, 0);
+          // 设置显示的最大可选权益的数量
+          this.maxRightsNum = rightsLength;
+          for (let i = 0; i < rightsLength; i++) {
+            this.$emit('addCount', this.getData, rightsNumMap);
+          }
+          // 设置选中状态
+          this.isChose = true;
+        }
       }
     },
     calcelChooseMaxnumRights() {
