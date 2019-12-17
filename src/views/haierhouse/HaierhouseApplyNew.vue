@@ -148,197 +148,197 @@
   </div>
 </template>
 <script>
-import {
-  mapState
-} from 'vuex';
-import {
-  Toast, Radio, Field, FieldItem, TabPicker, Icon, DatePicker, Check, CheckGroup, CheckList, Button
-} from 'mand-mobile';
-import {
-  BItem,
-  BUpload
-} from '@/components/form';
-
-import addressData from '@/lib/address';
-
-export default {
-  name: 'HaierhouseApply',
-  components: {
-    [Field.name]: Field,
-    [FieldItem.name]: FieldItem,
-    [Radio.name]: Radio,
-    [TabPicker.name]: TabPicker,
-    [Icon.name]: Icon,
-    [DatePicker.name]: DatePicker,
-    [Check.name]: Check,
-    [CheckGroup.name]: CheckGroup,
-    [CheckList.name]: CheckList,
-    [Button.name]: Button,
+  import {
+    mapState
+  } from 'vuex';
+  import {
+    Toast, Radio, Field, FieldItem, TabPicker, Icon, DatePicker, Check, CheckGroup, CheckList, Button
+  } from 'mand-mobile';
+  import {
     BItem,
     BUpload
-  },
-  data() {
-    return {
-      uploadUrl: '/api/file/simpleUpload',
-      headers: {
-        Authorization: ''
+  } from '@/components/form';
+
+  import addressData from '@/lib/address';
+
+  export default {
+    name: 'HaierhouseApply',
+    components: {
+      [Field.name]: Field,
+      [FieldItem.name]: FieldItem,
+      [Radio.name]: Radio,
+      [TabPicker.name]: TabPicker,
+      [Icon.name]: Icon,
+      [DatePicker.name]: DatePicker,
+      [Check.name]: Check,
+      [CheckGroup.name]: CheckGroup,
+      [CheckList.name]: CheckList,
+      [Button.name]: Button,
+      BItem,
+      BUpload
+    },
+    data() {
+      return {
+        uploadUrl: '/api/file/simpleUpload',
+        headers: {
+          Authorization: ''
+        },
+        addressName: '',
+        // 地址pop显示隐藏
+        addressPopShow: false,
+        defaultA: [],
+        isDatePickerShow: false,
+        isDatePickerShow1: false,
+        minDate: new Date('2013/9/9'),
+        maxDate: new Date('2020/9/9'),
+        currentDate: new Date(),
+        minDate1: new Date('2013/9/9'),
+        maxDate1: new Date('2020/9/9'),
+        currentDate1: new Date(),
+        customerInfo: {
+        },
+        industryList: [],
+        indeustryCode: [],
+        indeustryName: [],
+        indeustryChoosed: [],
+      };
+    },
+    created() {
+      this.headers.Authorization = `Bearer  ${localStorage.getItem('acces_token')}`;
+      this.addressData = addressData;
+      this.getIndustryList();
+    },
+    computed: {
+      ...mapState('haierHouse', ['choosedLeader']),
+    },
+    watch: {
+      indeustryCode(val) {
+        this.indeustryChoosed = [];
+        this.indeustryName = [];
+        this.indeustryCode.forEach((item) => {
+          this.industryList.forEach((i) => {
+            if (item === i.value) {
+              this.indeustryChoosed.push(i);
+              this.indeustryName.push(i.label);
+            }
+          });
+        });
+      }
+    },
+    methods: {
+      showAddressPop() {
+        /* 展示地址pop */
+        this.addressPopShow = true;
       },
-      addressName: '',
-      // 地址pop显示隐藏
-      addressPopShow: false,
-      defaultA: [],
-      isDatePickerShow: false,
-      isDatePickerShow1: false,
-      minDate: new Date('2013/9/9'),
-      maxDate: new Date('2020/9/9'),
-      currentDate: new Date(),
-      minDate1: new Date('2013/9/9'),
-      maxDate1: new Date('2020/9/9'),
-      currentDate1: new Date(),
-      customerInfo: {
+      addressChange(address) {
+        const addressName = address.options;
+        this.customerInfo.provinceCityArea = addressName[0].label + addressName[1].label + addressName[2].label;
       },
-      industryList: [],
-      indeustryCode: [],
-      indeustryName: [],
-      indeustryChoosed: [],
-    };
-  },
-  created() {
-    this.headers.Authorization = `Bearer  ${localStorage.getItem('acces_token')}`;
-    this.addressData = addressData;
-    this.getIndustryList();
-  },
-  computed: {
-    ...mapState('haierHouse', ['choosedLeader']),
-  },
-  watch: {
-    indeustryCode(val) {
-      this.indeustryChoosed = [];
-      this.indeustryName = [];
-      this.indeustryCode.forEach((item) => {
-        this.industryList.forEach((i) => {
-          if (item === i.value) {
-            this.indeustryChoosed.push(i);
-            this.indeustryName.push(i.label);
+      timeShow(index) {
+        if (index === 1) {
+          this.isDatePickerShow = true;
+        } else {
+          this.isDatePickerShow1 = true;
+        }
+      },
+      onDatePickerInitialed() {
+        this.customerInfo.rentStartTime = this.$refs.datePicker.getFormatDate('yyyy/MM/dd');
+        this.minDate1 = new Date(this.customerInfo.rentStartTime);
+      },
+      onDatePickerInitialed1() {
+        this.customerInfo.rentEndTime = this.$refs.datePicker1.getFormatDate('yyyy/MM/dd');
+        this.maxDate = new Date(this.customerInfo.rentEndTime);
+      },
+      // 获取产业列表
+      getIndustryList() {
+        this.basicService.queryIndustry().then((res) => {
+          if (res.code === 1) {
+            res.data.forEach((item) => {
+              item.value = item.industryCode;
+              item.label = item.industryName;
+            });
+            this.industryList = res.data;
           }
         });
-      });
-    }
-  },
-  methods: {
-    showAddressPop() {
-      /* 展示地址pop */
-      this.addressPopShow = true;
-    },
-    addressChange(address) {
-      const addressName = address.options;
-      this.customerInfo.provinceCityArea = addressName[0].label + addressName[1].label + addressName[2].label;
-    },
-    timeShow(index) {
-      if (index === 1) {
-        this.isDatePickerShow = true;
-      } else {
-        this.isDatePickerShow1 = true;
-      }
-    },
-    onDatePickerInitialed() {
-      this.customerInfo.rentStartTime = this.$refs.datePicker.getFormatDate('yyyy/MM/dd');
-      this.minDate1 = new Date(this.customerInfo.rentStartTime);
-    },
-    onDatePickerInitialed1() {
-      this.customerInfo.rentEndTime = this.$refs.datePicker1.getFormatDate('yyyy/MM/dd');
-      this.maxDate = new Date(this.customerInfo.rentEndTime);
-    },
-    // 获取产业列表
-    getIndustryList() {
-      this.basicService.queryIndustry().then((res) => {
-        if (res.code === 1) {
-          res.data.forEach((item) => {
-            item.value = item.industryCode;
-            item.label = item.industryName;
-          });
-          this.industryList = res.data;
-        }
-      });
-    },
-    // 下一步
-    nextPage() {
-      if (this.customerInfo.roomType === '' || !this.customerInfo.roomType) {
-        Toast.failed('请选择样板间类型');
-        return;
-      }
-      if (this.customerInfo.roomArea === '' || !this.customerInfo.roomArea) {
-        Toast.failed('请输入样板间面积');
-        return;
-      }
-      if (this.customerInfo.provinceCityArea === '' || !this.customerInfo.provinceCityArea) {
-        Toast.failed('请选择地区');
-        return;
-      }
-      if (this.customerInfo.roomAddress === '' || !this.customerInfo.roomAddress) {
-        Toast.failed('请输入详细地址');
-        return;
-      }
-      if (this.customerInfo.rentAmount === '' || !this.customerInfo.rentAmount) {
-        Toast.failed('请输入租金');
-        return;
-      }
-      if (this.customerInfo.rentStartTime === '' || !this.customerInfo.rentStartTime) {
-        Toast.failed('请选择开始日期');
-        return;
-      }
-      if (this.customerInfo.rentEndTime === '' || !this.customerInfo.rentEndTime) {
-        Toast.failed('请选择结束日期');
-        return;
-      }
-      if (this.indeustryChoosed.length === 0) {
-        Toast.failed('请选择产业');
-      }
-      this.customerInfo.industryCodeScope = this.indeustryCode.join(',');
-      this.customerInfo.industryNameScope = this.indeustryName.join(',');
-
-      console.log(this.customerInfo);
-      this.haierhouseService.addShopInfo({
-        ...this.customerInfo
-      }, {}).then((res) => {
-        console.log(res);
-        if (res.code === 1) {
-          this.id = res.data.id;
-        }
-      });
-    },
-    imageuploaded(data, fileList, item) {
-      const itemImg = {};
-      if (data.code === 1) {
-        if (item === '0') { // 样板间照片
-          itemImg.imageType = this.customerInfo.roomType;
-          itemImg.imageUrl = data.data;
-        } else { // 产业照片
-          itemImg.imageType = item.value;
-          itemImg.imageUrl = data.data;
-        }
-        this.customerInfo.imageUrlSaveVOList.push(itemImg);
-      }
-      fileList.push(data.data);
-    },
-    delImg(index, fileList) {
-      fileList.splice(index, 1);
-    },
-    uploadError(res) {
-      /* 上传错误 */
-      const errorObj = {
-        'FILE IS TOO LARGER MAX FILE IS': '图片最大不能超过5M'
-      };
-      for (const p in errorObj) {
-        if (new RegExp(p).test(res)) {
-          Toast.failed(errorObj[p]);
+      },
+      // 下一步
+      nextPage() {
+        if (this.customerInfo.roomType === '' || !this.customerInfo.roomType) {
+          Toast.failed('请选择样板间类型');
           return;
         }
+        if (this.customerInfo.roomArea === '' || !this.customerInfo.roomArea) {
+          Toast.failed('请输入样板间面积');
+          return;
+        }
+        if (this.customerInfo.provinceCityArea === '' || !this.customerInfo.provinceCityArea) {
+          Toast.failed('请选择地区');
+          return;
+        }
+        if (this.customerInfo.roomAddress === '' || !this.customerInfo.roomAddress) {
+          Toast.failed('请输入详细地址');
+          return;
+        }
+        if (this.customerInfo.rentAmount === '' || !this.customerInfo.rentAmount) {
+          Toast.failed('请输入租金');
+          return;
+        }
+        if (this.customerInfo.rentStartTime === '' || !this.customerInfo.rentStartTime) {
+          Toast.failed('请选择开始日期');
+          return;
+        }
+        if (this.customerInfo.rentEndTime === '' || !this.customerInfo.rentEndTime) {
+          Toast.failed('请选择结束日期');
+          return;
+        }
+        if (this.indeustryChoosed.length === 0) {
+          Toast.failed('请选择产业');
+        }
+        this.customerInfo.industryCodeScope = this.indeustryCode.join(',');
+        this.customerInfo.industryNameScope = this.indeustryName.join(',');
+
+        console.log(this.customerInfo);
+        this.haierhouseService.addShopInfo({
+          ...this.customerInfo
+        }, {}).then((res) => {
+          console.log(res);
+          if (res.code === 1) {
+            this.id = res.data.id;
+          }
+        });
+      },
+      imageuploaded(data, fileList, item) {
+        const itemImg = {};
+        if (data.code === 1) {
+          if (item === '0') { // 样板间照片
+            itemImg.imageType = this.customerInfo.roomType;
+            itemImg.imageUrl = data.data;
+          } else { // 产业照片
+            itemImg.imageType = item.value;
+            itemImg.imageUrl = data.data;
+          }
+          this.customerInfo.imageUrlSaveVOList.push(itemImg);
+        }
+        fileList.push(data.data);
+      },
+      delImg(index, fileList) {
+        fileList.splice(index, 1);
+      },
+      uploadError(res) {
+        /* 上传错误 */
+        const errorObj = {
+          'FILE IS TOO LARGER MAX FILE IS': '图片最大不能超过5M'
+        };
+        for (const p in errorObj) {
+          if (new RegExp(p).test(res)) {
+            Toast.failed(errorObj[p]);
+            return;
+          }
+        }
+        Toast.failed(res || '上传失败');
       }
-      Toast.failed(res || '上传失败');
     }
-  }
-};
+  };
 </script>
 <style lang="scss">
   .bg-white{
