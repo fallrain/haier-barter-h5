@@ -1,14 +1,14 @@
 <template>
 <div class="fs28">
   <div class="text-999 lh70 pl20">一站筑家信息</div>
-  <div class="dis-flex jus-bt row-style br-b">
-    <div class="text-333">
-      筑家店名
-    </div>
-    <div class="fg1 text-666 pl20">
-      <input type="text" class="w100per input-style" placeholder="如：一站筑家左岸风度店">
-    </div>
-  </div>
+<!--  <div class="dis-flex jus-bt row-style br-b">-->
+<!--    <div class="text-333">-->
+<!--      筑家店名-->
+<!--    </div>-->
+<!--    <div class="fg1 text-666 pl20">-->
+<!--      <input type="text" class="w100per input-style" v-model="customerInfo.adminName" placeholder="如：一站筑家左岸风度店">-->
+<!--    </div>-->
+<!--  </div>-->
   <div class="">
     <div class="text-333 br-b row-style">筑家类型</div>
     <div class="row-style br-b">
@@ -37,14 +37,14 @@
       placeholder="选择省/市/区(县)"
     ></b-item>
     <div class="pl120 row-style">
-      <input type="text" class="w100per input-style text-right" placeholder="请输入详细地址,具体到门牌号">
+      <input type="text" v-model="customerInfo.roomAddress" class="w100per input-style text-right" placeholder="请输入详细地址,具体到门牌号">
     </div>
   </div>
   <div class="dis-flex row-style br-b">
     <div class="">样板间租金</div>
     <div class="fg1 dis-flex">
       <div class="fg1 pl20 pr20">
-        <input type="number" v-model="customerInfo.roomArea" class="w100per input-style text-right" placeholder="请输入">
+        <input type="number" v-model="customerInfo.rentAmount" class="w100per input-style text-right" placeholder="请输入">
       </div>
       <div class="text-primary">元/月</div>
     </div>
@@ -53,21 +53,68 @@
     <div class="w200">租赁时间</div>
     <div class="fg1 dis-flex">
       <input type="text" v-model="customerInfo.rentStartTime" @click="timeShow(1)"
-             class="w250 input-style text-right pr20" placeholder="请输入">
+             class="w250 input-style text-center pr20" placeholder="开始日期">
       <div class="">至</div>
       <input type="text" v-model="customerInfo.rentEndTime" @click="timeShow(2)"
-             class="w250 input-style text-right pr20" placeholder="请输入">
+             class="w250 input-style text-center pr20" placeholder="结束日期">
       <md-icon name="calendar" size="lg"></md-icon>
     </div>
   </div>
   <div class="">
     <div class="text-333 br-b row-style">入驻产业</div>
-    <div class="row-style br-b">
-      <md-radio name="1" v-model="customerInfo.roomType" label="毛坯房" inline />
-      <md-radio name="2" v-model="customerInfo.roomType" label="精装房" inline />
-      <md-radio name="3" v-model="customerInfo.roomType" label="品牌联盟" inline />
-      <md-radio name="4" v-model="customerInfo.roomType" label="底商门脸房" inline />
+    <div class="row-style br-b clear">
+        <md-check-list
+          v-model="indeustryCode"
+          iconPosition="left"
+          :options="industryList"
+          inline
+        />
     </div>
+  </div>
+  <div class="mb20">
+    <div class="text-333 row-style">样板间区域照片</div>
+    <div class="bg-white p20">
+      <b-upload
+        :crop="false"
+        inputOfFile="file"
+        :max-file-size="1024*1024*5"
+        :maxWidth="1280"
+        :maxLength="3"
+        :compress="70"
+        :headers="headers"
+        @imageuploaded="(data, fileList)=>imageuploaded(data, fileList, '0')"
+        extensions="png,jpg,jpeg,gif"
+        :url="uploadUrl"
+        :multiple-size="1"
+        @delFun="delImg"
+        @errorhandle="uploadError"
+      >
+      </b-upload>
+    </div>
+  </div>
+  <div v-for="(item, index) in indeustryChoosed" :key="index" class="mb20">
+    <div class="text-333 row-style">{{item.label}}区域照片</div>
+    <div class="bg-white p20">
+      <b-upload
+        :crop="false"
+        inputOfFile="file"
+        :max-file-size="1024*1024*5"
+        :maxWidth="1280"
+        :maxLength="3"
+        :compress="70"
+        :headers="headers"
+        @imageuploaded="(data, fileList)=>imageuploaded(data, fileList, item)"
+        extensions="png,jpg,jpeg,gif"
+        :url="uploadUrl"
+        :multiple-size="1"
+        @delFun="delImg"
+        @errorhandle="uploadError"
+      >
+      </b-upload>
+    </div>
+  </div>
+  <div class="ph20 mt16">
+    <md-button type="primary" @click="nextPage">下一步</md-button>
   </div>
   <md-date-picker
     ref="datePicker"
@@ -105,10 +152,11 @@ import {
   mapState
 } from 'vuex';
 import {
-  Radio, Field, FieldItem, TabPicker, Icon, DatePicker
+  Toast, Radio, Field, FieldItem, TabPicker, Icon, DatePicker, Check, CheckGroup, CheckList, Button
 } from 'mand-mobile';
 import {
-  BItem
+  BItem,
+  BUpload
 } from '@/components/form';
 
 import addressData from '@/lib/address';
@@ -122,10 +170,19 @@ export default {
     [TabPicker.name]: TabPicker,
     [Icon.name]: Icon,
     [DatePicker.name]: DatePicker,
+    [Check.name]: Check,
+    [CheckGroup.name]: CheckGroup,
+    [CheckList.name]: CheckList,
+    [Button.name]: Button,
     BItem,
+    BUpload
   },
   data() {
     return {
+      uploadUrl: '/api/file/simpleUpload',
+      headers: {
+        Authorization: ''
+      },
       addressName: '',
       // 地址pop显示隐藏
       addressPopShow: false,
@@ -139,67 +196,33 @@ export default {
       maxDate1: new Date('2020/9/9'),
       currentDate1: new Date(),
       customerInfo: {
-        adminId: '00011682',
-        adminName: '张三',
-        adminPhone: '12154545',
-        roomType: '03',
-        roomArea: '',
-        provinceCityArea: '',
-        roomAddress: '',
-        rentAmount: 35000,
-        rentStartTime: '',
-        rentEndTime: '',
-        industryCodeScope: '01,02,03',
-        industryNameScope: '家中机,厨电,热水器',
-        imageUrlSaveVOList: [
-          {
-            imageType: '01',
-            imageUrl: '../../01.png'
-          },
-          {
-            imageType: '02',
-            imageUrl: '../../02.png'
-          }
-        ]
       },
-      sampleRoomTypeList: [{
-        id: '1',
-        name: '毛坯样板间'
-      },
-      {
-        id: '2',
-        name: '精装样板间',
-      },
-      {
-        id: '3',
-        name: '品牌联盟'
-      },
-      {
-        id: '4',
-        name: '新社区店'
-      }
-      ], // 样板间类型
+      industryList: [],
+      indeustryCode: [],
+      indeustryName: [],
+      indeustryChoosed: [],
     };
   },
   created() {
+    this.headers.Authorization = `Bearer  ${localStorage.getItem('acces_token')}`;
     this.addressData = addressData;
+    this.getIndustryList();
   },
   computed: {
     ...mapState('haierHouse', ['choosedLeader']),
-    // 初始化产业多选框数组
-    checkedIndustry() {
-      const checkedIndustryTemp = this.industryIds.map((v) => {
-        const checkedItem = this.items3.find(item => item.id === v);
-        return {
-          id: v,
-          name: checkedItem ? checkedItem.name : ''
-        };
+  },
+  watch: {
+    indeustryCode(val) {
+      this.indeustryChoosed = [];
+      this.indeustryName = [];
+      this.indeustryCode.forEach((item) => {
+        this.industryList.forEach((i) => {
+          if (item === i.value) {
+            this.indeustryChoosed.push(i);
+            this.indeustryName.push(i.label);
+          }
+        });
       });
-      checkedIndustryTemp.length && (checkedIndustryTemp.unshift({
-        id: 'ybj',
-        name: '样板间'
-      }));
-      return checkedIndustryTemp;
     }
   },
   methods: {
@@ -226,191 +249,109 @@ export default {
       this.customerInfo.rentEndTime = this.$refs.datePicker1.getFormatDate('yyyy/MM/dd');
       this.maxDate = new Date(this.customerInfo.rentEndTime);
     },
-    showMessage() {
-      this.middle = true;
-    },
-    toggleTab() {
-      this.$refs.picker.show();
-    },
-    onConfirm(val) {
-      console.log(val);
-      this.localName = val.result;
-    },
-    genFileMap() {
-      let temp = [];
-      const a = [{
-        id: 'ybj',
-        name: '样板间',
-        imgs: []
-      }];
-      temp = a.concat(this.items3);
-
-      // 模拟延时请求,动态添加上传数据保存的list
-      // setTimeout(() => {
-      temp.forEach((v) => {
-        this.$set(this.fileMap, v.id, []);
-      });
-      // });
-    },
     // 获取产业列表
     getIndustryList() {
-      this.hGet('buildHouse/proGrpList', {}).then((data) => {
-        if (data) {
-          data.data.forEach((v) => {
-            const temp = {
-              id: v.productCode,
-              name: v.productName,
-              imgs: []
-            };
-            this.items3.push(temp);
+      this.basicService.queryIndustry().then((res) => {
+        if (res.code === 1) {
+          res.data.forEach((item) => {
+            item.value = item.industryCode;
+            item.label = item.industryName;
           });
-
-          this.genFileMap();
+          this.industryList = res.data;
         }
       });
-    },
-    getChangeList() {
-      this.hGet('buildHouse/shopBuildHouse', {
-        id: this.shopId
-      }).then((data) => {
-        if (!data.data) {
-          uni.showToast({
-            title: '请求失败',
-            duration: 4000,
-            icon: 'none'
-          });
-          return;
-        }
-        debugger;
-        this.info = data.data;
-        this.name = data.data.constructionDirector;
-        this.localName = data.data.provinceCityArea;
-        this.blockName = data.data.buildAreaName;
-        this.tel = data.data.phoneNumber;
-        this.sampleRoomIds = data.data.templateType;
-        this.roomArea = data.data.area;
-        this.address = data.data.address;
-        this.rent = data.data.rent;
-        this.startTime = data.data.leaseBegin;
-        this.endTime = data.data.leaseEnd;
-        const indus = JSON.parse(data.data.inIndustryPic);
-        const temp = [];
-        const img = [];
-        indus.forEach((ind) => {
-          temp.push(ind.id);
-          const a = {
-            id: ind.id,
-            imgs: ind.imgs
-          };
-          img.push(a);
-        });
-        temp.shift();
-        this.industryIds = temp;
-        for (let i = 0; i < img.length; i++) {
-          for (const key in this.fileMap) {
-            if (img[i].id == key) {
-              this.fileMap[key] = img[i].imgs;
-            }
-          }
-        }
-      });
-    },
-    array_contain(array, obj) {
-      for (let i = 0; i < array.length; i++) {
-        if (array[i] == obj) // 如果要求数据类型也一致，这里可使用恒等号===
-        { return true; }
-      }
-      return false;
-    },
-    removeByValue(arr, val) {
-      for (let i = 0; i < arr.length; i++) {
-        if (arr[i] == val) {
-          arr.splice(i, 1);
-          break;
-        }
-      }
-    },
-    // 图片上传
-    onSuccess({
-      data,
-      fileList
-    }) {
-      if (!data) {
-        this.alertMsg = data.msg;
-        this.alert = true;
-      } else {
-        console.log(data);
-        fileList.push(data.data.imageUrl);
-      }
-    },
-    onError(err) {
-      this.toastShow(err);
-    },
-    onRemove({
-      index,
-      fileList
-    }) {
-      fileList.splice(index, 1);
-    },
-    nameEnd() {},
-    blockEnd() {},
-    addressEnd() {},
-    startTimeSelect() {
-      this.pickerStartShow = true;
-    },
-    endTimeSelect() {},
-    hidePopup() {
-      this.middle = false;
-    },
-    hidePopupAlert() {
-      this.alert = false;
-    },
-    // 显示弹窗
-    toastShow(title) {
-
     },
     // 下一步
     nextPage() {
-      if (this.blockName === '') {
-        this.toastShow('请输入筑家店名');
+      if (this.customerInfo.roomType === '' || !this.customerInfo.roomType) {
+        Toast.failed('请选择样板间类型');
         return;
       }
-      if (this.sampleRoomIds.length === 0) {
-        this.toastShow('请选择筑家类型');
+      if (this.customerInfo.roomArea === '' || !this.customerInfo.roomArea) {
+        Toast.failed('请输入样板间面积');
         return;
       }
-      if (this.roomArea === '') {
-        this.toastShow('请输入样板间面积');
+      if (this.customerInfo.provinceCityArea === '' || !this.customerInfo.provinceCityArea) {
+        Toast.failed('请选择地区');
         return;
       }
-      if (this.localName === '') {
-        this.toastShow('请选择地区');
+      if (this.customerInfo.roomAddress === '' || !this.customerInfo.roomAddress) {
+        Toast.failed('请输入详细地址');
         return;
       }
-      if (this.address === '') {
-        this.toastShow('请输入详细地址');
+      if (this.customerInfo.rentAmount === '' || !this.customerInfo.rentAmount) {
+        Toast.failed('请输入租金');
         return;
       }
-      if (this.rent === '') {
-        this.toastShow('请输入租金');
+      if (this.customerInfo.rentStartTime === '' || !this.customerInfo.rentStartTime) {
+        Toast.failed('请选择开始日期');
         return;
       }
-      if (this.startTime === '') {
-        this.toastShow('请选择开始日期');
+      if (this.customerInfo.rentEndTime === '' || !this.customerInfo.rentEndTime) {
+        Toast.failed('请选择结束日期');
         return;
       }
-      if (this.endTime === '') {
-        this.toastShow('请选择结束日期');
-        return;
+      if (this.indeustryChoosed.length === 0) {
+        Toast.failed('请选择产业');
       }
-      if (this.industryIds.length === 0) {
-        this.toastShow('请选择产业');
+      this.customerInfo.industryCodeScope = this.indeustryCode.join(',');
+      this.customerInfo.industryNameScope = this.indeustryName.join(',');
+
+      console.log(this.customerInfo);
+      this.haierhouseService.addShopInfo({
+        ...this.customerInfo
+      },{}).then((res) => {
+        console.log(res);
+        if (res.code === 1) {
+          this.id = res.data.id
+        }
+      });
+    },
+    imageuploaded(data, fileList, item) {
+      const itemImg = {};
+      if (data.code === 1) {
+        if (item === '0') { // 样板间照片
+          itemImg.imageType = this.customerInfo.roomType;
+          itemImg.imageUrl = data.data;
+        } else { // 产业照片
+          itemImg.imageType = item.value;
+          itemImg.imageUrl = data.data;
+        }
+        this.customerInfo.imageUrlSaveVOList.push(itemImg);
       }
+      fileList.push(data.data);
+    },
+    delImg(index, fileList) {
+      fileList.splice(index, 1);
+    },
+    uploadError(res) {
+      /* 上传错误 */
+      const errorObj = {
+        'FILE IS TOO LARGER MAX FILE IS': '图片最大不能超过5M'
+      };
+      for (const p in errorObj) {
+        if (new RegExp(p).test(res)) {
+          Toast.failed(errorObj[p]);
+          return;
+        }
+      }
+      Toast.failed(res || '上传失败');
     }
   }
 };
 </script>
-<style scoped lang="scss">
+<style lang="scss">
+  .bg-white{
+    background: #fff;
+  }
+  .clear {
+    clear: both;
+    overflow: hidden;
+  }
+  .md-check-list .md-cell-item{
+    float: left !important;
+    margin-right: 20px !important;
+  }
   .md-icon{
     line-height: 80px;
   }
@@ -459,6 +400,9 @@ export default {
   .lh70{
     line-height: 70px;
   }
+  .p20{
+    padding: 20px;
+  }
   .pl20{
     padding-left: 20px!important;
   }
@@ -467,6 +411,12 @@ export default {
   }
   .pl120{
     padding-left: 120px!important;
+  }
+  .pv20{
+    padding: 20px 0;
+  }
+  .ph20{
+    padding: 0 20px;
   }
   .w200{
     width: 200px;

@@ -13,4 +13,8 @@ export default {
     /* 优秀门店 */
     return axPostJson(urls.goodShopList, data, param);
   },
+  addShopInfo(data, param) {
+    /* 新增筑家门店 */
+    return axPostJson(urls.addShopInfo, data, param);
+  },
 };
