@@ -1,151 +1,151 @@
 <template>
-<div class="fs28">
-  <div class="text-999 lh70 pl20">一站筑家信息</div>
-<!--  <div class="dis-flex jus-bt row-style br-b">-->
-<!--    <div class="text-333">-->
-<!--      筑家店名-->
-<!--    </div>-->
-<!--    <div class="fg1 text-666 pl20">-->
-<!--      <input type="text" class="w100per input-style" v-model="customerInfo.adminName" placeholder="如：一站筑家左岸风度店">-->
-<!--    </div>-->
-<!--  </div>-->
-  <div class="">
-    <div class="text-333 br-b row-style">筑家类型</div>
-    <div class="row-style br-b">
-      <md-radio name="1" v-model="customerInfo.roomType" label="毛坯房" inline />
-      <md-radio name="2" v-model="customerInfo.roomType" label="精装房" inline />
-      <md-radio name="3" v-model="customerInfo.roomType" label="品牌联盟" inline />
-      <md-radio name="4" v-model="customerInfo.roomType" label="底商门脸房" inline />
-    </div>
-  </div>
-  <div class="dis-flex row-style br-b">
-    <div class="">样板间面积</div>
-    <div class="fg1 dis-flex">
-      <div class="fg1 pl20 pr20">
-        <input type="number" v-model="customerInfo.roomArea" class="w100per input-style text-right" placeholder="请输入">
+  <div class="fs28">
+    <div class="text-999 lh70 pl20">一站筑家信息</div>
+    <!--  <div class="dis-flex jus-bt row-style br-b">-->
+    <!--    <div class="text-333">-->
+    <!--      筑家店名-->
+    <!--    </div>-->
+    <!--    <div class="fg1 text-666 pl20">-->
+    <!--      <input type="text" class="w100per input-style" v-model="customerInfo.adminName" placeholder="如：一站筑家左岸风度店">-->
+    <!--    </div>-->
+    <!--  </div>-->
+    <div class="">
+      <div class="text-333 br-b row-style">筑家类型</div>
+      <div class="row-style br-b">
+        <md-radio name="1" v-model="customerInfo.roomType" label="毛坯房" inline />
+        <md-radio name="2" v-model="customerInfo.roomType" label="精装房" inline />
+        <md-radio name="3" v-model="customerInfo.roomType" label="品牌联盟" inline />
+        <md-radio name="4" v-model="customerInfo.roomType" label="底商门脸房" inline />
       </div>
-      <div class="text-primary">平米</div>
     </div>
-  </div>
-  <div class="br-b">
-    <b-item
-      title="地址"
-      :arrow="true"
-      :value="customerInfo.provinceCityArea"
-      @rightClick="showAddressPop"
-      iconClass="icon-dingwei"
-      placeholder="选择省/市/区(县)"
-    ></b-item>
-    <div class="pl120 row-style">
-      <input type="text" v-model="customerInfo.roomAddress" class="w100per input-style text-right" placeholder="请输入详细地址,具体到门牌号">
-    </div>
-  </div>
-  <div class="dis-flex row-style br-b">
-    <div class="">样板间租金</div>
-    <div class="fg1 dis-flex">
-      <div class="fg1 pl20 pr20">
-        <input type="number" v-model="customerInfo.rentAmount" class="w100per input-style text-right" placeholder="请输入">
+    <div class="dis-flex row-style br-b">
+      <div class="">样板间面积</div>
+      <div class="fg1 dis-flex">
+        <div class="fg1 pl20 pr20">
+          <input type="number" v-model="customerInfo.roomArea" class="w100per input-style text-right" placeholder="请输入">
+        </div>
+        <div class="text-primary">平米</div>
       </div>
-      <div class="text-primary">元/月</div>
     </div>
-  </div>
-  <div class="dis-flex row-style br-b">
-    <div class="w200">租赁时间</div>
-    <div class="fg1 dis-flex">
-      <input type="text" v-model="customerInfo.rentStartTime" @click="timeShow(1)"
-             class="w250 input-style text-center pr20" placeholder="开始日期">
-      <div class="">至</div>
-      <input type="text" v-model="customerInfo.rentEndTime" @click="timeShow(2)"
-             class="w250 input-style text-center pr20" placeholder="结束日期">
-      <md-icon name="calendar" size="lg"></md-icon>
+    <div class="br-b">
+      <b-item
+        title="地址"
+        :arrow="true"
+        :value="customerInfo.provinceCityArea"
+        @rightClick="showAddressPop"
+        iconClass="icon-dingwei"
+        placeholder="选择省/市/区(县)"
+      ></b-item>
+      <div class="pl120 row-style">
+        <input type="text" v-model="customerInfo.roomAddress" class="w100per input-style text-right" placeholder="请输入详细地址,具体到门牌号">
+      </div>
     </div>
-  </div>
-  <div class="">
-    <div class="text-333 br-b row-style">入驻产业</div>
-    <div class="row-style br-b clear">
+    <div class="dis-flex row-style br-b">
+      <div class="">样板间租金</div>
+      <div class="fg1 dis-flex">
+        <div class="fg1 pl20 pr20">
+          <input type="number" v-model="customerInfo.rentAmount" class="w100per input-style text-right" placeholder="请输入">
+        </div>
+        <div class="text-primary">元/月</div>
+      </div>
+    </div>
+    <div class="dis-flex row-style br-b">
+      <div class="w200">租赁时间</div>
+      <div class="fg1 dis-flex">
+        <input type="text" v-model="customerInfo.rentStartTime" @click="timeShow(1)"
+               class="w250 input-style text-center pr20" placeholder="开始日期">
+        <div class="">至</div>
+        <input type="text" v-model="customerInfo.rentEndTime" @click="timeShow(2)"
+               class="w250 input-style text-center pr20" placeholder="结束日期">
+        <md-icon name="calendar" size="lg"></md-icon>
+      </div>
+    </div>
+    <div class="">
+      <div class="text-333 br-b row-style">入驻产业</div>
+      <div class="row-style br-b clear">
         <md-check-list
           v-model="indeustryCode"
           iconPosition="left"
           :options="industryList"
           inline
         />
+      </div>
     </div>
-  </div>
-  <div class="mb20">
-    <div class="text-333 row-style">样板间区域照片</div>
-    <div class="bg-white p20">
-      <b-upload
-        :crop="false"
-        inputOfFile="file"
-        :max-file-size="1024*1024*5"
-        :maxWidth="1280"
-        :maxLength="3"
-        :compress="70"
-        :headers="headers"
-        @imageuploaded="(data, fileList)=>imageuploaded(data, fileList, '0')"
-        extensions="png,jpg,jpeg,gif"
-        :url="uploadUrl"
-        :multiple-size="1"
-        @delFun="delImg"
-        @errorhandle="uploadError"
-      >
-      </b-upload>
+    <div class="mb20">
+      <div class="text-333 row-style">样板间区域照片</div>
+      <div class="bg-white p20">
+        <b-upload
+          :crop="false"
+          inputOfFile="file"
+          :max-file-size="1024*1024*5"
+          :maxWidth="1280"
+          :maxLength="3"
+          :compress="70"
+          :headers="headers"
+          @imageuploaded="(data, fileList)=>imageuploaded(data, fileList, '0')"
+          extensions="png,jpg,jpeg,gif"
+          :url="uploadUrl"
+          :multiple-size="1"
+          @delFun="delImg"
+          @errorhandle="uploadError"
+        >
+        </b-upload>
+      </div>
     </div>
-  </div>
-  <div v-for="(item, index) in indeustryChoosed" :key="index" class="mb20">
-    <div class="text-333 row-style">{{item.label}}区域照片</div>
-    <div class="bg-white p20">
-      <b-upload
-        :crop="false"
-        inputOfFile="file"
-        :max-file-size="1024*1024*5"
-        :maxWidth="1280"
-        :maxLength="3"
-        :compress="70"
-        :headers="headers"
-        @imageuploaded="(data, fileList)=>imageuploaded(data, fileList, item)"
-        extensions="png,jpg,jpeg,gif"
-        :url="uploadUrl"
-        :multiple-size="1"
-        @delFun="delImg"
-        @errorhandle="uploadError"
-      >
-      </b-upload>
+    <div v-for="(item, index) in indeustryChoosed" :key="index" class="mb20">
+      <div class="text-333 row-style">{{item.label}}区域照片</div>
+      <div class="bg-white p20">
+        <b-upload
+          :crop="false"
+          inputOfFile="file"
+          :max-file-size="1024*1024*5"
+          :maxWidth="1280"
+          :maxLength="3"
+          :compress="70"
+          :headers="headers"
+          @imageuploaded="(data, fileList)=>imageuploaded(data, fileList, item)"
+          extensions="png,jpg,jpeg,gif"
+          :url="uploadUrl"
+          :multiple-size="1"
+          @delFun="delImg"
+          @errorhandle="uploadError"
+        >
+        </b-upload>
+      </div>
     </div>
+    <div class="ph20 mt16">
+      <md-button type="primary" @click="nextPage">下一步</md-button>
+    </div>
+    <md-date-picker
+      ref="datePicker"
+      type="custom"
+      v-model="isDatePickerShow"
+      :custom-types="['yyyy', 'MM','dd']"
+      :min-date="minDate"
+      :max-date="maxDate"
+      :default-date="currentDate"
+      @confirm="onDatePickerInitialed"
+    ></md-date-picker>
+    <md-date-picker
+      ref="datePicker1"
+      type="custom"
+      v-model="isDatePickerShow1"
+      :custom-types="['yyyy', 'MM','dd']"
+      :min-date="minDate1"
+      :max-date="maxDate1"
+      :default-date="currentDate"
+      @confirm="onDatePickerInitialed1"
+    ></md-date-picker>
+    <md-tab-picker
+      title="请选择"
+      describe="请选择您所在的省份、城市、区县"
+      large-radius
+      :data="addressData"
+      v-model="addressPopShow"
+      @change="addressChange"
+      :default-value="defaultA"
+    ></md-tab-picker>
   </div>
-  <div class="ph20 mt16">
-    <md-button type="primary" @click="nextPage">下一步</md-button>
-  </div>
-  <md-date-picker
-    ref="datePicker"
-    type="custom"
-    v-model="isDatePickerShow"
-    :custom-types="['yyyy', 'MM','dd']"
-    :min-date="minDate"
-    :max-date="maxDate"
-    :default-date="currentDate"
-    @confirm="onDatePickerInitialed"
-  ></md-date-picker>
-  <md-date-picker
-    ref="datePicker1"
-    type="custom"
-    v-model="isDatePickerShow1"
-    :custom-types="['yyyy', 'MM','dd']"
-    :min-date="minDate1"
-    :max-date="maxDate1"
-    :default-date="currentDate"
-    @confirm="onDatePickerInitialed1"
-  ></md-date-picker>
-  <md-tab-picker
-    title="请选择"
-    describe="请选择您所在的省份、城市、区县"
-    large-radius
-    :data="addressData"
-    v-model="addressPopShow"
-    @change="addressChange"
-    :default-value="defaultA"
-  ></md-tab-picker>
-</div>
 </template>
 <script>
 import {
@@ -300,10 +300,10 @@ export default {
       console.log(this.customerInfo);
       this.haierhouseService.addShopInfo({
         ...this.customerInfo
-      },{}).then((res) => {
+      }, {}).then((res) => {
         console.log(res);
         if (res.code === 1) {
-          this.id = res.data.id
+          this.id = res.data.id;
         }
       });
     },
