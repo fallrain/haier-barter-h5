@@ -184,7 +184,6 @@ export default {
             if (res.data && res.data.length > 0) {
               this.anylizeData(res.data);
             }
-            debugger
             if (!res.data || res.data.length == 0) {
               Toast.info('暂无数据');
               this.currentList = [];
@@ -201,16 +200,25 @@ export default {
           return sroviewObj;
         });
       }
-      return this.activityService.queryActivityInfoListForHmc({
+      let data = {
         activityType: '',
         keyWord: this.searchVal,
-        microCode: '',
-        channelType: ''
-        // microCode: this.userInfo.storeInfo.microCode,
-        // channelType: this.userInfo.storeInfo.mchannel,
-        // storeId: this.userInfo.storeInfo.storeId,
-        // productGroup: this.userInfo.productGroups,
-      }, {
+      };
+      if (this.getUserInfo) {
+        if (this.getUserInfo.storeInfo) {
+          data = {
+            ...data,
+            microCode: this.getUserInfo.storeInfo.microCode,
+            channelType: this.getUserInfo.storeInfo.mchannel,
+            storeId: this.getUserInfo.storeInfo.storeId,
+          };
+        }
+        data = {
+          ...data,
+          productGroup: this.getUserInfo.productGroups,
+        };
+      }
+      return this.activityService.queryActivityInfoListForHmc(data, {
         pageNum: page.num,
         pageSize: page.size,
       }).then((res) => {

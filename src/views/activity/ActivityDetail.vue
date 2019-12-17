@@ -6,8 +6,8 @@
       </div>
       <activity-name-time
         :title="detailInfo.activityTitle"
-        :startDate="detailInfo.activityStartTime"
-        :endDate="detailInfo.activityEndTime"
+        :startDate="activityStartTime"
+        :endDate="activityEndTime"
         :address="detailInfo.storeName"
       ></activity-name-time>
       <div class="activityDetail-detail-title-bg">
@@ -28,17 +28,17 @@
         <div class="activity-detail-content1">
           <img class="activity-detail-img" :src='detailInfo.activityLinkmanHeadUrl || defaultImg'>
           <div>
-            <span class="activity-detail-seller-name"> {{detailInfo.activityLinkmanName || getUserInfo.username}}</span>
+            <span class="activity-detail-seller-name"> {{activityLinkmanName}}</span>
 <!--            <span class="activity-detail-seller-store">巴拉巴拉巴拉拉</span>-->
             <div class="activity-detail-content1">
-              <button class="activity-detail-btn" v-show="detailInfo.activityLinkmanWechat">
+              <button class="activity-detail-btn mr16" v-show="detailInfo.activityLinkmanWechat">
                 <i class="iconfont icon-weixin icon-img">
                   <span class="activity-detail-seller-store">{{detailInfo.activityLinkmanWechat}}</span>
                 </i>
               </button>
-              <button class="activity-detail-btn ml16" v-show="detailInfo.activityLinkmanPhone || getUserInfo.mobile">
+              <button class="activity-detail-btn" v-show="activityLinkmanPhone">
                 <i class="iconfont icon-dianhua icon-img1">
-                  <span class="activity-detail-seller-store">{{detailInfo.activityLinkmanPhone || getUserInfo.mobile}}</span>
+                  <span class="activity-detail-seller-store">{{activityLinkmanPhone}}</span>
                 </i>
               </button>
             </div>
@@ -195,6 +195,7 @@ import {
   BRadio,
   BVerificationcode
 } from '@/components/form';
+import defaultImg from '@/assets/images/activity/portrait-icon.png';
 
 export default {
   name: 'ActivityDetail',
@@ -239,13 +240,18 @@ export default {
       openId: '',
       // 判断是不是在小程序里打开,1 =>小程序，0=>h5
       isMiniProgram: 0,
-      defaultImg: `this.src="${require('../../assets/images/activity/portrait-icon.png')}"`,
+      // 联系人姓名手机号
+      activityLinkmanName: '',
+      activityLinkmanPhone: '',
+      // 活动开始结束时间
+      activityStartTime: '',
+      activityEndTime: '',
+      defaultImg,
     };
   },
   created() {
     // this.openId = JSON.parse(localStorage.getItem('userinfo')).openId;
     // this.userinfo = JSON.parse(localStorage.getItem('userinfo'));
-    console.log('detailInfo.activityLinkmanHeadUrl',this.detailInfo.activityLinkmanHeadUrl);
     this.getUserInfo = this.$route.params.userInfo;
     // 扫码打开的页面query里有activityId，跳转的params里有activityId
     this.activityId = this.$route.query.activityId || this.$route.params.activityId;
@@ -256,7 +262,7 @@ export default {
     }
     console.log('activityDetail', this.openId);
     if (this.$route.query.activityId) {
-      // 浏览计数增加接口
+      // 只有从分享后打开的才增加浏览计数接口
       this.activityService.shareCount({}, {
         activityId: this.activityId,
         counterTypeCode: 'single_reading_count'
@@ -271,6 +277,27 @@ export default {
       }).then((res) => {
         if (res.code === 1) {
           this.detailInfo = res.data;
+          if (this.detailInfo) {
+            if (this.detailInfo.activityLinkmanName) {
+              this.activityLinkmanName = this.detailInfo.activityLinkmanName;
+            } else {
+              this.activityLinkmanName = this.$route.query.username || this.getUserInfo.username;
+            }
+            if (this.detailInfo.activityLinkmanPhone) {
+              this.activityLinkmanPhone = this.detailInfo.activityLinkmanPhone;
+            } else {
+              this.activityLinkmanPhone = this.$route.query.mobile || this.getUserInfo.mobile;
+            }
+            // 活动日期，截取到日
+            if (this.detailInfo.activityEndTime) {
+              const index = this.detailInfo.activityEndTime.indexOf(' ');
+              this.activityEndTime = this.detailInfo.activityEndTime.substring(0, index);
+            }
+            if (this.detailInfo.activityStartTime) {
+              const index = this.detailInfo.activityStartTime.indexOf(' ');
+              this.activityStartTime = this.detailInfo.activityStartTime.substring(0, index);
+            }
+          }
         }
       });
     }

@@ -74,7 +74,8 @@ export default {
       const protocol = `${window.location.protocol}//`;
       const host = window.location.host;
       const pathname = '/activity/activityDetail';
-      const url = `${protocol + host + pathname}?activityId=${this.activityInfo.id}`;
+      const url = `${protocol + host + pathname}?activityId=${this.activityInfo.id}&mobile=${this.getUserInfo.mobile}&username=${this.getUserInfo.username}`;
+      console.log('url', url);
       this.basicService.authorizedUrl({ frontUrl: url }).then((res) => {
         if (res.code === 1) {
           if (res.data) {
