@@ -61,16 +61,19 @@
       <button
         class="common-submit-btn-primary"
         type="button"
+        v-show="false"
       >传播核心用户分析
       </button>
       <button
         class="common-submit-btn-primary"
         type="button"
+        v-show="false"
       >已核销名单
       </button>
       <button
         class="common-submit-btn-primary"
         type="button"
+        v-show="false"
       >未核销名单
       </button>
     </div>

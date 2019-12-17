@@ -301,6 +301,12 @@ export default {
       this.currentActivity = item;
       // this.isPopupShow = true;
       this.isShowPopContainer = true;
+      wx.ready(() => {
+        console.log('this.getData.id====', item.id);
+        wx.miniProgram.postMessage({
+          data: item.id
+        });
+      });
     },
     shareWechat() {
       this.isPopupShow = false;

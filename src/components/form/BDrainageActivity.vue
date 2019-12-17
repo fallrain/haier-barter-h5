@@ -112,15 +112,10 @@ export default {
     },
     showActivityDetail() {
       // 传值给小程序
-      const protocol = `${window.location.protocol}//`;
-      const host = window.location.host;
-      const pathname = '/activity/activityDetail';
-      const url = `${protocol + host + pathname}?activityId=${this.activityId}`;
       wx.ready(() => {
+        console.log('this.getData.id====', this.getData.id);
         wx.miniProgram.postMessage({
-          data: {
-            shareUrl: url
-          }
+          data: this.getData.id
         });
       });
       this.$router.push({
