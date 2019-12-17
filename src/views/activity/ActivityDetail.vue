@@ -308,7 +308,7 @@ export default {
         requestNoToast: true
       }).then((res) => {
         if (res.code === -1) {
-          Toast.failed('您已经报名了该活动！无需继续报名');
+          Toast.failed(res.msg);
         } else {
           this.registerDialogShow = true;
         }
