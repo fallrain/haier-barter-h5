@@ -4,7 +4,7 @@ const urls = {
   jsSign: '/common/weixin/jssign',
   userInfo: '/user/info',
   scanQRcode: '/product/scan-qrcode',
-  queryIndustry: '/common/industry/list'
+  queryIndustry: '/common/industry/list',
 };
 
 Object.entries(urls).forEach(([key, value]) => {
