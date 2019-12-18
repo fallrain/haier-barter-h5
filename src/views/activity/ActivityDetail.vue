@@ -53,6 +53,7 @@
         style="margin-right: 30px"
         type="button"
         @click="share"
+        v-show="detailInfo.allowShare === 1"
         class="common-submit-btn-waring activityDetail-btm-btn"
       >分享有好礼
       </button>
@@ -265,7 +266,8 @@ export default {
       // 只有从分享后打开的才增加浏览计数接口
       this.activityService.shareCount({}, {
         activityId: this.activityId,
-        counterTypeCode: 'single_reading_count'
+        counterTypeCode: 'single_reading_count',
+        noToken: true
       }).then((res) => {
         console.log('shareCount', res);
       });
@@ -274,10 +276,20 @@ export default {
       // 活动详情查询
       this.activityService.queryActivityInfoDetails({}, {
         activityId: this.activityId,
+        noToken: true
       }).then((res) => {
         if (res.code === 1) {
           this.detailInfo = res.data;
           if (this.detailInfo) {
+            // 活动日期，截取到日
+            if (this.detailInfo.activityEndTime) {
+              const index = this.detailInfo.activityEndTime.indexOf(' ');
+              this.activityEndTime = this.detailInfo.activityEndTime.substring(0, index);
+            }
+            if (this.detailInfo.activityStartTime) {
+              const index = this.detailInfo.activityStartTime.indexOf(' ');
+              this.activityStartTime = this.detailInfo.activityStartTime.substring(0, index);
+            }
             if (this.detailInfo.activityLinkmanName) {
               this.activityLinkmanName = this.detailInfo.activityLinkmanName;
             } else {
@@ -287,15 +299,6 @@ export default {
               this.activityLinkmanPhone = this.detailInfo.activityLinkmanPhone;
             } else {
               this.activityLinkmanPhone = this.$route.query.mobile || this.getUserInfo.mobile;
-            }
-            // 活动日期，截取到日
-            if (this.detailInfo.activityEndTime) {
-              const index = this.detailInfo.activityEndTime.indexOf(' ');
-              this.activityEndTime = this.detailInfo.activityEndTime.substring(0, index);
-            }
-            if (this.detailInfo.activityStartTime) {
-              const index = this.detailInfo.activityStartTime.indexOf(' ');
-              this.activityStartTime = this.detailInfo.activityStartTime.substring(0, index);
             }
           }
         }
@@ -333,6 +336,7 @@ export default {
       this.activityService.validateJoiner({
         activityId: this.activityId,
         openId: this.openId,
+        noToken: true,
       }, {
         requestNoToast: true
       }).then((res) => {
@@ -396,6 +400,7 @@ export default {
         openId: this.openId,
         isMiniProgram: this.isMiniProgram,
         productType: this.form.productCatagoryList[0],
+        noToken: true,
         ...this.form,
       };
       this.checkboxType.forEach((item) => {

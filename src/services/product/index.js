@@ -9,10 +9,10 @@ export default {
     // return axGetUrl(urls.list, appendUrl);
     return axGet(urls.list(keyWords, pageNo, pageSize));
   },
-  price(productCode,productGroup ) {
+  price(productCode, productGroup) {
     /* 查询订单列表 */
     // return axGetUrl(urls.list, appendUrl);
-    return axGet(urls.price(productCode,productGroup ));
+    return axGet(urls.price(productCode, productGroup));
   },
   customerAddressList(mobile) {
     return axGet(urls.customerAddressList(mobile));
@@ -38,10 +38,10 @@ export default {
   userList(storeId) {
     return axGet(urls.userList(storeId));
   },
-  industryGroup(){
-    return axGet(urls.industryGroup)
+  industryGroup() {
+    return axGet(urls.industryGroup);
   },
-  industryGroupList(){
-    return axGet(urls.industryGroupList)
+  industryGroupList() {
+    return axGet(urls.industryGroupList, { noToken: true });
   },
 };

@@ -29,6 +29,7 @@
       <button
         type="button"
         class="common-btn-primary"
+        v-show="getData.allowShare === 1"
         @click.stop="share">
         分享
       </button>

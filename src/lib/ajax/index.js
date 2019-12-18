@@ -65,7 +65,7 @@ ax.interceptors.request.use((config) => {
   if (!config.params) {
     config.params = {};
   }
-  if (config.headers) {
+  if (config.headers && !config.params.noToken) {
     config.headers.Authorization = `Bearer  ${localStorage.getItem('acces_token')}`;
   }
   if (!config.params.noLoading) {
@@ -104,7 +104,9 @@ ax.interceptors.response.use((response) => {
           closeLoading();
           Toast.hide();
         } else {
-          showError(msg);
+          if (response.config.url.indexOf('/common/weixin/jssign') === -1) {
+            showError(msg);
+          }
         }
       }
     }
@@ -117,7 +119,9 @@ ax.interceptors.response.use((response) => {
   if (!error.config.params.noLoading) {
     closeLoading();
   }
-  showError(error);
+  if (error.config.url.indexOf('/common/weixin/jssign') === -1) {
+    showError(error);
+  }
   return {
     code: -1
   };

@@ -203,6 +203,8 @@ export default {
       let data = {
         activityType: '',
         keyWord: this.searchVal,
+        // 活动状态只显示已发布
+        status: 1,
       };
       if (this.getUserInfo) {
         if (this.getUserInfo.storeInfo) {
