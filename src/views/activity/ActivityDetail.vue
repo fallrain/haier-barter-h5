@@ -336,9 +336,9 @@ export default {
       this.activityService.validateJoiner({
         activityId: this.activityId,
         openId: this.openId,
-        noToken: true,
       }, {
-        requestNoToast: true
+        requestNoToast: true,
+        noToken: true,
       }).then((res) => {
         if (res.code === -1) {
           Toast.failed(res.msg);
@@ -400,7 +400,6 @@ export default {
         openId: this.openId,
         isMiniProgram: this.isMiniProgram,
         productType: this.form.productCatagoryList[0],
-        noToken: true,
         ...this.form,
       };
       this.checkboxType.forEach((item) => {

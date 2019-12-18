@@ -47,7 +47,7 @@ export default {
         return;
       }
       this.$nextTick(() => {
-        this.basicService.sendSms({ mobile: this.phone }, {}).then((res) => {
+        this.basicService.sendSms({ mobile: this.phone }).then((res) => {
           if (res.code === 1) {
             debugger;
             Toast.info('验证码发送成功');

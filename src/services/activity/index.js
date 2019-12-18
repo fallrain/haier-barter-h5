@@ -29,7 +29,7 @@ export default {
   },
   saveJoiner(data) {
     /* 数据详情分析 */
-    return axPostJson(urls.saveJoiner, data, null);
+    return axPostJson(urls.saveJoiner, data, { noToken: true, });
   },
   qrCodeCreate(data,) {
     /* 二维码生成接口 */
