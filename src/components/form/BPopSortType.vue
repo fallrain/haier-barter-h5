@@ -29,7 +29,6 @@
 <script>
 import {
   Popup,
-  PopupTitleBar
 } from 'mand-mobile';
 
 export default {
@@ -37,7 +36,6 @@ export default {
   inheritAttrs: true,
   components: {
     'md-popup': Popup,
-    'md-popup-title-bar': PopupTitleBar
   },
   props: {
     // 类型：checkbox radio
@@ -67,6 +65,9 @@ export default {
     };
   },
   watch: {
+    value(val) {
+      this.checkIds = JSON.parse(JSON.stringify(val));
+    },
     show(newVal) {
       this.popupShow = newVal;
     },
@@ -77,11 +78,10 @@ export default {
   methods: {
     checkboxClick({ id }) {
       this.checkIds = [];
-      this.checkIds.push(id)
-
+      this.checkIds.push(id);
+      this.$emit('input', this.checkIds);
       this.$emit('checkClick', this.checkIds);
       this.popupShow = false;
-
     },
   }
 };

@@ -9,9 +9,10 @@ const OrderFollowActivity = () => import('@/views/order/OrderFollowActivity');
 const OrderModify = () => import(/* webpackChunkName: "OrderModify" */ '@/views/order/OrderModify');// 订单录入
 const OrderConfirm = () => import(/* webpackChunkName: "OrderConfirm" */ '@/views/order/OrderConfirm');// 订单录入
 const OrderDetail = () => import(/* webpackChunkName: "OrderDetail" */ '@/views/order/OrderDetail');// 订单详情
-const ResidueGift = () => import(/* webpackChunkName: "OrderDetail" */ '@/views/order/ResidueGift');//查询权益剩余量
-const OrderSupplement = () => import(/* webpackChunkName: "OrderSupplement" */ '@/views/order/OrderSupplement');//订单补录
-const OrderRights = () => import(/* webpackChunkName: "OrderRights" */ '@/views/order/OrderRights');//订单quanyi
+const ResidueGift = () => import(/* webpackChunkName: "OrderDetail" */ '@/views/order/ResidueGift');// 查询权益剩余量
+const OrderSupplement = () => import(/* webpackChunkName: "OrderSupplement" */ '@/views/order/OrderSupplement');// 订单补录
+const OrderRights = () => import(/* webpackChunkName: "OrderRights" */ '@/views/order/OrderRights');// 订单权益
+const ApplyDeleteOrder = () => import(/* webpackChunkName: "ApplyDeleteOrder" */ '@/views/order/ApplyDeleteOrder');// 订单权益
 
 const prefix = '/order';
 const module = 'Order';
@@ -22,7 +23,7 @@ const data = [
     component: OrderFollowSearch,
     meta: {
       title: '订单跟进',
-      params:{}
+      params: {}
     }
   },
   {
@@ -113,7 +114,7 @@ const data = [
     name: `${module}.OrderFollowActivity`,
     component: OrderFollowActivity,
     meta: {
-      title: '订单huodong'
+      title: '订单活动'
     }
   },
   {
@@ -121,7 +122,7 @@ const data = [
     name: `${module}.OrderRights`,
     component: OrderRights,
     meta: {
-      title: '订单quanyi'
+      title: '订单权益'
     }
   },
   {
@@ -130,6 +131,15 @@ const data = [
     component: ResidueGift,
     meta: {
       title: '订单录入'
+    }
+  },
+  {
+    path: `${prefix}/applyDeleteOrder/:orderNo`,
+    name: `${module}.ApplyDeleteOrder`,
+    component: ApplyDeleteOrder,
+    props: true,
+    meta: {
+      title: '订单删除'
     }
   },
 ];
