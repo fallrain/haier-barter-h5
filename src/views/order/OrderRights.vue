@@ -96,11 +96,10 @@ import {
 } from '@/components/form';
 
 export default {
-  name: 'OrderFollowActivity',
+  name: 'OrderRights',
   components: {
     [TabBar.name]: TabBar,
-    BActivityItem,
-    Toast
+    BActivityItem
   },
   data() {
     return {
@@ -1020,7 +1019,7 @@ export default {
         item.rightsBrandC = item.rightsBrandC.replace(/089/g, '统帅');
 
         // 加按钮置灰
-        this.$set(item, 'addGray', item.isOptional === 1);
+        this.$set(item, 'addGray', !(item.isOptional === 1));
         // 减按钮置灰(selectedNum可能开始没值)
         this.$set(item, 'minesGray', !(item.selectedNum !== 0));
       });
