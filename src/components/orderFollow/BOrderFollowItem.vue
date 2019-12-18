@@ -72,7 +72,7 @@
             <div class="bOrderFollowItem-row-time-right">
           <span
             v-show="followItem.flowStatus === 4 || followItem.flowStatus === 5 || followItem.businessScenarios === 'YYFW' || followItem.businessScenarios === 'ADJ'"
-            @click="detailHide(index,followItem)"
+            @click="detailHide(followItem)"
             class="information-class bOrderFollowItem-textBtn"
           >
             <span class="information-class">详细信息 </span>
