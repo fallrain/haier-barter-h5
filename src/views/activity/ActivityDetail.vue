@@ -306,12 +306,20 @@ export default {
             if (this.detailInfo.activityLinkmanName) {
               this.activityLinkmanName = this.detailInfo.activityLinkmanName;
             } else {
-              this.activityLinkmanName = decodeURIComponent(this.$route.query.username) || this.getUserInfo.username;
+              if (this.getUserInfo) {
+                this.activityLinkmanName = this.getUserInfo.username;
+              } else {
+                this.activityLinkmanName = decodeURIComponent(this.$route.query.username);
+              }
             }
             if (this.detailInfo.activityLinkmanPhone) {
               this.activityLinkmanPhone = this.detailInfo.activityLinkmanPhone;
             } else {
-              this.activityLinkmanPhone = this.$route.query.mobile || this.getUserInfo.mobile;
+              if (this.getUserInfo) {
+                this.activityLinkmanPhone = this.getUserInfo.mobile;
+              } else {
+                this.activityLinkmanPhone = this.$route.query.mobile;
+              }
             }
             // https://testdb.haier.net/activity/activityDetail/?activityId=65022085451153408&mobile=15253269729&username=陆梦飞
             const protocol = `${window.location.protocol}//`;
@@ -355,7 +363,7 @@ export default {
       window.location.href = 'https://account.haier.com/html/privacypolicy.html';
     },
     registerDialog() {
-      // this.registerDialogShow = true;
+      this.registerDialogShow = true;
       this.activityService.validateJoiner({
         activityId: this.activityId,
         openId: this.openId,
