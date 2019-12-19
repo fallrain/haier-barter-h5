@@ -332,6 +332,7 @@ export default {
               if (!isReturn) {
                 if (ri.flag !== 1) {
                   this.$set(ri, 'flag', 1);
+                  // 已经选中的orderId
                   present = ri.ids;
                   rights.selcted = ri.ids;
                   item.rightsSelectedGroupDtoList.push(rights);
@@ -347,6 +348,7 @@ export default {
                 }
               }
               if (ri.flag !== 1) {
+                // 其他未选中的orderId组合们，如果其中一个产品在里面，则排除
                 if (this.uniqueArray(present, ri.ids)) {
                   this.$set(ri, 'flag', 1);
                   rights.num++;
