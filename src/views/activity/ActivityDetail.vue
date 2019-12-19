@@ -348,20 +348,20 @@ export default {
       window.location.href = 'https://account.haier.com/html/privacypolicy.html';
     },
     registerDialog() {
-      this.registerDialogShow = true;
-      // this.activityService.validateJoiner({
-      //   activityId: this.activityId,
-      //   openId: this.openId,
-      // }, {
-      //   requestNoToast: true,
-      //   noToken: true,
-      // }).then((res) => {
-      //   if (res.code === -1) {
-      //     Toast.failed(res.msg);
-      //   } else {
-      //     this.registerDialogShow = true;
-      //   }
-      // });
+      // this.registerDialogShow = true;
+      this.activityService.validateJoiner({
+        activityId: this.activityId,
+        openId: this.openId,
+      }, {
+        requestNoToast: true,
+        noToken: true,
+      }).then((res) => {
+        if (res.code === -1) {
+          Toast.failed(res.msg);
+        } else {
+          this.registerDialogShow = true;
+        }
+      });
     },
     clearJoinInfo() {
       this.form = {
