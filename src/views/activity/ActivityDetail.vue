@@ -87,9 +87,9 @@
             placeholder="请输入手机号码"
           >
         </div>
-        <div class="activityDetail-register-item">
+        <div class="activityDetail-register-item1">
           <input
-            class="activityDetail-register-ipt"
+            class="activityDetail-verifyCode-ipt"
             type="text"
             placeholder="请输入验证码"
             v-model="form.verifyCode"
@@ -128,6 +128,7 @@
         <div class="activityDetail-register-btns">
           <button
             type="button"
+            @click="clearJoinInfo"
             class="common-submit-btn-primary activityDetail-register-btn"
           >清空
           </button>
@@ -325,7 +326,7 @@ export default {
     const protocol = `${window.location.protocol}//`;
     const host = window.location.host;
     const pathname = '/activity/activityDetail';
-    const url = `${protocol + host + pathname}?activityId=${this.activityInfo.id}&mobile=${this.activityLinkmanPhone}&username=${this.activityLinkmanName}`;
+    const url = `${protocol + host + pathname}?activityId=${this.activityId}&mobile=${this.activityLinkmanPhone}&username=${this.activityLinkmanName}`;
     this.linkUrl = url;
   },
   computed: {
@@ -347,19 +348,29 @@ export default {
       window.location.href = 'https://account.haier.com/html/privacypolicy.html';
     },
     registerDialog() {
-      this.activityService.validateJoiner({
-        activityId: this.activityId,
-        openId: this.openId,
-      }, {
-        requestNoToast: true,
-        noToken: true,
-      }).then((res) => {
-        if (res.code === -1) {
-          Toast.failed(res.msg);
-        } else {
-          this.registerDialogShow = true;
-        }
-      });
+      this.registerDialogShow = true;
+      // this.activityService.validateJoiner({
+      //   activityId: this.activityId,
+      //   openId: this.openId,
+      // }, {
+      //   requestNoToast: true,
+      //   noToken: true,
+      // }).then((res) => {
+      //   if (res.code === -1) {
+      //     Toast.failed(res.msg);
+      //   } else {
+      //     this.registerDialogShow = true;
+      //   }
+      // });
+    },
+    clearJoinInfo() {
+      this.form = {
+        productCatagoryList: [],
+        userNickname: '',
+        mobile: '',
+        verifyCode: ''
+      };
+      this.checkboxType = [];
     },
     getProductGroup() {
       this.productService.industryGroupList()
@@ -508,8 +519,24 @@ export default {
     }
   }
 
+  .activityDetail-register-item1 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    min-height: 80px;
+    box-shadow: 0 1px 0 0 rgba(208, 208, 208, 0.6);
+  }
+
   .activityDetail-register-ipt {
     height: 100%;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    padding-left: 4px;
+  }
+  .activityDetail-verifyCode-ipt {
+    height: 100%;
+    width: 360px;
     background: transparent;
     border: 0;
     box-shadow: none;
