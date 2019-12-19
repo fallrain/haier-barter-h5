@@ -159,7 +159,7 @@
             扫描或长按识别
           </p>
           <p>
-            关注海知友服务号
+            关注海尔智家服务号
           </p>
         </div>
         <div class="activityDetail-qrcode-par">
@@ -173,7 +173,7 @@
           了解更多会员权益，获取更多会员福利尽在
         </p>
         <p class="activityDetail-qrcode-name">
-          海尔·海知友服务号
+          海尔·智家服务号
         </p>
       </div>
     </md-dialog>
@@ -422,13 +422,32 @@ export default {
           });
         });
       }
-
       this.isShowPopContainer = true;
     },
     closeShare() {
       this.isShowPopContainer = false;
     },
     joinActivity() {
+      if (!this.form.userNickname) {
+        Toast.info('请输入您的姓名');
+        return;
+      }
+      if (!this.form.mobile || !this.form.mobile.startsWith('1') || this.form.mobile.length != 11) {
+        Toast.info('请输入正确手机号');
+        return;
+      }
+      if (!this.form.verifyCode) {
+        Toast.info('请输入验证码');
+        return;
+      }
+      if (!this.checkboxType || this.checkboxType.length == 0) {
+        Toast.info('请选择预约类型');
+        return;
+      }
+      if (!this.form.productCatagoryList || this.form.productCatagoryList.length == 0) {
+        Toast.info('请选择产品类别');
+        return;
+      }
       if (!this.isRead) {
         Toast.info('请阅读并同意隐私协议');
         return;
@@ -464,6 +483,7 @@ export default {
         if (res.code === 1) {
           Toast.info('报名成功');
           this.registerDialogShow = false;
+          this.qrcodeDialogShow = true;
         }
       });
     },
