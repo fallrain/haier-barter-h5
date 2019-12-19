@@ -236,7 +236,7 @@ export default {
       // 注册对话框显示隐藏
       isShowProductCatagory: false,
       productCatagoryList: [],
-      isRead: 0,
+      isRead: 1,
       isShowPopContainer: false,
       getUserInfo: {},
       openId: '',
@@ -375,6 +375,7 @@ export default {
         verifyCode: ''
       };
       this.checkboxType = [];
+      this.isRead = 1;
     },
     getProductGroup() {
       this.productService.industryGroupList()
