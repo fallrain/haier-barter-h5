@@ -248,6 +248,7 @@ export default {
       // 活动开始结束时间
       activityStartTime: '',
       activityEndTime: '',
+      hmcId: '',
       linkUrl: '',
       defaultImg,
     };
@@ -266,15 +267,14 @@ export default {
     console.log('activityDetail', this.openId);
     if (this.$route.query.activityId) {
       // 只有从分享后打开的才增加浏览计数接口
-      let hmcId = '';
       if (this.getUserInfo) {
-        hmcId = this.getUserInfo.hmcId;
+        this.hmcId = this.getUserInfo.hmcId;
       } else {
-        hmcId = this.$route.query.hmcId;
+        this.hmcId = this.$route.query.hmcId;
       }
       this.activityService.shareCount({}, {
         activityId: this.activityId,
-        hmcId,
+        hmcId: this.hmcId,
         counterTypeCode: 'single_reading_count',
         noToken: true
       }).then((res) => {
@@ -412,8 +412,8 @@ export default {
       }
       let getData = {
         activityId: this.activityId,
-        mobile: this.getUserInfo.mobile,
-        hmcId: this.getUserInfo.hmcId,
+        mobile: this.form.mobile,
+        hmcId: this.hmcId,
         openId: this.openId,
         isMiniProgram: this.isMiniProgram,
         productType: this.form.productCatagoryList[0],
