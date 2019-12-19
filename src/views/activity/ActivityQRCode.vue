@@ -56,10 +56,10 @@ export default {
     ActivityNameTime
   },
   created() {
-    this.activityInfo = this.$route.params.activityInfo;
-    this.getUserInfo = this.$route.params.userInfo;
   },
   activated() {
+    this.activityInfo = this.$route.params.activityInfo;
+    this.getUserInfo = this.$route.params.userInfo;
     this.createQrcode();
   },
   data() {

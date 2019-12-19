@@ -98,6 +98,7 @@ export default {
       this.$emit('shareClick', this.getData);
     },
     qrCode() {
+      debugger
       this.$router.push({
         name: 'Activity.ActivityQRCode',
         params: { activityInfo: this.getData,

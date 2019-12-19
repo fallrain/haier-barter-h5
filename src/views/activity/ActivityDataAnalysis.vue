@@ -98,7 +98,7 @@ export default {
     Toast,
     ActivityNameTime
   },
-  created() {
+  activated() {
     this.getDate();
     if (this.$route.params.activityInfo) {
       this.activityInfo = this.$route.params.activityInfo;

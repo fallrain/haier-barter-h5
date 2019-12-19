@@ -251,7 +251,7 @@ export default {
       defaultImg,
     };
   },
-  created() {
+  activated() {
     // this.openId = JSON.parse(localStorage.getItem('userinfo')).openId;
     // this.userinfo = JSON.parse(localStorage.getItem('userinfo'));
     this.getUserInfo = this.$route.params.userInfo;
