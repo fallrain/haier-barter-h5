@@ -367,6 +367,7 @@ export default {
         });
     },
     share() {
+      console.log('linkUrl', this.linkUrl);
       wx.updateAppMessageShareData({
         title: '海之友兑呗', // 分享标题
         desc: '海之友兑呗活动详情', // 分享描述
