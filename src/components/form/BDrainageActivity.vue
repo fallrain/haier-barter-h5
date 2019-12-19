@@ -98,7 +98,7 @@ export default {
       this.$emit('shareClick', this.getData);
     },
     qrCode() {
-      debugger
+      this.settingShareWX();
       this.$router.push({
         name: 'Activity.ActivityQRCode',
         params: { activityInfo: this.getData,
@@ -106,6 +106,7 @@ export default {
       });
     },
     dataStatistics() {
+      this.settingShareWX();
       this.$router.push({
         name: 'Activity.ActivityDataAnalysis',
         params: { activityInfo: this.getData,
@@ -114,6 +115,15 @@ export default {
     },
     showActivityDetail() {
       // 传值给小程序
+      this.settingShareWX();
+      this.$router.push({
+        name: 'Activity.ActivityDetail',
+        params: { activityId: this.getData.id,
+          userInfo: this.userData }
+      });
+    },
+    // h5给小程序传分享时需要的数据
+    settingShareWX() {
       wx.ready(() => {
         console.log('this.getData.id====', this.getData.id);
         console.log('this.userData.hmcId====', this.userData.hmcId);
@@ -123,11 +133,6 @@ export default {
             hmcId: this.userData.hmcId,
           }
         });
-      });
-      this.$router.push({
-        name: 'Activity.ActivityDetail',
-        params: { activityId: this.getData.id,
-          userInfo: this.userData }
       });
     }
   },

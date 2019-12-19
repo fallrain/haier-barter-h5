@@ -320,11 +320,13 @@ export default {
             const userName = encodeURIComponent(this.activityLinkmanName);
             const url = `${protocol + host + pathname}?activityId=${this.activityId}&mobile=${this.activityLinkmanPhone}&username=${userName}&openId=${this.openId}&hmcId=${this.hmcId}`;
             this.linkUrl = url;
+            this.settingShareWX();
           }
         }
       });
     }
     this.getProductGroup();
+    // 判断环境是否为小程序
     wx.miniProgram.getEnv((res) => {
       console.log(res.miniprogram);
       if (res.miniprogram) {
@@ -391,39 +393,40 @@ export default {
         });
     },
     share() {
+      this.isShowPopContainer = true;
+    },
+    // h5分享到朋友圈和好友的设置
+    settingShareWX() {
       console.log('linkUrl', this.linkUrl);
       if (this.isMiniProgram === 0) {
         wx.ready(() => {
           wx.updateAppMessageShareData({
-            title: '海之友兑呗', // 分享标题
-            desc: '海之友兑呗活动详情', // 分享描述
+            title: '海知友兑呗', // 分享标题
+            desc: '营销活动详情', // 分享描述
             link: this.linkUrl, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
             imgUrl: defaultImg, // 分享图标
             success: (res) => {
               // 设置成功
-              console.log('success');
-              alert(JSON.stringify(res));
+              console.log('updateAppMessageShareData success');
             },
             fail: (res) => {
-              alert(JSON.stringify(res));
+              console.log('updateAppMessageShareData fail');
             }
           });
           wx.updateTimelineShareData({
-            title: '海之友兑呗', // 分享标题
+            title: '海知友兑呗', // 分享标题
             link: this.linkUrl, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
             imgUrl: defaultImg, // 分享图标
             success: (res) => {
               // 设置成功
-              console.log('success');
-              alert(JSON.stringify(res));
+              console.log('updateTimelineShareData success');
             },
             fail: (res) => {
-              alert(JSON.stringify(res));
+              console.log('updateTimelineShareData fail');
             }
           });
         });
       }
-      this.isShowPopContainer = true;
     },
     closeShare() {
       this.isShowPopContainer = false;

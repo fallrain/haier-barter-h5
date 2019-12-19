@@ -329,15 +329,6 @@ export default {
     closeShare() {
       this.isShowPopContainer = false;
     },
-    shareImg() {
-      // this.isPopupShow = false;
-      // this.activityService.generateQrcode('http://baidu.com/', '123456', '9999').then((res) => {
-      //   this.bUtil.downloadFile(res.data);
-      // });
-      // return this.activityService.generateQrcode('http://baidu.com/', this.getData.id, this.getData.createdBy).then((res) => {
-      //   this.bUtil.downloadFile(res.data);
-      // });
-    },
     getProductGroup() {
       this.productService.industryGroup()
         .then((res) => {
