@@ -247,6 +247,7 @@ export default {
       // 活动开始结束时间
       activityStartTime: '',
       activityEndTime: '',
+      linkUrl: '',
       defaultImg,
     };
   },
@@ -313,6 +314,12 @@ export default {
         this.isMiniProgram = 0;
       }
     });
+    // https://testdb.haier.net/activity/activityDetail/?activityId=65022085451153408&mobile=15253269729&username=陆梦飞
+    const protocol = `${window.location.protocol}//`;
+    const host = window.location.host;
+    const pathname = '/activity/activityDetail';
+    const url = `${protocol + host + pathname}?activityId=${this.activityInfo.id}&mobile=${this.activityLinkmanPhone}&username=${this.activityLinkmanName}`;
+    this.linkUrl = url;
   },
   computed: {
     productCatagoryName() {
@@ -360,30 +367,22 @@ export default {
         });
     },
     share() {
+      wx.updateAppMessageShareData({
+        title: '海之友兑呗', // 分享标题
+        desc: '海之友兑呗活动详情', // 分享描述
+        link: this.linkUrl, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+        imgUrl: defaultImg, // 分享图标
+        success: (res) => {
+          // 设置成功
+          console.log('success');
+          alert(JSON.stringify(res));
+
+        },
+        fail: (res) => {
+          alert(JSON.stringify(res));
+        }
+      });
       this.isShowPopContainer = true;
-      // this.basicService.authorizedUrl({ frontUrl: 'https://testdb.haier.net/activity/activityDetail' }).then((res) => {
-      //   if (res.code === 1) {
-      //     if (res.data) {
-      //       wx.ready(() => { // 需在用户可能点击分享按钮前就先调用
-      //         wx.updateAppMessageShareData({
-      //           title: '', // 分享标题
-      //           desc: '', // 分享描述
-      //           link: res.data, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-      //           imgUrl: '', // 分享图标
-      //           success: (res) => {
-      //             // 设置成功
-      //             console.log('success');
-      //             alert(JSON.stringify(res));
-      //
-      //           },
-      //           fail: (res) => {
-      //             alert(JSON.stringify(res));
-      //           }
-      //         });
-      //       });
-      //     }
-      //   }
-      // });
     },
     closeShare() {
       this.isShowPopContainer = false;
@@ -482,6 +481,7 @@ export default {
 
   .activityDetail-register-item {
     display: flex;
+    flex-direction:row;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;

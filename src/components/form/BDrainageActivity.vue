@@ -15,7 +15,7 @@
 
         <div class="drainage-activity-container">
           <div>
-            <span class="drainage-activity-time">{{getData.microName}}</span>
+            <span class="drainage-activity-time drainage-activity-store">{{getData.microName}}</span>
           </div>
           <div>
             <i class="iconfont icon-yanjing fs38 mr16"/>
@@ -196,6 +196,16 @@ export default {
     text-overflow:ellipsis;
     display:-webkit-box;
     -webkit-line-clamp:2;//想要的行数
+    -webkit-box-orient:vertical;
+  }
+
+  .drainage-activity-store {
+    height: 30px;
+    width: 326px;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    display:-webkit-box;
+    -webkit-line-clamp:1;//想要的行数
     -webkit-box-orient:vertical;
   }
 
