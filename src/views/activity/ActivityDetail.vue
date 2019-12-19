@@ -317,7 +317,8 @@ export default {
             const protocol = `${window.location.protocol}//`;
             const host = window.location.host;
             const pathname = '/activity/activityDetail';
-            const url = `${protocol + host + pathname}?activityId=${this.activityId}&mobile=${this.activityLinkmanPhone}&username=${this.activityLinkmanName}&openId=${this.openId}&hmcId=${this.hmcId}`;
+            const userName = encodeURIComponent(this.activityLinkmanName);
+            const url = `${protocol + host + pathname}?activityId=${this.activityId}&mobile=${this.activityLinkmanPhone}&username=${userName}&openId=${this.openId}&hmcId=${this.hmcId}`;
             this.linkUrl = url;
           }
         }

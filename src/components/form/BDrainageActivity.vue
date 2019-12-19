@@ -116,8 +116,12 @@ export default {
       // 传值给小程序
       wx.ready(() => {
         console.log('this.getData.id====', this.getData.id);
+        console.log('this.userData.hmcId====', this.userData.hmcId);
         wx.miniProgram.postMessage({
-          data: this.getData.id
+          data: {
+            activityId: this.getData.id,
+            hmcId: this.userData.hmcId,
+          }
         });
       });
       this.$router.push({

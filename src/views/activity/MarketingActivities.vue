@@ -313,8 +313,12 @@ export default {
       this.isShowPopContainer = true;
       wx.ready(() => {
         console.log('this.getData.id====', item.id);
+        console.log('this.getUserInfo.hmcId====', this.getUserInfo.hmcId);
         wx.miniProgram.postMessage({
-          data: item.id
+          data: {
+            activityId: item.id,
+            hmcId: this.getUserInfo.hmcId,
+          }
         });
       });
     },
