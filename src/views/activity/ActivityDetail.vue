@@ -391,20 +391,38 @@ export default {
     },
     share() {
       console.log('linkUrl', this.linkUrl);
-      wx.updateAppMessageShareData({
-        title: '海之友兑呗', // 分享标题
-        desc: '海之友兑呗活动详情', // 分享描述
-        link: this.linkUrl, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-        imgUrl: defaultImg, // 分享图标
-        success: (res) => {
-          // 设置成功
-          console.log('success');
-          alert(JSON.stringify(res));
-        },
-        fail: (res) => {
-          alert(JSON.stringify(res));
-        }
-      });
+      if (this.isMiniProgram === 0) {
+        wx.ready(function () {
+          wx.updateAppMessageShareData({
+            title: '海之友兑呗', // 分享标题
+            desc: '海之友兑呗活动详情', // 分享描述
+            link: this.linkUrl, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: defaultImg, // 分享图标
+            success: (res) => {
+              // 设置成功
+              console.log('success');
+              alert(JSON.stringify(res));
+            },
+            fail: (res) => {
+              alert(JSON.stringify(res));
+            }
+          });
+          wx.updateTimelineShareData({
+            title: '海之友兑呗', // 分享标题
+            link: this.linkUrl, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: defaultImg, // 分享图标
+            success: (res) => {
+              // 设置成功
+              console.log('success');
+              alert(JSON.stringify(res));
+            },
+            fail: (res) => {
+              alert(JSON.stringify(res));
+            }
+          });
+        });
+      }
+
       this.isShowPopContainer = true;
     },
     closeShare() {
