@@ -306,7 +306,7 @@ export default {
             if (this.detailInfo.activityLinkmanName) {
               this.activityLinkmanName = this.detailInfo.activityLinkmanName;
             } else {
-              this.activityLinkmanName = this.$route.query.username || this.getUserInfo.username;
+              this.activityLinkmanName = decodeURIComponent(this.$route.query.username) || this.getUserInfo.username;
             }
             if (this.detailInfo.activityLinkmanPhone) {
               this.activityLinkmanPhone = this.detailInfo.activityLinkmanPhone;
