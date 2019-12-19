@@ -313,6 +313,12 @@ export default {
             } else {
               this.activityLinkmanPhone = this.$route.query.mobile || this.getUserInfo.mobile;
             }
+            // https://testdb.haier.net/activity/activityDetail/?activityId=65022085451153408&mobile=15253269729&username=陆梦飞
+            const protocol = `${window.location.protocol}//`;
+            const host = window.location.host;
+            const pathname = '/activity/activityDetail';
+            const url = `${protocol + host + pathname}?activityId=${this.activityId}&mobile=${this.activityLinkmanPhone}&username=${this.activityLinkmanName}&openId=${this.openId}`;
+            this.linkUrl = url;
           }
         }
       });
@@ -326,12 +332,6 @@ export default {
         this.isMiniProgram = 0;
       }
     });
-    // https://testdb.haier.net/activity/activityDetail/?activityId=65022085451153408&mobile=15253269729&username=陆梦飞
-    const protocol = `${window.location.protocol}//`;
-    const host = window.location.host;
-    const pathname = '/activity/activityDetail';
-    const url = `${protocol + host + pathname}?activityId=${this.activityId}&mobile=${this.activityLinkmanPhone}&username=${this.activityLinkmanName}`;
-    this.linkUrl = url;
   },
   computed: {
     productCatagoryName() {
@@ -392,7 +392,7 @@ export default {
     share() {
       console.log('linkUrl', this.linkUrl);
       if (this.isMiniProgram === 0) {
-        wx.ready(function () {
+        wx.ready(() => {
           wx.updateAppMessageShareData({
             title: '海之友兑呗', // 分享标题
             desc: '海之友兑呗活动详情', // 分享描述
