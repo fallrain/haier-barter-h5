@@ -16,6 +16,12 @@
         <input type="number" v-model="customerInfo.adminPhone" class="w100per input-style text-right" placeholder="请输入">
       </div>
     </div>
+    <div class="dis-flex row-style br-b">
+      <div class="">筑家店名</div>
+      <div class="fg1 pl20 pr20">
+        <input type="text" v-model="customerInfo.shopName" class="w100per input-style text-right" placeholder="请输入">
+      </div>
+    </div>
     <div class="text-999 lh70 pl20">一站筑家信息</div>
     <!--  <div class="dis-flex jus-bt row-style br-b">-->
     <!--    <div class="text-333">-->
@@ -235,6 +241,7 @@ export default {
   },
   activated() {
     if (this.$route.params.userInfo) {
+      this.customerInfo.imageUrlSaveVOList = [];
       this.customerInfo.adminId = this.$route.params.userInfo.hmcId;
       this.customerInfo.adminName = this.$route.params.userInfo.username;
     }
@@ -313,6 +320,10 @@ export default {
         Toast.failed('请输入筑家负责人手机号');
         return;
       }
+      if (this.customerInfo.shopName === '' || !this.customerInfo.shopName) {
+        Toast.failed('请输入筑家店名');
+        return;
+      }
       if (this.customerInfo.roomType === '' || !this.customerInfo.roomType) {
         Toast.failed('请选择样板间类型');
         return;
@@ -358,10 +369,10 @@ export default {
       }, {}).then((res) => {
         console.log(res);
         if (res.code === 1) {
-          this.id = res.data.id;
+          this.id = res.data;
           this.$router.push({
             name: 'Haierhouse.HaierhouseAreaInfo',
-            params: { id: this.id }
+            params: { shopId: this.id }
           });
         }
       });

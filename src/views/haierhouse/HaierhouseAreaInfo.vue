@@ -6,7 +6,8 @@
       覆盖小区
     </div>
     <div class="fg1 text-666 pl20">
-      <input type="text" v-model="customerInfo.districtName" class="w100per input-style">
+      <input type="text" v-model="customerInfo.districtScope"
+             class="w100per input-style text-right" placeholder="请输入">
     </div>
   </div>
   <div class="br-b">
@@ -36,10 +37,10 @@
   <div class="dis-flex row-style br-b">
     <div class="">小区面积</div>
     <div class="fg1 dis-flex">
-      <input type="text" v-model="customerInfo.districtAreaStart" @click="timeShow(1)"
+      <input type="text" v-model="customerInfo.districtAreaStart"
              class="w250 input-style text-center pr20" placeholder="请输入">
       <div class="">至</div>
-      <input type="text" v-model="customerInfo.districtAreaEnd" @click="timeShow(2)"
+      <input type="text" v-model="customerInfo.districtAreaEnd"
              class="w250 input-style text-center pr20" placeholder="请输入">
       <div class="text-primary">平米</div>
     </div>
@@ -65,7 +66,7 @@
         :maxLength="3"
         :compress="70"
         :headers="headers"
-        @imageuploaded="(data, fileList)=>imageuploaded(data, fileList, '0')"
+        @imageuploaded="(data, fileList)=>imageuploaded(data, fileList)"
         extensions="png,jpg,jpeg,gif"
         :url="uploadUrl"
         :multiple-size="1"
@@ -76,8 +77,8 @@
     </div>
   </div>
   <div class="bottom-btn">
-    <md-button type="primary" inline>完成</md-button>
-    <md-button type="primary" inline plain>继续添加覆盖小区</md-button>
+    <md-button type="primary" @click="complete" inline>完成</md-button>
+    <md-button type="primary" @click="continu" inline plain>继续添加覆盖小区</md-button>
   </div>
   <md-tab-picker
     title="请选择"
@@ -92,7 +93,7 @@
 </template>
 <script>
 import {
-  Radio, Field, FieldItem, TabPicker, Icon, DatePicker, Check, CheckGroup, CheckList,Button
+  Radio, Field, FieldItem, TabPicker, Icon, DatePicker, Check, CheckGroup, CheckList, Button, Toast
 } from 'mand-mobile';
 import {
   BItem,
@@ -104,6 +105,7 @@ import addressData from '@/lib/address';
 export default {
   name: 'HaierhouseApply',
   components: {
+    Toast,
     [Field.name]: Field,
     [FieldItem.name]: FieldItem,
     [Radio.name]: Radio,
@@ -113,7 +115,7 @@ export default {
     [Check.name]: Check,
     [CheckGroup.name]: CheckGroup,
     [CheckList.name]: CheckList,
-    [Button .name]: Button ,
+    [Button.name]: Button,
     BItem,
     BUpload
   },
@@ -138,18 +140,18 @@ export default {
         districtAreaEnd: '',
         saleAveragePrice: '',
         imageUrlSaveVOList: [
-          {
-            imageType: '',
-            imageUrl: ''
-          }
         ]
       },
       houseType: [
       ],
-      houseTypeV: []
+      houseTypeV: [],
+      houseTypeN: []
     };
   },
   created() {
+    if (this.$route.params.shopId) {
+      this.customerInfo.shopId = this.$route.params.shopId;
+    }
     this.addressData = addressData;
     this.headers.Authorization = `Bearer  ${localStorage.getItem('acces_token')}`;
     // 家庭户型字典
@@ -158,17 +160,24 @@ export default {
         res.data.forEach((item) => {
           item.value = item.id;
           item.label = item.itemName;
-        })
+        });
         this.houseType = res.data;
       }
     });
   },
-  computed: {
+  watch: {
+    houseTypeV(val) {
+      this.houseTypeN = [];
+      val.forEach((item) => {
+        this.houseType.forEach((item1) => {
+          if (item1.value === item) {
+            this.houseTypeN.push(item1.label);
+          }
+        });
+      });
+    }
   },
   methods: {
-    getHouseType() {
-
-    },
     showAddressPop() {
       /* 展示地址pop */
       this.addressPopShow = true;
@@ -177,12 +186,13 @@ export default {
       const addressName = address.options;
       this.customerInfo.provinceCityArea = addressName[0].label + addressName[1].label + addressName[2].label;
     },
-    imageuploaded(data, fileList, item) {
+    imageuploaded(data, fileList) {
       const itemImg = {};
       if (data.code === 1) {
-        itemImg.imageType = item.value;
+        itemImg.imageType = 0;
         itemImg.imageUrl = data.data;
       }
+      this.customerInfo.imageUrlSaveVOList.push(itemImg)
       fileList.push(data.data);
     },
     delImg(index, fileList) {
@@ -200,6 +210,49 @@ export default {
         }
       }
       Toast.failed(res || '上传失败');
+    },
+    complete() {
+      this.confirm();
+      console.log(this.customerInfo);
+      this.haierhouseService.addDistrictInfo(this.customerInfo, {}).then((res) => {
+        if (res.code === 1) {
+          console.log(res);
+        }
+      });
+    },
+    continu() {
+      this.confirm();
+      console.log(this.customerInfo);
+      this.haierhouseService.addDistrictInfo(this.customerInfo, {}).then((res) => {
+        if (res.code === 1) {
+          console.log(res);
+        }
+      });
+    },
+    confirm() {
+      if (this.customerInfo.districtScope === '' || !this.customerInfo.districtScope) {
+        Toast.failed('请输入小区名称');
+      }
+      if (this.customerInfo.provinceCityArea === '' || !this.customerInfo.provinceCityArea) {
+        Toast.failed('请输入地址');
+      }
+      if (this.customerInfo.districtAddress === '' || !this.customerInfo.districtAddress) {
+        Toast.failed('请输入地址');
+      }
+      if (this.houseTypeV.length === 0) {
+        Toast.failed('请选择户型');
+      } else {
+        this.customerInfo.layoutType = this.houseTypeV.join(',');
+      }
+      if (this.customerInfo.districtAreaStart === '' || !this.customerInfo.districtAreaStart) {
+        Toast.failed('请输入小区面积范围');
+      }
+      if (this.customerInfo.districtAreaEnd === '' || !this.customerInfo.districtAreaEnd) {
+        Toast.failed('请输入小区面积范围');
+      }
+      if (this.customerInfo.saleAveragePrice === '' || !this.customerInfo.saleAveragePrice) {
+        Toast.failed('请输入小区均价');
+      }
     }
   }
 };

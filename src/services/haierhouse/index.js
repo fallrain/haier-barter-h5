@@ -17,4 +17,8 @@ export default {
     /* 新增筑家门店 */
     return axPostJson(urls.addShopInfo, data, param);
   },
+  addDistrictInfo(data, param) {
+    /* 新增筑小区信息 */
+    return axPostJson(urls.addDistrictInfo, data, param);
+  },
 };

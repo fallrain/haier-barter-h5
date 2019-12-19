@@ -48,11 +48,7 @@
             </button>
 
             <button class="bt2-myhouse-card-cnt-opt-btn mr24" @click="activity()">配置活动</button>
-            <!-- <div class="bt2-myhouse-card-cnt-opt-status">
-              <img src="@/assets/images/haierHouse/Icons／Complete@2x.png">
-              <text>{{myAreaList.status}}</text>
-            </div> -->
-            <div class="bt2-myhouse-card-cnt-opt-status" v-show="middle">
+            <div class="bt2-myhouse-card-cnt-opt-status">
               <img src="@/assets/images/haierHouse/Icons／Complete@2x.png">
               <text style="margin-left: 8px;">{{item.status}}</text>
             </div>
