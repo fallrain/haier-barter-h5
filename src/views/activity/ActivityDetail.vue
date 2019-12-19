@@ -288,6 +288,10 @@ export default {
         noToken: true
       }).then((res) => {
         if (res.code === 1) {
+          // 通过扫码打开的活动并且不允许分享  不展示内容
+          if (this.$route.query.activityId && res.data && res.data.allowShare === 0) {
+            return;
+          }
           this.detailInfo = res.data;
           if (this.detailInfo) {
             // 活动日期，截取到日
