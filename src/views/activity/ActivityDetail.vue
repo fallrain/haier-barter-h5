@@ -265,13 +265,13 @@ export default {
       this.openId = this.$route.query.openId;
     }
     console.log('activityDetail', this.openId);
+    if (this.getUserInfo) {
+      this.hmcId = this.getUserInfo.hmcId;
+    } else {
+      this.hmcId = this.$route.query.hmcId;
+    }
     if (this.$route.query.activityId) {
       // 只有从分享后打开的才增加浏览计数接口
-      if (this.getUserInfo) {
-        this.hmcId = this.getUserInfo.hmcId;
-      } else {
-        this.hmcId = this.$route.query.hmcId;
-      }
       this.activityService.shareCount({}, {
         activityId: this.activityId,
         hmcId: this.hmcId,
