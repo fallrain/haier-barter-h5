@@ -200,7 +200,7 @@ export default {
   }
 
   .drainage-activity-store {
-    height: 30px;
+    height: 33px;
     width: 326px;
     overflow: hidden;
     text-overflow:ellipsis;

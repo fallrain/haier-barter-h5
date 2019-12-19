@@ -265,8 +265,15 @@ export default {
     console.log('activityDetail', this.openId);
     if (this.$route.query.activityId) {
       // 只有从分享后打开的才增加浏览计数接口
+      let hmcId = '';
+      if (this.getUserInfo.hmcId) {
+        hmcId = this.getUserInfo.hmcId;
+      } else {
+        hmcId = this.$route.query.hmcId;
+      }
       this.activityService.shareCount({}, {
         activityId: this.activityId,
+        hmcId,
         counterTypeCode: 'single_reading_count',
         noToken: true
       }).then((res) => {
@@ -377,7 +384,6 @@ export default {
           // 设置成功
           console.log('success');
           alert(JSON.stringify(res));
-
         },
         fail: (res) => {
           alert(JSON.stringify(res));
