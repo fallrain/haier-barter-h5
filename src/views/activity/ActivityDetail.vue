@@ -363,7 +363,7 @@ export default {
       window.location.href = 'https://account.haier.com/html/privacypolicy.html';
     },
     registerDialog() {
-      this.registerDialogShow = true;
+      // this.registerDialogShow = true;
       this.activityService.validateJoiner({
         activityId: this.activityId,
         openId: this.openId,
