@@ -270,12 +270,23 @@ export default {
     } else {
       this.hmcId = this.$route.query.hmcId;
     }
+    // 只要进来就增加浏览计数接口
+    this.activityService.shareCount({}, {
+      activityId: this.activityId,
+      hmcId: this.hmcId,
+      openId: this.openId,
+      counterTypeCode: 'single_reading_count',
+      noToken: true
+    }).then((res) => {
+      console.log('shareCount', res);
+    });
     if (this.$route.query.activityId) {
-      // 只有从分享后打开的才增加浏览计数接口
+      // 只有从分享后打开的才增加分享计数接口
       this.activityService.shareCount({}, {
         activityId: this.activityId,
         hmcId: this.hmcId,
-        counterTypeCode: 'single_reading_count',
+        openId: this.openId,
+        counterTypeCode: 'single_share_count',
         noToken: true
       }).then((res) => {
         console.log('shareCount', res);
@@ -406,10 +417,10 @@ export default {
     // h5分享到朋友圈和好友的设置
     settingShareWX() {
       console.log('linkUrl', this.linkUrl);
-      this.basicService.authorizedUrl({ frontUrl: this.linkUrl }).then((res) => {
-        if (res.code === 1) {
-          console.log('authorizedUrl', res.data);
-          if (this.isMiniProgram === 0) {
+      if (this.isMiniProgram === 0) {
+        this.basicService.authorizedUrl({ frontUrl: this.linkUrl }).then((res) => {
+          if (res.code === 1) {
+            console.log('authorizedUrl', res.data);
             wx.ready(() => {
               wx.updateAppMessageShareData({
                 title: '海知友兑呗', // 分享标题
@@ -417,11 +428,20 @@ export default {
                 link: res.data, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
                 imgUrl: defaultImg, // 分享图标
                 success: (res) => {
-                  // 设置成功
+                  // 转发计数接口
                   console.log('updateAppMessageShareData success');
+                  this.activityService.shareCount({}, {
+                    activityId: this.activityId,
+                    hmcId: this.hmcId,
+                    openId: this.openId,
+                    counterTypeCode: 'single_forword_count',
+                    noToken: true
+                  }).then((res) => {
+                    console.log('shareCount', res);
+                  });
                 },
                 fail: (res) => {
-                  console.log('updateAppMessageShareData fail');
+                  console.log('updateAppMessageShareData fail', res);
                 }
               });
               wx.updateTimelineShareData({
@@ -429,17 +449,26 @@ export default {
                 link: res.data, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
                 imgUrl: defaultImg, // 分享图标
                 success: (res) => {
-                  // 设置成功
+                  // 转发计数接口
                   console.log('updateTimelineShareData success');
+                  this.activityService.shareCount({}, {
+                    activityId: this.activityId,
+                    hmcId: this.hmcId,
+                    openId: this.openId,
+                    counterTypeCode: 'single_forword_count',
+                    noToken: true
+                  }).then((res) => {
+                    console.log('shareCount', res);
+                  });
                 },
                 fail: (res) => {
-                  console.log('updateTimelineShareData fail');
+                  console.log('updateTimelineShareData fail', res);
                 }
               });
             });
           }
-        }
-      });
+        });
+      }
     },
     closeShare() {
       this.isShowPopContainer = false;

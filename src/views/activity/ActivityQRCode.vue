@@ -76,7 +76,7 @@ export default {
       const pathname = '/activity/activityDetail';
       const userName = encodeURIComponent(this.getUserInfo.username);
       const url = `${protocol + host + pathname}?activityId=${this.activityInfo.id}&mobile=${this.getUserInfo.mobile}&username=${userName}&hmcId=${this.getUserInfo.hmcId}`;
-      console.log('url', url);
+      console.log('url==', url);
       this.basicService.authorizedUrl({ frontUrl: url }).then((res) => {
         if (res.code === 1) {
           if (res.data) {
