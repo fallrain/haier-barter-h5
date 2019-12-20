@@ -292,6 +292,20 @@ export default {
         console.log('shareCount', res);
       });
     }
+    if (!this.openId) {
+      if (this.isMiniProgram === 0) {
+        const urlParams = window.location.href;
+        this.linkUrl = urlParams;
+        console.log('linkUrl before authorizedUrl', this.linkUrl);
+        this.basicService.authorizedUrl({ frontUrl: this.linkUrl }).then((res) => {
+          if (res.code === 1) {
+            console.log('authorizedUrl', res.data);
+            window.location.replace(res.data);
+          }
+        });
+      }
+      return;
+    }
     if (this.activityId) {
       // 活动详情查询
       this.activityService.queryActivityInfoDetails({}, {
@@ -418,55 +432,50 @@ export default {
     settingShareWX() {
       console.log('linkUrl', this.linkUrl);
       if (this.isMiniProgram === 0) {
-        this.basicService.authorizedUrl({ frontUrl: this.linkUrl }).then((res) => {
-          if (res.code === 1) {
-            console.log('authorizedUrl', res.data);
-            wx.ready(() => {
-              wx.updateAppMessageShareData({
-                title: '海知友兑呗', // 分享标题
-                desc: '营销活动详情', // 分享描述
-                link: res.data, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-                imgUrl: defaultImg, // 分享图标
-                success: (res) => {
-                  // 转发计数接口
-                  console.log('updateAppMessageShareData success');
-                  this.activityService.shareCount({}, {
-                    activityId: this.activityId,
-                    hmcId: this.hmcId,
-                    openId: this.openId,
-                    counterTypeCode: 'single_forword_count',
-                    noToken: true
-                  }).then((res) => {
-                    console.log('shareCount', res);
-                  });
-                },
-                fail: (res) => {
-                  console.log('updateAppMessageShareData fail', res);
-                }
+        wx.ready(() => {
+          wx.updateAppMessageShareData({
+            title: '海知友兑呗', // 分享标题
+            desc: '营销活动详情', // 分享描述
+            link: this.linkUrl, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: defaultImg, // 分享图标
+            success: (res) => {
+              // 转发计数接口
+              console.log('updateAppMessageShareData success');
+              this.activityService.shareCount({}, {
+                activityId: this.activityId,
+                hmcId: this.hmcId,
+                openId: this.openId,
+                counterTypeCode: 'single_forword_count',
+                noToken: true
+              }).then((res) => {
+                console.log('shareCount', res);
               });
-              wx.updateTimelineShareData({
-                title: '海知友兑呗', // 分享标题
-                link: res.data, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-                imgUrl: defaultImg, // 分享图标
-                success: (res) => {
-                  // 转发计数接口
-                  console.log('updateTimelineShareData success');
-                  this.activityService.shareCount({}, {
-                    activityId: this.activityId,
-                    hmcId: this.hmcId,
-                    openId: this.openId,
-                    counterTypeCode: 'single_forword_count',
-                    noToken: true
-                  }).then((res) => {
-                    console.log('shareCount', res);
-                  });
-                },
-                fail: (res) => {
-                  console.log('updateTimelineShareData fail', res);
-                }
+            },
+            fail: (res) => {
+              console.log('updateAppMessageShareData fail', res);
+            }
+          });
+          wx.updateTimelineShareData({
+            title: '海知友兑呗', // 分享标题
+            link: this.linkUrl, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: defaultImg, // 分享图标
+            success: (res) => {
+              // 转发计数接口
+              console.log('updateTimelineShareData success');
+              this.activityService.shareCount({}, {
+                activityId: this.activityId,
+                hmcId: this.hmcId,
+                openId: this.openId,
+                counterTypeCode: 'single_forword_count',
+                noToken: true
+              }).then((res) => {
+                console.log('shareCount', res);
               });
-            });
-          }
+            },
+            fail: (res) => {
+              console.log('updateTimelineShareData fail', res);
+            }
+          });
         });
       }
     },

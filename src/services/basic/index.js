@@ -8,7 +8,7 @@ import {
 export default {
   jsSign(url) {
     /* 微信权限 */
-    return axGet(urls.jsSign, { url, noLoading: true, requestNoToast: false });
+    return axGet(urls.jsSign, { url, noLoading: true, requestNoToast: false, noToken: true, });
   },
   userInfo() {
     /* 微信权限 */
