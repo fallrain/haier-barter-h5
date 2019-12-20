@@ -20,7 +20,7 @@ export default {
   },
   authorizedUrl(data) {
     /* 构建微信授权URL给前端 */
-    return axPost(urls.authorizedUrl, data);
+    return axPost(urls.authorizedUrl, data, { noToken: true, });
   },
   sendSms(data) {
     /* 发送短信验证码给客户 */
