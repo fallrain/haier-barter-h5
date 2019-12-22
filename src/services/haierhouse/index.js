@@ -21,4 +21,8 @@ export default {
     /* 新增筑小区信息 */
     return axPostJson(urls.addDistrictInfo, data, param);
   },
+  queryShopAndDistrict(data, param) {
+    /* 店铺申请信息查询接口 */
+    return axPostJson(urls.queryShopAndDistrict, data, param);
+  },
 };

@@ -46,11 +46,10 @@
             <button class="bt2-myhouse-card-cnt-opt-btn mr24" @click="changeInformation()" v-show="deny">修改信息</button>
             <button class="bt2-myhouse-card-cnt-opt-btn mr24" @click="checkDetail()" v-show="informationComplete">查看详情
             </button>
-
             <button class="bt2-myhouse-card-cnt-opt-btn mr24" @click="activity()">配置活动</button>
             <div class="bt2-myhouse-card-cnt-opt-status">
               <img src="@/assets/images/haierHouse/Icons／Complete@2x.png">
-              <text style="margin-left: 8px;">{{item.status}}</text>
+              <span style="margin-left: 8px;">{{item.status}}</span>
             </div>
           </div>
         </div>
@@ -225,8 +224,8 @@ export default {
     },
     getDatalist() {
       this.haierhouseService.queryMyShopList({
-        adminId: '00011682',
-        // adminId: this.userInfo.hmcid,
+        hmcId: '00011682',
+        // hmcId: this.userInfo.hmcid,
         rowNum: 3
       }).then((res) => {
         console.log(res);
@@ -268,10 +267,10 @@ export default {
       this.showAl();
     },
     showMoreList() {
-      const data = JSON.stringify(this.allList);
-      // uni.navigateTo({
-      //   url: `/pages/haierHouse/HaierHouseApplyBuildList?id=${data}&hmcid=${this.hmcid}`,
-      // });
+      this.$router.push({
+        name: 'Haierhouse.HaierhouseApplyBuildList',
+        params: { hmcId: this.userInfo.hmcid}
+      });
     },
     getQueryString(name) {
       const reg = new RegExp(`(^|&)${name}=([^&]*)(&|$)`, 'i');
@@ -430,7 +429,7 @@ export default {
     color: #F5A623;
     font-size: 26px;
     position: absolute;
-    right: 30px;
+    right: 60px;
     img{
       width: 36px;
       height: 36px;

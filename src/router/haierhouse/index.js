@@ -1,4 +1,5 @@
 const HaierhouseEntry = () => import('@/views/haierhouse/HaierhouseEntry');// 一站筑家
+const HaierhouseApplyBuildList = () => import('@/views/haierhouse/HaierhouseApplyBuildList');// 我的一站筑家
 const HaierhouseApply = () => import('@/views/haierhouse/HaierhouseApply');// 筑家申请
 const HaierhouseAreaInfo = () => import('@/views/haierhouse/HaierhouseAreaInfo');// 筑家小区信息
 const ChoosePerson = () => import('@/views/haierhouse/ChoosePerson');// 筑家负责人列表
@@ -12,6 +13,14 @@ const data = [
     component: HaierhouseEntry,
     meta: {
       title: '一站筑家',
+    },
+  },
+  {
+    path: `${prefix}/haierhouseApplyBuildList`,
+    name: `${module}.HaierhouseApplyBuildList`,
+    component: HaierhouseApplyBuildList,
+    meta: {
+      title: '我的一站筑家',
     },
   },
   {

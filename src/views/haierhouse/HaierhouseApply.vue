@@ -245,6 +245,10 @@ export default {
       this.customerInfo.adminId = this.$route.params.userInfo.hmcId;
       this.customerInfo.adminName = this.$route.params.userInfo.username;
     }
+    if (this.$route.params.id) { // 修改信息
+      this.id = this.$route.params.id;
+      this.getInformation(this.id);
+    }
   },
   created() {
     this.headers.Authorization = `Bearer  ${localStorage.getItem('acces_token')}`;
@@ -269,6 +273,13 @@ export default {
     }
   },
   methods: {
+    getInformation(id) {
+      this.haierhouseService.queryShopAndDistrict({}, {
+        id
+      }).then((res) => {
+        console.log(res);
+      });
+    },
     choosePerson() {
       this.$router.push({
         name: 'Haierhouse.ChoosePerson',

@@ -103,7 +103,7 @@ import {
 import addressData from '@/lib/address';
 
 export default {
-  name: 'HaierhouseApply',
+  name: 'HaierhouseAreaInfo',
   components: {
     Toast,
     [Field.name]: Field,
