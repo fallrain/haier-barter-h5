@@ -76,6 +76,7 @@
             class="activityDetail-register-ipt"
             type="text"
             v-model="form.userNickname"
+            v-resetInput
             placeholder="请输入您的姓名"
           >
         </div>
@@ -84,6 +85,7 @@
             class="activityDetail-register-ipt"
             type="text"
             v-model="form.mobile"
+            v-resetInput
             placeholder="请输入手机号码"
           >
         </div>
@@ -92,6 +94,7 @@
             class="activityDetail-verifyCode-ipt"
             type="text"
             placeholder="请输入验证码"
+            v-resetInput
             v-model="form.verifyCode"
           >
           <b-verificationcode
@@ -299,7 +302,7 @@ export default {
         console.log('linkUrl before authorizedUrl', this.linkUrl);
         this.basicService.authorizedUrl({ frontUrl: this.linkUrl }).then((res) => {
           if (res.code === 1) {
-            console.log('authorizedUrl', res.data);
+            console.log('aut horizedUrl', res.data);
             window.location.replace(res.data);
           }
         });
