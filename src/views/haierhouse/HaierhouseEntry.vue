@@ -224,8 +224,8 @@ export default {
     },
     getDatalist() {
       this.haierhouseService.queryMyShopList({
-        hmcId: '00011682',
-        // hmcId: this.userInfo.hmcid,
+        // hmcId: '00011682',
+        hmcId: this.userInfo.hmcid,
         rowNum: 3
       }).then((res) => {
         console.log(res);
@@ -360,6 +360,7 @@ export default {
     }
 
     &myhouse{
+      position: relative;
       background: #fff;
       padding-top: 24px;
       padding-bottom: 24px;
@@ -386,6 +387,7 @@ export default {
     color: #4A90E2;
     position: absolute;
     right: 76px;
+    top: 0px;
     font-size: 30px;
   }
   .bt2-myhouse-card-cnt{
@@ -429,7 +431,7 @@ export default {
     color: #F5A623;
     font-size: 26px;
     position: absolute;
-    right: 60px;
+    right: 0px;
     img{
       width: 36px;
       height: 36px;
@@ -458,6 +460,7 @@ export default {
 
   .img-class {
     position: absolute;
+    top: 18px;
     right: 24px;
     width: 38px;
     height: 38px;

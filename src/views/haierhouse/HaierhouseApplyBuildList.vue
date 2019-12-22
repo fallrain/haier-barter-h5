@@ -4,7 +4,7 @@
       <div class="">
         <div class="BTitle-par title-class">
           <p class="title-left"></p>
-          <p class="BTitle">我的一站筑家</p>
+          <p class="Btitle">我的一站筑家</p>
         </div>
         <div class="bt2-myhouse-card" v-for="(item, index) in this.scrollView.list" :key="index">
           <img v-if="item.imageUrl" :src="item.imageUrl" class="bt2-myhouse-card-portrait">
@@ -73,8 +73,8 @@ export default {
     },
     getDatalist(page) {
       return this.haierhouseService.queryMyShopList({
-        adminId: '00011682',
-        // adminId: this.userInfo.hmcid,
+        // adminId: '00011682',
+        hmcId: this.userInfo.hmcid,
       }).then((res) => {
         console.log(res);
         if (res.code === 1) {
@@ -128,7 +128,7 @@ export default {
     line-height: 70px;
   }
 
-  .BTitle {
+  .Btitle {
     color: #333;
     font-size: 32px;
   }

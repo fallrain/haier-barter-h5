@@ -148,10 +148,10 @@ export default {
       houseTypeN: []
     };
   },
+  activated() {
+    this.customerInfo.shopId = this.$route.query.shopId;
+  },
   created() {
-    if (this.$route.params.shopId) {
-      this.customerInfo.shopId = this.$route.params.shopId;
-    }
     this.addressData = addressData;
     this.headers.Authorization = `Bearer  ${localStorage.getItem('acces_token')}`;
     // 家庭户型字典
@@ -192,7 +192,7 @@ export default {
         itemImg.imageType = 0;
         itemImg.imageUrl = data.data;
       }
-      this.customerInfo.imageUrlSaveVOList.push(itemImg)
+      this.customerInfo.imageUrlSaveVOList.push(itemImg);
       fileList.push(data.data);
     },
     delImg(index, fileList) {
@@ -216,7 +216,9 @@ export default {
       console.log(this.customerInfo);
       this.haierhouseService.addDistrictInfo(this.customerInfo, {}).then((res) => {
         if (res.code === 1) {
-          console.log(res);
+          this.$router.push({
+            name: 'Haierhouse.HaierhouseEntry'
+          });
         }
       });
     },
@@ -225,7 +227,7 @@ export default {
       console.log(this.customerInfo);
       this.haierhouseService.addDistrictInfo(this.customerInfo, {}).then((res) => {
         if (res.code === 1) {
-          console.log(res);
+          this.$router.go(0);
         }
       });
     },
@@ -254,6 +256,45 @@ export default {
         Toast.failed('请输入小区均价');
       }
     }
+  },
+  beforeRouteLeave(to, from, next) {
+    debugger;
+    if (to.name === 'Haierhouse.HaierhouseApply') {
+      // to.name = 'Haierhouse.HaierhouseEntry';
+      this.$router.push({
+        name: 'Haierhouse.HaierhouseEntry'
+      });
+    }
+    if (this.$vnode && this.$vnode.data.keepAlive) {
+      if (this.$vnode.parent && this.$vnode.parent.componentInstance && this.$vnode.parent.componentInstance.cache) {
+        if (this.$vnode.componentOptions) {
+          const key = this.$vnode.key == null
+            ? this.$vnode.componentOptions.Ctor.cid + (this.$vnode.componentOptions.tag ? `::${this.$vnode.componentOptions.tag}` : '')
+            : this.$vnode.key;
+          const cache = this.$vnode.parent.componentInstance.cache;
+          const keys = this.$vnode.parent.componentInstance.keys;
+          if (to.name === 'Haierhouse.HaierhouseEntry') {
+            keys.forEach((k, index) => {
+              if (cache[k]) {
+                delete cache[k];
+              }
+            });
+          } else if (to.name === 'Haierhouse.HaierhouseApply') {
+            keys.forEach((k) => {
+              if (cache[k]) {
+                delete cache[k];
+              }
+            });
+            this.$router.push({
+              name: 'Haierhouse.HaierhouseEntry'
+            });
+          }
+          
+        }
+      }
+    }
+    this.$destroy();
+    next();
   }
 };
 </script>

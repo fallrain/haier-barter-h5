@@ -108,7 +108,7 @@
           extensions="png,jpg,jpeg,gif"
           :url="uploadUrl"
           :multiple-size="1"
-          @delFun="delImg"
+          @delFun="delImg(0)"
           @errorhandle="uploadError"
         >
         </b-upload>
@@ -129,7 +129,7 @@
           extensions="png,jpg,jpeg,gif"
           :url="uploadUrl"
           :multiple-size="1"
-          @delFun="delImg"
+          @delFun="delImg(item)"
           @errorhandle="uploadError"
         >
         </b-upload>
@@ -383,7 +383,7 @@ export default {
           this.id = res.data;
           this.$router.push({
             name: 'Haierhouse.HaierhouseAreaInfo',
-            params: { shopId: this.id }
+            query: { shopId: this.id }
           });
         }
       });
@@ -402,7 +402,14 @@ export default {
       }
       fileList.push(data.data);
     },
-    delImg(index, fileList) {
+    delImg(index, fileList, item) {
+      // if (item === '0') { // 样板间照片
+      //   itemImg.imageType = this.customerInfo.roomType;
+      //   itemImg.imageUrl = data.data;
+      // } else { // 产业照片
+      //   itemImg.imageType = item.value;
+      //   itemImg.imageUrl = data.data;
+      // }
       fileList.splice(index, 1);
     },
     uploadError(res) {
