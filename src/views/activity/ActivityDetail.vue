@@ -8,7 +8,7 @@
         :title="detailInfo.activityTitle"
         :startDate="activityStartTime"
         :endDate="activityEndTime"
-        :address="detailInfo.storeName"
+        :address="storeName"
       ></activity-name-time>
       <div class="activityDetail-detail-title-bg">
         <img :src="detailInfo.activityInfoPoster.posterUrl2" alt="">
@@ -253,6 +253,7 @@ export default {
       activityEndTime: '',
       hmcId: '',
       linkUrl: '',
+      storeName: '',
       defaultImg,
     };
   },
@@ -321,6 +322,11 @@ export default {
             return;
           }
           this.detailInfo = res.data;
+          if (this.detailInfo.storeName == '*') {
+            this.storeName = '全部门店';
+          } else {
+            this.storeName = this.detailInfo.storeName;
+          }
           if (this.detailInfo) {
             // 活动日期，截取到日
             if (this.detailInfo.activityEndTime) {
