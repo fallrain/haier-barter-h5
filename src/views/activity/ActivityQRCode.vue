@@ -7,7 +7,7 @@
       :title="activityInfo.activityTitle"
       :startDate="activityInfo.activityStartTime"
       :endDate="activityInfo.activityEndTime"
-      address="青岛市崂山区海尔路10号海尔专卖店"
+      :address="storeName"
     ></activity-name-time>
     <div class="activityQRCode-cnt">
       <p class="activityQRCode-cnt-title">活动专属二维码</p>
@@ -59,6 +59,11 @@ export default {
   },
   activated() {
     this.activityInfo = this.$route.params.activityInfo;
+    if (this.activityInfo.storeName == '*') {
+      this.storeName = '全部门店';
+    } else {
+      this.storeName = this.activityInfo.storeName;
+    }
     this.getUserInfo = this.$route.params.userInfo;
     this.createQrcode();
   },
@@ -67,6 +72,7 @@ export default {
       qrcodeImg: '',
       activityInfo: {},
       getUserInfo: {},
+      storeName: '',
     };
   },
   methods: {
@@ -140,8 +146,8 @@ export default {
 
   .activityQRCode-cnt-code-par {
     position: relative;
-    width: 314px;
-    height: 314px;
+    width: 330px;
+    height: 330px;
     margin-top: 24px;
     margin-left: auto;
     margin-right: auto;

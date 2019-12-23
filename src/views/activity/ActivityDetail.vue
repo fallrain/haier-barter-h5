@@ -159,7 +159,7 @@
       <div class="activityDetail-qrcode-body">
         <div class="activityDetail-qrcode-title">
           <p class="">
-            扫描或长按识别
+            扫描识别
           </p>
           <p>
             关注海尔智家服务号
@@ -170,7 +170,7 @@
           <div class="activityDetail-qrcode-corner activityDetail-qrcode-corner2"></div>
           <div class="activityDetail-qrcode-corner activityDetail-qrcode-corner3"></div>
           <div class="activityDetail-qrcode-corner activityDetail-qrcode-corner4"></div>
-          <img src="@/assets/images/activity/qrcode-example.png" alt="">
+          <img src="@/assets/images/activity/qrcode-zhijia.png" alt="">
         </div>
         <p class="activityDetail-qrcode-inf">
           了解更多会员权益，获取更多会员福利尽在
