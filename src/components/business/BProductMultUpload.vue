@@ -33,7 +33,7 @@
           >
           </b-upload>-->
           <b-wx-upload
-            @imageuploaded="(data)=>imageuploaded(data, fileMap[product.id],product)"
+            @imageuploaded="(data)=>imageuploaded(data, product.id,product)"
             :uploadFn="uploadImg"
             :imgs="fileMap[product.id]"
             @delFun="(delIndex)=>delImg(delIndex, fileMap[product.id], product)"
@@ -146,12 +146,12 @@ export default {
         recordMode: 'Haier'
       });
     },
-    imageuploaded(data, fileList, product) {
+    imageuploaded(data, id, product) {
       /* 上传成功 */
       if (data.code === 1) {
-        if (data.data.invoiceUrl !== null) {
+        if (data.data.invoiceUrl) {
           // 显示图片
-          fileList.push(data.data.invoiceUrl);
+          this.fileMap[id] = [data.data.invoiceUrl];
         }
         this.$emit('uploadSuccess', data.data, this.fileMap, product);
       } else {

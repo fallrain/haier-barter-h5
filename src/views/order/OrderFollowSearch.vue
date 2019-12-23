@@ -2,6 +2,7 @@
   <div class="page-class">
     <div class="">
       <md-notice-bar
+        v-if="noticeNum"
         mode="closable"
         :time="4000"
       >
@@ -32,6 +33,8 @@
     <b-order-follow-search-bar
       v-show="curScrollViewName==='scrollView'"
       :scenarioList="scenarioList"
+      :businessType.sync="scrollView.businessType"
+      :sortType.sync="scrollView.sortType"
       @checkClick="checkClicked"
       @popButtonClicked="buttonClicked"
     ></b-order-follow-search-bar>
@@ -43,8 +46,6 @@
     >
       <b-order-follow-item
         :list="scrollView.list"
-        @checkClick="checkClicked"
-        @popButtonClicked="buttonClicked"
         @updateOrderType="updateOrderType"
         @followButtonClick="followButtonClicked"
         @againEntry="againEntry"
@@ -57,6 +58,8 @@
     <b-order-follow-search-bar
       v-show="curScrollViewName==='scrollViewFinished'"
       :scenarioList="scenarioList"
+      :businessType.sync="scrollViewFinished.businessType"
+      :sortType.sync="scrollViewFinished.sortType"
       @checkClick="checkClicked"
       @popButtonClicked="buttonClicked"
     ></b-order-follow-search-bar>
@@ -68,8 +71,6 @@
     >
       <b-order-follow-item
         :list="scrollViewFinished.list"
-        @checkClick="checkClicked"
-        @popButtonClicked="buttonClicked"
         @updateOrderType="updateOrderType"
         @followButtonClick="followButtonClicked"
         @againEntry="againEntry"
@@ -81,7 +82,12 @@
     </div>
     <b-order-follow-search-bar
       v-show="curScrollViewName==='scrollViewOdd'"
-      :scenarioList="scenarioList"
+      :sortArray="oddOrderSortList"
+      :scenarioList="oddScenarioList"
+      :businessType.sync="scrollViewOdd.businessType"
+      businessCheckType="radio"
+      :businessTypeRadioCancel="true"
+      :sortType.sync="scrollViewOdd.sortType"
       @checkClick="checkClicked"
       @popButtonClicked="buttonClicked"
     ></b-order-follow-search-bar>
@@ -92,9 +98,8 @@
       v-show="curScrollViewName==='scrollViewOdd'"
     >
       <b-order-follow-item
+        type="odd"
         :list="scrollViewOdd.list"
-        @checkClick="checkClicked"
-        @popButtonClicked="buttonClicked"
         @updateOrderType="updateOrderType"
         @followButtonClick="followButtonClicked"
         @itemClick="itemClick"
@@ -104,6 +109,8 @@
     <b-order-follow-search-bar
       v-show="curScrollViewName==='scrollViewProgress'"
       :scenarioList="scenarioList"
+      :businessType.sync="scrollViewProgress.businessType"
+      :sortType.sync="scrollViewProgress.sortType"
       @checkClick="checkClicked"
       @popButtonClicked="buttonClicked"
     ></b-order-follow-search-bar>
@@ -156,6 +163,7 @@
 </template>
 <script>
 import {
+  Dialog,
   Icon,
   NoticeBar,
   Popup,
@@ -163,17 +171,20 @@ import {
   ScrollViewMore,
   ScrollViewRefresh,
   TabBar,
-  Toast,
-  Dialog
+  Toast
 } from 'mand-mobile';
-import {
-  BPopButton,
-  BPopSortType
-} from '@/components/form';
 import {
   BOrderFollowItem
 } from '@/components/orderFollow';
 import BOrderFollowSearchBar from '../../components/orderFollow/BOrderFollowSearchBar';
+
+import {
+  mapGetters
+} from 'vuex';
+
+import {
+  GET_USER
+} from '@/store/mutationsTypes';
 
 export default {
   name: '',
@@ -187,8 +198,6 @@ export default {
     [Toast.name]: Toast,
     [Dialog.name]: Dialog,
     [NoticeBar.name]: NoticeBar,
-    BPopSortType,
-    BPopButton,
     BOrderFollowItem,
     [Popup.name]: Popup
   },
@@ -225,7 +234,6 @@ export default {
           icon: 'chengjiao'
         }
       ],
-      sortType: 1,
       preIndex: '',
       currentScrollView: {},
       currentList: [],
@@ -234,24 +242,40 @@ export default {
       fuzzysearch: false,
       // 订单跟进全部
       scrollView: {
+        // 场景值
+        businessType: '',
+        // 排序方式
+        sortType: '1',
         mescroll: null,
         list: [],
         isListInit: false
       },
       // 已完成
       scrollViewFinished: {
+        // 场景值
+        businessType: '',
+        // 排序方式
+        sortType: '2',
         mescroll: null,
         list: [],
         isListInit: false
       },
       // 异常
       scrollViewOdd: {
+        // 场景值
+        businessType: '',
+        // 排序方式
+        sortType: '1',
         mescroll: null,
         list: [],
         isListInit: false
       },
       // 进行中
       scrollViewProgress: {
+        // 场景值
+        businessType: '',
+        // 排序方式
+        sortType: '1',
         mescroll: null,
         list: [],
         isListInit: false
@@ -273,7 +297,37 @@ export default {
         ],
       },
       // 业务场景下拉数据
-      scenarioList: []
+      scenarioList: [],
+      // 异常订单场景
+      oddScenarioList: [
+        {
+          itemCode: '0',
+          itemName: '待审核'
+        },
+        {
+          itemCode: '1',
+          itemName: '审核通过'
+        },
+        {
+          itemCode: '2',
+          itemName: '审核驳回'
+        },
+        {
+          itemCode: '3',
+          itemName: '人工处理'
+        }
+      ],
+      // 异常订单-排序方式
+      oddOrderSortList: [
+        {
+          id: '1',
+          name: '按照更新时间降序'
+        },
+        {
+          id: '2',
+          name: '按照创建时间降序'
+        }
+      ]
     };
   },
   activated() {
@@ -294,6 +348,9 @@ export default {
     this.getScenarioList();
   },
   computed: {
+    ...mapGetters([
+      GET_USER
+    ]),
     curScrollViewName() {
       // 当前tab下的scrollView的ref名字
       return {
@@ -339,22 +396,22 @@ export default {
           }
         });
     },
-    change(item, index, prevIndex) {
+    change(item, index) {
       this.curTab = index;
     },
     // 手工录单
     handEntry() {
       this.orderService.checkCreateOrder().then((res) => { // 判断店铺是否冻结
-        if (res.code != -1) {
+        if (res.code === 1) {
           const orderMode = JSON.parse(localStorage.getItem('userinfo')).orderMode;
-          if (orderMode == 'Casarte') {
+          if (orderMode === 'Casarte') {
             Toast.failed('卡萨帝模式，不支持手动录单');
             return;
           }
-          this.orderService.checkUpperLimitForSGLD().then((res) => {
-            if (res.code === 1) {
+          this.orderService.checkUpperLimitForSGLD().then((sgldRes) => {
+            if (sgldRes.code === 1) {
               this.handEntryCon = true;
-              this.handCount = res.data;
+              this.handCount = sgldRes.data;
             }
           });
         }
@@ -404,8 +461,26 @@ export default {
     },
     // 入户服务
     userService(item) {
+      const {
+        businessScenarios
+      } = item;
+      const args = {
+        userId: item.userId,
+        userName: item.userName,
+        mobile: item.userMobile,
+        flowStatus: item.flowStatus,
+        workFlowId: item.id,
+        hmcId: this.userinfo.hmcid,
+        orderNo: item.orderNo,
+        businessScenarios
+      };
+      // 爱到家需要传add4，add4是预留字段，由其他系统传递而来
+      if (businessScenarios === 'ADJ') {
+        args.add4 = item.add4;
+      }
+      const argsStr = this.bUtil.genQueryStringByObj(args);
       wx.miniProgram.navigateTo({
-        url: `/pages/userService/userService?userId=${item.userId}&userName=${item.userName}&mobile=${item.userMobile}&flowStatus=${item.flowStatus}&workFlowId=${item.id}&hmcId=${this.userinfo.hmcid}&orderNo=${item.orderNo}`
+        url: `/pages/userService/userService${argsStr}`
       });
     },
     // 潜在客户
@@ -414,7 +489,6 @@ export default {
         url: `/pages/mabyByuser/mabyByuser?userId=${item.userId}&userName=${item.userName}&mobile=${item.userMobile}&flowStatus=${item.flowStatus}&workFlowId=${item.id}&domainName=${item.recordMode}&orderNo=${item.orderNo}`
       });
     },
-
     headSwitch(index) {
       if (index === this.preIndex) {
         this.headList[index].isActive = false;
@@ -433,7 +507,6 @@ export default {
     upCallback(page) {
       // 下载过就设置已经初始化
       this[this.curScrollViewName].isListInit = true;
-      // this.businessType = '';
       this.searchData(page).then(({ result, pages }) => {
         this.$nextTick(() => {
           // 通过当前页的数据条数，和总页数来判断是否加载完
@@ -441,28 +514,16 @@ export default {
         });
       });
     },
-
-    checkClicked(val) {
-      // this.updateList = true;
-      this.sortType = parseInt(val);
-      this.businessType = '';
-      this.searchData({
-        num: 1,
-        size: 10
+    checkClicked() {
+      // 刷新页面、重置页码
+      this.$nextTick(() => {
+        this[this.curScrollViewName].mescroll.resetUpScroll();
       });
     },
-    buttonClicked(val) {
-      // this.updateList = true;
-      if (val.length === 0) {
-        this.businessType = '';
-      } else if (val.length === 1) {
-        this.businessType = val[0];
-      } else {
-        this.businessType = val.join(',');
-      }
-      this.searchData({
-        num: 1,
-        size: 10
+    buttonClicked() {
+      // 刷新页面
+      this.$nextTick(() => {
+        this[this.curScrollViewName].mescroll.resetUpScroll();
       });
     },
     followButtonClicked(val, info) {
@@ -497,7 +558,6 @@ export default {
       } else if (val.name === '继续录单') {
         this.orderService.checkCreateOrder().then((res) => { // 判断店铺是否冻结
           if (res.code != -1) {
-            const freezeMsg = res.data;
             this.$router.push({
               name: 'Order.OrderModify',
               params: {
@@ -527,12 +587,12 @@ export default {
       } else {
         // val.name === '录新订单'
         this.orderService.checkCreateOrder().then((res) => { // 判断店铺是否冻结
-          if (res.code != -1) {
+          if (res.code === 1) {
             const freezeMsg = res.data;
             // 生成一条新的待办
-            this.orderService.createNewOrder({}, { orderFollowId: info.id }).then((res) => {
+            this.orderService.createNewOrder({}, { orderFollowId: info.id }).then((createNewOrderRes) => {
               if (res.code === 1) {
-                const orderFollowId = res.data.id;
+                const orderFollowId = createNewOrderRes.data.id;
                 this.$router.push({
                   name: 'Order.OrderEntry',
                   params: {
@@ -557,36 +617,46 @@ export default {
         });
       }
     },
-
     searchData(page) {
-      if (this.curTab === 3) {
-        this.sortType = 2;
+      /* 搜索订单 */
+      let queryServiceName;
+      let searchData;
+      // 异常订单是单独的接口
+      if (this.curScrollViewName === 'scrollViewOdd') {
+        queryServiceName = 'queryRightsReviewList';
+        searchData = {
+          keyWord: this.searchWord,
+          sortType: this[this.curScrollViewName].sortType * 1,
+          status: this[this.curScrollViewName].businessType || '',
+          hmcId: this[GET_USER].hmcid
+        };
+      } else {
+        queryServiceName = 'queryOrderFollowList';
+        searchData = {
+          hmcId: this.userinfo.hmcid,
+          storeId: this.userinfo.shopId,
+          queryType: this.curTab,
+          sortType: this[this.curScrollViewName].sortType * 1,
+          recordMode: '',
+          userStatus: '',
+          orderFollowStatus: '',
+          flowType: '',
+          flowStatus: '',
+          orderFollowSource: '',
+          businessScenarios: this[this.curScrollViewName].businessType,
+          sourceSystem: '',
+          orderFollowStartDate: '',
+          orderFollowEndDate: '',
+          keyWord: this.searchWord
+        };
       }
-      console.log('keyword', this.searchWord);
-      return this.orderService
-        .queryOrderFollowlList(
-          {
-            hmcId: this.userinfo.hmcid,
-            storeId: this.userinfo.shopId,
-            queryType: this.curTab,
-            sortType: this.sortType,
-            recordMode: '',
-            userStatus: '',
-            orderFollowStatus: '',
-            flowType: '',
-            flowStatus: '',
-            orderFollowSource: '',
-            businessScenarios: this.businessType,
-            sourceSystem: '',
-            orderFollowStartDate: '',
-            orderFollowEndDate: '',
-            keyWord: this.searchWord
-          },
-          {
-            pageNum: page.num,
-            pageSize: page.size,
-          }
-        )
+      return this.orderService[queryServiceName](
+        searchData,
+        {
+          pageNum: page.num,
+          pageSize: page.size,
+        }
+      )
         .then((res) => {
           const sroviewObj = {};
           if (res.code === 1) {
@@ -596,17 +666,8 @@ export default {
             } = res.data;
             sroviewObj.pages = pages;
             sroviewObj.result = result;
-            if (this.fuzzy) {
-              if (result.length === 0) {
-                this[this.curScrollViewName].list = [];
-                Toast.failed('搜索结果不存在');
-                this.fuzzy = false;
-                return;
-              }
-            }
             if (result && result.length > 0) {
-              const curList = result;
-              this.anylizeData(curList);
+              this.anylizeData(result);
               console.log(page);
               if (page.num === 1) {
                 console.log(this.curScrollViewName);
@@ -614,6 +675,7 @@ export default {
                 this[this.curScrollViewName].list = this.currentList;
               } else {
                 if (page.num > 1 && res.data.pages === 1) {
+                  // todo
                 } else {
                   this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(this.currentList);
                   console.log(this[this.curScrollViewName].list);
@@ -631,9 +693,9 @@ export default {
     },
     anylizeData(curList) {
       curList.forEach((item) => {
-        /*
-          0-跟进中  1-已完成  2-草稿  3-暂不跟进 4-取消 5-异常
-          */
+        /**
+           0-跟进中  1-已完成  2-草稿  3-暂不跟进 4-取消 5-异常
+           * */
         if (item.flowStatus === 1) {
           // item.buttonList = [{ name: '录新订单' }, { name: '退货' }, { name: '换货' }];// 已完成
           // item.buttonList = [{ name: '录新订单' },{ name: '补录订单' }];// 已完成
@@ -742,24 +804,15 @@ export default {
       this.currentList = curList;
     },
     fuzzySearch() {
-      // this.updateList = true;
-      const page = {
-        num: 1,
-        size: 10
-      };
-      this.businessType = '';
-      this.searchData(page);
+      // 刷新页面、重置页码
+      this[this.curScrollViewName].mescroll.resetUpScroll();
       this.fuzzy = true;
     },
-    updateOrderType(type) {
+    updateOrderType() {
       // this.updateList = true;
-      this.businessType = '';
-      this.searchData({
-        num: 1,
-        size: 10
-      });
+      // 刷新页面、重置页码
+      this[this.curScrollViewName].mescroll.resetUpScroll();
     },
-
   },
   beforeRouteEnter(to, from, next) {
     if (from.name === 'Order.OrderFollowCommitResult' || from.name === 'Order.OrderConfirm' || from.name === 'Order.OrderEntry' || from.name === 'Order.OrderModify') {
@@ -767,7 +820,8 @@ export default {
       // this.$router.go(0);
       // window.location.reload();
       // let href = window.location.href;
-      // href += (href.indexOf('?') > -1 ? '&' : '?') + `_t=${(Math.random() + '').replace('.', '')}`;
+      // href += (href.indexOf('?') > -1 ? '&' : '?') + `
+      // _t =${(Math.random() + '').replace('.', '')}`;
       // window.location.replace(href);
     } else {
       next();
@@ -879,7 +933,8 @@ export default {
       height: 80px;
     }
   }
-  .notice-bar{
+
+  .notice-bar {
     height: 80px;
   }
 

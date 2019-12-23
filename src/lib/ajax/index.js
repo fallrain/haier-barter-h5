@@ -99,16 +99,17 @@ ax.interceptors.response.use((response) => {
   }
   if (!(response.config.params && response.config.params.requestNoToast)) {
     if (response.data.code !== 1 && !response.data.isSuccess) {
-      if (response.config.url !== '/api/manage/reportEhub/saveEhubBarCode') {
-        if (response.config.url === '/api/rights/rightsManage/queryOrderOptionalShareRights' || response.config.url === '/api/rights/rightsManage/queryOrderOptionalMutexRights') {
-          closeLoading();
-          Toast.hide();
-        } else {
-          if (response.config.url.indexOf('/common/weixin/jssign') === -1) {
-            showError(msg);
-          }
-        }
+      if (response.config.url.indexOf('/common/weixin/jssign') === -1) {
+        showError(msg);
       }
+      // if (response.config.url !== '/api/manage/reportEhub/saveEhubBarCode') {
+      //   if (response.config.url === '/api/rights/rightsManage/queryOrderOptionalShareRights' || response.config.url === '/api/rights/rightsManage/queryOrderOptionalMutexRights') {
+      //     closeLoading();
+      //     Toast.hide();
+      //   } else {
+      //     showError(msg);
+      //   }
+      // }
     }
   }
   if (customOptions && customOptions.returnResponse) {

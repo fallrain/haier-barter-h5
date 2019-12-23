@@ -1053,7 +1053,8 @@ export default {
                           localStorage.setItem('orderFollowId', this.orderFollowId);
                           this.$router.push({
                             name: 'Order.OrderUploadInvoice',
-                            params: { orderNo: this.orderNo }
+                            params: { orderNo: this.orderNo,
+                              subInfo: this.subInfo }
                           });
                         }
                       }
@@ -1081,7 +1082,8 @@ export default {
                   if (this.saveType === 0) {
                     this.$router.push({
                       name: 'Order.OrderUploadInvoice',
-                      params: { orderNo: this.orderNo }
+                      params: { orderNo: this.orderNo,
+                        subInfo: this.subInfo }
                     });
                     // this.$destroy();
                   }
@@ -1219,7 +1221,10 @@ export default {
               if (this.saveType === 0) {
                 this.$router.push({
                   name: 'Order.OrderUploadInvoice',
-                  params: { orderNo: this.orderNo }
+                  params: {
+                    orderNo: this.orderNo,
+                    subInfo: this.subInfo
+                  }
                 });
               }
             }

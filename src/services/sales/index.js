@@ -22,6 +22,6 @@ export default {
   },
   saveEhubBarCode(data) {
     /* 条码提报 */
-    return axPost(urls.saveEhubBarCode, data);
+    return axPost(urls.saveEhubBarCode, data, {requestNoToast: true});
   }
 };

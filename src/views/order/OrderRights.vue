@@ -876,7 +876,7 @@ export default {
           return;
         }
         if (type === 1) {
-          this.rightsService.queryOrderOptionalShareRights(this.subInfo, {})
+          this.rightsService.queryOrderOptionalShareRights(this.subInfo, {requestNoToast: true})
             .then((res) => {
               if (res.code === 1) {
                 if (res.data.length > 0) {
@@ -895,7 +895,7 @@ export default {
               }
             });
         } else {
-          this.rightsService.queryOrderOptionalMutexRights(this.subInfo, {})
+          this.rightsService.queryOrderOptionalMutexRights(this.subInfo, {requestNoToast: true})
             .then((res) => {
               if (res.code === 1) {
                 if (res.data.length > 0) {
