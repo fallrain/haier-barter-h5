@@ -395,7 +395,14 @@ const util = {
       store.commit(UPDATE_USER, userinfoStorage);
       userInfo.token && (localStorage.setItem('acces_token', userInfo.token));
     }
-  }
+  },
+  isRepeatArray(array1, array2) {
+    /* 判断两个数组是否有重复的值 */
+    const array1Len = array1.length;
+    const array2Len = array2.length;
+    const setArray = new Set(array1.concat(array2));
+    return setArray.size < array1Len + array2Len;
+  },
 };
 
 export default util;

@@ -332,44 +332,185 @@ export default {
         }
       });
     },
-    async chooseMaxnumRights() {
+    combineRightsDeduplication(list) {
+      /**
+       *套购重复权益删除（后台返回了全部组合，例如[ab]组合，a1、a2、b1应该为[a1 b1]而不是 [a1 b1]和[a2 b1]）
+       *@list 权益详细信息（子权益列表，以configId区分）
+       */
+      const listTemp = JSON.parse(JSON.stringify(list));
+      listTemp.forEach((right) => {
+        // 产品组合列表，orderIdList里的元素代表一个产品
+        const orderIdList = right.orderIdList;
+        // 去除orderIdList里的重复的
+        right.orderIdList = this.orderIdListDeduplication(orderIdList);
+      });
+      return listTemp;
+    },
+    orderIdListDeduplication(orderIdList, newOrderIdList) {
+      /**
+       *去掉多余的orderId（副作用方法，改变原来数组）
+       * */
+      if (orderIdList.length === 0) {
+        return newOrderIdList;
+      }
+      if (!newOrderIdList) {
+        newOrderIdList = [];
+      }
+      // 新的orderId组合
+      const newOrderIdCombination = orderIdList[0];
+      newOrderIdList.push(newOrderIdCombination);
+      orderIdList.splice(0, 1);
+      // 排除所有重复组合
+      for (let i = 0; i < orderIdList.length; i++) {
+        // orderIdCombination：一个orderId们的组合
+        const orderIdCombinationIds = orderIdList[i].ids;
+        // 重复即删除
+        if (this.bUtil.isRepeatArray(orderIdCombinationIds, newOrderIdCombination.ids)) {
+          orderIdList.splice(i, 1);
+          i--;
+        }
+      }
+      return this.orderIdListDeduplication(orderIdList, newOrderIdList);
+    },
+    sortByCombineNum(list) {
+      /**
+       * 根据组合数量排序并转化为object,key代表权重，数量越大组合越少，从1开始递增
+       * （副作用方法）
+      * */
+      // 根据组合排序，组合大的放前面
+      list.sort((pre, next) => {
+        const preLen = (pre.orderIdList && pre.orderIdList[0] && pre.orderIdList[0].ids.length) || 0;
+        const nextLen = (next.orderIdList && next.orderIdList[0] && next.orderIdList[0].ids.length) || 0;
+        if (preLen > nextLen) {
+          return -1;
+        }
+        return 1;
+      });
+      return list;
+    },
+    chooseMaxnumRights() {
       /* 选择最大数量的权益 （直接选择，没有加减数量，默认数量最大） */
       const {
+        // 单品 or 套购
+        rightsType,
         // 允许所选的权益
         allowRightsConditionDtoList
       } = this.getData;
         // 有可选的权益才可选
       if (allowRightsConditionDtoList && allowRightsConditionDtoList.length) {
-        // 权益对应的数量映射
-        const rightsNumMap = this.genRightsNumMap(allowRightsConditionDtoList);
-        // 查询实际使用的权益的
-        const { code, data } = await this.rightsService.viewGiftsNoLoading({
+        // 查询权益详细信息
+        const getRightsDetail = this.rightsService.viewGiftsNoLoading({
           rightsNo: this.getData.rightsNo
         });
-        if (code === 1) {
-          this.updateRightsNumOverload(rightsNumMap, data);
-          // 依次添加权益 todo 将来依然存在把数量添加按钮加回来的可能，所以保留单个添加权益的逻辑
-          const rightsLength = [...rightsNumMap.values()].reduce((cur, all) => cur + all, 0);
-          // 设置显示的最大可选权益的数量
-          this.maxRightsNum = rightsLength;
-          for (let i = 0; i < rightsLength; i++) {
-            this.$emit('addCount', this.getData, rightsNumMap);
-          }
-          // 设置选中状态
-          this.isChose = true;
+        // 权益对应的数量映射
+        let rightsNumMap;
+        if (rightsType === 'single') {
+          // 单品直接通过allowRightsConditionDtoList的数量来判断
+          rightsNumMap = this.genRightsNumMap(allowRightsConditionDtoList);
+          getRightsDetail.then(({ code, data }) => {
+            if (code === 1) {
+              this.updateRightsNumOverload(rightsNumMap, data);
+              // 依次添加权益 todo 将来依然存在把数量添加按钮加回来的可能，所以保留单个添加权益的逻辑
+              const rightsLength = [...rightsNumMap.values()].reduce((cur, all) => cur + all, 0);
+              // 设置显示的最大可选权益的数量
+              this.maxRightsNum = rightsLength;
+              for (let i = 0; i < rightsLength; i++) {
+                this.$emit('addCount', this.getData, {
+                  rightsNumMap
+                });
+              }
+              // 设置选中状态
+              this.isChose = true;
+            }
+          });
+        } else {
+          // 套购需要综合计算allowRightsConditionDtoList里的子权益以及子权益的orderList来计算
+          rightsNumMap = {};
+          // 去掉权重低的（目前为组合数量小）的权益
+          const delRight = getRightsDetail.then(({ code, data }) => {
+            if (code === 1) {
+              // 按照组合数量排序，避免每次查找组合数更少的组合
+              this.sortByCombineNum(allowRightsConditionDtoList);
+              // 排序之后一次排除，选择一个权益后，权益数量够，则排除权重小的权益里面的所有orderId组合，不够，则不排除，继续循环下一个权益
+              // 删选出最大组合，例如abc组合 ab组合，应该取abc，排除掉ab
+              allowRightsConditionDtoList.forEach((right, index) => {
+                // 符合的权益的数量
+                const rightLen = right.orderIdList.length;
+                const rightConfigId = right.configId;
+                const selectRights = data.find(v => v.configId === rightConfigId);
+                // 权益剩余数量
+                const rightsGiftSurplus = selectRights.rightsGiftSurplus;
+                // 剩余数量若不足，则从上到下删减选取的权益
+                if (rightLen > rightsGiftSurplus) {
+                  right.orderIdList = right.orderIdList.slice(0, rightsGiftSurplus);
+                }
+                //
+                right.orderIdList.forEach((orderIdObj) => {
+                  // orderId组合（产品组合）
+                  const orderIds = orderIdObj.ids;
+                  // 从权重低的权益中去除初中的orderId组合（有一个orderId重复即排除）
+                  for (let i = index + 1; i < allowRightsConditionDtoList.length; i++) {
+                    const excludeOrderList = allowRightsConditionDtoList[i].orderIdList;
+                    for (let j = 0; j < excludeOrderList.length; j++) {
+                      const excludeOrder = excludeOrderList[j];
+                      const ids = excludeOrder.ids;
+                      // 权重低的的权益里如果有重复的，则删除掉
+                      if (this.bUtil.isRepeatArray(ids, orderIds)) {
+                        excludeOrderList.splice(j, 1);
+                        j--;
+                      }
+                    }
+                  }
+                });
+              });
+            }
+          });
+          delRight.then(() => {
+            // 去除重复权益，一个产品只能领一个权益
+            const uniqueAllowRightsConditionDtoList = this.combineRightsDeduplication(allowRightsConditionDtoList);
+            // todo
+            console.log(uniqueAllowRightsConditionDtoList);
+            // 设置显示的最大可选权益的数量
+            const rightsLength = uniqueAllowRightsConditionDtoList.reduce((all, cur) => {
+              const orderIdList = cur.orderIdList;
+              let len;
+              if (orderIdList) {
+                len = all + cur.orderIdList.length;
+              } else {
+                len = all;
+              }
+              return len;
+            }, 0);
+            this.maxRightsNum = rightsLength;
+            this.$emit('addCount', this.getData, {
+              uniqueAllowRightsConditionDtoList
+            });
+            // 设置选中状态
+            this.isChose = true;
+          });
         }
       }
     },
     calcelChooseMaxnumRights() {
       /* 取消选中 */
       const {
+        // 权益类型
+        rightsType,
         // 允许所选的权益
         allowRightsConditionDtoList
       } = this.getData;
+      if (rightsType === 'single') {
+        // todo 单品暂时维持现状，单个减
         // 有可选的权益才可选
-      allowRightsConditionDtoList.forEach(() => {
-        this.$emit('minusCount', this.getData);
-      });
+        allowRightsConditionDtoList.forEach(() => {
+          this.$emit('minusCount', this.getData);
+        });
+      } else {
+        // 只通过isSelected selectedNum来取消
+        this.$set(this.getData, 'isSelected', 0);
+        // todo 兼容写法，以后去掉selectedNum
+        this.$set(this.getData, 'selectedNum', 0);
+      }
       // 设置选中状态
       this.isChose = false;
     }
