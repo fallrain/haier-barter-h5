@@ -93,6 +93,7 @@
           <input
             class="activityDetail-verifyCode-ipt"
             type="text"
+            maxlength="6"
             placeholder="请输入验证码"
             v-resetInput
             v-model="form.verifyCode"
