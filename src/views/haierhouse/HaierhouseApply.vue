@@ -97,6 +97,7 @@
       <div class="text-333 row-style">样板间区域照片</div>
       <div class="bg-white p20">
         <b-upload
+          :imgs="uploadImg"
           :crop="false"
           inputOfFile="file"
           :max-file-size="1024*1024*5"
@@ -108,7 +109,7 @@
           extensions="png,jpg,jpeg,gif"
           :url="uploadUrl"
           :multiple-size="1"
-          @delFun="delImg(0)"
+          @delFun="delImg"
           @errorhandle="uploadError"
         >
         </b-upload>
@@ -118,6 +119,7 @@
       <div class="text-333 row-style">{{item.label}}区域照片</div>
       <div class="bg-white p20">
         <b-upload
+          :imgs="uploadImg1[item.value]"
           :crop="false"
           inputOfFile="file"
           :max-file-size="1024*1024*5"
@@ -129,7 +131,7 @@
           extensions="png,jpg,jpeg,gif"
           :url="uploadUrl"
           :multiple-size="1"
-          @delFun="delImg(item)"
+          @delFun="(index, fileList)=>delImg(index, fileList, item)"
           @errorhandle="uploadError"
         >
         </b-upload>
@@ -237,6 +239,17 @@ export default {
       indeustryCode: [],
       indeustryName: [],
       indeustryChoosed: [],
+      uploadImg: [],
+      uploadImg1: {
+        I_BX: [],
+        I_KT: [],
+        I_XYJ: [],
+        I_CHUD: [],
+        I_DS: [],
+        I_JS: [],
+        I_RSQ: [],
+        I_SHJD: [],
+      }
     };
   },
   activated() {
@@ -260,6 +273,7 @@ export default {
   },
   watch: {
     indeustryCode(val) {
+      debugger;
       this.indeustryChoosed = [];
       this.indeustryName = [];
       this.indeustryCode.forEach((item) => {
@@ -277,7 +291,21 @@ export default {
       this.haierhouseService.queryShopAndDistrict({}, {
         id
       }).then((res) => {
-        console.log(res);
+        if (res.code === 1) {
+          res.data.rentStartTime = res.data.rentStartTime.split(' ')[0];
+          res.data.rentEndTime = res.data.rentEndTime.split(' ')[0];
+          this.customerInfo = res.data;
+          this.indeustryCode = this.customerInfo.industryCodeScope.split(',');
+          this.indeustryName = this.customerInfo.industryNameScope.split(',');
+          this.customerInfo.imageUrlSaveVOList = res.data.decoModelImageUrlDTOList;
+          res.data.decoModelImageUrlDTOList.forEach((item) => {
+            if (item.imageType.indexOf('_') > -1) {
+              this.uploadImg1[item.imageType].push(item.imageUrl);
+            } else {
+              this.uploadImg.push(item.imageUrl);
+            }
+          });
+        }
       });
     },
     choosePerson() {
@@ -403,13 +431,18 @@ export default {
       fileList.push(data.data);
     },
     delImg(index, fileList, item) {
-      // if (item === '0') { // 样板间照片
-      //   itemImg.imageType = this.customerInfo.roomType;
-      //   itemImg.imageUrl = data.data;
-      // } else { // 产业照片
-      //   itemImg.imageType = item.value;
-      //   itemImg.imageUrl = data.data;
-      // }
+      debugger;
+      let imgType = '';
+      if (item === '0') {
+        imgType = '1';
+      } else {
+        imgType = item.value;
+      }
+      this.customerInfo.imageUrlSaveVOList.forEach((item, index) => {
+        if (item.imageType === imgType) {
+          this.customerInfo.imageUrlSaveVOList.splice(index, 1);
+        }
+      });
       fileList.splice(index, 1);
     },
     uploadError(res) {

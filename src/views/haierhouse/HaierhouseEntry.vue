@@ -387,7 +387,7 @@ export default {
     color: #4A90E2;
     position: absolute;
     right: 76px;
-    top: 0px;
+    top: 10px;
     font-size: 30px;
   }
   .bt2-myhouse-card-cnt{

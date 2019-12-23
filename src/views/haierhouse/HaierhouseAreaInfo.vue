@@ -234,26 +234,33 @@ export default {
     confirm() {
       if (this.customerInfo.districtScope === '' || !this.customerInfo.districtScope) {
         Toast.failed('请输入小区名称');
+        return;
       }
       if (this.customerInfo.provinceCityArea === '' || !this.customerInfo.provinceCityArea) {
         Toast.failed('请输入地址');
+        return;
       }
       if (this.customerInfo.districtAddress === '' || !this.customerInfo.districtAddress) {
         Toast.failed('请输入地址');
+        return;
       }
       if (this.houseTypeV.length === 0) {
         Toast.failed('请选择户型');
+        return;
       } else {
         this.customerInfo.layoutType = this.houseTypeV.join(',');
       }
       if (this.customerInfo.districtAreaStart === '' || !this.customerInfo.districtAreaStart) {
         Toast.failed('请输入小区面积范围');
+        return;
       }
       if (this.customerInfo.districtAreaEnd === '' || !this.customerInfo.districtAreaEnd) {
         Toast.failed('请输入小区面积范围');
+        return;
       }
       if (this.customerInfo.saleAveragePrice === '' || !this.customerInfo.saleAveragePrice) {
         Toast.failed('请输入小区均价');
+        return;
       }
     }
   },
@@ -289,7 +296,7 @@ export default {
               name: 'Haierhouse.HaierhouseEntry'
             });
           }
-          
+
         }
       }
     }

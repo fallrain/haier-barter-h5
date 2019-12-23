@@ -226,13 +226,6 @@ export default {
     color: #666;
     margin-top: 16px;
   }
-  .bt2-myhouse-more {
-    float: right;
-    color: #4A90E2;
-    position: absolute;
-    right: 76px;
-    font-size: 30px;
-  }
   .bt2-myhouse-card-cnt{
     font-size: 28px;
   .title{
