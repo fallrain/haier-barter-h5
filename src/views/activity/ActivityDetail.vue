@@ -409,6 +409,7 @@ export default {
         if (res.code === -1) {
           Toast.failed(res.msg);
         } else {
+          this.clearJoinInfo();
           this.registerDialogShow = true;
         }
       });
