@@ -252,8 +252,20 @@
   margin-left: 10px;
 }
 
+.ml12 {
+  margin-left: 12px;
+}
+
+.ml14 {
+  margin-left: 14px;
+}
+
 .ml16 {
   margin-left: 16px;
+}
+
+.ml18 {
+  margin-left: 18px;
 }
 
 .ml28 {
@@ -295,8 +307,20 @@
   padding-left: 28px;
 }
 
+.pl44 {
+  padding-left: 44px;
+}
+
 .pl52 {
   padding-left: 52px;
+}
+
+.pl56 {
+  padding-left: 56px;
+}
+
+.pl88 {
+  padding-left: 88px;
 }
 
 /*padding end*/
@@ -439,8 +463,7 @@
   .mescroll-downwarp .downwarp-tip,
   .mescroll-upwarp .upwarp-nodata,
   .mescroll-upwarp .upwarp-tip,
-  .mescroll-upwarp .upwarp-empty
-  {
+  .mescroll-upwarp .upwarp-empty {
     font-size: 24px;
   }
 

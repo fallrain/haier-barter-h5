@@ -15,7 +15,7 @@
 
         <div class="drainage-activity-container">
           <div>
-            <span class="drainage-activity-time">{{getData.microName}}</span>
+            <span class="drainage-activity-time drainage-activity-store">{{getData.microName}}</span>
           </div>
           <div>
             <i class="iconfont icon-yanjing fs38 mr16"/>
@@ -29,6 +29,7 @@
       <button
         type="button"
         class="common-btn-primary"
+        v-show="getData.allowShare === 1"
         @click.stop="share">
         分享
       </button>
@@ -97,6 +98,7 @@ export default {
       this.$emit('shareClick', this.getData);
     },
     qrCode() {
+      this.settingShareWX();
       this.$router.push({
         name: 'Activity.ActivityQRCode',
         params: { activityInfo: this.getData,
@@ -104,6 +106,7 @@ export default {
       });
     },
     dataStatistics() {
+      this.settingShareWX();
       this.$router.push({
         name: 'Activity.ActivityDataAnalysis',
         params: { activityInfo: this.getData,
@@ -112,16 +115,24 @@ export default {
     },
     showActivityDetail() {
       // 传值给小程序
-      wx.ready(() => {
-        console.log('this.getData.id====', this.getData.id);
-        wx.miniProgram.postMessage({
-          data: this.getData.id
-        });
-      });
+      this.settingShareWX();
       this.$router.push({
         name: 'Activity.ActivityDetail',
         params: { activityId: this.getData.id,
           userInfo: this.userData }
+      });
+    },
+    // h5给小程序传分享时需要的数据
+    settingShareWX() {
+      wx.ready(() => {
+        console.log('this.getData.id====', this.getData.id);
+        console.log('this.userData.hmcId====', this.userData.hmcId);
+        wx.miniProgram.postMessage({
+          data: {
+            activityId: this.getData.id,
+            hmcId: this.userData.hmcId,
+          }
+        });
       });
     }
   },
@@ -195,6 +206,16 @@ export default {
     text-overflow:ellipsis;
     display:-webkit-box;
     -webkit-line-clamp:2;//想要的行数
+    -webkit-box-orient:vertical;
+  }
+
+  .drainage-activity-store {
+    height: 33px;
+    width: 326px;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    display:-webkit-box;
+    -webkit-line-clamp:1;//想要的行数
     -webkit-box-orient:vertical;
   }
 

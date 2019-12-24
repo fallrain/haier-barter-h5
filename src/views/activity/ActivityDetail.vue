@@ -8,7 +8,7 @@
         :title="detailInfo.activityTitle"
         :startDate="activityStartTime"
         :endDate="activityEndTime"
-        :address="detailInfo.storeName"
+        :address="storeName"
       ></activity-name-time>
       <div class="activityDetail-detail-title-bg">
         <img :src="detailInfo.activityInfoPoster.posterUrl2" alt="">
@@ -53,6 +53,7 @@
         style="margin-right: 30px"
         type="button"
         @click="share"
+        v-show="detailInfo.allowShare === 1"
         class="common-submit-btn-waring activityDetail-btm-btn"
       >分享有好礼
       </button>
@@ -75,6 +76,7 @@
             class="activityDetail-register-ipt"
             type="text"
             v-model="form.userNickname"
+            v-resetInput
             placeholder="请输入您的姓名"
           >
         </div>
@@ -83,14 +85,17 @@
             class="activityDetail-register-ipt"
             type="text"
             v-model="form.mobile"
+            v-resetInput
             placeholder="请输入手机号码"
           >
         </div>
-        <div class="activityDetail-register-item">
+        <div class="activityDetail-register-item1">
           <input
-            class="activityDetail-register-ipt"
+            class="activityDetail-verifyCode-ipt"
             type="text"
+            maxlength="6"
             placeholder="请输入验证码"
+            v-resetInput
             v-model="form.verifyCode"
           >
           <b-verificationcode
@@ -127,6 +132,7 @@
         <div class="activityDetail-register-btns">
           <button
             type="button"
+            @click="clearJoinInfo"
             class="common-submit-btn-primary activityDetail-register-btn"
           >清空
           </button>
@@ -154,10 +160,10 @@
       <div class="activityDetail-qrcode-body">
         <div class="activityDetail-qrcode-title">
           <p class="">
-            扫描或长按识别
+            扫描识别
           </p>
           <p>
-            关注海知友服务号
+            关注海尔智家服务号
           </p>
         </div>
         <div class="activityDetail-qrcode-par">
@@ -165,13 +171,13 @@
           <div class="activityDetail-qrcode-corner activityDetail-qrcode-corner2"></div>
           <div class="activityDetail-qrcode-corner activityDetail-qrcode-corner3"></div>
           <div class="activityDetail-qrcode-corner activityDetail-qrcode-corner4"></div>
-          <img src="@/assets/images/activity/qrcode-example.png" alt="">
+          <img src="@/assets/images/activity/qrcode-zhijia.png" alt="">
         </div>
         <p class="activityDetail-qrcode-inf">
           了解更多会员权益，获取更多会员福利尽在
         </p>
         <p class="activityDetail-qrcode-name">
-          海尔·海知友服务号
+          海尔·智家服务号
         </p>
       </div>
     </md-dialog>
@@ -234,7 +240,7 @@ export default {
       // 注册对话框显示隐藏
       isShowProductCatagory: false,
       productCatagoryList: [],
-      isRead: 0,
+      isRead: 1,
       isShowPopContainer: false,
       getUserInfo: {},
       openId: '',
@@ -246,10 +252,13 @@ export default {
       // 活动开始结束时间
       activityStartTime: '',
       activityEndTime: '',
+      hmcId: '',
+      linkUrl: '',
+      storeName: '',
       defaultImg,
     };
   },
-  created() {
+  activated() {
     // this.openId = JSON.parse(localStorage.getItem('userinfo')).openId;
     // this.userinfo = JSON.parse(localStorage.getItem('userinfo'));
     this.getUserInfo = this.$route.params.userInfo;
@@ -261,33 +270,65 @@ export default {
       this.openId = this.$route.query.openId;
     }
     console.log('activityDetail', this.openId);
+    if (this.getUserInfo) {
+      this.hmcId = this.getUserInfo.hmcId;
+    } else {
+      this.hmcId = this.$route.query.hmcId;
+    }
+    // 只要进来就增加浏览计数接口
+    this.activityService.shareCount({}, {
+      activityId: this.activityId,
+      hmcId: this.hmcId,
+      openId: this.openId,
+      counterTypeCode: 'single_reading_count',
+      noToken: true
+    }).then((res) => {
+      console.log('shareCount', res);
+    });
     if (this.$route.query.activityId) {
-      // 只有从分享后打开的才增加浏览计数接口
+      // 只有从分享后打开的才增加分享计数接口
       this.activityService.shareCount({}, {
         activityId: this.activityId,
-        counterTypeCode: 'single_reading_count'
+        hmcId: this.hmcId,
+        openId: this.openId,
+        counterTypeCode: 'single_share_count',
+        noToken: true
       }).then((res) => {
         console.log('shareCount', res);
       });
+    }
+    if (!this.openId) {
+      if (this.isMiniProgram === 0) {
+        const urlParams = window.location.href;
+        this.linkUrl = urlParams;
+        console.log('linkUrl before authorizedUrl', this.linkUrl);
+        this.basicService.authorizedUrl({ frontUrl: this.linkUrl }).then((res) => {
+          if (res.code === 1) {
+            console.log('aut horizedUrl', res.data);
+            window.location.replace(res.data);
+          }
+        });
+      }
+      return;
     }
     if (this.activityId) {
       // 活动详情查询
       this.activityService.queryActivityInfoDetails({}, {
         activityId: this.activityId,
+        noToken: true
       }).then((res) => {
         if (res.code === 1) {
+          // 通过扫码打开的活动并且不允许分享  不展示内容
+          if (this.$route.query.activityId && res.data && res.data.allowShare === 0) {
+            return;
+          }
           this.detailInfo = res.data;
+          if (this.detailInfo.storeName == '*') {
+            this.storeName = '全部门店';
+          } else {
+            this.storeName = this.detailInfo.storeName;
+          }
           if (this.detailInfo) {
-            if (this.detailInfo.activityLinkmanName) {
-              this.activityLinkmanName = this.detailInfo.activityLinkmanName;
-            } else {
-              this.activityLinkmanName = this.$route.query.username || this.getUserInfo.username;
-            }
-            if (this.detailInfo.activityLinkmanPhone) {
-              this.activityLinkmanPhone = this.detailInfo.activityLinkmanPhone;
-            } else {
-              this.activityLinkmanPhone = this.$route.query.mobile || this.getUserInfo.mobile;
-            }
             // 活动日期，截取到日
             if (this.detailInfo.activityEndTime) {
               const index = this.detailInfo.activityEndTime.indexOf(' ');
@@ -297,11 +338,38 @@ export default {
               const index = this.detailInfo.activityStartTime.indexOf(' ');
               this.activityStartTime = this.detailInfo.activityStartTime.substring(0, index);
             }
+            if (this.detailInfo.activityLinkmanName) {
+              this.activityLinkmanName = this.detailInfo.activityLinkmanName;
+            } else {
+              if (this.getUserInfo) {
+                this.activityLinkmanName = this.getUserInfo.username;
+              } else {
+                this.activityLinkmanName = decodeURIComponent(this.$route.query.username);
+              }
+            }
+            if (this.detailInfo.activityLinkmanPhone) {
+              this.activityLinkmanPhone = this.detailInfo.activityLinkmanPhone;
+            } else {
+              if (this.getUserInfo) {
+                this.activityLinkmanPhone = this.getUserInfo.mobile;
+              } else {
+                this.activityLinkmanPhone = this.$route.query.mobile;
+              }
+            }
+            // https://testdb.haier.net/activity/activityDetail/?activityId=65022085451153408&mobile=15253269729&username=陆梦飞
+            const protocol = `${window.location.protocol}//`;
+            const host = window.location.host;
+            const pathname = '/activity/activityDetail';
+            const userName = encodeURIComponent(this.activityLinkmanName);
+            const url = `${protocol + host + pathname}?activityId=${this.activityId}&mobile=${this.activityLinkmanPhone}&username=${userName}&hmcId=${this.hmcId}`;
+            this.linkUrl = url;
+            this.settingShareWX();
           }
         }
       });
     }
     this.getProductGroup();
+    // 判断环境是否为小程序
     wx.miniProgram.getEnv((res) => {
       console.log(res.miniprogram);
       if (res.miniprogram) {
@@ -330,11 +398,13 @@ export default {
       window.location.href = 'https://account.haier.com/html/privacypolicy.html';
     },
     registerDialog() {
+      // this.registerDialogShow = true;
       this.activityService.validateJoiner({
         activityId: this.activityId,
         openId: this.openId,
       }, {
-        requestNoToast: true
+        requestNoToast: true,
+        noToken: true,
       }).then((res) => {
         if (res.code === -1) {
           Toast.failed(res.msg);
@@ -342,6 +412,16 @@ export default {
           this.registerDialogShow = true;
         }
       });
+    },
+    clearJoinInfo() {
+      this.form = {
+        productCatagoryList: [],
+        userNickname: '',
+        mobile: '',
+        verifyCode: ''
+      };
+      this.checkboxType = [];
+      this.isRead = 1;
     },
     getProductGroup() {
       this.productService.industryGroupList()
@@ -357,42 +437,81 @@ export default {
     },
     share() {
       this.isShowPopContainer = true;
-      // this.basicService.authorizedUrl({ frontUrl: 'https://testdb.haier.net/activity/activityDetail' }).then((res) => {
-      //   if (res.code === 1) {
-      //     if (res.data) {
-      //       wx.ready(() => { // 需在用户可能点击分享按钮前就先调用
-      //         wx.updateAppMessageShareData({
-      //           title: '', // 分享标题
-      //           desc: '', // 分享描述
-      //           link: res.data, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-      //           imgUrl: '', // 分享图标
-      //           success: (res) => {
-      //             // 设置成功
-      //             console.log('success');
-      //             alert(JSON.stringify(res));
-      //
-      //           },
-      //           fail: (res) => {
-      //             alert(JSON.stringify(res));
-      //           }
-      //         });
-      //       });
-      //     }
-      //   }
-      // });
+      this.activityService.shareCount({}, {
+        activityId: this.activityId,
+        hmcId: this.hmcId,
+        openId: this.openId,
+        counterTypeCode: 'single_forword_count',
+        noToken: true
+      }).then((res) => {
+        console.log('shareCount', res);
+      });
+    },
+    // h5分享到朋友圈和好友的设置
+    settingShareWX() {
+      console.log('linkUrl', this.linkUrl);
+      if (this.isMiniProgram === 0) {
+        wx.ready(() => {
+          wx.updateAppMessageShareData({
+            title: '海知友兑呗', // 分享标题
+            desc: '营销活动详情', // 分享描述
+            link: this.linkUrl, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: defaultImg, // 分享图标
+            success: (res) => {
+              // 转发计数接口
+              console.log('updateAppMessageShareData success');
+            },
+            fail: (res) => {
+              console.log('updateAppMessageShareData fail', res);
+            }
+          });
+          wx.updateTimelineShareData({
+            title: '海知友兑呗', // 分享标题
+            link: this.linkUrl, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: defaultImg, // 分享图标
+            success: (res) => {
+              // 转发计数接口
+              console.log('updateTimelineShareData success');
+            },
+            fail: (res) => {
+              console.log('updateTimelineShareData fail', res);
+            }
+          });
+        });
+      }
     },
     closeShare() {
       this.isShowPopContainer = false;
     },
     joinActivity() {
+      if (!this.form.userNickname) {
+        Toast.info('请输入您的姓名');
+        return;
+      }
+      if (!this.form.mobile || !this.form.mobile.startsWith('1') || this.form.mobile.length != 11) {
+        Toast.info('请输入正确手机号');
+        return;
+      }
+      if (!this.form.verifyCode) {
+        Toast.info('请输入验证码');
+        return;
+      }
+      if (!this.checkboxType || this.checkboxType.length == 0) {
+        Toast.info('请选择预约类型');
+        return;
+      }
+      if (!this.form.productCatagoryList || this.form.productCatagoryList.length == 0) {
+        Toast.info('请选择产品类别');
+        return;
+      }
       if (!this.isRead) {
         Toast.info('请阅读并同意隐私协议');
         return;
       }
       let getData = {
         activityId: this.activityId,
-        mobile: this.getUserInfo.mobile,
-        hmcId: this.getUserInfo.hmcId,
+        mobile: this.form.mobile,
+        hmcId: this.hmcId,
         openId: this.openId,
         isMiniProgram: this.isMiniProgram,
         productType: this.form.productCatagoryList[0],
@@ -420,6 +539,7 @@ export default {
         if (res.code === 1) {
           Toast.info('报名成功');
           this.registerDialogShow = false;
+          this.qrcodeDialogShow = true;
         }
       });
     },
@@ -478,6 +598,7 @@ export default {
 
   .activityDetail-register-item {
     display: flex;
+    flex-direction:row;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
@@ -497,8 +618,24 @@ export default {
     }
   }
 
+  .activityDetail-register-item1 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    min-height: 80px;
+    box-shadow: 0 1px 0 0 rgba(208, 208, 208, 0.6);
+  }
+
   .activityDetail-register-ipt {
     height: 100%;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    padding-left: 4px;
+  }
+  .activityDetail-verifyCode-ipt {
+    height: 100%;
+    width: 360px;
     background: transparent;
     border: 0;
     box-shadow: none;

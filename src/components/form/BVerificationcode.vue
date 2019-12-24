@@ -46,8 +46,12 @@ export default {
       if (this.beforeSend && !this.beforeSend()) {
         return;
       }
+      if (!this.phone || !this.phone.startsWith('1') || this.phone.length != 11) {
+        Toast.info('请输入正确手机号');
+        return;
+      }
       this.$nextTick(() => {
-        this.basicService.sendSms({ mobile: this.phone }, {}).then((res) => {
+        this.basicService.sendSms({ mobile: this.phone }).then((res) => {
           if (res.code === 1) {
             debugger;
             Toast.info('验证码发送成功');

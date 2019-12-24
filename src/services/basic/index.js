@@ -8,7 +8,7 @@ import {
 export default {
   jsSign(url) {
     /* 微信权限 */
-    return axGet(urls.jsSign, { url });
+    return axGet(urls.jsSign, { url, noLoading: true, requestNoToast: false, noToken: true, });
   },
   userInfo() {
     /* 微信权限 */
@@ -20,10 +20,10 @@ export default {
   },
   authorizedUrl(data) {
     /* 构建微信授权URL给前端 */
-    return axPost(urls.authorizedUrl, data);
+    return axPost(urls.authorizedUrl, data, { noToken: true, });
   },
   sendSms(data) {
     /* 发送短信验证码给客户 */
-    return axPost(urls.sendSms, data);
+    return axPost(urls.sendSms, data, { noToken: true, });
   },
 };

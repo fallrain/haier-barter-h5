@@ -7,7 +7,7 @@
       :title="activityInfo.activityTitle"
       :startDate="activityInfo.activityStartTime"
       :endDate="activityInfo.activityEndTime"
-      address="青岛市崂山区海尔路10号海尔专卖店"
+      :address="storeName"
     ></activity-name-time>
     <div class="activityQRCode-cnt">
       <p class="activityQRCode-cnt-title">活动专属二维码</p>
@@ -56,10 +56,15 @@ export default {
     ActivityNameTime
   },
   created() {
-    this.activityInfo = this.$route.params.activityInfo;
-    this.getUserInfo = this.$route.params.userInfo;
   },
   activated() {
+    this.activityInfo = this.$route.params.activityInfo;
+    if (this.activityInfo.storeName == '*') {
+      this.storeName = '全部门店';
+    } else {
+      this.storeName = this.activityInfo.storeName;
+    }
+    this.getUserInfo = this.$route.params.userInfo;
     this.createQrcode();
   },
   data() {
@@ -67,6 +72,7 @@ export default {
       qrcodeImg: '',
       activityInfo: {},
       getUserInfo: {},
+      storeName: '',
     };
   },
   methods: {
@@ -74,8 +80,9 @@ export default {
       const protocol = `${window.location.protocol}//`;
       const host = window.location.host;
       const pathname = '/activity/activityDetail';
-      const url = `${protocol + host + pathname}?activityId=${this.activityInfo.id}&mobile=${this.getUserInfo.mobile}&username=${this.getUserInfo.username}`;
-      console.log('url', url);
+      const userName = encodeURIComponent(this.getUserInfo.username);
+      const url = `${protocol + host + pathname}?activityId=${this.activityInfo.id}&mobile=${this.getUserInfo.mobile}&username=${userName}&hmcId=${this.getUserInfo.hmcId}`;
+      console.log('url==', url);
       this.basicService.authorizedUrl({ frontUrl: url }).then((res) => {
         if (res.code === 1) {
           if (res.data) {
@@ -139,8 +146,8 @@ export default {
 
   .activityQRCode-cnt-code-par {
     position: relative;
-    width: 314px;
-    height: 314px;
+    width: 330px;
+    height: 330px;
     margin-top: 24px;
     margin-left: auto;
     margin-right: auto;

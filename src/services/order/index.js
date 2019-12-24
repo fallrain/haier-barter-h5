@@ -5,9 +5,9 @@ import {
 } from '@/lib/ajax';
 
 export default {
-  queryOrderFollowlList(data, param) {
+  queryOrderFollowList(data, param) {
     /* 查询订单列表 */
-    return axPostJson(urls.queryOrderFollowlList, data, param);
+    return axPostJson(urls.queryOrderFollowList, data, param);
   },
   fuzzySearchOrderFollowList(data, param) {
     return axPostJson(urls.fuzzySearchOrderFollowList, data, param);
@@ -79,5 +79,17 @@ export default {
   checkInvoiceByMediaId(data) {
     /* 上传发票并校验 */
     return axPost(urls.checkInvoiceByMediaId, data);
+  },
+  deleteOrderByHmc(params) {
+    /* 检查是否可以跳过上传发票 */
+    return axPostJson(urls.deleteOrderByHmc, null, params);
+  },
+  orderDeletionApprovalApply(data) {
+    /* 订单删除申请 */
+    return axPostJson(urls.orderDeletionApprovalApply, data);
+  },
+  queryRightsReviewList(data, params) {
+    /* 查询需要删除的订单的列表 */
+    return axPostJson(urls.queryRightsReviewList, data, params);
   },
 };

@@ -14,6 +14,8 @@ import product from '@/services/product';
 // 权益
 import rights from '@/services/rights';
 // 活动
+import campaignService from '@/services/campaign';
+// 活动
 import activity from '@/services/activity';
 
 Vue.prototype.basicService = basicService;
@@ -23,4 +25,5 @@ Vue.prototype.reportInstallService = reportInstall;
 Vue.prototype.salesService = sales;
 Vue.prototype.productService = product;
 Vue.prototype.rightsService = rights;
+Vue.prototype.campaignService = campaignService;
 Vue.prototype.activityService = activity;

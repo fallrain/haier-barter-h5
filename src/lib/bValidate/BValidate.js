@@ -1,5 +1,5 @@
 import {
-  Toast
+  Dialog,
 } from 'mand-mobile';
 import hValidateRules from './bValidateRules';
 
@@ -18,7 +18,10 @@ export default class {
           continue;
         }
         if (!this.hValidateRules.rules[i](this.option.formData[p], regs[i])) {
-          Toast.failed(this.option.messages[p][i] || this.hValidateRules.messages[i]);
+          Dialog.alert({
+            content: this.option.messages[p][i] || this.hValidateRules.messages[i],
+            confirmText: '确定'
+          });
           return false;
         }
       }
@@ -30,7 +33,10 @@ export default class {
     const regs = this.option.rules[name];
     for (const i in regs) {
       if (!this.hValidateRules.rules[i](this.option.formData[name], regs[i])) {
-        Toast.failed(this.option.messages[name][i] || this.hValidateRules.messages[i]);
+        Dialog.alert({
+          content: this.option.messages[name][i] || this.hValidateRules.messages[i],
+          confirmText: '确定'
+        });
         return false;
       }
     }

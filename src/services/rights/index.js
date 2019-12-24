@@ -1,6 +1,7 @@
 import urls from '../url/rights.url';
 import {
-  axPostJson, axPost, axGet, axGetUrl,
+  axGet,
+  axPostJson,
 } from '@/lib/ajax';
 
 export default {

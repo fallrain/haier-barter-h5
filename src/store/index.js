@@ -16,7 +16,8 @@ export default new Vuex.Store({
       'Nav',
       'ReportInstallDetail',
       // 'OrderEntry',
-      'SearchProduct'
+      'SearchProduct',
+      'ApplyDeleteOrder'
     ],
     loadingShow: false, // loading 显示隐藏
     areaCode: '86'

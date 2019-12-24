@@ -169,7 +169,7 @@ export default {
         this.$nextTick(() => {
           // 通过当前页的数据条数，和总数据量来判断是否加载完
           if (result) {
-            this[this.curScrollViewName].mescroll.endBySize(result.length, pages);
+            this[this.curScrollViewName].mescroll.endByPage(result.length, pages);
           }
         });
       });
@@ -202,7 +202,9 @@ export default {
       }
       let data = {
         activityType: '',
-        keyWord: this.searchVal,
+        activityTitle: this.searchVal,
+        // 活动状态只显示已发布
+        status: 1,
       };
       if (this.getUserInfo) {
         if (this.getUserInfo.storeInfo) {
@@ -311,8 +313,12 @@ export default {
       this.isShowPopContainer = true;
       wx.ready(() => {
         console.log('this.getData.id====', item.id);
+        console.log('this.getUserInfo.hmcId====', this.getUserInfo.hmcId);
         wx.miniProgram.postMessage({
-          data: item.id
+          data: {
+            activityId: item.id,
+            hmcId: this.getUserInfo.hmcId,
+          }
         });
       });
     },
@@ -322,15 +328,6 @@ export default {
     },
     closeShare() {
       this.isShowPopContainer = false;
-    },
-    shareImg() {
-      // this.isPopupShow = false;
-      // this.activityService.generateQrcode('http://baidu.com/', '123456', '9999').then((res) => {
-      //   this.bUtil.downloadFile(res.data);
-      // });
-      // return this.activityService.generateQrcode('http://baidu.com/', this.getData.id, this.getData.createdBy).then((res) => {
-      //   this.bUtil.downloadFile(res.data);
-      // });
     },
     getProductGroup() {
       this.productService.industryGroup()

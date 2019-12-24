@@ -1,7 +1,7 @@
 const baseURL = 'manage';
 const urls = {
   // 订单列表
-  queryOrderFollowlList: '/orderFollow/queryOrderFollowList', // 订单跟进列表
+  queryOrderFollowList: '/orderFollow/queryOrderFollowList', // 订单跟进列表
   fuzzySearchOrderFollowList: '/orderFollow/fuzzySearchOrderFollowList', // 模糊搜索列表
   updateOrderFollowByType: '/orderFollow/updateOrderFollowByType', // 修改状态
   generateOrderNo: '/orderManage/generateOrderNo', // 生成订单编号
@@ -23,8 +23,15 @@ const urls = {
   isAccordDeadline: '/reportEhub/isAccordDeadline', // 校验 购买日期与其当月销量闸口是否关闭
   checkCreateOrder: '/orderManage/checkCreateOrder', // 校验 订单录入校验
   createOrderForSGLD: '/orderManage/createOrderForSGLD', // 手工录单接口
-  ifUploadInvoice: '/orderManage/ifUploadInvoice', // 检查是否可以跳过上传发票
-  checkInvoiceByMediaId: '/orderManage/checkInvoiceByMediaId'// 上传发票并校验
+  checkInvoiceByMediaId: '/orderManage/checkInvoiceByMediaId',// 上传发票并校验
+  // 检查是否可以跳过上传发票
+  ifUploadInvoice: '/orderManage/ifUploadInvoice',
+  // 删除订单
+  deleteOrderByHmc: '/orderManage/deleteOrderByHmc',
+  // 有权益的时候，删除订单申请
+  orderDeletionApprovalApply: '/orderDeletionApproval/apply',
+  // 查询需要删除的订单的列表
+  queryRightsReviewList: '/orderDeletionApproval/queryRightsReviewList',
 };
 
 Object.entries(urls).forEach(([key, value]) => {
