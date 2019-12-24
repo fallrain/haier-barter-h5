@@ -7,7 +7,7 @@
       :title="activityInfo.activityTitle"
       :startDate="activityInfo.activityStartTime"
       :endDate="activityInfo.activityEndTime"
-      :address="storeName"
+      :address="detailInfo.storeName"
     ></activity-name-time>
     <div class="activityQRCode-cnt">
       <p class="activityQRCode-cnt-title">活动专属二维码</p>
@@ -59,12 +59,19 @@ export default {
   },
   activated() {
     this.activityInfo = this.$route.params.activityInfo;
-    if (this.activityInfo.storeName == '*') {
-      this.storeName = '全部门店';
-    } else {
-      this.storeName = this.activityInfo.storeName;
-    }
     this.getUserInfo = this.$route.params.userInfo;
+    if (this.activityInfo && this.getUserInfo) {
+      console.log(this.activityInfo);
+      // 活动详情查询
+      this.activityService.queryActivityInfoDetails({}, {
+        activityId: this.activityInfo.id,
+        hmcId: this.getUserInfo.hmcId,
+      }).then((res) => {
+        if (res.code === 1) {
+          this.detailInfo = res.data;
+        }
+      });
+    }
     this.createQrcode();
   },
   data() {
@@ -73,6 +80,7 @@ export default {
       activityInfo: {},
       getUserInfo: {},
       storeName: '',
+      detailInfo: {},
     };
   },
   methods: {
