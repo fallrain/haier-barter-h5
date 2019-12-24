@@ -1,7 +1,7 @@
 <template>
   <div class="activityQRCode">
     <div class="activityDataAnalysis-bg">
-      <img src="@/assets/images/activity/data-analysis-example.png" alt="">
+      <img v-if="detailInfo.activityInfoPoster.posterUrl1" :src="detailInfo.activityInfoPoster.posterUrl1" alt="">
     </div>
     <activity-name-time
       :title="activityInfo.activityTitle"

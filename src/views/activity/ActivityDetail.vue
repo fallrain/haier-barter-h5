@@ -38,7 +38,7 @@
               </button>
               <button class="activity-detail-btn" v-show="activityLinkmanPhone">
                 <i class="iconfont icon-dianhua icon-img1">
-                  <span class="activity-detail-seller-store">{{activityLinkmanPhone}}</span>
+                  <a :href="'tel:'+activityLinkmanPhone" class="activity-detail-seller-store">{{activityLinkmanPhone}}</a>
                 </i>
               </button>
             </div>
@@ -66,7 +66,7 @@
     </div>
     <md-dialog
       class="activityDetail-register-dialog"
-      title="注册海尔账号"
+      title="报名活动"
       :closable="true"
       v-model="registerDialogShow"
     >
