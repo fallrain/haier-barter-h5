@@ -203,6 +203,7 @@ export default {
   },
   data() {
     return {
+      isChange: false,
       uploadUrl: '/api/file/simpleUpload',
       headers: {
         Authorization: ''
@@ -259,8 +260,11 @@ export default {
       this.customerInfo.adminName = this.$route.params.userInfo.username;
     }
     if (this.$route.params.id) { // 修改信息
+      this.isChange = true;
       this.id = this.$route.params.id;
       this.getInformation(this.id);
+    } else {
+      this.isChange = false;
     }
   },
   created() {
@@ -273,7 +277,6 @@ export default {
   },
   watch: {
     indeustryCode(val) {
-      debugger;
       this.indeustryChoosed = [];
       this.indeustryName = [];
       this.indeustryCode.forEach((item) => {
@@ -403,16 +406,28 @@ export default {
         return;
       }
       console.log(this.customerInfo);
+      if (this.isChange) {
+        this.customerInfo.id = this.id;
+      }
       this.haierhouseService.addShopInfo({
+        hmcId: JSON.parse(localStorage.getItem('userinfo')).hmcid,
         ...this.customerInfo
       }, {}).then((res) => {
         console.log(res);
         if (res.code === 1) {
           this.id = res.data;
-          this.$router.push({
-            name: 'Haierhouse.HaierhouseAreaInfo',
-            query: { shopId: this.id }
-          });
+          if (this.isChange) {
+            this.customerInfo.id = this.id;
+            this.$router.push({
+              name: 'Haierhouse.HaierhouseAreaInfo',
+              params: { customerInfo: this.customerInfo }
+            });
+          } else {
+            this.$router.push({
+              name: 'Haierhouse.HaierhouseAreaInfo',
+              query: { shopId: this.id }
+            });
+          }
         }
       });
     },

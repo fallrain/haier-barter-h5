@@ -40,12 +40,12 @@
           <p class="title">{{item.buildAreaName}}</p>
           <p class="cnt">入驻产业：{{item.industryNameScope}}</p>
           <div class="bt2-myhouse-card-cnt-opt">
-            <button class="bt2-myhouse-card-cnt-opt-btn mr24" @click="information()"
+            <button class="bt2-myhouse-card-cnt-opt-btn mr24" @click="changeInformation(item)"
                     v-show="!middle && !deny && !informationComplete">补充信息
             </button>
-            <button class="bt2-myhouse-card-cnt-opt-btn mr24" @click="changeInformation()" v-show="deny">修改信息</button>
-            <button class="bt2-myhouse-card-cnt-opt-btn mr24" @click="checkDetail()" v-show="informationComplete">查看详情
-            </button>
+<!--            <button class="bt2-myhouse-card-cnt-opt-btn mr24" @click="changeInformation()" v-show="deny">修改信息</button>-->
+<!--            <button class="bt2-myhouse-card-cnt-opt-btn mr24" @click="checkDetail()" v-show="informationComplete">查看详情-->
+<!--            </button>-->
             <button class="bt2-myhouse-card-cnt-opt-btn mr24" @click="activity()">配置活动</button>
             <div class="bt2-myhouse-card-cnt-opt-status">
               <img src="@/assets/images/haierHouse/Icons／Complete@2x.png">
@@ -253,10 +253,11 @@ export default {
       //   url: `/pages/haierHouse/ChangeInformation?shopId=${this.myAreaList.id}&hmcid=${this.hmcid}`,
       // });
     },
-    changeInformation() {
-      // uni.navigateTo({
-      //   url: `/pages/haierHouse/HaierHouseApply?shopId=${this.myAreaList.id}&hmcid=${this.hmcid}`,
-      // });
+    changeInformation(item) {
+      this.$router.push({
+        name: 'Haierhouse.HaierhouseApply',
+        params: { id: item.id }
+      });
     },
     checkDetail() {
       uni.navigateTo({
@@ -269,7 +270,7 @@ export default {
     showMoreList() {
       this.$router.push({
         name: 'Haierhouse.HaierhouseApplyBuildList',
-        params: { hmcId: this.userInfo.hmcid}
+        params: { hmcId: this.userInfo.hmcid }
       });
     },
     getQueryString(name) {

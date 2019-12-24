@@ -2,7 +2,7 @@
 <div class="fs28">
   <div class="text-999 lh70 pl20">覆盖小区信息</div>
   <div class="dis-flex jus-bt row-style br-b">
-    <div class="text-333">
+    <div class="text-333 fs28">
       覆盖小区
     </div>
     <div class="fg1 text-666 pl20">
@@ -59,6 +59,7 @@
     <div class="text-333 row-style">小区照片</div>
     <div class="bg-white p20">
       <b-upload
+        :imgs="uploadImg"
         :crop="false"
         inputOfFile="file"
         :max-file-size="1024*1024*5"
@@ -121,6 +122,9 @@ export default {
   },
   data() {
     return {
+      isChange: false,
+      areaIndex: 0,
+      decoModelDistrictInfoDTOList: [],
       addressName: '',
       // 地址pop显示隐藏
       addressPopShow: false,
@@ -145,11 +149,28 @@ export default {
       houseType: [
       ],
       houseTypeV: [],
-      houseTypeN: []
+      houseTypeN: [],
+      uploadImg: []
     };
   },
   activated() {
-    this.customerInfo.shopId = this.$route.query.shopId;
+    if (this.$route.params.customerInfo) {
+      this.isChange = true;
+      if (this.$route.params.customerInfo.decoModelDistrictInfoDTOList.length > 0) {
+        this.decoModelDistrictInfoDTOList = this.$route.params.customerInfo.decoModelDistrictInfoDTOList;
+        this.customerInfo = this.decoModelDistrictInfoDTOList[0];
+        this.houseTypeV[0] = this.customerInfo.layoutType;
+        this.uploadImg = [];
+        if (this.customerInfo.decoModelImageUrlDTOList.length > 0) {
+          this.customerInfo.decoModelImageUrlDTOList.forEach((item) => {
+            this.uploadImg.push(item.imageUrl);
+          });
+        }
+      }
+    } else {
+      this.isChange = false;
+      this.customerInfo.shopId = this.$route.query.shopId;
+    }
   },
   created() {
     this.addressData = addressData;
@@ -192,6 +213,9 @@ export default {
         itemImg.imageType = 0;
         itemImg.imageUrl = data.data;
       }
+      if (!this.customerInfo.imageUrlSaveVOList){
+        this.customerInfo.imageUrlSaveVOList = [];
+      }
       this.customerInfo.imageUrlSaveVOList.push(itemImg);
       fileList.push(data.data);
     },
@@ -212,8 +236,13 @@ export default {
       Toast.failed(res || '上传失败');
     },
     complete() {
-      this.confirm();
+      if (!this.confirm()) {
+        return;
+      }
       console.log(this.customerInfo);
+      if (!this.isChange){
+        delete this.customerInfo.id;
+      }
       this.haierhouseService.addDistrictInfo(this.customerInfo, {}).then((res) => {
         if (res.code === 1) {
           this.$router.push({
@@ -223,45 +252,79 @@ export default {
       });
     },
     continu() {
-      this.confirm();
-      console.log(this.customerInfo);
+      if (!this.confirm()) {
+        return;
+      }
       this.haierhouseService.addDistrictInfo(this.customerInfo, {}).then((res) => {
         if (res.code === 1) {
-          this.$router.go(0);
+          // this.$router.go(0);
+          if (this.isChange) {
+            this.areaIndex++;
+            console.log(this.decoModelDistrictInfoDTOList)
+            console.log(this.areaIndex)
+            if (this.areaIndex < this.decoModelDistrictInfoDTOList.length) {
+              this.customerInfo = this.decoModelDistrictInfoDTOList[this.areaIndex]
+              this.houseTypeV[0] = this.customerInfo.layoutType;
+              this.uploadImg = [];
+              if (this.customerInfo.decoModelImageUrlDTOList.length > 0) {
+                this.customerInfo.decoModelImageUrlDTOList.forEach((item) => {
+                  this.uploadImg.push(item.imageUrl);
+                });
+                console.log(this.uploadImg)
+              }
+              return;
+            }
+          }
+          this.customerInfo = {
+            id: '',
+            districtName: '',
+            provinceCityArea: '',
+            districtAddress: '',
+            districtScope: '',
+            layoutType: '',
+            districtAreaStart: '',
+            districtAreaEnd: '',
+            saleAveragePrice: '',
+            imageUrlSaveVOList: [
+            ]
+          };
+          this.houseTypeV = [];
+          this.uploadImg = [];
         }
       });
     },
     confirm() {
       if (this.customerInfo.districtScope === '' || !this.customerInfo.districtScope) {
         Toast.failed('请输入小区名称');
-        return;
+        return false;
       }
       if (this.customerInfo.provinceCityArea === '' || !this.customerInfo.provinceCityArea) {
         Toast.failed('请输入地址');
-        return;
+        return false;
       }
       if (this.customerInfo.districtAddress === '' || !this.customerInfo.districtAddress) {
         Toast.failed('请输入地址');
-        return;
+        return false;
       }
       if (this.houseTypeV.length === 0) {
         Toast.failed('请选择户型');
-        return;
-      } else {
-        this.customerInfo.layoutType = this.houseTypeV.join(',');
+        return false;
       }
+      this.customerInfo.layoutType = this.houseTypeV.join(',');
+
       if (this.customerInfo.districtAreaStart === '' || !this.customerInfo.districtAreaStart) {
         Toast.failed('请输入小区面积范围');
-        return;
+        return false;
       }
       if (this.customerInfo.districtAreaEnd === '' || !this.customerInfo.districtAreaEnd) {
         Toast.failed('请输入小区面积范围');
-        return;
+        return false;
       }
       if (this.customerInfo.saleAveragePrice === '' || !this.customerInfo.saleAveragePrice) {
         Toast.failed('请输入小区均价');
-        return;
+        return false;
       }
+      return true;
     }
   },
   beforeRouteLeave(to, from, next) {
@@ -296,7 +359,6 @@ export default {
               name: 'Haierhouse.HaierhouseEntry'
             });
           }
-
         }
       }
     }
