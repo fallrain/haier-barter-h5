@@ -437,6 +437,15 @@ export default {
     },
     share() {
       this.isShowPopContainer = true;
+      this.activityService.shareCount({}, {
+        activityId: this.activityId,
+        hmcId: this.hmcId,
+        openId: this.openId,
+        counterTypeCode: 'single_forword_count',
+        noToken: true
+      }).then((res) => {
+        console.log('shareCount', res);
+      });
     },
     // h5分享到朋友圈和好友的设置
     settingShareWX() {
@@ -451,15 +460,6 @@ export default {
             success: (res) => {
               // 转发计数接口
               console.log('updateAppMessageShareData success');
-              this.activityService.shareCount({}, {
-                activityId: this.activityId,
-                hmcId: this.hmcId,
-                openId: this.openId,
-                counterTypeCode: 'single_forword_count',
-                noToken: true
-              }).then((res) => {
-                console.log('shareCount', res);
-              });
             },
             fail: (res) => {
               console.log('updateAppMessageShareData fail', res);
@@ -472,15 +472,6 @@ export default {
             success: (res) => {
               // 转发计数接口
               console.log('updateTimelineShareData success');
-              this.activityService.shareCount({}, {
-                activityId: this.activityId,
-                hmcId: this.hmcId,
-                openId: this.openId,
-                counterTypeCode: 'single_forword_count',
-                noToken: true
-              }).then((res) => {
-                console.log('shareCount', res);
-              });
             },
             fail: (res) => {
               console.log('updateTimelineShareData fail', res);
