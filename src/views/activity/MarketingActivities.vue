@@ -169,7 +169,7 @@ export default {
         this.$nextTick(() => {
           // 通过当前页的数据条数，和总数据量来判断是否加载完
           if (result) {
-            this[this.curScrollViewName].mescroll.endBySize(result.length, pages);
+            this[this.curScrollViewName].mescroll.endByPage(result.length, pages);
           }
         });
       });
