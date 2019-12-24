@@ -130,6 +130,8 @@ export default {
       }],
       rightsJson: '',
       num: 0,
+      // 点确定的时候选择的权益数量，用来做随机数用(getTime毫秒级会重复)
+      choseRightNum: 0,
       scrollViewFinish: {
         mescroll: null,
         list: [],
@@ -675,7 +677,8 @@ export default {
                   configId: ''
                 };
                 const a = {};
-                const timestamp = new Date().getTime();
+                this.choseRightNum++;
+                const timestamp = `${new Date().getTime()}${this.choseRightNum}`;
                 a.orderDetailId = sel.orderId;
                 a.rightsGroup = timestamp;
                 r.rightsGroup = timestamp;
@@ -685,7 +688,8 @@ export default {
               });
             } else {
               item.rightsSelectedGroupDtoList.forEach((sel) => {
-                const timestamp = new Date().getTime();
+                this.choseRightNum++;
+                const timestamp = `${new Date().getTime()}${this.choseRightNum}`;
                 // 起的什么破名
                 // 权益信息
                 this.rightsUserDto.push({
@@ -709,6 +713,8 @@ export default {
         this.num++;
       }
       if (this.num === 2) {
+        // 重置所选的全部权益数量
+        this.choseRightNum = 0;
         const rightJson = {};
         rightJson.rightsUserInterestsDetailsDTO = this.rightsDetailList;
         rightJson.rightName = this.nameList.join(',');
