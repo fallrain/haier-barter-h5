@@ -315,6 +315,7 @@ export default {
       // 活动详情查询
       this.activityService.queryActivityInfoDetails({}, {
         activityId: this.activityId,
+        hmcId: this.hmcId,
         noToken: true
       }).then((res) => {
         if (res.code === 1) {
