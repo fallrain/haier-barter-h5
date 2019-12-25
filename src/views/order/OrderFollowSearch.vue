@@ -92,20 +92,20 @@
       @popButtonClicked="buttonClicked"
     ></b-order-follow-search-bar>
     <div
-      id="scrollViewOdd"
-      ref="scrollViewOdd"
-      class="mescroll"
-      v-show="curScrollViewName==='scrollViewOdd'"
-    >
-      <b-order-follow-item
-        type="odd"
-        :list="scrollViewOdd.list"
-        @updateOrderType="updateOrderType"
-        @followButtonClick="followButtonClicked"
-        @itemClick="itemClick"
-        @gujiaClick="gujiaClick"
-      ></b-order-follow-item>
-    </div>
+    id="scrollViewOdd"
+    ref="scrollViewOdd"
+    class="mescroll"
+    v-show="curScrollViewName==='scrollViewOdd'"
+  >
+    <b-order-follow-item
+      type="odd"
+      :list="scrollViewOdd.list"
+      @updateOrderType="updateOrderType"
+      @followButtonClick="followButtonClicked"
+      @itemClick="itemClick"
+      @gujiaClick="gujiaClick"
+    ></b-order-follow-item>
+  </div>
     <b-order-follow-search-bar
       v-show="curScrollViewName==='scrollViewProgress'"
       :scenarioList="scenarioList"

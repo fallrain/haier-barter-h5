@@ -1,21 +1,14 @@
 import Nav from '@/views/Nav';
-import Test from '@/views/home/Test';
 import orderRoutes from '@/router/order';
 import salesRoutes from '@/router/sales';
 import reportInstallRoutes from '@/router/reportInstall';
+import evaluateProductRoutes from '@/router/evaluateProduct';
 
 const data = [
-  {
-    path: '/test',
-    name: 'Test',
-    component: Test,
-    meta: {
-      title: '测试'
-    }
-  },
   ...orderRoutes,
   ...salesRoutes,
-  ...reportInstallRoutes
+  ...reportInstallRoutes,
+  ...evaluateProductRoutes
 ];
 if (process.env.NODE_ENV !== 'production') {
   data.unshift({
