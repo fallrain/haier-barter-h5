@@ -24,7 +24,7 @@ export default {
   },
   methods: {
     queryUserList() {
-      const shopid = JSON.parse(localStorage.getItem('userinfo')).shopId
+      const shopid = JSON.parse(localStorage.getItem('userinfo')).shopId;
       this.productService.userList(shopid).then((res1) => {
         if (res1.code === 1) {
           this.userList = res1.data;

@@ -69,7 +69,8 @@
       <div class="">样板间租金</div>
       <div class="fg1 dis-flex">
         <div class="fg1 pl20 pr20">
-          <input type="number" v-model="customerInfo.rentAmount" @blur="judegNum(customerInfo.rentAmount,'rentAmount')"
+          <input type="number" v-model="customerInfo.rentAmount"
+                 @blur="judegNum(customerInfo.rentAmount,'rentAmount')"
                  class="w100per input-style text-right" placeholder="请输入">
         </div>
         <div class="text-primary">元/月</div>
@@ -100,15 +101,32 @@
     <div class="mb20">
       <div class="text-333 row-style">样板间区域照片</div>
       <div class="bg-white p20">
-        <b-wx-upload
+        <b-upload
           :imgs="uploadImg"
+          :crop="false"
+          inputOfFile="file"
+          :max-file-size="1024*1024*5"
+          :maxWidth="1280"
           :maxLength="3"
-          @imageuploaded="(data)=>imageuploaded(data, uploadImg, '0')"
-          :uploadFn="uploadImgFn"
-          @delFun="(index)=>delImg(index,uploadImg)"
+          :compress="70"
+          :headers="headers"
+          @imageuploaded="(data, fileList)=>imageuploaded(data, fileList, '0')"
+          extensions="png,jpg,jpeg,gif"
+          :url="uploadUrl"
+          :multiple-size="1"
+          @delFun="delImg"
           @errorhandle="uploadError"
         >
-        </b-wx-upload>
+        </b-upload>
+<!--        <b-wx-upload-->
+<!--          :imgs="uploadImg"-->
+<!--          :maxLength="3"-->
+<!--          @imageuploaded="(data)=>imageuploaded(data, uploadImg, '0')"-->
+<!--          :uploadFn="uploadImgFn"-->
+<!--          @delFun="(index)=>delImg(index,uploadImg)"-->
+<!--          @errorhandle="uploadError"-->
+<!--        >-->
+<!--        </b-wx-upload>-->
       </div>
     </div>
     <div v-for="(item, index) in indeustryChoosed" :key="index" class="mb20">
@@ -116,13 +134,30 @@
       <div class="bg-white p20">
         <b-upload
           :imgs="uploadImg1[item.value]"
+          :crop="false"
+          inputOfFile="file"
+          :max-file-size="1024*1024*5"
+          :maxWidth="1280"
           :maxLength="3"
-          @imageuploaded="(data)=>imageuploaded(data, uploadImg1[item.value], item)"
-          :uploadFn="uploadImgFn"
-          @delFun="(index1)=>delImg(index1, uploadImg1[item.value], item)"
+          :compress="70"
+          :headers="headers"
+          @imageuploaded="(data, fileList)=>imageuploaded(data, fileList, item)"
+          extensions="png,jpg,jpeg,gif"
+          :url="uploadUrl"
+          :multiple-size="1"
+          @delFun="(index, fileList)=>delImg(index, fileList, item)"
           @errorhandle="uploadError"
         >
         </b-upload>
+<!--        <b-wx-upload-->
+<!--          :imgs="uploadImg1[item.value]"-->
+<!--          :maxLength="3"-->
+<!--          @imageuploaded="(data)=>imageuploaded(data, uploadImg1[item.value], item)"-->
+<!--          :uploadFn="uploadImgFn"-->
+<!--          @delFun="(index1)=>delImg(index1, uploadImg1[item.value], item)"-->
+<!--          @errorhandle="uploadError"-->
+<!--        >-->
+<!--        </b-wx-upload>-->
       </div>
     </div>
     <div class="ph20 mt16">
@@ -407,7 +442,7 @@ export default {
         if (res.code === 1) {
           this.id = res.data;
           if (this.isChange) {
-            this.customerInfo.id = this.id;
+            this.customerInfo.shopId = this.id;
             this.$router.push({
               name: 'Haierhouse.HaierhouseAreaInfo',
               params: { customerInfo: this.customerInfo }

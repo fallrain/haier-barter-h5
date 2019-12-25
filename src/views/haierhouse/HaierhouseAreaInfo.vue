@@ -7,6 +7,7 @@
     </div>
     <div class="fg1 text-666 pl20">
       <input type="text" v-model="customerInfo.districtScope"
+             @input="dealChange(30, 'districtScope')"
              class="w100per input-style text-right" placeholder="请输入">
     </div>
   </div>
@@ -20,7 +21,9 @@
       placeholder="选择省/市/区(县)"
     ></b-item>
     <div class="pl120 row-style">
-      <input type="text" v-model="customerInfo.districtAddress" class="w100per input-style text-right" placeholder="请输入详细地址,具体到门牌号">
+      <input type="text" v-model="customerInfo.districtAddress"
+             @input="dealChange(50, 'districtAddress')"
+             class="w100per input-style text-right" placeholder="请输入详细地址,具体到门牌号">
     </div>
   </div>
   <div class="mt16">
@@ -38,6 +41,7 @@
     <div class="">小区面积</div>
     <div class="fg1 dis-flex">
       <input type="text" v-model="customerInfo.districtAreaStart"
+             @blur="judegNum(customerInfo.districtAreaStart,'districtAreaStart')"
              class="w250 input-style text-center pr20" placeholder="请输入">
       <div class="">至</div>
       <input type="text" v-model="customerInfo.districtAreaEnd"
@@ -49,7 +53,8 @@
     <div class="">均价</div>
     <div class="fg1 dis-flex">
       <div class="fg1 pl20 pr20">
-        <input type="number" v-model="customerInfo.saleAveragePrice"
+        <input type="text" v-model="customerInfo.saleAveragePrice"
+               @blur="judegNum(customerInfo.saleAveragePrice,'saleAveragePrice')"
                class="w100per input-style text-right" placeholder="请输入">
       </div>
       <div class="text-primary">元/月</div>
@@ -122,6 +127,7 @@ export default {
   },
   data() {
     return {
+      shopId: '',
       isChange: false,
       areaIndex: 0,
       decoModelDistrictInfoDTOList: [],
@@ -154,8 +160,10 @@ export default {
     };
   },
   activated() {
+    debugger;
     if (this.$route.params.customerInfo) {
       this.isChange = true;
+      this.shopId = this.$route.params.customerInfo.id;
       if (this.$route.params.customerInfo.decoModelDistrictInfoDTOList.length > 0) {
         this.decoModelDistrictInfoDTOList = this.$route.params.customerInfo.decoModelDistrictInfoDTOList;
         this.customerInfo = this.decoModelDistrictInfoDTOList[0];
@@ -170,6 +178,7 @@ export default {
     } else {
       this.isChange = false;
       this.customerInfo.shopId = this.$route.query.shopId;
+      this.shopId = this.$route.query.shopId;
     }
   },
   created() {
@@ -199,6 +208,25 @@ export default {
     }
   },
   methods: {
+    dealChange(num, key) {
+      if (this.customerInfo[key].length > num) {
+        Toast.failed(`最多输入${num}个字符`);
+        this.customerInfo[key] = this.customerInfo.districtScope.substring(0, num);
+      }
+    },
+    judegNum(num, key) {
+      debugger;
+      if (!this.testStr(num) || num > 100000) {
+        this.customerInfo[key] = '';
+        Toast.failed('请输入正确的数值，最大数值为100000且小数点后两位');
+      } else if (this.customerInfo.districtAreaStart > this.customerInfo.districtAreaEnd) {
+        Toast.failed('小区区间范围有误，开始数值应大于结束数值')
+      }
+    },
+    testStr(num) {
+      const reg = /^(\d+)(.\d{0,2})?$/;
+      return reg.test(num);
+    },
     showAddressPop() {
       /* 展示地址pop */
       this.addressPopShow = true;
@@ -242,6 +270,8 @@ export default {
       console.log(this.customerInfo);
       if (!this.isChange) {
         delete this.customerInfo.id;
+      } else {
+        this.customerInfo.id = this.id;
       }
       this.haierhouseService.addDistrictInfo(this.customerInfo, {}).then((res) => {
         if (res.code === 1) {
@@ -277,6 +307,7 @@ export default {
           }
           this.customerInfo = {
             id: '',
+            shopId: this.shopId,
             districtName: '',
             provinceCityArea: '',
             districtAddress: '',
@@ -398,6 +429,7 @@ export default {
     background: #fff;
   }
   .input-style{
+    font-size: 28px;
     border: none;
     line-height: 80px;
   }
