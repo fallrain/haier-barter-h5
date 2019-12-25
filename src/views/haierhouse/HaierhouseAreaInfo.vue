@@ -141,6 +141,7 @@ export default {
       },
       customerInfo: {
         id: '',
+        shopId: '',
         districtName: '',
         provinceCityArea: '',
         districtAddress: '',
@@ -160,13 +161,13 @@ export default {
     };
   },
   activated() {
-    debugger;
     if (this.$route.params.customerInfo) {
       this.isChange = true;
       this.shopId = this.$route.params.customerInfo.id;
       if (this.$route.params.customerInfo.decoModelDistrictInfoDTOList.length > 0) {
         this.decoModelDistrictInfoDTOList = this.$route.params.customerInfo.decoModelDistrictInfoDTOList;
         this.customerInfo = this.decoModelDistrictInfoDTOList[0];
+        this.id = this.customerInfo.id;
         this.houseTypeV[0] = this.customerInfo.layoutType;
         this.uploadImg = [];
         if (this.customerInfo.decoModelImageUrlDTOList.length > 0) {
@@ -220,7 +221,7 @@ export default {
         this.customerInfo[key] = '';
         Toast.failed('请输入正确的数值，最大数值为100000且小数点后两位');
       } else if (this.customerInfo.districtAreaStart > this.customerInfo.districtAreaEnd) {
-        Toast.failed('小区区间范围有误，开始数值应大于结束数值')
+        Toast.failed('小区区间范围有误，开始数值应大于结束数值');
       }
     },
     testStr(num) {
@@ -264,6 +265,7 @@ export default {
       Toast.failed(res || '上传失败');
     },
     complete() {
+      debugger;
       if (!this.confirm()) {
         return;
       }
@@ -282,18 +284,23 @@ export default {
       });
     },
     continu() {
+      debugger;
       if (!this.confirm()) {
         return;
+      }
+      if (!this.isChange) {
+        delete this.customerInfo.id;
+      } else {
+        this.customerInfo.id = this.id;
       }
       this.haierhouseService.addDistrictInfo(this.customerInfo, {}).then((res) => {
         if (res.code === 1) {
           // this.$router.go(0);
           if (this.isChange) {
             this.areaIndex++;
-            console.log(this.decoModelDistrictInfoDTOList);
-            console.log(this.areaIndex);
             if (this.areaIndex < this.decoModelDistrictInfoDTOList.length) {
               this.customerInfo = this.decoModelDistrictInfoDTOList[this.areaIndex];
+              this.id = this.customerInfo.id;
               this.houseTypeV[0] = this.customerInfo.layoutType;
               this.uploadImg = [];
               if (this.customerInfo.decoModelImageUrlDTOList.length > 0) {

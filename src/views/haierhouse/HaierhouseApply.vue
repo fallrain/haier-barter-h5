@@ -114,7 +114,7 @@
           extensions="png,jpg,jpeg,gif"
           :url="uploadUrl"
           :multiple-size="1"
-          @delFun="delImg"
+          @delFun="(index, fileList)=>delImg(index, fileList, '0')"
           @errorhandle="uploadError"
         >
         </b-upload>
@@ -379,43 +379,43 @@ export default {
     },
     // 下一步
     nextPage() {
-      if (this.customerInfo.adminName === '' || !this.customerInfo.adminName) {
+      if (this.customerInfo.adminName === '' || this.customerInfo.adminName === undefined) {
         Toast.failed('请选择筑家负责人');
         return;
       }
-      if (this.customerInfo.adminPhone === '' || !this.customerInfo.adminPhone) {
+      if (this.customerInfo.adminPhone === '' || this.customerInfo.adminPhone === undefined) {
         Toast.failed('请输入筑家负责人手机号');
         return;
       }
-      if (this.customerInfo.shopName === '' || !this.customerInfo.shopName) {
+      if (this.customerInfo.shopName === '' || this.customerInfo.shopName === undefined) {
         Toast.failed('请输入筑家店名');
         return;
       }
-      if (this.customerInfo.roomType === '' || !this.customerInfo.roomType) {
+      if (this.customerInfo.roomType === '' || this.customerInfo.roomType === undefined) {
         Toast.failed('请选择样板间类型');
         return;
       }
-      if (this.customerInfo.roomArea === '' || !this.customerInfo.roomArea) {
+      if (this.customerInfo.roomArea === '' || this.customerInfo.roomArea === undefined) {
         Toast.failed('请输入样板间面积');
         return;
       }
-      if (this.customerInfo.provinceCityArea === '' || !this.customerInfo.provinceCityArea) {
+      if (this.customerInfo.provinceCityArea === '' || this.customerInfo.provinceCityArea === undefined) {
         Toast.failed('请选择地区');
         return;
       }
-      if (this.customerInfo.roomAddress === '' || !this.customerInfo.roomAddress) {
+      if (this.customerInfo.roomAddress === '' || this.customerInfo.roomAddress === undefined) {
         Toast.failed('请输入详细地址');
         return;
-      }
-      if (this.customerInfo.rentAmount === '' || !this.customerInfo.rentAmount) {
+      } debugger;
+      if (this.customerInfo.rentAmount === '' || this.customerInfo.rentAmount === undefined) {
         Toast.failed('请输入租金');
         return;
       }
-      if (this.customerInfo.rentStartTime === '' || !this.customerInfo.rentStartTime) {
+      if (this.customerInfo.rentStartTime === '' || this.customerInfo.rentStartTime === undefined) {
         Toast.failed('请选择开始日期');
         return;
       }
-      if (this.customerInfo.rentEndTime === '' || !this.customerInfo.rentEndTime) {
+      if (this.customerInfo.rentEndTime === '' || this.customerInfo.rentEndTime === undefined) {
         Toast.failed('请选择结束日期');
         return;
       }
@@ -496,13 +496,13 @@ export default {
       debugger;
       let imgType = '';
       if (item === '0') {
-        imgType = '1';
+        imgType = this.customerInfo.roomType;
       } else {
         imgType = item.value;
       }
-      this.customerInfo.imageUrlSaveVOList.forEach((item, index) => {
-        if (item.imageType === imgType) {
-          this.customerInfo.imageUrlSaveVOList.splice(index, 1);
+      this.customerInfo.imageUrlSaveVOList.forEach((item1, index1) => {
+        if (item1.imageType === imgType) {
+          this.customerInfo.imageUrlSaveVOList.splice(index1, 1);
         }
       });
       fileList.splice(index, 1);
