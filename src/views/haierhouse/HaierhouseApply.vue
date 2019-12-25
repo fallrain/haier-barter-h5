@@ -19,7 +19,9 @@
     <div class="dis-flex row-style br-b">
       <div class="">筑家店名</div>
       <div class="fg1 pl20 pr20">
-        <input type="text" v-model="customerInfo.shopName" class="w100per input-style text-right" placeholder="请输入">
+        <input type="text" v-model="customerInfo.shopName"
+               @input="dealChange"
+               class="w100per input-style text-right" placeholder="请输入">
       </div>
     </div>
     <div class="text-999 lh70 pl20">一站筑家信息</div>
@@ -44,7 +46,8 @@
       <div class="">样板间面积</div>
       <div class="fg1 dis-flex">
         <div class="fg1 pl20 pr20">
-          <input type="number" v-model="customerInfo.roomArea" class="w100per input-style text-right" placeholder="请输入">
+          <input type="text" v-model="customerInfo.roomArea" @blur="judegNum(customerInfo.roomArea,'roomArea')"
+                 class="w100per input-style text-right" placeholder="请输入">
         </div>
         <div class="text-primary">平米</div>
       </div>
@@ -66,7 +69,8 @@
       <div class="">样板间租金</div>
       <div class="fg1 dis-flex">
         <div class="fg1 pl20 pr20">
-          <input type="number" v-model="customerInfo.rentAmount" class="w100per input-style text-right" placeholder="请输入">
+          <input type="number" v-model="customerInfo.rentAmount" @blur="judegNum(customerInfo.rentAmount,'rentAmount')"
+                 class="w100per input-style text-right" placeholder="请输入">
         </div>
         <div class="text-primary">元/月</div>
       </div>
@@ -96,23 +100,15 @@
     <div class="mb20">
       <div class="text-333 row-style">样板间区域照片</div>
       <div class="bg-white p20">
-        <b-upload
+        <b-wx-upload
           :imgs="uploadImg"
-          :crop="false"
-          inputOfFile="file"
-          :max-file-size="1024*1024*5"
-          :maxWidth="1280"
           :maxLength="3"
-          :compress="70"
-          :headers="headers"
-          @imageuploaded="(data, fileList)=>imageuploaded(data, fileList, '0')"
-          extensions="png,jpg,jpeg,gif"
-          :url="uploadUrl"
-          :multiple-size="1"
-          @delFun="delImg"
+          @imageuploaded="(data)=>imageuploaded(data, uploadImg, '0')"
+          :uploadFn="uploadImgFn"
+          @delFun="(index)=>delImg(index,uploadImg)"
           @errorhandle="uploadError"
         >
-        </b-upload>
+        </b-wx-upload>
       </div>
     </div>
     <div v-for="(item, index) in indeustryChoosed" :key="index" class="mb20">
@@ -120,18 +116,10 @@
       <div class="bg-white p20">
         <b-upload
           :imgs="uploadImg1[item.value]"
-          :crop="false"
-          inputOfFile="file"
-          :max-file-size="1024*1024*5"
-          :maxWidth="1280"
           :maxLength="3"
-          :compress="70"
-          :headers="headers"
-          @imageuploaded="(data, fileList)=>imageuploaded(data, fileList, item)"
-          extensions="png,jpg,jpeg,gif"
-          :url="uploadUrl"
-          :multiple-size="1"
-          @delFun="(index, fileList)=>delImg(index, fileList, item)"
+          @imageuploaded="(data)=>imageuploaded(data, uploadImg1[item.value], item)"
+          :uploadFn="uploadImgFn"
+          @delFun="(index1)=>delImg(index1, uploadImg1[item.value], item)"
           @errorhandle="uploadError"
         >
         </b-upload>
@@ -180,7 +168,8 @@ import {
 } from 'mand-mobile';
 import {
   BItem,
-  BUpload
+  BUpload,
+  BWxUpload
 } from '@/components/form';
 
 import addressData from '@/lib/address';
@@ -199,7 +188,8 @@ export default {
     [CheckList.name]: CheckList,
     [Button.name]: Button,
     BItem,
-    BUpload
+    BUpload,
+    BWxUpload
   },
   data() {
     return {
@@ -431,6 +421,28 @@ export default {
         }
       });
     },
+    judegNum(num, key) {
+      debugger;
+      if (!this.testStr(num) || num > 100000) {
+        this.customerInfo[key] = '';
+        Toast.failed('请输入正确的数值，最大数值为100000且小数点后两位');
+      } console.log(this.testStr(num));
+    },
+    testStr(num) {
+      const reg = /^(\d+)(.\d{0,2})?$/;
+      return reg.test(num);
+    },
+    dealChange() {
+      if (this.customerInfo.shopName.length > 30) {
+        Toast.failed('筑家店名最多输入30个字符');
+        this.customerInfo.shopName = this.customerInfo.shopName.substring(0, 30);
+      }
+    },
+    uploadImgFn(mediaId) {
+      return this.haierhouseService.simpleUpload({
+        mediaId
+      });
+    },
     imageuploaded(data, fileList, item) {
       const itemImg = {};
       if (data.code === 1) {
@@ -500,6 +512,7 @@ export default {
     background: #fff;
   }
   .input-style{
+    font-size: 28px;
     border: none;
     line-height: 80px;
   }

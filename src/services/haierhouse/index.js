@@ -25,4 +25,7 @@ export default {
     /* 店铺申请信息查询接口 */
     return axPostJson(urls.queryShopAndDistrict, data, param);
   },
+  simpleUpload(data) {
+    return axPost(urls.simpleUpload, data);
+  },
 };

@@ -213,7 +213,7 @@ export default {
         itemImg.imageType = 0;
         itemImg.imageUrl = data.data;
       }
-      if (!this.customerInfo.imageUrlSaveVOList){
+      if (!this.customerInfo.imageUrlSaveVOList) {
         this.customerInfo.imageUrlSaveVOList = [];
       }
       this.customerInfo.imageUrlSaveVOList.push(itemImg);
@@ -240,7 +240,7 @@ export default {
         return;
       }
       console.log(this.customerInfo);
-      if (!this.isChange){
+      if (!this.isChange) {
         delete this.customerInfo.id;
       }
       this.haierhouseService.addDistrictInfo(this.customerInfo, {}).then((res) => {
@@ -260,17 +260,17 @@ export default {
           // this.$router.go(0);
           if (this.isChange) {
             this.areaIndex++;
-            console.log(this.decoModelDistrictInfoDTOList)
-            console.log(this.areaIndex)
+            console.log(this.decoModelDistrictInfoDTOList);
+            console.log(this.areaIndex);
             if (this.areaIndex < this.decoModelDistrictInfoDTOList.length) {
-              this.customerInfo = this.decoModelDistrictInfoDTOList[this.areaIndex]
+              this.customerInfo = this.decoModelDistrictInfoDTOList[this.areaIndex];
               this.houseTypeV[0] = this.customerInfo.layoutType;
               this.uploadImg = [];
               if (this.customerInfo.decoModelImageUrlDTOList.length > 0) {
                 this.customerInfo.decoModelImageUrlDTOList.forEach((item) => {
                   this.uploadImg.push(item.imageUrl);
                 });
-                console.log(this.uploadImg)
+                console.log(this.uploadImg);
               }
               return;
             }

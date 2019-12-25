@@ -16,7 +16,7 @@
       </div>
     </div>
     <div @click="chooseImg">
-      <div class="bUpload" v-show="imgs.length < 1">
+      <div class="bUpload" v-show="imgs.length < maxLength">
         <i class="iconfont icon-jiahao bUpload-icon"></i>
       </div>
     </div>
@@ -40,6 +40,10 @@ export default {
       type: Object,
       default: () => {
       }
+    },
+    maxLength: {
+      type: Number,
+      default: 1
     },
     // 用来上传的函数
     uploadFn: {
