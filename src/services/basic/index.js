@@ -26,4 +26,8 @@ export default {
     /* 发送短信验证码给客户 */
     return axPost(urls.sendSms, data, { noToken: true, });
   },
+  queryIndustry() {
+    /* 查询产业组 */
+    return axGet(urls.queryIndustry);
+  }
 };

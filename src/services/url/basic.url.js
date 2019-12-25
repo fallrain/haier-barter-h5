@@ -8,6 +8,7 @@ const urls = {
   authorizedUrl: '/customer/oauth2/authorizedUrl',
   // 发送短信验证码给客户
   sendSms: '/customer/oauth2/send/sms',
+  queryIndustry: '/common/industry/list',
 
 };
 
