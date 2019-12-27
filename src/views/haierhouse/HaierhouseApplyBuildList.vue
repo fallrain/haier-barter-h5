@@ -105,6 +105,29 @@ export default {
         url: `/pages/haierHouse/ViewDetail?shopId=${this.myAreaList.id}&hmcid=${this.hmcid}`,
       });
     }
+  },
+  beforeRouteLeave(to, from, next) {
+    debugger;
+    if (this.$vnode && this.$vnode.data.keepAlive) {
+      if (this.$vnode.parent && this.$vnode.parent.componentInstance && this.$vnode.parent.componentInstance.cache) {
+        if (this.$vnode.componentOptions) {
+          const key = this.$vnode.key == null
+            ? this.$vnode.componentOptions.Ctor.cid + (this.$vnode.componentOptions.tag ? `::${this.$vnode.componentOptions.tag}` : '')
+            : this.$vnode.key;
+          const cache = this.$vnode.parent.componentInstance.cache;
+          const keys = this.$vnode.parent.componentInstance.keys;
+          if (to.name === 'Haierhouse.HaierhouseEntry') {
+            keys.forEach((k, index) => {
+              if (cache[k]) {
+                delete cache[k];
+              }
+            });
+          }
+        }
+      }
+    }
+    this.$destroy();
+    next();
   }
 };
 </script>

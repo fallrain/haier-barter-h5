@@ -216,12 +216,9 @@ export default {
       }
     },
     judegNum(num, key) {
-      debugger;
       if (!this.testStr(num) || num > 100000) {
         this.customerInfo[key] = '';
         Toast.failed('请输入正确的数值，最大数值为100000且小数点后两位');
-      } else if (this.customerInfo.districtAreaStart > this.customerInfo.districtAreaEnd) {
-        Toast.failed('小区区间范围有误，开始数值应大于结束数值');
       }
     },
     testStr(num) {
@@ -295,7 +292,6 @@ export default {
       }
       this.haierhouseService.addDistrictInfo(this.customerInfo, {}).then((res) => {
         if (res.code === 1) {
-          // this.$router.go(0);
           if (this.isChange) {
             this.areaIndex++;
             if (this.areaIndex < this.decoModelDistrictInfoDTOList.length) {
@@ -328,6 +324,7 @@ export default {
           };
           this.houseTypeV = [];
           this.uploadImg = [];
+          this.defaultA = [];
         }
       });
     },
