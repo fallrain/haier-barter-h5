@@ -77,7 +77,6 @@ export default {
   components: {
     BNoticeBar,
     BSearchInput,
-    Toast
   },
   created() {
     this.orderNo = this.$route.params.orderNo;
@@ -125,7 +124,7 @@ export default {
     }
   },
   methods: {
-    inputFunction(val) {
+    inputFunction() {
       this.searchList = this.searchHistory;
       if (this.searchVal === '') {
         this.searchList = [];
@@ -161,17 +160,17 @@ export default {
             if (result && typeof result === 'string') {
               if (result.includes(',')) {
                 this.searchVal = result.split(',')[1];
-	              this.search();
+                this.search();
               } else if (result.includes('http')) {
-	              this.basicService.scanQRcode(result).then((res2) => {
-		              if (res2.code === 1) {
-			              this.searchVal = res2.data;
-			              this.search();
-		              }
-	              });
+                this.basicService.scanQRcode(result).then((res2) => {
+                  if (res2.code === 1) {
+                    this.searchVal = res2.data;
+                    this.search();
+                  }
+                });
               } else {
-	              this.searchVal = result;
-	              this.search();
+                this.searchVal = result;
+                this.search();
               }
             }
           },
@@ -190,8 +189,8 @@ export default {
         Toast.info('产品组名称不能为空');
         return;
       }
-	    this.currentClickItemData.productGroup = item.productGroup;
-	    this.currentClickItemData.productGroupName = item.productGroupName;
+      this.currentClickItemData.productGroup = item.productGroup;
+      this.currentClickItemData.productGroupName = item.productGroupName;
       this.currentClickItemData.productBrandCode = item.productBrandCode;
       this.currentClickItemData.productBrandName = item.productBrandName;
       const orderMode = this.recordMode;
@@ -236,68 +235,69 @@ export default {
 </script>
 
 <style lang="scss">
-.md-toast-text{
-	white-space: normal !important;
-}
-.searchProduct-notice-bar-title {
-	color: #E89748;
-}
+  .md-toast-text {
+    white-space: normal !important;
+  }
 
-.searchProduct-history {
-	padding-left: 24px;
-	padding-right: 24px;
-	padding-bottom: 4px;
-	background: #fff;
-}
+  .searchProduct-notice-bar-title {
+    color: #E89748;
+  }
 
-.searchProduct-history-item {
-	border-bottom: 1px solid #CCC;
-	padding-left: 30px;
-	padding-right: 30px;
-	height: 78px;
-	line-height: 78px;
-	color: #666;
-	font-size: 28px;
-}
+  .searchProduct-history {
+    padding-left: 24px;
+    padding-right: 24px;
+    padding-bottom: 4px;
+    background: #fff;
+  }
 
-.searchProduct-secret {
-	padding: 24px;
+  .searchProduct-history-item {
+    border-bottom: 1px solid #CCC;
+    padding-left: 30px;
+    padding-right: 30px;
+    height: 78px;
+    line-height: 78px;
+    color: #666;
+    font-size: 28px;
+  }
 
-	strong {
-		color: #1969C6;
-	}
-}
+  .searchProduct-secret {
+    padding: 24px;
 
-.searchProduct-secret-title {
-	font-size: 28px;
-	color: #666;
-	margin-bottom: 20px;
-}
+    strong {
+      color: #1969C6;
+    }
+  }
 
-.searchProduct-secret-warn {
-	color: #F5A623;
-}
+  .searchProduct-secret-title {
+    font-size: 28px;
+    color: #666;
+    margin-bottom: 20px;
+  }
 
-.searchProduct-secret-con {
-	color: #333;
-	font-size: 24px;
-	line-height: 40px;
-}
+  .searchProduct-secret-warn {
+    color: #F5A623;
+  }
 
-.searchProduct-scan-wrap {
-	display: flex;
-	align-items: center;
-	color: #1969C6;
+  .searchProduct-secret-con {
+    color: #333;
+    font-size: 24px;
+    line-height: 40px;
+  }
 
-	.icon-saomiao {
-		font-size: 40px;
-	}
-}
+  .searchProduct-scan-wrap {
+    display: flex;
+    align-items: center;
+    color: #1969C6;
 
-.searchProduct-scan-inf {
-	line-height: 1;
-	margin-left: 12px;
-	font-size: 20px;
-	writing-mode: vertical-lr;
-}
+    .icon-saomiao {
+      font-size: 40px;
+    }
+  }
+
+  .searchProduct-scan-inf {
+    line-height: 1;
+    margin-left: 12px;
+    font-size: 20px;
+    writing-mode: vertical-lr;
+  }
 </style>
