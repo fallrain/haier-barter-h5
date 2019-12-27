@@ -46,7 +46,7 @@
       <div class="">样板间面积</div>
       <div class="fg1 dis-flex">
         <div class="fg1 pl20 pr20">
-          <input type="text" v-model="customerInfo.roomArea" @blur="judegNum(customerInfo.roomArea,'roomArea')"
+          <input type="number" v-model="customerInfo.roomArea" @blur="judegNum(customerInfo.roomArea,'roomArea')"
                  class="w100per input-style text-right" placeholder="请输入">
         </div>
         <div class="text-primary">平米</div>
@@ -406,7 +406,7 @@ export default {
       if (this.customerInfo.roomAddress === '' || this.customerInfo.roomAddress === undefined) {
         Toast.failed('请输入详细地址');
         return;
-      } debugger;
+      }
       if (this.customerInfo.rentAmount === '' || this.customerInfo.rentAmount === undefined) {
         Toast.failed('请输入租金');
         return;
@@ -421,6 +421,7 @@ export default {
       }
       if (this.indeustryChoosed.length === 0) {
         Toast.failed('请选择产业');
+        return;
       }
       this.customerInfo.industryCodeScope = this.indeustryCode.join(',');
       this.customerInfo.industryNameScope = this.indeustryName.join(',');
@@ -457,11 +458,10 @@ export default {
       });
     },
     judegNum(num, key) {
-      debugger;
-      if (!this.testStr(num) || num > 100000) {
+      if (!this.testStr(num) || num > 1000000) {
         this.customerInfo[key] = '';
         Toast.failed('请输入正确的数值，最大数值为100000且小数点后两位');
-      } console.log(this.testStr(num));
+      }
     },
     testStr(num) {
       const reg = /^(\d+)(.\d{0,2})?$/;

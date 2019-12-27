@@ -40,11 +40,11 @@
   <div class="dis-flex row-style br-b">
     <div class="">小区面积</div>
     <div class="fg1 dis-flex">
-      <input type="text" v-model="customerInfo.districtAreaStart"
+      <input type="number" v-model="customerInfo.districtAreaStart"
              @blur="judegNum(customerInfo.districtAreaStart,'districtAreaStart')"
              class="w250 input-style text-center pr20" placeholder="请输入">
       <div class="">至</div>
-      <input type="text" v-model="customerInfo.districtAreaEnd"
+      <input type="number" v-model="customerInfo.districtAreaEnd"
              class="w250 input-style text-center pr20" placeholder="请输入">
       <div class="text-primary">平米</div>
     </div>
@@ -53,7 +53,7 @@
     <div class="">均价</div>
     <div class="fg1 dis-flex">
       <div class="fg1 pl20 pr20">
-        <input type="text" v-model="customerInfo.saleAveragePrice"
+        <input type="number" v-model="customerInfo.saleAveragePrice"
                @blur="judegNum(customerInfo.saleAveragePrice,'saleAveragePrice')"
                class="w100per input-style text-right" placeholder="请输入">
       </div>
@@ -112,7 +112,8 @@ import {
 } from 'mand-mobile';
 import {
   BItem,
-  BUpload
+  BUpload,
+  BWxUpload
 } from '@/components/form';
 
 import addressData from '@/lib/address';
@@ -132,7 +133,8 @@ export default {
     [CheckList.name]: CheckList,
     [Button.name]: Button,
     BItem,
-    BUpload
+    BUpload,
+    BWxUpload
   },
   data() {
     return {
@@ -225,9 +227,9 @@ export default {
       }
     },
     judegNum(num, key) {
-      if (!this.testStr(num) || num > 100000) {
+      if (!this.testStr(num) || num > 1000000) {
         this.customerInfo[key] = '';
-        Toast.failed('请输入正确的数值，最大数值为100000且小数点后两位');
+        Toast.failed('请输入正确的数值，最大数值为1000000且小数点后两位');
       }
     },
     testStr(num) {
