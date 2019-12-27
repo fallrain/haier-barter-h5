@@ -316,7 +316,6 @@ export default {
           }
         });
       }
-      return;
     }
     if (this.activityId) {
       // 活动详情查询
