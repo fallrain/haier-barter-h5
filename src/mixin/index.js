@@ -19,6 +19,8 @@ export default {
         'uploadImage',
         'updateAppMessageShareData',
         'updateTimelineShareData',
+        'getEnv',
+        'postMessage'
       ]; // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
       /* if (true) { // process.env.NODE_ENV === 'production'
         const timestamp = `${new Date().getTime()}`.substr(0, 10);
@@ -50,16 +52,7 @@ export default {
             timestamp: data.timestamp, // 必填，生成签名的时间戳
             nonceStr: data.nonceStr, // 必填，生成签名的随机串
             signature: data.signature, // 必填
-            jsApiList: [
-              'scanQRCode',
-              'miniProgram.switchTab',
-              'miniProgram.navigateTo',
-              'miniProgram.reLaunch',
-              'switchTab',
-              'navigateTo',
-              'updateAppMessageShareData',
-              'reLaunch'
-            ] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+            jsApiList // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
           });
         }
       });
