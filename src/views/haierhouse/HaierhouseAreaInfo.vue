@@ -256,7 +256,7 @@ export default {
       fileList.push(data.data);
     },
     uploadImgFn(mediaId) {
-      return this.basicService.uploadByMediaId({
+      return this.basicService.uploadByMediaId({}, {
         mediaId
       });
     },

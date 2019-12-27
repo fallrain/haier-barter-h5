@@ -101,32 +101,32 @@
     <div class="mb20">
       <div class="text-333 row-style">样板间区域照片</div>
       <div class="bg-white p20">
-        <b-upload
-          :imgs="uploadImg"
-          :crop="false"
-          inputOfFile="file"
-          :max-file-size="1024*1024*5"
-          :maxWidth="1280"
-          :maxLength="3"
-          :compress="70"
-          :headers="headers"
-          @imageuploaded="(data, fileList)=>imageuploaded(data, fileList, '0')"
-          extensions="png,jpg,jpeg,gif"
-          :url="uploadUrl"
-          :multiple-size="1"
-          @delFun="(index, fileList)=>delImg(index, fileList, '0')"
-          @errorhandle="uploadError"
-        >
-        </b-upload>
-<!--        <b-wx-upload-->
+<!--        <b-upload-->
 <!--          :imgs="uploadImg"-->
+<!--          :crop="false"-->
+<!--          inputOfFile="file"-->
+<!--          :max-file-size="1024*1024*5"-->
+<!--          :maxWidth="1280"-->
 <!--          :maxLength="3"-->
-<!--          @imageuploaded="(data)=>imageuploaded(data, uploadImg, '0')"-->
-<!--          :uploadFn="uploadImgFn"-->
-<!--          @delFun="(index)=>delImg(index,uploadImg)"-->
+<!--          :compress="70"-->
+<!--          :headers="headers"-->
+<!--          @imageuploaded="(data, fileList)=>imageuploaded(data, fileList, '0')"-->
+<!--          extensions="png,jpg,jpeg,gif"-->
+<!--          :url="uploadUrl"-->
+<!--          :multiple-size="1"-->
+<!--          @delFun="(index, fileList)=>delImg(index, fileList, '0')"-->
 <!--          @errorhandle="uploadError"-->
 <!--        >-->
-<!--        </b-wx-upload>-->
+<!--        </b-upload>-->
+        <b-wx-upload
+          :imgs="uploadImg"
+          :maxLength="3"
+          @imageuploaded="(data)=>imageuploaded(data, uploadImg, '0')"
+          :uploadFn="uploadImgFn"
+          @delFun="(index)=>delImg(index,uploadImg)"
+          @errorhandle="uploadError"
+        >
+        </b-wx-upload>
       </div>
     </div>
     <div v-for="(item, index) in indeustryChoosed" :key="index" class="mb20">
@@ -474,7 +474,7 @@ export default {
       }
     },
     uploadImgFn(mediaId) {
-      return this.basicService.uploadByMediaId({
+      return this.basicService.uploadByMediaId({}, {
         mediaId
       });
     },
