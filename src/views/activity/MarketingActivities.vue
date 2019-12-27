@@ -6,7 +6,7 @@
       placeholder="输入活动名称进行查询"
     >
     </b-search-input>
-    <div class="activity-tab-bg activity-tab">
+    <div class="activity-tab-bg activity-tab" v-if="false">
       <md-tab-bar
         v-model="current"
         :items="items"
@@ -132,7 +132,7 @@ export default {
   data() {
     return {
       getUserInfo: {},
-      current: 0,
+      current: 1,
       currentActivity: {},
       orderNo: '',
       isPopupShow: false,
