@@ -7,7 +7,7 @@
       :title="activityInfo.activityTitle"
       :startDate="activityInfo.activityStartTime"
       :endDate="activityInfo.activityEndTime"
-      :address="storeName"
+      :address="detailInfo.storeName"
     ></activity-name-time>
 
     <b-item
@@ -100,7 +100,8 @@ export default {
   },
   activated() {
     this.getDate();
-    if (this.$route.params.activityInfo) {
+    this.getUserInfo = this.$route.params.userInfo;
+    if (this.$route.params.activityInfo && this.getUserInfo) {
       this.activityInfo = this.$route.params.activityInfo;
       if (this.activityInfo.storeName == '*') {
         this.storeName = '全部门店';
@@ -111,6 +112,7 @@ export default {
       // 活动详情查询
       this.activityService.queryActivityInfoDetails({}, {
         activityId: this.activityInfo.id,
+        hmcId: this.getUserInfo.hmcId,
       }).then((res) => {
         if (res.code === 1) {
           this.detailInfo = res.data;
@@ -136,6 +138,7 @@ export default {
         activityStartTime: '',
         activityEndTime: ''
       },
+      getUserInfo: {},
       count: {},
       startDate: '',
       endDate: '',

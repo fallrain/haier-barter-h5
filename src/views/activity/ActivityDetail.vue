@@ -11,7 +11,14 @@
         :address="storeName"
       ></activity-name-time>
       <div class="activityDetail-detail-title-bg">
-        <img :src="detailInfo.activityInfoPoster.posterUrl2" alt="">
+        <img v-if="detailInfo.activityInfoPoster.posterUrl2" :src="detailInfo.activityInfoPoster.posterUrl2" alt="">
+        <img v-if="detailInfo.activityInfoPoster.posterUrl3" :src="detailInfo.activityInfoPoster.posterUrl3" alt="">
+        <img v-if="detailInfo.activityInfoPoster.posterUrl4" :src="detailInfo.activityInfoPoster.posterUrl4" alt="">
+        <img v-if="detailInfo.activityInfoPoster.posterUrl5" :src="detailInfo.activityInfoPoster.posterUrl5" alt="">
+        <img v-if="detailInfo.activityInfoPoster.posterUrl6" :src="detailInfo.activityInfoPoster.posterUrl6" alt="">
+        <img v-if="detailInfo.activityInfoPoster.posterUrl7" :src="detailInfo.activityInfoPoster.posterUrl7" alt="">
+        <img v-if="detailInfo.activityInfoPoster.posterUrl8" :src="detailInfo.activityInfoPoster.posterUrl8" alt="">
+        <img v-if="detailInfo.activityInfoPoster.posterUrl9" :src="detailInfo.activityInfoPoster.posterUrl9" alt="">
       </div>
       <div class="activity-detail-tip">
         活动说明
@@ -38,7 +45,7 @@
               </button>
               <button class="activity-detail-btn" v-show="activityLinkmanPhone">
                 <i class="iconfont icon-dianhua icon-img1">
-                  <span class="activity-detail-seller-store">{{activityLinkmanPhone}}</span>
+                  <a :href="'tel:'+activityLinkmanPhone" class="activity-detail-seller-store">{{activityLinkmanPhone}}</a>
                 </i>
               </button>
             </div>
@@ -66,7 +73,7 @@
     </div>
     <md-dialog
       class="activityDetail-register-dialog"
-      title="注册海尔账号"
+      title="报名活动"
       :closable="true"
       v-model="registerDialogShow"
     >
@@ -309,12 +316,12 @@ export default {
           }
         });
       }
-      return;
     }
     if (this.activityId) {
       // 活动详情查询
       this.activityService.queryActivityInfoDetails({}, {
         activityId: this.activityId,
+        hmcId: this.hmcId,
         noToken: true
       }).then((res) => {
         if (res.code === 1) {
@@ -368,7 +375,7 @@ export default {
         }
       });
     }
-    this.getProductGroup();
+    this.getIndustry();
     // 判断环境是否为小程序
     wx.miniProgram.getEnv((res) => {
       console.log(res.miniprogram);
@@ -409,6 +416,7 @@ export default {
         if (res.code === -1) {
           Toast.failed(res.msg);
         } else {
+          this.clearJoinInfo();
           this.registerDialogShow = true;
         }
       });
@@ -423,17 +431,17 @@ export default {
       this.checkboxType = [];
       this.isRead = 1;
     },
-    getProductGroup() {
-      this.productService.industryGroupList()
-        .then((res) => {
-          if (res.code === 1) {
-            res.data.forEach((item) => {
-              item.name = item.groupName;
-              item.id = item.groupCode;
-            });
-            this.productCatagoryList = res.data;
-          }
-        });
+    // 获取产业数据
+    getIndustry() {
+      this.basicService.queryIndustry().then((res) => {
+        if (res.code === 1) {
+          res.data.forEach((item) => {
+            item.id = item.industryCode;
+            item.name = item.industryName;
+          });
+          this.productCatagoryList = res.data;
+        }
+      });
     },
     share() {
       this.isShowPopContainer = true;
@@ -496,14 +504,15 @@ export default {
         Toast.info('请输入验证码');
         return;
       }
-      if (!this.checkboxType || this.checkboxType.length == 0) {
-        Toast.info('请选择预约类型');
-        return;
-      }
-      if (!this.form.productCatagoryList || this.form.productCatagoryList.length == 0) {
-        Toast.info('请选择产品类别');
-        return;
-      }
+      // 这两个不是必填项
+      // if (!this.checkboxType || this.checkboxType.length == 0) {
+      //   Toast.info('请选择预约类型');
+      //   return;
+      // }
+      // if (!this.form.productCatagoryList || this.form.productCatagoryList.length == 0) {
+      //   Toast.info('请选择产品类别');
+      //   return;
+      // }
       if (!this.isRead) {
         Toast.info('请阅读并同意隐私协议');
         return;
