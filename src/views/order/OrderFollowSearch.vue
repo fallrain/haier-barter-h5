@@ -904,19 +904,6 @@ export default {
     padding-right: 50px !important;
   }
 
-  .bar-class {
-    height: 72px;
-    width: 250px;
-    float: left;
-    position: relative;
-  }
-
-  .bar-v {
-    background-color: white;
-    height: 72px;
-    margin-top: 15px;
-  }
-
   .bottom-class {
     margin-top: 20px;
     padding-top: 15px;

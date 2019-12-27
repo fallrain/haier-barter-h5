@@ -16,5 +16,13 @@ export default {
   scanQRcode(url) {
     /* 查询产品型号 */
     return axGet(urls.scanQRcode, { url });
-  }
+  },
+  industryList() {
+    /* 查询全部产业 */
+    return axGet(urls.industryList);
+  },
+  getBuyIntention() {
+    /* 查询购买意愿 */
+    return axGet(urls.buyIntention);
+  },
 };

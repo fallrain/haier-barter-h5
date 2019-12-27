@@ -1,35 +1,88 @@
 <template>
   <li class="bEvaluateProductItem">
-    <div class="bEvaluateProductItem-check">
-      <i class="iconfont icon-duihao"></i>
+    <div
+      v-if="checkMode"
+      class="bEvaluateProductItem-check"
+      @click="selectItem"
+    >
+      <i
+        v-show="isChecked"
+        class="iconfont icon-duihao"
+      ></i>
     </div>
     <div class="bEvaluateProductItem-cnt">
       <div class="bEvaluateProductItem-cnt-person mb22">
-        <span class="name mr16">张自强</span>
-        <span class="mr16">先生</span>
+        <span class="name mr16">{{data.userName}}</span>
+        <!--<span class="mr16">先生</span>-->
         <i class="iconfont icon-dianhua mr16"></i>
-        <span>13884970216</span>
+        <span>{{data.userPhone}}</span>
       </div>
       <div class="bEvaluateProductItem-cnt-price mb22">
         <span class="name">冰箱</span>
-        <span class="price">￥200.00</span>
+        <span class="price">￥{{data.totalPrice}}</span>
       </div>
       <div class="bEvaluateProductItem-cnt-time">
-        <i class="iconfont icon-shizhong"></i>2019-06-18 15:33
+        <i class="iconfont icon-shizhong"></i>{{data.crTime}}
       </div>
     </div>
-    <div>
-      <button
+    <div class="bEvaluateProductItem-btn-par">
+      <span class="bEvaluateProductItem-tips">{{orderStatusFilter(data)}}</span>
+      <!--<button
         type="button"
         class="common-btn-primary"
-      >估价详情</button>
+      >促成交
+      </button>-->
     </div>
   </li>
 </template>
 
 <script>
 export default {
-  name: 'BEvaluateProductItem'
+  name: 'BEvaluateProductItem',
+  props: {
+    // 订单数据
+    data: {
+      type: Object
+    },
+    // 选择模式
+    checkMode: {
+      type: Boolean,
+      default: false
+    },
+    // 是否选中
+    isChecked: {
+      type: Boolean,
+      default: false
+    }
+  },
+  filters: {
+    orderStatus() {
+
+    }
+  },
+  methods: {
+    selectItem() {
+      /* 选中本item */
+      this.$emit('update:isChecked', !this.isChecked);
+      this.$emit('onChecked', !this.isChecked);
+    },
+    orderStatusFilter({ orderStatus, orderSource }) {
+      /* 订单转状态筛选 */
+      const orderStatusMap = {
+        0: '未成交',
+        1: '已成交'
+      };
+      const orderSourceMap = {
+        DB: '兑呗',
+        YLH: '易理货'
+      };
+      let name = orderStatusMap[orderStatus] || '';
+      if (orderSourceMap[orderSource]) {
+        name += `（${orderSourceMap[orderSource]}）`;
+      }
+      return name;
+    }
+  }
 };
 </script>
 
@@ -40,16 +93,17 @@ export default {
     padding-top: 32px;
     padding-bottom: 32px;
     border-bottom: 1px solid #D9D9D9;
+    word-break: break-all;
   }
 
   .bEvaluateProductItem-cnt {
-    width: 490px;
+    width: 480px;
     overflow: hidden;
+    flex-shrink: 0;
   }
 
   .bEvaluateProductItem-cnt-person {
     color: #333;
-    line-height: 1;
 
     & > .name {
       font-size: 36px;
@@ -89,5 +143,11 @@ export default {
 
   .bEvaluateProductItem-btn-par {
     margin-left: auto;
+    text-align: right;
+  }
+
+  .bEvaluateProductItem-tips {
+    font-size: 20px;
+    color: #29AB91;
   }
 </style>

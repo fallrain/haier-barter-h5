@@ -4,33 +4,55 @@
       <b-evaluate-product-item
         v-for="(item,index) in list"
         :key="index"
+        :data="item"
+        :isChecked.sync="item.isChecked"
+        :checkMode="multiChooseMode"
+        @onChecked="itemChecked"
       ></b-evaluate-product-item>
     </ul>
-    <div class="bEvaluateProductList-chooseAll-btm">
-      <div class="bEvaluateProductList-chooseAll">
+    <div
+      v-if="multiChooseMode"
+      class="bEvaluateProductList-chooseAll-btm"
+    >
+      <div
+        class="bEvaluateProductList-chooseAll"
+        @click="toggleChooseAll"
+      >
         <div class="bEvaluateProductItem-check">
-          <i class="iconfont icon-duihao"></i>
+          <i
+            v-show="isChooseAll"
+            class="iconfont icon-duihao"
+          ></i>
         </div>
-        <span class="bEvaluateProductList-chooseAll-text">全选</span>
+        <span class="bEvaluateProductList-chooseAll-text">{{isChooseAll?'全不选':'全选'}}</span>
       </div>
       <div class="bEvaluateProductList-chooseAll-btns">
         <button
           type="button"
           class="bEvaluateProductList-chooseAll-btn-waring"
+          @click="sendCoupon"
         >批量发券
         </button>
       </div>
-
     </div>
+    <b-pop-check-list
+      type="radio"
+      :show.sync="popShow"
+      :list="tagList"
+      v-model="couponType"
+      @confirm="confirmCoupon"
+    ></b-pop-check-list>
   </div>
 </template>
 
 <script>
 import BEvaluateProductItem from './BEvaluateProductItem';
+import BPopCheckList from '../../form/BPopCheckList';
 
 export default {
   name: 'BEvaluateProductList',
   components: {
+    BPopCheckList,
     BEvaluateProductItem
   },
   props: {
@@ -38,6 +60,81 @@ export default {
     list: {
       type: Array,
       default: () => []
+    },
+    // 多选模式
+    multiChooseMode: {
+      type: Boolean,
+      default: false
+    },
+    // 是否选择了全选
+    chooseAll: {
+      type: Boolean,
+      default: false
+    },
+  },
+  data() {
+    return {
+      // 是否选择了全选
+      isChooseAll: this.chooseAll,
+      // 发卡券上推选择显示隐藏
+      popShow: false,
+      // 可选的卡券类型
+      tagList: [
+        {
+          id: 1,
+          name: '服务换新优惠券'
+        }
+      ],
+      // 卡券类型
+      couponType: []
+    };
+  },
+  watch: {
+    isChooseAll(val) {
+      this.$emit('update:chooseAll', val);
+    },
+    chooseAll(val) {
+      // 跟新本组件全选
+      this.isChooseAll = val;
+    }
+  },
+  methods: {
+    toggleChooseAll() {
+      /* 选择所有订单/取消所有订单 */
+      this.isChooseAll = !this.isChooseAll;
+      this.list.forEach((v) => {
+        v.isChecked = this.isChooseAll;
+      });
+    },
+    itemChecked(val) {
+      /* item选中后 */
+      if (val) {
+        if (!this.list.find(v => !v.isChecked)) {
+          this.isChooseAll = true;
+        }
+      } else {
+        this.isChooseAll = false;
+      }
+    },
+    sendCoupon() {
+      /* 批量发券 */
+      if (!this.list.find(v => v.isChecked)) {
+        this.$dialog.alert({
+          content: '请选择订单'
+        });
+        return;
+      }
+      this.popShow = true;
+    },
+    confirmCoupon(ids) {
+      /* 确认卡券类型 */
+      if (ids.length) {
+        this.$emit('confirmCoupon', ids);
+      } else {
+        this.$dialog.alert({
+          content: '请选择发送类型'
+        });
+      }
     }
   }
 };
@@ -49,8 +146,8 @@ export default {
   }
 
   .bEvaluateProductList {
-    padding-left: 24px;
-    padding-right: 24px;
+    padding-left: 20px;
+    padding-right: 20px;
     background: #fff;
 
     .bEvaluateProductItem:last-child {

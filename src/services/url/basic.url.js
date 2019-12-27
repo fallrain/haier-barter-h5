@@ -3,7 +3,11 @@ const urls = {
   // 微信权限
   jsSign: '/common/weixin/jssign',
   userInfo: '/user/info',
-  scanQRcode: '/product/scan-qrcode'
+  scanQRcode: '/product/scan-qrcode',
+  // 查询产品组
+  industryList: '/common/industry/list',
+  // 购买意愿
+  buyIntention: '/common/dictionary/list/BUYINTENTION',
 };
 
 Object.entries(urls).forEach(([key, value]) => {

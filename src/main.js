@@ -4,7 +4,8 @@ import router from '@/router';
 import store from '@/store';
 import '@/lib/veeValidate';
 import {
-  Toast
+  Toast,
+  Dialog
 } from 'mand-mobile';
 import directives from './directive';
 import filterMap from '@/filter';
@@ -25,6 +26,7 @@ Vue.prototype.axPost = axPost;
 Vue.prototype.axPostJson = axPostJson;
 Vue.prototype.axGet = axGet;
 Vue.prototype.$toast = Toast;
+Vue.prototype.$dialog = Dialog;
 Vue.prototype.BValidate = BValidate;
 
 // 全局filter
