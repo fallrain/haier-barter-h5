@@ -5,6 +5,7 @@ const urls = {
   userInfo: '/user/info',
   scanQRcode: '/product/scan-qrcode',
   queryIndustry: '/common/industry/list',
+  uploadByMediaId: '/common/uploadByMediaId', // 同步前端微信上传的文件
 };
 
 Object.entries(urls).forEach(([key, value]) => {

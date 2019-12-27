@@ -63,23 +63,32 @@
   <div class="mb20">
     <div class="text-333 row-style">小区照片</div>
     <div class="bg-white p20">
-      <b-upload
+<!--      <b-upload-->
+<!--        :imgs="uploadImg"-->
+<!--        :crop="false"-->
+<!--        inputOfFile="file"-->
+<!--        :max-file-size="1024*1024*5"-->
+<!--        :maxWidth="1280"-->
+<!--        :maxLength="3"-->
+<!--        :compress="70"-->
+<!--        :headers="headers"-->
+<!--        @imageuploaded="(data, fileList)=>imageuploaded(data, fileList)"-->
+<!--        extensions="png,jpg,jpeg,gif"-->
+<!--        :url="uploadUrl"-->
+<!--        :multiple-size="1"-->
+<!--        @delFun="delImg"-->
+<!--        @errorhandle="uploadError"-->
+<!--      >-->
+<!--      </b-upload>-->
+      <b-wx-upload
         :imgs="uploadImg"
-        :crop="false"
-        inputOfFile="file"
-        :max-file-size="1024*1024*5"
-        :maxWidth="1280"
         :maxLength="3"
-        :compress="70"
-        :headers="headers"
-        @imageuploaded="(data, fileList)=>imageuploaded(data, fileList)"
-        extensions="png,jpg,jpeg,gif"
-        :url="uploadUrl"
-        :multiple-size="1"
-        @delFun="delImg"
+        @imageuploaded="(data)=>imageuploaded(data, uploadImg, item)"
+        :uploadFn="uploadImgFn"
+        @delFun="(index1)=>delImg(index1, uploadImg, item)"
         @errorhandle="uploadError"
       >
-      </b-upload>
+      </b-wx-upload>
     </div>
   </div>
   <div class="bottom-btn">
@@ -230,6 +239,7 @@ export default {
       this.addressPopShow = true;
     },
     addressChange(address) {
+      debugger;
       const addressName = address.options;
       this.customerInfo.provinceCityArea = addressName[0].label + addressName[1].label + addressName[2].label;
     },
@@ -244,6 +254,11 @@ export default {
       }
       this.customerInfo.imageUrlSaveVOList.push(itemImg);
       fileList.push(data.data);
+    },
+    uploadImgFn(mediaId) {
+      return this.basicService.uploadByMediaId({
+        mediaId
+      });
     },
     delImg(index, fileList) {
       fileList.splice(index, 1);
@@ -290,6 +305,7 @@ export default {
       } else {
         this.customerInfo.id = this.id;
       }
+      console.log(this.customerInfo);
       this.haierhouseService.addDistrictInfo(this.customerInfo, {}).then((res) => {
         if (res.code === 1) {
           if (this.isChange) {
@@ -308,6 +324,8 @@ export default {
               return;
             }
           }
+          // 进入新增状态
+          this.isChange = false;
           this.customerInfo = {
             id: '',
             shopId: this.shopId,
@@ -324,7 +342,9 @@ export default {
           };
           this.houseTypeV = [];
           this.uploadImg = [];
+          console.log(this.defaultA);
           this.defaultA = [];
+          console.log(this.defaultA);
         }
       });
     },
