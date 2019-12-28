@@ -276,6 +276,7 @@ export default {
       this.customerInfo.provinceCityArea = addressName[0].label + addressName[1].label + addressName[2].label;
     },
     imageuploaded(data, fileList) {
+      this.customerInfo.imageUrlSaveVOList = [];
       fileList.push(data.data);
       fileList.forEach((item) => {
         const itemImg = {
