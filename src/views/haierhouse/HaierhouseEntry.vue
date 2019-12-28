@@ -300,7 +300,15 @@ export default {
       this.setValue('#valueSwiper2', from);
       this.setValue('#valueSwiper3', to);
     },
-  }
+  },
+  beforeRouteLeave(to, from, next) {
+    // wx.miniProgram.switchTab({ url: '/pages/tool/tool' });
+    if (to.name === 'Haierhouse.HaierhouseApply' || to.name === 'Haierhouse.HaierhouseAreaInfo') {
+      wx.miniProgram.switchTab({ url: '/pages/tool/tool' });
+    } else {
+      next();
+    }
+  },
 };
 </script>
 
