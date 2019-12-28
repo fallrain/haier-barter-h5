@@ -187,8 +187,10 @@ export default {
         this.houseTypeV = this.customerInfo.layoutType.split(',');
         this.uploadImg = [];
         if (this.customerInfo.decoModelImageUrlDTOList.length > 0) {
+          this.customerInfo.imageUrlSaveVOList = []
           this.customerInfo.decoModelImageUrlDTOList.forEach((item) => {
             this.uploadImg.push(item.imageUrl);
+            this.customerInfo.imageUrlSaveVOList.push(item);
           });
         }
       }
