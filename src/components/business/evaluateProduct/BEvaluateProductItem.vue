@@ -30,14 +30,14 @@
         <i class="iconfont icon-shizhong"></i>{{data.crTime}}
       </div>
     </div>
-    <div class="bEvaluateProductItem-btn-par">
-      <span class="bEvaluateProductItem-tips">{{orderStatusFilter(data)}}</span>
-      <!--<button
+    <!--<div class="bEvaluateProductItem-btn-par">
+      &lt;!&ndash;<span class="bEvaluateProductItem-tips">{{orderStatusFilter(data)}}</span>&ndash;&gt;
+      &lt;!&ndash;<button
         type="button"
         class="common-btn-primary"
       >促成交
-      </button>-->
-    </div>
+      </button>&ndash;&gt;
+    </div>-->
   </li>
 </template>
 
@@ -108,7 +108,8 @@ export default {
   }
 
   .bEvaluateProductItem-cnt {
-    width: 480px;
+    //width: 480px;
+    width: 100%;
     overflow: hidden;
     flex-shrink: 0;
   }
