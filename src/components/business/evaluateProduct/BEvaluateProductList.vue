@@ -142,7 +142,8 @@ export default {
 
 <style lang="scss">
   .bEvaluateProductList-par {
-    // height: 100%;
+    width: 100%;
+    //height: 100%;
   }
 
   .bEvaluateProductList {
@@ -156,7 +157,8 @@ export default {
   }
 
   .bEvaluateProductList-chooseAll-btm {
-    position: absolute;
+    position: fixed;
+    z-index: 100;
     bottom: 0;
     left: 0;
     right: 0;

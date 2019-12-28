@@ -18,6 +18,7 @@
       id="scrollView"
       ref="scrollView"
       class="mescroll evaluateProductList-scrollView"
+      :class="[isMultiChooseMode && 'active']"
     >
       <b-evaluate-product-list
         :list="list"
@@ -342,5 +343,11 @@ export default {
 <style lang="scss">
   .evaluateProductList-scrollView {
     height: calc(100vh - 164px);
+
+    &.active {
+      padding-bottom: 120px;
+    }
   }
+
+
 </style>

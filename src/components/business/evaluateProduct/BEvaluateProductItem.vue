@@ -1,5 +1,8 @@
 <template>
-  <li class="bEvaluateProductItem">
+  <li
+    @click="toDetail(data)"
+    class="bEvaluateProductItem"
+  >
     <div
       v-if="checkMode"
       class="bEvaluateProductItem-check"
@@ -63,10 +66,16 @@ export default {
     }
   },
   methods: {
-    selectItem() {
+    selectItem(e) {
       /* 选中本item */
+      e.stopPropagation();
       this.$emit('update:isChecked', !this.isChecked);
       this.$emit('onChecked', !this.isChecked);
+    },
+    toDetail(item) {
+      wx.miniProgram.navigateTo({
+        url: `/pages/message/valuationInfo/valuationInfo?odlfornewdbId=${item.id}`
+      });
     },
     orderStatusFilter({ orderStatus, orderSource }) {
       /* 订单转状态筛选 */
