@@ -274,16 +274,14 @@ export default {
       this.customerInfo.provinceCityArea = addressName[0].label + addressName[1].label + addressName[2].label;
     },
     imageuploaded(data, fileList) {
-      const itemImg = {};
-      if (data.code === 1) {
-        itemImg.imageType = 0;
-        itemImg.imageUrl = data.data;
-      }
-      if (!this.customerInfo.imageUrlSaveVOList) {
-        this.customerInfo.imageUrlSaveVOList = [];
-      }
-      this.customerInfo.imageUrlSaveVOList.push(itemImg);
       fileList.push(data.data);
+      fileList.forEach((item) => {
+        const itemImg = {
+          imageType: 0,
+          imageUrl: item
+        };
+        this.customerInfo.imageUrlSaveVOList.push(itemImg);
+      });
     },
     uploadImgFn(mediaId) {
       return this.basicService.uploadByMediaId({}, {
@@ -291,7 +289,16 @@ export default {
       });
     },
     delImg(index, fileList) {
+      debugger;
       fileList.splice(index, 1);
+      this.customerInfo.imageUrlSaveVOList = [];
+      fileList.forEach((item) => {
+        const itemImg = {
+          imageType: 0,
+          imageUrl: item
+        };
+        this.customerInfo.imageUrlSaveVOList.push(itemImg);
+      });
     },
     uploadError(res) {
       /* 上传错误 */

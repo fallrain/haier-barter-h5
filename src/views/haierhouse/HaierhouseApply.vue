@@ -324,6 +324,7 @@ export default {
           }
         });
       });
+      console.log(this.indeustryChoosed);
     }
   },
   methods: {
@@ -337,6 +338,14 @@ export default {
           this.customerInfo = res.data;
           this.indeustryCode = this.customerInfo.industryCodeScope.split(',');
           this.indeustryName = this.customerInfo.industryNameScope.split(',');
+          this.indeustryChoosed = [];
+          this.indeustryCode.forEach((item, index) => {
+            const itemObj = {
+              label: this.indeustryName[index],
+              value: item
+            };
+            this.indeustryChoosed.push(itemObj);
+          });
           this.customerInfo.imageUrlSaveVOList = res.data.decoModelImageUrlDTOList;
           res.data.decoModelImageUrlDTOList.forEach((item) => {
             if (item.imageType.indexOf('_') > -1) {
