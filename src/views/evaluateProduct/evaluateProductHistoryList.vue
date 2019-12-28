@@ -314,7 +314,7 @@ export default {
         if (order.isChecked) {
           messageVos.push({
             oldForNewId: order.id,
-            industry: order.industry,
+            industry: order.industryName,
             mobile: order.userPhone,
             price: order.totalPrice,
             sendType: 1,
