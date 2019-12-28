@@ -29,5 +29,13 @@ export default {
   queryIndustry() {
     /* 查询产业组 */
     return axGet(urls.queryIndustry);
-  }
+  },
+  industryList() {
+    /* 查询全部产业 */
+    return axGet(urls.industryList);
+  },
+  getBuyIntention() {
+    /* 查询购买意愿 */
+    return axGet(urls.buyIntention);
+  },
 };

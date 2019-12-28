@@ -287,6 +287,10 @@
 /*width end*/
 
 /*padding*/
+.pt10 {
+  padding-top: 10px;
+}
+
 .pr19 {
   padding-right: 19px;
 }
@@ -591,3 +595,24 @@
 }
 
 /*营销活动*/
+
+/*估价历史组件公共*/
+
+.bEvaluateProductItem-check {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  border: 1px solid #D0D0D0;
+  border-radius: 8px;
+  margin-right: 20px;
+  text-align: center;
+
+  .icon-duihao {
+    font-size: 28px;
+    vertical-align: top;
+    color: #1969C6;
+  }
+}
+
+/*估价历史组件公共 end*/

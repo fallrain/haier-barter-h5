@@ -108,6 +108,7 @@ export default {
     confirm() {
       /* 确定 */
       this.$emit('input', this.checkIds);
+      this.$emit('confirm', this.checkIds);
       this.popupShow = false;
     }
   }

@@ -4,6 +4,7 @@
       v-model="popupShow"
       position="top"
       transition="fade"
+      @hide="popupHide"
     >
       <div class="b-pop-checkList-cnt">
         <ul>
@@ -83,6 +84,10 @@ export default {
       this.$emit('checkClick', this.checkIds);
       this.popupShow = false;
     },
+    popupHide() {
+      /* 抛出隐藏事件 */
+      this.$emit('popupHide');
+    }
   }
 };
 </script>

@@ -92,20 +92,20 @@
       @popButtonClicked="buttonClicked"
     ></b-order-follow-search-bar>
     <div
-      id="scrollViewOdd"
-      ref="scrollViewOdd"
-      class="mescroll"
-      v-show="curScrollViewName==='scrollViewOdd'"
-    >
-      <b-order-follow-item
-        type="odd"
-        :list="scrollViewOdd.list"
-        @updateOrderType="updateOrderType"
-        @followButtonClick="followButtonClicked"
-        @itemClick="itemClick"
-        @gujiaClick="gujiaClick"
-      ></b-order-follow-item>
-    </div>
+    id="scrollViewOdd"
+    ref="scrollViewOdd"
+    class="mescroll"
+    v-show="curScrollViewName==='scrollViewOdd'"
+  >
+    <b-order-follow-item
+      type="odd"
+      :list="scrollViewOdd.list"
+      @updateOrderType="updateOrderType"
+      @followButtonClick="followButtonClicked"
+      @itemClick="itemClick"
+      @gujiaClick="gujiaClick"
+    ></b-order-follow-item>
+  </div>
     <b-order-follow-search-bar
       v-show="curScrollViewName==='scrollViewProgress'"
       :scenarioList="scenarioList"
@@ -902,19 +902,6 @@ export default {
     color: #666666;
     font-size: 28px;
     padding-right: 50px !important;
-  }
-
-  .bar-class {
-    height: 72px;
-    width: 250px;
-    float: left;
-    position: relative;
-  }
-
-  .bar-v {
-    background-color: white;
-    height: 72px;
-    margin-top: 15px;
   }
 
   .bottom-class {
