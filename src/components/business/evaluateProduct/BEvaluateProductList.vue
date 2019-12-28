@@ -142,7 +142,7 @@ export default {
 
 <style lang="scss">
   .bEvaluateProductList-par {
-    height: 100%;
+    // height: 100%;
   }
 
   .bEvaluateProductList {

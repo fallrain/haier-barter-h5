@@ -138,6 +138,9 @@ export default {
     }
   },
   computed: {
+    curScrollViewName() {
+      return 'scrollView';
+    },
     ...mapGetters([
       GET_USER
     ])
@@ -264,6 +267,7 @@ export default {
               });
               if (page.num === 1) {
                 this.list = result;
+                document.querySelector('.evaluateProductList-scrollView').scrollTo(0, 0);
               } else {
                 this.list = this.list.concat(result);
               }
