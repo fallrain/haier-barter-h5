@@ -118,7 +118,7 @@ export default {
     align-items: center;
     flex-wrap: wrap;
     color: #333;
-
+    font-size: 28px;
     & > .name {
       font-size: 36px;
     }
