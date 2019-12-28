@@ -31,6 +31,11 @@ export default {
   name: 'BUpload',
   components: {
   },
+  data() {
+    return {
+      isFinished: true
+    };
+  },
   props: {
     imgs: {
       type: Array,
@@ -54,6 +59,7 @@ export default {
   },
   methods: {
     imageuploaded(data) {
+      this.isFinished = true;
       Toast.hide();
       this.$emit('imageuploaded', data, this.imgs);
     },
@@ -64,6 +70,10 @@ export default {
       Toast.loading('上传中');
     },
     chooseImg() {
+      if (!this.isFinished){
+        return;
+      }
+      this.isFinished = false;
       /* 选择图片,并上传 */
       wx.ready(() => {
         wx.chooseImage({

@@ -140,7 +140,7 @@ export default {
     return {
       shopId: '',
       isChange: false,
-      areaIndex: 0,
+      areaIndex: '',
       decoModelDistrictInfoDTOList: [],
       addressName: '',
       // 地址pop显示隐藏
@@ -172,14 +172,19 @@ export default {
     };
   },
   activated() {
+    debugger;
     if (this.$route.params.customerInfo) {
       this.isChange = true;
+      localStorage.setItem('isChange', true);
+      this.areaIndex = localStorage.getItem('areaInfoIndex');
       this.shopId = this.$route.params.customerInfo.id;
+      localStorage.setItem('shopId', this.shopId);
       if (this.$route.params.customerInfo.decoModelDistrictInfoDTOList.length > 0) {
         this.decoModelDistrictInfoDTOList = this.$route.params.customerInfo.decoModelDistrictInfoDTOList;
-        this.customerInfo = this.decoModelDistrictInfoDTOList[0];
+        localStorage.setItem('areaInfoList', JSON.stringify(this.decoModelDistrictInfoDTOList));
+        this.customerInfo = this.decoModelDistrictInfoDTOList[this.areaIndex];
         this.id = this.customerInfo.id;
-        this.houseTypeV[0] = this.customerInfo.layoutType;
+        this.houseTypeV = this.customerInfo.layoutType.split(',');
         this.uploadImg = [];
         if (this.customerInfo.decoModelImageUrlDTOList.length > 0) {
           this.customerInfo.decoModelImageUrlDTOList.forEach((item) => {
@@ -187,10 +192,32 @@ export default {
           });
         }
       }
-    } else {
+    } else if (this.$route.query.shopId) {
       this.isChange = false;
       this.customerInfo.shopId = this.$route.query.shopId;
       this.shopId = this.$route.query.shopId;
+    } else {
+      this.shopId = localStorage.getItem('shopId');
+      this.areaIndex = localStorage.getItem('areaInfoIndex');
+      if (localStorage.getItem('isChange') === 'true') {
+        this.isChange = true;
+      } else {
+        this.isChange = false;
+      }
+      this.decoModelDistrictInfoDTOList = JSON.parse(localStorage.getItem('areaInfoList'));
+      if (this.areaIndex < this.decoModelDistrictInfoDTOList.length) {
+        this.customerInfo = this.decoModelDistrictInfoDTOList[this.areaIndex];
+        this.id = this.customerInfo.id;
+        this.houseTypeV = this.customerInfo.layoutType.split(',');
+        this.uploadImg = [];
+        if (this.customerInfo.decoModelImageUrlDTOList.length > 0) {
+          this.customerInfo.decoModelImageUrlDTOList.forEach((item) => {
+            this.uploadImg.push(item.imageUrl);
+          });
+        }
+      } else {
+        this.isChange = false;
+      }
     }
   },
   created() {
@@ -209,6 +236,7 @@ export default {
   },
   watch: {
     houseTypeV(val) {
+      console.log(this.houseTypeV);
       this.houseTypeN = [];
       val.forEach((item) => {
         this.houseType.forEach((item1) => {
@@ -289,6 +317,7 @@ export default {
       } else {
         this.customerInfo.id = this.id;
       }
+      this.customerInfo.shopId = this.shopId;
       this.haierhouseService.addDistrictInfo(this.customerInfo, {}).then((res) => {
         if (res.code === 1) {
           this.$router.push({
@@ -307,59 +336,30 @@ export default {
       } else {
         this.customerInfo.id = this.id;
       }
+      this.customerInfo.shopId = this.shopId;
       console.log(this.customerInfo);
       this.haierhouseService.addDistrictInfo(this.customerInfo, {}).then((res) => {
         if (res.code === 1) {
           if (this.isChange) {
+            console.log(this.areaIndex);
             this.areaIndex++;
-            if (this.areaIndex < this.decoModelDistrictInfoDTOList.length) {
-              this.customerInfo = this.decoModelDistrictInfoDTOList[this.areaIndex];
-              this.id = this.customerInfo.id;
-              this.houseTypeV[0] = this.customerInfo.layoutType;
-              this.uploadImg = [];
-              if (this.customerInfo.decoModelImageUrlDTOList.length > 0) {
-                this.customerInfo.decoModelImageUrlDTOList.forEach((item) => {
-                  this.uploadImg.push(item.imageUrl);
-                });
-                console.log(this.uploadImg);
-              }
-              return;
-            }
+            console.log(this.areaIndex);
+            localStorage.setItem('areaInfoIndex', this.areaIndex);
           }
-          // 进入新增状态
-          this.isChange = false;
-          this.customerInfo = {
-            id: '',
-            shopId: this.shopId,
-            districtName: '',
-            provinceCityArea: '',
-            districtAddress: '',
-            districtScope: '',
-            layoutType: '',
-            districtAreaStart: '',
-            districtAreaEnd: '',
-            saleAveragePrice: '',
-            imageUrlSaveVOList: [
-            ]
-          };
-          this.houseTypeV = [];
-          this.uploadImg = [];
-          console.log(this.defaultA);
-          this.defaultA = [];
-          console.log(this.defaultA);
+          this.$router.go(0);
         }
       });
     },
     confirm() {
-      if (this.customerInfo.districtScope === '' || !this.customerInfo.districtScope) {
+      if (this.customerInfo.districtScope === '' || this.customerInfo.districtScope === undefined) {
         Toast.failed('请输入小区名称');
         return false;
       }
-      if (this.customerInfo.provinceCityArea === '' || !this.customerInfo.provinceCityArea) {
+      if (this.customerInfo.provinceCityArea === '' || this.customerInfo.provinceCityArea === undefined) {
         Toast.failed('请输入地址');
         return false;
       }
-      if (this.customerInfo.districtAddress === '' || !this.customerInfo.districtAddress) {
+      if (this.customerInfo.districtAddress === '' || this.customerInfo.districtAddress === undefined) {
         Toast.failed('请输入地址');
         return false;
       }
@@ -369,15 +369,15 @@ export default {
       }
       this.customerInfo.layoutType = this.houseTypeV.join(',');
 
-      if (this.customerInfo.districtAreaStart === '' || !this.customerInfo.districtAreaStart) {
+      if (this.customerInfo.districtAreaStart === '' || this.customerInfo.districtAreaStart === undefined) {
         Toast.failed('请输入小区面积范围');
         return false;
       }
-      if (this.customerInfo.districtAreaEnd === '' || !this.customerInfo.districtAreaEnd) {
+      if (this.customerInfo.districtAreaEnd === '' || this.customerInfo.districtAreaEnd === undefined) {
         Toast.failed('请输入小区面积范围');
         return false;
       }
-      if (this.customerInfo.saleAveragePrice === '' || !this.customerInfo.saleAveragePrice) {
+      if (this.customerInfo.saleAveragePrice === '' || this.customerInfo.saleAveragePrice === undefined) {
         Toast.failed('请输入小区均价');
         return false;
       }

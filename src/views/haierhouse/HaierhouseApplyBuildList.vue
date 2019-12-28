@@ -1,27 +1,40 @@
 <template>
   <div>
-    <div class="bt2-myhouse pt50 mt16 position mescroll" ref="scrollView" id="scrollView">
+    <div class="bt2-myhouse pt50 mt16 position">
       <div class="">
         <div class="BTitle-par title-class">
           <p class="title-left"></p>
           <p class="Btitle">我的一站筑家</p>
         </div>
-        <div class="bt2-myhouse-card" v-for="(item, index) in this.scrollView.list" :key="index">
-          <img v-if="item.imageUrl" :src="item.imageUrl" class="bt2-myhouse-card-portrait">
-          <img v-else src="@/assets/images/haierHouse/Group@3x.png" class="bt2-myhouse-card-portrait"/>
-          <div class="bt2-myhouse-card-cnt">
-            <p class="title">{{item.buildAreaName}}</p>
-            <p class="cnt">入驻产业：{{item.industryNameScope}}</p>
-            <div class="bt2-myhouse-card-cnt-opt">
-              <button class="bt2-myhouse-card-cnt-opt-btn mr24" @click="changeInformation(item)"
-                      >补充信息
-              </button>
-<!--              <button class="bt2-myhouse-card-cnt-opt-btn mr24" @click="changeInformation()" >修改信息</button>-->
-<!--              <button class="bt2-myhouse-card-cnt-opt-btn mr24" @click="checkDetail()">查看详情</button>-->
-              <button class="bt2-myhouse-card-cnt-opt-btn mr24" @click="active">配置活动</button>
-              <div class="bt2-myhouse-card-cnt-opt-status">
-                <img src="@/assets/images/haierHouse/Icons／Complete@2x.png">
-                <span style="margin-left: 8px;">{{item.status}}</span>
+        <div class=" mescroll mescroll-touch" ref="scrollView" id="scrollView">
+          <div class="">
+            <div class="bt2-myhouse-card" v-for="(item, index) in this.scrollView.list" :key="index">
+              <img v-if="item.imageUrl" :src="item.imageUrl" class="bt2-myhouse-card-portrait">
+              <img v-else src="@/assets/images/haierHouse/Group@3x.png" class="bt2-myhouse-card-portrait"/>
+              <div class="bt2-myhouse-card-cnt">
+                <p class="title">{{item.buildAreaName}}</p>
+                <p class="cnt">入驻产业：{{item.industryNameScope}}</p>
+                <div class="bt2-myhouse-card-cnt-opt">
+                  <button class="bt2-myhouse-card-cnt-opt-btn mr24" @click="changeInformation(item)"
+                          v-show="item.status!=='审核通过'"
+                  >补充信息
+                  </button>
+                  <!--              <button class="bt2-myhouse-card-cnt-opt-btn mr24" @click="changeInformation()" >修改信息</button>-->
+                  <!--              <button class="bt2-myhouse-card-cnt-opt-btn mr24" @click="checkDetail()">查看详情</button>-->
+                  <button class="bt2-myhouse-card-cnt-opt-btn mr24" @click="active">配置活动</button>
+                  <div v-if="item.status === '审核通过'" class="bt2-myhouse-card-cnt-opt-statu">
+                    <img src="@/assets/images/haierHouse/pass.png">
+                    <span style="margin-left: 8px; color: #4a90e2;">{{item.status}}</span>
+                  </div>
+                  <div v-else-if="item.status === '拒绝'" class="bt2-myhouse-card-cnt-opt-statu">
+                    <img src="@/assets/images/haierHouse/deny.png">
+                    <span style="margin-left: 8px;color: #ec3334;">{{item.status}}</span>
+                  </div>
+                  <div v-else class="bt2-myhouse-card-cnt-opt-statu">
+                    <img src="@/assets/images/haierHouse/Icons／Complete@2x.png">
+                    <span style="margin-left: 8px;">{{item.status}}</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -55,7 +68,7 @@ export default {
   },
   mounted() {
     // 创建当前tab的MeScroll对象，并下拉刷新
-    this.bUtil.scroviewTabChange('scrollView', this);
+    // this.bUtil.scroviewTabChange('scrollView', this);
   },
   created() {
     this.getDatalist();
@@ -107,7 +120,6 @@ export default {
     }
   },
   beforeRouteLeave(to, from, next) {
-    debugger;
     if (this.$vnode && this.$vnode.data.keepAlive) {
       if (this.$vnode.parent && this.$vnode.parent.componentInstance && this.$vnode.parent.componentInstance.cache) {
         if (this.$vnode.componentOptions) {
@@ -286,7 +298,7 @@ export default {
     font-size: 25px;
   }
 
-  .bt2-myhouse-card-cnt-opt-status{
+  .bt2-myhouse-card-cnt-opt-statu{
     color: #F5A623;
     font-size: 26px;
     position: absolute;

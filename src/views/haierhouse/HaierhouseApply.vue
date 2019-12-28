@@ -123,7 +123,7 @@
           :maxLength="3"
           @imageuploaded="(data)=>imageuploaded(data, uploadImg, '0')"
           :uploadFn="uploadImgFn"
-          @delFun="(index)=>delImg(index,uploadImg)"
+          @delFun="(index)=>delImg(index,uploadImg,'0')"
           @errorhandle="uploadError"
         >
         </b-wx-upload>
@@ -279,6 +279,18 @@ export default {
     };
   },
   activated() {
+    // 数据清空
+    this.uploadImg = [];
+    this.uploadImg1 = {
+      I_BX: [],
+      I_KT: [],
+      I_XYJ: [],
+      I_CHUD: [],
+      I_DS: [],
+      I_JS: [],
+      I_RSQ: [],
+      I_SHJD: []
+    };
     if (this.$route.params.userInfo) {
       this.customerInfo.imageUrlSaveVOList = [];
       this.customerInfo.adminId = this.$route.params.userInfo.hmcId;
@@ -443,6 +455,7 @@ export default {
         if (res.code === 1) {
           this.id = res.data;
           if (this.isChange) {
+            localStorage.setItem('areaInfoIndex', 0);
             this.customerInfo.shopId = this.id;
             this.$router.push({
               name: 'Haierhouse.HaierhouseAreaInfo',
@@ -493,7 +506,6 @@ export default {
       fileList.push(data.data);
     },
     delImg(index, fileList, item) {
-      debugger;
       let imgType = '';
       if (item === '0') {
         imgType = this.customerInfo.roomType;
@@ -524,6 +536,9 @@ export default {
 };
 </script>
 <style lang="scss">
+  .md-cell-item-content{
+    font-size: 28px;
+  }
   .bg-white{
     background: #fff;
   }

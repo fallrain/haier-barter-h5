@@ -41,13 +41,21 @@
           <p class="cnt">入驻产业：{{item.industryNameScope}}</p>
           <div class="bt2-myhouse-card-cnt-opt">
             <button class="bt2-myhouse-card-cnt-opt-btn mr24" @click="changeInformation(item)"
-                    v-show="!middle && !deny && !informationComplete">补充信息
+                    v-show="item.status!=='审核通过'">补充信息
             </button>
 <!--            <button class="bt2-myhouse-card-cnt-opt-btn mr24" @click="changeInformation()" v-show="deny">修改信息</button>-->
 <!--            <button class="bt2-myhouse-card-cnt-opt-btn mr24" @click="checkDetail()" v-show="informationComplete">查看详情-->
 <!--            </button>-->
             <button class="bt2-myhouse-card-cnt-opt-btn mr24" @click="activity()">配置活动</button>
-            <div class="bt2-myhouse-card-cnt-opt-status">
+            <div v-if="item.status === '审核通过'" class="bt2-myhouse-card-cnt-opt-status">
+              <img src="@/assets/images/haierHouse/pass.png">
+              <span style="margin-left: 8px;">{{item.status}}</span>
+            </div>
+            <div v-if="item.status === '拒绝'" class="bt2-myhouse-card-cnt-opt-status">
+              <img src="@/assets/images/haierHouse/deny.png">
+              <span style="margin-left: 8px;">{{item.status}}</span>
+            </div>
+            <div v-else class="bt2-myhouse-card-cnt-opt-status">
               <img src="@/assets/images/haierHouse/Icons／Complete@2x.png">
               <span style="margin-left: 8px;">{{item.status}}</span>
             </div>
@@ -432,7 +440,7 @@ export default {
     color: #F5A623;
     font-size: 26px;
     position: absolute;
-    right: 0px;
+    right: 10px;
     img{
       width: 36px;
       height: 36px;
