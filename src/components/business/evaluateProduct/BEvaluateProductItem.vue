@@ -14,11 +14,13 @@
       <div class="bEvaluateProductItem-cnt-person mb22">
         <span class="name mr16">{{data.userName}}</span>
         <!--<span class="mr16">先生</span>-->
-        <i class="iconfont icon-dianhua mr16"></i>
-        <span>{{data.userPhone}}</span>
+        <span>
+          <i class="iconfont icon-dianhua mr16"></i>
+          <a :href="'tel:'+data.userPhone">{{data.userPhone}}</a>
+        </span>
       </div>
       <div class="bEvaluateProductItem-cnt-price mb22">
-        <span class="name">冰箱</span>
+        <span class="name">{{data.industryName}}</span>
         <span class="price">￥{{data.totalPrice}}</span>
       </div>
       <div class="bEvaluateProductItem-cnt-time">
@@ -103,15 +105,22 @@ export default {
   }
 
   .bEvaluateProductItem-cnt-person {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
     color: #333;
 
     & > .name {
       font-size: 36px;
     }
 
-    & > .iconfont {
+    .iconfont {
       font-size: 32px;
       color: #1969C6;
+    }
+
+    a {
+      color: #333;
     }
   }
 

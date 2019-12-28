@@ -112,7 +112,10 @@ export default {
       // 右侧浮动筛选的数据
       filterList: [],
       // 选择所有
-      chooseAll: false
+      chooseAll: false,
+      // 产品组数据
+      industryAy: [],
+      industryData: {}
     };
   },
   created() {
@@ -139,6 +142,11 @@ export default {
       GET_USER
     ])
   },
+  filters: {
+    industryFilter(val) {
+      return this.industryData[val] || '';
+    }
+  },
   methods: {
     preventDefault(e) {
       if (!document.querySelector('.bFloatSearch-cnt-list').contains(e.target)) {
@@ -156,19 +164,35 @@ export default {
       /* 切换筛选显示隐藏 */
       this.filterListShow = !this.filterListShow;
     },
+    convertIndustryList(industryData) {
+      // 用来避免多次循环显示产业名的object
+      industryData.forEach((v) => {
+        this.industryData[v.industry] = v.industryName;
+      });
+    },
+    getIndustryList() {
+      /* 获取产业数据 */
+      if (this.industryAy.length) {
+        return Promise.resolve(this.industryAy);
+      }
+      return this.campaignService.listOldForNewIndustry().then(({ code, data }) => {
+        if (code === 1) {
+          this.convertIndustryList(data);
+          this.industryAy = data;
+        }
+        return this.industryAy;
+      });
+    },
     getFilterList() {
       /* 构建右侧搜索栏目的数据 */
       // 查询产业数据
-      const getIndustryList = this.campaignService.listOldForNewIndustry();
+      const getIndustryList = this.getIndustryList();
       // 查询年限
       const getStatisticalParameter = this.campaignService.statisticalParameter();
       // 查询购买意愿
       const getBuyIntention = this.basicService.getBuyIntention();
       Promise.all([getIndustryList, getStatisticalParameter, getBuyIntention]).then(([
-        {
-          code: industryCode,
-          data: industryData
-        },
+        industryData,
         {
           code: yearCode,
           data: yearData
@@ -178,7 +202,7 @@ export default {
           data: buyIntentionData
         }
       ]) => {
-        if (industryCode === 1) {
+        if (industryData) {
           const industry = {
             name: '产业',
             isExpand: true,
@@ -233,16 +257,19 @@ export default {
             total
           } = data;
           this.$nextTick(() => {
-            result.forEach((v) => {
-              v.isChecked = false;
+            this.getIndustryList().then(() => {
+              result.forEach((v) => {
+                v.isChecked = false;
+                v.industryName = this.industryData[v.industry];
+              });
+              if (page.num === 1) {
+                this.list = result;
+              } else {
+                this.list = this.list.concat(result);
+              }
+              // 通过当前页的数据条数，和总数据量来判断是否加载完
+              this.scrollView.mescroll.endBySize(result.length, total);
             });
-            if (page.num === 1) {
-              this.list = result;
-            } else {
-              this.list = this.list.concat(result);
-            }
-            // 通过当前页的数据条数，和总数据量来判断是否加载完
-            this.scrollView.mescroll.endBySize(result.length, total);
           });
         } else {
           this.scrollView.mescroll.endErr();
@@ -281,6 +308,7 @@ export default {
       this.list.forEach((order) => {
         if (order.isChecked) {
           messageVos.push({
+            oldForNewId: order.id,
             industry: order.industry,
             mobile: order.userPhone,
             price: order.totalPrice,
@@ -290,10 +318,10 @@ export default {
         }
       });
       // 发短信
-      this.campaignService.batchSendMessage(messageVos).then(({ code, data }) => {
+      this.campaignService.batchSendMessage(messageVos).then(({ code, msg }) => {
         if (code === 1) {
           this.$dialog.alert({
-            content: data
+            content: msg
           });
           // 重置选择
           this.chooseAll = false;
