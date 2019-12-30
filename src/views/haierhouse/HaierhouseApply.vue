@@ -487,9 +487,9 @@ export default {
       if (this.isChange) {
         this.customerInfo.id = this.id;
       }
+      this.customerInfo.status = '1';
       this.haierhouseService.addShopInfo({
         hmcId: JSON.parse(localStorage.getItem('userinfo')).hmcid,
-        status: 1,
         ...this.customerInfo
       }, {}).then((res) => {
         console.log(res);

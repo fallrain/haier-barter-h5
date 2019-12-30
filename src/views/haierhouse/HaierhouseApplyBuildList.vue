@@ -26,7 +26,7 @@
                     <img src="@/assets/images/haierHouse/pass.png">
                     <span style="margin-left: 8px; color: #4a90e2;">{{item.status}}</span>
                   </div>
-                  <div v-else-if="item.status === '拒绝'" class="bt2-myhouse-card-cnt-opt-statu">
+                  <div v-else-if="item.status === '被驳回'" class="bt2-myhouse-card-cnt-opt-statu">
                     <img src="@/assets/images/haierHouse/deny.png">
                     <span style="margin-left: 8px;color: #ec3334;">{{item.status}}</span>
                   </div>
