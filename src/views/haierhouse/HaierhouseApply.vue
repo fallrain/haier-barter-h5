@@ -317,7 +317,20 @@ export default {
       if (newV.length < oldV.length) {
         let arr = newV.concat(oldV);
         arr = Array.from(new Set(arr));
-        this.uploadImg1[arr[arr.length - 1]] = [];
+        const img_type = arr[arr.length - 1];
+        this.uploadImg1[img_type] = [];
+        if (this.customerInfo.imageUrlSaveVOList) {
+          const spliceArr = [];
+          this.customerInfo.imageUrlSaveVOList.forEach((item, index) => {
+            if (item.imageType === img_type) {
+              spliceArr.push(index);
+            }
+          });
+          spliceArr.reverse();
+          spliceArr.forEach((item) => {
+            this.customerInfo.imageUrlSaveVOList.splice(item, 1);
+          });
+        }
       }
       this.indeustryChoosed = [];
       this.indeustryName = [];
