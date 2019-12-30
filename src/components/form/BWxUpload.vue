@@ -91,6 +91,8 @@ export default {
                   this.uploadFn(serverId).then((data) => {
                     // this.imgs.push(localId);
                     this.imageuploaded(data);
+                    this.isFinished = true;
+                    console.log('success')
                   });
                 },
                 fail(uploadError) {
@@ -99,6 +101,7 @@ export default {
                 },
                 complete() {
                   this.isFinished = true;
+                  console.log('complete')
                 }
               });
             }, 100);
@@ -108,6 +111,7 @@ export default {
           },
           complete() {
             this.isFinished = true;
+            console.log('complete1')
           }
         });
       });

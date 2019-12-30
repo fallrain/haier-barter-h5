@@ -315,8 +315,8 @@ export default {
   watch: {
     indeustryCode(newV, oldV) {
       if (newV.length < oldV.length) {
-        let arr = newV.concat(oldV)
-        arr = Array.from(new Set(arr))
+        let arr = newV.concat(oldV);
+        arr = Array.from(new Set(arr));
         this.uploadImg1[arr[arr.length - 1]] = [];
       }
       this.indeustryChoosed = [];
@@ -463,6 +463,7 @@ export default {
       }
       this.haierhouseService.addShopInfo({
         hmcId: JSON.parse(localStorage.getItem('userinfo')).hmcid,
+        status: 1,
         ...this.customerInfo
       }, {}).then((res) => {
         console.log(res);
