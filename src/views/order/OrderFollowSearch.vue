@@ -477,6 +477,7 @@ export default {
       // 爱到家需要传add4，add4是预留字段，由其他系统传递而来
       if (businessScenarios === 'ADJ') {
         args.add4 = item.add4;
+        args.sourceSn = item.sourceSn;
       }
       const argsStr = this.bUtil.genQueryStringByObj(args);
       wx.miniProgram.navigateTo({
