@@ -59,7 +59,6 @@ export default {
   },
   methods: {
     imageuploaded(data) {
-      this.isFinished = true;
       Toast.hide();
       this.$emit('imageuploaded', data, this.imgs);
     },
@@ -98,24 +97,17 @@ export default {
                   console.log('fail2');
                   this.$emit('errorhandle', uploadError);
                 },
-                cancel() {
-                  console.log('cancel2');
-                },
                 complete() {
-                  console.log('complete2');
+                  this.isFinished = true;
                 }
               });
             }, 100);
           },
           fail(error) {
-            console.log('fail1');
             this.$emit('errorhandle', error);
           },
-          cancel() {
-            console.log('cancel1');
-          },
           complete() {
-            console.log('complete1');
+            this.isFinished = true;
           }
         });
       });
