@@ -303,7 +303,7 @@ export default {
   },
   beforeRouteLeave(to, from, next) {
     // wx.miniProgram.switchTab({ url: '/pages/tool/tool' });
-    if (to.name === 'Haierhouse.HaierhouseApply' || to.name === 'Haierhouse.HaierhouseAreaInfo') {
+    if (to.name === 'Haierhouse.HaierhouseAreaInfo') {
       wx.miniProgram.switchTab({ url: '/pages/tool/tool' });
     } else {
       next();
