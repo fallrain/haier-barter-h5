@@ -58,8 +58,7 @@ export default {
     }
   },
   activated() {
-    console.log(`${this.isFinished}1`);
-    this.isFinished = true;
+    localStorage.setItem('picFinishedStatus', 'true');
   },
   methods: {
     imageuploaded(data) {
@@ -73,11 +72,12 @@ export default {
       Toast.loading('上传中');
     },
     chooseImg() {
+      this.isFinished = localStorage.getItem('picFinishedStatus')
       console.log(this.isFinished);
-      if (!this.isFinished) {
+      if (this.isFinished === 'false') {
         return;
       }
-      this.isFinished = false;
+      this.isFinished = 'false';
       /* 选择图片,并上传 */
       wx.ready(() => {
         wx.chooseImage({
@@ -103,10 +103,6 @@ export default {
                 fail(uploadError) {
                   console.log('fail2');
                   this.$emit('errorhandle', uploadError);
-                },
-                complete() {
-                  this.isFinished = true;
-                  console.log('complete');
                 }
               });
             }, 100);
@@ -115,12 +111,8 @@ export default {
             this.$emit('errorhandle', error);
           },
           complete() {
-            this.isFinished = true;
+            localStorage.setItem('picFinishedStatus', 'true');
             console.log('complete1');
-          },
-          cancel() {
-            this.isFinished = true;
-            console.log('cancel1');
           }
         });
       });
