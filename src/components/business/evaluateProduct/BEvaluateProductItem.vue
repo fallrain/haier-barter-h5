@@ -108,9 +108,9 @@ export default {
   }
 
   .bEvaluateProductItem-cnt {
-    //width: 480px;
-    width: 100%;
+    // width: 480px;
     overflow: hidden;
+    flex-grow: 1;
     flex-shrink: 0;
   }
 
