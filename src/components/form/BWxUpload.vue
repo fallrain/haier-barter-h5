@@ -73,11 +73,10 @@ export default {
     },
     chooseImg() {
       this.isFinished = localStorage.getItem('picFinishedStatus')
-      console.log(this.isFinished);
       if (this.isFinished === 'false') {
         return;
       }
-      this.isFinished = 'false';
+      localStorage.setItem('picFinishedStatus', 'false');
       /* 选择图片,并上传 */
       wx.ready(() => {
         wx.chooseImage({
@@ -96,12 +95,9 @@ export default {
                   this.uploadFn(serverId).then((data) => {
                     // this.imgs.push(localId);
                     this.imageuploaded(data);
-                    this.isFinished = true;
-                    console.log('success');
                   });
                 },
                 fail(uploadError) {
-                  console.log('fail2');
                   this.$emit('errorhandle', uploadError);
                 }
               });
@@ -112,7 +108,6 @@ export default {
           },
           complete() {
             localStorage.setItem('picFinishedStatus', 'true');
-            console.log('complete1');
           }
         });
       });
