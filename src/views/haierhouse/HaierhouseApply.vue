@@ -279,28 +279,41 @@ export default {
     };
   },
   activated() {
-    // 数据清空
-    this.uploadImg = [];
-    this.uploadImg1 = {
-      I_BX: [],
-      I_KT: [],
-      I_XYJ: [],
-      I_CHUD: [],
-      I_DS: [],
-      I_JS: [],
-      I_RSQ: [],
-      I_SHJD: []
-    };
+    debugger;
     if (this.$route.params.userInfo) {
-      this.customerInfo.imageUrlSaveVOList = [];
+      // this.customerInfo.imageUrlSaveVOList = [];
       this.customerInfo.adminId = this.$route.params.userInfo.hmcId;
       this.customerInfo.adminName = this.$route.params.userInfo.username;
-    }
-    if (this.$route.params.id) { // 修改信息
+    } else if (this.$route.params.id) { // 修改信息
+      // 数据清空
+      this.uploadImg = [];
+      this.uploadImg1 = {
+        I_BX: [],
+        I_KT: [],
+        I_XYJ: [],
+        I_CHUD: [],
+        I_DS: [],
+        I_JS: [],
+        I_RSQ: [],
+        I_SHJD: []
+      };
       this.isChange = true;
       this.id = this.$route.params.id;
       this.getInformation(this.id);
     } else {
+      // 数据清空
+      this.uploadImg = [];
+      this.uploadImg1 = {
+        I_BX: [],
+        I_KT: [],
+        I_XYJ: [],
+        I_CHUD: [],
+        I_DS: [],
+        I_JS: [],
+        I_RSQ: [],
+        I_SHJD: []
+      };
+      this.customerInfo.imageUrlSaveVOList = [];
       this.isChange = false;
     }
   },
@@ -354,8 +367,8 @@ export default {
           res.data.rentStartTime = res.data.rentStartTime.split(' ')[0];
           res.data.rentEndTime = res.data.rentEndTime.split(' ')[0];
           this.customerInfo = res.data;
-          this.indeustryCode = this.customerInfo.industryCodeScope.split(',');
-          this.indeustryName = this.customerInfo.industryNameScope.split(',');
+          this.indeustryCode = res.data.industryCodeScope.split(',');
+          this.indeustryName = res.data.industryNameScope.split(',');
           this.indeustryChoosed = [];
           this.indeustryCode.forEach((item, index) => {
             const itemObj = {
