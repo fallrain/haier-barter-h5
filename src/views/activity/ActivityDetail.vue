@@ -36,7 +36,7 @@
           <img class="activity-detail-img" :src='detailInfo.activityLinkmanHeadUrl || defaultImg'>
           <div>
             <span class="activity-detail-seller-name"> {{activityLinkmanName}}</span>
-<!--            <span class="activity-detail-seller-store">巴拉巴拉巴拉拉</span>-->
+            <!--            <span class="activity-detail-seller-store">巴拉巴拉巴拉拉</span>-->
             <div class="activity-detail-content1">
               <button class="activity-detail-btn mr16" v-show="detailInfo.activityLinkmanWechat">
                 <i class="iconfont icon-weixin icon-img">
@@ -45,7 +45,8 @@
               </button>
               <button class="activity-detail-btn" v-show="activityLinkmanPhone">
                 <i class="iconfont icon-dianhua icon-img1">
-                  <a :href="'tel:'+activityLinkmanPhone" class="activity-detail-seller-store">{{activityLinkmanPhone}}</a>
+                  <a :href="'tel:'+activityLinkmanPhone"
+                     class="activity-detail-seller-store">{{activityLinkmanPhone}}</a>
                 </i>
               </button>
             </div>
@@ -196,10 +197,10 @@
 
 <script>
 import {
-  Toast,
   Check,
   CheckGroup,
-  Dialog
+  Dialog,
+  Toast
 } from 'mand-mobile';
 import ActivityNameTime from '../../components/business/activity/ActivityNameTime';
 import {
@@ -265,7 +266,9 @@ export default {
       defaultImg,
     };
   },
-  activated() {
+  async activated() {
+    // 获取判断是否是小程序
+    await this.getMiniProgramEnv();
     // this.openId = JSON.parse(localStorage.getItem('userinfo')).openId;
     // this.userinfo = JSON.parse(localStorage.getItem('userinfo'));
     this.getUserInfo = this.$route.params.userInfo;
@@ -376,15 +379,6 @@ export default {
       });
     }
     this.getIndustry();
-    // 判断环境是否为小程序
-    wx.miniProgram.getEnv((res) => {
-      console.log(res.miniprogram);
-      if (res.miniprogram) {
-        this.isMiniProgram = 1;
-      } else {
-        this.isMiniProgram = 0;
-      }
-    });
   },
   computed: {
     productCatagoryName() {
@@ -397,6 +391,24 @@ export default {
     }
   },
   methods: {
+    getMiniProgramEnv() {
+      // 判断环境是否为小程序
+      return new Promise((resolve) => {
+        wx.ready(() => {
+          wx.miniProgram.getEnv((res) => {
+            console.log(res.miniprogram);
+            if (res.miniprogram) {
+              this.isMiniProgram = 1;
+            } else {
+              this.isMiniProgram = 0;
+            }
+            return resolve(this.isMiniProgram);
+          });
+        });
+        // 由于这里是进入就调用，如果wx config失败，则调用error，防止页面空白
+        wx.error(() => resolve(true));
+      });
+    },
     showProductCatagory() {
       /* 显示产品类别 */
       this.isShowProductCatagory = true;
@@ -607,7 +619,7 @@ export default {
 
   .activityDetail-register-item {
     display: flex;
-    flex-direction:row;
+    flex-direction: row;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
@@ -642,6 +654,7 @@ export default {
     box-shadow: none;
     padding-left: 4px;
   }
+
   .activityDetail-verifyCode-ipt {
     height: 100%;
     width: 360px;
@@ -820,35 +833,35 @@ export default {
   }
 
   .activity-detail-btn {
-    width:216px;
-    height:48px;
-    border:1px solid rgba(102,102,102,1);
-    border-radius:8px;
+    width: 216px;
+    height: 48px;
+    border: 1px solid rgba(102, 102, 102, 1);
+    border-radius: 8px;
     background: #ffffff;
     margin-top: 12px;
     text-align: center;
   }
 
   .activity-detail-seller-name {
-    font-size:32px;
-    font-weight:bold;
-    color:rgba(51,51,51,1);
+    font-size: 32px;
+    font-weight: bold;
+    color: rgba(51, 51, 51, 1);
     margin-right: 20px;
   }
 
   .activity-detail-seller-store {
-    font-size:24px;
-    color:rgba(153,153,153,1);
+    font-size: 24px;
+    color: rgba(153, 153, 153, 1);
   }
 
   .icon-img {
-    font-size:22px;
-    color:#00cd00;
+    font-size: 22px;
+    color: #00cd00;
   }
 
   .icon-img1 {
-    font-size:22px;
-    color:#4A90E2;
+    font-size: 22px;
+    color: #4A90E2;
   }
 
   .popContainer {
