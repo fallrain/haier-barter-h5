@@ -19,13 +19,13 @@ export default {
       userList: []
     };
   },
-  created() {
+  activated() {
     this.queryUserList();
   },
   methods: {
     queryUserList() {
       const shopid = JSON.parse(localStorage.getItem('userinfo')).shopId;
-      const hmcId = JSON.parse(localStorage.getItem('userinfo')).hmcId;
+      const hmcId = JSON.parse(localStorage.getItem('userinfo')).hmcid;
       this.productService.userList(shopid).then((res1) => {
         if (res1.code === 1) {
           res1.data.splice(res1.data.findIndex(item => item.hmcId === hmcId), 1)

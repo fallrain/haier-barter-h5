@@ -70,7 +70,7 @@ export default {
       Toast.loading('上传中');
     },
     chooseImg() {
-      if (!this.isFinished){
+      if (!this.isFinished) {
         return;
       }
       this.isFinished = false;
@@ -95,13 +95,27 @@ export default {
                   });
                 },
                 fail(uploadError) {
+                  console.log('fail2');
                   this.$emit('errorhandle', uploadError);
+                },
+                cancel() {
+                  console.log('cancel2');
+                },
+                complete() {
+                  console.log('complete2');
                 }
               });
             }, 100);
           },
           fail(error) {
+            console.log('fail1');
             this.$emit('errorhandle', error);
+          },
+          cancel() {
+            console.log('cancel1');
+          },
+          complete() {
+            console.log('complete1');
           }
         });
       });

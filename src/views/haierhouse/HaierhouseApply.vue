@@ -313,7 +313,12 @@ export default {
     ...mapState('haierHouse', ['choosedLeader']),
   },
   watch: {
-    indeustryCode(val) {
+    indeustryCode(newV, oldV) {
+      if (newV.length < oldV.length) {
+        let arr = newV.concat(oldV)
+        arr = Array.from(new Set(arr))
+        this.uploadImg1[arr[arr.length - 1]] = [];
+      }
       this.indeustryChoosed = [];
       this.indeustryName = [];
       this.indeustryCode.forEach((item) => {
@@ -514,15 +519,10 @@ export default {
       }
       fileList.push(data.data);
     },
-    delImg(index, fileList, item) {
-      let imgType = '';
-      if (item === '0') {
-        imgType = this.customerInfo.roomType;
-      } else {
-        imgType = item.value;
-      }
+    delImg(index, fileList) {
+      const current = fileList[index];
       this.customerInfo.imageUrlSaveVOList.forEach((item1, index1) => {
-        if (item1.imageType === imgType) {
+        if (item1.imageUrl === current) {
           this.customerInfo.imageUrlSaveVOList.splice(index1, 1);
         }
       });
