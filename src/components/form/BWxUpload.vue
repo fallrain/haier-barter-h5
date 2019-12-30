@@ -57,6 +57,10 @@ export default {
       required: true
     }
   },
+  activated() {
+    console.log(`${this.isFinished}1`);
+    this.isFinished = true;
+  },
   methods: {
     imageuploaded(data) {
       Toast.hide();
@@ -69,6 +73,7 @@ export default {
       Toast.loading('上传中');
     },
     chooseImg() {
+      console.log(this.isFinished);
       if (!this.isFinished) {
         return;
       }
@@ -92,7 +97,7 @@ export default {
                     // this.imgs.push(localId);
                     this.imageuploaded(data);
                     this.isFinished = true;
-                    console.log('success')
+                    console.log('success');
                   });
                 },
                 fail(uploadError) {
@@ -101,7 +106,7 @@ export default {
                 },
                 complete() {
                   this.isFinished = true;
-                  console.log('complete')
+                  console.log('complete');
                 }
               });
             }, 100);
@@ -111,7 +116,11 @@ export default {
           },
           complete() {
             this.isFinished = true;
-            console.log('complete1')
+            console.log('complete1');
+          },
+          cancel() {
+            this.isFinished = true;
+            console.log('cancel1');
           }
         });
       });
