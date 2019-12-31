@@ -13,6 +13,7 @@ const urls = {
   industryList: '/common/industry/list',
   // 购买意愿
   buyIntention: '/common/dictionary/list/BUYINTENTION',
+  uploadByMediaId: '/common/uploadByMediaId', // 同步前端微信上传的文件
 };
 
 Object.entries(urls).forEach(([key, value]) => {

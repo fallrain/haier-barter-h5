@@ -10,6 +10,7 @@ const urls = {
   reportEhubAgain: '/reportEhub/reportEhubAgain',
   // 条码提报
   saveEhubBarCode: '/reportEhub/saveEhubBarCode',
+  getproGrpList: '/buildHouse/proGrpList' // 查询产业列表
 };
 
 Object.entries(urls).forEach(([key, value]) => {

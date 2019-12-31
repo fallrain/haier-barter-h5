@@ -1,7 +1,6 @@
 import urls from '../url/basic.url';
 import {
-  axGet,
-  axPost,
+  axGet, axPostJson
 } from '@/lib/ajax';
 
 
@@ -38,4 +37,8 @@ export default {
     /* 查询购买意愿 */
     return axGet(urls.buyIntention);
   },
+  uploadByMediaId(data, param) {
+    /* 同步前端微信上传的文件 */
+    return axPostJson(urls.uploadByMediaId, data, param);
+  }
 };
