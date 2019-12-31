@@ -230,6 +230,7 @@ export default {
   },
   data() {
     return {
+      isFirst: true,
       isChange: false,
       reviewImageScope: '',
       uploadUrl: '/api/file/simpleUpload',
@@ -330,6 +331,10 @@ export default {
   },
   watch: {
     indeustryCode(newV, oldV) {
+      if (this.isFirst){
+        this.isFirst = false;
+        return;
+      }
       if (newV.length < oldV.length) {
         let arr = newV.concat(oldV);
         arr = Array.from(new Set(arr));
@@ -371,14 +376,14 @@ export default {
     getInformation(id) {
       this.haierhouseService.queryShopAndDistrict({}, {
         id
-      }).then((res) => {
+      }).then((res) => {debugger
         if (res.code === 1) {
           res.data.rentStartTime = res.data.rentStartTime.split(' ')[0];
           res.data.rentEndTime = res.data.rentEndTime.split(' ')[0];
           this.customerInfo = res.data;
-          this.indeustryCode = res.data.industryCodeScope.split(',');
-          this.indeustryName = res.data.industryNameScope.split(',');
           this.reviewImageScope = res.data.reviewImageScope;
+          this.indeustryName = res.data.industryNameScope.split(',');
+          this.indeustryCode = res.data.industryCodeScope.split(',');
           this.indeustryChoosed = [];
           this.indeustryCode.forEach((item, index) => {
             const itemObj = {
@@ -510,7 +515,6 @@ export default {
         hmcId: JSON.parse(localStorage.getItem('userinfo')).hmcid,
         ...this.customerInfo
       }, {}).then((res) => {
-        console.log(res);
         if (res.code === 1) {
           this.id = res.data;
           if (this.isChange) {
@@ -586,6 +590,10 @@ export default {
       }
       Toast.failed(res || '上传失败');
     }
+  },
+  beforeRouteLeave(to, from, next) {
+    this.$destroy();
+    next();
   }
 };
 </script>
