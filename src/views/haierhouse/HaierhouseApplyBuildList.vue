@@ -26,9 +26,14 @@
                     <img src="@/assets/images/haierHouse/pass.png">
                     <span style="margin-left: 8px; color: #4a90e2;">{{item.status}}</span>
                   </div>
-                  <div v-else-if="item.status === '被驳回'" class="bt2-myhouse-card-cnt-opt-statu">
-                    <img src="@/assets/images/haierHouse/deny.png">
-                    <span style="margin-left: 8px;color: #ec3334;">{{item.status}}</span>
+                  <div v-else-if="item.status === '被驳回'"
+                       @click="showTip(item.refuseReason)"
+                       class="bt2-myhouse-card-cnt-opt-statu ">
+<!--                    <img src="@/assets/images/haierHouse/deny.png">-->
+                    <md-icon name="info-solid" size="lg"
+                             style="position: absolute;left: 12px;top: -1px;color: #ec3334;"
+                    ></md-icon>
+                    <span style="padding-left: 40px;color: #ec3334;">{{item.status}}</span>
                   </div>
                   <div v-else class="bt2-myhouse-card-cnt-opt-statu">
                     <img src="@/assets/images/haierHouse/Icons／Complete@2x.png">
@@ -41,21 +46,41 @@
         </div>
       </div>
     </div>
+    <md-dialog
+      title="驳回原因"
+      :closable="true"
+      v-model="basicDialog.open"
+      :btns="basicDialog.btns"
+    >
+      {{currentPop}}
+    </md-dialog>
   </div>
 </template>
 
 <script>
 import {
-  Toast
+  Toast, Icon, Dialog
 } from 'mand-mobile';
 
 export default {
   name: 'HaierhouseApplyBuildList',
   components: {
-    Toast
+    Toast,
+    [Icon.name]: Icon,
+    [Dialog.name]: Dialog,
   },
   data() {
     return {
+      basicDialog: {
+        open: false,
+        btns: [
+          {
+            text: '确认',
+            handler: this.onBasicConfirm,
+          },
+        ],
+      },
+      currentPop: '',
       scrollView: {
         mescroll: null, // mescroll实例对象
         list: [],
@@ -117,6 +142,13 @@ export default {
       uni.navigateTo({
         url: `/pages/haierHouse/ViewDetail?shopId=${this.myAreaList.id}&hmcid=${this.hmcid}`,
       });
+    },
+    showTip(str) {
+      this.currentPop = str;
+      this.basicDialog.open = true;
+    },
+    onBasicConfirm() {
+      this.basicDialog.open = false;
     }
   },
   beforeRouteLeave(to, from, next) {

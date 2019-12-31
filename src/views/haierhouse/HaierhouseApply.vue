@@ -130,7 +130,9 @@
       </div>
     </div>
     <div v-for="(item, index) in indeustryChoosed" :key="index" class="mb20">
-      <div class="text-333 row-style">{{item.label}}区域照片</div>
+      <div class="text-333 row-style">{{item.label}}区域照片
+        <span style="color: #ec3334;" v-show="item.isRefuse">被驳回，请重新上传</span>
+      </div>
       <div class="bg-white p20">
 <!--        <b-upload-->
 <!--          :imgs="uploadImg1[item.value]"-->
@@ -229,6 +231,7 @@ export default {
   data() {
     return {
       isChange: false,
+      reviewImageScope: '',
       uploadUrl: '/api/file/simpleUpload',
       headers: {
         Authorization: ''
@@ -347,8 +350,14 @@ export default {
       }
       this.indeustryChoosed = [];
       this.indeustryName = [];
+
       this.indeustryCode.forEach((item) => {
         this.industryList.forEach((i) => {
+          if (this.reviewImageScope.split(',')) {
+            if (this.reviewImageScope.split(',').indexOf(i.value) > -1) {
+              i.isRefuse = true;
+            }
+          }
           if (item === i.value) {
             this.indeustryChoosed.push(i);
             this.indeustryName.push(i.label);
@@ -369,14 +378,22 @@ export default {
           this.customerInfo = res.data;
           this.indeustryCode = res.data.industryCodeScope.split(',');
           this.indeustryName = res.data.industryNameScope.split(',');
+          this.reviewImageScope = res.data.reviewImageScope;
           this.indeustryChoosed = [];
           this.indeustryCode.forEach((item, index) => {
             const itemObj = {
               label: this.indeustryName[index],
-              value: item
+              value: item,
+              isRefuse: false
             };
+            if (this.reviewImageScope.split(',')) {
+              if (this.reviewImageScope.split(',').indexOf(item) > -1) {
+                itemObj.isRefuse = true;
+              }
+            }
             this.indeustryChoosed.push(itemObj);
           });
+          console.log(this.indeustryChoosed);
           this.customerInfo.imageUrlSaveVOList = res.data.decoModelImageUrlDTOList;
           res.data.decoModelImageUrlDTOList.forEach((item) => {
             if (item.imageType.indexOf('_') > -1) {
@@ -488,6 +505,7 @@ export default {
         this.customerInfo.id = this.id;
       }
       this.customerInfo.status = '1';
+      this.customerInfo.reviewImageScope = '';
       this.haierhouseService.addShopInfo({
         hmcId: JSON.parse(localStorage.getItem('userinfo')).hmcid,
         ...this.customerInfo
