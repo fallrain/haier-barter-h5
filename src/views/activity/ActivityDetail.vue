@@ -58,7 +58,6 @@
     </div>
     <div class="activityDetail-btm-btns">
       <button
-        style="margin-right: 30px"
         type="button"
         @click="share"
         v-show="detailInfo.allowShare === 1"
@@ -68,6 +67,8 @@
       <button
         type="button"
         @click="registerDialog"
+        v-show="openId"
+        style="margin-left: 30px"
         class="common-submit-btn-default activityDetail-btm-btn"
       >我要报名参加
       </button>
@@ -350,20 +351,14 @@ export default {
             }
             if (this.detailInfo.activityLinkmanName) {
               this.activityLinkmanName = this.detailInfo.activityLinkmanName;
-            } else {
-              if (this.getUserInfo) {
-                this.activityLinkmanName = this.getUserInfo.username;
-              } else {
-                this.activityLinkmanName = decodeURIComponent(this.$route.query.username);
-              }
-            }
-            if (this.detailInfo.activityLinkmanPhone) {
               this.activityLinkmanPhone = this.detailInfo.activityLinkmanPhone;
             } else {
               if (this.getUserInfo) {
+                this.activityLinkmanName = this.getUserInfo.username;
                 this.activityLinkmanPhone = this.getUserInfo.mobile;
               } else {
-                this.activityLinkmanPhone = this.$route.query.mobile;
+                this.activityLinkmanName = decodeURIComponent(this.$route.query.username);
+                this.activityLinkmanPhone = this.getUserInfo.mobile;
               }
             }
             // https://testdb.haier.net/activity/activityDetail/?activityId=65022085451153408&mobile=15253269729&username=陆梦飞
