@@ -358,7 +358,7 @@ export default {
                 this.activityLinkmanPhone = this.getUserInfo.mobile;
               } else {
                 this.activityLinkmanName = decodeURIComponent(this.$route.query.username);
-                this.activityLinkmanPhone = this.getUserInfo.mobile;
+                this.activityLinkmanPhone = this.$route.query.mobile;
               }
             }
             // https://testdb.haier.net/activity/activityDetail/?activityId=65022085451153408&mobile=15253269729&username=陆梦飞
