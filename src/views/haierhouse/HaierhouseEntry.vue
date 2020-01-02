@@ -37,16 +37,17 @@
         <img v-if="item.imageUrl" :src="item.imageUrl" class="bt2-myhouse-card-portrait">
         <img v-else src="@/assets/images/haierHouse/Group@3x.png" class="bt2-myhouse-card-portrait"/>
         <div class="bt2-myhouse-card-cnt">
-          <p class="title">{{item.buildAreaName}}</p>
+          <p class="title">{{item.shopName}}</p>
           <p class="cnt">入驻产业：{{item.industryNameScope}}</p>
           <div class="bt2-myhouse-card-cnt-opt">
             <button class="bt2-myhouse-card-cnt-opt-btn mr24" @click="changeInformation(item)"
                     v-show="item.status!=='审核通过'">补充信息
             </button>
 <!--            <button class="bt2-myhouse-card-cnt-opt-btn mr24" @click="changeInformation()" v-show="deny">修改信息</button>-->
-<!--            <button class="bt2-myhouse-card-cnt-opt-btn mr24" @click="checkDetail()" v-show="informationComplete">查看详情-->
-<!--            </button>-->
-            <button class="bt2-myhouse-card-cnt-opt-btn mr24" @click="activity()">配置活动</button>
+            <button class="bt2-myhouse-card-cnt-opt-btn mr24"
+                    @click="checkDetail(item)" v-show="item.status === '审核通过'">查看详情
+            </button>
+<!--            <button class="bt2-myhouse-card-cnt-opt-btn mr24" @click="activity()">配置活动</button>-->
             <div v-if="item.status === '审核通过'" class="bt2-myhouse-card-cnt-opt-status">
               <img src="@/assets/images/haierHouse/pass.png">
               <span style="margin-left: 8px;">{{item.status}}</span>
@@ -267,9 +268,10 @@ export default {
         params: { id: item.id }
       });
     },
-    checkDetail() {
-      uni.navigateTo({
-        url: `/pages/haierHouse/ViewDetail?shopId=${this.myAreaList.id}&hmcid=${this.hmcid}`,
+    checkDetail(item) {
+      this.$router.push({
+        name: 'Haierhouse.HaierhouseDetail',
+        query: { id: item.id }
       });
     },
     activity() {

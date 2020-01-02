@@ -391,7 +391,7 @@ export default {
               value: item,
               isRefuse: false
             };
-            if (this.reviewImageScope.split(',')) {
+            if (this.reviewImageScope) {
               if (this.reviewImageScope.split(',').indexOf(item) > -1) {
                 itemObj.isRefuse = true;
               }
