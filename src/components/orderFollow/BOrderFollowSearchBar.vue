@@ -10,18 +10,27 @@
         <p
           class="order-span"
           v-bind:class="{active:item.isActive}"
-          @click="headSwitch(index)"
+          @click="headSwitch(index,item)"
         >{{item.name}}
-          <i class="iconfont icon-jiantou9" v-show="!item.isActive"></i>
-          <i class="iconfont2 icon-xialaactive-copy" v-show="item.isActive"></i>
+          <i
+            class="iconfont"
+            :class="[
+              item.icon || 'icon-jiantou9',
+              item.isActive && 'active',
+              item.isActive && item.activeClass
+            ]"
+          ></i>
         </p>
       </div>
+      <slot>
+      </slot>
     </div>
     <b-pop-sort-type
       :show.sync="sortShow"
       :list="sortList"
       v-model="sortTypeTemp"
       @checkClick="checkClicked"
+      @popupHide="popupHide"
     >
     </b-pop-sort-type>
     <b-pop-button
@@ -31,6 +40,7 @@
       :list="scenarioList"
       v-model="businessTypeTemp"
       @popButtonClicked="buttonClicked"
+      @popupHide="popupHide"
     ></b-pop-button>
   </div>
 </template>
@@ -79,6 +89,15 @@ export default {
     isShowScenario: {
       type: Boolean,
       default: true
+    },
+    // 是否显示筛选,默认不显示（场景少）
+    isShowFilter: {
+      type: Boolean,
+      default: false
+    },
+    // 额外的搜索区按钮，结构同headList
+    otherHeadList: {
+      type: Array
     }
   },
   data() {
@@ -88,23 +107,14 @@ export default {
           show: true,
           name: '排序',
           isActive: false,
-          icon: '@/assets/images/orderFollow-up/xiala@3x.png',
-          activeIcon: '@/assets/images/orderFollow-up/shangla@3x.png'
+          activeClass: 'reverse'
         },
         {
           show: this.isShowScenario,
           name: '业务场景',
           isActive: false,
-          icon: '@/assets/images/orderFollow-up/xiala@3x.png',
-          activeIcon: '@/assets/images/orderFollow-up/shangla@3x.png'
-        },
-        /** *****功能未实现****** */
-        // {
-        //   name: '筛选',
-        //   isActive: false,
-        //   icon: '@/assets/images/orderFollow-up/shaixuan@3x.png',
-        //   activeIcon: '@/assets/images/orderFollow-up/shaixuan@3x.png'
-        // }
+          activeClass: 'reverse'
+        }
       ],
       businessTypeTemp: [],
       preIndex: '',
@@ -155,32 +165,40 @@ export default {
       } else {
         this.sortList = this.sortListTemp;
       }
+      // 搜索区其他按钮
+      if (this.otherHeadList) {
+        this.headList = this.headList.concat(this.otherHeadList);
+      }
     },
-    headSwitch(index) {
+    headSwitch(index, item) {
       if (index === this.preIndex) {
         this.headList[index].isActive = false;
         this.preIndex = '';
         this.sortShow = false;
         this.scenarioShow = false;
-        return;
-      }
-      for (let i = 0; i < this.headList.length; i++) {
-        if (i === index) {
-          this.preIndex = index;
-          this.headList[i].isActive = true;
+      } else {
+        for (let i = 0; i < this.headList.length; i++) {
+          if (i === index) {
+            this.preIndex = index;
+            this.headList[i].isActive = true;
+          } else {
+            this.headList[i].isActive = false;
+          }
+        }
+        if (index === 0) {
+          this.sortShow = true;
+          this.scenarioShow = false;
+        } else if (index === 1) {
+          this.sortShow = false;
+          this.scenarioShow = true;
         } else {
-          this.headList[i].isActive = false;
+          this.sortShow = false;
+          this.scenarioShow = false;
         }
       }
-      if (index === 0) {
-        this.sortShow = true;
-        this.scenarioShow = false;
-      } else if (index === 1) {
-        this.sortShow = false;
-        this.scenarioShow = true;
-      } else {
-        this.sortShow = false;
-        this.scenarioShow = false;
+
+      if (item.customeClick) {
+        item.customeClick();
       }
     },
     checkClicked(val) {
@@ -207,13 +225,24 @@ export default {
       }
       this.$emit('popButtonClicked', val);
     },
+    popupHide() {
+      /* 隐藏 */
+      this.sortShow = false;
+      this.scenarioShow = false;
+      // 取消active状态
+      this.headList.forEach((v) => {
+        v.isActive = false;
+      });
+    }
   }
 };
 </script>
 
 <style scoped lang="scss">
   .bar-v {
-    background-color: white;
+    display: flex;
+    justify-content: space-between;
+    background-color: #fff;
     width: 100%;
     height: 72px;
     border-bottom: 1px solid #eee;
@@ -252,6 +281,20 @@ export default {
     font-size: 28px;
     padding-left: 56px;
     line-height: 72px;
+
+    .iconfont {
+      font-size: 28px;
+      vertical-align: top;
+      display: inline-block;
+    }
+
+    .active {
+      color: #1969c6;
+    }
+
+    .reverse {
+      transform: rotateX(180deg);
+    }
   }
 
   .order-span-blue {

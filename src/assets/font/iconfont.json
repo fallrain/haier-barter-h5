@@ -55,6 +55,13 @@
       "unicode_decimal": 58958
     },
     {
+      "icon_id": "677593",
+      "name": "筛选",
+      "font_class": "shaixuan",
+      "unicode": "e62e",
+      "unicode_decimal": 58926
+    },
+    {
       "icon_id": "695129",
       "name": "单选 选中",
       "font_class": "danxuanxuanzhong",
@@ -207,6 +214,13 @@
       "font_class": "shanchu",
       "unicode": "e620",
       "unicode_decimal": 58912
+    },
+    {
+      "icon_id": "5807789",
+      "name": "批量操作",
+      "font_class": "piliang-copy",
+      "unicode": "e61b",
+      "unicode_decimal": 58907
     },
     {
       "icon_id": "6056169",
