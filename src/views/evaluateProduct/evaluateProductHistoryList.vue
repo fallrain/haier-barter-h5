@@ -67,7 +67,7 @@ export default {
       orderSortList: [
         {
           id: '1',
-          name: '按名字降序'
+          name: '按名字升序'
         },
         {
           id: '0',
@@ -270,6 +270,7 @@ export default {
                 this.list = result;
                 document.querySelector('.evaluateProductList-scrollView').scrollTo(0, 0);
               } else {
+                this.chooseAll = false;
                 this.list = this.list.concat(result);
               }
               // 通过当前页的数据条数，和总数据量来判断是否加载完
@@ -292,6 +293,7 @@ export default {
     },
     queryByCondition(searchForm) {
       /* 按条件搜索 */
+      this.chooseAll = false;
       if (searchForm) {
         this.searchForm = {
           ...this.searchForm,

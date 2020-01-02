@@ -104,6 +104,9 @@ export default {
     hide() {
       /* 隐藏 */
       this.$emit('update:show', false);
+      // 抛出confirm事件
+      const searchForm = this.genFormData();
+      this.$emit('confirm', searchForm);
     },
     cancel() {
       /* 取消按钮操作 */
@@ -137,9 +140,8 @@ export default {
         });
       });
     },
-    confirm() {
-      /* 确认搜索结果 */
-      // 参数、参数值类型映射
+    genFormData() {
+      /* 参数、参数值类型映射 */
       const conditionMap = {
         0: {
           key: 'industryList',
@@ -177,10 +179,12 @@ export default {
           }
         });
       });
+      return searchForm;
+    },
+    confirm() {
+      /* 确认搜索结果 */
       // 关闭搜索框
       this.hide();
-      // 抛出confirm事件
-      this.$emit('confirm', searchForm);
     }
   }
 };
@@ -219,6 +223,7 @@ export default {
   .bFloatSearch-cnt-list {
     height: calc(100vh - 108px);
     overflow-y: auto;
+
     &::-webkit-scrollbar {
       display: none;
     }
