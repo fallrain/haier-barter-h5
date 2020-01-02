@@ -25,12 +25,6 @@
         title="筑家类型"
         :value="roomTypeName"
       ></b-item>
-      <!--<div class="row-style br-b">
-        <md-radio name="1" v-model="customerInfo.roomType" label="毛坯房" inline />
-        <md-radio name="2" v-model="customerInfo.roomType" label="精装房" inline />
-        <md-radio name="3" v-model="customerInfo.roomType" label="品牌联盟" inline />
-        <md-radio name="4" v-model="customerInfo.roomType" label="底商门脸房" inline />
-      </div>-->
     </div>
     <div class="br-b">
       <b-item
@@ -88,6 +82,52 @@
         <span v-show="uploadImg1[item.value].length === 0" class="" style="color: #ec3334">无</span>
         <div class="bUpload-preshow" v-for="(item1, index1) in uploadImg1[item.value]" :key="index1">
           <img :src="item1" alt="" class="">
+        </div>
+      </div>
+    </div>
+    <div class="text-999 lh70 pl20">覆盖小区信息</div>
+    <div class="" v-for="(item, index) in customerInfo.decoModelDistrictInfoDTOList" :key="index">
+      <div class="br-b">
+        <b-item
+          title="覆盖小区"
+          :value="item.districtScope"
+        ></b-item>
+      </div>
+      <div class="br-b">
+        <b-item
+          title="详细地址"
+          :value="item.provinceCityArea"
+        ></b-item>
+        <b-item
+          title=""
+          :value="item.districtAddress"
+        ></b-item>
+      </div>
+      <div class="br-b">
+        <b-item
+          title="小区户型"
+          :value="1"
+        ></b-item>
+      </div>
+      <div class="br-b">
+        <b-item
+          title="小区面积"
+          :value="item.districtAreaStart+'至'+item.districtAreaEnd+'平米'"
+        ></b-item>
+      </div>
+      <div class="br-b">
+        <b-item
+          title="均价"
+          :value="item.saleAveragePrice+'元/月'"
+        ></b-item>
+      </div>
+      <div class="mb20">
+        <div class="text-333 row-style">小区照片</div>
+        <div class="bg-white p20">
+          <span v-show="item.decoModelImageUrlDTOList.length === 0" class="" style="color: #ec3334">无</span>
+          <div class="bUpload-preshow" v-for="(item1, index1) in item.decoModelImageUrlDTOList" :key="index1">
+            <img :src="item1.imageUrl" alt="" class="">
+          </div>
         </div>
       </div>
     </div>
@@ -248,7 +288,6 @@ export default {
             }
             this.indeustryChoosed.push(itemObj);
           });
-          console.log(this.indeustryChoosed);
           this.customerInfo.imageUrlSaveVOList = res.data.decoModelImageUrlDTOList;
           res.data.decoModelImageUrlDTOList.forEach((item) => {
             if (item.imageType.indexOf('_') > -1) {
