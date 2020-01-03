@@ -331,7 +331,7 @@ export default {
       this.customerInfo.shopId = this.shopId;
       this.haierhouseService.addDistrictInfo(this.customerInfo, {}).then((res) => {
         if (res.code === 1) {
-          this.$router.replace({
+          this.$router.push({
             name: 'Haierhouse.HaierhouseApplyBuildList'
           });
         }
