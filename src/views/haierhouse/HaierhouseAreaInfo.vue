@@ -319,7 +319,6 @@ export default {
       Toast.failed(res || '上传失败');
     },
     complete() {
-      debugger;
       if (!this.confirm()) {
         return;
       }
@@ -333,7 +332,7 @@ export default {
       this.haierhouseService.addDistrictInfo(this.customerInfo, {}).then((res) => {
         if (res.code === 1) {
           this.$router.push({
-            name: 'Haierhouse.HaierhouseEntry'
+            name: 'Haierhouse.HaierhouseApplyBuildList'
           });
         }
       });
@@ -399,9 +398,8 @@ export default {
   beforeRouteLeave(to, from, next) {
     debugger;
     if (to.name === 'Haierhouse.HaierhouseApply') {
-      // to.name = 'Haierhouse.HaierhouseEntry';
-      this.$router.push({
-        name: 'Haierhouse.HaierhouseEntry'
+      this.$router.replace({
+        name: 'Haierhouse.HaierhouseApplyBuildList'
       });
     }
     if (this.$vnode && this.$vnode.data.keepAlive) {
@@ -417,15 +415,6 @@ export default {
               if (cache[k]) {
                 delete cache[k];
               }
-            });
-          } else if (to.name === 'Haierhouse.HaierhouseApply') {
-            keys.forEach((k) => {
-              if (cache[k]) {
-                delete cache[k];
-              }
-            });
-            this.$router.push({
-              name: 'Haierhouse.HaierhouseEntry'
             });
           }
         }

@@ -331,7 +331,7 @@ export default {
   },
   watch: {
     indeustryCode(newV, oldV) {
-      if (this.isFirst){
+      if (this.isFirst) {
         this.isFirst = false;
         return;
       }
@@ -376,7 +376,8 @@ export default {
     getInformation(id) {
       this.haierhouseService.queryShopAndDistrict({}, {
         id
-      }).then((res) => {debugger
+      }).then((res) => {
+        debugger;
         if (res.code === 1) {
           res.data.rentStartTime = res.data.rentStartTime.split(' ')[0];
           res.data.rentEndTime = res.data.rentEndTime.split(' ')[0];
@@ -391,7 +392,7 @@ export default {
               value: item,
               isRefuse: false
             };
-            if (this.reviewImageScope.split(',')) {
+            if (this.reviewImageScope) {
               if (this.reviewImageScope.split(',').indexOf(item) > -1) {
                 itemObj.isRefuse = true;
               }
@@ -598,6 +599,23 @@ export default {
 };
 </script>
 <style lang="scss">
+  .md-cell-item-left{
+    margin-right: 10px;
+  }
+  .md-check-list .md-icon-check:before {
+    font-family: "iconfont" !important;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    content: "\e68c";
+  }
+  .md-check-list .md-icon-checked:before, .md-icon-success:before {
+    font-family: "iconfont" !important;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    content: "\e61c";
+  }
   .md-cell-item-content{
     font-size: 28px;
   }
@@ -610,7 +628,7 @@ export default {
   }
   .md-check-list .md-cell-item{
     float: left !important;
-    margin-right: 20px !important;
+    margin-right: 30px !important;
   }
   .md-icon{
     line-height: 80px;

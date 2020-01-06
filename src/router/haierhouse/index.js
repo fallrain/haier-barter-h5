@@ -3,6 +3,7 @@ const HaierhouseApplyBuildList = () => import('@/views/haierhouse/HaierhouseAppl
 const HaierhouseApply = () => import('@/views/haierhouse/HaierhouseApply');// 筑家申请
 const HaierhouseAreaInfo = () => import('@/views/haierhouse/HaierhouseAreaInfo');// 筑家小区信息
 const ChoosePerson = () => import('@/views/haierhouse/ChoosePerson');// 筑家负责人列表
+const HaierhouseDetail = () => import('@/views/haierhouse/HaierhouseDetail');// 筑家负责人列表
 
 const prefix = '/haierhouse';
 const module = 'Haierhouse';
@@ -45,6 +46,14 @@ const data = [
     component: HaierhouseAreaInfo,
     meta: {
       title: '筑家小区信息',
+    },
+  },
+  {
+    path: `${prefix}/haierhouseDetail`,
+    name: `${module}.HaierhouseDetail`,
+    component: HaierhouseDetail,
+    meta: {
+      title: '筑家详情',
     },
   }
 ];
