@@ -1,6 +1,6 @@
 import urls from '../url/sales.url';
 import {
-  axPost
+  axPost, axGet
 } from '@/lib/ajax';
 
 export default {
@@ -23,5 +23,9 @@ export default {
   saveEhubBarCode(data) {
     /* 条码提报 */
     return axPost(urls.saveEhubBarCode, data, {requestNoToast: true});
+  },
+  getproGrpList() {
+    /* 获取产品组列表 */
+    return axGet(urls.getproGrpList);
   }
 };

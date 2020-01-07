@@ -4,14 +4,15 @@ import salesRoutes from '@/router/sales';
 import reportInstallRoutes from '@/router/reportInstall';
 import activityRoutes from '@/router/activity';
 import evaluateProductRoutes from '@/router/evaluateProduct';
+import haierhouseRoutes from '@/router/haierhouse';
 
 const data = [
   ...orderRoutes,
   ...salesRoutes,
   ...reportInstallRoutes,
   ...activityRoutes,
-  ...reportInstallRoutes,
-  ...evaluateProductRoutes
+  ...evaluateProductRoutes,
+  ...haierhouseRoutes
 ];
 if (process.env.NODE_ENV !== 'production') {
   data.unshift({
