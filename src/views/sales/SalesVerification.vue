@@ -545,7 +545,7 @@ export default {
             onConfirm: () => {
               this[this.curScrollViewName].mescroll.triggerDownScroll();
             }
-          })
+          });
           // this[this.curScrollViewName].list.splice(index, 1);
           // this[this.curScrollViewName].mescroll.triggerDownScroll();
         }
