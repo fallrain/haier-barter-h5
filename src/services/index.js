@@ -11,7 +11,8 @@ import reportInstall from '@/services/reportInstall';
 import sales from '@/services/sales';
 // 产品搜索
 import product from '@/services/product';
-// 权益
+// 入户服务
+import houseService from '@/services/houseService';
 import rights from '@/services/rights';
 // 活动
 import campaignService from '@/services/campaign';
@@ -26,6 +27,7 @@ Vue.prototype.orderService = orderService;
 Vue.prototype.reportInstallService = reportInstall;
 Vue.prototype.salesService = sales;
 Vue.prototype.productService = product;
+Vue.prototype.houseService = houseService;
 Vue.prototype.rightsService = rights;
 Vue.prototype.campaignService = campaignService;
 Vue.prototype.activityService = activity;
