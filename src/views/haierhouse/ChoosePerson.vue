@@ -50,11 +50,6 @@ export default {
 .fs28{
   font-size: 28px;
 }
-.title{
-  color: #999;
-  line-height: 70;
-  padding: 0 20px;
-}
 .content{
   background: #fff;
   padding: 0 20px;

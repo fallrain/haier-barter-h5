@@ -288,6 +288,7 @@ export default {
       // this.customerInfo.imageUrlSaveVOList = [];
       this.customerInfo.adminId = this.$route.params.userInfo.hmcId;
       this.customerInfo.adminName = this.$route.params.userInfo.username;
+      this.isFirst = false;
     } else if (this.$route.params.id) { // 修改信息
       // 数据清空
       this.uploadImg = [];
@@ -319,10 +320,10 @@ export default {
       };
       this.customerInfo.imageUrlSaveVOList = [];
       this.isChange = false;
+      this.isFirst = false;
     }
   },
   created() {
-    this.headers.Authorization = `Bearer  ${localStorage.getItem('acces_token')}`;
     this.addressData = addressData;
     this.getIndustryList();
   },

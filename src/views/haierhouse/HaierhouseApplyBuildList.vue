@@ -97,20 +97,10 @@ export default {
     // 创建当前tab的MeScroll对象，并下拉刷新
     // this.bUtil.scroviewTabChange('scrollView', this);
   },
-  created() {
+  activated() {debugger;
     this.getDatalist();
   },
   methods: {
-    upCallback(page) {
-      // 下载过就设置已经初始化
-      this.scrollView.isListInit = true;
-      this.getDatalist(page).then(({ result, pages }) => {
-        this.$nextTick(() => {
-          // 通过当前页的数据条数，和总页数来判断是否加载完
-          this.scrollView.mescroll.endByPage(result.length, pages);
-        });
-      });
-    },
     getDatalist(page) {
       return this.haierhouseService.queryMyShopList({
         // adminId: '00011682',
@@ -124,10 +114,6 @@ export default {
             return;
           }
           this.scrollView.list = res.data;
-          const sroviewObj = {};
-          sroviewObj.pages = 1;
-          sroviewObj.result = res.data;
-          return sroviewObj;
         }
       });
     },
@@ -302,16 +288,18 @@ export default {
   }
   .bt2-myhouse-card-cnt{
     font-size: 28px;
-  .title{
-    color: #666;
-    overflow: hidden;
-    text-overflow:ellipsis;
-    white-space: nowrap;
-  }
-  .cnt{
-    margin-top: 10px;
-    color: #999;
-  }
+    height: 100%;
+    .title{
+      height: 40px;
+      color: #666;
+      overflow: hidden;
+      text-overflow:ellipsis;
+      white-space: nowrap;
+    }
+    .cnt{
+      margin-top: 10px;
+      color: #999;
+    }
   }
 
   .bt2-myhouse-card-cnt-opt{

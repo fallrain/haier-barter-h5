@@ -109,7 +109,8 @@
     >
       <div class="pop-class">
         <img :src="areaImg" alt="" :mode='imageMode' class="pop-img-class">
-        <p class="pop-p">{{this.areaName}}</p>
+        <p class="pop-p">一站筑家店名称：{{this.areaName}}</p>
+        <p class="pop-p">所属客户：{{this.areaName}}</p>
       </div>
     </uni-popup>
   </div>
@@ -213,8 +214,8 @@ export default {
     },
     showPic(item) {
       this.alert = true;
-      this.areaName = item.name;
-      this.areaImg = item.pic;
+      this.areaName = item.shopName;
+      this.areaImg = item.imageUrl;
     },
     hidePopupAlert() {
       this.alert = false;
@@ -502,24 +503,20 @@ export default {
 
   .pop-class {
     width: 600px;
-    height: 500px;
+    height: 550px;
+    padding: 20px;
     text-align: center
   }
 
   .pop-img-class {
-    width: 500px;
+    width: 100%;
     height: 400px;
-    /* background-color: red; */
-    position: absolute;
-    right: 13%;
-    top: 50px
   }
 
   .pop-p {
     text-align: center;
-    position: absolute;
-    width: 90%
-
+    line-height: 30px;
+    width: 100%
   }
 
   .uni-popup-middle.uni-popup-fixed[data-v-728667af] {
