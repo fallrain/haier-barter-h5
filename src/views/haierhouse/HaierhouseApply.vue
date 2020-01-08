@@ -79,12 +79,28 @@
     <div class="dis-flex row-style br-b">
       <div class="w200">租赁时间</div>
       <div class="fg1 dis-flex">
-        <input type="text" v-model="customerInfo.rentStartTime" @click="timeShow(1)"
-               class="w250 input-style text-center pr20" placeholder="开始日期">
-        <div class="">至</div>
-        <input type="text" v-model="customerInfo.rentEndTime" @click="timeShow(2)"
-               class="w250 input-style text-center pr20" placeholder="结束日期">
-        <md-icon class="mt10" name="calendar" size="lg"></md-icon>
+        <b-date-picker
+          class="time-style"
+          slot="right"
+          type="date"
+          title="请选择日期"
+          defaultDate=""
+          v-model="customerInfo.rentStartTime"
+        ></b-date-picker>
+        <!--<input type="text" v-model="customerInfo.rentStartTime" @click.prevent="timeShow(1)"
+               class="w250 input-style text-center pr20" placeholder="开始日期">-->
+        <div class="mh10px">至</div>
+        <b-date-picker
+          class="time-style"
+          slot="right"
+          type="date"
+          title="请选择日期"
+          defaultDate=""
+          v-model="customerInfo.rentEndTime"
+        ></b-date-picker>
+        <!--<input type="text" v-model="customerInfo.rentEndTime" @click.prevent="timeShow(2)"
+               class="w250 input-style text-center pr20" placeholder="结束日期">-->
+<!--        <md-icon class="mt10" name="calendar" size="lg"></md-icon>-->
       </div>
     </div>
     <div class="">
@@ -205,7 +221,7 @@ import {
 } from 'mand-mobile';
 import {
   BItem,
-  BUpload,
+  BDatePicker,
   BWxUpload
 } from '@/components/form';
 
@@ -225,7 +241,7 @@ export default {
     [CheckList.name]: CheckList,
     [Button.name]: Button,
     BItem,
-    BUpload,
+    BDatePicker,
     BWxUpload
   },
   data() {
@@ -647,6 +663,10 @@ export default {
     border: none;
     line-height: 80px;
   }
+  .time-style{
+    width: 260px;
+    padding: 7px 0 0 0;
+  }
   .jus-bt{
     justify-content: space-between;
   }
@@ -700,6 +720,9 @@ export default {
   }
   .mt10{
     margin-top: 10px;
+  }
+  .mh10px{
+    margin: 0 10px;
   }
   .w200{
     width: 200px;
