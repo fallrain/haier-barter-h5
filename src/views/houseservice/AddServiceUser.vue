@@ -332,20 +332,20 @@ export default {
       this.isChangePlan = true;
       this.customerInfo = this.$route.params.customerInfo;
       // 查询入户服务礼品卡券
-      this.houseService.getCanBeIssuedRights({
-        userId: this.customerInfo.userId,
-        type: 2
-      }).then((res) => {
-        if (res.code === '200') {
-          res.data.forEach((item) => {
-            const name = `${item.cardTypeName} &nbsp; <span class="text-warning fs20">${item.rightsList[0].residualNum}</span>`;
-            this.tagList1.push({
-              id: item.rightsList[0].id,
-              name
-            });
-          });
-        }
-      });
+      // this.houseService.getCanBeIssuedRights({
+      //   userId: this.customerInfo.userId,
+      //   type: 2
+      // }).then((res) => {
+      //   if (res.code === '200') {
+      //     res.data.forEach((item) => {
+      //       const name = `${item.cardTypeName} &nbsp; <span class="text-warning fs20">${item.rightsList[0].residualNum}</span>`;
+      //       this.tagList1.push({
+      //         id: item.rightsList[0].id,
+      //         name
+      //       });
+      //     });
+      //   }
+      // });
       if (this.customerInfo.productCodes !== '' && this.customerInfo.productCodes !== null) {
         this.productNames = this.customerInfo.productNames.split(',');
         this.productCodes = this.customerInfo.productCodes.split(',');

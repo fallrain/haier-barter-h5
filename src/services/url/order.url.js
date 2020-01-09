@@ -46,6 +46,8 @@ const urls = {
   queryExceptionOrder: '/orderManage/queryExceptionOrder',
   // 补录票据
   hmcUploadInvoiceForOrderFreeze: '/orderManage/hmcUploadInvoiceForOrderFreeze',
+  createFollowByRHFW: '/orderFollow/createFollowByRHFW', // 检查是否可以跳过上传发票
+  queryUserNewestOrder: '/orderManage/queryUserNewestOrder', // 查询用户最新订单信息
 };
 
 Object.entries(urls).forEach(([key, value]) => {

@@ -160,7 +160,7 @@
         <div class="md-example-child  md-example-child-button md-example-child-button-3">
           <div class="md-example-section">
             <md-button type="primary" inline plain @click="addServiceUser()">创建新用户入户</md-button>
-            <md-button type="primary" inline >查看优秀案例</md-button>
+<!--            <md-button type="primary" inline >查看优秀案例</md-button>-->
           </div>
         </div>
       </template>
@@ -353,7 +353,7 @@ export default {
     display: flex;
     justify-content: space-between;
     button{
-      width: 48%;
+      width: 100%;
       height: 80px;
     }
   }

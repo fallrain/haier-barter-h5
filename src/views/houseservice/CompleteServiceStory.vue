@@ -265,14 +265,13 @@ export default {
   mounted() {
   },
   created() {
-    debugger;
     this.headers.Authorization = `Bearer  ${localStorage.getItem('acces_token')}`;
     if (this.$route.query.planId) {
       this.customerInfo.planId = this.$route.query.planId;
       this.houseService.searchStoryByPlanId({
         planId: this.customerInfo.planId
       }).then((res) => {
-        if (res.code === 1) {
+        if (res.code === 1) {debugger
           if (res.data === null) {
             this.isAddState = false;
           } else {
@@ -282,17 +281,19 @@ export default {
             this.customerInfo.heartInfo = obj.heartInfo;
             this.customerInfo.lifeInfo = obj.lifeInfo;
             this.customerInfo.userwordInfo = obj.userwordInfo;
-            // 查询直销员信息
-            this.basicService.userInfo().then((res) => {
-              if (res.code === 1) {
-                const storeName = res.data.storeInfo.storeName;
-                const username = res.data.username;
-                this.customerInfo.tag = `${storeName}/${username}`;
-                console.log(this.customerInfo);
-              }
-            });
           }
+          return res;
         }
+      }).then(() => {
+        // 查询直销员信息
+        this.basicService.userInfo().then((res) => {
+          if (res.code === 1) {
+            const storeName = res.data.storeInfo.storeName;
+            const username = res.data.username;
+            this.customerInfo.tag = `${storeName}/${username}`;
+            console.log(this.customerInfo);
+          }
+        });
       });
     }
   },
@@ -334,6 +335,20 @@ export default {
         userwordInfo: this.customerInfo.userwordInfo,
       };
       this.customerInfo.content = JSON.stringify(content);
+      if (status === 1) {
+        if (this.customerInfo.coverImage === '') {
+          Toast.failed('请上传封面图片！');
+          return;
+        }
+        if (this.customerInfo.title === '') {
+          Toast.failed('请输入故事标题！');
+          return;
+        }
+        if (this.customerInfo.content === '{"heartInfo":[{"url":"","descript":""}],"lifeInfo":[{"url":"","descript":""}],"userwordInfo":[{"url":"","descript":""}]}') {
+          Toast.failed('请输入故事内容！');
+          return;
+        }
+      }
       if (!this.isAddState) { // 新增
         this.houseService.addStory(this.customerInfo).then((res) => {
           if (res.code === 1) {
@@ -393,7 +408,6 @@ export default {
       });
     },
     imageuploaded(data, fileList, item) {
-      console.log(item);
       if (data.code === 1) { // 上传成功
         if (item) {
           item.url = data.data;

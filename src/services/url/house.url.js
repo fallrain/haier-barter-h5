@@ -18,6 +18,7 @@ const urls = {
   queryFlagsById: '/visitService/plan/queryFlagsById', // 查询完善计划状态
   appraiseStatistics: '/visitService/statistics/appraiseStatistics', // 评价统计
   analysis: '/visitService/statistics/analysis', // 数据分析
+  appraiseAdd: '/visitService/appraise/add', // 邀请评价
 };
 
 Object.entries(urls).forEach(([key, value]) => {

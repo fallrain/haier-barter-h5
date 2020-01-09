@@ -48,20 +48,10 @@
           <b-radio-item
             :inline="true"
             :list="buyChanl"
-            v-model="customerInfo.sex"
+            v-model="productInfo.buyingChannel"
             @radioChange="radioChange"
           ></b-radio-item>
         </div>
-<!--        <template>-->
-<!--          <div class="md-example-child md-example-child-radio md-example-child-radio-1">-->
-<!--            <md-field>-->
-<!--              <md-field-item title="购买渠道" solid>-->
-<!--                <md-radio name="0" v-model="productInfo.buyingChannel" label="线上平台" inline />-->
-<!--                <md-radio name="1" v-model="productInfo.buyingChannel" label="线下门店" inline />-->
-<!--              </md-field-item>-->
-<!--            </md-field>-->
-<!--          </div>-->
-<!--        </template>-->
       </div>
       <div class="product-item br-b fs28">
         <label >产品购买价格</label>
@@ -96,6 +86,7 @@
           <input class="text-666 br-n fs28"
                  type="text"
                  v-model="productInfo.frequency"
+                 @keyup="dealNum($event)"
                  placeholder="请填写维修次数(可不填写)"
           >
         </div>
@@ -233,7 +224,7 @@ export default {
       assessmentV: [],
       productInfo: {
         brandItemCode: '',
-        buyingChannel: '',
+        buyingChannel: 0,
         categoryItemCode: '',
         customerFamilyId: null,
         customerId: null,
@@ -301,9 +292,14 @@ export default {
       // 编辑
       if (this.$route.params.productInfo) {
         this.productInfo = this.$route.params.productInfo;
-        this.productInfo.buyingChannel = this.$route.params.productInfo.buyingChannel.toString();
+        // this.productInfo.buyingChannel = this.$route.params.productInfo.buyingChannel.toString();
         this.productInfo.purchaseDate = this.bUtil.formatDate(this.$route.params.productInfo.purchaseDate, 'yyyy-MM-dd');
         this.productInfo.havePicture = false;
+        this.productInfo.picUrlList = this.$route.params.productInfo.img
+        if (this.productInfo.groupAppraiseCode) {
+          this.assessmentV = this.productInfo.groupAppraiseCode.split(',');
+        }
+
         this.regio = 'edit';
         console.log(this.productInfo);
       }
@@ -321,7 +317,14 @@ export default {
   },
   methods: {
     radioChange(val) {
-      this.customerInfo.sex = val;
+      this.productInfo.buyingChannel = val;
+    },
+    dealNum(e) {
+      const flag = new RegExp('^[1-9]([0-9])*$').test(e.target.value);
+      if (!flag) {
+        Toast.failed('请输入正整数');
+        this.productInfo.frequency = '';
+      }
     },
     chooseBrand() {
       /* 选择品牌显示隐藏 */
@@ -337,6 +340,26 @@ export default {
     },
     // 保存
     dealSave() {
+      if (this.productInfo.brandItemCode === '') {
+        Toast.failed('请选择品牌！');
+        return;
+      }
+      if (this.productInfo.categoryItemCode === '') {
+        Toast.failed('请选择产品类别！');
+        return;
+      }
+      if (this.productInfo.buyingChannel === '') {
+        Toast.failed('请选择购买渠道！');
+        return;
+      }
+      if (this.productInfo.price === null) {
+        Toast.failed('请输入产品价格！');
+        return;
+      }
+      if (this.productInfo.purchaseDate === '') {
+        Toast.failed('请选择购买日期！');
+        return;
+      }
       this.productInfo.name = this.BrandName + this.productGroup;
       this.productInfo.customerFamilyId = this.customerInfo.customerInfoId;
       this.productInfo.customerId = this.customerInfo.customerId;
@@ -347,6 +370,7 @@ export default {
         if (res.code === 1) {
         }
       });
+      delete this.productInfo.img;
       this.basicService.saveHouseHold(this.productInfo, {}).then((res) => {
         if (res.code === 1) {
           if (this.regio === 'edit') {
