@@ -546,14 +546,14 @@ export default {
             res.data.customerHeaInfoList.forEach((item, index) => {
               if (item.id) {
                 this.basicService.queryHoseHoldPictures(item.id).then((res1) => {
-                  debugger;
                   if (res1.code === 1) {
                     if (res1.data.length === 0) {
                       res.data.customerHeaInfoList[index].havePicture = false;
                       this.$set(this.imgList, item.id, '0');
                     } else {
-                      this.$set(this.imgList, item.id, res1.data);
+                      this.$set(this.imgList, item.id, res1.data[0]);
                       res.data.customerHeaInfoList[index].havePicture = true;
+                      this.familyCompleteInfo.customerHeaInfoList[index].img = res1.data;
                     }
                   }
                 });

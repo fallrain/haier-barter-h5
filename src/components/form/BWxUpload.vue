@@ -57,7 +57,7 @@ export default {
       required: true
     }
   },
-  activated() {
+  created() {
     localStorage.setItem('picFinishedStatus', 'true');
   },
   methods: {

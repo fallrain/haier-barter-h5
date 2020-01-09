@@ -61,7 +61,7 @@
             </div>
             <span class="content-right lh60">去完善</span>
           </div>
-          <div class="body-item mt16">
+          <!--<div class="body-item mt16">
             <img src="@/assets/images/houseServicer/completeInfor/icon5.png" alt="">
             <div class="content-center">
               <div class="title lh60">引导用户代言/传播</div>
@@ -75,7 +75,7 @@
             </div>
             <span class="content-right lh60">估换新</span>
             <span class="content-right lh60">去换购</span>
-          </div>
+          </div>-->
         </div>
       </div>
     </div>
@@ -164,7 +164,6 @@ export default {
       this.houseService.queryDetailById(param).then((res) => {
         if (res.code === 1) {
           this.customerInfo = res.data;
-          this.delTagCount();
         }
       });
     },
@@ -173,6 +172,7 @@ export default {
       this.houseService.queryFlagsById(param).then((res) => {
         if (res.code === 1) {
           this.flagInfo = res.data;
+          this.delTagCount();
         }
       });
     },
@@ -182,11 +182,20 @@ export default {
       };
       switch (index) {
         case 0: // 邀请评价
+          if (this.flagInfo.appraise_flag === 1) {
+            return;
+          }
           this.houseService.completeAppraise(param).then((res) => {
             if (res.code === 1) {
               this.queryFlagsById(this.customerInfo.id);
             }
           });
+          let host = `${window.location.protocol}//${window.location.host}`;
+          if (host.indexOf('localhost') > -1) {
+            host = 'https://testdb.haier.net';
+          }
+          const url = `${host}/houseservice/serviceEvaluate?planId=${this.customerInfo.id}&userId=${this.customerInfo.userId}&userName=${this.customerInfo.userName}&servicerName=${this.customerInfo.servicerName}`;
+          window.open(url);
           break;
         case 1: // 完善小区住宅信息
           this.judgeTabState = 1;
@@ -223,22 +232,22 @@ export default {
       this.complete = 0;
       this.uncomplete = 4;
       // 已评价
-      if (this.customerInfo.appraiseFlag === 1) {
+      if (this.flagInfo.appraise_flag === 1) {
         this.complete++;
         this.uncomplete--;
       }
       // 完善家庭信息
-      if (this.customerInfo.familyFlag === 1) {
+      if (this.flagInfo.family_flag === 1) {
         this.complete++;
         this.uncomplete--;
       }
       // 完善家电信息
-      if (this.customerInfo.applianceFlag === 1) {
+      if (this.flagInfo.appliance_flag === 1) {
         this.complete++;
         this.uncomplete--;
       }
       // 完善服务故事信息
-      if (this.customerInfo.storyFlag === 1) {
+      if (this.flagInfo.story_flag === 1) {
         this.complete++;
         this.uncomplete--;
       }

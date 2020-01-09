@@ -92,4 +92,10 @@ export default {
     /* 查询需要删除的订单的列表 */
     return axPostJson(urls.queryRightsReviewList, data, params);
   },
+  queryUserNewestOrder(data, param) {
+    return axPostJson(urls.queryUserNewestOrder, data, param);
+  },
+  createFollowByRHFW(data, param) {
+    return axPostJson(urls.createFollowByRHFW, data, param);
+  },
 };

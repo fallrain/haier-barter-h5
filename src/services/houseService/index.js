@@ -75,4 +75,8 @@ export default {
     /* 数据分析 */
     return axPostJson(urls.analysis, data, param);
   },
+  appraiseAdd(data, param) {
+    /* 邀请评价 */
+    return axPostJson(urls.appraiseAdd, data, param);
+  },
 };

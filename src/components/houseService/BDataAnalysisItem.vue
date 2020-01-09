@@ -63,7 +63,7 @@
       </li>
     </ul>
 
-    <div class="body-item mt16">
+    <!--<div class="body-item mt16">
       <img src="@/assets/images/houseServicer/completeInfor/icon5.png" alt="">
       <div class="content-center">
         <div class="title lh60">引导用户代言/传播</div>
@@ -77,7 +77,7 @@
       </div>
       <span class="content-right lh60">估换新</span>
       <span class="content-right lh60">去换购</span>
-    </div>
+    </div>-->
 
   </div>
 </template>

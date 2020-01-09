@@ -44,10 +44,10 @@
         </div>
       </div>
     </div>
-    <div class="footer">
-      <span>用户会员等级有问题?</span>
-      <button class="btn" type="button">点击查看解决方法</button>
-    </div>
+<!--    <div class="footer">-->
+<!--      <span>用户会员等级有问题?</span>-->
+<!--      <button class="btn" type="button">点击查看解决方法</button>-->
+<!--    </div>-->
     <md-dialog
       title="其他入户服务计划"
       :closable="false"
