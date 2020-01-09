@@ -31,7 +31,7 @@
       :show.sync="filterListShow"
       :filterList="filterList"
       :conditions="conditions"
-      @confirm="queryByCondition"
+      @confirm="confirmSearch"
     ></b-float-search>
   </div>
 </template>
@@ -243,7 +243,7 @@ export default {
           const buyTime = {
             name: '潜客类型',
             isExpand: true,
-            type: 'checkbox',
+            type: 'radio',
             data: []
           };
           buyTime.data = sneakData.map(v => ({
@@ -310,6 +310,16 @@ export default {
         pageSize: page.size,
       });
     },
+    confirmSearch(searchForm) {
+      // 检查搜索值是否不一样
+      if (
+        !this.bUtil.isSameValueOfOneDimensional(this.searchForm.industryList, searchForm.industryList)
+        || this.searchForm.sneakType !== searchForm.sneakType
+        || this.searchForm.buyIntention !== searchForm.buyIntention
+      ) {
+        this.queryByCondition(searchForm);
+      }
+    },
     queryByCondition(searchForm) {
       /* 按条件搜索 */
       this.chooseAll = false;
@@ -328,7 +338,7 @@ export default {
         this.queryByCondition();
       });
     },
-    confirmSendCoupon() {
+    confirmSendCoupon(ids) {
       /* 确认发卡券 */
       const messageVos = [];
       this.list.forEach((order) => {
@@ -338,7 +348,7 @@ export default {
             industry: order.industryName,
             mobile: order.userPhone,
             price: order.totalPrice,
-            sendType: 1,
+            sendType: ids[0],
             userName: order.userName,
           });
         }
