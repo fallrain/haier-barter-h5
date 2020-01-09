@@ -30,6 +30,7 @@
     <b-float-search
       :show.sync="filterListShow"
       :filterList="filterList"
+      :conditions="conditions"
       @confirm="queryByCondition"
     ></b-float-search>
   </div>
@@ -105,6 +106,7 @@ export default {
         buyIntention: '',
         industryList: [],
         years: [],
+        sneakType: '',
         sortType: '0'
       },
       list: [],
@@ -112,11 +114,26 @@ export default {
       filterListShow: false,
       // 右侧浮动筛选的数据
       filterList: [],
+      // 浮动搜索key,type
+      conditions: [
+        {
+          key: 'industryList',
+          type: 'checkbox'
+        },
+        {
+          key: 'sneakType',
+          type: 'radio'
+        },
+        {
+          key: 'buyIntention',
+          type: 'radio'
+        }
+      ],
       // 选择所有
       chooseAll: false,
       // 产品组数据
       industryAy: [],
-      industryData: {}
+      industryData: {},
     };
   },
   created() {
@@ -192,14 +209,16 @@ export default {
       // 查询产业数据
       const getIndustryList = this.getIndustryList();
       // 查询年限
-      const getStatisticalParameter = this.campaignService.statisticalParameter();
+      // const getStatisticalParameter = this.campaignService.statisticalParameter();
+      // 查询潜客
+      const getSneakType = this.productService.commonTypeQuery('SNEAK_TYPE');
       // 查询购买意愿
       const getBuyIntention = this.basicService.getBuyIntention();
-      Promise.all([getIndustryList, getStatisticalParameter, getBuyIntention]).then(([
+      Promise.all([getIndustryList, getSneakType, getBuyIntention]).then(([
         industryData,
         {
-          code: yearCode,
-          data: yearData
+          code: sneakCode,
+          data: sneakData
         },
         {
           code: buyIntentionCode,
@@ -220,16 +239,16 @@ export default {
           }));
           this.filterList.push(industry);
         }
-        if (yearCode === 1) {
+        if (sneakCode === 1) {
           const buyTime = {
-            name: '购买时间',
+            name: '潜客类型',
             isExpand: true,
             type: 'checkbox',
             data: []
           };
-          buyTime.data = yearData.yeasList.map(v => ({
-            key: v.outputYear,
-            value: v.outputYear,
+          buyTime.data = sneakData.map(v => ({
+            key: v.itemCode,
+            value: v.itemName,
             isChecked: false
           }));
           this.filterList.push(buyTime);
