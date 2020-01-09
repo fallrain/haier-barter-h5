@@ -14,7 +14,7 @@ export default {
     return axGet(urls.userInfo);
   },
   scanQRcode(url) {
-    /* 查询产品型号 */
+    /* 查询产品型号  */
     return axGet(urls.scanQRcode, { url });
   },
   authorizedUrl(data) {
