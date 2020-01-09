@@ -167,7 +167,7 @@
 
 <script>
 import {
-  Toast, Popup, PopupTitleBar, Button, Icon, Radio, Field, FieldItem, Tag,Dialog
+  Toast, Popup, PopupTitleBar, Button, Icon, Radio, Field, FieldItem, Tag, Dialog
 } from 'mand-mobile';
 import {
   BDatePicker,
@@ -341,7 +341,12 @@ export default {
       this.productInfo.customerFamilyId = this.customerInfo.customerInfoId;
       this.productInfo.customerId = this.customerInfo.customerId;
       this.productInfo.groupAppraiseCode = this.assessmentV.join(',');
-      console.log(this.productInfo);
+      this.houseService.completeAppliance({
+        planId: this.customerInfo.id
+      }).then((res) => {
+        if (res.code === 1) {
+        }
+      });
       this.basicService.saveHouseHold(this.productInfo, {}).then((res) => {
         if (res.code === 1) {
           if (this.regio === 'edit') {

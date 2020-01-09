@@ -123,7 +123,10 @@
             <div>用户及家庭成员信息备注</div>
             <textarea placeholder="请输入用户的备注信息，200字以内..."
                       placeholder-style="font-size: 28px; color:#999;"
-                      class="w100per" rows="3" v-model="familyCompleteInfo.memberRemarks"></textarea>
+                      class="w100per" rows="3"
+                      v-model="familyCompleteInfo.memberRemarks"
+                      @input="delKeyNum"
+            ></textarea>
           </div>
         </div>
         <div v-show="tabIndex==2" class="tab-item">
@@ -143,7 +146,8 @@
           </div>
           <div class="fs30 mt24 ml25 text-333">产品明细列表</div>
           <div class="product-show-item" v-for="(item, index) in familyCompleteInfo.customerHeaInfoList" :key="index">
-            <img v-if="item.img" :src="item.img[0]">
+<!--            <img v-if="item.img" :src="item.img[0]">-->
+            <img v-if="imgList[item.id] !== '0'" :src="imgList[item.id]">
             <img v-else src="@/assets/images/houseServicer/head.png">
             <div class="product-infor">
               <div class="infor-rows">
@@ -241,6 +245,7 @@ export default {
   },
   data() {
     return {
+      isTaizhang: false,
       tabIndex: 1,
       tagPopShow: false,
       tagPopShow1: false,
@@ -276,7 +281,24 @@ export default {
         avgPrice: null, // 均价
         communityName: '', // 小区名称
         customerFamilyId: '',
-        customerHeaInfoList: [], // 家电信息列表
+        customerHeaInfoList: [
+          {
+            brandItemCode: null,
+            buyingChannel: null,
+            categoryItemCode: null,
+            customerFamilyId: null,
+            customerId: null,
+            frequency: null,
+            groupAppraiseCode: null,
+            havePicture: null,
+            id: '',
+            img: [],
+            name: '',
+            picUrlList: '',
+            price: '',
+            purchaseDate: '',
+          }
+        ], // 家电信息列表
         familyItemCode: '', // 家庭住址类型字典分类代码
         gradeItemCode: '', // 小区档次字典代码
         groupCompositionCode: '', // 家庭结构标签代码 标签表代码
@@ -287,7 +309,8 @@ export default {
         totalBrand: 0, // 品牌数量
         totalCategory: 0, // 品类的数量
         totalProduct: 0 // 产品数量
-      }
+      },
+      imgList: {}
     };
   },
   computed: {
@@ -375,8 +398,7 @@ export default {
       if (this.familyCompleteInfo.groupCompositionCode) {
         return this.familyCompleteInfo.groupCompositionCode.split(',');
       }
-    },
-
+    }
   },
   mounted() {
   },
@@ -460,6 +482,8 @@ export default {
       }
     });
     if (this.$route.query.customerInfoId) {
+      // 台账过来的
+      this.isTaizhang = true;
       this.tabIndex = this.$route.query.tabState;
       this.customerInfoId = this.$route.query.customerInfoId;
       this.customerInfo.userName = this.$route.query.userName;
@@ -469,6 +493,12 @@ export default {
     }
   },
   methods: {
+    delKeyNum() {
+      if (this.familyCompleteInfo.memberRemarks.length > 200) {
+        Toast.failed('最多输入200个字');
+        this.familyCompleteInfo.memberRemarks = this.familyCompleteInfo.memberRemarks.substr(0, 200);
+      }
+    },
     tabChange(index) {
       this.tabIndex = index;
     },
@@ -497,7 +527,7 @@ export default {
       // 查询家庭成员信息
       this.basicService.queryFamilyInfo(this.customerInfoId).then((res) => {
         if (res.code === 1) {
-          this.familyCompleteInfo = res.data;
+          // this.familyCompleteInfo = res.data;
           this.houseAreaLevelV[0] = res.data.gradeItemCode; // 小区档次
           this.houseTypeV[0] = res.data.housetypItemCode; // 户型
           this.addressRelationV[0] = res.data.familyItemCode; // 用户与地址的关系
@@ -512,21 +542,26 @@ export default {
             });
           }
           // 查询产品图片信息
-          if (this.familyCompleteInfo.customerHeaInfoList.length > 0) {
-            this.familyCompleteInfo.customerHeaInfoList.forEach((item, index) => {
+          if (res.data.customerHeaInfoList.length > 0) {
+            res.data.customerHeaInfoList.forEach((item, index) => {
               if (item.id) {
-                this.basicService.queryHoseHoldPictures(item.id).then((res) => {
-                  if (res.code === 1) {
-                    if (res.data.length === 0) {
-                      this.familyCompleteInfo.customerHeaInfoList[index].havePicture = false;
+                this.basicService.queryHoseHoldPictures(item.id).then((res1) => {
+                  debugger;
+                  if (res1.code === 1) {
+                    if (res1.data.length === 0) {
+                      res.data.customerHeaInfoList[index].havePicture = false;
+                      this.$set(this.imgList, item.id, '0');
                     } else {
-                      this.familyCompleteInfo.customerHeaInfoList[index].img = res.data;
-                      this.familyCompleteInfo.customerHeaInfoList[index].havePicture = true;
+                      this.$set(this.imgList, item.id, res1.data);
+                      res.data.customerHeaInfoList[index].havePicture = true;
                     }
                   }
                 });
               }
             });
+            this.familyCompleteInfo = res.data;
+          } else {
+            this.familyCompleteInfo = res.data;
           }
         }
       });
@@ -643,10 +678,12 @@ export default {
         return;
       }
       // 修改住宅信息状态
-      this.houseService.completeFamily({
-        planId: this.planId
-      }).then((res) => {
-      });
+      if (!this.isTaizhang) {
+        this.houseService.completeFamily({
+          planId: this.planId
+        }).then((res) => {
+        });
+      }
       /* 修改顾客的住宅信息、家庭成员 */
       this.basicService.updataFamilyInfo(familyCompleteInfo, {}).then((res) => {
         if (res.code === 1) {
