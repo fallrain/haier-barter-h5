@@ -274,7 +274,6 @@ const util = {
   },
   /** *****判断代报装时间是否符合要求******** */
   isReportInstallFit(productlist, deliveryTime) {
-    debugger;
     let change = true;
     // const now = new Date()
     const deT = Date.parse(deliveryTime.substring(0, 16).replace(/-/g, '/'));

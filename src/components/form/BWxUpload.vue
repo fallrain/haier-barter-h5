@@ -28,7 +28,7 @@ import {
 } from 'mand-mobile';
 
 export default {
-  name: 'BUpload',
+  name: 'BWxUpload',
   components: {
   },
   data() {
@@ -57,6 +57,9 @@ export default {
       required: true
     }
   },
+  created() {
+    localStorage.setItem('picFinishedStatus', 'true');
+  },
   activated() {
     localStorage.setItem('picFinishedStatus', 'true');
   },
@@ -72,7 +75,7 @@ export default {
       Toast.loading('上传中');
     },
     chooseImg() {
-      this.isFinished = localStorage.getItem('picFinishedStatus')
+      this.isFinished = localStorage.getItem('picFinishedStatus');
       if (this.isFinished === 'false') {
         return;
       }
