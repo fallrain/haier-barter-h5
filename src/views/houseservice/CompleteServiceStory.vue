@@ -325,12 +325,6 @@ export default {
       }
     },
     submit(status) {
-      this.houseService.completeStory({
-        planId: this.customerInfo.planId
-      }).then((res) => {
-        if (res.code === 1) {
-        }
-      });
       this.customerInfo.authorizeFlag = this.switch1 === true ? 1 : 0;
       this.customerInfo.applyFlag = this.switch2 === true ? 1 : 0;
       this.customerInfo.status = status;
@@ -345,28 +339,48 @@ export default {
           if (res.code === 1) {
             if (status === 0) {
               Toast.succeed('暂存成功');
+              setTimeout(() => {
+                this.$router.go(-1);
+                this.$destroy();
+              }, 500);
             } else {
               Toast.succeed('提交成功');
+              this.houseService.completeStory({
+                planId: this.customerInfo.planId
+              }).then((res) => {
+                if (res.code === 1) {
+                  setTimeout(() => {
+                    this.$router.go(-1);
+                    this.$destroy();
+                  }, 500);
+                }
+              });
             }
           }
-          setTimeout(() => {
-            this.$router.go(-1);
-            this.$destroy();
-          }, 500);
         });
       } else if (this.isAddState) { // 修改
         this.houseService.modifyStory(this.customerInfo).then((res) => {
           if (res.code === 1) {
             if (status === 0) {
               Toast.succeed('暂存成功');
+              setTimeout(() => {
+                this.$router.go(-1);
+                this.$destroy();
+              }, 500);
             } else {
               Toast.succeed('提交成功');
+              this.houseService.completeStory({
+                planId: this.customerInfo.planId
+              }).then((res) => {
+                if (res.code === 1) {
+                  setTimeout(() => {
+                    this.$router.go(-1);
+                    this.$destroy();
+                  }, 500);
+                }
+              });
             }
           }
-          setTimeout(() => {
-            this.$router.go(-1);
-            this.$destroy();
-          }, 500);
         });
       }
     },

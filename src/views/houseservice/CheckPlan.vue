@@ -102,7 +102,7 @@ export default {
       this.houseService.queryDetailById(param).then((res) => {
         if (res.code === 1) {
           this.customerInfo = res.data;
-          this.productlist = res.data.productNames.split(',')
+          this.productlist = res.data.productNames.split(',');
         }
       });
     },

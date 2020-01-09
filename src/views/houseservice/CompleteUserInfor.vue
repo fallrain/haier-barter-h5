@@ -199,11 +199,6 @@ export default {
           });
           break;
         case 2:// 完善家电信息
-          this.houseService.completeAppliance(param).then((res) => {
-            if (res.code === 1) {
-              // this.queryDetail(this.customerInfo.id);
-            }
-          });
           this.judgeTabState = 2;
           this.$router.push({
             name: 'Houseservice.CompleteFamilyInfor',

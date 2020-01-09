@@ -141,8 +141,8 @@ export default {
       ],
       mySuccessPlan: [ // 我的已入户计划用户信息
       ],
-      appraiseData:{},
-      analysisData:{},
+      appraiseData: {},
+      analysisData: {},
       userinfo: {}
     };
   },
@@ -197,6 +197,10 @@ export default {
       };
       // param.servicerId = this.userinfo.hmcid;
       this.houseService.queryOtherPlanServiceList(param, '').then((res) => {
+        res.data.result.forEach((item, index) => {
+          res.data.result[index].arrowtag = false;
+          res.data.result[index].dealproducts = item.productNames.split(',');
+        });
         this.otherPlanServices = res.data.result;
       });
     },
