@@ -1,6 +1,8 @@
 import urls from '../url/basic.url';
 import {
-  axGet, axPostJson
+  axGet,
+  axPost,
+  axPostJson
 } from '@/lib/ajax';
 
 
