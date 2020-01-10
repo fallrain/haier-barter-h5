@@ -1,10 +1,5 @@
 <template>
   <div>
-<!--    <b-notice-bar-->
-<!--      :show.sync="noticeShow"-->
-<!--      content="温馨提示：点击下方的【扫描】，可扫产品能效贴自动带入产品型号。"-->
-<!--    >-->
-<!--    </b-notice-bar>-->
     <b-search-input
       v-model="searchVal"
       @search="search"
@@ -48,7 +43,10 @@ export default {
   data() {
     return {
       searchVal: '',
-      searchData: '',
+      searchData: {
+        username: '',
+        hmcId: ''
+      },
       // 点击的数据
       currentClickItemData: {},
       searchList: []
@@ -65,13 +63,13 @@ export default {
           if (res.data === null) {
             Toast.failed('暂无信息，请重新搜索');
             this.searchVal = '';
-            this.searchData = '';
+            this.searchData = {
+              username: '',
+              hmcId: ''
+            };
           }
         }
       });
-    },
-    array_contain(array, obj) {
-      return !!array.find(v => v.productCode === obj.productCode);
     },
     onItemClick() {
       this.searchVal = '';
