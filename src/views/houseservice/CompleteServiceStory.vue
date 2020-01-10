@@ -360,14 +360,17 @@ export default {
       if (status === 1) {
         if (this.customerInfo.coverImage === '') {
           Toast.failed('请上传封面图片！');
+          this.customerInfo.status = 0
           return;
         }
         if (this.customerInfo.title === '') {
           Toast.failed('请输入故事标题！');
+          this.customerInfo.status = 0
           return;
         }
         if (this.customerInfo.content === '{"heartInfo":[{"url":"","descript":""}],"lifeInfo":[{"url":"","descript":""}],"userwordInfo":[{"url":"","descript":""}]}') {
           Toast.failed('请输入故事内容！');
+          this.customerInfo.status = 0
           return;
         }
       }

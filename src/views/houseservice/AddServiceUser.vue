@@ -556,12 +556,14 @@ export default {
       if (!this.isChangePlan) { // 新增计划
         this.houseService.createPlanService(this.customerInfo, {}).then((res) => {
           if (res.code === 1) {
+            Toast.succeed('保存成功')
             this.dealTip(res.data);
           }
         });
       } else { // 修改计划
         this.houseService.changePlanService(this.customerInfo, {}).then((res) => {
           if (res.code === 1) {
+            Toast.succeed('保存成功')
             this.dealTip(res.data);
           }
         });
@@ -621,6 +623,10 @@ export default {
               name: 'Houseservice.HouseServiceEntry',
             });
           }
+        });
+      } else {
+        this.$router.push({
+          name: 'Houseservice.HouseServiceEntry',
         });
       }
     },

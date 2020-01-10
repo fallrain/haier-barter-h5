@@ -93,7 +93,7 @@
       </div>
       <div class="img-upload br-b">
         <div>产品图片</div>
-        <b-upload
+        <!--<b-upload
             :imgs="productInfo.img"
             :crop="false"
             inputOfFile="file"
@@ -109,7 +109,14 @@
             @delFun="delImg"
             @errorhandle="uploadError"
         >
-        </b-upload>
+        </b-upload>-->
+        <b-wx-upload
+          :maxLength="3"
+          @imageuploaded="(data, fileList)=>imageuploaded(data, fileList)"
+          :uploadFn="uploadImgFn"
+          @errorhandle="uploadError"
+        >
+        </b-wx-upload>
       </div>
       <div class="br-b family-tag-area">
         <label class="fs28">用户评价</label>
@@ -165,7 +172,8 @@ import {
   BItem,
   BPopCheckList,
   BRadioItem,
-  BUpload
+  BUpload,
+  BWxUpload
 } from '@/components/form';
 
 export default {
@@ -177,6 +185,7 @@ export default {
     BUpload,
     BPopCheckList,
     BRadioItem,
+    BWxUpload,
     [Popup.name]: Popup,
     [PopupTitleBar.name]: PopupTitleBar,
     [Button.name]: Button,
@@ -295,7 +304,7 @@ export default {
         // this.productInfo.buyingChannel = this.$route.params.productInfo.buyingChannel.toString();
         this.productInfo.purchaseDate = this.bUtil.formatDate(this.$route.params.productInfo.purchaseDate, 'yyyy-MM-dd');
         this.productInfo.havePicture = false;
-        this.productInfo.picUrlList = this.$route.params.productInfo.img
+        this.productInfo.picUrlList = this.$route.params.productInfo.img;
         if (this.productInfo.groupAppraiseCode) {
           this.assessmentV = this.productInfo.groupAppraiseCode.split(',');
         }
@@ -382,6 +391,11 @@ export default {
             this.$router.go(-1);
           }, 800);
         }
+      });
+    },
+    uploadImgFn(mediaId) {
+      return this.basicService.uploadByMediaId({}, {
+        mediaId
       });
     },
     imageuploaded(data, fileList) {

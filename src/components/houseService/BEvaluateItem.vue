@@ -94,8 +94,7 @@ export default {
       clear: both;
       .evaluate-tag{
         font-size: 24px;
-        padding: 14px 20px 16px;
-        height: 60px;
+        padding: 10px 16px;
         border: 1px solid #D0D0D0;
         border-radius: 30px;
         float: left;

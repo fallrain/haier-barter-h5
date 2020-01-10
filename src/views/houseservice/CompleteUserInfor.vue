@@ -185,11 +185,6 @@ export default {
           if (this.flagInfo.appraise_flag === 1) {
             return;
           }
-          this.houseService.completeAppraise(param).then((res) => {
-            if (res.code === 1) {
-              this.queryFlagsById(this.customerInfo.id);
-            }
-          });
           let host = `${window.location.protocol}//${window.location.host}`;
           if (host.indexOf('localhost') > -1) {
             host = 'https://testdb.haier.net';

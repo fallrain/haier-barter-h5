@@ -58,7 +58,7 @@
           <img
             src="@/assets/images/houseServicer/home_icons/shujufenxi1.png"
           >
-          <span class="tagNum">{{tagNum4}}</span>
+<!--          <span class="tagNum">{{tagNum4}}</span>-->
         </div>
         <p class="title">数据分析</p>
       </span>
@@ -154,6 +154,7 @@ export default {
     this.getMyPlan();// 入户计划列表查询
     this.getOtherPlan();// 其他入户计划列表查询
     this.getMySuccessPlan();// 查询已入户计划列表
+    this.dealAppraise();
   },
   created() {
     this.userinfo = JSON.parse(localStorage.getItem('userinfo'));
@@ -166,7 +167,7 @@ export default {
         pageNum: this.pageNum,
         pageSize: '10'
       };
-      this.houseService.queryPlanServiceList(data, {}).then((res) => {
+      this.houseService.queryPlanServiceList(data, {}).then((res) => {debugger
         if (res.code === 1) {
           res.data.result.forEach((item, index) => {
             res.data.result[index].arrowtag = false;
@@ -256,6 +257,7 @@ export default {
       }).then((res) => {
         if (res.code === 1) {
           this.appraiseData = res.data;
+          this.tagNum3 = res.data.descriptions.length;
         }
       });
     },
