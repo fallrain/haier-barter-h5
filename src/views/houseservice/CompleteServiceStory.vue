@@ -6,7 +6,7 @@
         <img v-show="customerInfo.coverImage !== ''" :src="customerInfo.coverImage" alt="">
       </div>
       <span v-show="this.customerInfo.status !== 1" class="img-change">
-        <b-upload
+        <!--<b-upload
           :crop="false"
           inputOfFile="file"
           :max-file-size="1024*1024*5"
@@ -20,7 +20,14 @@
           :multiple-size="1"
           @errorhandle="uploadError"
         >
-        </b-upload>
+        </b-upload>-->
+        <b-wx-upload
+          :maxLength="-1"
+          @imageuploaded="(data, fileList)=>imageuploaded(data, fileList)"
+          :uploadFn="uploadImgFn"
+          @errorhandle="uploadError"
+        >
+        </b-wx-upload>
         更换封面图片</span>
     </div>
     <div class="content">
@@ -39,7 +46,7 @@
           <div class="append-item" v-for="(item, index) in customerInfo.heartInfo" :key="index">
             <div class="img-show">
               <div v-show="customerInfo.status !== 1">
-                <b-upload
+                <!--<b-upload
                   :crop="false"
                   inputOfFile="file"
                   :max-file-size="1024*1024*5"
@@ -53,7 +60,14 @@
                   :multiple-size="1"
                   @errorhandle="uploadError"
                 >
-                </b-upload>
+                </b-upload>-->
+                <b-wx-upload
+                  :maxLength="-1"
+                  @imageuploaded="(data, fileList)=>imageuploaded(data, fileList, item)"
+                  :uploadFn="uploadImgFn"
+                  @errorhandle="uploadError"
+                >
+                </b-wx-upload>
               </div>
               <div v-show="item.url === ''" class="add-tag">+</div>
               <img v-show="item.url!=''" :src="item.url" alt="">
@@ -76,7 +90,7 @@
           <div class="append-item" v-for="(item, index) in customerInfo.lifeInfo" :key="index">
             <div class="img-show">
               <div v-show="customerInfo.status !== 1">
-                <b-upload
+                <!--<b-upload
                   :crop="false"
                   inputOfFile="file"
                   :max-file-size="1024*1024*5"
@@ -90,7 +104,14 @@
                   :multiple-size="1"
                   @errorhandle="uploadError"
                 >
-                </b-upload>
+                </b-upload>-->
+                <b-wx-upload
+                  :maxLength="-1"
+                  @imageuploaded="(data, fileList)=>imageuploaded(data, fileList, item)"
+                  :uploadFn="uploadImgFn"
+                  @errorhandle="uploadError"
+                >
+                </b-wx-upload>
               </div>
               <div v-show="item.url === ''" class="add-tag">+</div>
               <img v-show="item.url!=''" :src="item.url" alt="">
@@ -129,7 +150,7 @@
                 >
                 </b-upload>-->
                 <b-wx-upload
-                  :maxLength="1"
+                  :maxLength="-1"
                   @imageuploaded="(data, fileList)=>imageuploaded(data, fileList, item)"
                   :uploadFn="uploadImgFn"
                   @errorhandle="uploadError"
@@ -271,7 +292,8 @@ export default {
       this.houseService.searchStoryByPlanId({
         planId: this.customerInfo.planId
       }).then((res) => {
-        if (res.code === 1) {debugger
+        if (res.code === 1) {
+          debugger;
           if (res.data === null) {
             this.isAddState = false;
           } else {
@@ -448,6 +470,13 @@ export default {
     left: 0px;
     top: 0px;
   }
+  .service-story .click-upload {
+    width: 140px;
+    height: 140px;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
   .face-show{
     position: relative;
     .img-show{
@@ -472,6 +501,14 @@ export default {
       position: absolute;
       bottom: 20px;
       right: 20px;
+      display: block;
+      .click-upload{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
     }
   }
   .content{
