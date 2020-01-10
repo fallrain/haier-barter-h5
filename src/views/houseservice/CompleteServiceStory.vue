@@ -129,7 +129,7 @@
                 >
                 </b-upload>-->
                 <b-wx-upload
-                  :maxLength="-1"
+                  :maxLength="1"
                   @imageuploaded="(data, fileList)=>imageuploaded(data, fileList, item)"
                   :uploadFn="uploadImgFn"
                   @errorhandle="uploadError"
