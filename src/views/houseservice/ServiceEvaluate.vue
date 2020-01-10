@@ -83,7 +83,7 @@ export default {
         improve: [],
         description: ''
       },
-      tagList:[]
+      tagList: []
     };
   },
   methods: {
@@ -115,10 +115,16 @@ export default {
       }
       this.houseService.appraiseAdd({
         ...this.customerInfo
-      }, {}).then((res) => {
+      }, {}).then(res => res).then((res) => {
         if (res.code === 1) {
-          Toast.succeed('评价成功！谢谢~~');
-          this.$router.go(-1);
+          this.houseService.completeAppraise({
+            planId: this.customerInfo.planId
+          }).then((res1) => {
+            if (res1.code === 1) {
+              Toast.succeed('评价成功！谢谢~~');
+              this.$router.go(-1);
+            }
+          });
         }
       });
     },
