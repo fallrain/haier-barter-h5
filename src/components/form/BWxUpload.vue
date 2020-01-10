@@ -15,7 +15,7 @@
         >
       </div>
     </div>
-    <div @click="chooseImg">
+    <div class="click-upload" @click="chooseImg">
       <div class="bUpload" v-show="imgs.length < maxLength">
         <i class="iconfont icon-jiahao bUpload-icon"></i>
       </div>
