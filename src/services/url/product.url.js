@@ -4,8 +4,8 @@ const urls = {
   list(keyWords, pageNo, pageSize) {
     return `/product/list/${keyWords}/${pageNo}/${pageSize}`;
   },
-  price(productCode, productGroup ) {
-    return `/product/price/${productCode}/${productGroup }`;
+  price(productCode, productGroup) {
+    return `/product/price/${productCode}/${productGroup}`;
   },
   // 查询顾客地址列表
   customerAddressList(mobile) {
@@ -24,8 +24,8 @@ const urls = {
     return `/customer/address/default/${mobile}`;
   },
   // 查询数据字典
-  commonTypeQuery(type){
-    return  `/common/dictionary/list/${type}`
+  commonTypeQuery(type) {
+    return `/common/dictionary/list/${type}`;
   },
   // 根据storeid查询门店
   storeInfo(shopId) {

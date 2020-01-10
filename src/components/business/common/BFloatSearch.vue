@@ -84,10 +84,21 @@ export default {
     // 显示隐藏
     show: {
       type: Boolean,
-      defalut: false
+      default: false
     },
     // 筛选数据
     filterList: {
+      type: Array
+    },
+    // 搜索参数映射（单选多选，返回key）
+    // 例如：
+    // [
+    //   {
+    //     key: 'industryList',
+    //     type: 'checkbox'
+    //   }
+    // ]
+    conditions: {
       type: Array
     }
   },
@@ -104,6 +115,9 @@ export default {
     hide() {
       /* 隐藏 */
       this.$emit('update:show', false);
+      // 抛出confirm事件
+      const searchForm = this.genFormData();
+      this.$emit('confirm', searchForm);
     },
     cancel() {
       /* 取消按钮操作 */
@@ -137,27 +151,13 @@ export default {
         });
       });
     },
-    confirm() {
-      /* 确认搜索结果 */
-      // 参数、参数值类型映射
-      const conditionMap = {
-        0: {
-          key: 'industryList',
-          type: 'checkbox'
-        },
-        1: {
-          key: 'years',
-          type: 'checkbox'
-        },
-        2: {
-          key: 'buyIntention',
-          type: 'radio'
-        }
-      };
+    genFormData() {
+      /* 参数、参数值类型映射 */
+      const conditions = this.conditions;
       const searchForm = {};
       this.filterList.forEach((filters, index) => {
         // Array创建数组，String创建字符串
-        const searchFormType = conditionMap[index];
+        const searchFormType = conditions[index];
         // 不存在则新创建
         if (searchForm[searchFormType.key] === undefined) {
           if (searchFormType.type === 'checkbox') {
@@ -177,10 +177,12 @@ export default {
           }
         });
       });
+      return searchForm;
+    },
+    confirm() {
+      /* 确认搜索结果 */
       // 关闭搜索框
       this.hide();
-      // 抛出confirm事件
-      this.$emit('confirm', searchForm);
     }
   }
 };
@@ -219,6 +221,7 @@ export default {
   .bFloatSearch-cnt-list {
     height: calc(100vh - 108px);
     overflow-y: auto;
+
     &::-webkit-scrollbar {
       display: none;
     }

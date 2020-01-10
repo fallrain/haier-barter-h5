@@ -83,6 +83,10 @@ export default {
         {
           id: 1,
           name: '服务换新优惠券'
+        },
+        {
+          id: 3,
+          name: '服务换新礼品券'
         }
       ],
       // 卡券类型
@@ -94,17 +98,19 @@ export default {
       this.$emit('update:chooseAll', val);
     },
     chooseAll(val) {
-      // 跟新本组件全选
+      // 更新本组件全选
       this.isChooseAll = val;
     }
   },
   methods: {
     toggleChooseAll() {
       /* 选择所有订单/取消所有订单 */
-      this.isChooseAll = !this.isChooseAll;
-      this.list.forEach((v) => {
-        v.isChecked = this.isChooseAll;
-      });
+      if (this.list.length) {
+        this.isChooseAll = !this.isChooseAll;
+        this.list.forEach((v) => {
+          v.isChecked = this.isChooseAll;
+        });
+      }
     },
     itemChecked(val) {
       /* item选中后 */

@@ -30,7 +30,8 @@
     <b-float-search
       :show.sync="filterListShow"
       :filterList="filterList"
-      @confirm="queryByCondition"
+      :conditions="conditions"
+      @confirm="confirmSearch"
     ></b-float-search>
   </div>
 </template>
@@ -67,7 +68,7 @@ export default {
       orderSortList: [
         {
           id: '1',
-          name: '按名字降序'
+          name: '按名字升序'
         },
         {
           id: '0',
@@ -105,6 +106,7 @@ export default {
         buyIntention: '',
         industryList: [],
         years: [],
+        sneakType: '',
         sortType: '0'
       },
       list: [],
@@ -112,11 +114,26 @@ export default {
       filterListShow: false,
       // 右侧浮动筛选的数据
       filterList: [],
+      // 浮动搜索key,type
+      conditions: [
+        {
+          key: 'industryList',
+          type: 'checkbox'
+        },
+        {
+          key: 'sneakType',
+          type: 'radio'
+        },
+        {
+          key: 'buyIntention',
+          type: 'radio'
+        }
+      ],
       // 选择所有
       chooseAll: false,
       // 产品组数据
       industryAy: [],
-      industryData: {}
+      industryData: {},
     };
   },
   created() {
@@ -192,14 +209,16 @@ export default {
       // 查询产业数据
       const getIndustryList = this.getIndustryList();
       // 查询年限
-      const getStatisticalParameter = this.campaignService.statisticalParameter();
+      // const getStatisticalParameter = this.campaignService.statisticalParameter();
+      // 查询潜客
+      const getSneakType = this.productService.commonTypeQuery('SNEAK_TYPE');
       // 查询购买意愿
       const getBuyIntention = this.basicService.getBuyIntention();
-      Promise.all([getIndustryList, getStatisticalParameter, getBuyIntention]).then(([
+      Promise.all([getIndustryList, getSneakType, getBuyIntention]).then(([
         industryData,
         {
-          code: yearCode,
-          data: yearData
+          code: sneakCode,
+          data: sneakData
         },
         {
           code: buyIntentionCode,
@@ -220,16 +239,16 @@ export default {
           }));
           this.filterList.push(industry);
         }
-        if (yearCode === 1) {
+        if (sneakCode === 1) {
           const buyTime = {
-            name: '购买时间',
+            name: '潜客类型',
             isExpand: true,
-            type: 'checkbox',
+            type: 'radio',
             data: []
           };
-          buyTime.data = yearData.yeasList.map(v => ({
-            key: v.outputYear,
-            value: v.outputYear,
+          buyTime.data = sneakData.map(v => ({
+            key: v.itemCode,
+            value: v.itemName,
             isChecked: false
           }));
           this.filterList.push(buyTime);
@@ -270,6 +289,7 @@ export default {
                 this.list = result;
                 document.querySelector('.evaluateProductList-scrollView').scrollTo(0, 0);
               } else {
+                this.chooseAll = false;
                 this.list = this.list.concat(result);
               }
               // 通过当前页的数据条数，和总数据量来判断是否加载完
@@ -290,8 +310,19 @@ export default {
         pageSize: page.size,
       });
     },
+    confirmSearch(searchForm) {
+      // 检查搜索值是否不一样
+      if (
+        !this.bUtil.isSameValueOfOneDimensional(this.searchForm.industryList, searchForm.industryList)
+        || this.searchForm.sneakType !== searchForm.sneakType
+        || this.searchForm.buyIntention !== searchForm.buyIntention
+      ) {
+        this.queryByCondition(searchForm);
+      }
+    },
     queryByCondition(searchForm) {
       /* 按条件搜索 */
+      this.chooseAll = false;
       if (searchForm) {
         this.searchForm = {
           ...this.searchForm,
@@ -307,7 +338,7 @@ export default {
         this.queryByCondition();
       });
     },
-    confirmSendCoupon() {
+    confirmSendCoupon(ids) {
       /* 确认发卡券 */
       const messageVos = [];
       this.list.forEach((order) => {
@@ -317,7 +348,7 @@ export default {
             industry: order.industryName,
             mobile: order.userPhone,
             price: order.totalPrice,
-            sendType: 1,
+            sendType: ids[0],
             userName: order.userName,
           });
         }
