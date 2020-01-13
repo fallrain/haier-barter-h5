@@ -145,10 +145,11 @@
             </div>
           </div>
           <div class="fs30 mt24 ml25 text-333">产品明细列表</div>
-          <div class="product-show-item" v-for="(item, index) in familyCompleteInfo.customerHeaInfoList" :key="index">
+          <div class="product-show-item" v-for="(item, index) in familyCompleteInfo.customerHeaInfoList"
+               :key="index">
 <!--            <img v-if="item.img" :src="item.img[0]">-->
             <img v-if="imgList[item.id] !== '0'" :src="imgList[item.id]">
-            <img v-else src="@/assets/images/houseServicer/head.png">
+            <img v-else src="@/assets/images/houseServicer/no_img.png">
             <div class="product-infor">
               <div class="infor-rows">
                 <span v-if="item.brandItemCode" class="fs28 text-333">{{BrandName(item.brandItemCode)}}-{{groupName(item.categoryItemCode)}}</span>

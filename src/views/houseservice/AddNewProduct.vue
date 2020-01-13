@@ -44,7 +44,7 @@
       </b-item>
       <div class="bg-white ph24">
         <div class="addAddress-form-item">
-          <label class="addAddress-form-item-name">购买渠道</label>
+          <label class="addAddress-form-item-name text-333">购买渠道</label>
           <b-radio-item
             :inline="true"
             :list="buyChanl"
@@ -54,9 +54,9 @@
         </div>
       </div>
       <div class="product-item br-b fs28">
-        <label >产品购买价格</label>
+        <label class="text-333">产品购买价格</label>
         <div class="address-form-item">
-          <input class="text-666 br-n fs28"
+          <input class="text-333 br-n fs28"
                  type="text"
                  placeholder="请输入产品购买价格"
                  v-model="productInfo.price"
@@ -81,9 +81,9 @@
         </template>
       </b-item>
       <div class="product-item br-b fs28">
-        <label >维修次数</label>
+        <label class="text-333">维修次数</label>
         <div class="address-form-item">
-          <input class="text-666 br-n fs28"
+          <input class="text-333 br-n fs28"
                  type="text"
                  v-model="productInfo.frequency"
                  @keyup="dealNum($event)"
@@ -92,7 +92,7 @@
         </div>
       </div>
       <div class="img-upload br-b">
-        <div>产品图片</div>
+        <div class="text-333 mb16">产品图片</div>
         <!--<b-upload
             :imgs="productInfo.img"
             :crop="false"
@@ -119,7 +119,7 @@
         </b-wx-upload>
       </div>
       <div class="br-b family-tag-area">
-        <label class="fs28">用户评价</label>
+        <label class="fs28 text-333">用户评价</label>
         <div class="tagList">
           <span :class="['family-tag',assessmentV.some(v => v===i) && 'familyTagActive']"
                 @click="clickFamilyTag(i)"
