@@ -74,7 +74,7 @@
       </b-item>
       <div class="bg-white p24">
         <div class="rows">
-          <div class="">入户地址</div>
+          <div class="text-333">入户地址</div>
           <button type="button" class="common-btn-waring" @click="queryAddress">修改地址</button>
         </div>
         <div class="">{{customerInfo.serviceAddress}}</div>
@@ -87,6 +87,7 @@
         @rightClick="chooseGift()"
       ></b-item>-->
       <b-item
+        v-show="productNames.length > 0"
         class="br-b service mt16"
         title="购买产品"
         placeholder=""
@@ -111,7 +112,7 @@
         <span :class="[{'active':activeOffset==='3'},'tag-style']" @click="clickTag('3')">提前1小时</span>
       </div>
       <div class="remarks">
-        <div>备注</div>
+        <div class="text-333">备注</div>
         <textarea placeholder="请输入备注信息" class="w100per" rows="3"
                   @input="inputMax"
                   v-model="customerInfo.description">
@@ -556,14 +557,14 @@ export default {
       if (!this.isChangePlan) { // 新增计划
         this.houseService.createPlanService(this.customerInfo, {}).then((res) => {
           if (res.code === 1) {
-            Toast.succeed('保存成功')
+            Toast.succeed('保存成功');
             this.dealTip(res.data);
           }
         });
       } else { // 修改计划
         this.houseService.changePlanService(this.customerInfo, {}).then((res) => {
           if (res.code === 1) {
-            Toast.succeed('保存成功')
+            Toast.succeed('保存成功');
             this.dealTip(res.data);
           }
         });

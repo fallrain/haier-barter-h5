@@ -190,7 +190,9 @@ export default {
             planId: this.customerInfo.id,
             servicerName: this.customerInfo.servicerName
           }).then((res) => {
-            console.log(res);
+            if (res.code === 1) {
+              Toast.succeed('邀请评价成功，请用户评价！')
+            }
           });
           /* let host = `${window.location.protocol}//${window.location.host}`;
           if (host.indexOf('localhost') > -1) {
