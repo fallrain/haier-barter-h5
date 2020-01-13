@@ -177,20 +177,27 @@ export default {
       });
     },
     changeState(index) {
-      const param = {
-        planId: this.customerInfo.id
-      };
       switch (index) {
         case 0: // 邀请评价
           if (this.flagInfo.appraise_flag === 1) {
             return;
           }
-          let host = `${window.location.protocol}//${window.location.host}`;
+          const data = new Date(this.customerInfo.serviceTime);
+          this.houseService.sendWeiXinMsg({
+            userId: this.customerInfo.userId,
+            userName: this.customerInfo.userName,
+            planDateTime: data,
+            planId: this.customerInfo.id,
+            servicerName: this.customerInfo.servicerName
+          }).then((res) => {
+            console.log(res);
+          });
+          /* let host = `${window.location.protocol}//${window.location.host}`;
           if (host.indexOf('localhost') > -1) {
             host = 'https://testdb.haier.net';
           }
           const url = `${host}/houseservice/serviceEvaluate?planId=${this.customerInfo.id}&userId=${this.customerInfo.userId}&userName=${this.customerInfo.userName}&servicerName=${this.customerInfo.servicerName}`;
-          window.open(url);
+          window.open(url); */
           break;
         case 1: // 完善小区住宅信息
           this.judgeTabState = 1;

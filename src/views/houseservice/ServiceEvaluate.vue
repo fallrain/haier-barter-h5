@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding-bottom: 60px;">
     <div class="content-header">
       您的满意，是我们前进的方向，请您根据实际感受，留下 您的反馈和建议吧~
     </div>

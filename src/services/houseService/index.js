@@ -79,4 +79,8 @@ export default {
     /* 邀请评价 */
     return axPostJson(urls.appraiseAdd, data, param);
   },
+  sendWeiXinMsg(data, param) {
+    /* 发送模板消息邀请评价 */
+    return axPostJson(urls.sendWeiXinMsg, data, param);
+  },
 };
