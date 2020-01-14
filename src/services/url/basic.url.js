@@ -9,6 +9,10 @@ const urls = {
   // 发送短信验证码给客户
   sendSms: '/customer/oauth2/send/sms',
   queryIndustry: '/common/industry/list',
+  // 数据字典
+  dictionary(type) {
+    return `/common/dictionary/list/${type}`;
+  },
 
 };
 

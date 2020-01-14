@@ -29,5 +29,10 @@ export default {
   queryIndustry() {
     /* 查询产业组 */
     return axGet(urls.queryIndustry);
-  }
+  },
+  activityType() {
+    /* 查询活动类型 */
+    return axGet(urls.dictionary('ACTIVITY_TYPE'));
+  },
+
 };

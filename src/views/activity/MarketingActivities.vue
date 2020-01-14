@@ -37,6 +37,20 @@
     </div>
     <div class="reportInstallList-view"
          v-show="curScrollViewName==='scrollViewDrainageActivity'">
+      <div class="b-pop-button-cnt">
+        <ul class="b-pop-button-cnt-list">
+          <li
+            class="b-pop-button-cnt-list-item"
+            v-for="(item,index) in activityType"
+            :class="[checkIds.some(v=>v===item.itemCode) && 'active']"
+            :key="index"
+            @click="checkboxClick(item)"
+          >
+            <span class="b-pop-button-cnt-list-item-name">{{item.itemName}}</span>
+          </li>
+        </ul>
+
+      </div>
       <div
         id="scrollViewDrainageActivity"
         ref="scrollViewDrainageActivity"
@@ -159,6 +173,9 @@ export default {
       productGroupName: [],
       openId: '',
       isShowPopContainer: false,
+      // 活动类型
+      activityType: [],
+      checkIds: [],
     };
   },
   watch: {
@@ -238,6 +255,7 @@ export default {
         data = {
           ...data,
           productGroup: this.getUserInfo.productGroups,
+          activityType: this.checkIds && this.checkIds.length > 0 ? this.checkIds[0] : '',
         };
       } else {
         return Promise.resolve({});
@@ -359,6 +377,15 @@ export default {
           }
         });
     },
+    checkboxClick(item) {
+      const index = this.checkIds.findIndex(itemCode => itemCode === item.itemCode);
+      if (this.radioCancel && index > -1) {
+        this.checkIds = [];
+      } else {
+        this.checkIds = [item.itemCode];
+      }
+      this[this.curScrollViewName].mescroll.triggerDownScroll();
+    },
   },
   created() {
     this.getProductGroup();
@@ -372,6 +399,11 @@ export default {
           ...userInfo,
           openId: this.openId,
         };
+      }
+    });
+    this.basicService.activityType().then((res) => {
+      if (res.code === 1) {
+        this.activityType = res.data;
       }
     });
     // var vConsole = new VConsole(option);
@@ -389,6 +421,13 @@ export default {
   mounted() {
     this.bUtil.scroviewTabChange(this.curScrollViewName, this);
   },
+  activated() {
+    const checkIds = this.$route.params.checkIds;
+    this.checkIds = [];
+    if (checkIds) {
+      this.checkIds = [checkIds];
+    }
+  }
 };
 </script>
 
@@ -541,4 +580,42 @@ export default {
     bottom: 0;
     background: rgba(0, 0, 0, 0.5);
   }
+  .b-pop-button-cnt {
+    background: #fff;
+    padding-bottom: 16px;
+  }
+
+  .b-pop-button-cnt-list {
+    &:after {
+      content: '';
+      display: block;
+      clear: both;
+    }
+  }
+
+  .b-pop-button-cnt-list-item {
+    // width: 180px;
+    height: 60px;
+    margin-top: 10px;
+    margin-left: 24px;
+    padding-left: 24px;
+    padding-right: 24px;
+    line-height: 60px;
+    background: #fff;
+    text-align: center;
+    color: #666666;
+    border: 1px #cccccc solid;
+    font-size: 24px;
+    border-radius: 30px;
+    float: left;
+
+    &.active {
+      border-color: #1969C6;
+
+      .b-pop-button-cnt-list-item-name {
+        color: #1969C6;
+      }
+    }
+  }
+
 </style>
