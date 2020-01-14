@@ -104,7 +104,7 @@
     <div id="otherPlan">
       <div class="rows header">
         <span class="">他人入户计划</span>
-        <span class="date">展开详情</span>
+<!--        <span class="date">展开详情</span>-->
       </div>
       <div v-show="otherlist.length == 0" class="panel-body text-center text-666">
         暂无数据...
