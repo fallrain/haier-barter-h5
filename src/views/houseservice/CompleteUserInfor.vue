@@ -182,11 +182,10 @@ export default {
           if (this.flagInfo.appraise_flag === 1) {
             return;
           }
-          const data = new Date(this.customerInfo.serviceTime);
           this.houseService.sendWeiXinMsg({
             userId: this.customerInfo.userId,
             userName: this.customerInfo.userName,
-            planDateTime: data,
+            planDateTime: this.customerInfo.serviceTime,
             planId: this.customerInfo.id,
             servicerName: this.customerInfo.servicerName
           }).then((res) => {
