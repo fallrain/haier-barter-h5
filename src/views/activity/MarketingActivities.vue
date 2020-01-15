@@ -422,7 +422,7 @@ export default {
     this.bUtil.scroviewTabChange(this.curScrollViewName, this);
   },
   activated() {
-    const checkIds = this.$route.params.checkIds;
+    const checkIds = this.$route.query.checkIds;
     this.checkIds = [];
     if (checkIds) {
       this.checkIds = [checkIds];
