@@ -427,6 +427,12 @@ export default {
     if (checkIds) {
       this.checkIds = [checkIds];
     }
+  },
+  beforeRouteLeave(to, from, next) {
+    if (to.name !== 'Activity.ActivityDetail') {
+      this.$destroy();
+    }
+    next();
   }
 };
 </script>
