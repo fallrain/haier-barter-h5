@@ -268,7 +268,7 @@ export default {
     haierHouseLink() {
       this.$router.push({
         name: 'Activity.MarketingActivities',
-        query: { checkIds: '3' }
+        query: { checkIds: '2' }
       });
     },
     orderLink() {
