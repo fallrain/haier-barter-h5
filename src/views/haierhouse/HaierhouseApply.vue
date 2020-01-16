@@ -495,7 +495,6 @@ export default {
       }
     },
     uploadImgFn(mediaId) {
-      alert(mediaId);
       return this.basicService.uploadByMediaId({}, {
         mediaId
       });
