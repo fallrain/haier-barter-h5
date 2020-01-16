@@ -85,6 +85,10 @@ export default {
     sortType: {
       type: String
     },
+    // 排序类型
+    defalutCheckedsortId: {
+      type: String
+    },
     // 是否显示业务场景
     isShowScenario: {
       type: Boolean,
@@ -138,6 +142,7 @@ export default {
   },
   created() {
     this.setSearchOptions();
+    this.businessTypeTemp.push(this.defalutCheckedsortId);
   },
   watch: {
     sortType(val) {

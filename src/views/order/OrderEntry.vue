@@ -1132,7 +1132,7 @@ export default {
       }
       this.generateSubInfo(2);
     },
-    selectAddress(item) {console.log(item)
+    selectAddress(item) {
       this.customerInfo.province = item.province;
       this.customerInfo.district = item.district;
       this.customerInfo.city = item.city;

@@ -30,14 +30,14 @@
         <i class="iconfont icon-shizhong"></i>{{data.crTime}}
       </div>
     </div>
-    <!--<div class="bEvaluateProductItem-btn-par">
-      &lt;!&ndash;<span class="bEvaluateProductItem-tips">{{orderStatusFilter(data)}}</span>&ndash;&gt;
-      &lt;!&ndash;<button
-        type="button"
-        class="common-btn-primary"
-      >促成交
-      </button>&ndash;&gt;
-    </div>-->
+    <div class="bEvaluateProductItem-btn-par">
+    <span class="bEvaluateProductItem-tips">{{orderStatusFilter(data)}}</span>
+    <!--<button
+      type="button"
+      class="common-btn-primary"
+    >促成交
+    </button>-->
+  </div>
   </li>
 </template>
 
@@ -77,20 +77,20 @@ export default {
         url: `/pages/message/valuationInfo/valuationInfo?odlfornewdbId=${item.id}`
       });
     },
-    orderStatusFilter({ orderStatus, orderSource }) {
+    orderStatusFilter({ orderStatus }) {
       /* 订单转状态筛选 */
       const orderStatusMap = {
         0: '未成交',
         1: '已成交'
       };
-      const orderSourceMap = {
-        DB: '兑呗',
-        YLH: '易理货'
-      };
-      let name = orderStatusMap[orderStatus] || '';
-      if (orderSourceMap[orderSource]) {
-        name += `（${orderSourceMap[orderSource]}）`;
-      }
+      // const orderSourceMap = {
+      //   DB: '兑呗',
+      //   YLH: '易理货'
+      // };
+      const name = orderStatusMap[orderStatus] || '';
+      //  if (orderSourceMap[orderSource]) {
+      //   name += `（${orderSourceMap[orderSource]}）`;
+      // }
       return name;
     }
   }
@@ -108,8 +108,8 @@ export default {
   }
 
   .bEvaluateProductItem-cnt {
-    // width: 480px;
-    max-width: 100%;
+    width: 480px;
+    // max-width: 100%;
     overflow: hidden;
     flex-grow: 1;
     flex-shrink: 0;

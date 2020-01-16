@@ -322,7 +322,7 @@ export default {
       }
     }
   },
-  created() {
+  created() {debugger
     // 不加入双向绑定
     this.addressData = addressData;
     this.customerInfo.hmcId = JSON.parse(localStorage.getItem('userinfo')).hmcid;

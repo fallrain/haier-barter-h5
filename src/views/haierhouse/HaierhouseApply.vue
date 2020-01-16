@@ -85,10 +85,9 @@
           type="date"
           title="请选择日期"
           defaultDate=""
+          :max-date="getdate(customerInfo.rentEndTime)"
           v-model="customerInfo.rentStartTime"
         ></b-date-picker>
-        <!--<input type="text" v-model="customerInfo.rentStartTime" @click.prevent="timeShow(1)"
-               class="w250 input-style text-center pr20" placeholder="开始日期">-->
         <div class="mh10px">至</div>
         <b-date-picker
           class="time-style"
@@ -96,11 +95,9 @@
           type="date"
           title="请选择日期"
           defaultDate=""
+          :min-date="getdate(customerInfo.rentStartTime)"
           v-model="customerInfo.rentEndTime"
         ></b-date-picker>
-        <!--<input type="text" v-model="customerInfo.rentEndTime" @click.prevent="timeShow(2)"
-               class="w250 input-style text-center pr20" placeholder="结束日期">-->
-<!--        <md-icon class="mt10" name="calendar" size="lg"></md-icon>-->
       </div>
     </div>
     <div class="">
@@ -117,23 +114,6 @@
     <div class="mb20">
       <div class="text-333 row-style">样板间区域照片</div>
       <div class="bg-white p20">
-<!--        <b-upload-->
-<!--          :imgs="uploadImg"-->
-<!--          :crop="false"-->
-<!--          inputOfFile="file"-->
-<!--          :max-file-size="1024*1024*5"-->
-<!--          :maxWidth="1280"-->
-<!--          :maxLength="3"-->
-<!--          :compress="70"-->
-<!--          :headers="headers"-->
-<!--          @imageuploaded="(data, fileList)=>imageuploaded(data, fileList, '0')"-->
-<!--          extensions="png,jpg,jpeg,gif"-->
-<!--          :url="uploadUrl"-->
-<!--          :multiple-size="1"-->
-<!--          @delFun="(index, fileList)=>delImg(index, fileList, '0')"-->
-<!--          @errorhandle="uploadError"-->
-<!--        >-->
-<!--        </b-upload>-->
         <b-wx-upload
           :imgs="uploadImg"
           :maxLength="3"
@@ -150,23 +130,6 @@
         <span style="color: #ec3334;" v-show="item.isRefuse">被驳回，请重新上传</span>
       </div>
       <div class="bg-white p20">
-<!--        <b-upload-->
-<!--          :imgs="uploadImg1[item.value]"-->
-<!--          :crop="false"-->
-<!--          inputOfFile="file"-->
-<!--          :max-file-size="1024*1024*5"-->
-<!--          :maxWidth="1280"-->
-<!--          :maxLength="3"-->
-<!--          :compress="70"-->
-<!--          :headers="headers"-->
-<!--          @imageuploaded="(data, fileList)=>imageuploaded(data, fileList, item)"-->
-<!--          extensions="png,jpg,jpeg,gif"-->
-<!--          :url="uploadUrl"-->
-<!--          :multiple-size="1"-->
-<!--          @delFun="(index, fileList)=>delImg(index, fileList, item)"-->
-<!--          @errorhandle="uploadError"-->
-<!--        >-->
-<!--        </b-upload>-->
         <b-wx-upload
           :imgs="uploadImg1[item.value]"
           :maxLength="3"
@@ -181,26 +144,6 @@
     <div class="ph20 mt16">
       <md-button type="primary" @click="nextPage">下一步</md-button>
     </div>
-    <md-date-picker
-      ref="datePicker"
-      type="custom"
-      v-model="isDatePickerShow"
-      :custom-types="['yyyy', 'MM','dd']"
-      :min-date="minDate"
-      :max-date="maxDate"
-      :default-date="currentDate"
-      @confirm="onDatePickerInitialed"
-    ></md-date-picker>
-    <md-date-picker
-      ref="datePicker1"
-      type="custom"
-      v-model="isDatePickerShow1"
-      :custom-types="['yyyy', 'MM','dd']"
-      :min-date="minDate1"
-      :max-date="maxDate1"
-      :default-date="currentDate"
-      @confirm="onDatePickerInitialed1"
-    ></md-date-picker>
     <md-tab-picker
       title="请选择"
       describe="请选择您所在的省份、城市、区县"
@@ -257,14 +200,6 @@ export default {
       // 地址pop显示隐藏
       addressPopShow: false,
       defaultA: [],
-      isDatePickerShow: false,
-      isDatePickerShow1: false,
-      minDate: new Date('2013/9/9'),
-      maxDate: new Date('2020/9/9'),
-      currentDate: new Date(),
-      minDate1: new Date('2013/9/9'),
-      maxDate1: new Date('2020/9/9'),
-      currentDate1: new Date(),
       customerInfo: {
         adminId: '',
         adminName: '',
@@ -341,10 +276,17 @@ export default {
   },
   created() {
     this.addressData = addressData;
+    this.customerInfo.rentStartTime = this.bUtil.formatDate(new Date(), 'yyyy-MM-dd');
+    this.customerInfo.rentEndTime = this.bUtil.formatDate(new Date(), 'yyyy-MM-dd');
     this.getIndustryList();
   },
   computed: {
     ...mapState('haierHouse', ['choosedLeader']),
+    getdate() {
+      return (date) => {
+        return new Date(date);
+      };
+    }
   },
   watch: {
     indeustryCode(newV, oldV) {
@@ -441,21 +383,6 @@ export default {
     addressChange(address) {
       const addressName = address.options;
       this.customerInfo.provinceCityArea = addressName[0].label + addressName[1].label + addressName[2].label;
-    },
-    timeShow(index) {
-      if (index === 1) {
-        this.isDatePickerShow = true;
-      } else {
-        this.isDatePickerShow1 = true;
-      }
-    },
-    onDatePickerInitialed() {
-      this.customerInfo.rentStartTime = this.$refs.datePicker.getFormatDate('yyyy/MM/dd');
-      this.minDate1 = new Date(this.customerInfo.rentStartTime);
-    },
-    onDatePickerInitialed1() {
-      this.customerInfo.rentEndTime = this.$refs.datePicker1.getFormatDate('yyyy/MM/dd');
-      this.maxDate = new Date(this.customerInfo.rentEndTime);
     },
     // 获取产业列表
     getIndustryList() {
