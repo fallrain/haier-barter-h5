@@ -2,9 +2,6 @@ import Vue from 'vue';
 import store from '@/store';
 import Router from 'vue-router';
 import routerData from '@/router/routerData';
-import {
-  axPost
-} from '@/lib/ajax';
 
 Vue.use(Router);
 const router = new Router({

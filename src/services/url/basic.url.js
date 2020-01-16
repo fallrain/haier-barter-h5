@@ -9,6 +9,11 @@ const urls = {
   // 发送短信验证码给客户
   sendSms: '/customer/oauth2/send/sms',
   queryIndustry: '/common/industry/list',
+  // 查询产品组
+  industryList: '/common/industry/list',
+  // 购买意愿
+  buyIntention: '/common/dictionary/list/BUYINTENTION',
+  uploadByMediaId: '/common/uploadByMediaId', // 同步前端微信上传的文件
   // 数据字典
   dictionary(type) {
     return `/common/dictionary/list/${type}`;

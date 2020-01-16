@@ -16,7 +16,7 @@
       </div>
     </div>
     <div @click="chooseImg">
-      <div class="bUpload" v-show="imgs.length < 1">
+      <div class="bUpload" v-show="imgs.length < maxLength">
         <i class="iconfont icon-jiahao bUpload-icon"></i>
       </div>
     </div>
@@ -28,8 +28,13 @@ import {
 } from 'mand-mobile';
 
 export default {
-  name: 'BUpload',
+  name: 'BWxUpload',
   components: {
+  },
+  data() {
+    return {
+      isFinished: true
+    };
   },
   props: {
     imgs: {
@@ -41,12 +46,22 @@ export default {
       default: () => {
       }
     },
+    maxLength: {
+      type: Number,
+      default: 1
+    },
     // 用来上传的函数
     uploadFn: {
       type: Function,
       default: () => function () {},
       required: true
     }
+  },
+  created() {
+    localStorage.setItem('picFinishedStatus', 'true');
+  },
+  activated() {
+    localStorage.setItem('picFinishedStatus', 'true');
   },
   methods: {
     imageuploaded(data) {
@@ -60,6 +75,11 @@ export default {
       Toast.loading('上传中');
     },
     chooseImg() {
+      this.isFinished = localStorage.getItem('picFinishedStatus');
+      if (this.isFinished === 'false') {
+        return;
+      }
+      localStorage.setItem('picFinishedStatus', 'false');
       /* 选择图片,并上传 */
       wx.ready(() => {
         wx.chooseImage({
@@ -88,6 +108,9 @@ export default {
           },
           fail(error) {
             this.$emit('errorhandle', error);
+          },
+          complete() {
+            localStorage.setItem('picFinishedStatus', 'true');
           }
         });
       });

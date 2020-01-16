@@ -15,13 +15,14 @@
         </p>
       </div>
 
-        <p v-show="shareRightsList.length === 0" class="info-Class">暂无同享活动数据</p>
+      <p v-show="shareRightsList.length === 0" class="info-Class">暂无同享活动数据</p>
       <b-activity-item
         v-for="(item,index) in shareRightsList"
         :key="index"
         :getData.sync="item"
         :isFinish="false"
         :residueGift="false"
+        :autoChooseMax="true"
         @minusCount="minusCount"
         @addCount="addCount"
         :hasData="false"
@@ -93,14 +94,12 @@ import {
 import {
   BActivityItem
 } from '@/components/form';
-import rightListTest from '@/lib/address/rightsJson.js';
 
 export default {
-  name: 'OrderFollowActivity',
+  name: 'OrderRights',
   components: {
     [TabBar.name]: TabBar,
-    BActivityItem,
-    Toast
+    BActivityItem
   },
   data() {
     return {
@@ -131,6 +130,8 @@ export default {
       }],
       rightsJson: '',
       num: 0,
+      // 点确定的时候选择的权益数量，用来做随机数用(getTime毫秒级会重复)
+      choseRightNum: 0,
       scrollViewFinish: {
         mescroll: null,
         list: [],
@@ -244,112 +245,69 @@ export default {
         if (item.isOptional === 0) {
           this.$set(item, 'isOptional', 1);
         }
-      } else {
-        // 套购同享
-        let isReturn = false;
-        let present = [];
-        item.rightsSelectedGroupDtoList.shift();
-        item.allowRightsConditionDtoList.forEach((rights) => {
-          if (rights.flag !== 0) {
-            rights.orderIdList.forEach((ri) => {
-              if (!isReturn) {
-                if (ri.flag !== 0) {
-                  this.$set(ri, 'flag', 0);
-                  present = ri.ids;
-                  ri.num--;
-                  ri.tempList = [];
-                  item.selectedNum--;
-                  this.$set(item, 'selectedNum', item.selectedNum);
-                  this.$set(item, 'isSelected', item.selectedNum);
-                  rights.num--;
-                  if (rights.num === 0) {
-                    this.$set(rights, 'flag', 0);
-                    item.num--;
-                  }
-                  isReturn = true;
-                }
-              }
-              if (ri.flag !== 0) {
-                if (this.uniqueArray(present, ri.ids)) {
-                  this.$set(ri, 'flag', 0);
-                  rights.num--;
-                  ri.tempList = [];
-                  if (rights.num === 0) {
-                    this.$set(rights, 'flag', 0);
-                    item.num--;
-                  }
-                }
-              }
-            });
-          }
-          if (item.isOptional === 0) {
-            this.$set(item, 'isOptional', 1);
-          }
-        });
       }
 
       this.anylizeMCData(this.shareRightsList);
     },
-    addCount(item) {
+    countRightnNumByConfigId(configId, list) {
+      /* 根据configId计算权益数量 */
+      let num = 0;
+      if (list) {
+        num = list.filter(v => v.configId === configId).length;
+      }
+      return num;
+    },
+    addCount(item, {
+      rightsNumMap
+    }) {
+      /**
+       *组合所选权益加到rightsSelectedGroupDtoList
+       *@rightsNumMap 单品的时候权益数量map
+       *@uniqueAllowRightsConditionDtoList 套购的时候，符合的权益
+       * */
+      // todo 前人此方法过于垃圾，待重构
+      // 符合的权益组合
+      const allowRightsConditionDtoList = item.allowRightsConditionDtoList;
       // 单品;
       if (item.rightsType === 'single') {
         // 同享
-        let isReturn = false;
-        item.allowRightsConditionDtoList.forEach((rights) => {
-          if (!isReturn) {
-            if (rights.flag !== 1) {
+        for (let i = 0; i < allowRightsConditionDtoList.length; i++) {
+          const rights = allowRightsConditionDtoList[i];
+          // 已选的权益的数量
+          const choseRightsNum = this.countRightnNumByConfigId(rights.configId, item.rightsSelectedGroupDtoList);
+          // todo  if (rights.flag !== 1 && choseRightsNum < rightsNumMap.get(rights.configId))) {
+          if (rights.flag !== 1) {
+            // todo rightsNumMap非空判断无意义，临时代码
+            if ((rightsNumMap && choseRightsNum < rightsNumMap.get(rights.configId)) || !rightsNumMap) {
               this.$set(rights, 'flag', 1);
               item.rightsSelectedGroupDtoList.push(rights);
               item.selectedNum++;
               this.$set(item, 'selectedNum', item.selectedNum);
               this.$set(item, 'isSelected', 1);
-              isReturn = true;
+              break;
             }
           }
-        });
-        if (item.allowRightsConditionDtoList.length === item.rightsSelectedGroupDtoList.length) {
+        }
+        if (allowRightsConditionDtoList.length === item.rightsSelectedGroupDtoList.length) {
           this.$set(item, 'isOptional', 0);
         }
       } else {
         // 套购
-        let isReturn = false;
-        let present = [];
-        item.allowRightsConditionDtoList.forEach((rights) => {
-          if (rights.flag !== 1) {
-            rights.orderIdList.forEach((ri) => {
-              if (!isReturn) {
-                if (ri.flag !== 1) {
-                  this.$set(ri, 'flag', 1);
-                  present = ri.ids;
-                  rights.selcted = ri.ids;
-                  item.rightsSelectedGroupDtoList.push(rights);
-                  item.selectedNum++;
-                  this.$set(item, 'selectedNum', item.selectedNum);
-                  this.$set(item, 'isSelected', 1);
-                  rights.num++;
-                  if (rights.num === rights.orderIdList.length) {
-                    this.$set(rights, 'flag', 1);
-                    item.num++;
-                  }
-                  isReturn = true;
-                }
-              }
-              if (ri.flag !== 1) {
-                if (this.uniqueArray(present, ri.ids)) {
-                  this.$set(ri, 'flag', 1);
-                  rights.num++;
-                  if (rights.num === rights.orderIdList.length) {
-                    this.$set(rights, 'flag', 1);
-                    item.num++;
-                  }
-                }
-              }
+        const rightsSelectedGroupDtoList = [];
+        // 以orderIdList的item为维度，加入已选权益
+        item.allowRightsConditionDtoList.forEach((right) => {
+          right.orderIdList.forEach((childRight) => {
+            rightsSelectedGroupDtoList.push({
+              rightsNo: right.rightsNo,
+              configId: right.configId,
+              ids: childRight.ids,
             });
-          }
+          });
         });
-        if (item.num === item.allowRightsConditionDtoList.length) {
-          this.$set(item, 'isOptional', 0);
-        }
+        item.rightsSelectedGroupDtoList = rightsSelectedGroupDtoList;
+        this.$set(item, 'isSelected', 1);
+        // todo 兼容写法，以后去掉selectedNum
+        this.$set(item, 'selectedNum', 1);
       }
 
       this.anylizeMCData(this.shareRightsList);
@@ -392,7 +350,7 @@ export default {
                 if (ri.flag !== 0 || id.tempList.length !== 0) {
                   const a = [];
                   a.push(rightid);
-                  if (this.uniqueArray(a, id.ids)) {
+                  if (this.isRepeatArray(a, id.ids)) {
                     const index = id.tempList.findIndex(item => item === rightid);
                     id.tempList.splice(index, 1);
                     if (id.tempList.length === 0) {
@@ -468,7 +426,7 @@ export default {
               if (ri.flag !== 0) {
                 const a = [];
                 a.push(ri.orderId);
-                if (this.uniqueArray(a, present)) {
+                if (this.isRepeatArray(a, present)) {
                   if (rights.allowRightsConditionDtoList.length === 1 && rights.selectedNum === 1) {
                     return;
                   }
@@ -483,7 +441,7 @@ export default {
               ri.orderIdList.forEach((r) => {
                 if (ri.flag !== 0 || r.tempList.length !== 0) {
                   if (r.flag !== 0) {
-                    if (this.uniqueArray(r.ids, present)) {
+                    if (this.isRepeatArray(r.ids, present)) {
                       for (var i = 0; i < r.ids.length; i++) {
                         for (let j = 0; j < present.length; j++) {
                           if (r.ids[i] === present[j]) {
@@ -556,7 +514,7 @@ export default {
                 if (ri.flag !== 1 || (r.tempList.length < r.ids.length)) {
                   const a = [];
                   a.push(rightid);
-                  if (this.uniqueArray(a, r.ids)) {
+                  if (this.isRepeatArray(a, r.ids)) {
                     this.$set(r, 'flag', 1);
                     r.tempList.push(rightid);
                     ri.num++;
@@ -616,7 +574,7 @@ export default {
               if (ri.flag !== 1) {
                 const a = [];
                 a.push(ri.orderId);
-                if (this.uniqueArray(a, present)) {
+                if (this.isRepeatArray(a, present)) {
                   this.$set(ri, 'flag', 1);
                   rights.num++;
                 }
@@ -625,7 +583,7 @@ export default {
               ri.orderIdList.forEach((r) => {
                 if (ri.flag !== 1 || (r.tempList.length < r.ids.length)) {
                   if (r.flag !== 1 || (r.tempList.length < r.ids.length)) {
-                    if (this.uniqueArray(r.ids, present)) {
+                    if (this.isRepeatArray(r.ids, present)) {
                       this.$set(r, 'flag', 1);
                       ri.num++;
                       for (var i = 0; i < r.ids.length; i++) {
@@ -658,8 +616,8 @@ export default {
       }
       this.anylizeMCData(this.mutexRightsList);
     },
-    // 判断数组是否重复
-    uniqueArray(array1, array2) {
+    isRepeatArray(array1, array2) {
+      /* 判断两个数组是否有重复的值 */
       const a = array1.length;
       const b = array2.length;
       const concatA = array1.concat(array2);
@@ -718,14 +676,9 @@ export default {
                   rightsGroup: '',
                   configId: ''
                 };
-                let timestamp = new Date().getTime();
-                // let timestamp = 0
-                let Num = 0;
-                for (let i = 0; i < 6; i++) {
-                  Num += Math.pow(10, i) * Math.floor(Math.random() * 10);
-                }
-                timestamp += Num;
                 const a = {};
+                this.choseRightNum++;
+                const timestamp = `${new Date().getTime()}${this.choseRightNum}`;
                 a.orderDetailId = sel.orderId;
                 a.rightsGroup = timestamp;
                 r.rightsGroup = timestamp;
@@ -734,29 +687,25 @@ export default {
                 this.rightsUserDto.push(r);
               });
             } else {
-              let timestamp = '';
               item.rightsSelectedGroupDtoList.forEach((sel) => {
-                const r = {
+                this.choseRightNum++;
+                const timestamp = `${new Date().getTime()}${this.choseRightNum}`;
+                // 起的什么破名
+                // 权益信息
+                this.rightsUserDto.push({
                   rightsId: item.rightsNo,
-                  rightsGroup: '',
-                  configId: ''
-                };
-                timestamp = new Date().getTime();
-                let Num = 0;
-                for (let i = 0; i < 6; i++) {
-                  Num += Math.pow(10, i) * Math.floor(Math.random() * 10);
-                }
-                timestamp += Num;
-                debugger;
-                sel.selcted.forEach((val) => {
-                  const a = {};
-                  a.orderDetailId = val;
-                  a.rightsGroup = timestamp;
-                  this.rightsDetailList.push(a);
+                  configId: sel.configId,
+                  rightsGroup: timestamp,
                 });
-                r.rightsGroup = timestamp;
-                r.configId = sel.configId;
-                this.rightsUserDto.push(r);
+                // 子权益信息
+                // todo 兼容写法，以后去掉sel.selcted
+                const ids = sel.selcted || sel.ids;
+                ids.forEach((val) => {
+                  this.rightsDetailList.push({
+                    orderDetailId: val,
+                    rightsGroup: timestamp
+                  });
+                });
               });
             }
           }
@@ -764,21 +713,14 @@ export default {
         this.num++;
       }
       if (this.num === 2) {
+        // 重置所选的全部权益数量
+        this.choseRightNum = 0;
         const rightJson = {};
         rightJson.rightsUserInterestsDetailsDTO = this.rightsDetailList;
-        if (this.nameList.length === 1) {
-          rightJson.rightName = this.nameList[0];
-        } else {
-          rightJson.rightName = this.nameList.join(',');
-        }
-        if (this.idList.length === 1) {
-          rightJson.rightId = this.idList[0];
-        } else {
-          rightJson.rightId = this.idList.join(',');
-        }
+        rightJson.rightName = this.nameList.join(',');
+        rightJson.rightId = this.idList.join(',');
         rightJson.rightsUserInterestsDTO = this.rightsUserDto;
         this.rightsJson = JSON.stringify(rightJson);
-        debugger;
         this.$router.go(-1);
       }
     },
@@ -800,6 +742,10 @@ export default {
             if (result && result.length > 0) {
               const temp = result;
               temp.forEach((not) => {
+                // 某天突然返回了个null=.=
+                if (!not) {
+                  return;
+                }
                 const ProductCategoryNameAy = [];
                 this.productGroupName.forEach((v) => {
                   const reg = new RegExp(v.groupCode);
@@ -868,15 +814,20 @@ export default {
         });
     },
     getData(type) {
-      // todo
+      /**
+         * 请求权益互动
+         * @type 1:同享 2:不同享
+         * */
+      // 获取订单信息，根据订单的产品、价格等信息获取满足的权益
       this.subInfo = JSON.parse(this.$route.params.orderInfo);
+      // 订单号
       this.orderNo = this.subInfo.orderNo;
       if (this.current === 0) {
         if (!type) {
           return;
         }
         if (type === 1) {
-          this.rightsService.queryOrderOptionalShareRights(this.subInfo, {requestNoToast: true})
+          this.rightsService.queryOrderOptionalShareRights(this.subInfo, { requestNoToast: true })
             .then((res) => {
               if (res.code === 1) {
                 if (res.data.length > 0) {
@@ -895,7 +846,7 @@ export default {
               }
             });
         } else {
-          this.rightsService.queryOrderOptionalMutexRights(this.subInfo, {requestNoToast: true})
+          this.rightsService.queryOrderOptionalMutexRights(this.subInfo, { requestNoToast: true })
             .then((res) => {
               if (res.code === 1) {
                 if (res.data.length > 0) {
@@ -972,17 +923,25 @@ export default {
         });
     },
     anylizeData(curlist, type) {
-      console.log('curlist', curlist);
+      /**
+         * 转化权益列表
+         * @curlist 原始权益列表
+         * @type 1:同享列表 2：互斥列表
+         * */
       curlist.forEach((item) => {
-        const ProductCategoryNameAy = [];
+        // rightsProductCategory产品组code转化为产品组名称
+        const productCategoryNameAy = [];
         this.productGroupName.forEach((v) => {
           const reg = new RegExp(v.groupCode);
           if (reg.test(item.rightsProductCategory)) {
-            ProductCategoryNameAy.push(v.groupName);
+            productCategoryNameAy.push(v.groupName);
           }
         });
-        item.rightsProductCategory = ProductCategoryNameAy.join('、');
+        // rightsProductCategory属性重置为产品组名称
+        item.rightsProductCategory = productCategoryNameAy.join('、');
+        // 权益数量
         item.num = 0;
+        // 把orderIdList从数组转化为对象
         item.allowRightsConditionDtoList.forEach((al) => {
           al.flag = 0;
           if (al.orderIdList) {
@@ -1000,29 +959,16 @@ export default {
             al.orderIdList = temp;
           }
         });
-        const brands = [];
-        const a = item.rightsBrand.split(',');
-        a.forEach((i) => {
-          if (i === '000') {
-            brands.push('海尔');
-          } else if (i === '051') {
-            brands.push('卡萨帝');
-          } else {
-            brands.push('统帅');
-          }
-        });
-        item.rightsBrandC = brands.join(',');
-        // this.$set(item, 'minesGray', true);
-        if (item.isOptional === 1) {
-          this.$set(item, 'addGray', false);
-        } else {
-          this.$set(item, 'addGray', true);
-        }
-        if (item.selectedNum !== 0) {
-          this.$set(item, 'minesGray', false);
-        } else {
-          this.$set(item, 'minesGray', true);
-        }
+
+        const rightsBrandTemp = item.rightsBrand;
+        item.rightsBrandC = rightsBrandTemp.replace(/000/g, '海尔');
+        item.rightsBrandC = item.rightsBrandC.replace(/051/g, '卡萨帝');
+        item.rightsBrandC = item.rightsBrandC.replace(/089/g, '统帅');
+
+        // 加按钮置灰
+        this.$set(item, 'addGray', !(item.isOptional === 1));
+        // 减按钮置灰(selectedNum可能开始没值)
+        this.$set(item, 'minesGray', !(item.selectedNum !== 0));
       });
       if (type === 1) {
         this.shareRightsList = curlist;
@@ -1032,7 +978,6 @@ export default {
     }
   },
   beforeRouteLeave(to, from, next) {
-    debugger;
     if (this.rightsJson) {
       const right = JSON.parse(this.rightsJson);
       if (right.rightsUserInterestsDetailsDTO.length === 0) {
@@ -1060,7 +1005,6 @@ export default {
                 }
               }
               delete cache[key];
-              debugger;
             }
           }
         }
@@ -1157,11 +1101,6 @@ export default {
     color: #666666;
   }
 
-  .iconfont {
-    font-size: 40px;
-    float: right;
-  }
-
   .bottom-btn {
     width: 100%;
     padding: 20px 0;
@@ -1191,13 +1130,15 @@ export default {
   .bottom-height {
     height: 150px;
   }
-  .info-Class{
+
+  .info-Class {
     text-align: center;
     padding: 30px;
     color: #666666;
     font-size: 32px;
   }
-  .rights-notice{
+
+  .rights-notice {
     width: 700px;
     margin-left: 25px;
     margin-bottom: 25px;
@@ -1208,7 +1149,8 @@ export default {
     font-size: 28px;
     padding: 24px;
   }
-  .important-class{
+
+  .important-class {
     font-weight: 500;
     font-size: 30px;
   }
