@@ -8,6 +8,7 @@ export default {
     /* 登录 */
     return axPost(urls.jsSign, data);
   },
+
   userInfo() {
     /* 查询直销员信息 */
     return axGet(urls.userInfo);

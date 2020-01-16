@@ -14,6 +14,11 @@ const urls = {
   // 购买意愿
   buyIntention: '/common/dictionary/list/BUYINTENTION',
   uploadByMediaId: '/common/uploadByMediaId', // 同步前端微信上传的文件
+  // 数据字典
+  dictionary(type) {
+    return `/common/dictionary/list/${type}`;
+  },
+
 };
 
 Object.entries(urls).forEach(([key, value]) => {
