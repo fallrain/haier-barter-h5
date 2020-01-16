@@ -108,6 +108,7 @@
   </div>
     <b-order-follow-search-bar
       v-show="curScrollViewName==='scrollViewProgress'"
+      :defalutCheckedsortId="defalutCheckedsortId"
       :scenarioList="scenarioList"
       :businessType.sync="scrollViewProgress.businessType"
       :sortType.sync="scrollViewProgress.sortType"
@@ -203,6 +204,7 @@ export default {
   },
   data() {
     return {
+      defalutCheckedsortId: '',
       updateList: false,
       pageNum: 1,
       searchWord: '',
@@ -334,6 +336,12 @@ export default {
     // window.location.reload();
   },
   created() {
+    if (this.$route.query.businessScenarios) {
+      // 一站筑家跳转过来的
+      this.scrollViewProgress.businessType = this.$route.query.businessScenarios;
+      this.defalutCheckedsortId = this.$route.query.businessScenarios;
+      console.log(this.scrollViewProgress);
+    }
     if (localStorage.getItem('confirm') === 'list') {
       this.curTab = 3;
       localStorage.setItem('confirm', '');
@@ -619,6 +627,7 @@ export default {
       }
     },
     searchData(page) {
+      debugger;
       /* 搜索订单 */
       let queryServiceName;
       let searchData;
@@ -632,6 +641,7 @@ export default {
           hmcId: this[GET_USER].hmcid
         };
       } else {
+        debugger;
         queryServiceName = 'queryOrderFollowList';
         searchData = {
           hmcId: this.userinfo.hmcid,
@@ -834,6 +844,9 @@ export default {
       wx.miniProgram.switchTab({ url: '/pages/tool/tool' });
       // wx.miniProgram.navigateTo({ url: '/pages/tool/tool' });
       // next();
+    } else if (to.name === 'Haierhouse.HaierhouseEntry') {
+      this.$destroy();
+      next();
     } else {
       next();
     }

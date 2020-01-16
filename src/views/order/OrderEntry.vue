@@ -1133,6 +1133,9 @@ export default {
       this.generateSubInfo(2);
     },
     selectAddress(item) {
+      this.customerInfo.province = item.province;
+      this.customerInfo.district = item.district;
+      this.customerInfo.city = item.city;
       this.addressPopShow = false;
       this.consignee.name = item.consigneeUserName;
       this.consignee.phone = item.consigneeUserPhone;
