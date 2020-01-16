@@ -42,7 +42,6 @@ export default {
   uploadByMediaId(data, param) {
     /* 同步前端微信上传的文件 */
     return axPostJson(urls.uploadByMediaId, data, param);
-  }
   },
   activityType() {
     /* 查询活动类型 */
