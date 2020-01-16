@@ -1094,6 +1094,9 @@ export default {
       }
     },
     selectAddress(item) {
+      this.customerInfo.province = item.province;
+      this.customerInfo.district = item.district;
+      this.customerInfo.city = item.city;
       // 修改收货人地址
       this.consignee.address.provinceName = item.consignee.provinceName;
       this.consignee.address.cityName = item.consignee.cityName;
