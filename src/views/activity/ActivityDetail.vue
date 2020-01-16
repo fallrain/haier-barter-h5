@@ -527,12 +527,12 @@ export default {
       }
       let getData = {
         activityId: this.activityId,
-        mobile,
         hmcId: this.hmcId,
         openId: this.openId,
         isMiniProgram: this.isMiniProgram,
         productType: this.form.productCatagoryList[0],
         ...this.form,
+        mobile,
       };
       this.checkboxType.forEach((item) => {
         if (item == 1) {
