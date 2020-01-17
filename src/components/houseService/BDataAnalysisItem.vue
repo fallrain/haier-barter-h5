@@ -10,6 +10,7 @@
           type="date"
           title="请选择日期"
           :defaultDate="startTime"
+          :max-date="getdate(endTime)"
           v-model="startTime"
         ></b-date-picker>
         <b-date-picker
@@ -19,6 +20,7 @@
           type="date"
           title="请选择日期"
           :defaultDate="endTime"
+          :min-date="getdate(startTime)"
           v-model="endTime"
         ></b-date-picker>
       </div>
@@ -116,6 +118,15 @@ export default {
       }
     };
   },
+  created() {
+    this.getDefalutData();
+    this.searchResult();
+  },
+  computed: {
+    getdate() {
+      return date => new Date(date);
+    }
+  },
   methods: {
     searchResult() {
       if (this.startTime === '' || this.endTime === '') {
@@ -127,6 +138,51 @@ export default {
         servicerId: JSON.parse(localStorage.getItem('userinfo')).hmcid
       };
       this.$emit('dealAnalysis', obj);
+    },
+    getDefalutData() {
+      this.startTime = this.getLastMonthStartDate();
+      this.endTime = this.getLastMonthEndDate();
+    },
+    // 获得上月开始时间
+    getLastMonthStartDate() {
+      const lastMonthDate = new Date(); // 上月日期
+      lastMonthDate.setDate(1); // 变成这个月一号
+      lastMonthDate.setMonth(lastMonthDate.getMonth() - 1);
+      let lastYear = lastMonthDate.getFullYear();
+      lastYear += (lastYear < 2000) ? 1900 : 0;
+      const lastMonth = lastMonthDate.getMonth();
+
+      const lastMonthStartDate = new Date(lastYear, lastMonth, 1);
+      return this.formatDate(lastMonthStartDate);
+    },
+    // 获得上月结束时间
+    getLastMonthEndDate() {
+      const lastMonthDate = new Date(); // 上月日期
+      lastMonthDate.setDate(1); // 变成这个月一号
+      lastMonthDate.setMonth(lastMonthDate.getMonth() - 1);
+      let lastYear = lastMonthDate.getFullYear();
+      lastYear += (lastYear < 2000) ? 1900 : 0;
+      const lastMonth = lastMonthDate.getMonth();
+
+      const lastMonthEndDate = new Date(lastYear, lastMonth, this.getMonthDays(lastMonth));
+      return this.formatDate(lastMonthEndDate);
+    },
+    // 获得某月的天数 可以
+    getMonthDays(myMonth) {
+      const nowYear = (new Date()).getFullYear();
+      const monthStartDate = new Date(nowYear, myMonth, 1);
+      const monthEndDate = new Date(nowYear, myMonth + 1, 1);
+      //   console.log('天数'+monthStartDate+'==='+ monthEndDate)
+      const days = (monthEndDate - monthStartDate) / (1000 * 60 * 60 * 24);
+      //  console.log('天数，数量：'+days);
+      return days;
+    },
+    // 格式化日期：yyyy-MM-dd
+    formatDate(date) {
+      const myyear = date.getFullYear();
+      const mymonth = (date.getMonth() + 1).toString().padStart(2, '0');
+      const myweekday = date.getDate().toString().padStart(2, '0');
+      return (`${myyear}-${mymonth}-${myweekday}`);
     }
   }
 };
