@@ -29,11 +29,11 @@ export default {
   },
   queryIndustry() {
     /* 查询产业组 */
-    return axGet(urls.queryIndustry);
+    return axGet(urls.queryIndustry, { noToken: true, });
   },
   industryList() {
     /* 查询全部产业 */
-    return axGet(urls.industryList);
+    return axGet(urls.industryList, { noToken: true, });
   },
   getBuyIntention() {
     /* 查询购买意愿 */
