@@ -31,7 +31,7 @@
             </span>
             <span class="icon iconfont icon-shizhong pt2"></span>
           </div>
-          <div class="mb20">
+          <div class="mb20" v-show="item.accompanyingName !== ''">
             <span class="key-color">随行参与人:</span>
             <span class="value-color">{{item.accompanyingName}}</span>
           </div>
@@ -44,7 +44,7 @@
               <span class="icon iconfont icon-dingwei"></span>
             </span>
           </div>
-          <div class="mb20 rows">
+          <div class="mb20 rows" v-show="item.dealproducts.length > 0">
             <div>
               <span class="key-color left">购机型号:</span>
               <ul class="type-list left" :class="{'hide-height':!item.arrowtag}">
@@ -130,7 +130,7 @@
           <span class="key-color">计划上门服务时间</span>
           <span class="value-color">{{item.serviceTime}}</span>
         </div>
-        <div class="mb20">
+        <div class="mb20" v-show="item.accompanyingName !== ''">
           <span class="key-color">随行参与人</span>
           <span class="value-color">{{item.accompanyingName}}</span>
         </div>
@@ -138,7 +138,7 @@
           <span class="key-color">服务地址</span>
           <span class="value-color">{{item.serviceAddress}}</span>
         </div>
-        <div class="rows mb20">
+        <div class="rows mb20" v-show="item.dealproducts.length > 0">
           <div>
             <span class="key-color left">购机型号:</span>
             <ul class="type-list left" :class="{'hide-height':!item.arrowtag}">

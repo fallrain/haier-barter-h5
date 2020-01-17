@@ -100,6 +100,7 @@ export default {
         float: left;
         margin-right: 24px;
         margin-bottom: 16px;
+        background: #fff;
       }
       .evaluate-tag.active{
         color: #1969C6;

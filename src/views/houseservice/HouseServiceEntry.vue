@@ -52,13 +52,11 @@
           <img
             src="@/assets/images/houseServicer/home_icons/shujufenxi.png"
           >
-          <span class="tagNum">{{tagNum4}}</span>
         </div>
         <div class="icon-style1" v-show="current==4">
           <img
             src="@/assets/images/houseServicer/home_icons/shujufenxi1.png"
           >
-<!--          <span class="tagNum">{{tagNum4}}</span>-->
         </div>
         <p class="title">数据分析</p>
       </span>
@@ -167,11 +165,16 @@ export default {
         pageNum: this.pageNum,
         pageSize: '10'
       };
-      this.houseService.queryPlanServiceList(data, {}).then((res) => {debugger
+      this.houseService.queryPlanServiceList(data, {}).then((res) => {
+        debugger;
         if (res.code === 1) {
           res.data.result.forEach((item, index) => {
             res.data.result[index].arrowtag = false;
-            res.data.result[index].dealproducts = item.productNames.split(',');
+            if (item.productNames !== '') {
+              res.data.result[index].dealproducts = item.productNames.split(',');
+            } else {
+              res.data.result[index].dealproducts = [];
+            }
           });
           if (this.pageNum === 1) {
             this.myPlanServices = [];
@@ -200,7 +203,11 @@ export default {
       this.houseService.queryOtherPlanServiceList(param, '').then((res) => {
         res.data.result.forEach((item, index) => {
           res.data.result[index].arrowtag = false;
-          res.data.result[index].dealproducts = item.productNames.split(',');
+          if (item.productNames !== '') {
+            res.data.result[index].dealproducts = item.productNames.split(',');
+          } else {
+            res.data.result[index].dealproducts = [];
+          }
         });
         this.otherPlanServices = res.data.result;
       });
@@ -236,7 +243,11 @@ export default {
         if (res.code === 1) {
           res.data.result.forEach((item, index) => {
             res.data.result[index].arrowtag = false;
-            res.data.result[index].dealProducts = res.data.result[index].productNames.split(',');
+            if (item.productNames !== '') {
+              res.data.result[index].dealproducts = item.productNames.split(',');
+            } else {
+              res.data.result[index].dealproducts = [];
+            }
           });
           this.mySuccessPlan = res.data.result;
           this.tagNum2 = res.data.total;

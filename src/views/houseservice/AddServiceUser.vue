@@ -72,7 +72,7 @@
           <span class="icon iconfont icon-wenhao"></span>
         </templet>
       </b-item>
-      <div class="bg-white p24">
+      <div class="bg-white p24 fs28">
         <div class="rows">
           <div class="text-333">入户地址</div>
           <button type="button" class="common-btn-waring" @click="queryAddress">修改地址</button>
@@ -101,17 +101,17 @@
           <span @click="deleteProduct(index)" class="icon iconfont icon-shanchu text-ccc"></span>
         </li>
       </ul>
-      <div class="rows br-b bg-white p24 mt16">
+      <div class="rows br-b bg-white p24 mt16 fs28">
         <label>加入我的日程提醒</label>
         <md-switch v-model="isTip"/>
       </div>
-      <div v-show="isTip" class="br-b bg-white p24">
+      <div v-show="isTip" class="br-b bg-white p24 fs28">
         <span :class="[{'active':activeOffset==='0'},'tag-style']" @click="clickTag('0')">提前三天</span>
         <span :class="[{'active':activeOffset==='1'},'tag-style']" @click="clickTag('1')">提前一天</span>
         <span :class="[{'active':activeOffset==='2'},'tag-style']" @click="clickTag('2')">提前2小时</span>
         <span :class="[{'active':activeOffset==='3'},'tag-style']" @click="clickTag('3')">提前1小时</span>
       </div>
-      <div class="remarks">
+      <div class="remarks fs28">
         <div class="text-333">备注</div>
         <textarea placeholder="请输入备注信息" class="w100per" rows="3"
                   @input="inputMax"
@@ -586,13 +586,7 @@ export default {
           host = 'https://testdb.haier.net';
         }
         const url = `${host}/houseservice/checkPlan?id=${id}`;
-        let endDate = new Date(this.customerInfo.serviceTime.replace(/-/g, '/'));
-        const Y = endDate.getFullYear();
-        const M = (endDate.getMonth() + 1).toString().padStart(2, '0');
-        const D = endDate.getDate().toString().padStart(2, '0');
-        const h = endDate.getHours().toString().padStart(2, '0');
-        const m = endDate.getMinutes().toString().padStart(2, '0');
-        endDate = `${Y}-${M}-${D}T${h}:${m}:00.000Z`;
+        const endDate = new Date(this.customerInfo.serviceTime.replace(/-/g, '/'));
         const tipInfo = {
           hmcId: this.customerInfo.servicerId,
           jumpPage: url,
@@ -639,13 +633,6 @@ export default {
       } else if (type === 'h') {
         endDate = new Date(startDate.getTime() - num * 60 * 60 * 1000);
       }
-      const Y = endDate.getFullYear();
-      const M = (endDate.getMonth() + 1).toString().padStart(2, '0');
-      const D = endDate.getDate().toString().padStart(2, '0');
-      const h = endDate.getHours().toString().padStart(2, '0');
-      const m = endDate.getMinutes().toString().padStart(2, '0');
-      endDate = `${Y}-${M}-${D}T${h}:${m}:00.000Z`;
-      console.log(endDate);
       return endDate;
     }
   },
@@ -840,6 +827,9 @@ export default {
   }
   .fs20{
     font-size: 20px;
+  }
+  .fs28{
+    font-size: 28px;
   }
   .fs34 {
     font-size: 34px;
