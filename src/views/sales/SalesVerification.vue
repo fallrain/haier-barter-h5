@@ -405,7 +405,7 @@ export default {
         // todo 门店id需从接口取
         mdId: this.userinfo.shopId,
         // 购机时间
-        gjTime: this.curSearchDate,
+        gjTime: this.bUtil.formatDate(this.curSearchDate, 'yyyy-MM'),
         // 直销员产品线编码 todo 接口取
         productLineCode: this.userinfo.productGroups,
         productCode: this.searchVal
