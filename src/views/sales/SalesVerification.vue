@@ -464,7 +464,7 @@ export default {
       this.salesService.getReportEhubByProductList({
         dbDataStatus: this.curTab,
         mdId: this.userinfo.shopId,
-        gjTime: this.curSearchDate,
+        gjTime: this.bUtil.formatDate(this.curSearchDate, 'yyyy-MM'),
         productCode: item.product
       }).then(({ code, data }) => {
         if (code === 1) {
@@ -522,7 +522,7 @@ export default {
       const argsObj = {
         mdId: this.userinfo.shopId,
         productCode: itemInfo.product,
-        gjTime: this.curSearchDate
+        gjTime: this.bUtil.formatDate(this.curSearchDate, 'yyyy-MM')
       };
       this.$router.push({
         name: 'Sales.SalesChooseOrder',
@@ -545,7 +545,7 @@ export default {
             onConfirm: () => {
               this[this.curScrollViewName].mescroll.triggerDownScroll();
             }
-          })
+          });
           // this[this.curScrollViewName].list.splice(index, 1);
           // this[this.curScrollViewName].mescroll.triggerDownScroll();
         }
