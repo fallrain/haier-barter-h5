@@ -373,12 +373,14 @@ export default {
       this.productInfo.customerFamilyId = this.customerInfo.customerInfoId;
       this.productInfo.customerId = this.customerInfo.customerId;
       this.productInfo.groupAppraiseCode = this.assessmentV.join(',');
-      this.houseService.completeAppliance({
-        planId: this.customerInfo.id
-      }).then((res) => {
-        if (res.code === 1) {
-        }
-      });
+      if (this.customerInfo.id) { // 更改已完善家电信息状态
+        this.houseService.completeAppliance({
+          planId: this.customerInfo.id
+        }).then((res) => {
+          if (res.code === 1) {
+          }
+        });
+      }
       delete this.productInfo.img;
       this.basicService.saveHouseHold(this.productInfo, {}).then((res) => {
         if (res.code === 1) {
