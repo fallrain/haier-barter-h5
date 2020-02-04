@@ -186,7 +186,7 @@
           disabled
         ></md-switch>
       </div>
-      <div class="switch-item">
+      <!--<div class="switch-item">
         <div class="switch-info">
           <div class="fs28 text-666">提交申请作为优秀服务案例</div>
           <div class="fs24 text-999">勾选后，将提交中心和总部人员进行审核</div>
@@ -200,7 +200,7 @@
           v-model="switch2"
           disabled
         ></md-switch>
-      </div>
+      </div>-->
     </div>
     <!--    底部按钮-->
     <div class="footer">

@@ -404,14 +404,14 @@ export default {
   mounted() {
   },
   activated() {
-    debugger;
-    if (this.$route.query.customerId) {
+    console.log(1)
+    if (this.$route.query.customerId && !this.isTaizhang) {
       this.planId = this.$route.query.customerId;
       this.tabIndex = this.$route.query.tabState;
       this.queryDetail(this.$route.query.customerId);
     }
   },
-  created() {
+  created() {console.log(2)
     const clientHeight = document.documentElement.clientHeight || document.body.clientHeight;
     window.onresize = function () {
       const nowClientHeight = document.documentElement.clientHeight || document.body.clientHeight;
