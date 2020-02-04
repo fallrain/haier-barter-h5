@@ -404,14 +404,15 @@ export default {
   mounted() {
   },
   activated() {
-    console.log(1)
     if (this.$route.query.customerId && !this.isTaizhang) {
       this.planId = this.$route.query.customerId;
       this.tabIndex = this.$route.query.tabState;
       this.queryDetail(this.$route.query.customerId);
+    } else if (this.isTaizhang) {
+      this.getFamilyInfo();
     }
   },
-  created() {console.log(2)
+  created() {
     const clientHeight = document.documentElement.clientHeight || document.body.clientHeight;
     window.onresize = function () {
       const nowClientHeight = document.documentElement.clientHeight || document.body.clientHeight;
@@ -467,11 +468,28 @@ export default {
       }
     });
     // 产品类别字典
-    this.basicService.queryProductGroupList().then((res) => {
+    this.productGroupName = [
+      { id: '1', groupCode: 'BX', groupName: '冰箱' },
+      { id: '2', groupCode: 'XYJ', groupName: '洗衣机' },
+      { id: '3', groupCode: 'DS', groupName: '电视' },
+      { id: '4', groupCode: 'KT', groupName: '空调' },
+      { id: '5', groupCode: 'KX', groupName: '烤箱' },
+      { id: '6', groupCode: 'BG', groupName: '冰柜' },
+      { id: '7', groupCode: 'DN', groupName: '电脑' },
+      { id: '8', groupCode: 'RSQ', groupName: '热水器' },
+      { id: '9', groupCode: 'JSQ', groupName: '净水器' },
+      { id: '10', groupCode: 'XDG', groupName: '消毒柜' },
+      { id: '11', groupCode: 'RQZ', groupName: '燃气灶' },
+      { id: '12', groupCode: 'XWJ', groupName: '洗碗机' },
+      { id: '13', groupCode: 'YYJ', groupName: '油烟机' },
+      { id: '14', groupCode: 'SJ', groupName: '手机' },
+      { id: '15', groupCode: 'QT', groupName: '其他' },
+    ];
+    /* this.basicService.queryProductGroupList().then((res) => {
       if (res.code === 1) {
         this.productGroupName = res.data;
       }
-    });
+    }); */
     // 家庭结构字典
     this.productService.commonTypeQuery('group_composition_code').then((res) => {
       if (res.code === 1) {
@@ -483,7 +501,7 @@ export default {
       }
     });
     if (this.$route.query.customerInfoId) {
-      debugger
+      debugger;
       // 台账过来的
       this.isTaizhang = true;
       this.tabIndex = this.$route.query.tabState;
