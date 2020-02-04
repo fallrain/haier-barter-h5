@@ -483,10 +483,12 @@ export default {
       }
     });
     if (this.$route.query.customerInfoId) {
+      debugger
       // 台账过来的
       this.isTaizhang = true;
       this.tabIndex = this.$route.query.tabState;
       this.customerInfoId = this.$route.query.customerInfoId;
+      this.customerId = this.$route.query.customerId;
       this.customerInfo.userName = this.$route.query.userName;
       this.customerInfo.userPhone = this.$route.query.userPhone;
       this.getFamilyInfo();
@@ -608,6 +610,10 @@ export default {
     },
     // 新增产品
     addProduct() {
+      this.customerInfo.customerInfoId = this.customerInfoId;
+      if (this.customerId) {
+        this.customerInfo.customerId = this.customerId;
+      }
       this.$router.push({
         name: 'Houseservice.AddNewProduct',
         params: {
