@@ -303,6 +303,8 @@ export default {
             this.customerInfo.heartInfo = obj.heartInfo;
             this.customerInfo.lifeInfo = obj.lifeInfo;
             this.customerInfo.userwordInfo = obj.userwordInfo;
+            this.switch1 = this.customerInfo.authorizeFlag === 1 ? true : false;
+            this.switch2 = this.customerInfo.applyFlag === 1 ? true : false;
           }
           return res;
         }
