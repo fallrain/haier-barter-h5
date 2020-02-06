@@ -307,7 +307,12 @@ export default {
         // this.productInfo.buyingChannel = this.$route.params.productInfo.buyingChannel.toString();
         this.productInfo.purchaseDate = this.bUtil.formatDate(this.$route.params.productInfo.purchaseDate, 'yyyy-MM-dd');
         this.productInfo.havePicture = false;
-        this.productInfo.picUrlList = this.$route.params.productInfo.img;
+        if (this.$route.params.productInfo.img) {
+          this.productInfo.picUrlList = this.$route.params.productInfo.img;
+        } else {
+          this.productInfo.picUrlList = [];
+        }
+
         if (this.productInfo.groupAppraiseCode) {
           this.assessmentV = this.productInfo.groupAppraiseCode.split(',');
         }
@@ -475,7 +480,8 @@ export default {
       return reg.test(num);
     },
   },
-  beforeRouteLeave(to, from, next) {debugger
+  beforeRouteLeave(to, from, next) {
+    debugger;
     if (to.name === 'Houseservice.CompleteFamilyInfor') {
       to.query.tabState = 2;
       this.$destroy();
