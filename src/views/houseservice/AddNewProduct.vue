@@ -57,9 +57,10 @@
         <label class="text-333">产品购买价格</label>
         <div class="address-form-item">
           <input class="text-333 br-n fs28"
-                 type="text"
+                 type="number"
                  placeholder="请输入产品购买价格"
                  v-model="productInfo.price"
+                 @blur="judegNum"
           >
         </div>
       </div>
@@ -462,6 +463,16 @@ export default {
     },
     onBasicCancel() {
       this.basicDialog.open = false;
+    },
+    judegNum() {
+      if (!this.testStr(this.productInfo.price) || this.productInfo.price > 10000000) {
+        this.productInfo.price = '';
+        Toast.failed('请输入正确的数值，最大数值为1000000且小数点后两位');
+      }
+    },
+    testStr(num) {
+      const reg = /^(\d+)(.\d{0,2})?$/;
+      return reg.test(num);
     },
   },
   beforeRouteLeave(to, from, next) {debugger
