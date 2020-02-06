@@ -113,7 +113,7 @@
         <b-wx-upload
           :imgs="productInfo.picUrlList"
           :maxLength="3"
-          @imageuploaded="(data, fileList)=>imageuploaded(data, fileList)"
+          @imageuploaded="(data)=>imageuploaded(data, productInfo.picUrlList)"
           @delFun="(index)=>delImg(index,productInfo.picUrlList)"
           :uploadFn="uploadImgFn"
           @errorhandle="uploadError"
@@ -407,7 +407,7 @@ export default {
       if (data.code === 1) { // 上传成功
         fileList.push(data.data);
         this.productInfo.havePicture = true;
-        this.productInfo.picUrlList.push(data.data);
+        // this.productInfo.picUrlList.push(data.data);
       }
     },
     delImg(index, fileList) {
