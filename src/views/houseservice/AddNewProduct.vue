@@ -411,7 +411,7 @@ export default {
       }
     },
     delImg(index, fileList) {
-      this.productInfo.picUrlList.splice(index, 1);
+      // this.productInfo.picUrlList.splice(index, 1);
       fileList.splice(index, 1);
     },
     uploadError(res) {
@@ -464,12 +464,9 @@ export default {
       this.basicDialog.open = false;
     },
   },
-  beforeRouteLeave(to, from, next) {
+  beforeRouteLeave(to, from, next) {debugger
     if (to.name === 'Houseservice.CompleteFamilyInfor') {
-      const obj = {
-        tabIndex: 3
-      };
-      to.query.temp = JSON.stringify(obj);
+      to.query.tabState = 2;
       this.$destroy();
     }
     next();
