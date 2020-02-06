@@ -403,7 +403,7 @@ export default {
   },
   mounted() {
   },
-  activated() {
+  activated() {debugger
     if (this.$route.query.customerId && !this.isTaizhang) {
       this.planId = this.$route.query.customerId;
       this.tabIndex = this.$route.query.tabState;
