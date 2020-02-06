@@ -111,8 +111,10 @@
         >
         </b-upload>-->
         <b-wx-upload
+          :imgs="productInfo.picUrlList"
           :maxLength="3"
           @imageuploaded="(data, fileList)=>imageuploaded(data, fileList)"
+          @delFun="(index)=>delImg(index,productInfo.picUrlList)"
           :uploadFn="uploadImgFn"
           @errorhandle="uploadError"
         >
@@ -409,10 +411,8 @@ export default {
       }
     },
     delImg(index, fileList) {
+      this.productInfo.picUrlList.splice(index, 1);
       fileList.splice(index, 1);
-    },
-    imageuploading() {
-      Toast.loading('上传中');
     },
     uploadError(res) {
       console.log(res);
