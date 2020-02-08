@@ -503,7 +503,8 @@ export default {
         Toast.info('请输入您的姓名');
         return;
       }
-      if (!this.form.mobile || !this.form.mobile.startsWith('1') || this.form.mobile.length != 11) {
+      const mobile = this.form.mobile.trim();
+      if (!mobile || !mobile.startsWith('1') || mobile.length != 11) {
         Toast.info('请输入正确手机号');
         return;
       }
@@ -526,12 +527,12 @@ export default {
       }
       let getData = {
         activityId: this.activityId,
-        mobile: this.form.mobile,
         hmcId: this.hmcId,
         openId: this.openId,
         isMiniProgram: this.isMiniProgram,
         productType: this.form.productCatagoryList[0],
         ...this.form,
+        mobile,
       };
       this.checkboxType.forEach((item) => {
         if (item == 1) {
