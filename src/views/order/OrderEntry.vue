@@ -469,8 +469,74 @@ export default {
   mounted() {
 
   },
+  created() {
+    const {
+      params,
+      query
+    } = this.$route;
+    this.addressData = addressData;
+    this.userParam = JSON.parse(localStorage.getItem('userinfo'));
+    this.shopId = this.userParam.shopId;
+    const customerConsigneeInfo = params.customerConsigneeInfo || {};
+    if (customerConsigneeInfo.freezeMsg) {
+      this.freezeMsg = customerConsigneeInfo.freezeMsg;
+      if (this.freezeMsg === 'Y') {
+        this.handRegion = true;
+      }
+    }
+
+    if (params.region === 'new') {
+      this.customerInfo = customerConsigneeInfo;
+      if (customerConsigneeInfo.username) {
+        this.haveCustomer = true;
+      }
+      this.mobile = customerConsigneeInfo.mobile;
+      this.queryCustomerDefault();
+    }
+
+    if (this.userParam.oldForNew === 1) {
+      this.isYJHX = true;
+      this.customerInfo.username = this.userParam.username;
+      this.customerInfo.mobile = this.userParam.mobile;
+      this.customerInfo.customerId = this.userParam.customerId;
+      this.customerInfo.orderFollowId = this.userParam.orderFollowId;
+      this.shopId = this.userParam.storeId;
+      this.customerInfo.userId = '';
+      this.haveCustomer = true;
+      this.haveConsignee = false;
+    }
+
+    this.queryUserList();
+    this.getUserStore();
+
+    if (customerConsigneeInfo.businessScenarios) {
+      this.orderSource = customerConsigneeInfo.businessScenarios;
+    } else {
+      this.orderSource = 'SGLD';
+    }
+    if (customerConsigneeInfo.sourceSn) {
+      this.sourceSn = customerConsigneeInfo.sourceSn;
+    } else {
+      this.sourceSn = '';
+    }
+    // 是否手工录单
+    const isHand = params.region === 'hand' || query.region === 'hand';
+    // 处理权益是否可选
+    if (isHand) {
+      this.handRegion = true;
+      this.haveConsignee = false;
+      this.haveCustomer = false;
+    }
+  },
   activated() {
-    if (this.$route.params.customerConsigneeInfo && this.$route.params.customerConsigneeInfo.id) {
+    const {
+      params,
+      query
+    } = this.$route;
+    // 是否手工录单
+    const isHand = params.region === 'hand' || query.region === 'hand';
+    const customerConsigneeInfo = params.customerConsigneeInfo || {};
+    if (customerConsigneeInfo.id) {
       this.orderFollowId = this.$route.params.customerConsigneeInfo.id;
       localStorage.setItem('orderFollowId', this.orderFollowId);
     }
@@ -543,8 +609,8 @@ export default {
         this.rightName = '';
         this.rightId = '';
       }
-    } else if (this.$route.params.region != 'hand') {
-      if (localStorage.getItem('invoice') == 'true') {
+    } else if (!isHand) {
+      if (localStorage.getItem('invoice') === 'true') {
         localStorage.setItem('invoice', '');
         return;
       }
@@ -560,60 +626,6 @@ export default {
       this.recordMode = this.$route.params.customerConsigneeInfo.recordMode;
       this.mobile = this.customerInfo.mobile;
       this.queryCustomerDefault();
-    }
-  },
-  created() {
-    this.addressData = addressData;
-    this.userParam = JSON.parse(localStorage.getItem('userinfo'));
-    this.shopId = this.userParam.shopId;
-    // 处理权益是否可选
-    if (this.$route.params.region === 'hand') {
-      this.handRegion = true;
-    }
-    if (this.$route.params.customerConsigneeInfo.freezeMsg) {
-      this.freezeMsg = this.$route.params.customerConsigneeInfo.freezeMsg;
-      if (this.freezeMsg === 'Y') {
-        this.handRegion = true;
-      }
-    }
-
-    if (this.$route.params.region === 'new') {
-      this.customerInfo = this.$route.params.customerConsigneeInfo;
-      if (this.$route.params.customerConsigneeInfo.username) {
-        this.haveCustomer = true;
-      }
-      this.mobile = this.$route.params.customerConsigneeInfo.mobile;
-      this.queryCustomerDefault();
-    }
-
-    if (this.userParam.oldForNew === 1) {
-      this.isYJHX = true;
-      this.customerInfo.username = this.userParam.username;
-      this.customerInfo.mobile = this.userParam.mobile;
-      this.customerInfo.customerId = this.userParam.customerId;
-      this.customerInfo.orderFollowId = this.userParam.orderFollowId;
-      this.shopId = this.userParam.storeId;
-      this.customerInfo.userId = '';
-      this.haveCustomer = true;
-      this.haveConsignee = false;
-    }
-
-    this.queryUserList();
-    this.getUserStore();
-
-    if (this.$route.params.customerConsigneeInfo.businessScenarios) {
-      this.orderSource = this.$route.params.customerConsigneeInfo.businessScenarios;
-    } else {
-      this.orderSource = 'SGLD';
-    }
-    if (this.$route.params.customerConsigneeInfo.sourceSn) {
-      this.sourceSn = this.$route.params.customerConsigneeInfo.sourceSn;
-    } else {
-      this.sourceSn = '';
-    }
-    if (this.$route.params.region === 'hand') {
-      this.haveConsignee = false;
-      this.haveCustomer = false;
     }
   },
   methods: {
