@@ -19,7 +19,10 @@
         <!--<span class="mr16">先生</span>-->
         <span>
           <i class="iconfont icon-dianhua mr16"></i>
-          <a :href="'tel:'+data.userPhone">{{data.userPhone}}</a>
+          <a
+            :href="'tel:'+data.userPhone"
+            @click="recordCall(data)"
+          >{{data.userPhone}}</a>
         </span>
       </div>
       <div class="bEvaluateProductItem-cnt-price mb22">
@@ -31,13 +34,13 @@
       </div>
     </div>
     <div class="bEvaluateProductItem-btn-par">
-    <span class="bEvaluateProductItem-tips">{{orderStatusFilter(data)}}</span>
-    <!--<button
-      type="button"
-      class="common-btn-primary"
-    >促成交
-    </button>-->
-  </div>
+      <span class="bEvaluateProductItem-tips">{{orderStatusFilter(data)}}</span>
+      <!--<button
+        type="button"
+        class="common-btn-primary"
+      >促成交
+      </button>-->
+    </div>
   </li>
 </template>
 
@@ -83,16 +86,26 @@ export default {
         0: '未成交',
         1: '已成交'
       };
-      // const orderSourceMap = {
-      //   DB: '兑呗',
-      //   YLH: '易理货'
-      // };
+        // const orderSourceMap = {
+        //   DB: '兑呗',
+        //   YLH: '易理货'
+        // };
       const name = orderStatusMap[orderStatus] || '';
       //  if (orderSourceMap[orderSource]) {
       //   name += `（${orderSourceMap[orderSource]}）`;
       // }
       return name;
-    }
+    },
+    recordCall(item) {
+      /* 记录以旧换新打电话 */
+      const {
+        id
+      } = item;
+      this.campaignService.recordFrequency({
+        id,
+        type: 1
+      });
+    },
   }
 };
 </script>
@@ -121,6 +134,7 @@ export default {
     flex-wrap: wrap;
     color: #333;
     font-size: 28px;
+
     & > .name {
       font-size: 36px;
     }
