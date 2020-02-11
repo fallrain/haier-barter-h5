@@ -92,4 +92,8 @@ export default {
     /* 查询需要删除的订单的列表 */
     return axPostJson(urls.queryRightsReviewList, data, params);
   },
+  checkRepeatCreateOrder(params) {
+    /* 检查重复录单 */
+    return axPostJson(urls.checkRepeatCreateOrder, null, params);
+  },
 };

@@ -120,7 +120,7 @@ import {
 } from '@/components/business';
 
 export default {
-  name: 'OrderModify',
+  name: 'OrderConfirm',
   components: {
     [Dialog.name]: Dialog,
     BActivityList,
@@ -270,22 +270,28 @@ export default {
         }
       });
     },
-
-
     next() {
       Dialog.confirm({
         content: '请务必上传真实、清晰、完整的发票。否则，将影响用户权益的领取，而且将影响您的工资核算与发放！',
         confirmText: '确定',
-        onConfirm: () => {
-          this.orderService.createOrderSubmit({}, { orderNo: this.orderNo }).then((res) => {
-            if (res.code === 1) {
-              localStorage.removeItem('orderFollowId');
-              this.$router.push({
-                name: 'Order.OrderFollowCommitResult',
-                params: { orderInfo: res.data }
-              });
-            }
+        onConfirm: async () => {
+          // 检查重复录单
+          const { code } = await this.orderService.checkRepeatCreateOrder({
+            orderNo: this.orderNo,
+            hmcId: this.orderInfo.hmcId,
+            userPhone: this.phone
           });
+          if (code === 1) {
+            this.orderService.createOrderSubmit({}, { orderNo: this.orderNo }).then((res) => {
+              if (res.code === 1) {
+                localStorage.removeItem('orderFollowId');
+                this.$router.push({
+                  name: 'Order.OrderFollowCommitResult',
+                  params: { orderInfo: res.data }
+                });
+              }
+            });
+          }
         },
       });
     },
