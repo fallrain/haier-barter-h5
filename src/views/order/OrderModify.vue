@@ -751,11 +751,7 @@ export default {
       this.productService.deafaultCustomerAddress(this.mobile).then((res) => {
         if (res.code === 1) {
           if (res.data !== null) {
-            if (index === '1') {
-              this.customerInfo.customerId = res.data.customerId;
-            } else {
-              this.customerInfo = res.data;
-            }
+            this.customerInfo = res.data;
             this.consignee.familyId = res.data.familyId;
             if (res.data.sex === 1) {
               this.consignee.sexCn = '男士';
