@@ -722,7 +722,7 @@ export default {
               this.getActivityList();
             }
           }
-          this.queryCustomerDefault('1');
+          this.queryCustomerDefault();
         }
       });
     },
@@ -747,7 +747,7 @@ export default {
       });
     },
     // 查询客户信息及默认地址
-    queryCustomerDefault(index) {
+    queryCustomerDefault() {
       this.productService.deafaultCustomerAddress(this.mobile).then((res) => {
         if (res.code === 1) {
           if (res.data !== null) {
@@ -992,7 +992,7 @@ export default {
       subInfo.dispatchProvince = this.consignee.address.provinceName;
       subInfo.dispatchCityId = this.customerInfo.city;
       subInfo.dispatchCity = this.consignee.address.cityName;
-      subInfo.dispatchAreaId = this.customerInfo.area;
+      subInfo.dispatchAreaId = this.customerInfo.district;
       subInfo.dispatchArea = this.consignee.address.districtName;
       subInfo.dispatchAdd = this.consignee.address.street;
       subInfo.buyTime = this.buyDate;
@@ -1098,10 +1098,10 @@ export default {
         }
       }
     },
-    selectAddress(item) {
+    selectAddress(item) {debugger
       this.customerInfo.province = item.province;
-      this.customerInfo.district = item.district;
       this.customerInfo.city = item.city;
+      this.customerInfo.district = item.district;
       // 修改收货人地址
       this.consignee.address.provinceName = item.consignee.provinceName;
       this.consignee.address.cityName = item.consignee.cityName;
