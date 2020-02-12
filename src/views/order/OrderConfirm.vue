@@ -276,23 +276,35 @@ export default {
         confirmText: '确定',
         onConfirm: async () => {
           // 检查重复录单
-          const { code } = await this.orderService.checkRepeatCreateOrder({
+          const { code, msg } = await this.orderService.checkRepeatCreateOrder({
             orderNo: this.orderNo,
             hmcId: this.orderInfo.hmcId,
             userPhone: this.phone
           });
           if (code === 1) {
-            this.orderService.createOrderSubmit({}, { orderNo: this.orderNo }).then((res) => {
-              if (res.code === 1) {
-                localStorage.removeItem('orderFollowId');
-                this.$router.push({
-                  name: 'Order.OrderFollowCommitResult',
-                  params: { orderInfo: res.data }
-                });
+            this.submitOrder();
+          } else {
+            Dialog.confirm({
+              content: msg,
+              confirmText: '确认提交',
+              onConfirm: () => {
+                this.submitOrder();
               }
             });
           }
         },
+      });
+    },
+    submitOrder() {
+      /* 提交订单 */
+      this.orderService.createOrderSubmit({}, { orderNo: this.orderNo }).then((res) => {
+        if (res.code === 1) {
+          localStorage.removeItem('orderFollowId');
+          this.$router.push({
+            name: 'Order.OrderFollowCommitResult',
+            params: { orderInfo: res.data }
+          });
+        }
       });
     },
     changeOrder() {

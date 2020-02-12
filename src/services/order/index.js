@@ -94,6 +94,9 @@ export default {
   },
   checkRepeatCreateOrder(params) {
     /* 检查重复录单 */
-    return axPostJson(urls.checkRepeatCreateOrder, null, params);
+    return axPostJson(urls.checkRepeatCreateOrder, null, {
+      ...params,
+      requestNoToast: true
+    });
   },
 };
