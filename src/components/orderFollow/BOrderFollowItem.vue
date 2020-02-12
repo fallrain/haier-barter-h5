@@ -206,6 +206,7 @@
           placeholder="请输入"
           placeholder-style="font-size: 28px;color: #BBBBBB;margin-left: 10px;"
           v-model="remark"
+          v-resetInput
         />
         <p class="pop-con" @click="confirmRemark">确认</p>
       </div>
