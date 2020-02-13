@@ -161,6 +161,7 @@ export default {
   .btn-groups{
     text-align: right;
     button{
+      font-size: 24px;
       margin-right: 25px;
       border-radius: 3.333vw;
       background: #fff;

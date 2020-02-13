@@ -279,19 +279,21 @@ export default {
   .btn-groups{
     text-align: right;
     button{
+      font-size: 24px;
       margin-right: 25px;
       border-radius: 3.333vw;
       background: #fff;
-      padding: 0 1.5vw;
+      padding: 0vw 1.5vw;
       line-height: 6vw;
       border: 1px solid #195cad;
       color: #195cad;
     }
     .tel-style{
+      font-size: 24px;
       margin-right: 25px;
       border-radius: 3.333vw;
       background: #fff;
-      padding: 0 1.5vw;
+      padding: 0.7vw 1.5vw;
       line-height: 6vw;
       border: 1px solid #195cad;
       color: #195cad;

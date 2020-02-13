@@ -485,11 +485,6 @@ export default {
       { id: '14', groupCode: 'SJ', groupName: '手机' },
       { id: '15', groupCode: 'QT', groupName: '其他' },
     ];
-    /* this.basicService.queryProductGroupList().then((res) => {
-      if (res.code === 1) {
-        this.productGroupName = res.data;
-      }
-    }); */
     // 家庭结构字典
     this.productService.commonTypeQuery('group_composition_code').then((res) => {
       if (res.code === 1) {
