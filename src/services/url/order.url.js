@@ -32,6 +32,8 @@ const urls = {
   orderDeletionApprovalApply: '/orderDeletionApproval/apply',
   // 查询需要删除的订单的列表
   queryRightsReviewList: '/orderDeletionApproval/queryRightsReviewList',
+  // 检查重复录单
+  checkRepeatCreateOrder: '/orderManage/checkRepeatCreateOrder',
 };
 
 Object.entries(urls).forEach(([key, value]) => {
