@@ -18,7 +18,8 @@
     </div>
     <div class="orderUploadInvoice-tips mt16">
       <p class="orderUploadInvoice-tips-title">温馨提示：</p>
-      <p>购机凭证必须上传，在3个月内，允许补传正规购机凭证。</p>
+     <!-- <p>购机凭证必须上传，在3个月内，允许补传正规购机凭证。</p>-->
+      <p>包含权益的订单必须上传购机凭证。</p>
     </div>
     <div class="orderUploadInvoice-question mt16">
       <p class="orderUploadInvoice-question-title">问题解答：</p>
