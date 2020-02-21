@@ -29,6 +29,11 @@
       <div class="bEvaluateProductList-chooseAll-btns">
         <button
           type="button"
+          class="bEvaluateProductList-chooseAll-btn-default mr26"
+        >分配给临促员
+        </button>
+        <button
+          type="button"
           class="bEvaluateProductList-chooseAll-btn-waring"
           @click="sendCoupon"
         >批量发券
@@ -196,6 +201,15 @@ export default {
     width: 180px;
     height: 60px;
     background: #F5A623;
+    font-size: 28px;
+    color: #fff;
+    border-radius: 30px;
+  }
+
+  .bEvaluateProductList-chooseAll-btn-default {
+    width: 220px;
+    height: 60px;
+    background: #1969C6;
     font-size: 28px;
     color: #fff;
     border-radius: 30px;

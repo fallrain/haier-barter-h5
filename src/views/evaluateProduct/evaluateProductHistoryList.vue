@@ -268,6 +268,25 @@ export default {
           }));
           this.filterList.push(buyIntention);
         }
+        // todo 将来从接口取
+        // 分配状态
+        this.filterList.push({
+          name: '分配状态',
+          isExpand: true,
+          type: 'radio',
+          data: [
+            {
+              key: 1,
+              value: '已分配',
+              isChecked: false
+            },
+            {
+              key: 1,
+              value: '未分配',
+              isChecked: false
+            }
+          ]
+        });
       });
     },
     upCallback(page) {
