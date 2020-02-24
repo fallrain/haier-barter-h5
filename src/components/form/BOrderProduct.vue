@@ -113,12 +113,12 @@ export default {
         return;
       }
       console.log(this.data);
-      let bbcPrice = 0;
+      let bbcPrice = '';
       if (this.data.bccPrice) {
         bbcPrice = this.data.bccPrice;
       }
       const obj = {
-        bccPrice: bbcPrice,
+        bccPrice: (bbcPrice || bbcPrice === 0) ? bbcPrice : '',
         productCode: this.data.productCode,
         productPrice: this.data.productPrice,
       };
