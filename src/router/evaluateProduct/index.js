@@ -5,7 +5,9 @@ const evaluateProductHistoryList = () =>
 const evaluateProductDetail = () =>
   import(/* webpackChunkName: "evaluateProductDetail" */ "@/views/evaluateProduct/evaluateProductDetail");
 
-// evaluateProductDetail
+//服务换新记录 serviceUpdateRecord
+const serviceUpdateRecord = () =>
+  import(/* webpackChunkName: "serviceUpdateRecord" */ "@/views/evaluateProduct/serviceUpdateRecord");
 
 const prefix = "/evaluateProductHistoryList";
 const module = "EvaluateProductHistoryList";
@@ -24,6 +26,14 @@ const data = [
     component: evaluateProductDetail,
     meta: {
       title: "沟通记录"
+    }
+  },
+  {
+    path: `${prefix}/serviceUpdateRecord`,
+    name: `${module}.serviceUpdateRecord`,
+    component: serviceUpdateRecord,
+    meta: {
+      title: "服务换新记录"
     }
   }
 ];
