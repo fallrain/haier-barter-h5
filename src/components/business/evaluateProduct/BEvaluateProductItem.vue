@@ -21,7 +21,7 @@
           <i class="iconfont icon-shizhong"></i>
           {{data.crTime}}
         </div>
-        <div class="cliclMore">查看沟通记录</div>
+        <div class="cliclMore" @click="barCodeClick(item)">查看沟通记录</div>
       </div>
     </div>
     <div class="bEvaluateProductItem-btn-par">
@@ -58,6 +58,13 @@ export default {
     orderStatus() {}
   },
   methods: {
+    barCodeClick(item) {
+      /* 查看记录click */
+      this.$router.push({
+        name: "EvaluateProductHistoryList.evaluateProductDetail",
+        params: { isShow: false }
+      });
+    },
     selectItem(e) {
       /* 选中本item */
       e.stopPropagation();

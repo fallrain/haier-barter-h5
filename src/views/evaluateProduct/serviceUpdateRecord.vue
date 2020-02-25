@@ -4,7 +4,7 @@
       <md-tab-bar v-model="curTab" :items="tabs" :hasInk="false"></md-tab-bar>
       <div class="count-class">共10人</div>
     </div>
-    <li class="songs-item-li" @click="gosonglistFn(item)" v-for="(item,k) in userList">
+    <li class="songs-item-li" v-for="(item,k) in userList">
       <div class="bEvaluateProductItem-cnt">
         <div class="bEvaluateProductItem-cnt-person mb22">
           <span class="name mr16">张三</span>
@@ -26,7 +26,7 @@
         <div class="c-container">
           <div class="goutjlClass">沟通记录</div>
           <div class="inputgtClass">请输入本次沟通记录</div>
-          <div class="cliclMore">查看记录</div>
+          <div class="cliclMore" @click="barCodeClick(item)">查看记录</div>
         </div>
       </div>
     </li>
@@ -61,6 +61,15 @@ export default {
       ],
       userList: [1, 2, 3, 4, 5, 6]
     };
+  },
+  methods: {
+    barCodeClick(item) {
+      /* 查看记录click */
+      this.$router.push({
+        name: "EvaluateProductHistoryList.evaluateProductDetail",
+        params: { isShow: true }
+      });
+    }
   }
 };
 </script>

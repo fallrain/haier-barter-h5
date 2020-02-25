@@ -30,6 +30,10 @@
         <div class="info-detail">记录：明天到店次数增加，今天到店次数减少</div>
       </div>
     </li>
+    <div v-if="isShow" class="bot-class">
+      <div class="addjlClass">添加记录</div>
+      <div class="callClass">继续拨打</div>
+    </div>
   </div>
 </template>
 
@@ -38,7 +42,8 @@ export default {
   name: "evaluateProductDetail",
   data() {
     return {
-      songList: [1, 2, 3, 4, 5, 6, 7, 8]
+      songList: [1, 2, 3, 4, 5, 6, 7, 8],
+      isShow: this.$route.params.isShow
     };
   }
 };
@@ -135,5 +140,36 @@ export default {
   font-size: 15px;
   padding-left: 20px;
   padding-top: 20px;
+}
+.bot-class {
+  display: flex;
+  flex-direction: row;
+  margin-top: 70px;
+  margin-bottom: 40px;
+  justify-content: space-around;
+}
+.addjlClass {
+  height: 84px;
+  border: #1969c6 solid 1px;
+  background-color: white;
+  border-radius: 10px;
+  width: 330px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1969c6;
+  font-size: 15px;
+}
+.callClass {
+  height: 84px;
+  border: #1969c6 solid 1px;
+  background-color: #1969c6;
+  border-radius: 10px;
+  width: 330px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 15px;
 }
 </style>
