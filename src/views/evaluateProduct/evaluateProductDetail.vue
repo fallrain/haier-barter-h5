@@ -1,23 +1,23 @@
 <template>
   <div class="container">
-    <div class="bEvaluateProductItem-cnt">
+    <div class="person-info">
       <div class="bEvaluateProductItem-cnt-person mb22">
-        <!-- <span class="name mr16">{{data.userName}}</span> -->
-        <span class="name mr16">张三</span>
-        <span>
-          <i class="iconfont icon-dianhua mr16"></i>
-          <a :href="'tel:'+18678611903" @click="recordCall(data)">18678611903</a>
-        </span>
+        <div class="name-style">张三</div>
+        <a href="tel:18510778318" class="go-phone">
+          <div class="num-style">18678611903</div>
+          <div class="phone-style">
+            <i class="iconfont icon-dianhua mr16"></i>
+            拨打电话
+          </div>
+        </a>
       </div>
-      <div class="c-container">
-        <div class="bEvaluateProductItem-cnt-price mb22">
-          <span class="name">洗衣机</span>
-          <span class="price">￥1998</span>
-        </div>
-        <div class="bEvaluateProductItem-cnt-time">
-          <!-- <i class="iconfont icon-shizhong"></i> -->
-          2019.09.20
-        </div>
+      <div class="bEvaluateProductItem-cnt-price mb22">
+        <span class="name">电冰箱</span>
+        <span class="price">￥1897</span>
+      </div>
+      <div class="bEvaluateProductItem-cnt-time">
+        <!-- <i class="iconfont icon-shizhong"></i> -->
+        2010.02.12
       </div>
     </div>
     <li class="songs-item-li" @click="gosonglistFn(item)" v-for="(item,k) in songList">
@@ -27,7 +27,10 @@
           <div>临促：李柳</div>
           <div>微信号：ULss2233</div>
         </div>
-        <div class="info-detail">记录：明天到店次数增加，今天到店次数减少</div>
+        <div class="info-detail">
+          记录：明天到店次数增加，今天到店次数减少
+          <span class="no-data" v-show="false">无文字记录</span>
+        </div>
       </div>
     </li>
     <div v-if="isShow" class="bot-class">
@@ -39,7 +42,7 @@
 
 <script>
 export default {
-  name: "evaluateProductDetail",
+  name: 'evaluateProductDetail',
   data() {
     return {
       songList: [1, 2, 3, 4, 5, 6, 7, 8],
@@ -51,69 +54,50 @@ export default {
 
 <style lang="scss">
 .container {
-  display: flex;
-  flex-direction: column;
-}
-.bEvaluateProductItem-cnt {
-  overflow: hidden;
-  flex-grow: 1;
-  flex-shrink: 0;
-  padding-left: 30px;
-  padding-top: 40px;
-  background-color: white;
-  height: 170px;
-}
+  .person-info{
+    padding: 24px;
+    background: #fff;
+    .bEvaluateProductItem-cnt-person{
+      line-height: 50px;
+      display: flex;
+      .name-style{
+        width: 110px;
+        font-size: 36px;
+        color: #333;
+        font-weight: 600;
 
-.bEvaluateProductItem-cnt-person {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  color: #333;
-  font-size: 28px;
-
-  & > .name {
-    font-size: 36px;
+      }
+      .go-phone{
+        display: flex;
+        justify-content: space-between;
+        flex-grow: 1;
+        .num-style{
+          color: #333333;
+        }
+        .phone-style{
+          .iconfont{
+            font-size: 32px;
+          }
+          color: #1969C6;
+        }
+      }
+    }
+    .bEvaluateProductItem-cnt-price{
+      color: #1969C6;
+      .name{
+        padding-right: 20px;
+      }
+    }
+    .bEvaluateProductItem-cnt-time{
+    }
   }
-
-  .iconfont {
-    font-size: 32px;
-    color: #1969c6;
-  }
-
-  a {
-    color: #333;
-  }
 }
+
 .c-container {
   display: flex;
   flex-direction: row;
 }
-.bEvaluateProductItem-cnt-price {
-  line-height: 1;
-  font-size: 28px;
-
-  & > .name {
-    color: #1969c6;
-    margin-right: 18px;
-  }
-
-  & > .price {
-    color: #1969c6;
-  }
-}
-
-.bEvaluateProductItem-cnt-time {
-  line-height: 1;
-  font-size: 28px;
-  margin-left: 30px;
-  .iconfont {
-    font-size: 28px;
-    margin-right: 18px;
-    color: #bbb;
-  }
-}
 .listen {
-  height: 208px;
   margin-left: 24px;
   margin-right: 24px;
   margin-top: 24px;
@@ -121,25 +105,25 @@ export default {
   border-radius: 10px;
   display: flex;
   flex-direction: column;
+  padding: 24px;
 }
 .info-header {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
-  font-size: 12px;
-  margin-top: 24px;
+  justify-content: space-between;
+  font-size: 24px;
 }
 .info-detail {
+  margin-top: 24px;
   background-color: #f5f5f5;
   border-radius: 10px;
-  height: 70px;
-  margin-left: 24px;
-  margin-right: 24px;
-  margin-top: 24px;
+  padding: 24px;
   color: #29ab91;
-  font-size: 15px;
-  padding-left: 20px;
-  padding-top: 20px;
+  font-size: 30px;
+  font-weight: 500;
+  .no-data{
+    color: #999;
+  }
 }
 .bot-class {
   display: flex;
