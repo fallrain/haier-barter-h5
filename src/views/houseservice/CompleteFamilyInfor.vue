@@ -65,7 +65,8 @@
             <label>建筑面积</label>
             <div class="address-form-item">
               <input class="text-666"
-                     type="text"
+                     type="number"
+                     @input="inputChange"
                      placeholder="请输入入户小区面积"
                      v-model="familyCompleteInfo.area"
               >
@@ -85,6 +86,7 @@
             <div class="address-form-item">
               <input class="text-666"
                      type="number"
+                     @input="inputChange"
                      placeholder="请输入均价"
                      v-model.number="familyCompleteInfo.avgPrice"
               >
@@ -509,6 +511,16 @@ export default {
     }
   },
   methods: {
+    inputChange(){
+      if (this.familyCompleteInfo.area > 10000 || this.familyCompleteInfo.area < 0) {
+        Toast.failed('请输入正确范围数值0~10000');
+        this.familyCompleteInfo.area = null;
+      }
+      if (this.familyCompleteInfo.avgPrice > 10000 || this.familyCompleteInfo.avgPrice < 0) {
+        Toast.failed('请输入正确范围数值0~10000');
+        this.familyCompleteInfo.avgPrice = null;
+      }
+    },
     delKeyNum() {
       if (this.familyCompleteInfo.memberRemarks.length > 200) {
         Toast.failed('最多输入200个字');
