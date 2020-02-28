@@ -30,6 +30,7 @@
         <button
           type="button"
           class="bEvaluateProductList-chooseAll-btn-default mr26"
+          @click="shareClick"
         >分配给临促员
         </button>
         <button
@@ -136,6 +137,15 @@ export default {
         return;
       }
       this.popShow = true;
+    },
+    shareClick() {
+      if (!this.list.find(v => v.isChecked)) {
+        this.$dialog.alert({
+          content: '请选择订单'
+        });
+      } else {
+        this.$emit('shareClick');
+      }
     },
     confirmCoupon(ids) {
       /* 确认卡券类型 */

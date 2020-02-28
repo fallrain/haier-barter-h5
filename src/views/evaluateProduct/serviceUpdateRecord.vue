@@ -8,7 +8,7 @@
     <div
        id="scrollViewAll"
        ref="scrollViewAll"
-       class="mescroll scrollViewAll-scrollView"
+       class="mescroll scrollView"
        v-show="curTab===1">
       <b-evaluate-member-item
       :userlist="scrollViewAll.list"
@@ -17,7 +17,7 @@
     <div
       id="scrollViewContacted"
       ref="scrollViewContacted"
-      class="mescroll scrollViewContacted-scrollView"
+      class="mescroll scrollView"
       v-show="curTab===2">
       <b-evaluate-member-item
         :userlist="scrollViewContacted.list"
@@ -26,7 +26,7 @@
     <div
       id="scrollViewNoContact"
       ref="scrollViewNoContact"
-      class="mescroll scrollViewNoContact-scrollView"
+      class="mescroll scrollView"
       v-show="curTab===3">
       <b-evaluate-member-item
         :userlist="scrollViewNoContact.list"
@@ -87,8 +87,12 @@ export default {
       userList: [],
       // 产品组数据
       industryAy: [],
-      industryData: {}
+      industryData: {},
+      openId: ''
     };
+  },
+  created() {
+    this.openId = JSON.parse(localStorage.getItem('userinfo')).openId;
   },
   computed: {
     curScrollViewName() {
@@ -139,7 +143,7 @@ export default {
               });
               if (page.num === 1) {
                 this[this.curScrollViewName].list = result;
-                document.querySelector(`.${this.curScrollViewName}-scrollView`).scrollTo(0, 0);
+                document.querySelector('.scrollView').scrollTo(0, 0);
               } else {
                 this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(result);
               }
@@ -175,6 +179,7 @@ export default {
     query(page, type) {
       /* 按照临促人员openId查询估价列表 */
       return this.campaignService.getOldForNewQueryList({
+        // openId: this.openId,
         openId: '123',
         queryType: type,
         pageNo: page.num,

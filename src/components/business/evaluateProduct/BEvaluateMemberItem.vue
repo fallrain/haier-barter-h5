@@ -53,6 +53,7 @@ export default {
   },
   data() {
     return {
+      openId: '',
       currentUserList: [],
       currentItem: {},
       recordContent: '',
@@ -78,7 +79,7 @@ export default {
     }
   },
   created() {
-    console.log(this.userlist);
+    this.openId = JSON.parse(localStorage.getItem('userinfo')).openId;
   },
   watch: {
     userlist(newV, oldV) {
@@ -96,6 +97,7 @@ export default {
       }
       this.campaignService.addComRecordSave({
         openId: '233',
+        // openId: this.openId,
         mobile: this.currentItem.userPhone,
         wxName: '啊啊',
         sourceId: this.currentItem.id,
@@ -111,7 +113,8 @@ export default {
       this.currentItem = item;
       this.basicDialog.open = true;
     },
-    barCodeClick(item) {debugger
+    barCodeClick(item) {
+      debugger;
       /* 查看记录click */
       this.$router.push({
         name: 'EvaluateProductHistoryList.evaluateProductDetail',

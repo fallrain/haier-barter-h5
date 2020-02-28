@@ -24,6 +24,7 @@
         :list="list"
         :multiChooseMode="isMultiChooseMode"
         @confirmCoupon="confirmSendCoupon"
+        @shareClick="shareClick"
         :chooseAll.sync="chooseAll"
       ></b-evaluate-product-list>
     </div>
@@ -33,6 +34,9 @@
       :conditions="conditions"
       @confirm="confirmSearch"
     ></b-float-search>
+    <div class="popContainer" v-if="isShowPopContainer" @click="closeShare" style="z-index: 100000">
+      <img src="@/assets/images/activity/activity-share.png" alt="" class="activity-detail-share">
+    </div>
   </div>
 </template>
 
@@ -64,6 +68,7 @@ export default {
   },
   data() {
     return {
+      isShowPopContainer: false,
       // 排序方式
       orderSortList: [
         {
@@ -169,6 +174,9 @@ export default {
     }
   },
   methods: {
+    closeShare() {
+      this.isShowPopContainer = false;
+    },
     preventDefault(e) {
       if (!document.querySelector('.bFloatSearch-cnt-list').contains(e.target)) {
         e.preventDefault();
@@ -385,8 +393,25 @@ export default {
           });
         }
       });
-    }
-  }
+    },
+    shareClick() {
+      this.isShowPopContainer = true;
+      const idList = [];
+      this.list.forEach((order) => {
+        if (order.isChecked) {
+          idList.push(order.id);
+        }
+      });
+      console.log(idList);
+      wx.ready(() => {
+        wx.miniProgram.postMessage({
+          data: {
+            oldForNewIds: idList
+          }
+        });
+      });
+    },
+  },
 };
 </script>
 
@@ -398,6 +423,18 @@ export default {
       padding-bottom: 120px;
     }
   }
-
-
+  .popContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+  }
+  .activity-detail-share {
+    position: fixed;
+    right: 128px;
+    width: 493px;
+    height: 694px;
+  }
 </style>
