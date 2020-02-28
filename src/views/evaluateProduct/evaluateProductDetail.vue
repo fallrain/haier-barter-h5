@@ -2,9 +2,9 @@
   <div class="container">
     <div class="person-info">
       <div class="bEvaluateProductItem-cnt-person mb22">
-        <div class="name-style">张三</div>
+        <div class="name-style">{{memberInfo.userName}}</div>
         <a href="tel:18510778318" class="go-phone">
-          <div class="num-style">18678611903</div>
+          <div class="num-style">{{memberInfo.userPhone}}</div>
           <div class="phone-style">
             <i class="iconfont icon-dianhua mr16"></i>
             拨打电话
@@ -12,24 +12,24 @@
         </a>
       </div>
       <div class="bEvaluateProductItem-cnt-price mb22">
-        <span class="name">电冰箱</span>
-        <span class="price">￥1897</span>
+        <span class="name">{{memberInfo.industryName}}</span>
+        <span class="price">￥{{memberInfo.totalPrice}}</span>
       </div>
       <div class="bEvaluateProductItem-cnt-time">
         <!-- <i class="iconfont icon-shizhong"></i> -->
-        2010.02.12
+        {{memberInfo.crTime}}
       </div>
     </div>
-    <li class="songs-item-li" @click="gosonglistFn(item)" v-for="(item,k) in songList">
+    <li class="songs-item-li" v-for="(item,index) in songList" :key="index">
       <div class="listen">
         <div class="info-header">
-          <div>2020.02.01 19:34</div>
-          <div>临促：李柳</div>
-          <div>微信号：ULss2233</div>
+          <div>{{getTime(item.createTime)}}</div>
+          <div>临促：{{memberInfo.userName}}</div>
+          <div>微信：{{item.wxName}}</div>
         </div>
         <div class="info-detail">
-          记录：明天到店次数增加，今天到店次数减少
-          <span class="no-data" v-show="false">无文字记录</span>
+          <span class="">{{item.content}}</span>
+          <span class="no-data" v-show="item.content == ''">无文字记录</span>
         </div>
       </div>
     </li>
@@ -45,9 +45,48 @@ export default {
   name: 'evaluateProductDetail',
   data() {
     return {
-      songList: [1, 2, 3, 4, 5, 6, 7, 8],
-      isShow: this.$route.params.isShow
+      songList: [],
+      isShow: this.$route.params.isShow,
+      memberInfo: {
+        crTime: '',
+        id: null,
+        industry: '',
+        industryName: '',
+        isChecked: false,
+        orderSource: null,
+        orderStatus: null,
+        totalPrice: 0,
+        userName: '',
+        userPhone: '',
+      }
     };
+  },
+  created() {
+    if (this.$route.params) {
+      this.memberInfo = this.$route.params.memberInfo;
+      console.log(this.$route.params.memberInfo);
+      this.getRecord();
+    }
+  },
+  activated() {},
+  methods: {
+    getRecord() {
+      this.campaignService.queryComRecord(this.memberInfo.id).then((res) => {
+        if (res.code === 1) {
+          console.log(res);
+          this.songList = res.data;
+        }
+      });
+    }
+  },
+  computed: {
+    getTime() {
+      return time => this.bUtil.formatDate(time, 'yyyy-MM-dd HH:mm');
+    }
+  },
+  beforeRouteLeave(to, from, next) {
+    this.$destroy();
+    next();
   }
 };
 </script>

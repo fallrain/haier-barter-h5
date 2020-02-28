@@ -21,7 +21,7 @@
           <i class="iconfont icon-shizhong"></i>
           {{data.crTime}}
         </div>
-        <div class="cliclMore" @click="barCodeClick(item)">查看沟通记录</div>
+        <div class="cliclMore" @click="barCodeClick(data)">查看沟通记录</div>
       </div>
     </div>
     <div class="bEvaluateProductItem-btn-par">
@@ -37,7 +37,7 @@
 
 <script>
 export default {
-  name: "BEvaluateProductItem",
+  name: 'BEvaluateProductItem',
   props: {
     // 订单数据
     data: {
@@ -61,15 +61,15 @@ export default {
     barCodeClick(item) {
       /* 查看记录click */
       this.$router.push({
-        name: "EvaluateProductHistoryList.evaluateProductDetail",
-        params: { isShow: false }
+        name: 'EvaluateProductHistoryList.evaluateProductDetail',
+        params: { isShow: false, memberInfo: item }
       });
     },
     selectItem(e) {
       /* 选中本item */
       e.stopPropagation();
-      this.$emit("update:isChecked", !this.isChecked);
-      this.$emit("onChecked", !this.isChecked);
+      this.$emit('update:isChecked', !this.isChecked);
+      this.$emit('onChecked', !this.isChecked);
     },
     toDetail(item) {
       wx.miniProgram.navigateTo({
@@ -79,14 +79,14 @@ export default {
     orderStatusFilter({ orderStatus }) {
       /* 订单转状态筛选 */
       const orderStatusMap = {
-        0: "未成交",
-        1: "已成交"
+        0: '未成交',
+        1: '已成交'
       };
       // const orderSourceMap = {
       //   DB: '兑呗',
       //   YLH: '易理货'
       // };
-      const name = orderStatusMap[orderStatus] || "";
+      const name = orderStatusMap[orderStatus] || '';
       //  if (orderSourceMap[orderSource]) {
       //   name += `（${orderSourceMap[orderSource]}）`;
       // }

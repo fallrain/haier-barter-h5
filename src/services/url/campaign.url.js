@@ -9,7 +9,15 @@ const urls = {
   // 查询估价列表信息
   getOldForNewHistory: '/oldForNewController/queryList',
   // 批量发卡券
-  batchSendMessage: '/oldForNewController/batchSendMessage'
+  batchSendMessage: '/oldForNewController/batchSendMessage',
+  // 按照临促人员openId查询估价列表
+  getOldForNewQueryList: '/oldForNew/temporary/queryList',
+  // 临促人员添加沟通记录
+  addComRecordSave: '/oldForNew/temporary/comRecord/save',
+  // 查询沟通记录
+  queryComRecord(id) {
+    return `/oldForNew/temporary/comRecord/queryList/${id}`;
+  }
 };
 
 Object.entries(urls).forEach(([key, value]) => {

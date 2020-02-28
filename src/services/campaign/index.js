@@ -27,5 +27,17 @@ export default {
   batchSendMessage(data) {
     /* 批量发卡券 */
     return axPostJson(urls.batchSendMessage, data);
-  }
+  },
+  getOldForNewQueryList(data) {
+    /* 按照临促人员openId查询估价列表 */
+    return axPostJson(urls.getOldForNewQueryList, data);
+  },
+  addComRecordSave(data) {
+  /* 临促人员添加沟通记录 */
+    return axPostJson(urls.addComRecordSave, data);
+  },
+  queryComRecord(id) {
+    /* 查询沟通记录 */
+    return axGet(urls.queryComRecord(id));
+  },
 };

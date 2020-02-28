@@ -1,10 +1,10 @@
 <template>
-  <div class="">
-    <li class="songs-item-li" v-for="(item,index) in userList" :key="index">
+  <div v-if="currentUserList.length !== 0" class="member-style">
+    <li class="songs-item-li" v-for="(item,index) in currentUserList" :key="index">
       <div class="bEvaluateProductItem-cnt-person mb22">
-        <div class="name-style">张三</div>
+        <div class="name-style">{{item.userName}}</div>
         <a href="tel:18510778318" class="go-phone">
-          <div class="num-style">18678611903</div>
+          <div class="num-style">{{item.userPhone}}</div>
           <div class="phone-style">
             <i class="iconfont icon-dianhua mr16"></i>
             拨打电话
@@ -12,81 +12,140 @@
         </a>
       </div>
       <div class="bEvaluateProductItem-cnt-price mb22">
-        <span class="name">电冰箱</span>
-        <span class="price">￥1897</span>
+        <span class="name">{{item.industryName}}</span>
+        <span class="price">￥{{item.totalPrice}}</span>
       </div>
       <div class="bEvaluateProductItem-cnt-time">
         <!-- <i class="iconfont icon-shizhong"></i> -->
-        2010.02.12
+        {{item.crTime}}
       </div>
       <div class="container-style">
         <div class="goutjlClass">沟通记录</div>
-        <div class="inputgtClass">
+        <div class="inputgtClass" @click="addRecord(item)">
           <input type="text" class="" placeholder="请输入本次沟通记录">
         </div>
         <div class="cliclMore" @click="barCodeClick(item)">查看记录</div>
       </div>
     </li>
+    <md-dialog
+      :closable="false"
+      v-model="basicDialog.open"
+      :btns="basicDialog.btns"
+    >
+      <div class="dialog-title">
+        为 &nbsp;{{currentItem.userName}}&nbsp;添加本次沟通记录
+      </div>
+      <textarea v-model="recordContent" placeholder="请输入本次沟通记录" class="dialog-area" name="" id="" rows="5"></textarea>
+    </md-dialog>
   </div>
 </template>
-
 <script>
+import {
+  Dialog, Button, Toast
+} from 'mand-mobile';
+
 export default {
   name: 'BEvaluateMemberItem',
+  components: {
+    Toast,
+    [Dialog.name]: Dialog,
+    [Button.name]: Button,
+  },
+  data() {
+    return {
+      currentUserList: [],
+      currentItem: {},
+      recordContent: '',
+      basicDialog: {
+        open: false,
+        btns: [
+          {
+            text: '取消',
+            handler: this.onBasicCancel,
+          },
+          {
+            text: '确认',
+            handler: this.onBasicConfirm,
+          },
+        ],
+      },
+    };
+  },
   props: {
     // 订单数据
-    userList: {
+    userlist: {
       type: Array
     }
   },
+  created() {
+    console.log(this.userlist);
+  },
+  watch: {
+    userlist(newV, oldV) {
+      this.currentUserList = newV;
+    }
+  },
   methods: {
-    barCodeClick(item) {
+    onBasicCancel() {
+      this.basicDialog.open = false;
+    },
+    onBasicConfirm() {
+      if (this.recordContent === '') {
+        Toast.failed('请输入沟通内容');
+        return;
+      }
+      this.campaignService.addComRecordSave({
+        openId: '233',
+        mobile: this.currentItem.userPhone,
+        wxName: '啊啊',
+        sourceId: this.currentItem.id,
+        content: this.recordContent
+      }).then((res) => {
+        if (res.code === 1) {
+          Toast.succeed('添加成功');
+          this.basicDialog.open = false;
+        }
+      });
+    },
+    addRecord(item) {
+      this.currentItem = item;
+      this.basicDialog.open = true;
+    },
+    barCodeClick(item) {debugger
       /* 查看记录click */
       this.$router.push({
         name: 'EvaluateProductHistoryList.evaluateProductDetail',
-        params: { isShow: false }
+        params: { memberInfo: item }
       });
-    },
-    selectItem(e) {
-      /* 选中本item */
-      e.stopPropagation();
-      this.$emit('update:isChecked', !this.isChecked);
-      this.$emit('onChecked', !this.isChecked);
     },
     toDetail(item) {
       wx.miniProgram.navigateTo({
         url: `/pages/message/valuationInfo/valuationInfo?odlfornewdbId=${item.id}`
       });
     },
-    orderStatusFilter({ orderStatus }) {
-      /* 订单转状态筛选 */
-      const orderStatusMap = {
-        0: '未成交',
-        1: '已成交'
-      };
-      // const orderSourceMap = {
-      //   DB: '兑呗',
-      //   YLH: '易理货'
-      // };
-      const name = orderStatusMap[orderStatus] || '';
-      //  if (orderSourceMap[orderSource]) {
-      //   name += `（${orderSourceMap[orderSource]}）`;
-      // }
-      return name;
-    },
-    recordCall(item) {
-      /* 记录以旧换新打电话 */
-      const { id } = item;
-      this.campaignService.recordFrequency({
-        id,
-        type: 1
-      });
-    }
   }
 };
 </script>
 
 <style lang="scss">
+  .dialog-title{
+    font-size: 34px;
+    text-align: center;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  .md-dialog-body{
+    padding: 20px;
+  }
+  .dialog-area{
+    width: 100%;
+    font-size: 30px;
+    line-height: 40px;
+    border:2px solid rgba(238,238,238,1);
+    border-radius:20px;
+    padding: 18px;
+  }
   .songs-item-li{
     background: #fff;
     border-bottom: 1px solid #eee;
@@ -135,6 +194,7 @@ export default {
         flex-grow: 1;
         padding: 0 34px;
         input{
+          width: 100%;
           height: 60px;
           line-height: 60px;
           padding: 14px 25px;
