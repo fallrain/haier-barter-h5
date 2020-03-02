@@ -106,6 +106,7 @@ export default {
         if (res.code === 1) {
           Toast.succeed('添加成功');
           this.basicDialog.open = false;
+          this.recordContent = '';
         }
       });
     },

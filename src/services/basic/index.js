@@ -47,5 +47,9 @@ export default {
     /* 查询活动类型 */
     return axGet(urls.dictionary('ACTIVITY_TYPE'));
   },
+  dictionary(type) {
+    /* 查询活动类型 */
+    return axGet(urls.dictionary(type));
+  },
 
 };

@@ -109,6 +109,7 @@ export default {
       searchForm: {
         customer: '',
         buyIntention: '',
+        distributeStatus: '',
         industryList: [],
         years: [],
         sneakType: '',
@@ -131,6 +132,10 @@ export default {
         },
         {
           key: 'buyIntention',
+          type: 'radio'
+        },
+        {
+          key: 'distributeStatus',
           type: 'radio'
         }
       ],
@@ -222,7 +227,9 @@ export default {
       const getSneakType = this.productService.commonTypeQuery('SNEAK_TYPE');
       // 查询购买意愿
       const getBuyIntention = this.basicService.getBuyIntention();
-      Promise.all([getIndustryList, getSneakType, getBuyIntention]).then(([
+      // 查询分配状态
+      const distributeStatus = this.basicService.dictionary('distribute_status');
+      Promise.all([getIndustryList, getSneakType, getBuyIntention, distributeStatus]).then(([
         industryData,
         {
           code: sneakCode,
@@ -231,6 +238,10 @@ export default {
         {
           code: buyIntentionCode,
           data: buyIntentionData
+        },
+        {
+          code: distributeStatusCode,
+          data: distributeStatusData
         }
       ]) => {
         if (industryData) {
@@ -276,25 +287,21 @@ export default {
           }));
           this.filterList.push(buyIntention);
         }
-        // todo 将来从接口取
         // 分配状态
-        this.filterList.push({
-          name: '分配状态',
-          isExpand: true,
-          type: 'radio',
-          data: [
-            {
-              key: 1,
-              value: '已分配',
-              isChecked: false
-            },
-            {
-              key: 1,
-              value: '未分配',
-              isChecked: false
-            }
-          ]
-        });
+        if (distributeStatusCode === 1) {
+          const distributeStatus = {
+            name: '分配状态',
+            isExpand: true,
+            type: 'radio',
+            data: []
+          };
+          distributeStatus.data = distributeStatusData.map(v => ({
+            key: v.itemCode,
+            value: v.itemName,
+            isChecked: false
+          }));
+          this.filterList.push(distributeStatus);
+        }
       });
     },
     upCallback(page) {
@@ -337,12 +344,13 @@ export default {
         pageSize: page.size,
       });
     },
-    confirmSearch(searchForm) {
+    confirmSearch(searchForm) {debugger
       // 检查搜索值是否不一样
       if (
         !this.bUtil.isSameValueOfOneDimensional(this.searchForm.industryList, searchForm.industryList)
         || this.searchForm.sneakType !== searchForm.sneakType
         || this.searchForm.buyIntention !== searchForm.buyIntention
+        || this.searchForm.distributeStatus !== searchForm.distributeStatus
       ) {
         this.queryByCondition(searchForm);
       }
