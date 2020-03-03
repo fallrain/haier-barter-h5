@@ -316,14 +316,18 @@ export default {
           this.$nextTick(() => {
             this.getIndustryList().then(() => {
               result.forEach((v) => {
-                v.isChecked = false;
+                if (this.chooseAll === true) {
+                  v.isChecked = true;
+                } else {
+                  v.isChecked = false;
+                }
                 v.industryName = this.industryData[v.industry];
               });
               if (page.num === 1) {
                 this.list = result;
                 document.querySelector('.evaluateProductList-scrollView').scrollTo(0, 0);
               } else {
-                this.chooseAll = false;
+                // this.chooseAll = false;
                 this.list = this.list.concat(result);
               }
               // 通过当前页的数据条数，和总数据量来判断是否加载完
@@ -344,7 +348,8 @@ export default {
         pageSize: page.size,
       });
     },
-    confirmSearch(searchForm) {debugger
+    confirmSearch(searchForm) {
+      debugger;
       // 检查搜索值是否不一样
       if (
         !this.bUtil.isSameValueOfOneDimensional(this.searchForm.industryList, searchForm.industryList)

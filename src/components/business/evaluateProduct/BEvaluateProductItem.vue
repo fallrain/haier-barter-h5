@@ -9,7 +9,7 @@
         <!--<span class="mr16">先生</span>-->
         <span>
           <i class="iconfont icon-dianhua mr16"></i>
-          <a :href="'tel:'+data.userPhone" @click="recordCall(data)">{{data.userPhone}}</a>
+          <a :href="'tel:'+data.userPhone" @click.stop="recordCall(data)">{{data.userPhone}}</a>
         </span>
       </div>
       <div class="bEvaluateProductItem-cnt-price mb22">
@@ -21,7 +21,7 @@
           <i class="iconfont icon-shizhong"></i>
           {{data.crTime}}
         </div>
-        <div class="cliclMore" @click="barCodeClick(data)">查看沟通记录</div>
+        <div class="cliclMore" @click.stop="barCodeClick(data)">查看沟通记录</div>
       </div>
     </div>
     <div class="bEvaluateProductItem-btn-par">
