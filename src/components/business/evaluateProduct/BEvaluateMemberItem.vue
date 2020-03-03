@@ -22,7 +22,8 @@
       <div class="container-style">
         <div class="goutjlClass">沟通记录</div>
         <div class="inputgtClass" @click="addRecord(item)">
-          <input type="text" class="" placeholder="请输入本次沟通记录">
+          <!--<input type="text" class="" placeholder="请输入本次沟通记录">-->
+          <span class="">请输入本次沟通记录</span>
         </div>
         <div class="cliclMore" @click="barCodeClick(item)">查看记录</div>
       </div>
@@ -197,11 +198,14 @@ export default {
       .inputgtClass{
         flex-grow: 1;
         padding: 0 34px;
-        input{
+        span{
+          display: inline-block;
+          font-size: 24px;
+          color: #666;
           width: 100%;
           height: 60px;
           line-height: 60px;
-          padding: 14px 25px;
+          padding: 0px 25px;
           border: 1px solid #ddd;
           border-radius: 5px;
         }
