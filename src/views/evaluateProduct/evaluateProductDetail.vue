@@ -3,7 +3,7 @@
     <div class="person-info">
       <div class="bEvaluateProductItem-cnt-person mb22">
         <div class="name-style">{{memberInfo.userName}}</div>
-        <a href="tel:18510778318" class="go-phone">
+        <a :href="'tel:'+memberInfo.userPhone" class="go-phone">
           <div class="num-style">{{memberInfo.userPhone}}</div>
           <div class="phone-style">
             <i class="iconfont icon-dianhua mr16"></i>
