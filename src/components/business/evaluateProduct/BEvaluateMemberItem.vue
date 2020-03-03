@@ -97,8 +97,8 @@ export default {
         return;
       }
       this.campaignService.addComRecordSave({
-        openId: '233',
-        // openId: this.openId,
+        // openId: '233',
+        openId: this.openId,
         mobile: this.currentItem.userPhone,
         wxName: '啊啊',
         sourceId: this.currentItem.id,
