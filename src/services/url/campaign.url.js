@@ -12,6 +12,8 @@ const urls = {
   batchSendMessage: '/oldForNewController/batchSendMessage',
   // 按照临促人员openId查询估价列表
   getOldForNewQueryList: '/oldForNew/temporary/queryList',
+  // 统计临促人员拨打电话次数
+  statisticCalNum: '/oldForNew/temporary/statisticCalNum',
   // 临促人员添加沟通记录
   addComRecordSave: '/oldForNew/temporary/comRecord/save',
   // 查询沟通记录

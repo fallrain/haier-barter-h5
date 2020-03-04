@@ -32,6 +32,10 @@ export default {
     /* 按照临促人员openId查询估价列表 */
     return axPostJson(urls.getOldForNewQueryList, data);
   },
+  statisticCalNum(data) {
+    /* 临促人员添加沟通记录 */
+    return axPostJson(urls.statisticCalNum, data);
+  },
   addComRecordSave(data) {
   /* 临促人员添加沟通记录 */
     return axPostJson(urls.addComRecordSave, data);

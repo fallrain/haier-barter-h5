@@ -3,7 +3,7 @@
     <li class="songs-item-li" v-for="(item,index) in currentUserList" :key="index">
       <div class="bEvaluateProductItem-cnt-person mb22">
         <div class="name-style">{{item.userName}}</div>
-        <a :href="'tel:'+item.userPhone" class="go-phone">
+        <a :href="'tel:'+item.userPhone" @click="recordPhone(item)" class="go-phone">
           <div class="num-style">{{item.userPhone}}</div>
           <div class="phone-style">
             <i class="iconfont icon-dianhua mr16"></i>
@@ -83,8 +83,8 @@ export default {
   },
   created() {
     this.openId = JSON.parse(localStorage.getItem('userinfo')).openId;
-    this.wxName = JSON.parse(localStorage.getItem('userinfo')).wxName;
-    console.log(this.userlist);
+    this.wxName = decodeURI(JSON.parse(localStorage.getItem('userinfo')).wxName);
+    console.log(this.wxName);
   },
   watch: {
     userlist(newV) {
@@ -94,6 +94,19 @@ export default {
     }
   },
   methods: {
+    recordPhone(item) {
+      // 记录打电话的次数
+      this.campaignService.statisticCalNum({
+        sourceId: item.id,
+        wxName: this.wxName,
+        openId: this.openId,
+        mobile: item.userPhone,
+      }).then((res) => {
+        if (res.code === 1) {
+          console.log(res);
+        }
+      });
+    },
     onBasicCancel() {
       this.basicDialog.open = false;
     },
@@ -122,7 +135,6 @@ export default {
       this.basicDialog.open = true;
     },
     barCodeClick(item) {
-      debugger;
       /* 查看记录click */
       this.$router.push({
         name: 'EvaluateProductHistoryList.evaluateProductDetail',
