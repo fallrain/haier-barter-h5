@@ -93,6 +93,7 @@ export default {
   },
   created() {
     this.openId = JSON.parse(localStorage.getItem('userinfo')).openId;
+    this.hmcId = JSON.parse(localStorage.getItem('userinfo')).hmcid;
   },
   computed: {
     curScrollViewName() {
@@ -182,6 +183,7 @@ export default {
       return this.campaignService.getOldForNewQueryList({
         openId: this.openId,
         // openId: 'oxWgn45tr-Nk-uVKemFDLblYc49I',
+        hmcId: this.hmcId,
         queryType: type,
         pageNo: page.num,
         pageSize: page.size,
