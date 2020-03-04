@@ -180,8 +180,8 @@ export default {
     query(page, type) {
       /* 按照临促人员openId查询估价列表 */
       return this.campaignService.getOldForNewQueryList({
-        // openId: this.openId,
-        openId: 'oxWgn45tr-Nk-uVKemFDLblYc49I',
+        openId: this.openId,
+        // openId: 'oxWgn45tr-Nk-uVKemFDLblYc49I',
         queryType: type,
         pageNo: page.num,
         pageSize: page.size,
