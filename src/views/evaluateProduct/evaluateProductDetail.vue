@@ -24,8 +24,8 @@
       <div class="listen">
         <div class="info-header">
           <div>{{getTime(item.createTime)}}</div>
-          <div>临促：{{memberInfo.userName}}</div>
-          <div>微信：{{item.wxName}}</div>
+          <div>临促：{{item.wxName}}</div>
+          <!--<div>微信：{{item.wxName}}</div>-->
         </div>
         <div class="info-detail">
           <span class="">{{item.content}}</span>

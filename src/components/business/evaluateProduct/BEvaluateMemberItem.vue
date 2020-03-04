@@ -3,7 +3,7 @@
     <li class="songs-item-li" v-for="(item,index) in currentUserList" :key="index">
       <div class="bEvaluateProductItem-cnt-person mb22">
         <div class="name-style">{{item.userName}}</div>
-        <a href="tel:18510778318" class="go-phone">
+        <a :href="'tel:'+item.userPhone" class="go-phone">
           <div class="num-style">{{item.userPhone}}</div>
           <div class="phone-style">
             <i class="iconfont icon-dianhua mr16"></i>
@@ -81,6 +81,7 @@ export default {
   },
   created() {
     this.openId = JSON.parse(localStorage.getItem('userinfo')).openId;
+    this.wxName = JSON.parse(localStorage.getItem('userinfo')).wxName;
   },
   watch: {
     userlist(newV, oldV) {
@@ -100,7 +101,7 @@ export default {
         // openId: '233',
         openId: this.openId,
         mobile: this.currentItem.userPhone,
-        wxName: '啊啊',
+        wxName: this.wxName,
         sourceId: this.currentItem.id,
         content: this.recordContent
       }).then((res) => {

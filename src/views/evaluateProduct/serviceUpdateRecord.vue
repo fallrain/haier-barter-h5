@@ -180,7 +180,7 @@ export default {
       /* 按照临促人员openId查询估价列表 */
       return this.campaignService.getOldForNewQueryList({
         openId: this.openId,
-        // openId: 'oxWgn45tr-Nk-uVKemFDLblYc49I',
+        // openId: '123',
         queryType: type,
         pageNo: page.num,
         pageSize: page.size,
@@ -202,6 +202,9 @@ export default {
 </script>
 
 <style lang="scss">
+  .scrollView{
+    height: calc(100vh - 120px);
+  }
 .reportInstallList-tab {
   display: flex;
   flex-direction: row;
