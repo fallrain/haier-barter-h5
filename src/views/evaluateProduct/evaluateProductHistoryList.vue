@@ -352,7 +352,8 @@ export default {
       debugger;
       // 检查搜索值是否不一样
       if (
-        !this.bUtil.isSameValueOfOneDimensional(this.searchForm.industryList, searchForm.industryList)
+        // !this.bUtil.isSameValueOfOneDimensional(this.searchForm.industryList, searchForm.industryList)
+        !this.judgeArrsSame(this.searchForm.industryList, searchForm.industryList)
         || this.searchForm.sneakType !== searchForm.sneakType
         || this.searchForm.buyIntention !== searchForm.buyIntention
         || this.searchForm.distributeStatus !== searchForm.distributeStatus
@@ -424,6 +425,12 @@ export default {
         });
       });
     },
+    judgeArrsSame(arr1, arr2) {
+      if (arr1.sort().toString() === arr2.sort().toString()) {
+        return true;
+      }
+      return false;
+    }
   },
 };
 </script>
