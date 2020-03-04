@@ -146,6 +146,7 @@ export default {
                 document.querySelector('.scrollView').scrollTo(0, 0);
               } else {
                 this[this.curScrollViewName].list = this[this.curScrollViewName].list.concat(result);
+                console.log(this[this.curScrollViewName].list);
               }
               // 通过当前页的数据条数，和总数据量来判断是否加载完
               this[this.curScrollViewName].mescroll.endBySize(result.length, total);
@@ -179,8 +180,8 @@ export default {
     query(page, type) {
       /* 按照临促人员openId查询估价列表 */
       return this.campaignService.getOldForNewQueryList({
-        openId: this.openId,
-        // openId: '123',
+        // openId: this.openId,
+        openId: 'oxWgn45tr-Nk-uVKemFDLblYc49I',
         queryType: type,
         pageNo: page.num,
         pageSize: page.size,

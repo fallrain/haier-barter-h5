@@ -1,5 +1,5 @@
 <template>
-  <div v-if="currentUserList.length !== 0" class="member-style">
+  <div :key="updata" class="member-style">
     <li class="songs-item-li" v-for="(item,index) in currentUserList" :key="index">
       <div class="bEvaluateProductItem-cnt-person mb22">
         <div class="name-style">{{item.userName}}</div>
@@ -54,6 +54,7 @@ export default {
   },
   data() {
     return {
+      updata: 1,
       openId: '',
       currentUserList: [],
       currentItem: {},
@@ -76,16 +77,20 @@ export default {
   props: {
     // 订单数据
     userlist: {
-      type: Array
+      type: Array,
+      default: () => []
     }
   },
   created() {
     this.openId = JSON.parse(localStorage.getItem('userinfo')).openId;
     this.wxName = JSON.parse(localStorage.getItem('userinfo')).wxName;
+    console.log(this.userlist);
   },
   watch: {
-    userlist(newV, oldV) {
+    userlist(newV) {
       this.currentUserList = newV;
+      console.log(this.currentUserList);
+      this.updata++;
     }
   },
   methods: {
