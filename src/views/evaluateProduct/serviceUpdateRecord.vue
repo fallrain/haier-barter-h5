@@ -95,9 +95,7 @@ export default {
     console.log(window.location.href)
     this.openId = JSON.parse(localStorage.getItem('userinfo')).openId;
     this.hmcId = JSON.parse(localStorage.getItem('userinfo')).hmcid;
-  },
-  activated(){
-    console.log(window.location.href)
+    this.startTime = JSON.parse(localStorage.getItem('userinfo')).startTime;
   },
   computed: {
     curScrollViewName() {
@@ -188,6 +186,7 @@ export default {
         openId: this.openId,
         // openId: 'oxWgn45tr-Nk-uVKemFDLblYc49I',
         hmcId: this.hmcId,
+        startTime: this.startTime,
         queryType: type,
         pageNo: page.num,
         pageSize: page.size,
