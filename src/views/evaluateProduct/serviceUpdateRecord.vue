@@ -166,7 +166,9 @@ export default {
       if (this.industryAy.length) {
         return Promise.resolve(this.industryAy);
       }
-      return this.campaignService.listOldForNewIndustry().then(({ code, data }) => {
+      return this.campaignService.listOldForNewIndustry({
+        noToken: true
+      }).then(({ code, data }) => {
         if (code === 1) {
           this.convertIndustryList(data);
           this.industryAy = data;
