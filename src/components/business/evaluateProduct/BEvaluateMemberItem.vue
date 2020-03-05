@@ -138,7 +138,7 @@ export default {
       /* 查看记录click */
       this.$router.push({
         name: 'EvaluateProductHistoryList.evaluateProductDetail',
-        params: { memberInfo: item }
+        params: { region: 'update', memberInfo: item }
       });
     },
     toDetail(item) {

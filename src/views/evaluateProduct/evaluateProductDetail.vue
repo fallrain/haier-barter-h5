@@ -3,7 +3,7 @@
     <div class="person-info">
       <div class="bEvaluateProductItem-cnt-person mb22">
         <div class="name-style">{{memberInfo.userName}}</div>
-        <a :href="'tel:'+memberInfo.userPhone" class="go-phone">
+        <a :href="'tel:'+memberInfo.userPhone" @click="dealRecord" class="go-phone">
           <div class="num-style">{{memberInfo.userPhone}}</div>
           <div class="phone-style">
             <i class="iconfont icon-dianhua mr16"></i>
@@ -45,6 +45,7 @@ export default {
   name: 'evaluateProductDetail',
   data() {
     return {
+      region: '',
       songList: [],
       isShow: this.$route.params.isShow,
       memberInfo: {
@@ -64,7 +65,9 @@ export default {
   created() {
     if (this.$route.params) {
       this.memberInfo = this.$route.params.memberInfo;
-      console.log(this.$route.params.memberInfo);
+      this.region = this.$route.params.region;
+      console.log(this.memberInfo);
+      console.log(this.region);
       this.getRecord();
     }
   },
@@ -76,6 +79,34 @@ export default {
           console.log(res);
           this.songList = res.data;
         }
+      });
+    },
+    dealRecord() {
+      if (this.region === 'history') {
+        this.recordCall();
+      }
+      if (this.region === 'update') {
+        this.recordPhone();
+      }
+    },
+    recordPhone() {
+      // 记录打电话的次数
+      this.campaignService.statisticCalNum({
+        sourceId: this.memberInfo.id,
+        wxName: this.wxName,
+        openId: this.openId,
+        mobile: this.memberInfo.userPhone,
+      }).then((res) => {
+        if (res.code === 1) {
+          console.log(res);
+        }
+      });
+    },
+    recordCall() {
+      /* 记录以旧换新打电话 */
+      this.campaignService.recordFrequency({
+        id: this.memberInfo.id,
+        type: 1
       });
     }
   },

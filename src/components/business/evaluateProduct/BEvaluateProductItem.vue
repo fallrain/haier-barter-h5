@@ -62,7 +62,7 @@ export default {
       /* 查看记录click */
       this.$router.push({
         name: 'EvaluateProductHistoryList.evaluateProductDetail',
-        params: { isShow: false, memberInfo: item }
+        params: { region: 'history', memberInfo: item }
       });
     },
     selectItem(e) {

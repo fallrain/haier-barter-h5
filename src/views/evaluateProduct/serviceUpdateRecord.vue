@@ -200,6 +200,10 @@ export default {
         return 2;
       }
     }
+  },
+  beforeRouteLeave(to, from, next) {
+    this.$destroy();
+    next();
   }
 };
 </script>
