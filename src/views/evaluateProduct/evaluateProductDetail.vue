@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div v-cloak class="container">
     <div class="person-info">
       <div class="bEvaluateProductItem-cnt-person mb22">
         <div class="name-style">{{memberInfo.userName}}</div>
@@ -33,6 +33,7 @@
         </div>
       </div>
     </li>
+    <div v-show="noRecord" class="no-record">暂无记录</div>
     <div v-if="isShow" class="bot-class">
       <div class="addjlClass">添加记录</div>
       <div class="callClass">继续拨打</div>
@@ -45,6 +46,7 @@ export default {
   name: 'evaluateProductDetail',
   data() {
     return {
+      noRecord: false,
       region: '',
       songList: [],
       isShow: this.$route.params.isShow,
@@ -78,6 +80,11 @@ export default {
         if (res.code === 1) {
           console.log(res);
           this.songList = res.data;
+          if (this.songList.length === 0) {
+            this.noRecord = true;
+          } else {
+            this.noRecord = false;
+          }
         }
       });
     },
@@ -123,6 +130,9 @@ export default {
 </script>
 
 <style lang="scss">
+  [v-cloak]{
+    display: none;
+  }
 .container {
   .person-info{
     padding: 24px;

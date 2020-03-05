@@ -92,8 +92,12 @@ export default {
     };
   },
   created() {
+    console.log(window.location.href)
     this.openId = JSON.parse(localStorage.getItem('userinfo')).openId;
     this.hmcId = JSON.parse(localStorage.getItem('userinfo')).hmcid;
+  },
+  activated(){
+    console.log(window.location.href)
   },
   computed: {
     curScrollViewName() {
