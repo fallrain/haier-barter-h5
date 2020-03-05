@@ -4,7 +4,7 @@
       <div class="bEvaluateProductItem-cnt-person mb22">
         <div class="name-style">{{memberInfo.userName}}</div>
         <a :href="'tel:'+memberInfo.userPhone" @click="dealRecord" class="go-phone">
-          <div class="num-style">{{memberInfo.userPhone}}</div>
+          <div class="num-style">{{hidePhoneNum(memberInfo.userPhone)}}</div>
           <div class="phone-style">
             <i class="iconfont icon-dianhua mr16"></i>
             拨打电话
@@ -120,7 +120,10 @@ export default {
   computed: {
     getTime() {
       return time => this.bUtil.formatDate(time, 'yyyy-MM-dd HH:mm');
-    }
+    },
+    hidePhoneNum() {
+      return num => num.replace(num.substring(3, 7), '****');
+    },
   },
   beforeRouteLeave(to, from, next) {
     this.$destroy();
@@ -132,6 +135,14 @@ export default {
 <style lang="scss">
   [v-cloak]{
     display: none;
+  }
+  .no-record{
+    width: 100%;
+    background: #fff;
+    margin-top: 20px;
+    text-align: center;
+    height: 60px;
+    line-height: 60px;
   }
 .container {
   .person-info{
@@ -151,6 +162,7 @@ export default {
         display: flex;
         justify-content: space-between;
         flex-grow: 1;
+        padding-left: 20px;
         .num-style{
           color: #333333;
         }

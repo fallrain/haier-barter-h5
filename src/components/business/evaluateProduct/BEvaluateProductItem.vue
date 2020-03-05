@@ -9,7 +9,7 @@
         <!--<span class="mr16">先生</span>-->
         <span>
           <i class="iconfont icon-dianhua mr16"></i>
-          <a :href="'tel:'+data.userPhone" @click.stop="recordCall(data)">{{data.userPhone}}</a>
+          <a :href="'tel:'+data.userPhone" @click.stop="recordCall(data)">{{hidePhoneNum(data.userPhone)}}</a>
         </span>
       </div>
       <div class="bEvaluateProductItem-cnt-price mb22">
@@ -100,6 +100,11 @@ export default {
         type: 1
       });
     }
+  },
+  computed: {
+    hidePhoneNum() {
+      return num => num.replace(num.substring(3, 7), '****');
+    },
   }
 };
 </script>

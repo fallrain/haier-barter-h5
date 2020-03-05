@@ -4,7 +4,7 @@
       <div class="bEvaluateProductItem-cnt-person mb22">
         <div class="name-style">{{item.userName}}</div>
         <a :href="'tel:'+item.userPhone" @click="recordPhone(item)" class="go-phone">
-          <div class="num-style">{{item.userPhone}}</div>
+          <div class="num-style">{{hidePhoneNum(item.userPhone)}}</div>
           <div class="phone-style">
             <i class="iconfont icon-dianhua mr16"></i>
             拨打电话
@@ -145,6 +145,11 @@ export default {
       wx.miniProgram.navigateTo({
         url: `/pages/message/valuationInfo/valuationInfo?odlfornewdbId=${item.id}`
       });
+    },
+  },
+  computed: {
+    hidePhoneNum() {
+      return num => num.replace(num.substring(3, 7), '****');
     },
   }
 };
