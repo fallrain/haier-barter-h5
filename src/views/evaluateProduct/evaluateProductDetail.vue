@@ -65,6 +65,8 @@ export default {
     };
   },
   created() {
+    this.openId = JSON.parse(localStorage.getItem('userinfo')).openId;
+    this.wxName = decodeURI(JSON.parse(localStorage.getItem('userinfo')).wxName);
     if (this.$route.params) {
       this.memberInfo = this.$route.params.memberInfo;
       this.region = this.$route.params.region;
@@ -88,7 +90,8 @@ export default {
         }
       });
     },
-    dealRecord() {
+    dealRecord() {debugger
+      console.log(this.region)
       if (this.region === 'history') {
         this.recordCall();
       }
