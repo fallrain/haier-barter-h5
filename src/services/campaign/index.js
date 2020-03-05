@@ -30,18 +30,24 @@ export default {
   },
   getOldForNewQueryList(data) {
     /* 按照临促人员openId查询估价列表 */
-    return axPostJson(urls.getOldForNewQueryList, data);
+    return axPostJson(urls.getOldForNewQueryList, data, {
+      noToken: true
+    });
   },
   statisticCalNum(data) {
     /* 临促人员添加沟通记录 */
-    return axPostJson(urls.statisticCalNum, data);
+    return axPostJson(urls.statisticCalNum, data, {
+      noToken: true
+    });
   },
   addComRecordSave(data) {
   /* 临促人员添加沟通记录 */
-    return axPostJson(urls.addComRecordSave, data);
+    return axPostJson(urls.addComRecordSave, data, {
+      noToken: true
+    });
   },
   queryComRecord(id) {
     /* 查询沟通记录 */
-    return axGet(urls.queryComRecord(id));
+    return axGet(urls.queryComRecord(id),{noToken: true});
   },
 };
