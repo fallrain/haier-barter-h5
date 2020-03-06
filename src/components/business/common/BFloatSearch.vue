@@ -326,7 +326,7 @@ export default {
   }
 
   .filter-move-enter-to,
-  .filter-leave-enter {
+  .filter-move-leave {
     right: 0;
   }
 
@@ -343,25 +343,17 @@ export default {
     }
   }
 
-  .floatSearch-show-enter {
-    display: block;
-  }
-
   .floatSearch-show-enter-active {
-    transition: display 0s;
+    transition: all 0s;
   }
 
   .floatSearch-show-leave-active {
-    transition: display .4s;
-  }
-
-  .floatSearch-show-leave {
-    display: none;
+    transition: all .5s;
   }
 
   .floatSearch-mask-show-enter,
   .floatSearch-mask-show-leave-to {
-    opacity: .8;
+    opacity: .3;
   }
 
   .floatSearch-mask-show-enter-active {
@@ -369,12 +361,12 @@ export default {
   }
 
   .floatSearch-mask-show-leave-active {
-    animation: floatSearchMaskHide 2s linear;
+    animation: floatSearchMaskHide .4s linear;
   }
 
   .floatSearch-mask-show-enter-to,
   .floatSearch-mask-show-leave {
-    opacity: .3;
+    opacity: .8;
   }
 
   @keyframes floatSearchMaskShow {
@@ -392,7 +384,7 @@ export default {
       opacity: .8;
     }
     100% {
-      opacity: .3;
+      opacity: 0;
       display: none;
     }
   }

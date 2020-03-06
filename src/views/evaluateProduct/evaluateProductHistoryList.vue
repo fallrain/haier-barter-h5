@@ -24,6 +24,7 @@
         :list="list"
         :multiChooseMode="isMultiChooseMode"
         @confirmCoupon="confirmSendCoupon"
+        @shareClick="shareClick"
         :chooseAll.sync="chooseAll"
       ></b-evaluate-product-list>
     </div>
@@ -33,6 +34,9 @@
       :conditions="conditions"
       @confirm="confirmSearch"
     ></b-float-search>
+    <div class="popContainer" v-if="isShowPopContainer" @click="closeShare" style="z-index: 100000">
+      <img src="@/assets/images/activity/activity-share.png" alt="" class="activity-detail-share">
+    </div>
   </div>
 </template>
 
@@ -64,6 +68,7 @@ export default {
   },
   data() {
     return {
+      isShowPopContainer: false,
       // 排序方式
       orderSortList: [
         {
@@ -104,6 +109,7 @@ export default {
       searchForm: {
         customer: '',
         buyIntention: '',
+        distributeStatus: '',
         industryList: [],
         years: [],
         sneakType: '',
@@ -126,6 +132,10 @@ export default {
         },
         {
           key: 'buyIntention',
+          type: 'radio'
+        },
+        {
+          key: 'distributeStatus',
           type: 'radio'
         }
       ],
@@ -169,6 +179,9 @@ export default {
     }
   },
   methods: {
+    closeShare() {
+      this.isShowPopContainer = false;
+    },
     preventDefault(e) {
       if (!document.querySelector('.bFloatSearch-cnt-list').contains(e.target)) {
         e.preventDefault();
@@ -214,7 +227,9 @@ export default {
       const getSneakType = this.productService.commonTypeQuery('SNEAK_TYPE');
       // 查询购买意愿
       const getBuyIntention = this.basicService.getBuyIntention();
-      Promise.all([getIndustryList, getSneakType, getBuyIntention]).then(([
+      // 查询分配状态
+      const distributeStatus = this.basicService.dictionary('distribute_status');
+      Promise.all([getIndustryList, getSneakType, getBuyIntention, distributeStatus]).then(([
         industryData,
         {
           code: sneakCode,
@@ -223,6 +238,10 @@ export default {
         {
           code: buyIntentionCode,
           data: buyIntentionData
+        },
+        {
+          code: distributeStatusCode,
+          data: distributeStatusData
         }
       ]) => {
         if (industryData) {
@@ -268,6 +287,21 @@ export default {
           }));
           this.filterList.push(buyIntention);
         }
+        // 分配状态
+        if (distributeStatusCode === 1) {
+          const distributeStatus = {
+            name: '分配状态',
+            isExpand: true,
+            type: 'radio',
+            data: []
+          };
+          distributeStatus.data = distributeStatusData.map(v => ({
+            key: v.itemCode,
+            value: v.itemName,
+            isChecked: false
+          }));
+          this.filterList.push(distributeStatus);
+        }
       });
     },
     upCallback(page) {
@@ -282,14 +316,18 @@ export default {
           this.$nextTick(() => {
             this.getIndustryList().then(() => {
               result.forEach((v) => {
-                v.isChecked = false;
+                if (this.chooseAll === true) {
+                  v.isChecked = true;
+                } else {
+                  v.isChecked = false;
+                }
                 v.industryName = this.industryData[v.industry];
               });
               if (page.num === 1) {
                 this.list = result;
                 document.querySelector('.evaluateProductList-scrollView').scrollTo(0, 0);
               } else {
-                this.chooseAll = false;
+                // this.chooseAll = false;
                 this.list = this.list.concat(result);
               }
               // 通过当前页的数据条数，和总数据量来判断是否加载完
@@ -311,11 +349,14 @@ export default {
       });
     },
     confirmSearch(searchForm) {
+      debugger;
       // 检查搜索值是否不一样
       if (
-        !this.bUtil.isSameValueOfOneDimensional(this.searchForm.industryList, searchForm.industryList)
+        // !this.bUtil.isSameValueOfOneDimensional(this.searchForm.industryList, searchForm.industryList)
+        !this.judgeArrsSame(this.searchForm.industryList, searchForm.industryList)
         || this.searchForm.sneakType !== searchForm.sneakType
         || this.searchForm.buyIntention !== searchForm.buyIntention
+        || this.searchForm.distributeStatus !== searchForm.distributeStatus
       ) {
         this.queryByCondition(searchForm);
       }
@@ -366,8 +407,31 @@ export default {
           });
         }
       });
+    },
+    shareClick() {
+      this.isShowPopContainer = true;
+      const idList = [];
+      this.list.forEach((order) => {
+        if (order.isChecked) {
+          idList.push(order.id);
+        }
+      });
+      console.log(idList);
+      wx.ready(() => {
+        wx.miniProgram.postMessage({
+          data: {
+            oldForNewIds: idList
+          }
+        });
+      });
+    },
+    judgeArrsSame(arr1, arr2) {
+      if (arr1.sort().toString() === arr2.sort().toString()) {
+        return true;
+      }
+      return false;
     }
-  }
+  },
 };
 </script>
 
@@ -379,6 +443,18 @@ export default {
       padding-bottom: 120px;
     }
   }
-
-
+  .popContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+  }
+  .activity-detail-share {
+    position: fixed;
+    right: 128px;
+    width: 493px;
+    height: 694px;
+  }
 </style>
