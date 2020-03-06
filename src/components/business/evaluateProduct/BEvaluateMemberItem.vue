@@ -36,7 +36,11 @@
       <div class="dialog-title">
         为 &nbsp;{{currentItem.userName}}&nbsp;添加本次沟通记录
       </div>
-      <textarea v-model="recordContent" placeholder="请输入本次沟通记录" class="dialog-area" name="" id="" rows="5"></textarea>
+      <textarea v-model="recordContent"
+        placeholder="请输入本次沟通记录" class="dialog-area"
+        name="" id="" rows="5"
+        @blur="onBlurInput()"
+      ></textarea>
     </md-dialog>
   </div>
 </template>
@@ -146,6 +150,9 @@ export default {
         url: `/pages/message/valuationInfo/valuationInfo?odlfornewdbId=${item.id}`
       });
     },
+    onBlurInput () {
+      window.scroll(0, 0)
+    }
   },
   computed: {
     hidePhoneNum() {
@@ -182,7 +189,7 @@ export default {
       line-height: 50px;
       display: flex;
       .name-style{
-        width: 110px;
+        width: 200px;
         font-size: 36px;
         color: #333;
         font-weight: 600;
