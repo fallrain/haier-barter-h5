@@ -155,7 +155,7 @@ export default {
       line-height: 50px;
       display: flex;
       .name-style{
-        width: 110px;
+        width: 200px;
         font-size: 36px;
         color: #333;
         font-weight: 600;
