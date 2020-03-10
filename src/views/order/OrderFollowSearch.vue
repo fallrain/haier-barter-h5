@@ -53,6 +53,8 @@
         @gujiaClick="gujiaClick"
         @userService="userService"
         @maybeBuyer="maybeBuyer"
+        @setWeixinStatus="setWeixinStatus"
+        @setPhoneStatus="setPhoneStatus"
       ></b-order-follow-item>
     </div>
     <b-order-follow-search-bar
@@ -78,6 +80,8 @@
         @gujiaClick="gujiaClick"
         @userService="userService"
         @maybeBuyer="maybeBuyer"
+        @setWeixinStatus="setWeixinStatus"
+        @setPhoneStatus="setPhoneStatus"
       ></b-order-follow-item>
     </div>
     <b-order-follow-search-bar
@@ -92,20 +96,20 @@
       @popButtonClicked="buttonClicked"
     ></b-order-follow-search-bar>
     <div
-    id="scrollViewOdd"
-    ref="scrollViewOdd"
-    class="mescroll"
-    v-show="curScrollViewName==='scrollViewOdd'"
-  >
-    <b-order-follow-item
-      type="odd"
-      :list="scrollViewOdd.list"
-      @updateOrderType="updateOrderType"
-      @followButtonClick="followButtonClicked"
-      @itemClick="itemClick"
-      @gujiaClick="gujiaClick"
-    ></b-order-follow-item>
-  </div>
+      id="scrollViewOdd"
+      ref="scrollViewOdd"
+      class="mescroll"
+      v-show="curScrollViewName==='scrollViewOdd'"
+    >
+      <b-order-follow-item
+        type="odd"
+        :list="scrollViewOdd.list"
+        @updateOrderType="updateOrderType"
+        @followButtonClick="followButtonClicked"
+        @itemClick="itemClick"
+        @gujiaClick="gujiaClick"
+      ></b-order-follow-item>
+    </div>
     <b-order-follow-search-bar
       v-show="curScrollViewName==='scrollViewProgress'"
       :defalutCheckedsortId="defalutCheckedsortId"
@@ -129,6 +133,8 @@
         @itemClick="itemClick"
         @gujiaClick="gujiaClick"
         @maybeBuyer="maybeBuyer"
+        @setWeixinStatus="setWeixinStatus"
+        @setPhoneStatus="setPhoneStatus"
       ></b-order-follow-item>
     </div>
     <div class="js-md-tab-bar md-example-child md-example-child-tabs md-example-child-tab-bar-4">
@@ -482,7 +488,7 @@ export default {
         orderNo: item.orderNo,
         businessScenarios
       };
-      // 爱到家需要传add4，add4是预留字段，由其他系统传递而来
+        // 爱到家需要传add4，add4是预留字段，由其他系统传递而来
       if (businessScenarios === 'ADJ') {
         args.add4 = item.add4;
         args.sourceSn = item.sourceSn;
@@ -786,6 +792,22 @@ export default {
         } else if (this.curTab === 3) {
           item.showList = [];
         }
+        // 以旧换新,添加标记'已加微信' '无效手机号'
+        if (item.businessScenarios === 'YJHX') {
+          const {
+            add5,
+            add6
+          } = item;
+          item.showList.push({
+            id: '22',
+            name: add5 === '1' ? '取消已加微信' : '已加微信'
+          },
+          {
+            id: '23',
+            name: add6 === '1' ? '取消无效手机号' : '无效手机号'
+          });
+        }
+
         if (item.orderNo !== '') {
           item.showDetail = true;
           if (item.flowStatus !== 2) {
@@ -824,6 +846,34 @@ export default {
       // 刷新页面、重置页码
       this[this.curScrollViewName].mescroll.resetUpScroll();
     },
+    setWeixinStatus(item, index) {
+      /* 设置是否已加微信 */
+      const status = item.add5 === '1' ? '0' : '1';
+      this.orderService.updateStatusForYJHX({
+        orderFollowId: item.id,
+        type: 1,
+        status
+      }).then(({ code }) => {
+        if (code === 1) {
+          item.add5 = status;
+          item.showList[index].name = status === '1' ? '取消已加微信' : '已加微信';
+        }
+      });
+    },
+    setPhoneStatus(item, index) {
+      /* 设置是否是无效电话状态 */
+      const status = item.add6 === '1' ? '0' : '1';
+      this.orderService.updateStatusForYJHX({
+        orderFollowId: item.id,
+        type: 2,
+        status
+      }).then(({ code }) => {
+        if (code === 1) {
+          item.add6 = status;
+          item.showList[index].name = status === '1' ? '取消无效手机号' : '无效手机号';
+        }
+      });
+    }
   },
   beforeRouteEnter(to, from, next) {
     if (from.name === 'Order.OrderFollowCommitResult' || from.name === 'Order.OrderConfirm' || from.name === 'Order.OrderEntry' || from.name === 'Order.OrderModify') {

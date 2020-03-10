@@ -98,4 +98,8 @@ export default {
       requestNoToast: true
     });
   },
+  updateStatusForYJHX(params) {
+    /* 以旧换新标记手机号、微信是否添加或者无效 */
+    return axPostJson(urls.updateStatusForYJHX, null, params);
+  },
 };

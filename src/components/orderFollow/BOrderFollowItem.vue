@@ -60,6 +60,8 @@
               v-show="followItem.recordMode ==='Casarte'"
             >
             <span class="hand-class">{{followItem.userS}}</span>
+            <span class="hand-class">{{followItem.add5==='1'?'已加微信':'未加微信'}}</span>
+            <span class="hand-class">{{followItem.add6==='1'?'无效手机号':''}}</span>
             <span class="handred-class">{{followItem.tardinessS}}</span>
             <span class="handgray-class">{{followItem.flowS}}</span>
           </div>
@@ -187,7 +189,7 @@
             <p
               v-for="(item,index) in followItem.showList"
               :key="index"
-              @click="updateOrderType(item.id,followItem)"
+              @click="updateOrderType(item.id,followItem,index)"
               class="show-p"
             >{{item.name}}</p>
           </div>
@@ -411,49 +413,77 @@ export default {
         this.$emit('searchProduct', item);
       }
     },
-    updateOrderType(type, item) {
+    updateOrderType(type, item, index) {
+      /* 扩展操作 */
       this.stopProcess();
       for (let i = 0; i < this.list.length; i++) {
         this.$set(this.list[i], 'show', false);
       }
-      if (type === '20') {
-        this.$emit('userService', item);
-
-        return;
-      }
-      if (type === '21') {
-        this.$emit('maybeBuyer', item);
-        return;
-      }
-
-      if (type === '10') {
-        this.$emit('againEntry', item);
-        return;
-      }
-      if (type === '11') {
-        this.$emit('cancleOrder', item);
-        return;
-      }
-      if (type === '3') {
+      /* eslint-disable no-unused-vars */
+      function popShow() {
         this.popShow = true;
-        return;
       }
-      this.orderService
-        .updateOrderFollowByType(
+
+      function updateOrderFollowByType() {
+        this.orderService.updateOrderFollowByType(
           {},
           {
             orderFollowId: this.ID,
             type,
             remark: this.remark
           }
-        )
-        .then((res) => {
+        ).then((res) => {
           if (res.code === 1) {
             this.remark = '';
             console.log('this.list', this.list);
             this.$emit('updateOrderType', type);
           }
         });
+      }
+      const optionsMap = {
+        3: {
+          type: 'function',
+          eventName: 'popShow'
+        },
+        6: {
+          type: 'function',
+          eventName: 'updateOrderFollowByType'
+        },
+        7: {
+          type: 'function',
+          eventName: 'updateOrderFollowByType'
+        },
+        10: {
+          type: 'emit',
+          eventName: 'againEntry'
+        },
+        11: {
+          type: 'emit',
+          eventName: 'cancleOrder'
+        },
+        20: {
+          type: 'emit',
+          eventName: 'userService'
+        },
+        21: {
+          type: 'emit',
+          eventName: 'maybeBuyer'
+        },
+        22: {
+          type: 'emit',
+          eventName: 'setWeixinStatus'
+        },
+        23: {
+          type: 'emit',
+          eventName: 'setPhoneStatus'
+        }
+      };
+      const option = optionsMap[type];
+      if (option.type === 'emit') {
+        this.$emit(option.eventName, item, index);
+      } else {
+        option.eventName();
+      }
     },
     recordCall(item) {
       /* 记录以旧换新打电话 */
@@ -766,6 +796,8 @@ export default {
     height: 80px;
     line-height: 80px;
     border-bottom: 1px solid #999999;
+    padding-left: 10px;
+    padding-right: 10px;
 
     &:last-of-type {
       border-bottom: 0;
@@ -773,7 +805,7 @@ export default {
   }
 
   .more-pop {
-    width: 200px;
+    min-width: 200px;
     /*height: 200px;*/
     border: 1px solid #999999;
     background-color: white;
