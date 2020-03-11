@@ -54,7 +54,7 @@
         @userService="userService"
         @maybeBuyer="maybeBuyer"
         @setWeixinStatus="setWeixinStatus"
-        @setPhoneStatus="setPhoneStatus"
+        @setInvalidWeixinStatus="setInvalidWeixinStatus"
       ></b-order-follow-item>
     </div>
     <b-order-follow-search-bar
@@ -81,7 +81,7 @@
         @userService="userService"
         @maybeBuyer="maybeBuyer"
         @setWeixinStatus="setWeixinStatus"
-        @setPhoneStatus="setPhoneStatus"
+        @setInvalidWeixinStatus="setInvalidWeixinStatus"
       ></b-order-follow-item>
     </div>
     <b-order-follow-search-bar
@@ -134,7 +134,7 @@
         @gujiaClick="gujiaClick"
         @maybeBuyer="maybeBuyer"
         @setWeixinStatus="setWeixinStatus"
-        @setPhoneStatus="setPhoneStatus"
+        @setInvalidWeixinStatus="setInvalidWeixinStatus"
       ></b-order-follow-item>
     </div>
     <div class="js-md-tab-bar md-example-child md-example-child-tabs md-example-child-tab-bar-4">
@@ -792,20 +792,41 @@ export default {
         } else if (this.curTab === 3) {
           item.showList = [];
         }
-        // 以旧换新,添加标记'已加微信' '无效手机号'
+        // 以旧换新,添加标记'已加微信' '无效微信'
         if (item.businessScenarios === 'YJHX') {
           const {
-            add5,
-            add6
+            add5
           } = item;
-          item.showList.push({
-            id: '22',
-            name: add5 === '1' ? '取消已加微信' : '已加微信'
-          },
-          {
-            id: '23',
-            name: add6 === '1' ? '取消无效手机号' : '无效手机号'
-          });
+          if (add5 === '1') {
+            item.showList.push({
+              id: '22',
+              name: '取消已加微信'
+            },
+            {
+              id: '23',
+              name: '无效微信',
+              hide: true
+            });
+          } else if (add5 === '2') {
+            item.showList.push({
+              id: '22',
+              name: '已加微信',
+              hide: true
+            },
+            {
+              id: '23',
+              name: '取消无效微信'
+            });
+          } else {
+            item.showList.push({
+              id: '22',
+              name: '已加微信'
+            },
+            {
+              id: '23',
+              name: '无效微信'
+            });
+          }
         }
 
         if (item.orderNo !== '') {
@@ -846,31 +867,55 @@ export default {
       // 刷新页面、重置页码
       this[this.curScrollViewName].mescroll.resetUpScroll();
     },
+    updateStatusForYJHX(item, status) {
+      /* 更新有效微信or无效微信状态 */
+      return this.orderService.updateStatusForYJHX({
+        orderFollowId: item.id,
+        status
+      });
+    },
+    showWeixinOptions(item) {
+      /* 显示设置已加微信or无效微信选项 */
+      for (let i = 0; i < item.showList.length; i++) {
+        const option = item.showList[i];
+        if (option.id === '22' || option.id === '23') {
+          option.hide = false;
+        }
+      }
+    },
     setWeixinStatus(item, index) {
       /* 设置是否已加微信 */
       const status = item.add5 === '1' ? '0' : '1';
-      this.orderService.updateStatusForYJHX({
-        orderFollowId: item.id,
-        type: 1,
-        status
-      }).then(({ code }) => {
+      this.updateStatusForYJHX(item, status).then(({ code }) => {
         if (code === 1) {
           item.add5 = status;
-          item.showList[index].name = status === '1' ? '取消已加微信' : '已加微信';
+          if (status === '1') {
+            item.showList[index].name = '取消已加微信';
+            const validWxOption = item.showList.find(v => v.id === '23');
+            // 隐藏设置无效微信
+            this.$set(validWxOption, 'hide', true);
+          } else {
+            item.showList[index].name = '已加微信';
+            this.showWeixinOptions(item);
+          }
         }
       });
     },
-    setPhoneStatus(item, index) {
-      /* 设置是否是无效电话状态 */
-      const status = item.add6 === '1' ? '0' : '1';
-      this.orderService.updateStatusForYJHX({
-        orderFollowId: item.id,
-        type: 2,
-        status
-      }).then(({ code }) => {
+    setInvalidWeixinStatus(item, index) {
+      /* 设置是否是无效微信 */
+      const status = item.add5 === '2' ? '0' : '2';
+      this.updateStatusForYJHX(item, status).then(({ code }) => {
         if (code === 1) {
-          item.add6 = status;
-          item.showList[index].name = status === '1' ? '取消无效手机号' : '无效手机号';
+          item.add5 = status;
+          if (status === '2') {
+            item.showList[index].name = '取消无效微信';
+            const validWxOption = item.showList.find(v => v.id === '22');
+            // 隐藏设置有效微信
+            this.$set(validWxOption, 'hide', true);
+          } else {
+            item.showList[index].name = '无效微信';
+            this.showWeixinOptions(item);
+          }
         }
       });
     }

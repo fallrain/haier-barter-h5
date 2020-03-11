@@ -60,8 +60,7 @@
               v-show="followItem.recordMode ==='Casarte'"
             >
             <span class="hand-class">{{followItem.userS}}</span>
-            <span class="hand-class">{{followItem.add5==='1'?'已加微信':'未加微信'}}</span>
-            <span class="hand-class">{{followItem.add6==='1'?'无效手机号':''}}</span>
+            <span class="hand-class">{{{1:'已加微信',2:'无效微信'}[followItem.add5] || ''}}</span>
             <span class="handred-class">{{followItem.tardinessS}}</span>
             <span class="handgray-class">{{followItem.flowS}}</span>
           </div>
@@ -188,9 +187,10 @@
             <div class="more-pop-in"></div>
             <p
               v-for="(item,index) in followItem.showList"
-              :key="index"
+              :key="item.id"
               @click="updateOrderType(item.id,followItem,index)"
               class="show-p"
+              v-show="!item.hide"
             >{{item.name}}</p>
           </div>
 
@@ -475,7 +475,7 @@ export default {
         },
         23: {
           type: 'emit',
-          eventName: 'setPhoneStatus'
+          eventName: 'setInvalidWeixinStatus'
         }
       };
       const option = optionsMap[type];

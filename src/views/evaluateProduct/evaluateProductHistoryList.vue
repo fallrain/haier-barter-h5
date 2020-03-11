@@ -114,8 +114,7 @@ export default {
         years: [],
         sneakType: '',
         sortType: '0',
-        addWxStatus: '',
-        invalidMobileStatus: ''
+        addWxStatus: ''
       },
       list: [],
       // 右侧浮动筛选显示隐藏
@@ -143,11 +142,7 @@ export default {
         {
           key: 'addWxStatus',
           type: 'radio'
-        },
-        {
-          key: 'invalidMobileStatus',
-          type: 'radio'
-        },
+        }
       ],
       // 选择所有
       chooseAll: false,
@@ -241,15 +236,12 @@ export default {
       const getDistributeStatus = this.basicService.dictionary('distribute_status');
       // 获取微信状态
       const getWxStatus = this.basicService.dictionary('add_wx_status');
-      // 获取手机号状态
-      const getMobileStatus = this.basicService.dictionary('invalid_mobile_status');
       Promise.all([
         getIndustryList,
         getSneakType,
         getBuyIntention,
         getDistributeStatus,
         getWxStatus,
-        getMobileStatus
       ]).then(([
         industryData,
         {
@@ -267,10 +259,6 @@ export default {
         {
           code: wxStatusCode,
           data: wxStatusData
-        },
-        {
-          code: mobileStatusCode,
-          data: mobileStatusData
         }
       ]) => {
         if (industryData) {
@@ -346,21 +334,6 @@ export default {
           }));
           this.filterList.push(wxStatus);
         }
-        // 手机号状态
-        if (mobileStatusCode === 1) {
-          const mobileStatus = {
-            name: '无效手机号',
-            isExpand: true,
-            type: 'radio',
-            data: []
-          };
-          mobileStatus.data = mobileStatusData.map(v => ({
-            key: v.itemCode,
-            value: v.itemName,
-            isChecked: false
-          }));
-          this.filterList.push(mobileStatus);
-        }
       });
     },
     upCallback(page) {
@@ -416,7 +389,6 @@ export default {
         || this.searchForm.buyIntention !== searchForm.buyIntention
         || this.searchForm.distributeStatus !== searchForm.distributeStatus
         || this.searchForm.addWxStatus !== searchForm.addWxStatus
-        || this.searchForm.invalidMobileStatus !== searchForm.invalidMobileStatus
       ) {
         this.queryByCondition(searchForm);
       }

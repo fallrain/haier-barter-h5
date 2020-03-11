@@ -15,8 +15,7 @@
       <div class="bEvaluateProductItem-cnt-price mb22">
         <span class="name">{{data.industryName}}</span>
         <span class="price">￥{{data.totalPrice}}</span>
-        <span class="state">{{data.addWxStatus===1?'已加微信':'未加微信'}}</span>
-        <span class="state">{{data.invalidMobileStatus===1?'无效手机号':''}}</span>
+        <span class="state">{{{1:'已加微信',2:'无效微信'}[data.addWxStatus] || ''}}</span>
       </div>
       <div class="c-container">
         <div class="bEvaluateProductItem-cnt-time">
