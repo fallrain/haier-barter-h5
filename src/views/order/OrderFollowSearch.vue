@@ -53,6 +53,8 @@
         @gujiaClick="gujiaClick"
         @userService="userService"
         @maybeBuyer="maybeBuyer"
+        @setWeixinStatus="setWeixinStatus"
+        @setInvalidWeixinStatus="setInvalidWeixinStatus"
       ></b-order-follow-item>
     </div>
     <b-order-follow-search-bar
@@ -78,6 +80,8 @@
         @gujiaClick="gujiaClick"
         @userService="userService"
         @maybeBuyer="maybeBuyer"
+        @setWeixinStatus="setWeixinStatus"
+        @setInvalidWeixinStatus="setInvalidWeixinStatus"
       ></b-order-follow-item>
     </div>
     <b-order-follow-search-bar
@@ -92,20 +96,20 @@
       @popButtonClicked="buttonClicked"
     ></b-order-follow-search-bar>
     <div
-    id="scrollViewOdd"
-    ref="scrollViewOdd"
-    class="mescroll"
-    v-show="curScrollViewName==='scrollViewOdd'"
-  >
-    <b-order-follow-item
-      type="odd"
-      :list="scrollViewOdd.list"
-      @updateOrderType="updateOrderType"
-      @followButtonClick="followButtonClicked"
-      @itemClick="itemClick"
-      @gujiaClick="gujiaClick"
-    ></b-order-follow-item>
-  </div>
+      id="scrollViewOdd"
+      ref="scrollViewOdd"
+      class="mescroll"
+      v-show="curScrollViewName==='scrollViewOdd'"
+    >
+      <b-order-follow-item
+        type="odd"
+        :list="scrollViewOdd.list"
+        @updateOrderType="updateOrderType"
+        @followButtonClick="followButtonClicked"
+        @itemClick="itemClick"
+        @gujiaClick="gujiaClick"
+      ></b-order-follow-item>
+    </div>
     <b-order-follow-search-bar
       v-show="curScrollViewName==='scrollViewProgress'"
       :defalutCheckedsortId="defalutCheckedsortId"
@@ -129,6 +133,8 @@
         @itemClick="itemClick"
         @gujiaClick="gujiaClick"
         @maybeBuyer="maybeBuyer"
+        @setWeixinStatus="setWeixinStatus"
+        @setInvalidWeixinStatus="setInvalidWeixinStatus"
       ></b-order-follow-item>
     </div>
     <div class="js-md-tab-bar md-example-child md-example-child-tabs md-example-child-tab-bar-4">
@@ -482,7 +488,7 @@ export default {
         orderNo: item.orderNo,
         businessScenarios
       };
-      // 爱到家需要传add4，add4是预留字段，由其他系统传递而来
+        // 爱到家需要传add4，add4是预留字段，由其他系统传递而来
       if (businessScenarios === 'ADJ') {
         args.add4 = item.add4;
         args.sourceSn = item.sourceSn;
@@ -786,6 +792,43 @@ export default {
         } else if (this.curTab === 3) {
           item.showList = [];
         }
+        // 以旧换新,添加标记'已加微信' '无效微信'
+        if (item.businessScenarios === 'YJHX') {
+          const {
+            add5
+          } = item;
+          if (add5 === '1') {
+            item.showList.push({
+              id: '22',
+              name: '取消已加微信'
+            },
+            {
+              id: '23',
+              name: '无效微信',
+              hide: true
+            });
+          } else if (add5 === '2') {
+            item.showList.push({
+              id: '22',
+              name: '已加微信',
+              hide: true
+            },
+            {
+              id: '23',
+              name: '取消无效微信'
+            });
+          } else {
+            item.showList.push({
+              id: '22',
+              name: '已加微信'
+            },
+            {
+              id: '23',
+              name: '无效微信'
+            });
+          }
+        }
+
         if (item.orderNo !== '') {
           item.showDetail = true;
           if (item.flowStatus !== 2) {
@@ -824,6 +867,58 @@ export default {
       // 刷新页面、重置页码
       this[this.curScrollViewName].mescroll.resetUpScroll();
     },
+    updateStatusForYJHX(item, status) {
+      /* 更新有效微信or无效微信状态 */
+      return this.orderService.updateStatusForYJHX({
+        orderFollowId: item.id,
+        status
+      });
+    },
+    showWeixinOptions(item) {
+      /* 显示设置已加微信or无效微信选项 */
+      for (let i = 0; i < item.showList.length; i++) {
+        const option = item.showList[i];
+        if (option.id === '22' || option.id === '23') {
+          option.hide = false;
+        }
+      }
+    },
+    setWeixinStatus(item, index) {
+      /* 设置是否已加微信 */
+      const status = item.add5 === '1' ? '0' : '1';
+      this.updateStatusForYJHX(item, status).then(({ code }) => {
+        if (code === 1) {
+          item.add5 = status;
+          if (status === '1') {
+            item.showList[index].name = '取消已加微信';
+            const validWxOption = item.showList.find(v => v.id === '23');
+            // 隐藏设置无效微信
+            this.$set(validWxOption, 'hide', true);
+          } else {
+            item.showList[index].name = '已加微信';
+            this.showWeixinOptions(item);
+          }
+        }
+      });
+    },
+    setInvalidWeixinStatus(item, index) {
+      /* 设置是否是无效微信 */
+      const status = item.add5 === '2' ? '0' : '2';
+      this.updateStatusForYJHX(item, status).then(({ code }) => {
+        if (code === 1) {
+          item.add5 = status;
+          if (status === '2') {
+            item.showList[index].name = '取消无效微信';
+            const validWxOption = item.showList.find(v => v.id === '22');
+            // 隐藏设置有效微信
+            this.$set(validWxOption, 'hide', true);
+          } else {
+            item.showList[index].name = '无效微信';
+            this.showWeixinOptions(item);
+          }
+        }
+      });
+    }
   },
   beforeRouteEnter(to, from, next) {
     if (from.name === 'Order.OrderFollowCommitResult' || from.name === 'Order.OrderConfirm' || from.name === 'Order.OrderEntry' || from.name === 'Order.OrderModify') {

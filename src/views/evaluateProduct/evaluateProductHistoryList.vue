@@ -113,7 +113,8 @@ export default {
         industryList: [],
         years: [],
         sneakType: '',
-        sortType: '0'
+        sortType: '0',
+        addWxStatus: ''
       },
       list: [],
       // 右侧浮动筛选显示隐藏
@@ -136,6 +137,10 @@ export default {
         },
         {
           key: 'distributeStatus',
+          type: 'radio'
+        },
+        {
+          key: 'addWxStatus',
           type: 'radio'
         }
       ],
@@ -228,8 +233,16 @@ export default {
       // 查询购买意愿
       const getBuyIntention = this.basicService.getBuyIntention();
       // 查询分配状态
-      const distributeStatus = this.basicService.dictionary('distribute_status');
-      Promise.all([getIndustryList, getSneakType, getBuyIntention, distributeStatus]).then(([
+      const getDistributeStatus = this.basicService.dictionary('distribute_status');
+      // 获取微信状态
+      const getWxStatus = this.basicService.dictionary('add_wx_status');
+      Promise.all([
+        getIndustryList,
+        getSneakType,
+        getBuyIntention,
+        getDistributeStatus,
+        getWxStatus,
+      ]).then(([
         industryData,
         {
           code: sneakCode,
@@ -242,6 +255,10 @@ export default {
         {
           code: distributeStatusCode,
           data: distributeStatusData
+        },
+        {
+          code: wxStatusCode,
+          data: wxStatusData
         }
       ]) => {
         if (industryData) {
@@ -302,6 +319,21 @@ export default {
           }));
           this.filterList.push(distributeStatus);
         }
+        // 加微信状态
+        if (wxStatusCode === 1) {
+          const wxStatus = {
+            name: '加微信状态',
+            isExpand: true,
+            type: 'radio',
+            data: []
+          };
+          wxStatus.data = wxStatusData.map(v => ({
+            key: v.itemCode,
+            value: v.itemName,
+            isChecked: false
+          }));
+          this.filterList.push(wxStatus);
+        }
       });
     },
     upCallback(page) {
@@ -349,7 +381,6 @@ export default {
       });
     },
     confirmSearch(searchForm) {
-      debugger;
       // 检查搜索值是否不一样
       if (
         // !this.bUtil.isSameValueOfOneDimensional(this.searchForm.industryList, searchForm.industryList)
@@ -357,6 +388,7 @@ export default {
         || this.searchForm.sneakType !== searchForm.sneakType
         || this.searchForm.buyIntention !== searchForm.buyIntention
         || this.searchForm.distributeStatus !== searchForm.distributeStatus
+        || this.searchForm.addWxStatus !== searchForm.addWxStatus
       ) {
         this.queryByCondition(searchForm);
       }

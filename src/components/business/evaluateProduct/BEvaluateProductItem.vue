@@ -15,6 +15,7 @@
       <div class="bEvaluateProductItem-cnt-price mb22">
         <span class="name">{{data.industryName}}</span>
         <span class="price">￥{{data.totalPrice}}</span>
+        <span class="state">{{{1:'已加微信',2:'无效微信'}[data.addWxStatus] || ''}}</span>
       </div>
       <div class="c-container">
         <div class="bEvaluateProductItem-cnt-time">
@@ -55,14 +56,18 @@ export default {
     }
   },
   filters: {
-    orderStatus() {}
+    orderStatus() {
+    }
   },
   methods: {
     barCodeClick(item) {
       /* 查看记录click */
       this.$router.push({
         name: 'EvaluateProductHistoryList.evaluateProductDetail',
-        params: { region: 'history', memberInfo: item }
+        params: {
+          region: 'history',
+          memberInfo: item
+        }
       });
     },
     selectItem(e) {
@@ -82,10 +87,10 @@ export default {
         0: '未成交',
         1: '已成交'
       };
-      // const orderSourceMap = {
-      //   DB: '兑呗',
-      //   YLH: '易理货'
-      // };
+        // const orderSourceMap = {
+        //   DB: '兑呗',
+        //   YLH: '易理货'
+        // };
       const name = orderStatusMap[orderStatus] || '';
       //  if (orderSourceMap[orderSource]) {
       //   name += `（${orderSourceMap[orderSource]}）`;
@@ -110,85 +115,94 @@ export default {
 </script>
 
 <style lang="scss">
-.bEvaluateProductItem {
-  display: flex;
-  align-items: center;
-  padding-top: 32px;
-  padding-bottom: 32px;
-  border-bottom: 1px solid #d9d9d9;
-  word-break: break-all;
-}
-
-.bEvaluateProductItem-cnt {
-  width: 480px;
-  // max-width: 100%;
-  overflow: hidden;
-  flex-grow: 1;
-  flex-shrink: 0;
-}
-
-.bEvaluateProductItem-cnt-person {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  color: #333;
-  font-size: 28px;
-
-  & > .name {
-    font-size: 36px;
+  .bEvaluateProductItem {
+    display: flex;
+    align-items: center;
+    padding-top: 32px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid #d9d9d9;
+    word-break: break-all;
   }
 
-  .iconfont {
-    font-size: 32px;
-    color: #1969c6;
+  .bEvaluateProductItem-cnt {
+    width: 480px;
+    // max-width: 100%;
+    overflow: hidden;
+    flex-grow: 1;
+    flex-shrink: 0;
   }
 
-  a {
+  .bEvaluateProductItem-cnt-person {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
     color: #333;
-  }
-}
-
-.bEvaluateProductItem-cnt-price {
-  line-height: 1;
-  font-size: 28px;
-
-  & > .name {
-    color: #666;
-    margin-right: 18px;
-  }
-
-  & > .price {
-    color: #1969c6;
-  }
-}
-.c-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-.bEvaluateProductItem-cnt-time {
-  line-height: 1;
-  font-size: 28px;
-  color: #1969c6;
-
-  .iconfont {
     font-size: 28px;
-    margin-right: 18px;
-    color: #bbb;
-  }
-}
-.cliclMore {
-  color: #1969c6;
-  font-size: 28rpx;
-}
-.bEvaluateProductItem-btn-par {
-  margin-left: auto;
-  text-align: right;
-}
 
-.bEvaluateProductItem-tips {
-  font-size: 20px;
-  color: #29ab91;
-}
+    & > .name {
+      font-size: 36px;
+    }
+
+    .iconfont {
+      font-size: 32px;
+      color: #1969c6;
+    }
+
+    a {
+      color: #333;
+    }
+  }
+
+  .bEvaluateProductItem-cnt-price {
+    line-height: 1;
+    font-size: 28px;
+
+    & > .name {
+      color: #666;
+      margin-right: 18px;
+    }
+
+    & > .price {
+      color: #1969c6;
+    }
+
+    & > .state {
+      color: #f5a623;
+      font-size: 24px;
+      margin-left: 16px;
+    }
+  }
+
+  .c-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .bEvaluateProductItem-cnt-time {
+    line-height: 1;
+    font-size: 28px;
+    color: #1969c6;
+
+    .iconfont {
+      font-size: 28px;
+      margin-right: 18px;
+      color: #bbb;
+    }
+  }
+
+  .cliclMore {
+    color: #1969c6;
+    font-size: 28px;
+  }
+
+  .bEvaluateProductItem-btn-par {
+    margin-left: auto;
+    text-align: right;
+  }
+
+  .bEvaluateProductItem-tips {
+    font-size: 20px;
+    color: #29ab91;
+  }
 </style>
