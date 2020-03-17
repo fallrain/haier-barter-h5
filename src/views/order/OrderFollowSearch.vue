@@ -627,7 +627,6 @@ export default {
       }
     },
     searchData(page) {
-      debugger;
       /* 搜索订单 */
       let queryServiceName;
       let searchData;
@@ -641,7 +640,6 @@ export default {
           hmcId: this[GET_USER].hmcid
         };
       } else {
-        debugger;
         queryServiceName = 'queryOrderFollowList';
         searchData = {
           hmcId: this.userinfo.hmcid,
