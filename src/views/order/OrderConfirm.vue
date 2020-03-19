@@ -546,6 +546,7 @@ export default {
       position: absolute;
       left: 60px;
       top: 60px;
+      z-index: 999;
     }
     .content{
       background: #fff;
