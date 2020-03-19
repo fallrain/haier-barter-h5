@@ -141,6 +141,7 @@
       </div>
     </div>
     <div v-show="tipState2" class="shade-style">
+      <div v-show="timeShow" class="time-style">{{totalTime}}s</div>
       <div class="content">
         <p class="title">海尔专卖店权益录单合规提示函</p>
         <p class="text-indent2 fs28">
@@ -174,17 +175,13 @@
         <p class="text-danger text-indent2 mt20">
           我已认真阅读《购机权益录单合规提示函》知晓其中内容，我郑重承诺，认同《购机权益录单合规提示函》中各项规定并严格遵守，保证录单真实规范，若有违反公司规章内容的，自愿接受公司相关规章制度的管理处罚。
         </p>
-        <div class="orderEntry-btns-par">
-          <button
-            type="button"
-            class="common-submit-btn-primary"
-          >取消
-          </button>
-          <button
-            type="button"
-            class="common-submit-btn-default"
-          >确定
-          </button>
+        <div class="tip-button">
+          <md-button class="mr28" v-show="timeShow" type="disabled" size="small" inline>取消</md-button>
+          <md-button v-show="timeShow" type="disabled" size="small" inline>确定</md-button>
+          <md-button class="mr28" v-show="!timeShow" type="primary" size="small" inline
+                     @click="cancleTip" plain>取消</md-button>
+          <md-button v-show="!timeShow" type="primary" size="small" inline
+                     @click="sureTip">确定</md-button>
         </div>
       </div>
 
