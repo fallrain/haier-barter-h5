@@ -416,7 +416,7 @@ export default {
             }
           }, 1000);
         } else {
-          Dialog.confirm({
+          /*Dialog.confirm({
             content: '请务必上传真实、清晰、完整的发票。否则，将影响用户权益的领取，而且将影响您的工资核算与发放！',
             confirmText: '确定',
             onConfirm: () => {
@@ -430,7 +430,7 @@ export default {
                 }
               });
             },
-          });
+          });*/
         }
       }
     },
@@ -443,7 +443,7 @@ export default {
       this.timeShow = true;
       this.tipState1 = false;
       this.tipState2 = false;
-      Dialog.confirm({
+      /*Dialog.confirm({
         content: '请务必上传真实、清晰、完整的发票。否则，将影响用户权益的领取，而且将影响您的工资核算与发放！',
         confirmText: '确定',
         onConfirm: () => {
@@ -457,7 +457,7 @@ export default {
             }
           });
         },
-      });
+      });*/
     },
     changeOrder() {
       this.$router.push({
