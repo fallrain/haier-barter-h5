@@ -419,27 +419,28 @@ export default {
       for (let i = 0; i < this.list.length; i++) {
         this.$set(this.list[i], 'show', false);
       }
-      /* eslint-disable no-unused-vars */
-      function popShow() {
-        this.popShow = true;
-      }
+      const fns = {
+        popShow() {
+          this.popShow = true;
+        },
+        updateOrderFollowByType() {
+          this.orderService.updateOrderFollowByType(
+            {},
+            {
+              orderFollowId: this.ID,
+              type,
+              remark: this.remark
+            }
+          ).then((res) => {
+            if (res.code === 1) {
+              this.remark = '';
+              console.log('this.list', this.list);
+              this.$emit('updateOrderType', type);
+            }
+          });
+        }
+      };
 
-      function updateOrderFollowByType() {
-        this.orderService.updateOrderFollowByType(
-          {},
-          {
-            orderFollowId: this.ID,
-            type,
-            remark: this.remark
-          }
-        ).then((res) => {
-          if (res.code === 1) {
-            this.remark = '';
-            console.log('this.list', this.list);
-            this.$emit('updateOrderType', type);
-          }
-        });
-      }
       const optionsMap = {
         3: {
           type: 'function',
@@ -482,7 +483,7 @@ export default {
       if (option.type === 'emit') {
         this.$emit(option.eventName, item, index);
       } else {
-        option.eventName();
+        fns[option.eventName].call(this);
       }
     },
     recordCall(item) {
