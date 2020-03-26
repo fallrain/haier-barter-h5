@@ -166,6 +166,25 @@
     >
       您本月还有{{handCount}}个手工录单名额，超出限制后本月将不能手工录单！同时，手工录入的订单不能发放购机权益
     </md-dialog>
+    <md-dialog
+      title="确定核销"
+      :closable="true"
+      v-model="showVerificationDialog"
+      class="verificationDialog"
+    >
+      <div>
+        <div class="verification-code">{{currentHeXiaoCode}}</div>
+        <div>
+          <button
+            type="button"
+            class="common-submit-btn-default"
+            @click="doVerification"
+          >确定
+          </button>
+        </div>
+      </div>
+
+    </md-dialog>
   </div>
 </template>
 <script>
@@ -335,7 +354,10 @@ export default {
           id: '2',
           name: '按照创建时间降序'
         }
-      ]
+      ],
+      showVerificationDialog: false,
+      currentHeXiaoCode: null,
+      currentHeXiaoId: null,
     };
   },
   activated() {
@@ -599,6 +621,10 @@ export default {
             });
           }
         });
+      } else if (val.name === '核销') {
+        this.showVerificationDialog = true;
+        this.currentHeXiaoCode = info.add5;
+        this.currentHeXiaoId = info.id;
       } else {
         // val.name === '录新订单'
         this.orderService.checkCreateOrder().then((res) => { // 判断店铺是否冻结
@@ -718,6 +744,15 @@ export default {
         } else if (item.flowStatus === 0) {
           // item.buttonList = [{ name: '成交录单' }, { name: '发放卡券' }];
           item.buttonList = [{ name: '成交录单' }];
+          if(item.businessScenarios === 'JKHXJ_RC'){
+            if(item.writeOff == '0'){
+              item.buttonList.push({ name: '核销' });
+            }else if(item.writeOff == '1'){
+              item.buttonList.push({ name: '已核销', disabled:true });
+            }else if(item.writeOff == '2'){
+              item.buttonList.push({ name: '无法核销', disabled:true });
+            }
+          }
         } else if (item.flowStatus === 5) {
           item.buttonList = [{ name: '刷新' }, { name: '修改订单' }, { name: '录新订单' }];
         } else if (item.flowStatus === 2) {
@@ -776,8 +811,8 @@ export default {
               }
             ];
           }
-          // 扫码录单 爱到家添加入户服务、潜在顾客
-          if (item.businessScenarios === 'SMLD' || item.businessScenarios === 'ADJ') {
+          // 扫码录单 爱到家添加入户服务、潜在顾客、健康换新
+          if (item.businessScenarios === 'SMLD' || item.businessScenarios === 'ADJ' || item.businessScenarios === 'JKHXJ_RC') {
             item.showList.push({
               id: '20',
               name: '入户服务'
@@ -854,6 +889,21 @@ export default {
         }
       });
       this.currentList = curList;
+    },
+    doVerification(){
+      this.orderService.updateOrderFollowByType(
+        {},
+        {
+          orderFollowId: this.currentHeXiaoId,
+          type: '8',
+          remark: ''
+        }
+      ).then((res) => {
+        if (res.code === 1) {
+          this.showVerificationDialog = false;
+          this.updateOrderType();
+        }
+      });
     },
     fuzzySearch() {
       // 刷新页面、重置页码
@@ -1096,6 +1146,22 @@ export default {
       display: inline-block;
       width: 300px;
       border-right: 1px #1969C6 solid;
+    }
+  }
+  .verificationDialog{
+    ::v-deep.md-dialog-body{
+      max-height: 60vw !important;
+      text-align: center;
+    }
+    .verification-code{
+      font-size:40px;
+      font-family:PingFang SC;
+      font-weight:bold;
+      line-height:27px;
+      color:rgba(25,105,198,1);
+    }
+    .common-submit-btn-default{
+      margin-top: 24px;
     }
   }
 </style>
