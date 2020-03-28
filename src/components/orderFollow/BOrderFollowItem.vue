@@ -26,7 +26,7 @@
         ></b-order-follow-item-del>
         <div
           class="row-class pt10"
-          :class="[['YZZJ','YJHX', 'ADJ', 'SMLD', 'SGLD', 'RC','YYFW'].includes(followItem.businessScenarios) && 'pl56']"
+          :class="[['YZZJ','YJHX', 'ADJ', 'SMLD', 'SGLD', 'RC','YYFW','JKHXJ_RC'].includes(followItem.businessScenarios) && 'pl56']"
         >
           <span class="label-span">{{followItem.userName}}</span>
           <span
@@ -47,7 +47,7 @@
             @click="recordCall(followItem)"
           >{{followItem.userMobile}}</a></span>
         </div>
-        <div :class="[['YZZJ','YJHX', 'ADJ', 'SMLD', 'SGLD', 'RC','YYFW'].includes(followItem.businessScenarios) && 'pl56']">
+        <div :class="[['YZZJ','YJHX', 'ADJ', 'SMLD', 'SGLD', 'RC','YYFW','JKHXJ_RC'].includes(followItem.businessScenarios) && 'pl56']">
           <div class="row-class">
             <img
               src="@/assets/images/orderFollow-up/Haier@3x.png"
