@@ -153,7 +153,7 @@
           v-show="followItem.detailShow"
         >
           <p>
-            <strong>报名编号：</strong>{{followItem.add2}}
+            <strong>消费券码：</strong>{{followItem.add5}}
           </p>
           <p
             v-if="followItem.add3"

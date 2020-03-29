@@ -52,7 +52,7 @@ export default {
           className: 'orderFollowItem-type-tag-adj'
         },
         JKHXJ_RC: {
-          name: '健康换新',
+          name: '健康焕新',
           className: 'orderFollowItem-type-tag-yjhx'
         }
       }[this.businessScenarios];
