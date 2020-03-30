@@ -26,7 +26,7 @@
         ></b-order-follow-item-del>
         <div
           class="row-class pt10"
-          :class="[['YZZJ','YJHX', 'ADJ', 'SMLD', 'SGLD', 'RC','YYFW'].includes(followItem.businessScenarios) && 'pl56']"
+          :class="[['YZZJ','YJHX', 'ADJ', 'SMLD', 'SGLD', 'RC','YYFW','JKHXJ_RC'].includes(followItem.businessScenarios) && 'pl56']"
         >
           <span class="label-span">{{followItem.userName}}</span>
           <span
@@ -47,7 +47,7 @@
             @click="recordCall(followItem)"
           >{{followItem.userMobile}}</a></span>
         </div>
-        <div :class="[['YZZJ','YJHX', 'ADJ', 'SMLD', 'SGLD', 'RC','YYFW'].includes(followItem.businessScenarios) && 'pl56']">
+        <div :class="[['YZZJ','YJHX', 'ADJ', 'SMLD', 'SGLD', 'RC','YYFW','JKHXJ_RC'].includes(followItem.businessScenarios) && 'pl56']">
           <div class="row-class">
             <img
               src="@/assets/images/orderFollow-up/Haier@3x.png"
@@ -72,7 +72,7 @@
             <span class="time-label">{{followItem.updatedTime}}</span>
             <div class="bOrderFollowItem-row-time-right">
           <span
-            v-show="followItem.flowStatus === 4 || followItem.flowStatus === 5 || followItem.businessScenarios === 'YYFW' || followItem.businessScenarios === 'ADJ'"
+            v-show="followItem.flowStatus === 4 || followItem.flowStatus === 5 || followItem.businessScenarios === 'YYFW' || followItem.businessScenarios === 'ADJ' || followItem.businessScenarios === 'JKHXJ_RC'"
             @click="detailHide(followItem)"
             class="information-class bOrderFollowItem-textBtn"
           >
@@ -143,6 +143,34 @@
             <strong>用户地址：</strong>{{followItem.add3}}
           </p>
         </div>
+        <!--健康换新认筹的详细信息-->
+        <div
+          v-if="
+          (followItem.businessScenarios === 'JKHXJ_RC')
+          && (followItem.flowStatus !== 4 && followItem.flowStatus !== 5)
+        "
+          class="information-p"
+          v-show="followItem.detailShow"
+        >
+          <p>
+            <strong>消费券码：</strong>{{followItem.add5}}
+          </p>
+          <p
+            v-if="followItem.add3"
+          >
+            <strong> 活动名称：</strong>{{followItem.add3}}
+          </p>
+          <p
+            v-if="followItem.add1"
+          >
+            <strong>意向产品：</strong>{{followItem.add1}}
+          </p>
+          <p
+            v-if="followItem.add6"
+          >
+            <strong>用户地址：</strong>{{followItem.add6}}
+          </p>
+        </div>
         <!--其他类型（只有取消、异常状态才显示）详细信息-->
         <div
           v-else
@@ -168,7 +196,7 @@
           <!--<span v-if="followItem.businessScenarios !== 'YJHX' && followItem.businessScenarios !== 'ADJ'">-->
           <span v-if="followItem.businessScenarios !== 'ADJ'">
           <p
-            class="bottom-button"
+            :class="['bottom-button',button.disabled?'bottom-button-disabled':'']"
             v-for="(button,index) in followItem.buttonList"
             :key="index"
             @click="followButtonClick(button,followItem)"
@@ -574,6 +602,12 @@ export default {
     float: right;
     margin-top: 5px;
     margin-left: 10px;
+  }
+
+  .bottom-button-disabled{
+    background-color: #DDDDDD;
+    color: #666666;
+    border: none;
   }
 
   .xialaimage {

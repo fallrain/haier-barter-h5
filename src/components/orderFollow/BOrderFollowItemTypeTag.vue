@@ -50,6 +50,10 @@ export default {
         YYFW: {
           name: '预约服务',
           className: 'orderFollowItem-type-tag-adj'
+        },
+        JKHXJ_RC: {
+          name: '健康焕新',
+          className: 'orderFollowItem-type-tag-yjhx'
         }
       }[this.businessScenarios];
     },
