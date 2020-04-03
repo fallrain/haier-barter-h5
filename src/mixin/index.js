@@ -114,11 +114,11 @@ export default {
       /* 复制功能 */
       const copyIns = this.bUtil.clipboardCopy(selector, text);
       copyIns.on('success', () => {
-        this.$toast('复制成功');
+        this.$toast.succeed('复制成功');
       });
 
       copyIns.on('error', () => {
-        this.$toast('复制失败，请手动复制');
+        this.$toast.succeed('复制失败，请手动复制');
       });
       return copyIns;
     }

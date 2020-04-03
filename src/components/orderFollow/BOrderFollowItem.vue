@@ -24,25 +24,17 @@
           <span class="sex-class" v-show="followItem.userSex === '1'">先生</span>
           <span class="sex-class" v-show="followItem.userSex === '2'">女士</span>
           <span class="sex-class-tel">
-            <img src="@/assets/images/orderFollow-up/tel@3x.png" class="telImage" />
+            <img src="@/assets/images/orderFollow-up/tel@3x.png" class="telImage">
             <a
-              id="input_url"
               :href="'tel:' + followItem.userMobile"
               class="telClass"
               @click="recordCall(followItem)"
             >{{followItem.userMobile}}</a>
             <img
               class="copyClass"
-              @click="copyTel(followItem.userMobile)"
               src="../../assets/images/copyTel.png"
-            />
-            <!-- <input type="text" id="cpLink" v-model="followItem.userMobile" /> -->
-            <input
-              id="input_url"
-              v-model="followItem.userMobile"
-              style="opacity: 0;position: absolute;"
-              type="text"
-            />
+              :data-clipboard-text="followItem.userMobile"
+            >
           </span>
         </div>
         <div
@@ -237,21 +229,25 @@
 
 
 <script>
-import { Button, Dialog, Icon, Popup, PopupTitleBar, Toast } from "mand-mobile";
-import BOrderFollowItemDel from "./BOrderFollowItemDel";
-import BOrderFollowItemTypeTag from "./BOrderFollowItemTypeTag";
-import BOrderFollowItemOdd from "./BOrderFollowItemOdd";
+import {
+  Button, Dialog, Icon, Popup, PopupTitleBar, Toast
+} from 'mand-mobile';
+import ClipboardJS from 'clipboard';
+
+import BOrderFollowItemDel from './BOrderFollowItemDel';
+import BOrderFollowItemTypeTag from './BOrderFollowItemTypeTag';
+import BOrderFollowItemOdd from './BOrderFollowItemOdd';
 
 export default {
-  name: "BOrderFollowItem",
+  name: 'BOrderFollowItem',
   components: {
     BOrderFollowItemOdd,
     BOrderFollowItemDel,
     BOrderFollowItemTypeTag,
     [Icon.name]: Icon,
     [Toast.name]: Toast,
-    "md-dialog": Dialog,
-    "md-popup": Popup,
+    'md-dialog': Dialog,
+    'md-popup': Popup,
     [PopupTitleBar.name]: PopupTitleBar,
     [Button.name]: Button
   },
@@ -267,7 +263,7 @@ export default {
     // 类型,普通订单：normal，异常：odd，其他类型以后也许还有
     type: {
       type: String,
-      default: "normal"
+      default: 'normal'
     }
     // handleList:{
     //   type: Array,
@@ -277,21 +273,21 @@ export default {
   data() {
     return {
       popShow: false,
-      remark: "",
+      remark: '',
       buttonList: [],
       pageNum: 1,
       dataList: [],
-      scenarioType: "",
+      scenarioType: '',
       show: false,
       showList: [],
-      ID: "",
+      ID: '',
       currentList: this.list,
       // 订单删除成功对话框
       orderDelSucDialog: {
         open: false,
         btns: [
           {
-            text: "关闭"
+            text: '关闭'
           }
         ]
       },
@@ -300,10 +296,10 @@ export default {
         open: false,
         btns: [
           {
-            text: "取消"
+            text: '取消'
           },
           {
-            text: "去申请",
+            text: '去申请',
             handler: this.applyDeleteOrder
           }
         ]
@@ -313,24 +309,33 @@ export default {
   created() {
     console.log(this.currentList);
   },
+  mounted() {
+    this.bindCopyTel();
+  },
+  destroyed() {
+    this.ClipboardJS.destroy();
+  },
   methods: {
-    copyTel: function(e) {
-      var url = document.getElementById("cpLink");
-      debugger;
-      url.select();
-      document.execCommand("copy");
-      debugger;
+    bindCopyTel() {
+      /* 绑定复制功能 */
+      this.ClipboardJS = new ClipboardJS('.copyClass');
+      this.ClipboardJS.on('success', (e) => {
+        const {
+          text
+        } = e;
+        this.$toast.succeed(`号码${text}已复制`);
+      });
     },
     hidePopUp() {
       this.popShow = false;
     },
     confirmRemark() {
-      if (this.remark === "") {
-        Toast.info("请输入暂不跟进原因");
+      if (this.remark === '') {
+        Toast.info('请输入暂不跟进原因');
         this.popShow = true;
         return;
       }
-      const type = "3";
+      const type = '3';
       this.orderService
         .updateOrderFollowByType(
           {},
@@ -340,65 +345,65 @@ export default {
             remark: this.remark
           }
         )
-        .then(res => {
+        .then((res) => {
           if (res.code === 1) {
-            this.remark = "";
-            console.log("this.list", this.list);
-            Toast.succeed("状态更新成功");
+            this.remark = '';
+            console.log('this.list', this.list);
+            Toast.succeed('状态更新成功');
             this.popShow = false;
-            this.$emit("updateOrderType", type);
+            this.$emit('updateOrderType', type);
           }
         });
     },
     itemClick(followItem) {
       this.stopProcess();
-      this.$emit("itemClick", followItem);
+      this.$emit('itemClick', followItem);
     },
     orderClick() {
       /* 隐藏弹出层 */
-      this.list.forEach(v => {
-        this.$set(v, "showInTop", false);
-        this.$set(v, "show", false);
+      this.list.forEach((v) => {
+        this.$set(v, 'showInTop', false);
+        this.$set(v, 'show', false);
       });
     },
     gujiaClick(followItem) {
       this.stopProcess();
-      this.$emit("gujiaClick", followItem);
+      this.$emit('gujiaClick', followItem);
     },
     followButtonClick(button, item) {
       console.log(item);
-      const orderMode = JSON.parse(localStorage.getItem("userinfo")).orderMode;
-      if (orderMode === "Casarte") {
-        if (item.businessScenarios === "SGLD") {
-          Toast.failed("卡萨帝模式，不支持手工录单");
+      const orderMode = JSON.parse(localStorage.getItem('userinfo')).orderMode;
+      if (orderMode === 'Casarte') {
+        if (item.businessScenarios === 'SGLD') {
+          Toast.failed('卡萨帝模式，不支持手工录单');
           return;
         }
       }
       this.stopProcess();
 
-      this.$emit("followButtonClick", button, item);
+      this.$emit('followButtonClick', button, item);
     },
     showMore(item, e) {
       this.stopProcess();
       this.ID = item.id;
       const isShow = item.show;
       for (let i = 0; i < this.list.length; i++) {
-        this.$set(this.list[i], "show", false);
+        this.$set(this.list[i], 'show', false);
       }
       let isOverflow = false;
       if (!isShow) {
         const target = e.currentTarget;
-        const morePop = target.parentNode.querySelector(".more-pop");
+        const morePop = target.parentNode.querySelector('.more-pop');
         // 是否溢出显示区域
         isOverflow = this.bUtil.checkOverflowScreen({
           dom: morePop,
-          btmDom: document.querySelector(".js-md-tab-bar")
+          btmDom: document.querySelector('.js-md-tab-bar')
         });
       }
 
       // 显示的时候才会设置showInTop，隐藏依然没有，防止计算屏幕溢出错误
-      this.$set(item, "showInTop", isOverflow && !isShow);
-      this.$set(item, "show", !isShow);
+      this.$set(item, 'showInTop', isOverflow && !isShow);
+      this.$set(item, 'show', !isShow);
     },
     stopProcess() {
       const e = window.event;
@@ -411,16 +416,16 @@ export default {
     },
     detailHide(item) {
       this.stopProcess();
-      this.$set(item, "detailShow", !item.detailShow);
+      this.$set(item, 'detailShow', !item.detailShow);
       if (item.detailShow) {
-        this.$emit("searchProduct", item);
+        this.$emit('searchProduct', item);
       }
     },
     updateOrderType(type, item, index) {
       /* 扩展操作 */
       this.stopProcess();
       for (let i = 0; i < this.list.length; i++) {
-        this.$set(this.list[i], "show", false);
+        this.$set(this.list[i], 'show', false);
       }
       const fns = {
         popShow() {
@@ -436,11 +441,11 @@ export default {
                 remark: this.remark
               }
             )
-            .then(res => {
+            .then((res) => {
               if (res.code === 1) {
-                this.remark = "";
-                console.log("this.list", this.list);
-                this.$emit("updateOrderType", type);
+                this.remark = '';
+                console.log('this.list', this.list);
+                this.$emit('updateOrderType', type);
               }
             });
         }
@@ -448,44 +453,44 @@ export default {
 
       const optionsMap = {
         3: {
-          type: "function",
-          eventName: "popShow"
+          type: 'function',
+          eventName: 'popShow'
         },
         6: {
-          type: "function",
-          eventName: "updateOrderFollowByType"
+          type: 'function',
+          eventName: 'updateOrderFollowByType'
         },
         7: {
-          type: "function",
-          eventName: "updateOrderFollowByType"
+          type: 'function',
+          eventName: 'updateOrderFollowByType'
         },
         10: {
-          type: "emit",
-          eventName: "againEntry"
+          type: 'emit',
+          eventName: 'againEntry'
         },
         11: {
-          type: "emit",
-          eventName: "cancleOrder"
+          type: 'emit',
+          eventName: 'cancleOrder'
         },
         20: {
-          type: "emit",
-          eventName: "userService"
+          type: 'emit',
+          eventName: 'userService'
         },
         21: {
-          type: "emit",
-          eventName: "maybeBuyer"
+          type: 'emit',
+          eventName: 'maybeBuyer'
         },
         22: {
-          type: "emit",
-          eventName: "setWeixinStatus"
+          type: 'emit',
+          eventName: 'setWeixinStatus'
         },
         23: {
-          type: "emit",
-          eventName: "setInvalidWeixinStatus"
+          type: 'emit',
+          eventName: 'setInvalidWeixinStatus'
         }
       };
       const option = optionsMap[type];
-      if (option.type === "emit") {
+      if (option.type === 'emit') {
         this.$emit(option.eventName, item, index);
       } else {
         fns[option.eventName].call(this);
@@ -495,7 +500,7 @@ export default {
       /* 记录以旧换新打电话 */
       const { businessScenarios, sourceSn: id } = item;
       // 现在只统计以旧换新
-      if (businessScenarios === "YJHX") {
+      if (businessScenarios === 'YJHX') {
         this.campaignService.recordFrequency({
           id,
           type: 1
@@ -519,7 +524,7 @@ export default {
       /* 订单删除申请 */
       this.orderDelApplyDialog.open = false;
       this.$router.push({
-        name: "Order.ApplyDeleteOrder",
+        name: 'Order.ApplyDeleteOrder',
         params: {
           orderNo: this.orderDelApplyDialog.orderNo
         }
