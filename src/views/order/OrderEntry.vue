@@ -270,7 +270,7 @@
             v-for="(item,index) in receivedCoupons"
             :key="index"
           >
-            <span>{{item.activityName}}</span>
+            <span>{{item.service}}</span>
             <span class="orderModify-coupon-item-num">
               <span class="num">1</span> 张
             </span>
