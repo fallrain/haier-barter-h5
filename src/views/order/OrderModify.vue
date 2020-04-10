@@ -256,7 +256,7 @@
             v-for="(item,index) in receivedCoupons"
             :key="index"
           >
-            <span>{{item.service}}</span>
+            <span>{{item}}</span>
             <span class="orderModify-coupon-item-num">
               <span class="num">1</span> 张
             </span>
@@ -632,7 +632,7 @@ export default {
         }).then(({ code, data }) => {
           if (code === 1) {
             this.couponDialog.open = true;
-            this.receivedCoupons = data || [];
+            this.receivedCoupons = data[0].service.split(',') || [];
           }
         });
       } else {
