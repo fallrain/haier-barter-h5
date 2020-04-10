@@ -127,6 +127,21 @@
     </b-fieldset>
     <b-item
       class="mt16"
+      title="已领优惠券："
+    >
+      <template
+        v-slot:right=""
+      >
+        <div
+          class="orderModify-coupon-btn-show"
+          @click="showReceivedCoupons"
+        >
+          <span>查看</span> <i class="iconfont icon-youjiantou1"></i>
+        </div>
+      </template>
+    </b-item>
+    <b-item
+      class="mt16"
       title="选择送货时间："
     >
       <template
@@ -239,6 +254,36 @@
     >
       该月销量闸口已关闭，你录入的该订单非本月订单，将无法拿到销量提成，请确定是否继续？
     </md-dialog>
+    <md-dialog
+      class="orderModify-coupon-dialog"
+      :closable="false"
+      v-model="couponDialog.open"
+      :btns="couponDialog.btns"
+    >
+      <div>
+        <ul
+          v-if="receivedCoupons.length"
+          class="orderModify-coupon-list"
+        >
+          <li
+            class="orderModify-coupon-item"
+            v-for="(item,index) in receivedCoupons"
+            :key="index"
+          >
+            <span>{{item}}</span>
+            <span class="orderModify-coupon-item-num">
+              <span class="num">1</span> 张
+            </span>
+          </li>
+        </ul>
+        <div
+          v-else
+          class="orderModify-coupon-info"
+        >
+          暂无优惠券领用信息
+        </div>
+      </div>
+    </md-dialog>
   </div>
 </template>
 
@@ -316,6 +361,16 @@ export default {
           {
             text: '确定',
             handler: this.onBasicConfirm1,
+          },
+        ],
+      },
+      // 模态框:已领优惠券
+      couponDialog: {
+        open: false,
+        btns: [
+          {
+            text: '确定',
+            handler: this.couponDialogConfirm,
           },
         ],
       },
@@ -430,8 +485,9 @@ export default {
       multyBuy: false,
       // 0：下一步 1：暂存
       saveType: 1,
-      isYJHX: false
-
+      isYJHX: false,
+      // 已领优惠券
+      receivedCoupons: [],
     };
   },
   watch: {
@@ -629,6 +685,31 @@ export default {
     }
   },
   methods: {
+    showReceivedCoupons() {
+      /* 查看已领取的优惠券 */
+      const hasFridge = this.productList.find(v => v.productCategoryCode === 'AA');
+      if (hasFridge) {
+        const userPhone = this.customerInfo.mobile;
+        if (!userPhone) {
+          this.$dialog.alert({
+            content: '请添加顾客'
+          });
+          return;
+        }
+        this.orderService.queryAdjCouponInfo({
+          userPhone
+        }).then(({ code, data }) => {
+          if (code === 1) {
+            this.couponDialog.open = true;
+            this.receivedCoupons = data[0].service.split(',') || [];
+          }
+        });
+      } else {
+        this.$dialog.alert({
+          content: '暂无可用消费券'
+        });
+      }
+    },
     // 获取权益列表
     getActivityList() {
       const obj = {
@@ -1332,6 +1413,9 @@ export default {
     },
     onBasicConfirm1() {
       this.basicDialog1.open = false;
+    },
+    couponDialogConfirm() {
+      this.couponDialog.open = false;
     }
   },
   // beforeRouteLeave(to,from,next){

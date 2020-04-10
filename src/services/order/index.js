@@ -102,4 +102,8 @@ export default {
     /* 以旧换新标记手机号、微信是否添加或者无效 */
     return axPostJson(urls.updateStatusForYJHX, null, params);
   },
+  queryAdjCouponInfo(params) {
+    /* 查询领取优惠券信息 */
+    return axPostJson(urls.queryAdjCouponInfo, null, params);
+  },
 };
