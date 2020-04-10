@@ -87,18 +87,26 @@
       v-show="receivedCoupons && receivedCoupons.length"
     >
       <div>
-        <ul class="orderDetail-coupon-list">
+        <ul :class="['orderDetail-coupon-list',isCouponShowMore && 'active']">
           <li
             class="orderDetail-coupon-item"
             v-for="(item,index) in receivedCoupons"
             :key="index"
           >
             <span>{{item.activityName}}</span>
-            <!--<span class="orderDetail-coupon-item-num">
-              <span class="num"></span>张
-            </span>-->
+            <span class="orderDetail-coupon-item-num">
+              <span class="num">1</span> 张
+            </span>
           </li>
         </ul>
+        <div
+          v-if="receivedCoupons.length > 2"
+          class="orderDetail-coupon-show-more"
+          @click="couponShowMore"
+        >
+          <span>{{isCouponShowMore?'收起':'查看更多'}}</span>
+          <i :class="['iconfont', 'icon-jiantou9',isCouponShowMore && 'reverse']"></i>
+        </div>
       </div>
     </b-fieldset>
     <b-item
@@ -164,8 +172,8 @@ export default {
       // 收货人信息
       consignee: {
         /* name: '',
-                    sex: '男士',
-                    phone: '15067543689' */
+                          sex: '男士',
+                          phone: '15067543689' */
       },
       // 订单类型单选
       orderTypes: [
@@ -199,7 +207,9 @@ export default {
       username: '',
       phone: '',
       // 已领优惠券
-      receivedCoupons: []
+      receivedCoupons: [],
+      // 是否点了查看更多
+      isCouponShowMore: false
     };
   },
   computed: {},
@@ -221,6 +231,10 @@ export default {
           }
         }
       });
+    },
+    couponShowMore() {
+      /* 查看更多 */
+      this.isCouponShowMore = !this.isCouponShowMore;
     },
     queryAdjCouponInfo(userPhone) {
       /* 查询优惠券领取信息 */
@@ -499,6 +513,12 @@ export default {
   .orderDetail-coupon-list {
     width: 100%;
     padding-bottom: 16px;
+    max-height: 88px;
+    overflow: hidden;
+
+    &.active {
+      max-height: none;
+    }
   }
 
   .orderDetail-coupon-item {
@@ -516,6 +536,20 @@ export default {
 
     .num {
       color: #000;
+    }
+  }
+
+  .orderDetail-coupon-show-more {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 26px;
+    color: #1969C6;
+    padding-bottom: 16px;
+
+    .iconfont.reverse {
+      transform: rotateX(180deg);
     }
   }
 </style>
