@@ -62,6 +62,45 @@
         </ul>
       </div>
     </b-fieldset>
+    <b-fieldset
+      class="mt16"
+      title="用户购买的产品"
+    >
+      <div>
+        <ul>
+          <b-order-product-confirm
+            class="mb20"
+            v-for="(item,index) in productList"
+            :key="index"
+            :data="item"
+            :index="index"
+            :content="item.installTime"
+          >
+          </b-order-product-confirm>
+        </ul>
+      </div>
+    </b-fieldset>
+    <b-fieldset
+      class="mt16"
+      title="已领优惠券"
+      :showTitle="true"
+      v-show="receivedCoupons && receivedCoupons.length"
+    >
+      <div>
+        <ul class="orderDetail-coupon-list">
+          <li
+            class="orderDetail-coupon-item"
+            v-for="(item,index) in receivedCoupons"
+            :key="index"
+          >
+            <span>{{item.activityName}}</span>
+            <!--<span class="orderDetail-coupon-item-num">
+              <span class="num"></span>张
+            </span>-->
+          </li>
+        </ul>
+      </div>
+    </b-fieldset>
     <b-item
       class="mt16"
       title="送货时间："
@@ -83,9 +122,9 @@
     </b-fieldset>
     <div class="orderEntry-btns-par2">
       <!--<button-->
-        <!--type="button"-->
-        <!--class="common-submit-btn-primary"-->
-        <!--@click="changeOrder"-->
+      <!--type="button"-->
+      <!--class="common-submit-btn-primary"-->
+      <!--@click="changeOrder"-->
       <!--&gt;返回修改草稿-->
       <!--</button>-->
       <button
@@ -100,38 +139,19 @@
 
 <script>
 import {
-  Toast
-} from 'mand-mobile';
-import {
   BActivityList,
-  BDatePicker,
   BFieldset,
   BItem,
-  BOrderProduct,
   BOrderProductConfirm,
-  BPop,
-  BPopAddressList,
-  BPopCheckList,
-  BRadioItem
 } from '@/components/form';
 
-import {
-  BMultbuyCheck
-} from '@/components/business';
 
 export default {
   name: 'OrderModify',
   components: {
     BActivityList,
-    BDatePicker,
     BFieldset,
     BItem,
-    BMultbuyCheck,
-    BOrderProduct,
-    BPop,
-    BPopAddressList,
-    BPopCheckList,
-    BRadioItem,
     BOrderProductConfirm
   },
   data() {
@@ -144,8 +164,8 @@ export default {
       // 收货人信息
       consignee: {
         /* name: '',
-                sex: '男士',
-                phone: '15067543689' */
+                    sex: '男士',
+                    phone: '15067543689' */
       },
       // 订单类型单选
       orderTypes: [
@@ -159,28 +179,27 @@ export default {
         }
       ],
       // 订单类型
-      orderType: 2,
+      orderType: '',
       // 购机时间
       buyDate: '',
       // 产品列表
       productList: [],
       // 活动列表
-      activityList: [
-
-      ],
+      activityList: [],
       // 选中的活动id
       choosedActivitys: [],
       // 选择礼品pop显示隐藏
       chooseGiftPopShow: false,
       // pop礼品列表
-      giftList: [
-      ],
+      giftList: [],
       orderNo: '',
       createdTime: '',
       deliveryTime: '',
       customerString: '',
       username: '',
-      phone: ''
+      phone: '',
+      // 已领优惠券
+      receivedCoupons: []
     };
   },
   computed: {},
@@ -203,6 +222,16 @@ export default {
         }
       });
     },
+    queryAdjCouponInfo(userPhone) {
+      /* 查询优惠券领取信息 */
+      this.orderService.queryAdjCouponInfo({
+        userPhone
+      }).then(({ code, data }) => {
+        if (code === 1) {
+          this.receivedCoupons = data || [];
+        }
+      });
+    },
     getData() {
       this.orderService.queryOrderInfoByOrderNo({}, { orderNo: this.orderNo }).then((response) => {
         if (response.code === 1) {
@@ -211,6 +240,8 @@ export default {
           this.consignee.name = resData.consigneeName;
           this.username = resData.userName;
           this.phone = resData.userPhone;
+          // 查询已领优惠券信息
+          this.queryAdjCouponInfo(this.phone);
           this.consignee.phone = resData.consigneePhone;
           this.consignee.sex = resData.userSex;
           if (resData.userSex === 1) {
@@ -233,7 +264,7 @@ export default {
           const h = dt.getHours();
           const ha = h + 1;
 
-          const time = `${y}-${m}-${d} ${h}:00` + `-${ha}:00`;
+          const time = `${y}-${m}-${d} ${h}:00-${ha}:00`;
           this.deliveryTime = time;
           this.createdTime = resData.createdTime;
           this.orderNo = resData.orderNo;
@@ -431,7 +462,8 @@ export default {
       line-height: 80px;
     }
   }
-  .orderEntry-header-cus{
+
+  .orderEntry-header-cus {
     display: flex;
     align-items: center;
 
@@ -443,13 +475,15 @@ export default {
     color: #333;
     margin-top: 20px;
   }
+
   .orderEntry-btns-par2 {
     width: 100%;
     position: relative;
     padding-top: 10px;
     background: #fff;
   }
-  .common-submit-btn-default1{
+
+  .common-submit-btn-default1 {
     height: 84px;
     font-size: 34px;
     border-radius: 8px;
@@ -460,5 +494,28 @@ export default {
     margin-bottom: 20px;
     /*position: absolute;*/
     bottom: 20px;
+  }
+
+  .orderDetail-coupon-list {
+    width: 100%;
+    padding-bottom: 16px;
+  }
+
+  .orderDetail-coupon-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 24px;
+    color: #55a532;
+    margin-bottom: 10px;
+  }
+
+  .orderDetail-coupon-item-num {
+    flex-shrink: 0;
+    margin-left: 20px;
+
+    .num {
+      color: #000;
+    }
   }
 </style>
