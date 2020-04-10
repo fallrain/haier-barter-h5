@@ -524,24 +524,6 @@ export default {
     }
   }
 
-  .orderDetail-coupon-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 24px;
-    color: #55a532;
-    margin-bottom: 10px;
-  }
-
-  .orderDetail-coupon-item-num {
-    flex-shrink: 0;
-    margin-left: 20px;
-
-    .num {
-      color: #000;
-    }
-  }
-
   .orderDetail-coupon-show-more {
     display: flex;
     align-items: center;
