@@ -80,7 +80,7 @@
         </ul>
       </div>
     </b-fieldset>
-    <b-fieldset
+    <!--<b-fieldset
       class="mt16"
       title="已领优惠券"
       :showTitle="true"
@@ -108,7 +108,7 @@
           <i :class="['iconfont', 'icon-jiantou9',isCouponShowMore && 'reverse']"></i>
         </div>
       </div>
-    </b-fieldset>
+    </b-fieldset>-->
     <b-item
       class="mt16"
       title="送货时间："
@@ -207,9 +207,9 @@ export default {
       username: '',
       phone: '',
       // 已领优惠券
-      receivedCoupons: [],
+      // receivedCoupons: [],
       // 是否点了查看更多
-      isCouponShowMore: false
+      // isCouponShowMore: false
     };
   },
   computed: {},
@@ -234,10 +234,12 @@ export default {
     },
     couponShowMore() {
       /* 查看更多 */
+      // 暂时去掉
       this.isCouponShowMore = !this.isCouponShowMore;
     },
     queryAdjCouponInfo(userPhone) {
       /* 查询优惠券领取信息 */
+      // 暂时去掉
       this.orderService.queryAdjCouponInfo({
         userPhone
       }).then(({ code, data }) => {
@@ -255,7 +257,8 @@ export default {
           this.username = resData.userName;
           this.phone = resData.userPhone;
           // 查询已领优惠券信息
-          this.queryAdjCouponInfo(this.phone);
+          // 暂时去掉
+          // this.queryAdjCouponInfo(this.phone);
           this.consignee.phone = resData.consigneePhone;
           this.consignee.sex = resData.userSex;
           if (resData.userSex === 1) {
