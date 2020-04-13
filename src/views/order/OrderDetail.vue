@@ -62,24 +62,6 @@
         </ul>
       </div>
     </b-fieldset>
-    <b-fieldset
-      class="mt16"
-      title="用户购买的产品"
-    >
-      <div>
-        <ul>
-          <b-order-product-confirm
-            class="mb20"
-            v-for="(item,index) in productList"
-            :key="index"
-            :data="item"
-            :index="index"
-            :content="item.installTime"
-          >
-          </b-order-product-confirm>
-        </ul>
-      </div>
-    </b-fieldset>
     <!--<b-fieldset
       class="mt16"
       title="已领优惠券"
