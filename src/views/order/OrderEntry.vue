@@ -687,7 +687,7 @@ export default {
   methods: {
     showReceivedCoupons() {
       /* 查看已领取的优惠券 */
-      const hasFridge = this.productList.find(v => v.productCategoryCode === 'AA');
+      const hasFridge = this.productList.find(v => v.productCategoryCode === 'AA' || v.productCategoryCode === 'AB');
       if (hasFridge) {
         const userPhone = this.customerInfo.mobile;
         if (!userPhone) {
@@ -700,8 +700,9 @@ export default {
           userPhone
         }).then(({ code, data }) => {
           if (code === 1) {
+            this.receivedCoupons = (data && data[0].service.split(',')) || [];
+            this.couponDialog.btns[0].text = this.receivedCoupons.length ? '核销' : '确定';
             this.couponDialog.open = true;
-            this.receivedCoupons = data[0].service.split(',') || [];
           }
         });
       } else {
