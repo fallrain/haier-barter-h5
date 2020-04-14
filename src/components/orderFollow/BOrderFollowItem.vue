@@ -172,7 +172,7 @@
           </div>
           <!--估价不显示录单操作-->
           <!--<span v-if="followItem.businessScenarios !== 'YJHX' && followItem.businessScenarios !== 'ADJ'">-->
-          <span v-if="followItem.businessScenarios !== 'ADJ'">
+          <span>
             <p
               :class="['bottom-button',button.disabled?'bottom-button-disabled':'']"
               v-for="(button,index) in followItem.buttonList"
