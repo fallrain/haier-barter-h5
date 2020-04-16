@@ -18,7 +18,7 @@
         type="button"
         class="common-submit-btn-default"
         @click="orderFollow()"
-      >查看订单跟进
+      >查看订单录入
       </button>
     </div>
     <!--<div class="order-commit-tip">-->

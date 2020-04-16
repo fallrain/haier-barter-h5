@@ -22,7 +22,7 @@ const data = [
     name: `${module}.OrderFollowSearch`,
     component: OrderFollowSearch,
     meta: {
-      title: '订单跟进',
+      title: '订单录入',
       params: {}
     }
   },
