@@ -40,6 +40,10 @@ const urls = {
   queryAdjCouponInfo: '/orderManage/queryAdjCouponInfo',
   // 获取地址
   getLocationByBaiduMap: '/buildHouse/getLocationByBaiduMap',
+  // 异常订单列表查询
+  queryExceptionOrder: '/orderManage/queryExceptionOrder',
+  // 补录票据
+  hmcUploadInvoiceForOrderFreeze: '/orderManage/hmcUploadInvoiceForOrderFreeze',
 };
 
 Object.entries(urls).forEach(([key, value]) => {

@@ -13,6 +13,7 @@ const ResidueGift = () => import(/* webpackChunkName: "OrderDetail" */ '@/views/
 const OrderSupplement = () => import(/* webpackChunkName: "OrderSupplement" */ '@/views/order/OrderSupplement');// 订单补录
 const OrderRights = () => import(/* webpackChunkName: "OrderRights" */ '@/views/order/OrderRights');// 订单权益
 const ApplyDeleteOrder = () => import(/* webpackChunkName: "ApplyDeleteOrder" */ '@/views/order/ApplyDeleteOrder');// 订单权益
+const OrderSupplementBill = () => import(/* webpackChunkName: "OrderSupplementBill" */ '@/views/order/OrderSupplementBill');// 补录票据
 
 const prefix = '/order';
 const module = 'Order';
@@ -140,6 +141,15 @@ const data = [
     props: true,
     meta: {
       title: '订单删除'
+    }
+  },
+  {
+    path: `${prefix}/orderSupplementBill`,
+    name: `${module}.OrderSupplementBill`,
+    component: OrderSupplementBill,
+    props: true,
+    meta: {
+      title: '补录票据'
     }
   },
 ];

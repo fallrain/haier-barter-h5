@@ -60,8 +60,11 @@
     <b-order-follow-search-bar
       v-show="curScrollViewName==='scrollViewFinished'"
       :scenarioList="scenarioList"
+      :orderStatusList="orderStatusList"
+      :isShowOrderStatus="true"
       :businessType.sync="scrollViewFinished.businessType"
       :sortType.sync="scrollViewFinished.sortType"
+      :orderStatus.sync="scrollViewFinished.orderStatus"
       @checkClick="checkClicked"
       @popButtonClicked="buttonClicked"
     ></b-order-follow-search-bar>
@@ -87,8 +90,14 @@
     <b-order-follow-search-bar
       v-show="curScrollViewName==='scrollViewOdd'"
       :sortArray="oddOrderSortList"
-      :scenarioList="oddScenarioList"
-      :businessType.sync="scrollViewOdd.businessType"
+      :isShowScenario="false"
+      :isShowOrderDelAudit="true"
+      :isShowOrderSupplement="true"
+      :orderDelAuditList="oddScenarioList"
+      :orderDelAudit.sync="scrollViewOdd.orderDelAudit"
+      :orderSupplementList="oddOrderSupplementList"
+      :orderSupplement.sync="scrollViewOdd.orderSupplement"
+      :orderMark.sync="scrollViewOdd.orderMark"
       businessCheckType="radio"
       :businessTypeRadioCancel="true"
       :sortType.sync="scrollViewOdd.sortType"
@@ -312,6 +321,8 @@ export default {
       scrollViewFinished: {
         // 场景值
         businessType: '',
+        // 订单状态
+        orderStatus: '',
         // 排序方式
         sortType: '2',
         mescroll: null,
@@ -322,6 +333,15 @@ export default {
       scrollViewOdd: {
         // 场景值
         businessType: '',
+        // 删单审核
+        orderDelAudit: '',
+        // 订单录单
+        orderSupplement: '',
+        // 订单删除状态：0-待审核，1-审核通过，2-审核驳回，3-人工处理
+        // 订单冻结状态：0-正常，1-冻结，2-补录待审核，3-审核通过
+        status: '',
+        // 订单标签 1：删除订单  2：补录订单
+        orderMark: '',
         // 排序方式
         sortType: '1',
         mescroll: null,
@@ -356,6 +376,13 @@ export default {
       },
       // 业务场景下拉数据
       scenarioList: [],
+      // 订单状态
+      orderStatusList: [
+        {
+          itemCode: '1',
+          itemName: '订单冻结'
+        }
+      ],
       // 异常订单场景
       oddScenarioList: [
         {
@@ -373,6 +400,21 @@ export default {
         {
           itemCode: '3',
           itemName: '人工处理'
+        }
+      ],
+      // 异常订单补录审核选项
+      oddOrderSupplementList: [
+        {
+          itemCode: '2',
+          itemName: '补传待审核'
+        },
+        {
+          itemCode: '1',
+          itemName: '审核驳回'
+        },
+        {
+          itemCode: '3',
+          itemName: '审核通过'
         }
       ],
       // 异常订单-排序方式
@@ -395,6 +437,9 @@ export default {
   },
   activated() {
     // window.location.reload();
+    if(this.$route.params.refreshPage){
+      this.buttonClicked();
+    }
   },
   created() {
     if (this.$route.query.businessScenarios) {
@@ -663,6 +708,15 @@ export default {
         this.verificationRemark = "";
         this.currentHeXiaoCode = info.add5;
         this.currentHeXiaoId = info.id;
+      } else if (val.name === '补录票据') {
+        console.log("补录票据");
+        this.$router.push({
+          name: 'Order.OrderSupplementBill',
+          params: {
+            orderNo: info.orderNo,
+            orderFollowId: info.id,
+          }
+        });
       } else {
         // val.name === '录新订单'
         this.orderService.checkCreateOrder().then((res) => { // 判断店铺是否冻结
@@ -702,13 +756,19 @@ export default {
       let searchData;
       // 异常订单是单独的接口
       if (this.curScrollViewName === 'scrollViewOdd') {
-        queryServiceName = 'queryRightsReviewList';
+        queryServiceName = 'queryExceptionOrder';
         searchData = {
           keyWord: this.searchWord,
           sortType: this[this.curScrollViewName].sortType * 1,
-          status: this[this.curScrollViewName].businessType || '',
-          hmcId: this[GET_USER].hmcid
+          hmcId: this[GET_USER].hmcid,
+          orderMark: this[this.curScrollViewName].orderMark
         };
+        if(this[this.curScrollViewName].orderMark == '1'){
+          searchData.status = this[this.curScrollViewName].orderDelAudit || '';
+        }
+        if(this[this.curScrollViewName].orderMark == '2'){
+          searchData.status = this[this.curScrollViewName].orderSupplement || '';
+        }
       } else {
         queryServiceName = 'queryOrderFollowList';
         searchData = {
@@ -726,7 +786,8 @@ export default {
           sourceSystem: '',
           orderFollowStartDate: '',
           orderFollowEndDate: '',
-          keyWord: this.searchWord
+          keyWord: this.searchWord,
+          orderFreezeStatus: this[this.curScrollViewName].orderStatus,
         };
       }
       return this.orderService[queryServiceName](
@@ -779,6 +840,12 @@ export default {
           // item.buttonList = [{ name: '录新订单' }, { name: '退货' }, { name: '换货' }];// 已完成
           // item.buttonList = [{ name: '录新订单' },{ name: '补录订单' }];// 已完成
           item.buttonList = [{ name: '录新订单' }];
+          if(item.orderFreezeStatus == '1'){
+            item.buttonList.push({ name: '补录票据' });
+          }
+          if(item.orderFreezeStatus == '2'){
+            item.buttonList.push({ name: '补录票据', disabled:true });
+          }
         } else if (item.flowStatus === 0) {
           // item.buttonList = [{ name: '成交录单' }, { name: '发放卡券' }];
           item.buttonList = [{ name: '成交录单' }];

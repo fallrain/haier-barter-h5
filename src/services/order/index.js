@@ -99,6 +99,10 @@ export default {
       requestNoToast: true
     });
   },
+  queryExceptionOrder(data, params) {
+    /* 异常订单列表查询 */
+    return axPostJson(urls.queryExceptionOrder, data, params);
+  },
   updateStatusForYJHX(params) {
     /* 以旧换新标记手机号、微信是否添加或者无效 */
     return axPostJson(urls.updateStatusForYJHX, null, params);
@@ -110,5 +114,8 @@ export default {
   getLocationByBaiduMap(param) {
     /* 查询地理位置 */
     return axGet(urls.getLocationByBaiduMap, param);
+  },
+  hmcUploadInvoiceForOrderFreeze(data, param) {
+    return axPostJson(urls.hmcUploadInvoiceForOrderFreeze, data, param);
   },
 };

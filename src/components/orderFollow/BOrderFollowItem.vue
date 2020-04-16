@@ -92,6 +92,9 @@
               </span>
             </div>
           </div>
+		  <div class="row-class text-red" v-show="followItem.orderFreezeStatus === 1 || followItem.orderFreezeStatus === 2">
+			订单冻结（{{followItem.orderFreezeRemark}}）
+		  </div>
         </div>
         <!--<div-->
         <!--v-show="followItem.detailShow && followItem.showDetail"-->
@@ -372,6 +375,9 @@ export default {
     },
     followButtonClick(button, item) {
       console.log(item);
+      if(button.disabled){
+        return;
+      }
       const orderMode = JSON.parse(localStorage.getItem('userinfo')).orderMode;
       if (orderMode === 'Casarte') {
         if (item.businessScenarios === 'SGLD') {
@@ -785,6 +791,9 @@ export default {
 .row-class {
   margin-bottom: 10px;
 }
+  .text-red {
+    color: red;
+  }
 
 .bOrderFollowItem-row-time {
   display: flex;
