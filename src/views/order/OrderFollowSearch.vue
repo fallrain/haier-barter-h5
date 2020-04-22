@@ -942,6 +942,7 @@ export default {
         }
       ).then((res) => {
         if (res.code === 1) {
+          Toast.succeed('核销成功！');
           this.showVerificationDialog = false;
           this.showVerificationDialog_ADJ = false;
           this.updateOrderType();
