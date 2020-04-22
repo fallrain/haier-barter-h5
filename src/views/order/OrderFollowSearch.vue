@@ -793,6 +793,8 @@ export default {
           if(item.businessScenarios === 'ADJ'){
             if(item.writeOff == '0'){
               item.buttonList.push({ name: '核销' });
+            }else if(item.writeOff == '1'){
+              item.buttonList.push({ name: '已核销', disabled:true });
             }
           }
         } else if (item.flowStatus === 5) {
@@ -946,6 +948,8 @@ export default {
           this.showVerificationDialog = false;
           this.showVerificationDialog_ADJ = false;
           this.updateOrderType();
+        }else{
+          Toast.failed(res.msg);
         }
       });
     },
