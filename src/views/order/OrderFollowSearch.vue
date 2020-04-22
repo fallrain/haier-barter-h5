@@ -166,6 +166,7 @@
     >
       您本月还有{{handCount}}个手工录单名额，超出限制后本月将不能手工录单！同时，手工录入的订单不能发放购机权益
     </md-dialog>
+    <!--健康换新核销-->
     <md-dialog
       title="确定核销"
       :closable="true"
@@ -178,6 +179,35 @@
           <button
             type="button"
             class="common-submit-btn-default"
+            @click="doVerification"
+          >确定
+          </button>
+        </div>
+      </div>
+
+    </md-dialog>
+    <!--爱到家核销-->
+    <md-dialog
+      title="确定核销"
+      :closable="true"
+      v-model="showVerificationDialog_ADJ"
+      class="verificationDialog"
+    >
+      <div>
+        <div class="flex text-df algin-center justify-center line-height padding-top padding-bottom">
+          <span>优惠券号：</span>
+          <input v-model="verificationRemark" class="margin-left text-input" placeholder="请输入优惠券号"/>
+        </div>
+        <div class="flex">
+          <button
+            type="button"
+            class="common-submit-btn-default"
+            @click="()=>{return showVerificationDialog_ADJ=false}"
+          >取消
+          </button>
+          <button
+            type="button"
+            class="common-submit-btn-default margin-left"
             @click="doVerification"
           >确定
           </button>
@@ -356,8 +386,10 @@ export default {
         }
       ],
       showVerificationDialog: false,
+      showVerificationDialog_ADJ: false,
       currentHeXiaoCode: null,
       currentHeXiaoId: null,
+      verificationRemark: ""
     };
   },
   activated() {
@@ -622,7 +654,12 @@ export default {
           }
         });
       } else if (val.name === '核销') {
-        this.showVerificationDialog = true;
+        if(info.businessScenarios === 'ADJ'){
+          this.showVerificationDialog_ADJ = true;
+        }else{
+          this.showVerificationDialog = true;
+        }
+        this.verificationRemark = "";
         this.currentHeXiaoCode = info.add5;
         this.currentHeXiaoId = info.id;
       } else {
@@ -751,6 +788,11 @@ export default {
               item.buttonList.push({ name: '已核销', disabled:true });
             }else if(item.writeOff == '2'){
               item.buttonList.push({ name: '无法核销', disabled:true });
+            }
+          }
+          if(item.businessScenarios === 'ADJ'){
+            if(item.writeOff == '0'){
+              item.buttonList.push({ name: '核销' });
             }
           }
         } else if (item.flowStatus === 5) {
@@ -896,11 +938,12 @@ export default {
         {
           orderFollowId: this.currentHeXiaoId,
           type: '8',
-          remark: ''
+          remark: this.verificationRemark
         }
       ).then((res) => {
         if (res.code === 1) {
           this.showVerificationDialog = false;
+          this.showVerificationDialog_ADJ = false;
           this.updateOrderType();
         }
       });
@@ -1162,6 +1205,37 @@ export default {
     }
     .common-submit-btn-default{
       margin-top: 24px;
+    }
+    .flex{
+      display: flex;
+    }
+    .margin-left{
+      margin-left: 30px;
+    }
+    .text-df{
+      font-size: 28px;
+    }
+    .algin-center{
+      align-items: center;
+    }
+    .justify-center{
+      justify-content: center;
+    }
+    .text-input{
+      line-height: 30px;
+      padding: 0 20px;
+      width: 260px;
+      height: 50px;
+    }
+    .line-height{
+      line-height: 50px;
+      height: 50px;
+    }
+    .padding-top{
+      padding-top: 60px;
+    }
+    .padding-bottom{
+      padding-bottom: 60px;
     }
   }
 </style>
