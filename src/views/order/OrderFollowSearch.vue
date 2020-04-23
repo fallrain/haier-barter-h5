@@ -196,7 +196,8 @@
       <div>
         <div class="flex text-df algin-center justify-center line-height padding-top padding-bottom">
           <span>优惠券号：</span>
-          <input v-model="verificationRemark" class="margin-left text-input" placeholder="请输入优惠券号"/>
+          <input v-model="verificationRemark" class="margin-left text-input" placeholder="请输入优惠券号"
+           @blur="inputBlur"/>
         </div>
         <div class="flex">
           <button
@@ -934,6 +935,12 @@ export default {
       });
       this.currentList = curList;
     },
+    inputBlur(){
+      //IOS系统 input输入框失去焦点，软键盘关闭后，
+      //被撑起的页面无法回退到原来正常的位置，导致弹框里的按钮响应区域错位
+      var scrollHeight = document.documentElement.scrollTop || document.body.scrollTop || 0;
+      window.scrollTo(0, Math.max(scrollHeight - 1, 0)); 
+    },
     doVerification(){
       this.orderService.updateOrderFollowByType(
         {},
@@ -948,8 +955,6 @@ export default {
           this.showVerificationDialog = false;
           this.showVerificationDialog_ADJ = false;
           this.updateOrderType();
-        }else{
-          Toast.failed(res.msg);
         }
       });
     },
