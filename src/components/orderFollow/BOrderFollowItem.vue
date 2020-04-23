@@ -132,7 +132,7 @@
         </div>
         <!--健康换新认筹的详细信息-->
         <div
-          v-if="
+          v-else-if="
           (followItem.businessScenarios === 'JKHXJ_RC')
           && (followItem.flowStatus !== 4 && followItem.flowStatus !== 5)
         "
