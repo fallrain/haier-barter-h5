@@ -113,7 +113,7 @@
           class="information-p"
           v-show="followItem.detailShow"
         >
-          <p>
+          <p v-if="followItem.businessScenarios != 'ADJ'">
             <strong>报名编号：</strong>
             {{followItem.sourceSn}}
           </p>
