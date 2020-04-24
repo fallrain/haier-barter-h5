@@ -18,7 +18,7 @@
         ></b-order-follow-item-del>
         <div
           class="row-class pt10"
-          :class="[['YZZJ','YJHX', 'ADJ', 'SMLD', 'SGLD', 'RC','YYFW','JKHXJ_RC'].includes(followItem.businessScenarios) && 'pl56']"
+          :class="[['YZZJ','YJHX', 'ADJ', 'SMLD', 'SGLD', 'RC','YYFW','JKHXJ_RC','CASARTE_QZGK'].includes(followItem.businessScenarios) && 'pl56']"
         >
           <span class="label-span">{{followItem.userName}}</span>
           <span class="sex-class" v-show="followItem.userSex === '1'">先生</span>
@@ -38,7 +38,7 @@
           </span>
         </div>
         <div
-          :class="[['YZZJ','YJHX', 'ADJ', 'SMLD', 'SGLD', 'RC','YYFW','JKHXJ_RC'].includes(followItem.businessScenarios) && 'pl56']"
+          :class="[['YZZJ','YJHX', 'ADJ', 'SMLD', 'SGLD', 'RC','YYFW','JKHXJ_RC','CASARTE_QZGK'].includes(followItem.businessScenarios) && 'pl56']"
         >
           <div class="row-class">
             <img
@@ -61,7 +61,7 @@
             <span class="time-label">{{followItem.updatedTime}}</span>
             <div class="bOrderFollowItem-row-time-right">
               <span
-                v-show="followItem.flowStatus === 4 || followItem.flowStatus === 5 || followItem.businessScenarios === 'YYFW' || followItem.businessScenarios === 'ADJ' || followItem.businessScenarios === 'JKHXJ_RC'"
+                v-show="followItem.flowStatus === 4 || followItem.flowStatus === 5 || followItem.businessScenarios === 'YYFW' || followItem.businessScenarios === 'ADJ' || followItem.businessScenarios === 'JKHXJ_RC' || followItem.businessScenarios === 'CASARTE_QZGK'"
                 @click="detailHide(followItem)"
                 class="information-class bOrderFollowItem-textBtn"
               >
@@ -133,13 +133,13 @@
         <!--健康换新认筹的详细信息-->
         <div
           v-else-if="
-          (followItem.businessScenarios === 'JKHXJ_RC')
+          (followItem.businessScenarios === 'JKHXJ_RC' || followItem.businessScenarios === 'CASARTE_QZGK')
           && (followItem.flowStatus !== 4 && followItem.flowStatus !== 5)
         "
           class="information-p"
           v-show="followItem.detailShow"
         >
-          <p>
+          <p v-if="followItem.businessScenarios != 'CASARTE_QZGK'">
             <strong>消费券码：</strong>
             {{followItem.add5}}
           </p>
