@@ -1,7 +1,12 @@
 <template>
   <div class="bSearchInput-par">
     <div class="bSearchInput-wrap">
-      <form :target="iframeId" class="bSearchInput-form" action="#">
+      <form
+        :target="iframeId"
+        class="bSearchInput-form"
+        action="#"
+        onsubmit="return false;"
+      >
         <input
           class="bSearchInput"
           type="search"
