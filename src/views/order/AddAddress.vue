@@ -1,6 +1,30 @@
 <template>
   <div ref="addForm" class="addAddress-form">
-    <ul class="address-back">
+    <div
+      v-show="!searchEnd"
+      class="addAddress-search-head"
+    >
+      <div class="addAddress-search-par">
+        <label class="addAddress-search-name">老顾客搜索</label>
+        <b-search-input
+          v-model="customerInfo.mobile"
+          @search="search('')"
+          placeholder="请输入老顾客手机号"
+        >
+        <span
+          class="addAddress-search-btn"
+          @click="search('')"
+        >搜索</span>
+        </b-search-input>
+      </div>
+      <b-warm-tips
+        :tips="warmTips"
+      ></b-warm-tips>
+    </div>
+    <ul
+      class="address-back"
+      v-show="searchEnd"
+    >
       <li>
         <div class="addAddress-form-item">
           <label class="addAddress-form-item-name">顾客手机号</label>
@@ -9,50 +33,41 @@
             class="addAddress-form-item-ipt"
             placeholder="请输入手机号"
             v-model="customerInfo.mobile"
-            v-show="region !== 'userAdd'"
-            v-resetInput
-          >
-          <input
-            type="number"
-            class="addAddress-form-item-ipt"
-            placeholder="请输入手机号"
-            disabled="true"
-            v-show="region === 'userAdd'"
-            v-model="customerInfo.mobile"
             v-resetInput
           >
         </div>
       </li>
-      <p class="searchResultClass" v-show="searchResultShow">
-        <span class="searchTextClass">搜索暂无结果,</span><span class="searchBtnClass" @click="creatCustomer">创建信息</span>
-      </p>
-      <div v-show="searchEnd">
-        <li>
-          <div class="addAddress-form-item">
-            <label class="addAddress-form-item-name">顾客姓名</label>
-            <input
-              type="text"
-              class="addAddress-form-item-ipt"
-              placeholder="请输入姓名"
-              v-show="region !== 'userAdd'"
-              v-model="customerInfo.username"
-              @input="judgeName(customerInfo.username, 20)"
-              v-resetInput
-            >
-            <input
-              type="text"
-              class="addAddress-form-item-ipt"
-              placeholder="请输入姓名"
-              disabled="true"
-              v-show="region === 'userAdd'"
-              v-model="customerInfo.username"
-              v-resetInput
-            >
-          </div>
-        </li>
-      </div>
+      <li>
+        <div class="addAddress-form-item">
+          <label class="addAddress-form-item-name">顾客姓名</label>
+          <input
+            type="text"
+            class="addAddress-form-item-ipt"
+            placeholder="请输入姓名"
+            v-show="region !== 'userAdd'"
+            v-model="customerInfo.username"
+            @input="judgeName(customerInfo.username, 20)"
+            v-resetInput
+          >
+          <input
+            type="text"
+            class="addAddress-form-item-ipt"
+            placeholder="请输入姓名"
+            disabled="true"
+            v-show="region === 'userAdd'"
+            v-model="customerInfo.username"
+            v-resetInput
+          >
+        </div>
+      </li>
     </ul>
-    <div class="consignee-class" v-show="searchEnd">
+   <!-- <p
+      class="searchResultClass"
+      v-show="searchResultShow"
+    >
+      <span class="searchTextClass">搜索暂无结果,</span><span class="searchBtnClass" @click="creatCustomer">创建信息</span>
+    </p>-->
+    <ul class="consignee-class" v-show="searchEnd">
       <li>
         <div class="addAddress-form-item">
           <label class="addAddress-form-item-name">收货人姓名</label>
@@ -71,7 +86,7 @@
           <label class="addAddress-form-item-name">收货人手机号</label>
           <input
             type="text"
-            oninput = "value=value.replace(/[^\d]/g,'')"
+            oninput="value=value.replace(/[^\d]/g,'')"
             class="addAddress-form-item-ipt"
             placeholder="请输入手机号"
             v-model="customerInfo.consigneeUserPhone"
@@ -129,7 +144,7 @@
           ></md-switch>
         </div>
       </li>
-    </div>
+    </ul>
 
     <b-pop-check-list
       type="radio"
@@ -147,12 +162,24 @@
       :default-value="defaultA"
     ></md-tab-picker>
     <button class="common-bottom-button" @click="confirm()" v-show="searchEnd">确认</button>
-    <button class="common-bottom-button" @click="search()" v-show="!searchEnd">搜索</button>
+    <!--<button class="common-bottom-button" @click="search()" v-show="!searchEnd">搜索</button>-->
+    <button class="common-bottom-button" @click="creatCustomer" v-show="!searchEnd">创建新顾客</button>
+    <md-dialog
+      title="顾客不存在"
+      :closable="true"
+      v-model="noCustomerDialog.open"
+      :btns="noCustomerDialog.btns"
+    >
+      该手机号不存在，是否为手机号
+      <span class="common-haier-blue">{{customerInfo.mobile}}</span>
+      创建新顾客？
+    </md-dialog>
   </div>
 </template>
 
 <script>
 import {
+  Dialog,
   Switch,
   TabPicker,
   Toast
@@ -168,22 +195,25 @@ import addressData from '@/lib/address';
 import {
   mapMutations
 } from 'vuex';
+import BSearchInput from '../../components/business/BSearchInput';
+import BWarmTips from '../../components/form/BWarmTips';
 
 export default {
   name: 'AddAddress',
   components: {
+    BWarmTips,
+    BSearchInput,
+    'md-dialog': Dialog,
     'md-switch': Switch,
     'md-tab-picker': TabPicker,
     BPopCheckList,
     BItem,
-    BRadioItem,
-    Toast
+    BRadioItem
   },
 
   data() {
     return {
       // disabled: false,
-      searchResultShow: false,
       confirmClicked: false,
       form: {
         name: '',
@@ -253,7 +283,26 @@ export default {
       addressPopShow: false,
       addressName: '',
       confirmShow: false,
-      smld: false
+      smld: false,
+      // 温馨提示
+      warmTips: [
+        '新顾客请点击底部创建按钮进行创建；',
+        '老顾客可输入客户手机号搜索，将自动跳出顾客信息'
+      ],
+      // 手机号无对应顾客对话框
+      noCustomerDialog: {
+        open: false,
+        btns: [
+          {
+            text: '重新搜索',
+            handler: this.closeCreatCustomerDialog,
+          },
+          {
+            text: '创建新顾客',
+            handler: this.dialogCreatCustomer,
+          },
+        ],
+      },
     };
   },
   activated() {
@@ -311,7 +360,7 @@ export default {
           this.customerInfo.tag = a;
         }
       }
-      if (this.$route.params.info != '{}') {
+      if (this.$route.params.info !== '{}') {
         const obj = JSON.parse(this.$route.params.info);
         console.log(obj);
         this.newAddress.provinceName = JSON.parse(this.$route.params.info).consignee.provinceName;
@@ -322,7 +371,7 @@ export default {
       }
     }
   },
-  created() {debugger
+  created() {
     // 不加入双向绑定
     this.addressData = addressData;
     this.customerInfo.hmcId = JSON.parse(localStorage.getItem('userinfo')).hmcid;
@@ -369,7 +418,6 @@ export default {
       this.productService.deafaultCustomerAddress(this.customerInfo.mobile).then((res) => {
         if (res.code === 1) {
           if (res.data) {
-            this.searchResultShow = false;
             this.searchEnd = true;
             this.customerInfo.username = res.data.username;
             this.customerInfo.sex = res.data.sex;
@@ -381,14 +429,23 @@ export default {
             this.defaultA.push(res.data.district);
             this.$router.go(-1);
           } else {
-            this.searchResultShow = true;
+            this.noCustomerDialog.open = true;
           }
         }
       });
     },
     creatCustomer() {
       this.searchEnd = true;
-      this.searchResultShow = false;
+    },
+    closeCreatCustomerDialog() {
+      /* 重新搜索 */
+      this.noCustomerDialog.open = false;
+      this.customerInfo.mobile = '';
+    },
+    dialogCreatCustomer() {
+      /* 无顾客对话框创建顾客 */
+      this.noCustomerDialog.open = false;
+      this.creatCustomer();
     },
     addressChange(address) {
       /* 地址change */
@@ -661,13 +718,43 @@ export default {
       color: #1969C6;
     }
   }
-  .fs26{
+
+  .fs26 {
     font-size: 26px !important;
   }
-  .text-666{
+
+  .text-666 {
     color: #666;
   }
-  .w100{
+
+  .w100 {
     width: 100% !important;
+  }
+
+  .addAddress-search-par {
+    display: flex;
+    align-items: center;
+    font-size: 28px;
+    background: #fff;
+
+    .bSearchInput-wrap {
+      border: 1px solid #ddd;
+    }
+  }
+
+  .addAddress-search-head {
+    .bWarmTips {
+      margin-top: 12px;
+    }
+  }
+
+  .addAddress-search-name {
+    color: #666;
+    flex-shrink: 0;
+    padding-left: 24px;
+  }
+
+  .addAddress-search-btn {
+    color: #1969C6;
   }
 </style>
