@@ -61,12 +61,12 @@
         </div>
       </li>
     </ul>-->
-   <!-- <p
-      class="searchResultClass"
-      v-show="searchResultShow"
-    >
-      <span class="searchTextClass">搜索暂无结果,</span><span class="searchBtnClass" @click="creatCustomer">创建信息</span>
-    </p>-->
+    <!-- <p
+       class="searchResultClass"
+       v-show="searchResultShow"
+     >
+       <span class="searchTextClass">搜索暂无结果,</span><span class="searchBtnClass" @click="creatCustomer">创建信息</span>
+     </p>-->
     <ul class="consignee-class" v-show="searchEnd">
       <li>
         <div class="addAddress-form-item">
@@ -159,8 +159,9 @@
       large-radius
       :data="addressData"
       v-model="addressPopShow"
+      v-if="addressPopShow"
       @change="addressChange"
-      :default-value="defaultA"
+      :default-value="defaultAddress"
     ></md-tab-picker>
     <button class="common-bottom-button" @click="confirm()" v-show="searchEnd">确认</button>
     <!--<button class="common-bottom-button" @click="search()" v-show="!searchEnd">搜索</button>-->
@@ -224,7 +225,8 @@ export default {
         isDefault: false,
         tag: []
       },
-      defaultA: [],
+      // 默认地址
+      defaultAddress: [],
       customerInfo: {
         address: '',
         city: '',
@@ -363,13 +365,18 @@ export default {
       }
       if (this.$route.params.info !== '{}') {
         const obj = JSON.parse(this.$route.params.info);
-        console.log(obj);
-        this.newAddress.provinceName = JSON.parse(this.$route.params.info).consignee.provinceName;
-        this.newAddress.districtName = JSON.parse(this.$route.params.info).consignee.districtName;
-        this.newAddress.cityName = JSON.parse(this.$route.params.info).consignee.cityName;
-        this.newAddress.regionCode = JSON.parse(this.$route.params.info).regionCode;
+        this.newAddress.provinceName = obj.consignee.provinceName;
+        this.newAddress.districtName = obj.consignee.districtName;
+        this.newAddress.cityName = obj.consignee.cityName;
+        this.newAddress.regionCode = obj.regionCode;
+        // 默认地址
+        this.defaultAddress = [obj.province, obj.city, obj.district];
         this.addressName = `${this.newAddress.provinceName}/${this.newAddress.cityName}/${this.newAddress.districtName}`;
       }
+    }
+    // 无地址信息，就用定位
+    if (!this.defaultAddress.length) {
+      this.getCurAddress();
     }
   },
   created() {
@@ -398,6 +405,29 @@ export default {
     ...mapMutations([
       'updataNewAddress'
     ]),
+    getCurAddress() {
+      this.orderService.getLocationByBaiduMap({
+        longitude: '116',
+        latitude: '40',
+      }).then(({ code, data }) => {
+        if (code === 1) {
+          alert(data);
+        }
+      });
+      wx.getLocation({
+        type: 'wgs84',
+        success: (res) => {
+          this.orderService.getLocationByBaiduMap({
+            longitude: res.longitude,
+            latitude: res.latitude,
+          }).then(({ code, data }) => {
+            if (code === 1) {
+              alert(data);
+            }
+          });
+        }
+      });
+    },
     showTags() {
       /* 地址标签显示隐藏 */
       this.tagPopShow = true;
@@ -425,9 +455,9 @@ export default {
             this.customerInfo.customerId = res.data.customerId;
             this.customerInfo.consigneeUserName = res.data.consigneeUserName;
             this.customerInfo.consigneeUserPhone = res.data.consigneeUserPhone;
-            this.defaultA.push(res.data.province);
-            this.defaultA.push(res.data.city);
-            this.defaultA.push(res.data.district);
+            this.defaultAddress.push(res.data.province);
+            this.defaultAddress.push(res.data.city);
+            this.defaultAddress.push(res.data.district);
             this.$router.go(-1);
           } else {
             this.noCustomerDialog.open = true;
@@ -477,9 +507,9 @@ export default {
         return;
       }
       /* if (this.customerInfo.username === '' || !this.customerInfo.username) {
-        Toast.failed('顾客姓名不能为空');
-        return;
-      } */
+          Toast.failed('顾客姓名不能为空');
+          return;
+        } */
       if (this.customerInfo.province === '') {
         Toast.failed('省份不能为空');
         return;
@@ -516,7 +546,7 @@ export default {
       }
       if (this.region === 'add' || this.region === 'userAdd') {
         delete this.customerInfo.id;
-        if (this.$route.params.businessScenarios != '') {
+        if (this.$route.params.businessScenarios !== '') {
           this.customerInfo.source = this.$route.params.businessScenarios;
         }
         this.productService.addcustomerAddress(this.customerInfo, {}).then((res) => {
@@ -704,6 +734,7 @@ export default {
       color: #1969C6;
       font-size: 40px;
     }
+
     border-bottom: 1px solid #F5F5F5;
   }
 

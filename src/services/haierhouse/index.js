@@ -1,7 +1,6 @@
 import urls from '../url/haierhouse.url';
 import {
-  axPostJson,
-  axPost
+  axPostJson
 } from '@/lib/ajax';
 
 export default {
@@ -27,5 +26,5 @@ export default {
   },
   queryCount(data, param) {
     return axPostJson(urls.queryCount, data, param);
-  },
+  }
 };

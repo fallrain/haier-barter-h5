@@ -20,7 +20,8 @@ export default {
         'updateAppMessageShareData',
         'updateTimelineShareData',
         'getEnv',
-        'postMessage'
+        'postMessage',
+        'getLocation'
       ]; // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
       /* if (true) { // process.env.NODE_ENV === 'production'
         const timestamp = `${new Date().getTime()}`.substr(0, 10);
