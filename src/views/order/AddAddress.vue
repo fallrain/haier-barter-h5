@@ -7,7 +7,7 @@
       <div class="addAddress-search-par">
         <label class="addAddress-search-name">老顾客搜索</label>
         <b-search-input
-          v-model="customerInfo.mobile"
+          v-model="customerInfo.consigneeUserPhone"
           @search="search('')"
           placeholder="请输入老顾客手机号"
         >
@@ -21,7 +21,7 @@
         :tips="warmTips"
       ></b-warm-tips>
     </div>
-    <ul
+    <!--<ul
       class="address-back"
       v-show="searchEnd"
     >
@@ -32,7 +32,7 @@
             type="number"
             class="addAddress-form-item-ipt"
             placeholder="请输入手机号"
-            v-model="customerInfo.mobile"
+            v-model="customerInfo.consigneeUserPhone"
             v-resetInput
           >
         </div>
@@ -60,7 +60,7 @@
           >
         </div>
       </li>
-    </ul>
+    </ul>-->
    <!-- <p
       class="searchResultClass"
       v-show="searchResultShow"
@@ -116,7 +116,7 @@
         ></b-item>
       </li>
       <li>
-        <div class="addAddress-form-item1">
+        <div class="addAddress-form-item">
           <label class="addAddress-form-item-name w100per fs26 text-666 dis-block">详细地址</label>
           <input
             type="text"
@@ -128,14 +128,15 @@
           >
         </div>
       </li>
-      <li>
+      <!--20200429，去掉该地址与用户关系-->
+      <!--<li>
         <b-item
           title="该地址与用户关系"
           :arrow="true"
           :value="tagName"
           @rightClick="showTags"
         ></b-item>
-      </li>
+      </li>-->
       <li>
         <div class="addAddress-form-item">
           <label class="addAddress-form-item-name">设为默认地址</label>
@@ -171,7 +172,7 @@
       :btns="noCustomerDialog.btns"
     >
       该手机号不存在，是否为手机号
-      <span class="common-haier-blue">{{customerInfo.mobile}}</span>
+      <span class="common-haier-blue">{{customerInfo.consigneeUserPhone}}</span>
       创建新顾客？
     </md-dialog>
   </div>
@@ -319,7 +320,7 @@ export default {
         this.searchEnd = true;
         this.customerInfo.username = JSON.parse(this.$route.params.info).username;
         this.customerInfo.userId = JSON.parse(this.$route.params.info).userId;
-        this.customerInfo.mobile = JSON.parse(this.$route.params.info).mobile;
+        this.customerInfo.consigneeUserPhone = JSON.parse(this.$route.params.info).mobile;
         if (JSON.parse(this.$route.params.info).customerId) {
           this.customerInfo.customerId = JSON.parse(this.$route.params.info).customerId;
         }
@@ -328,7 +329,7 @@ export default {
         this.searchEnd = true;
         if (this.region === 'add' && !JSON.parse(this.$route.params.info).address) {
           this.customerInfo.username = JSON.parse(this.$route.params.info).username;
-          this.customerInfo.mobile = JSON.parse(this.$route.params.info).mobile;
+          this.customerInfo.consigneeUserPhone = JSON.parse(this.$route.params.info).mobile;
           this.customerInfo.userId = JSON.parse(this.$route.params.info).userId;
           if (JSON.parse(this.$route.params.info).customerId) {
             this.customerInfo.customerId = JSON.parse(this.$route.params.info).customerId;
@@ -338,7 +339,7 @@ export default {
           console.log(JSON.parse(this.$route.params.info));
           this.customerInfo = JSON.parse(this.$route.params.info);
           // this.customerInfo.username = JSON.parse(this.$route.params.info).username;
-          // this.customerInfo.mobile = JSON.parse(this.$route.params.info).mobile;
+          // this.customerInfo.consigneeUserPhone = JSON.parse(this.$route.params.info).mobile;
           // this.customerInfo.userId = JSON.parse(this.$route.params.info).userId;
           // this.customerInfo.consigneeUserName = JSON.parse(this.$route.params.info).consigneeUserName;
           // this.customerInfo.consigneeUserPhone = JSON.parse(this.$route.params.info).consigneeUserPhone;
@@ -348,7 +349,7 @@ export default {
         } else {
           console.log(JSON.parse(this.$route.params.info));
           this.customerInfo.username = JSON.parse(this.$route.params.info).username;
-          this.customerInfo.mobile = JSON.parse(this.$route.params.info).mobile;
+          this.customerInfo.consigneeUserPhone = JSON.parse(this.$route.params.info).mobile;
           this.customerInfo.userId = JSON.parse(this.$route.params.info).userId;
           // this.customerInfo = JSON.parse(this.$route.params.info);
           this.customerInfo.hmcId = JSON.parse(localStorage.getItem('userinfo')).hmcid;
@@ -410,12 +411,12 @@ export default {
     },
     search() {
       // this.searchEnd = true;
-      if (!(/^1[3456789]\d{9}$/.test(this.customerInfo.mobile))) {
+      if (!(/^1[3456789]\d{9}$/.test(this.customerInfo.consigneeUserPhone))) {
         Toast.failed('手机格式错误');
-        this.customerInfo.mobile = '';
+        this.customerInfo.consigneeUserPhone = '';
         return;
       }
-      this.productService.deafaultCustomerAddress(this.customerInfo.mobile).then((res) => {
+      this.productService.deafaultCustomerAddress(this.customerInfo.consigneeUserPhone).then((res) => {
         if (res.code === 1) {
           if (res.data) {
             this.searchEnd = true;
@@ -440,7 +441,7 @@ export default {
     closeCreatCustomerDialog() {
       /* 重新搜索 */
       this.noCustomerDialog.open = false;
-      this.customerInfo.mobile = '';
+      this.customerInfo.consigneeUserPhone = '';
     },
     dialogCreatCustomer() {
       /* 无顾客对话框创建顾客 */
@@ -462,29 +463,23 @@ export default {
       this.addressName = addressA.join('/');
     },
     confirm() {
-      if (!(/^1[3456789]\d{9}$/.test(this.customerInfo.mobile))) {
-        Toast.failed('手机号格式错误');
-        this.customerInfo.mobile = '';
-        return;
-      }
-      if (this.customerInfo.username === '' || !this.customerInfo.username) {
-        Toast.failed('顾客姓名不能为空');
-        return;
-      }
-      if (this.customerInfo.consigneeUserName === '' || !this.customerInfo.consigneeUserName) {
+      if (!this.customerInfo.consigneeUserName) {
         Toast.failed('收货人姓名不能为空');
         return;
       }
-      if (this.customerInfo.consigneeUserPhone === '' || !this.customerInfo.consigneeUserPhone) {
+      if (!this.customerInfo.consigneeUserPhone) {
         Toast.failed('收货人手机号不能为空');
         return;
       }
       if (!(/^1[3456789]\d{9}$/.test(this.customerInfo.consigneeUserPhone))) {
-        Toast.failed('手机号格式错误');
+        Toast.failed('请填写正确的手机号');
         this.customerInfo.consigneeUserPhone = '';
         return;
       }
-
+      /* if (this.customerInfo.username === '' || !this.customerInfo.username) {
+        Toast.failed('顾客姓名不能为空');
+        return;
+      } */
       if (this.customerInfo.province === '') {
         Toast.failed('省份不能为空');
         return;
@@ -501,6 +496,10 @@ export default {
         Toast.failed('详细地址不能为空');
         return;
       }
+      // 现在顾客手机号姓名默认为收货人手机号和姓名
+      this.customerInfo.username = this.customerInfo.consigneeUserName;
+      this.customerInfo.mobile = this.customerInfo.consigneeUserPhone;
+
       this.customerInfo.address = this.customerInfo.address.replace(/[\r\n]/g, '');
       if (this.customerInfo.consignee) {
         delete this.customerInfo.consignee;
@@ -595,7 +594,7 @@ export default {
   },
   beforeRouteLeave(to, from, next) {
     const obj = {
-      tel: this.customerInfo.mobile,
+      tel: this.customerInfo.consigneeUserPhone,
       smld: this.smld,
       customerInfo: this.customerInfo,
       region: this.region
@@ -705,6 +704,7 @@ export default {
       color: #1969C6;
       font-size: 40px;
     }
+    border-bottom: 1px solid #F5F5F5;
   }
 
   .searchResultClass {
