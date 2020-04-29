@@ -372,7 +372,7 @@ export default {
     confirmDate(dates) {
       /* 确认时间 */
       if (dates) {
-        this.curSearchDate = `${dates[0].value}-${dates[1].value}`;
+        this.curSearchDate = `${dates[0].value}/${dates[1].value}`;
         this[this.curScrollViewName].mescroll.triggerDownScroll();
       }
     },

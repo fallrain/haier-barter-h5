@@ -56,7 +56,20 @@ const util = {
     if (!date) {
       return '';
     }
+
     if (!(date instanceof Date)) {
+      if (typeof date === 'string') {
+        // ios下必须以2000/01/01类似结构
+        date = date.replace(/-/g, '/');
+        const dateAy = date.split(' ');
+        const dateStr = dateAy[0];
+        const len = 3 - dateStr.split('/').length;
+        const timeSuffix = Array(len).fill('/00');
+        date = dateStr + timeSuffix;
+        if (dateAy.length > 1) {
+          date += dateAy[1];
+        }
+      }
       date = new Date(date);
     }
     const numToStr = function (num) {
