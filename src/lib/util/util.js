@@ -64,8 +64,8 @@ const util = {
         const dateAy = date.split(' ');
         const dateStr = dateAy[0];
         const len = 3 - dateStr.split('/').length;
-        const timeSuffix = Array(len).fill('/00');
-        date = dateStr + timeSuffix;
+        const timeSuffix = Array(len).fill('/01');
+        date = dateStr + timeSuffix.join('');
         if (dateAy.length > 1) {
           date += dateAy[1];
         }
