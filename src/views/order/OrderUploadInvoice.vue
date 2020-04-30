@@ -1,65 +1,73 @@
 <template>
-  <div class="orderUploadInvoice">
-    <div class="orderUploadInvoice-head">上传产品购机凭证</div>
-    <!-- <b-radio-item
-      :inline="true"
-      :list="uploadTypes"
-      v-model="uploadType"
-    ></b-radio-item> -->
-    <div class="orderUploadInvoice-cnt">
-      <b-product-mult-upload
-        :products="products"
-        :merge="uploadType===1"
-        v-model="invoiceImg"
-        @uploadSuccess="uploadSuccess"
-        @uploadErr="uploadErr"
-        @delImg="delImg"
-      ></b-product-mult-upload>
-    </div>
-    <div class="orderUploadInvoice-tips mt16">
-      <p class="orderUploadInvoice-tips-title">温馨提示：</p>
-     <!-- <p>购机凭证必须上传，在3个月内，允许补传正规购机凭证。</p>-->
-      <p>包含权益的订单必须上传购机凭证。</p>
-    </div>
-    <div class="orderUploadInvoice-question mt16">
-      <p class="orderUploadInvoice-question-title">问题解答：</p>
-      <ul>
-        <li
-          class="orderUploadInvoice-question-item"
-        >
-          <p class="orderUploadInvoice-question-item-q">
-            Q1、为什么需要上传购机凭证
-          </p>
-          <p class="orderUploadInvoice-question-item-answer">
-            A：通过购机凭证校验销售订单的真实性
-          </p>
-        </li>
-        <li
-          class="orderUploadInvoice-question-item"
-        >
-          <p class="orderUploadInvoice-question-item-q">
-            Q2、购机凭证都支持哪些类型
-          </p>
-          <p class="orderUploadInvoice-question-item-answer">
-            A：上传购机凭证包括：发票、购机小票、系统订单截图
-          </p>
-        </li>
-      </ul>
-    </div>
-    <div class="orderEntry-btns-par">
-      <button
-        v-if="!isMustUploadInvoice"
-        type="button"
-        class="common-submit-btn-primary"
-        @click="skipUpload"
-      >跳过
-      </button>
-      <button
-        type="button"
-        class="common-submit-btn-default"
-        @click="updateSubmit"
-      >上传凭证
-      </button>
+  <div>
+    <b-notice-bar
+      :show.sync="noticeShow"
+      content="温馨提示：因微信版本接口bug，若发票上传请求失败，请退出兑呗，并将微信升级为最新版本，再重新登录兑呗！"
+      type="error"
+    >
+    </b-notice-bar>
+    <div class="orderUploadInvoice">
+      <div class="orderUploadInvoice-head">上传产品购机凭证</div>
+      <!-- <b-radio-item
+        :inline="true"
+        :list="uploadTypes"
+        v-model="uploadType"
+      ></b-radio-item> -->
+      <div class="orderUploadInvoice-cnt">
+        <b-product-mult-upload
+          :products="products"
+          :merge="uploadType===1"
+          v-model="invoiceImg"
+          @uploadSuccess="uploadSuccess"
+          @uploadErr="uploadErr"
+          @delImg="delImg"
+        ></b-product-mult-upload>
+      </div>
+      <div class="orderUploadInvoice-tips mt16">
+        <p class="orderUploadInvoice-tips-title">温馨提示：</p>
+        <!-- <p>购机凭证必须上传，在3个月内，允许补传正规购机凭证。</p>-->
+        <p>包含权益的订单必须上传购机凭证。</p>
+      </div>
+      <div class="orderUploadInvoice-question mt16">
+        <p class="orderUploadInvoice-question-title">问题解答：</p>
+        <ul>
+          <li
+            class="orderUploadInvoice-question-item"
+          >
+            <p class="orderUploadInvoice-question-item-q">
+              Q1、为什么需要上传购机凭证
+            </p>
+            <p class="orderUploadInvoice-question-item-answer">
+              A：通过购机凭证校验销售订单的真实性
+            </p>
+          </li>
+          <li
+            class="orderUploadInvoice-question-item"
+          >
+            <p class="orderUploadInvoice-question-item-q">
+              Q2、购机凭证都支持哪些类型
+            </p>
+            <p class="orderUploadInvoice-question-item-answer">
+              A：上传购机凭证包括：发票、购机小票、系统订单截图
+            </p>
+          </li>
+        </ul>
+      </div>
+      <div class="orderEntry-btns-par">
+        <button
+          v-if="!isMustUploadInvoice"
+          type="button"
+          class="common-submit-btn-primary"
+          @click="skipUpload"
+        >跳过
+        </button>
+        <button
+          type="button"
+          class="common-submit-btn-default"
+          @click="updateSubmit"
+        >上传凭证
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -81,9 +89,14 @@ import {
   GET_USER
 } from '@/store/mutationsTypes';
 
+import {
+  BNoticeBar
+} from '@/components/form';
+
 export default {
   name: 'OrderUploadInvoice',
   components: {
+    BNoticeBar,
     BProductMultUpload,
   },
   data() {
@@ -110,7 +123,9 @@ export default {
       invoiceImg: [],
       orderNo: '',
       // 必须上传发票
-      isMustUploadInvoice: false
+      isMustUploadInvoice: false,
+      // 提示显示隐藏
+      noticeShow: true
     };
   },
   created() {
