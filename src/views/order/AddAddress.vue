@@ -309,6 +309,8 @@ export default {
     };
   },
   activated() {
+    // 额外调用一次getJsSign
+    const getJsSign = this.getJsSign();
     if (this.$route.params) {
       this.region = this.$route.params.region;
       console.log(this.region);
@@ -377,7 +379,9 @@ export default {
     }
     // 无地址信息，就用定位
     if (!this.defaultAddress.length) {
-      this.getCurAddress();
+      getJsSign.then(() => {
+        this.getCurAddress();
+      });
     }
   },
   created() {
@@ -402,24 +406,33 @@ export default {
       return '';
     },
   },
-  customOption: {
-    wxReady() {
-      if (!this.defaultAddress.length) {
-        this.getCurAddress();
-      }
-    }
-  },
   methods: {
     ...mapMutations([
       'updataNewAddress'
     ]),
+    getJsSign() {
+      return this.basicService.jsSign(encodeURIComponent(window.location.href.split('#')[0])).then(({ code, data }) => {
+        if (code === 1) {
+          wx.config({
+            appId: data.appId, // 必填，公众号的唯一标识
+            timestamp: data.timestamp, // 必填，生成签名的时间戳
+            nonceStr: data.nonceStr, // 必填，生成签名的随机串
+            signature: data.signature, // 必填
+            jsApiList: ['getLocation'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+          });
+          return true;
+        }
+      });
+    },
     getCurAddress() {
       /* 获取坐标 */
-      wx.getLocation({
-        type: 'wgs84',
-        success: (res) => {
-          this.getAddressCode(res);
-        }
+      wx.ready(() => {
+        wx.getLocation({
+          type: 'wgs84',
+          success: (res) => {
+            this.getAddressCode(res);
+          }
+        });
       });
     },
     getAddressCode({ longitude, latitude }) {
