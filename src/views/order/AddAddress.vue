@@ -365,13 +365,14 @@ export default {
       }
       if (this.$route.params.info !== '{}') {
         const obj = JSON.parse(this.$route.params.info);
-        this.newAddress.provinceName = obj.consignee.provinceName;
-        this.newAddress.districtName = obj.consignee.districtName;
-        this.newAddress.cityName = obj.consignee.cityName;
-        this.newAddress.regionCode = obj.regionCode;
         // 默认地址
-        this.defaultAddress = [obj.province, obj.city, obj.district];
-        this.addressName = `${this.newAddress.provinceName}/${this.newAddress.cityName}/${this.newAddress.districtName}`;
+        this.setAddressPickerVal({
+          ...obj,
+          regionCode: obj.regionCode,
+          provinceName: obj.consignee && obj.consignee.provinceName,
+          cityName: obj.consignee && obj.consignee.cityName,
+          districtName: obj.consignee && obj.consignee.districtName,
+        });
       }
     }
     // 无地址信息，就用定位
@@ -406,27 +407,58 @@ export default {
       'updataNewAddress'
     ]),
     getCurAddress() {
-      this.orderService.getLocationByBaiduMap({
-        longitude: '116',
-        latitude: '40',
-      }).then(({ code, data }) => {
-        if (code === 1) {
-          alert(data);
-        }
-      });
+      /* 获取坐标 */
       wx.getLocation({
         type: 'wgs84',
         success: (res) => {
-          this.orderService.getLocationByBaiduMap({
-            longitude: res.longitude,
-            latitude: res.latitude,
-          }).then(({ code, data }) => {
-            if (code === 1) {
-              alert(data);
-            }
+          this.getAddressCode(res);
+        }
+      });
+    },
+    getAddressCode({ longitude, latitude }) {
+      this.orderService.getLocationByBaiduMap({
+        longitude,
+        latitude,
+      }).then(({ code, data }) => {
+        if (code === 1) {
+          const {
+            proCode,
+            cityCode,
+            regionCode
+          } = data;
+          // 为customerInfo添加值
+          this.customerInfo.province = proCode;
+          this.customerInfo.city = cityCode;
+          this.customerInfo.district = regionCode;
+          // picker添加值
+          this.setAddressPickerVal({
+            province: proCode,
+            city: cityCode,
+            district: regionCode,
+            regionCode: `${proCode}${cityCode}${regionCode}`,
+            provinceName: data.province,
+            cityName: data.city,
+            districtName: data.district,
           });
         }
       });
+    },
+    setAddressPickerVal(obj) {
+      /* 设置地址选择的值 */
+      // newAddress更新store用
+      this.newAddress.provinceName = obj.provinceName || '';
+      this.newAddress.districtName = obj.districtName || '';
+      this.newAddress.cityName = obj.cityName || '';
+      this.newAddress.regionCode = obj.regionCode || '';
+      // 设置picker的选中值
+      // code和名字必须有，任何一个没有清空
+      if (obj.province && obj.city && obj.district && obj.provinceName && obj.cityName && obj.districtName) {
+        this.defaultAddress = [obj.province, obj.city, obj.district];
+        this.addressName = `${obj.provinceName}/${obj.cityName}/${obj.districtName}`;
+      } else {
+        this.defaultAddress = [];
+        this.addressName = '';
+      }
     },
     showTags() {
       /* 地址标签显示隐藏 */
@@ -507,9 +539,9 @@ export default {
         return;
       }
       /* if (this.customerInfo.username === '' || !this.customerInfo.username) {
-          Toast.failed('顾客姓名不能为空');
-          return;
-        } */
+            Toast.failed('顾客姓名不能为空');
+            return;
+          } */
       if (this.customerInfo.province === '') {
         Toast.failed('省份不能为空');
         return;
