@@ -402,19 +402,24 @@ export default {
       return '';
     },
   },
+  customOption: {
+    wxReady() {
+      if (!this.defaultAddress.length) {
+        this.getCurAddress();
+      }
+    }
+  },
   methods: {
     ...mapMutations([
       'updataNewAddress'
     ]),
     getCurAddress() {
       /* 获取坐标 */
-      wx.ready(() => {
-        wx.getLocation({
-          type: 'wgs84',
-          success: (res) => {
-            this.getAddressCode(res);
-          }
-        });
+      wx.getLocation({
+        type: 'wgs84',
+        success: (res) => {
+          this.getAddressCode(res);
+        }
       });
     },
     getAddressCode({ longitude, latitude }) {

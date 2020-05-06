@@ -55,6 +55,14 @@ export default {
             signature: data.signature, // 必填
             jsApiList // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
           });
+          wx.ready(() => {
+            if (vm.$options.customOption) {
+              const {
+                wxReady
+              } = vm.$options.customOption;
+              wxReady();
+            }
+          });
         }
       });
       // }
