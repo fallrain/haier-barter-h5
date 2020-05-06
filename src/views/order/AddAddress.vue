@@ -408,11 +408,13 @@ export default {
     ]),
     getCurAddress() {
       /* 获取坐标 */
-      wx.getLocation({
-        type: 'wgs84',
-        success: (res) => {
-          this.getAddressCode(res);
-        }
+      wx.ready(() => {
+        wx.getLocation({
+          type: 'wgs84',
+          success: (res) => {
+            this.getAddressCode(res);
+          }
+        });
       });
     },
     getAddressCode({ longitude, latitude }) {
