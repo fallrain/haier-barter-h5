@@ -310,7 +310,7 @@ export default {
   },
   activated() {
     // 额外调用一次getJsSign
-    const getJsSign = this.getJsSign();
+    // const getJsSign = this.getJsSign();
     if (this.$route.params) {
       this.region = this.$route.params.region;
       console.log(this.region);
@@ -378,11 +378,11 @@ export default {
       }
     }
     // 无地址信息，就用定位
-    if (!this.defaultAddress.length) {
-      getJsSign.then(() => {
-        this.getCurAddress();
-      });
-    }
+    // if (!this.defaultAddress.length) {
+    //   getJsSign.then(() => {
+    //     this.getCurAddress();
+    //   });
+    // }
   },
   created() {
     // 不加入双向绑定
