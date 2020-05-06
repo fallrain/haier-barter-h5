@@ -1,6 +1,30 @@
 <template>
   <div ref="addForm" class="addAddress-form">
-    <ul class="address-back">
+    <div
+      v-show="!searchEnd"
+      class="addAddress-search-head"
+    >
+      <div class="addAddress-search-par">
+        <label class="addAddress-search-name">老顾客搜索</label>
+        <b-search-input
+          v-model="customerInfo.consigneeUserPhone"
+          @search="search('')"
+          placeholder="请输入老顾客手机号"
+        >
+        <span
+          class="addAddress-search-btn"
+          @click="search('')"
+        >搜索</span>
+        </b-search-input>
+      </div>
+      <b-warm-tips
+        :tips="warmTips"
+      ></b-warm-tips>
+    </div>
+    <!--<ul
+      class="address-back"
+      v-show="searchEnd"
+    >
       <li>
         <div class="addAddress-form-item">
           <label class="addAddress-form-item-name">顾客手机号</label>
@@ -8,51 +32,42 @@
             type="number"
             class="addAddress-form-item-ipt"
             placeholder="请输入手机号"
-            v-model="customerInfo.mobile"
-            v-show="region !== 'userAdd'"
-            v-resetInput
-          >
-          <input
-            type="number"
-            class="addAddress-form-item-ipt"
-            placeholder="请输入手机号"
-            disabled="true"
-            v-show="region === 'userAdd'"
-            v-model="customerInfo.mobile"
+            v-model="customerInfo.consigneeUserPhone"
             v-resetInput
           >
         </div>
       </li>
-      <p class="searchResultClass" v-show="searchResultShow">
-        <span class="searchTextClass">搜索暂无结果,</span><span class="searchBtnClass" @click="creatCustomer">创建信息</span>
-      </p>
-      <div v-show="searchEnd">
-        <li>
-          <div class="addAddress-form-item">
-            <label class="addAddress-form-item-name">顾客姓名</label>
-            <input
-              type="text"
-              class="addAddress-form-item-ipt"
-              placeholder="请输入姓名"
-              v-show="region !== 'userAdd'"
-              v-model="customerInfo.username"
-              @input="judgeName(customerInfo.username, 20)"
-              v-resetInput
-            >
-            <input
-              type="text"
-              class="addAddress-form-item-ipt"
-              placeholder="请输入姓名"
-              disabled="true"
-              v-show="region === 'userAdd'"
-              v-model="customerInfo.username"
-              v-resetInput
-            >
-          </div>
-        </li>
-      </div>
-    </ul>
-    <div class="consignee-class" v-show="searchEnd">
+      <li>
+        <div class="addAddress-form-item">
+          <label class="addAddress-form-item-name">顾客姓名</label>
+          <input
+            type="text"
+            class="addAddress-form-item-ipt"
+            placeholder="请输入姓名"
+            v-show="region !== 'userAdd'"
+            v-model="customerInfo.username"
+            @input="judgeName(customerInfo.username, 20)"
+            v-resetInput
+          >
+          <input
+            type="text"
+            class="addAddress-form-item-ipt"
+            placeholder="请输入姓名"
+            disabled="true"
+            v-show="region === 'userAdd'"
+            v-model="customerInfo.username"
+            v-resetInput
+          >
+        </div>
+      </li>
+    </ul>-->
+    <!-- <p
+       class="searchResultClass"
+       v-show="searchResultShow"
+     >
+       <span class="searchTextClass">搜索暂无结果,</span><span class="searchBtnClass" @click="creatCustomer">创建信息</span>
+     </p>-->
+    <ul class="consignee-class" v-show="searchEnd">
       <li>
         <div class="addAddress-form-item">
           <label class="addAddress-form-item-name">收货人姓名</label>
@@ -71,7 +86,7 @@
           <label class="addAddress-form-item-name">收货人手机号</label>
           <input
             type="text"
-            oninput = "value=value.replace(/[^\d]/g,'')"
+            oninput="value=value.replace(/[^\d]/g,'')"
             class="addAddress-form-item-ipt"
             placeholder="请输入手机号"
             v-model="customerInfo.consigneeUserPhone"
@@ -101,7 +116,7 @@
         ></b-item>
       </li>
       <li>
-        <div class="addAddress-form-item1">
+        <div class="addAddress-form-item">
           <label class="addAddress-form-item-name w100per fs26 text-666 dis-block">详细地址</label>
           <input
             type="text"
@@ -113,14 +128,15 @@
           >
         </div>
       </li>
-      <li>
+      <!--20200429，去掉该地址与用户关系-->
+      <!--<li>
         <b-item
           title="该地址与用户关系"
           :arrow="true"
           :value="tagName"
           @rightClick="showTags"
         ></b-item>
-      </li>
+      </li>-->
       <li>
         <div class="addAddress-form-item">
           <label class="addAddress-form-item-name">设为默认地址</label>
@@ -129,7 +145,7 @@
           ></md-switch>
         </div>
       </li>
-    </div>
+    </ul>
 
     <b-pop-check-list
       type="radio"
@@ -143,16 +159,29 @@
       large-radius
       :data="addressData"
       v-model="addressPopShow"
+      v-if="addressPopShow"
       @change="addressChange"
-      :default-value="defaultA"
+      :default-value="defaultAddress"
     ></md-tab-picker>
     <button class="common-bottom-button" @click="confirm()" v-show="searchEnd">确认</button>
-    <button class="common-bottom-button" @click="search()" v-show="!searchEnd">搜索</button>
+    <!--<button class="common-bottom-button" @click="search()" v-show="!searchEnd">搜索</button>-->
+    <button class="common-bottom-button" @click="creatCustomer" v-show="!searchEnd">创建新顾客</button>
+    <md-dialog
+      title="顾客不存在"
+      :closable="true"
+      v-model="noCustomerDialog.open"
+      :btns="noCustomerDialog.btns"
+    >
+      该手机号不存在，是否为手机号
+      <span class="common-haier-blue">{{customerInfo.consigneeUserPhone}}</span>
+      创建新顾客？
+    </md-dialog>
   </div>
 </template>
 
 <script>
 import {
+  Dialog,
   Switch,
   TabPicker,
   Toast
@@ -168,22 +197,25 @@ import addressData from '@/lib/address';
 import {
   mapMutations
 } from 'vuex';
+import BSearchInput from '../../components/business/BSearchInput';
+import BWarmTips from '../../components/form/BWarmTips';
 
 export default {
   name: 'AddAddress',
   components: {
+    BWarmTips,
+    BSearchInput,
+    'md-dialog': Dialog,
     'md-switch': Switch,
     'md-tab-picker': TabPicker,
     BPopCheckList,
     BItem,
-    BRadioItem,
-    Toast
+    BRadioItem
   },
 
   data() {
     return {
       // disabled: false,
-      searchResultShow: false,
       confirmClicked: false,
       form: {
         name: '',
@@ -193,7 +225,8 @@ export default {
         isDefault: false,
         tag: []
       },
-      defaultA: [],
+      // 默认地址
+      defaultAddress: [],
       customerInfo: {
         address: '',
         city: '',
@@ -253,10 +286,31 @@ export default {
       addressPopShow: false,
       addressName: '',
       confirmShow: false,
-      smld: false
+      smld: false,
+      // 温馨提示
+      warmTips: [
+        '新顾客请点击底部创建按钮进行创建；',
+        '老顾客可输入客户手机号搜索，将自动跳出顾客信息'
+      ],
+      // 手机号无对应顾客对话框
+      noCustomerDialog: {
+        open: false,
+        btns: [
+          {
+            text: '重新搜索',
+            handler: this.closeCreatCustomerDialog,
+          },
+          {
+            text: '创建新顾客',
+            handler: this.dialogCreatCustomer,
+          },
+        ],
+      },
     };
   },
   activated() {
+    // 额外调用一次getJsSign
+    // const getJsSign = this.getJsSign();
     if (this.$route.params) {
       this.region = this.$route.params.region;
       console.log(this.region);
@@ -270,7 +324,7 @@ export default {
         this.searchEnd = true;
         this.customerInfo.username = JSON.parse(this.$route.params.info).username;
         this.customerInfo.userId = JSON.parse(this.$route.params.info).userId;
-        this.customerInfo.mobile = JSON.parse(this.$route.params.info).mobile;
+        this.customerInfo.consigneeUserPhone = JSON.parse(this.$route.params.info).mobile;
         if (JSON.parse(this.$route.params.info).customerId) {
           this.customerInfo.customerId = JSON.parse(this.$route.params.info).customerId;
         }
@@ -279,7 +333,7 @@ export default {
         this.searchEnd = true;
         if (this.region === 'add' && !JSON.parse(this.$route.params.info).address) {
           this.customerInfo.username = JSON.parse(this.$route.params.info).username;
-          this.customerInfo.mobile = JSON.parse(this.$route.params.info).mobile;
+          this.customerInfo.consigneeUserPhone = JSON.parse(this.$route.params.info).mobile;
           this.customerInfo.userId = JSON.parse(this.$route.params.info).userId;
           if (JSON.parse(this.$route.params.info).customerId) {
             this.customerInfo.customerId = JSON.parse(this.$route.params.info).customerId;
@@ -289,7 +343,7 @@ export default {
           console.log(JSON.parse(this.$route.params.info));
           this.customerInfo = JSON.parse(this.$route.params.info);
           // this.customerInfo.username = JSON.parse(this.$route.params.info).username;
-          // this.customerInfo.mobile = JSON.parse(this.$route.params.info).mobile;
+          // this.customerInfo.consigneeUserPhone = JSON.parse(this.$route.params.info).mobile;
           // this.customerInfo.userId = JSON.parse(this.$route.params.info).userId;
           // this.customerInfo.consigneeUserName = JSON.parse(this.$route.params.info).consigneeUserName;
           // this.customerInfo.consigneeUserPhone = JSON.parse(this.$route.params.info).consigneeUserPhone;
@@ -299,7 +353,7 @@ export default {
         } else {
           console.log(JSON.parse(this.$route.params.info));
           this.customerInfo.username = JSON.parse(this.$route.params.info).username;
-          this.customerInfo.mobile = JSON.parse(this.$route.params.info).mobile;
+          this.customerInfo.consigneeUserPhone = JSON.parse(this.$route.params.info).mobile;
           this.customerInfo.userId = JSON.parse(this.$route.params.info).userId;
           // this.customerInfo = JSON.parse(this.$route.params.info);
           this.customerInfo.hmcId = JSON.parse(localStorage.getItem('userinfo')).hmcid;
@@ -311,18 +365,26 @@ export default {
           this.customerInfo.tag = a;
         }
       }
-      if (this.$route.params.info != '{}') {
+      if (this.$route.params.info !== '{}') {
         const obj = JSON.parse(this.$route.params.info);
-        console.log(obj);
-        this.newAddress.provinceName = JSON.parse(this.$route.params.info).consignee.provinceName;
-        this.newAddress.districtName = JSON.parse(this.$route.params.info).consignee.districtName;
-        this.newAddress.cityName = JSON.parse(this.$route.params.info).consignee.cityName;
-        this.newAddress.regionCode = JSON.parse(this.$route.params.info).regionCode;
-        this.addressName = `${this.newAddress.provinceName}/${this.newAddress.cityName}/${this.newAddress.districtName}`;
+        // 默认地址
+        this.setAddressPickerVal({
+          ...obj,
+          regionCode: obj.regionCode,
+          provinceName: obj.consignee && obj.consignee.provinceName,
+          cityName: obj.consignee && obj.consignee.cityName,
+          districtName: obj.consignee && obj.consignee.districtName,
+        });
       }
     }
+    // 无地址信息，就用定位
+    // if (!this.defaultAddress.length) {
+    //   getJsSign.then(() => {
+    //     this.getCurAddress();
+    //   });
+    // }
   },
-  created() {debugger
+  created() {
     // 不加入双向绑定
     this.addressData = addressData;
     this.customerInfo.hmcId = JSON.parse(localStorage.getItem('userinfo')).hmcid;
@@ -348,6 +410,77 @@ export default {
     ...mapMutations([
       'updataNewAddress'
     ]),
+    getJsSign() {
+      const url = window.$mWxEntryUrl || window.location.href;
+      return this.basicService.jsSign(encodeURIComponent(url.split('#')[0])).then(({ code, data }) => {
+        if (code === 1) {
+          wx.config({
+            appId: data.appId, // 必填，公众号的唯一标识
+            timestamp: data.timestamp, // 必填，生成签名的时间戳
+            nonceStr: data.nonceStr, // 必填，生成签名的随机串
+            signature: data.signature, // 必填
+            jsApiList: ['getLocation'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+          });
+          return true;
+        }
+      });
+    },
+    getCurAddress() {
+      /* 获取坐标 */
+      wx.ready(() => {
+        wx.getLocation({
+          type: 'wgs84',
+          success: (res) => {
+            this.getAddressCode(res);
+          }
+        });
+      });
+    },
+    getAddressCode({ longitude, latitude }) {
+      this.orderService.getLocationByBaiduMap({
+        longitude,
+        latitude,
+      }).then(({ code, data }) => {
+        if (code === 1) {
+          const {
+            proCode,
+            cityCode,
+            regionCode
+          } = data;
+          // 为customerInfo添加值
+          this.customerInfo.province = proCode;
+          this.customerInfo.city = cityCode;
+          this.customerInfo.district = regionCode;
+          // picker添加值
+          this.setAddressPickerVal({
+            province: proCode,
+            city: cityCode,
+            district: regionCode,
+            regionCode: `${proCode}${cityCode}${regionCode}`,
+            provinceName: data.province,
+            cityName: data.city,
+            districtName: data.district,
+          });
+        }
+      });
+    },
+    setAddressPickerVal(obj) {
+      /* 设置地址选择的值 */
+      // newAddress更新store用
+      this.newAddress.provinceName = obj.provinceName || '';
+      this.newAddress.districtName = obj.districtName || '';
+      this.newAddress.cityName = obj.cityName || '';
+      this.newAddress.regionCode = obj.regionCode || '';
+      // 设置picker的选中值
+      // code和名字必须有，任何一个没有清空
+      if (obj.province && obj.city && obj.district && obj.provinceName && obj.cityName && obj.districtName) {
+        this.defaultAddress = [obj.province, obj.city, obj.district];
+        this.addressName = `${obj.provinceName}/${obj.cityName}/${obj.districtName}`;
+      } else {
+        this.defaultAddress = [];
+        this.addressName = '';
+      }
+    },
     showTags() {
       /* 地址标签显示隐藏 */
       this.tagPopShow = true;
@@ -361,34 +494,42 @@ export default {
     },
     search() {
       // this.searchEnd = true;
-      if (!(/^1[3456789]\d{9}$/.test(this.customerInfo.mobile))) {
+      if (!(/^1[3456789]\d{9}$/.test(this.customerInfo.consigneeUserPhone))) {
         Toast.failed('手机格式错误');
-        this.customerInfo.mobile = '';
+        this.customerInfo.consigneeUserPhone = '';
         return;
       }
-      this.productService.deafaultCustomerAddress(this.customerInfo.mobile).then((res) => {
+      this.productService.deafaultCustomerAddress(this.customerInfo.consigneeUserPhone).then((res) => {
         if (res.code === 1) {
           if (res.data) {
-            this.searchResultShow = false;
             this.searchEnd = true;
             this.customerInfo.username = res.data.username;
             this.customerInfo.sex = res.data.sex;
             this.customerInfo.customerId = res.data.customerId;
             this.customerInfo.consigneeUserName = res.data.consigneeUserName;
             this.customerInfo.consigneeUserPhone = res.data.consigneeUserPhone;
-            this.defaultA.push(res.data.province);
-            this.defaultA.push(res.data.city);
-            this.defaultA.push(res.data.district);
+            this.defaultAddress.push(res.data.province);
+            this.defaultAddress.push(res.data.city);
+            this.defaultAddress.push(res.data.district);
             this.$router.go(-1);
           } else {
-            this.searchResultShow = true;
+            this.noCustomerDialog.open = true;
           }
         }
       });
     },
     creatCustomer() {
       this.searchEnd = true;
-      this.searchResultShow = false;
+    },
+    closeCreatCustomerDialog() {
+      /* 重新搜索 */
+      this.noCustomerDialog.open = false;
+      this.customerInfo.consigneeUserPhone = '';
+    },
+    dialogCreatCustomer() {
+      /* 无顾客对话框创建顾客 */
+      this.noCustomerDialog.open = false;
+      this.creatCustomer();
     },
     addressChange(address) {
       /* 地址change */
@@ -405,29 +546,23 @@ export default {
       this.addressName = addressA.join('/');
     },
     confirm() {
-      if (!(/^1[3456789]\d{9}$/.test(this.customerInfo.mobile))) {
-        Toast.failed('手机号格式错误');
-        this.customerInfo.mobile = '';
-        return;
-      }
-      if (this.customerInfo.username === '' || !this.customerInfo.username) {
-        Toast.failed('顾客姓名不能为空');
-        return;
-      }
-      if (this.customerInfo.consigneeUserName === '' || !this.customerInfo.consigneeUserName) {
+      if (!this.customerInfo.consigneeUserName) {
         Toast.failed('收货人姓名不能为空');
         return;
       }
-      if (this.customerInfo.consigneeUserPhone === '' || !this.customerInfo.consigneeUserPhone) {
+      if (!this.customerInfo.consigneeUserPhone) {
         Toast.failed('收货人手机号不能为空');
         return;
       }
       if (!(/^1[3456789]\d{9}$/.test(this.customerInfo.consigneeUserPhone))) {
-        Toast.failed('手机号格式错误');
+        Toast.failed('请填写正确的手机号');
         this.customerInfo.consigneeUserPhone = '';
         return;
       }
-
+      /* if (this.customerInfo.username === '' || !this.customerInfo.username) {
+            Toast.failed('顾客姓名不能为空');
+            return;
+          } */
       if (this.customerInfo.province === '') {
         Toast.failed('省份不能为空');
         return;
@@ -444,6 +579,10 @@ export default {
         Toast.failed('详细地址不能为空');
         return;
       }
+      // 现在顾客手机号姓名默认为收货人手机号和姓名
+      this.customerInfo.username = this.customerInfo.consigneeUserName;
+      this.customerInfo.mobile = this.customerInfo.consigneeUserPhone;
+
       this.customerInfo.address = this.customerInfo.address.replace(/[\r\n]/g, '');
       if (this.customerInfo.consignee) {
         delete this.customerInfo.consignee;
@@ -460,7 +599,7 @@ export default {
       }
       if (this.region === 'add' || this.region === 'userAdd') {
         delete this.customerInfo.id;
-        if (this.$route.params.businessScenarios != '') {
+        if (this.$route.params.businessScenarios !== '') {
           this.customerInfo.source = this.$route.params.businessScenarios;
         }
         this.productService.addcustomerAddress(this.customerInfo, {}).then((res) => {
@@ -538,7 +677,7 @@ export default {
   },
   beforeRouteLeave(to, from, next) {
     const obj = {
-      tel: this.customerInfo.mobile,
+      tel: this.customerInfo.consigneeUserPhone,
       smld: this.smld,
       customerInfo: this.customerInfo,
       region: this.region
@@ -648,6 +787,8 @@ export default {
       color: #1969C6;
       font-size: 40px;
     }
+
+    border-bottom: 1px solid #F5F5F5;
   }
 
   .searchResultClass {
@@ -661,13 +802,43 @@ export default {
       color: #1969C6;
     }
   }
-  .fs26{
+
+  .fs26 {
     font-size: 26px !important;
   }
-  .text-666{
+
+  .text-666 {
     color: #666;
   }
-  .w100{
+
+  .w100 {
     width: 100% !important;
+  }
+
+  .addAddress-search-par {
+    display: flex;
+    align-items: center;
+    font-size: 28px;
+    background: #fff;
+
+    .bSearchInput-wrap {
+      border: 1px solid #ddd;
+    }
+  }
+
+  .addAddress-search-head {
+    .bWarmTips {
+      margin-top: 12px;
+    }
+  }
+
+  .addAddress-search-name {
+    color: #666;
+    flex-shrink: 0;
+    padding-left: 24px;
+  }
+
+  .addAddress-search-btn {
+    color: #1969C6;
   }
 </style>

@@ -1,5 +1,6 @@
 import urls from '../url/order.url';
 import {
+  axGet,
   axPostJson,
   axPost
 } from '@/lib/ajax';
@@ -105,5 +106,9 @@ export default {
   queryAdjCouponInfo(params) {
     /* 查询领取优惠券信息 */
     return axPostJson(urls.queryAdjCouponInfo, null, params);
+  },
+  getLocationByBaiduMap(param) {
+    /* 查询地理位置 */
+    return axGet(urls.getLocationByBaiduMap, param);
   },
 };

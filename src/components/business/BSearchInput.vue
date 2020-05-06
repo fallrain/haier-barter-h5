@@ -1,7 +1,12 @@
 <template>
   <div class="bSearchInput-par">
     <div class="bSearchInput-wrap">
-      <form :target="iframeId" class="bSearchInput-form" action="#">
+      <form
+        :target="iframeId"
+        class="bSearchInput-form"
+        action="#"
+        onsubmit="return false;"
+      >
         <input
           class="bSearchInput"
           type="search"
@@ -74,7 +79,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 602px;
+    width: 100%;
     height: 60px;
     padding-left: 24px;
     padding-right: 24px;

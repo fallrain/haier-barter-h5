@@ -38,6 +38,8 @@ const urls = {
   updateStatusForYJHX: '/orderFollow/updateStatusForYJHX',
   // 查询领取优惠券信息
   queryAdjCouponInfo: '/orderManage/queryAdjCouponInfo',
+  // 获取地址
+  getLocationByBaiduMap: '/buildHouse/getLocationByBaiduMap',
 };
 
 Object.entries(urls).forEach(([key, value]) => {
