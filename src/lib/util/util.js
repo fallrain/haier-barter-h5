@@ -452,7 +452,7 @@ const util = {
   setEntryUrl() {
     const isIOS = window.localStorage.getItem('isIOS');
     if (!isIOS) {
-      const iosFlag = this.isIOS ? '1' : '0';
+      const iosFlag = this.isIOS() ? '1' : '0';
       window.localStorage.setItem('isIOS', iosFlag);
     }
     if (isIOS === '1') {
