@@ -31,7 +31,8 @@ Vue.prototype.axGet = axGet;
 Vue.prototype.$toast = Toast;
 Vue.prototype.$dialog = Dialog;
 Vue.prototype.BValidate = BValidate;
-
+// 设置ios flag
+bUtil.setEntryUrl();
 // 全局filter
 Object.keys(filterMap).forEach((filterName) => {
   Vue.filter(filterName, filterMap[filterName]);

@@ -432,6 +432,19 @@ const util = {
       }
     }
     return valid;
+  },
+  isIOS() {
+    return navigator.userAgent.toUpperCase().indexOf('ANDROID') === -1;
+  },
+  setEntryUrl() {
+    const isIOS = window.localStorage.getItem('isIOS');
+    if (!isIOS) {
+      const iosFlag = this.isIOS ? '1' : '0';
+      window.localStorage.setItem('isIOS', iosFlag);
+    }
+    if (isIOS === '1') {
+      window.$mWxEntryUrl = window.location.href;
+    }
   }
 };
 

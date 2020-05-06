@@ -411,7 +411,8 @@ export default {
       'updataNewAddress'
     ]),
     getJsSign() {
-      return this.basicService.jsSign(encodeURIComponent(window.location.href.split('#')[0])).then(({ code, data }) => {
+      const url = window.$mWxEntryUrl || window.location.href;
+      return this.basicService.jsSign(encodeURIComponent(url.split('#')[0])).then(({ code, data }) => {
         if (code === 1) {
           wx.config({
             appId: data.appId, // 必填，公众号的唯一标识
