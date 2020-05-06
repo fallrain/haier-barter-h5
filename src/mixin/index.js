@@ -60,7 +60,7 @@ export default {
               const {
                 wxReady
               } = vm.$options.customOption;
-              wxReady();
+              wxReady.call(vm);
             }
           });
         }
