@@ -15,7 +15,7 @@ const urls = {
   buyIntention: '/common/dictionary/list/BUYINTENTION',
   uploadByMediaId: '/common/uploadByMediaId', // 同步前端微信上传的文件
   queryCustomerList: '/customer/queryCustomerList', // 查询直销员可选择入户服务人员列表 客户台账
-  queryAccompanier: '/user/single', // 搜索随行参与人
+  queryAccompanier: '/user/accompanyingUser', // 搜索随行参与人
   queryAddress(customerId) {
     return `/customer/address/list/${customerId}`; // 查询入户服务人员地址列表
   },

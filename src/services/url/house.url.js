@@ -20,6 +20,9 @@ const urls = {
   analysis: '/visitService/statistics/analysis', // 数据分析
   appraiseAdd: '/visitService/appraise/add', // 邀请评价
   sendWeiXinMsg: '/visitService/evaluation/sendWeiXinMsg', // 发送模板消息邀请评价
+  queryHistoryPlan: '/visitService/plan/queryHistoryPlan',// 查询历史入户服务接口
+  queryByCondition: '/visitService/story/queryByCondition',// 查询入户服务故事列表
+  
 };
 
 Object.entries(urls).forEach(([key, value]) => {
