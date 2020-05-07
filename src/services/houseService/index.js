@@ -83,4 +83,12 @@ export default {
     /* 发送模板消息邀请评价 */
     return axPostJson(urls.sendWeiXinMsg, data, param);
   },
+  queryHistoryPlan(data, param) {
+    /* 查询历史入户服务接口 */
+    return axPostJson(urls.queryHistoryPlan, data, param);
+  },
+  queryByCondition(data, param) {
+    /* 查询历史入户服务故事列表 */
+    return axPostJson(urls.queryByCondition, data, param);
+  },
 };

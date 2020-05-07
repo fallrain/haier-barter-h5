@@ -25,8 +25,9 @@
         ></b-date-picker>
       </div>
     </div>
+    <!-- 入户概览 -->
     <span class="data-analysis-date-text mt23">入户概览</span>
-    <ul class="activityDataAnalysis-data-grid">
+    <!-- <ul class="activityDataAnalysis-data-grid">
       <li class="activityDataAnalysis-data-grid-item">
         <div class="activityDataAnalysis-data-grid-item-num">{{dataObj.planCount}}</div>
         <div class="activityDataAnalysis-data-grid-item-user">计划入户数</div>
@@ -40,21 +41,28 @@
         <div class="activityDataAnalysis-data-grid-item-num">{{dataObj.favorableRate}}</div>
         <div class="activityDataAnalysis-data-grid-item-user">入户好评率</div>
       </li>
-    </ul>
-    <span class="data-analysis-date-text mt23">入户效果</span>
-    <ul class="activityDataAnalysis-data-grid1">
-<!--      <li class="activityDataAnalysis-data-grid-item">-->
-<!--        <div class="activityDataAnalysis-data-grid-item-num1">{{dataObj.}}</div>-->
-<!--        <div class="activityDataAnalysis-data-grid-item-user1">发展代言人</div>-->
-<!--      </li>-->
+    </ul> -->
+     <ul class="activityDataAnalysis-data-grid1">
+      <li class="activityDataAnalysis-data-grid-item">
+        <div class="activityDataAnalysis-data-grid-item-num1">{{dataObj.planCount}}</div>
+        <div class="activityDataAnalysis-data-grid-item-user1">计划入户数</div>
+      </li>
       <li class="activityDataAnalysis-data-grid-item">
         <div class="activityDataAnalysis-data-grid-item-num1">{{dataObj.serviceCount}}</div>
         <div class="activityDataAnalysis-data-grid-item-user1">实际入户数</div>
       </li>
-<!--      <li class="activityDataAnalysis-data-grid-item">-->
-<!--        <div class="activityDataAnalysis-data-grid-item-num1">{{dataObj.readCount}}</div>-->
-<!--        <div class="activityDataAnalysis-data-grid-item-user1">传播次数</div>-->
-<!--      </li>-->
+      <li class="activityDataAnalysis-data-grid-item">
+        <div class="activityDataAnalysis-data-grid-item-num1">{{dataObj.favorableRate}}</div>
+        <div class="activityDataAnalysis-data-grid-item-user1">入户好评率</div>
+      </li>
+    </ul>
+    <!-- 入户效果 -->
+    <span class="data-analysis-date-text mt23">入户效果</span>
+    <ul class="activityDataAnalysis-data-grid1">
+      <li class="activityDataAnalysis-data-grid-item">
+        <div class="activityDataAnalysis-data-grid-item-num1">{{dataObj.serviceCount}}</div>
+        <div class="activityDataAnalysis-data-grid-item-user1">实际入户数</div>
+      </li>
       <li class="activityDataAnalysis-data-grid-item">
         <div class="activityDataAnalysis-data-grid-item-num1">{{dataObj.orderCount}}</div>
         <div class="activityDataAnalysis-data-grid-item-user1">转化订单</div>
@@ -62,6 +70,22 @@
       <li class="activityDataAnalysis-data-grid-item">
         <div class="activityDataAnalysis-data-grid-item-num1">{{dataObj.orderAmount}}</div>
         <div class="activityDataAnalysis-data-grid-item-user1">转化订单额</div>
+      </li>
+    </ul>
+<!-- 用户评价 -->
+     <span class="data-analysis-date-text mt23">用户评价</span>
+    <ul class="activityDataAnalysis-data-grid1">
+      <li class="activityDataAnalysis-data-grid-item">
+        <div class="activityDataAnalysis-data-grid-item-num1">{{dataObj.positiveCommentCount}}</div>
+        <div class="activityDataAnalysis-data-grid-item-user1">好评数</div>
+      </li>
+      <li class="activityDataAnalysis-data-grid-item">
+        <div class="activityDataAnalysis-data-grid-item-num1">{{dataObj.moderateCommentCount}}</div>
+        <div class="activityDataAnalysis-data-grid-item-user1">中评数</div>
+      </li>
+      <li class="activityDataAnalysis-data-grid-item">
+        <div class="activityDataAnalysis-data-grid-item-num1">{{dataObj.negativeCommentCount}}</div>
+        <div class="activityDataAnalysis-data-grid-item-user1">差评数</div>
       </li>
     </ul>
 

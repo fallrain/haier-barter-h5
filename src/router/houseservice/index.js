@@ -10,6 +10,9 @@ const CompleteServiceStory = () => import('@/views/houseservice/CompleteServiceS
 const AddNewProduct = () => import('@/views/houseservice/AddNewProduct');// 新增家电信息
 const SearchAccompanying = () => import('@/views/houseservice/SearchAccompanying');// 搜索随行参与人
 const ServiceEvaluate = () => import('@/views/houseservice/ServiceEvaluate');// 评价页面
+const HouseStoreDetailEntry = () => import('@/views/houseservice/HouseStoreDetailEntry');//入戶故事詳情
+const HouseServiceDetail = () => import('@/views/houseservice/HouseServiceDetail');//入戶詳情
+
 const prefix = '/houseservice';
 const module = 'Houseservice';
 const data = [
@@ -107,6 +110,22 @@ const data = [
     component: ServiceEvaluate,
     meta: {
       title: '评价页面',
+    }
+  },
+  {
+    path: `${prefix}/houseStoreDetailEntry`,
+    name: `${module}.HouseStoreDetailEntry`,
+    component: HouseStoreDetailEntry,
+    meta: {
+      title: '入戶故事詳情页面',
+    }
+  },
+  {
+    path: `${prefix}/houseServiceDetail`,
+    name: `${module}.HouseServiceDetail`,
+    component: HouseServiceDetail,
+    meta: {
+      title: '入戶詳情页面',
     }
   },
 ];
