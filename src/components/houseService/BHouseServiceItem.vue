@@ -6,7 +6,7 @@
         <!--        <span class="date">查看日历</span>-->
       </div>
       <div v-show="list.length == 0" class="panel-body text-center text-666">暂无数据...</div>
-      <div class="panel-body" v-for="(item,index) in list" :key="index" @click="clickDetail">
+      <div class="panel-body" v-for="(item,index) in list" :key="index" @click="clickDetail(item)">
         <!--        自主创建-->
         <div v-if="item.flag == 0">
           <div class="rows mb20">
@@ -59,10 +59,10 @@
             </div>
           </div> -->
           <div class="btn-groups">
-            <button type="button" @click="successPlan(item)">完成入户</button>
-            <button type="button" @click="checkPlan(item)">查看订单</button>
-            <button type="button" @click="changePlan(item)">修改</button>
-            <button type="button" @click="deletePlan(item)" class="mn">删除</button>
+            <button type="button" @click.stop="successPlan(item)">完成入户</button>
+            <button type="button" @click.stop="checkPlan(item)">查看订单</button>
+            <button type="button" @click.stop="changePlan(item)">修改</button>
+            <button type="button" @click.stop="deletePlan(item)" class="mn">删除</button>
           </div>
         </div>
         <!--        用户申请-->
@@ -95,7 +95,7 @@
           <div class="btn-groups">
             <button type="button">完善计划</button>
             <button type="button">修改</button>
-            <button type="button" class="mn">删除</button>
+            <button  type="button" class="mn">删除</button>
           </div>
         </div>
       </div>
@@ -110,7 +110,7 @@
         <!--        <span class="date">展开详情</span>-->
       </div>
       <div v-show="otherlist.length == 0" class="panel-body text-center text-666">暂无数据...</div>
-      <div class="panel-body ptn" v-for="(item,index) in otherlist" :key="index" @click="clickDetail">
+      <div class="panel-body ptn" v-for="(item,index) in otherlist" :key="index" >
         <div class="title">{{item.title}}</div>
         <div class="rows mb20">
           <span class="info">
@@ -209,11 +209,8 @@ export default {
   },
   methods: {
     // 跳转入户详情
-    clickDetail() {
-      this.$router.push({
-        name: "Houseservice.CompleteFamilyInfor",
-        params: { test: {}, tag: "test" }
-      });
+    clickDetail(item) {
+    this.$emit("clickDetail", item);
     },
     // 跳到用户选择
     addServiceUser() {

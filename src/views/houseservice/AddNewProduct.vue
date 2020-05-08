@@ -180,7 +180,7 @@ import {
 } from '@/components/form';
 
 export default {
-  name: 'CompleteFamilyInfor',
+  name: 'AddNewProduct',
   components: {
     [Toast.name]: Toast,
     BDatePicker,

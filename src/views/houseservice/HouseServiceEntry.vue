@@ -30,6 +30,7 @@
         @changePlan="changePlan"
         @checkPlan="checkPlan"
         @morePlan="morePlan"
+        @clickDetail="clickDetail"
         :list="myPlanServices"
         :otherlist="otherPlanServices"
         :isMoreMyPlan="isMoreMyPlan"
@@ -51,7 +52,11 @@
     </div>-->
     <!-- 入户故事 -->
     <div v-show="current === 3">
-      <b-house-store-item :dataObj="appraiseData" :list="hoseStoreList"  v-on:rhgsListAction="rhgsListAction"></b-house-store-item>
+      <b-house-store-item
+        :dataObj="appraiseData"
+        :list="hoseStoreList"
+        v-on:rhgsListAction="rhgsListAction"
+      ></b-house-store-item>
     </div>
 
     <!--    数据分析-->
@@ -62,7 +67,9 @@
 </template>
 
 <script>
-import { Toast, Popup, PopupTitleBar, Button, Icon } from "mand-mobile";
+import {
+  Toast, Popup, PopupTitleBar, Button, Icon
+} from 'mand-mobile';
 
 import {
   BHouseServiceItem,
@@ -70,15 +77,16 @@ import {
   BEvaluateItem,
   BDataAnalysisItem,
   BHouseStoreItem
-} from "@/components/houseService";
+} from '@/components/houseService';
 
 export default {
-  name: "HouseServiceEntry",
+  name: 'HouseServiceEntry',
   components: {
     [Toast.name]: Toast,
     BHouseServiceItem,
     BFinishedItem,
     BEvaluateItem,
+
     BDataAnalysisItem,
     // eslint-disable-next-line vue/no-unused-components
     BHouseStoreItem,
@@ -123,22 +131,21 @@ export default {
     // this.postStoryList();
   },
   created() {
-    this.userinfo = JSON.parse(localStorage.getItem("userinfo"));
+    this.userinfo = JSON.parse(localStorage.getItem('userinfo'));
   },
   methods: {
-    rhgsListAction (a){
-      //我的 全国
+    rhgsListAction(a) {
+      // 我的 全国
       this.postStoryList();
     },
-    //入户故事列表
+    // 入户故事列表
     postStoryList(a) {
       // 新增
       const data = {
-        createdBy: "",
-        sortType: "0"
+        createdBy: '',
+        sortType: '0'
       };
-      this.houseService.queryByCondition(data, {}).then(res => {
-        debugger;
+      this.houseService.queryByCondition(data, {}).then((res) => {
         if (res.code === 1) {
         }
       });
@@ -148,16 +155,16 @@ export default {
       const data = {
         servicerId: this.userinfo.hmcid,
         pageNum: this.pageNum,
-        pageSize: "10"
+        pageSize: '10'
       };
-      this.houseService.queryPlanServiceList(data, {}).then(res => {
+      this.houseService.queryPlanServiceList(data, {}).then((res) => {
         // debugger;
         if (res.code === 1) {
           res.data.result.forEach((item, index) => {
             res.data.result[index].arrowtag = false;
-            if (item.productNames !== "") {
+            if (item.productNames !== '') {
               res.data.result[index].dealproducts = item.productNames.split(
-                ","
+                ','
               );
             } else {
               res.data.result[index].dealproducts = [];
@@ -183,15 +190,15 @@ export default {
     getOtherPlan() {
       const param = {
         servicerId: this.userinfo.hmcid,
-        pageNum: "1",
-        pageSize: "10"
+        pageNum: '1',
+        pageSize: '10'
       };
       // param.servicerId = this.userinfo.hmcid;
-      this.houseService.queryOtherPlanServiceList(param, "").then(res => {
+      this.houseService.queryOtherPlanServiceList(param, '').then((res) => {
         res.data.result.forEach((item, index) => {
           res.data.result[index].arrowtag = false;
-          if (item.productNames !== "") {
-            res.data.result[index].dealproducts = item.productNames.split(",");
+          if (item.productNames !== '') {
+            res.data.result[index].dealproducts = item.productNames.split(',');
           } else {
             res.data.result[index].dealproducts = [];
           }
@@ -204,18 +211,30 @@ export default {
       this.getMyPlan();
       this.getMySuccessPlan();
     },
+    clickDetail(item) {
+      // 进入入户详情
+      this.currentItem = item;
+      this.$router.push({
+        name: 'Houseservice.CompleteFamilyInfor',
+        query: {
+          customerId: item.customerInfoId,
+          tabState: this.judgeTabState,
+          customerInfo: JSON.stringify(item)
+        }
+      });
+    },
     changePlan(item) {
       // 修改计划列表
       this.currentItem = item;
       this.$router.push({
-        name: "Houseservice.AddServiceUser",
+        name: 'Houseservice.AddServiceUser',
         params: { customerInfo: item }
       });
     },
     checkPlan(item) {
       // 查看计划
       this.$router.push({
-        name: "Houseservice.CheckPlan",
+        name: 'Houseservice.CheckPlan',
         query: { id: item.id }
       });
     },
@@ -230,17 +249,17 @@ export default {
       // 查询已入户计划列表 （已入户）
       const data = {
         servicerId: this.userinfo.hmcid,
-        pageNum: "1",
-        pageSize: "20",
-        searchContent: val //搜索用
+        pageNum: '1',
+        pageSize: '20',
+        searchContent: val // 搜索用
       };
-      this.houseService.querySuccessPlanList(data, {}).then(res => {
+      this.houseService.querySuccessPlanList(data, {}).then((res) => {
         if (res.code === 1) {
           res.data.result.forEach((item, index) => {
             res.data.result[index].arrowtag = false;
-            if (item.productNames !== "") {
+            if (item.productNames !== '') {
               res.data.result[index].dealproducts = item.productNames.split(
-                ","
+                ','
               );
             } else {
               res.data.result[index].dealproducts = [];
@@ -254,17 +273,17 @@ export default {
     completeUserInfo(item) {
       this.currentItem = item;
       this.$router.push({
-        name: "Houseservice.CompleteUserInfor",
+        name: 'Houseservice.CompleteUserInfor',
         params: {}
       });
     },
     dealAppraise() {
-      const servicerId = JSON.parse(localStorage.getItem("userinfo")).hmcid;
+      const servicerId = JSON.parse(localStorage.getItem('userinfo')).hmcid;
       this.houseService
         .appraiseStatistics({
           servicerId
         })
-        .then(res => {
+        .then((res) => {
           if (res.code === 1) {
             this.appraiseData = res.data;
             this.tagNum3 = res.data.descriptions.length;
@@ -276,7 +295,7 @@ export default {
         .analysis({
           ...obj
         })
-        .then(res => {
+        .then((res) => {
           if (res.code === 1) {
             this.analysisData = res.data;
           }
@@ -295,14 +314,14 @@ export default {
       }
     },
     getQueryString(name) {
-      const reg = new RegExp(`(^|&)${name}=([^&]*)(&|$)`, "i");
+      const reg = new RegExp(`(^|&)${name}=([^&]*)(&|$)`, 'i');
       const r = window.location.search.substr(1).match(reg);
       if (r != null) return unescape(r[2]);
       return null;
     }
   },
   beforeRouteLeave(to, from, next) {
-    if (to.name === "Houseservice.CompleteUserInfor") {
+    if (to.name === 'Houseservice.CompleteUserInfor') {
       const obj = { completeInfo: this.currentItem };
       to.query.completeInfo = JSON.stringify(obj);
     }

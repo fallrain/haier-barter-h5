@@ -161,18 +161,20 @@
 </template>
 
 <script>
-import { Toast, Popup, PopupTitleBar, Button, Icon, Switch } from "mand-mobile";
+import {
+  Toast, Popup, PopupTitleBar, Button, Icon, Switch
+} from 'mand-mobile';
 
 import {
   BDatePicker,
   BItem,
   BPopAddressList,
   BPopCheckList
-} from "@/components/form";
-import addressData from "@/lib/address";
+} from '@/components/form';
+import addressData from '@/lib/address';
 
 export default {
-  name: "AddServiceUser",
+  name: 'AddServiceUser',
   components: {
     [Toast.name]: Toast,
     BDatePicker,
@@ -188,21 +190,21 @@ export default {
   data() {
     return {
       showMask: false,
-      orderFollowId: "", // 订单传过来的代办
+      orderFollowId: '', // 订单传过来的代办
       isTip: false,
-      activeOffset: "0",
+      activeOffset: '0',
       addressPopShow: false,
       addressList: [],
       consignee: {},
       isChangePlan: false,
-      pattern: "yyyy-MM-dd hh:mm",
+      pattern: 'yyyy-MM-dd hh:mm',
       usersex: 0,
       tag: [],
       tagList: [],
       tag1: [],
       tagList1: [],
-      accompanier: "",
-      createdType: "直销员手工创建的入户服务",
+      accompanier: '',
+      createdType: '直销员手工创建的入户服务',
       tagPopShow: false,
       tagPopShow1: false,
       productCodes: [],
@@ -210,28 +212,28 @@ export default {
       productCategory: [],
       productCategoryName: [],
       customerInfo: {
-        title: "",
-        customerId: "",
-        customerInfoId: "",
-        userId: "",
-        userName: "",
-        userPhone: "",
-        servicescape: "", // 入户服务场景
-        appointmentTime: "", // 用户预约时间
-        serviceTime: "", // 计划上门时间
-        servicerId: "", // 服务人ID
-        servicerName: "", // 服务人姓名
-        accompanyingId: "", // 随行人ID
-        accompanyingName: "", // 随行人姓名
-        giftId: "", // 服务礼品ID
-        giftName: "", // 服务礼品名称
-        productCodes: "", // 购买产品编码
-        productNames: "", // 购买产品名称
-        productCategory: "", // 产品组编码
-        productCategoryName: "", // 产品组名称
-        serviceAddress: "", // 入户服务地址
-        description: "", // 备注
-        warnFlag: "", // 是否加入提醒
+        title: '',
+        customerId: '',
+        customerInfoId: '',
+        userId: '',
+        userName: '',
+        userPhone: '',
+        servicescape: '', // 入户服务场景
+        appointmentTime: '', // 用户预约时间
+        serviceTime: '', // 计划上门时间
+        servicerId: '', // 服务人ID
+        servicerName: '', // 服务人姓名
+        accompanyingId: '', // 随行人ID
+        accompanyingName: '', // 随行人姓名
+        giftId: '', // 服务礼品ID
+        giftName: '', // 服务礼品名称
+        productCodes: '', // 购买产品编码
+        productNames: '', // 购买产品名称
+        productCategory: '', // 产品组编码
+        productCategoryName: '', // 产品组名称
+        serviceAddress: '', // 入户服务地址
+        description: '', // 备注
+        warnFlag: '', // 是否加入提醒
         flag: 0 // 服务计划类型
       }
     };
@@ -245,27 +247,27 @@ export default {
         if (tagObj) {
           name = tagObj.name;
         } else {
-          name = "";
+          name = '';
         }
         that.customerInfo.servicescape = this.tag[0];
         return name;
       }
-      return "";
+      return '';
     },
     tagName1() {
       if (this.tag1) {
         const tagObj = this.tagList1.find(v => v.id == this.tag1[0]);
         let name;
         if (tagObj) {
-          name = tagObj.name.split("&")[0];
+          name = tagObj.name.split('&')[0];
           this.customerInfo.giftId = this.tag1[0];
           this.customerInfo.giftName = name;
         } else {
-          name = "";
+          name = '';
         }
         return name;
       }
-      return "";
+      return '';
     }
   },
   activated() {
@@ -290,7 +292,7 @@ export default {
       this.getDefaultAddress();
       // 查询用户最新购买产品
       // 查询直销员信息
-      this.basicService.userInfo().then(res => {
+      this.basicService.userInfo().then((res) => {
         this.customerInfo.servicerId = res.data.hmcId;
         this.customerInfo.servicerName = res.data.username;
         this.orderService
@@ -302,10 +304,10 @@ export default {
               requestNoToast: true
             }
           )
-          .then(res => {
+          .then((res) => {
             if (res.code === 1) {
               if (res.data.orderDetailDtoList.length > 0) {
-                res.data.orderDetailDtoList.forEach(item => {
+                res.data.orderDetailDtoList.forEach((item) => {
                   this.productNames.push(
                     item.productModel + item.productCategoryName
                   );
@@ -359,19 +361,19 @@ export default {
       //   }
       // });
       if (
-        this.customerInfo.productCodes !== "" &&
-        this.customerInfo.productCodes !== null
+        this.customerInfo.productCodes !== ''
+        && this.customerInfo.productCodes !== null
       ) {
-        this.productNames = this.customerInfo.productNames.split(",");
-        this.productCodes = this.customerInfo.productCodes.split(",");
+        this.productNames = this.customerInfo.productNames.split(',');
+        this.productCodes = this.customerInfo.productCodes.split(',');
       }
       if (
-        this.customerInfo.productCategory !== "" &&
-        this.customerInfo.productCategory !== null
+        this.customerInfo.productCategory !== ''
+        && this.customerInfo.productCategory !== null
       ) {
-        this.productCategory = this.customerInfo.productCategory.split(",");
+        this.productCategory = this.customerInfo.productCategory.split(',');
         this.productCategoryName = this.customerInfo.productCategoryName.split(
-          ","
+          ','
         );
       }
       this.tag[0] = this.customerInfo.servicescape;
@@ -406,7 +408,7 @@ export default {
         pageNum: '1',
         pageSize: '100',
       };
-      this.houseService.queryHistoryPlan(data, {}).then(res => {
+      this.houseService.queryHistoryPlan(data, {}).then((res) => {
         if (res.code === 1) {
           this.showMask = true;
           debugger;
@@ -432,18 +434,18 @@ export default {
     queryCustomerAddressList() {
       this.productService
         .customerAddressList(this.customerInfo.customerId)
-        .then(res => {
+        .then((res) => {
           if (res.code === 1) {
             const Data = this.addressData.options;
-            res.data.forEach(address => {
+            res.data.forEach((address) => {
               address.consignee = {};
-              Data.forEach(p => {
+              Data.forEach((p) => {
                 if (address.province === p.value) {
                   address.consignee.provinceName = p.label;
-                  p.children.options.forEach(c => {
+                  p.children.options.forEach((c) => {
                     if (address.city === c.value) {
                       address.consignee.cityName = c.label;
-                      c.children.options.forEach(d => {
+                      c.children.options.forEach((d) => {
                         if (address.district === d.value) {
                           address.consignee.districtName = d.label;
                         }
@@ -461,7 +463,7 @@ export default {
     getDefaultAddress() {
       this.productService
         .deafaultCustomerAddress(this.customerInfo.userPhone)
-        .then(res => {
+        .then((res) => {
           if (res.code === 1) {
             if (res.data !== null) {
               console.log(res);
@@ -485,13 +487,13 @@ export default {
     getAddressName(province, city, district, address) {
       this.consignee.address = {};
       const Data = this.addressData.options;
-      Data.forEach(p => {
+      Data.forEach((p) => {
         if (province === p.value) {
           this.consignee.address.provinceName = p.label;
-          p.children.options.forEach(c => {
+          p.children.options.forEach((c) => {
             if (city === c.value) {
               this.consignee.address.cityName = c.label;
-              c.children.options.forEach(d => {
+              c.children.options.forEach((d) => {
                 if (district === d.value) {
                   this.consignee.address.districtName = d.label;
                 }
@@ -506,7 +508,7 @@ export default {
     chooseJoinPerson() {
       // 进入随行参与人页面
       this.$router.push({
-        name: "Houseservice.SearchAccompanying",
+        name: 'Houseservice.SearchAccompanying',
         params: {}
       });
     },
@@ -515,9 +517,9 @@ export default {
     },
     addAddress() {
       // 添加新地址
-      this.region = "add";
+      this.region = 'add';
       this.$router.push({
-        name: "Houseservice.ChooseAddress",
+        name: 'Houseservice.ChooseAddress',
         params: {
           region: this.region,
           customerInfo: this.customerInfo
@@ -530,9 +532,9 @@ export default {
       info.mobile = this.customerInfo.userPhone;
       console.log(info);
       console.log(this.customerInfo);
-      this.region = "edit";
+      this.region = 'edit';
       this.$router.push({
-        name: "Houseservice.ChooseAddress",
+        name: 'Houseservice.ChooseAddress',
         params: {
           region: this.region,
           customerInfo: info
@@ -551,9 +553,9 @@ export default {
     // 查询 入户服务场景 数据字典
     getServiceEle() {
       const data = [
-        { id: 1, name: "购买后指导家电使用" },
-        { id: 2, name: "用户关怀（上门清洗保养）" },
-        { id: 3, name: "未购买用户上门测量" }
+        { id: 1, name: '购买后指导家电使用' },
+        { id: 2, name: '用户关怀（上门清洗保养）' },
+        { id: 3, name: '未购买用户上门测量' }
       ];
       this.tagList = data;
     },
@@ -561,7 +563,7 @@ export default {
     chooseProduct() {
       /* 添加产品 */
       this.$router.push({
-        name: "Houseservice.SearchProduct"
+        name: 'Houseservice.SearchProduct'
       });
     },
     deleteProduct(index) {
@@ -574,7 +576,7 @@ export default {
     inputMax() {
       const strResult = String(this.customerInfo.description);
       if (strResult.length > 100) {
-        Toast.failed("最多可输入100个字符！");
+        Toast.failed('最多可输入100个字符！');
         this.customerInfo.description = strResult.slice(0, 100);
       }
     },
@@ -586,40 +588,40 @@ export default {
     // 保存
     dealSave() {
       if (
-        this.customerInfo.servicescape === undefined ||
-        this.customerInfo.servicescape === ""
+        this.customerInfo.servicescape === undefined
+        || this.customerInfo.servicescape === ''
       ) {
-        Toast.failed("入户服务场景不能为空");
+        Toast.failed('入户服务场景不能为空');
         return;
       }
       if (
-        this.customerInfo.serviceTime === undefined ||
-        this.customerInfo.serviceTime === ""
+        this.customerInfo.serviceTime === undefined
+        || this.customerInfo.serviceTime === ''
       ) {
-        Toast.failed("计划服务时间不能为空");
+        Toast.failed('计划服务时间不能为空');
         return;
       }
       if (
-        this.customerInfo.servicerName === undefined ||
-        this.customerInfo.servicerName === ""
+        this.customerInfo.servicerName === undefined
+        || this.customerInfo.servicerName === ''
       ) {
-        Toast.failed("服务人不能为空");
+        Toast.failed('服务人不能为空');
         return;
       }
       debugger;
       if (
-        this.customerInfo.serviceAddress === undefined ||
-        this.customerInfo.serviceAddress === ""
+        this.customerInfo.serviceAddress === undefined
+        || this.customerInfo.serviceAddress === ''
       ) {
-        Toast.failed("入户服务地址不能为空");
+        Toast.failed('入户服务地址不能为空');
         return;
       }
       // 处理选择的产品
-      this.customerInfo.productNames = this.productNames.join(",");
-      this.customerInfo.productCodes = this.productCodes.join(",");
-      this.customerInfo.productCategory = this.productCategory.join(",");
+      this.customerInfo.productNames = this.productNames.join(',');
+      this.customerInfo.productCodes = this.productCodes.join(',');
+      this.customerInfo.productCategory = this.productCategory.join(',');
       this.customerInfo.productCategoryName = this.productCategoryName.join(
-        ","
+        ','
       );
       if (this.orderFollowId) {
         this.customerInfo.orderFollowId = this.orderFollowId;
@@ -627,17 +629,17 @@ export default {
       console.log(this.customerInfo);
       if (!this.isChangePlan) {
         // 新增计划
-        this.houseService.createPlanService(this.customerInfo, {}).then(res => {
+        this.houseService.createPlanService(this.customerInfo, {}).then((res) => {
           if (res.code === 1) {
-            Toast.succeed("保存成功");
+            Toast.succeed('保存成功');
             this.dealTip(res.data);
           }
         });
       } else {
         // 修改计划
-        this.houseService.changePlanService(this.customerInfo, {}).then(res => {
+        this.houseService.changePlanService(this.customerInfo, {}).then((res) => {
           if (res.code === 1) {
-            Toast.succeed("保存成功");
+            Toast.succeed('保存成功');
             this.dealTip(res.data);
           }
         });
@@ -645,7 +647,7 @@ export default {
     },
     dealAddress(str) {
       const obj = JSON.parse(str);
-      if (typeof obj.addressName !== "undefined") {
+      if (typeof obj.addressName !== 'undefined') {
         // 选择地址
         this.customerInfo.serviceAddress = obj.addressName;
         this.customerInfo.customerInfoId = obj.customerInfoId;
@@ -655,33 +657,33 @@ export default {
     dealTip(id) {
       if (this.isTip) {
         let host = `${window.location.protocol}//${window.location.host}`;
-        if (host.indexOf("localhost") > -1) {
-          host = "https://testdb.haier.net";
+        if (host.indexOf('localhost') > -1) {
+          host = 'https://testdb.haier.net';
         }
         const url = `${host}/houseservice/checkPlan?id=${id}`;
         const endDate = new Date(
-          this.customerInfo.serviceTime.replace(/-/g, "/")
+          this.customerInfo.serviceTime.replace(/-/g, '/')
         );
         const tipInfo = {
           hmcId: this.customerInfo.servicerId,
           jumpPage: url,
           remindTitle: `${this.tagName}——${this.customerInfo.userName}`,
-          remindType: "1",
+          remindType: '1',
           topEndTime: endDate,
-          topStartTime: ""
+          topStartTime: ''
         };
         switch (this.activeOffset) {
-          case "0":
-            tipInfo.topStartTime = this.getTipTime(3, "d");
+          case '0':
+            tipInfo.topStartTime = this.getTipTime(3, 'd');
             break;
-          case "1":
-            tipInfo.topStartTime = this.getTipTime(1, "d");
+          case '1':
+            tipInfo.topStartTime = this.getTipTime(1, 'd');
             break;
-          case "2":
-            tipInfo.topStartTime = this.getTipTime(2, "h");
+          case '2':
+            tipInfo.topStartTime = this.getTipTime(2, 'h');
             break;
-          case "3":
-            tipInfo.topStartTime = this.getTipTime(1, "h");
+          case '3':
+            tipInfo.topStartTime = this.getTipTime(1, 'h');
             break;
         }
         this.basicService
@@ -691,35 +693,35 @@ export default {
             },
             {}
           )
-          .then(res => {
+          .then((res) => {
             if (res.code === 1) {
               debugger;
               this.$router.push({
-                name: "Houseservice.HouseServiceEntry"
+                name: 'Houseservice.HouseServiceEntry'
               });
             }
           });
       } else {
         this.$router.push({
-          name: "Houseservice.HouseServiceEntry"
+          name: 'Houseservice.HouseServiceEntry'
         });
       }
     },
     getTipTime(num, type) {
       const startDate = new Date(
-        this.customerInfo.serviceTime.replace(/-/g, "/")
+        this.customerInfo.serviceTime.replace(/-/g, '/')
       );
-      let endDate = "";
-      if (type === "d") {
+      let endDate = '';
+      if (type === 'd') {
         endDate = new Date(startDate.getTime() - num * 24 * 60 * 60 * 1000);
-      } else if (type === "h") {
+      } else if (type === 'h') {
         endDate = new Date(startDate.getTime() - num * 60 * 60 * 1000);
       }
       return endDate;
     }
   },
   beforeRouteLeave(to, from, next) {
-    if (to.name === "Houseservice.HouseServiceEntry") {
+    if (to.name === 'Houseservice.HouseServiceEntry') {
       this.$destroy();
     }
     next();
@@ -956,7 +958,7 @@ footer {
     border-radius: 8px;
     position: relative;
     padding-top: 90px;
-    
+
   }
   .listClass{
     overflow-y: auto;
