@@ -1,4 +1,4 @@
-<template xmlns:v-slot="">
+<template xmlns:v-slot="" >
   <div class="service-story">
     <!-- <div class="face-show">
       <div class="img-show">
@@ -33,9 +33,25 @@
         <!-- <div>{{customerInfo.tag}}</div> -->
       </div>
       <div class="mainbody">
+            <!-- <input
+          type="text"
+          v-show="this.customerInfo.status !== 1"
+          v-model="customerInfo.mainbody"
+          @input="judgemainbodyWord()"
+          placeholder="正文"
+        /> -->
+           <md-textarea-item
+        ref="demo0"
+        title=""
+        autosize
+        class="example"
+        v-model="customerInfo.mainbody"
+        placeholder="正文"
+        rows = '20'
+      />
         <div class="addBtnClass">
           <img
-            class="zanclass"
+            class=""
             @click="addAction"
             src="@/assets/images/houseServicer/rugsAdd_icon.png"
           />
@@ -162,55 +178,9 @@
         </div>
       </template>
     </div>
-
-    <div class="dialog" v-show="showMask">
-      <div class="dialog-container">
-        <div class="md-example-child md-example-child-reader md-example-child-reader-0">
-          <ul class="image-reader-list">
-            <li
-              class="image-reader-item"
-              v-for="(img, index) in imageList['reader0']"
-              :key="index"
-              :style="{
-          'backgroundImage': `url(${img})`,
-          'backgroundPosition': 'center center',
-          'backgroundRepeat': 'no-repeat',
-          'backgroundSize': 'cover'
-        }"
-            >
-              <md-tag
-                class="image-reader-item-del"
-                size="small"
-                shape="quarter"
-                fill-color="#111A34"
-                type="fill"
-                font-color="#fff"
-                @click.native="onDeleteImage('reader0', index)"
-              >
-                <md-icon name="close"></md-icon>
-              </md-tag>
-            </li>
-            <li class="image-reader-item add">
-              <md-image-reader
-                name="reader0"
-                @select="onReaderSelect"
-                @complete="onReaderComplete"
-                @error="onReaderError"
-                is-multiple
-              ></md-image-reader>
-              <md-icon name="camera" size="md" color="#CCC"></md-icon>
-            </li>
-          </ul>
-        </div>
-        <div class="bottomClass">
-          <button>取消</button>
-          <button>确定插入</button>
-        </div>
-        <div class="close-btn" @click="closeMask">
-          <i class="iconfont icon-close"></i>
-        </div>
-      </div>
-    </div>
+    <!-- SelectPhotosTools -->
+     <select-photos-tools  :showMask = 'showMaska' @clickCloseMask = 'clickCloseMask'
+      ></select-photos-tools>
   </div>
 </template>
 
@@ -224,14 +194,21 @@ import {
   ImageReader,
   Switch,
   Tag,
-  Dialog
-} from "mand-mobile";
-import { BUpload, BWxUpload } from "@/components/form";
+  Dialog,
+  TextareaItem, Field
+} from 'mand-mobile';
+import {
+  BUpload, BWxUpload
+} from '@/components/form';
+
+import {
+  SelectPhotosTools
+} from '@/components/houseService';
 
 export default {
-  name: "CompleteServiceStory",
+  name: 'CompleteServiceStory',
   components: {
-    Toast,
+    [Toast.name]: Toast,
     [Dialog.name]: Dialog,
     [Popup.name]: Popup,
     [PopupTitleBar.name]: PopupTitleBar,
@@ -239,57 +216,55 @@ export default {
     [Icon.name]: Icon,
     [ImageReader.name]: ImageReader,
     [Switch.name]: Switch,
-    BUpload,
-    BWxUpload
+    [BUpload.name]: BUpload,
+    [BWxUpload.name]: BWxUpload,
+    [Tag.name]: Tag,
+    [TextareaItem.name]: TextareaItem,
+    [Field.name]: Field,
+    [SelectPhotosTools.name]: SelectPhotosTools,
   },
   data() {
     return {
-      showMask: false,
+      showMaska: false,
       slotDialog: {
         open: false,
         btns: [
           {
-            text: "好的"
+            text: '好的'
           }
         ]
       },
-      imageList: {
-        reader0: [
-          "//img-hxy021.didistatic.com/static/strategymis/insurancePlatform_spu/uploads/27fb7f097ca218d743f816836bc7ea4a",
-          "//manhattan.didistatic.com/static/manhattan/insurancePlatform_spu/uploads/c2912793a222eb24b606a582fd849ab7"
-        ],
-        reader1: []
-      },
       isAddState: false,
-      uploadUrl: "/api/file/simpleUpload",
+      uploadUrl: '/api/file/simpleUpload',
       headers: {
-        Authorization: ""
+        Authorization: ''
       },
       switch1: true,
       switch2: true,
       defaultInfo: {},
       customerInfo: {
-        coverImage: "",
-        title: "",
-        tag: "",
+        coverImage: '',
+        title: '',
+        mainbody: '',
+        tag: '',
         authorizeFlag: 1,
         applyFlag: 1,
         heartInfo: [
           {
-            url: "",
-            descript: ""
+            url: '',
+            descript: ''
           }
         ],
         lifeInfo: [
           {
-            url: "",
-            descript: ""
+            url: '',
+            descript: ''
           }
         ],
         userwordInfo: [
           {
-            url: "",
-            descript: ""
+            url: '',
+            descript: ''
           }
         ]
       }
@@ -299,7 +274,7 @@ export default {
   mounted() {},
   created() {
     this.headers.Authorization = `Bearer  ${localStorage.getItem(
-      "acces_token"
+      'acces_token'
     )}`;
     if (this.$route.query.planId) {
       this.customerInfo.planId = this.$route.query.planId;
@@ -307,7 +282,7 @@ export default {
         .searchStoryByPlanId({
           planId: this.customerInfo.planId
         })
-        .then(res => {
+        .then((res) => {
           if (res.code === 1) {
             if (res.data === null) {
               this.isAddState = false;
@@ -318,16 +293,15 @@ export default {
               this.customerInfo.heartInfo = obj.heartInfo;
               this.customerInfo.lifeInfo = obj.lifeInfo;
               this.customerInfo.userwordInfo = obj.userwordInfo;
-              this.switch1 =
-                this.customerInfo.authorizeFlag === 1 ? true : false;
-              this.switch2 = this.customerInfo.applyFlag === 1 ? true : false;
+              this.switch1 = this.customerInfo.authorizeFlag === 1;
+              this.switch2 = this.customerInfo.applyFlag === 1;
             }
             return res;
           }
         })
         .then(() => {
           // 查询直销员信息
-          this.basicService.userInfo().then(res => {
+          this.basicService.userInfo().then((res) => {
             if (res.code === 1) {
               const storeName = res.data.storeInfo.storeName;
               const username = res.data.username;
@@ -339,64 +313,41 @@ export default {
     }
   },
   methods: {
-    onReaderSelect(name, { files }) {
-      files.forEach(file => {
-        console.log(
-          "[Mand Mobile] ImageReader Selected:",
-          "File Name " + file.name
-        );
-      });
-      Toast.loading("图片读取中...");
-    },
-    onReaderComplete(name, { dataUrl, file }) {
-      Toast.hide();
-      console.log(
-        "[Mand Mobile] ImageReader Complete:",
-        "File Name " + file.name
-      );
-      setTimeout(() => {
-        const demoImageList = this.imageList[name] || [];
-        demoImageList.push(dataUrl);
-        this.$set(this.imageList, name, demoImageList);
-      }, 100);
-    },
-    onReaderError(name, { msg }) {
-      Toast.failed(msg);
-    },
-    onDeleteImage(name, index) {
-      const demoImageList = this.imageList[name] || [];
-      demoImageList.splice(index, 1);
-      this.$set(this.imageList, name, demoImageList);
+    clickCloseMask(meg) {
+      this.showMaska = false;
     },
 
-    closeMask() {
-      this.showMask = false;
-    },
     closeBtn() {
-      this.$emit("cancel");
+      this.$emit('cancel');
       this.closeMask();
     },
     dangerBtn() {
-      this.$emit("danger");
+      this.$emit('danger');
       this.closeMask();
     },
     confirmBtn() {
-      this.$emit("confirm");
+      this.$emit('confirm');
       this.closeMask();
     },
     // 添加图片
     addAction() {
-      this.showMask = true;
+      this.showMaska = true;
     },
     judgeTitleWord() {
       if (this.customerInfo.title.length > 20) {
-        Toast.failed("最多输入20个字符！");
+        Toast.failed('最多输入20个字符！');
         this.customerInfo.title = this.customerInfo.title.substring(0, 20);
+      }
+    },
+    judgemainbodyWord() {
+      if (this.customerInfo.mainbody.length > 200) {
+        Toast.failed('最多输入200个字符！');
+        this.customerInfo.mainbody = this.customerInfo.mainbody.substring(0, 200);
       }
     },
     judgeContentWord(key, index) {
       if (this.customerInfo[key][index].descript.length > 100) {
-        Toast.failed("最多输入100个字符！");
+        Toast.failed('最多输入100个字符！');
         this.customerInfo[key][index].descript = this.customerInfo[key][
           index
         ].descript.substring(0, 100);
@@ -404,8 +355,8 @@ export default {
     },
     addInfor(index) {
       const obj = {
-        url: "",
-        descript: ""
+        url: '',
+        descript: ''
       };
       if (index == 1) {
         this.customerInfo.heartInfo.push(obj);
@@ -428,42 +379,42 @@ export default {
       };
       this.customerInfo.content = JSON.stringify(content);
       if (status === 1) {
-        if (this.customerInfo.coverImage === "") {
-          Toast.failed("请上传封面图片！");
+        if (this.customerInfo.coverImage === '') {
+          Toast.failed('请上传封面图片！');
           this.customerInfo.status = 0;
           return;
         }
-        if (this.customerInfo.title === "") {
-          Toast.failed("请输入故事标题！");
+        if (this.customerInfo.title === '') {
+          Toast.failed('请输入故事标题！');
           this.customerInfo.status = 0;
           return;
         }
         if (
-          this.customerInfo.content ===
-          '{"heartInfo":[{"url":"","descript":""}],"lifeInfo":[{"url":"","descript":""}],"userwordInfo":[{"url":"","descript":""}]}'
+          this.customerInfo.content
+          === '{"heartInfo":[{"url":"","descript":""}],"lifeInfo":[{"url":"","descript":""}],"userwordInfo":[{"url":"","descript":""}]}'
         ) {
-          Toast.failed("请输入故事内容！");
+          Toast.failed('请输入故事内容！');
           this.customerInfo.status = 0;
           return;
         }
       }
       if (!this.isAddState) {
         // 新增
-        this.houseService.addStory(this.customerInfo).then(res => {
+        this.houseService.addStory(this.customerInfo).then((res) => {
           if (res.code === 1) {
             if (status === 0) {
-              Toast.succeed("暂存成功");
+              Toast.succeed('暂存成功');
               setTimeout(() => {
                 this.$router.go(-1);
                 this.$destroy();
               }, 500);
             } else {
-              Toast.succeed("提交成功");
+              Toast.succeed('提交成功');
               this.houseService
                 .completeStory({
                   planId: this.customerInfo.planId
                 })
-                .then(res => {
+                .then((res) => {
                   if (res.code === 1) {
                     setTimeout(() => {
                       this.$router.go(-1);
@@ -476,21 +427,21 @@ export default {
         });
       } else if (this.isAddState) {
         // 修改
-        this.houseService.modifyStory(this.customerInfo).then(res => {
+        this.houseService.modifyStory(this.customerInfo).then((res) => {
           if (res.code === 1) {
             if (status === 0) {
-              Toast.succeed("暂存成功");
+              Toast.succeed('暂存成功');
               setTimeout(() => {
                 this.$router.go(-1);
                 this.$destroy();
               }, 500);
             } else {
-              Toast.succeed("提交成功");
+              Toast.succeed('提交成功');
               this.houseService
                 .completeStory({
                   planId: this.customerInfo.planId
                 })
-                .then(res => {
+                .then((res) => {
                   if (res.code === 1) {
                     setTimeout(() => {
                       this.$router.go(-1);
@@ -528,7 +479,7 @@ export default {
     uploadError(res) {
       /* 上传错误 */
       const errorObj = {
-        "FILE IS TOO LARGER MAX FILE IS": "图片最大不能超过5M"
+        'FILE IS TOO LARGER MAX FILE IS': '图片最大不能超过5M'
       };
       for (const p in errorObj) {
         if (new RegExp(p).test(res)) {
@@ -536,7 +487,7 @@ export default {
           return;
         }
       }
-      Toast.failed(res || "上传失败");
+      Toast.failed(res || '上传失败');
     }
   },
   beforeRouteLeave(to, from, next) {
@@ -550,6 +501,9 @@ textarea:disabled,
 input:disabled {
   background: #fff;
 }
+.app-container{
+  background: white;
+  }
 .service-story .g-core-image-upload-btn {
   width: 100%;
   height: 100%;
@@ -600,8 +554,10 @@ input:disabled {
 }
 .content {
   padding: 24px;
-  /*background: #fff;*/
+  background: #fff;
   .title {
+    padding-right: 10px;
+    border-bottom: 1px solid #EEEEEE;
     input {
       background: rgba(0, 0, 0, 0);
       border: none;
@@ -617,7 +573,25 @@ input:disabled {
     }
   }
   .mainbody {
+    position: relative;
     height: 618px;
+     input {
+      background: rgba(0, 0, 0, 0);
+      border: none;
+      margin: 24px 0;
+      width: 100%;
+      font-size: 32px;
+      // font-weight: bold;
+    }
+    .addBtnClass {
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
+    }
+    .addBtnClass img{
+      width: 47px;
+      height: 47px;
+    }
   }
   .templete-item {
     .tip-style {
@@ -750,79 +724,5 @@ input:disabled {
   font-weight: bold;
 }
 
-.dialog {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 9999;
-  .dialog-container {
-    width: 689px;
-    height: 819px;
-    background: #ffffff;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 8px;
-    position: relative;
-    padding: 15px;
-  }
-  .close-btn {
-    position: absolute;
-    background: yellow;
-    top: 16px;
-    right: 16px;
-    width: 30px;
-    height: 30px;
-    line-height: 30px;
-    text-align: center;
-    font-size: 18px;
-    cursor: pointer;
-    &:hover {
-      font-weight: 600;
-    }
-  }
-}
-.md-example-child-reader {
-  .image-reader-list {
-    float: left;
-    width: 100%;
-  }
-  .image-reader-item {
-    position: relative;
-    float: left;
-    width: 193px;
-    padding-bottom: 23.5%;
 
-    background: #fff;
-    box-shadow: 0 5px 20px rgba(197, 202, 213, 0.25);
-    box-sizing: border-box;
-    list-style: none;
-    border-radius: 4px;
-    background-size: cover;
-    overflow: hidden;
-    // &: nth-of-type(4n)
-    margin-left: 20px;
-    margin-top: 40px;
-    //  &.add;
-    .md-icon {
-      position: absolute;
-      top: 40%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      opacity: 0.5;
-    }
-    .image-reader-item-del {
-      background: #ff0000;
-    }
-  }
-  .bottomClass {
-    display: flex;
-    flex-direction: row;
-    background: #4a90e2;
-  }
-}
 </style>
