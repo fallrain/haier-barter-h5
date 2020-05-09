@@ -86,7 +86,6 @@ export default {
     BHouseServiceItem,
     BFinishedItem,
     BEvaluateItem,
-
     BDataAnalysisItem,
     // eslint-disable-next-line vue/no-unused-components
     BHouseStoreItem,
@@ -360,7 +359,7 @@ export default {
     align-items: center;
     justify-content: center;
     border-radius: 20px;
-    font-size: 10px;
+    // font-size: 10px;
     right: 10px;
     top: -10px;
   }

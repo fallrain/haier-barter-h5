@@ -59,9 +59,9 @@
             </div>
           </div> -->
           <div class="btn-groups">
-            <button type="button" @click.stop="successPlan(item)">完成入户</button>
+            <!-- <button type="button" @click.stop="successPlan(item)">完成入户</button>
             <button type="button" @click.stop="checkPlan(item)">查看订单</button>
-            <button type="button" @click.stop="changePlan(item)">修改</button>
+            <button type="button" @click.stop="changePlan(item)">修改</button> -->
             <button type="button" @click.stop="deletePlan(item)" class="mn">删除</button>
           </div>
         </div>
@@ -166,20 +166,30 @@
         </div>
       </template>
     </div>
+        <md-dialog
+      title="确认"
+      :closable="true"
+      v-model="basicDialog.open"
+      :btns="basicDialog.btns"
+    >请确认是否要删除该入户计划？
+    </md-dialog>
   </div>
 </template>
 
 
 <script>
-import { Icon, Toast, PopupTitleBar, Button } from "mand-mobile";
+import {
+  Icon, Toast, PopupTitleBar, Button, Dialog
+} from 'mand-mobile';
 
 export default {
-  name: "",
+  name: '',
   components: {
     [Icon.name]: Icon,
     [Toast.name]: Toast,
     [PopupTitleBar.name]: PopupTitleBar,
-    [Button.name]: Button
+    [Button.name]: Button,
+    [Dialog.name]: Dialog
   },
   props: {
     // followItem: {
@@ -201,28 +211,58 @@ export default {
   },
   data() {
     return {
-      currentItem: {}
+      currentItem: {},
+      basicDialog: {
+        open: false,
+        btns: [
+          {
+            text: '取消',
+            handler: this.onBasicCancel,
+          },
+          {
+            text: '确认',
+            handler: this.onBasicConfirm,
+          },
+        ],
+      },
     };
   },
   created() {
     console.log(this.list);
   },
   methods: {
+    onBasicConfirm() {
+      const data = {};
+      data.id = this.currentItem.id;
+      this.houseService.deletePlanService(data, {}).then((res) => {
+        console.log(res);
+        if (res.code === 1) {
+          Toast.succeed('删除计划成功');
+          this.$emit('updatePlan');
+        } else {
+          Toast.succeed('删除计划失败');
+        }
+      });
+      this.basicDialog.open = false;
+    },
+    onBasicCancel() {
+      this.basicDialog.open = false;
+    },
     // 跳转入户详情
     clickDetail(item) {
-    this.$emit("clickDetail", item);
+      this.$emit('clickDetail', item);
     },
     // 跳到用户选择
     addServiceUser() {
       // const query =
       this.$router.push({
-        name: "Houseservice.ChooseUser",
-        params: { test: {}, tag: "test" }
+        name: 'Houseservice.ChooseUser',
+        params: { test: {}, tag: 'test' }
       });
     },
     clickMore() {
       // 查询更多
-      this.$emit("morePlan");
+      this.$emit('morePlan');
     },
     change(item) {
       item.arrowtag = !item.arrowtag;
@@ -238,32 +278,23 @@ export default {
     },
     // 删除计划
     deletePlan(item) {
-      const data = {};
-      data.id = item.id;
-      this.houseService.deletePlanService(data, {}).then(res => {
-        console.log(res);
-        if (res.code === 1) {
-          Toast.succeed("删除计划成功");
-          this.$emit("updatePlan");
-        } else {
-          Toast.succeed("删除计划失败");
-        }
-      });
+      this.basicDialog.open = true;
+      this.currentItem = item;
     },
     changePlan(item) {
       // 修改计划 changePlan
-      this.$emit("changePlan", item);
+      this.$emit('changePlan', item);
     },
     checkPlan(item) {
       // 修改计划 changePlan
-      this.$emit("checkPlan", item);
+      this.$emit('checkPlan', item);
     },
     successPlan(item) {
       // 标注计划已入户
       item.status = 1;
-      this.houseService.changePlanService(item, {}).then(res => {
+      this.houseService.changePlanService(item, {}).then((res) => {
         if (res.code === 1) {
-          this.$emit("updatePlan");
+          this.$emit('updatePlan');
         }
       });
     }

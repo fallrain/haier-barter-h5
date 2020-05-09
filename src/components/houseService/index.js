@@ -3,6 +3,7 @@ import BFinishedItem from './BFinishedItem';
 import BEvaluateItem from './BEvaluateItem';
 import BDataAnalysisItem from './BDataAnalysisItem';
 import BHouseStoreItem from './BHouseStoreItem';
+import SelectPhotosTools from './SelectPhotosTools';
 
 /* eslint-disable import/prefer-default-export */
 export {
@@ -10,5 +11,6 @@ export {
   BFinishedItem,
   BEvaluateItem,
   BDataAnalysisItem,
-  BHouseStoreItem
+  BHouseStoreItem,
+  SelectPhotosTools
 };

@@ -239,9 +239,9 @@ export default {
   margin-bottom: 16px;
 }
 .btn-groups {
-  text-align: right;
-  // position: absolute;
-  button {
+  position: absolute;
+  right: -10px;  
+button {
     font-size: 24px;
     margin-right: 25px;
     border-radius: 3.333vw;
@@ -361,6 +361,7 @@ export default {
   position: relative;
   display: flex;
   justify-content: space-between;
+  height: 40px;
 }
 .shareClass {
   display: flex;
