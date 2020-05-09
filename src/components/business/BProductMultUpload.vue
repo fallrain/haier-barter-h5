@@ -38,6 +38,7 @@
             :imgs="fileMap[product.id]"
             @delFun="(delIndex)=>delImg(delIndex, fileMap[product.id], product)"
             @errorhandle="uploadError"
+            @imgClick="imgClick"
           ></b-wx-upload>
           <p class="bProductMultUpload-item-inf">上传购机凭证,包括:发票、购机小票</p>
         </div>
@@ -176,6 +177,10 @@ export default {
     delImg(index, fileList, product) {
       fileList.splice(index, 1);
       this.$emit('delImg', fileList, product);
+    },
+    imgClick(src) {
+      /* 图片点击事件 */
+      this.$emit('imgClick', src);
     }
   }
 };

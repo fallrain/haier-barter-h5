@@ -11,7 +11,9 @@
       >
         <i class="iconfont del icon-shanchu" @click="delFun(index)"></i>
         <img
-          :src="item" class="images"
+          :src="item"
+          class="images"
+          @click="imgClick(item,index)"
         >
       </div>
     </div>
@@ -114,6 +116,10 @@ export default {
           }
         });
       });
+    },
+    imgClick(src) {
+      /* 图片点击事件 */
+      this.$emit('imgClick', src);
     }
   }
 };
