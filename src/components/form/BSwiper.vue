@@ -18,8 +18,8 @@
       v-bind="$attrs"
     >
       <md-swiper-item
-        v-for="(item, $index) in imgs"
-        :key="$index"
+        v-for="(item) in imgs"
+        :key="item"
       >
         <img
           :src="item.src"

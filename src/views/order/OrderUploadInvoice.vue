@@ -86,7 +86,7 @@
           v-show="rightsReceiveType===2"
           type="button"
           class="common-submit-btn-default"
-          @click="skipUpload"
+          @click="updateSubmit"
         >下一步
         </button>
       </div>
@@ -287,13 +287,20 @@ export default {
         this.splice(index, 1);
       }
     },
-
     updateSubmit() {
-      if (!this.invoiceList.find(v => v.invoiceUrl)) {
-        Toast.failed('请上传凭证！');
-        return;
+      let invoiceList = JSON.parse(JSON.stringify(this.invoiceList));
+      if (this.rightsReceiveType === 1) {
+        if (!this.invoiceList.find(v => v.invoiceUrl)) {
+          Toast.failed('请上传凭证！');
+          return;
+        }
+      } else {
+        // 选择扫码，是无需上传的情况，invoiceUrl重置为null
+        invoiceList = invoiceList.forEach((v) => {
+          v.invoiceUrl = null;
+        });
       }
-      this.orderService.uploadInvoice(this.invoiceList, {
+      this.orderService.uploadInvoice(invoiceList, {
         orderNo: this.orderNo,
         rightsReceiveType: this.rightsReceiveType
       }).then((res) => {
