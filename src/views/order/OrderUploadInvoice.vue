@@ -19,7 +19,13 @@
         </div>
       </div>
       <div v-show="rightsReceiveType===1 || !isMustUploadInvoice">
-        <div class="orderUploadInvoice-head mt23">上传产品购机凭证</div>
+        <div class="orderUploadInvoice-head mt23">
+          <span>上传产品购机凭证</span>
+          <span
+            class="orderUploadInvoice-head-btn"
+            @click="showExample"
+          >查看示例</span>
+        </div>
         <div class="orderUploadInvoice-cnt">
           <b-product-mult-upload
             :products="products"
@@ -35,7 +41,10 @@
         <p class="orderUploadInvoice-tips-title">温馨提示：</p>
         <p>{{warmTips}}</p>
       </div>
-      <div class="orderUploadInvoice-question mt16">
+      <div
+        class="orderUploadInvoice-question mt16"
+        v-show="rightsReceiveType!==2"
+      >
         <p class="orderUploadInvoice-question-title">问题解答：</p>
         <ul>
           <li
@@ -92,6 +101,10 @@
       </div>
     </div>
     <b-swiper
+      :show.sync="isShowInvoice"
+      :imgs="invoiceExampleList"
+    ></b-swiper>
+    <b-swiper
       :show.sync="invoicePreviewShow"
       :imgs="invoiceImgList"
       ref="bSwiper"
@@ -121,6 +134,10 @@ import {
   BRadioItem
 } from '@/components/form';
 import BSwiper from '../../components/form/BSwiper';
+
+import invoiceExample1 from '@/assets/images/uploadInvoice/invoiceExample1@2x.jpg';
+import invoiceExample2 from '@/assets/images/uploadInvoice/invoiceExample2@2x.jpg';
+import invoiceExample3 from '@/assets/images/uploadInvoice/invoiceExample3@2x.jpg';
 
 export default {
   name: 'OrderUploadInvoice',
@@ -163,6 +180,10 @@ export default {
       invoiceImgList: [],
       // 轮播默认的索引
       invoiceDefaultIndex: 0,
+      // 是否显示发票示例
+      isShowInvoice: false,
+      // 发票图片数组
+      invoiceExampleList: []
     };
   },
   activated() {
@@ -202,6 +223,22 @@ export default {
     }
   },
   methods: {
+    showExample() {
+      /* 显示发票示例 */
+      this.isShowInvoice = true;
+      this.invoiceExampleList = [
+
+        {
+          src: invoiceExample1
+        },
+        {
+          src: invoiceExample2
+        },
+        {
+          src: invoiceExample3
+        }
+      ];
+    },
     async checkMustUploadInvoice() {
       /* 检查是否必须上传发票 */
       const { code, data } = await this.orderService.ifUploadInvoice({
@@ -390,10 +427,19 @@ export default {
   }
 
   .orderUploadInvoice-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     color: #333;
     font-size: 30px;
     font-weight: 600;
     line-height: 42px;
+  }
+
+  .orderUploadInvoice-head-btn {
+    color: #1969C6;
+    font-size: 24px;
+    font-weight: 400;
   }
 
   .orderUploadInvoice-head-radio-wrap {
@@ -453,5 +499,11 @@ export default {
 
   .orderUploadInvoice-question-item-answer {
     color: #1969C6;
+  }
+
+  .bSwiper-showExample {
+    .md-swiper-item {
+      width: 100% !important;
+    }
   }
 </style>

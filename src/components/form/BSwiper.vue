@@ -19,7 +19,7 @@
     >
       <md-swiper-item
         v-for="(item) in imgs"
-        :key="item.src"
+        :key="'img' + item.src"
       >
         <img
           :src="item.src"
