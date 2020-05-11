@@ -288,17 +288,17 @@ export default {
       }
     },
     updateSubmit() {
-      let invoiceList = JSON.parse(JSON.stringify(this.invoiceList));
-      if (this.rightsReceiveType === 1) {
+      const invoiceList = JSON.parse(JSON.stringify(this.invoiceList));
+      if (this.rightsReceiveType === 2) {
+        // 选择扫码，是无需上传的情况，invoiceUrl重置为null
+        invoiceList.forEach((v) => {
+          v.invoiceUrl = null;
+        });
+      } else {
         if (!this.invoiceList.find(v => v.invoiceUrl)) {
           Toast.failed('请上传凭证！');
           return;
         }
-      } else {
-        // 选择扫码，是无需上传的情况，invoiceUrl重置为null
-        invoiceList = invoiceList.forEach((v) => {
-          v.invoiceUrl = null;
-        });
       }
       this.orderService.uploadInvoice(invoiceList, {
         orderNo: this.orderNo,
