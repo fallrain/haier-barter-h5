@@ -3,29 +3,6 @@
     <div class="dialog-container">
       <div class="md-example-child md-example-child-reader md-example-child-reader-0">
         <ul class="image-reader-list">
-          <li
-            class="image-reader-item"
-            v-for="(img, index) in imageList['reader0']"
-            :key="index"
-            :style="{
-          'backgroundImage': `url(${img})`,
-          'backgroundPosition': 'center center',
-          'backgroundRepeat': 'no-repeat',
-          'backgroundSize': 'cover'
-        }"
-          >
-            <md-tag
-              class="image-reader-item-del"
-              size="small"
-              shape="quarter"
-              fill-color="#111A34"
-              type="fill"
-              font-color="#fff"
-              @click.native="onDeleteImage('reader0', index)"
-            >
-              <md-icon name="close"></md-icon>
-            </md-tag>
-          </li>
           <li class="image-reader-item add">
             <md-image-reader
               name="reader0"
@@ -36,21 +13,47 @@
             ></md-image-reader>
             <md-icon name="camera" size="md" color="#CCC"></md-icon>
           </li>
+          <li
+            class="image-reader-item"
+            v-for="(img, index) in imageList['reader0']"
+            :key="index"
+            @click="checkTab(img)"
+            :style="{
+          'backgroundImage': `url(${img})`,
+          'backgroundPosition': 'center center',
+          'backgroundRepeat': 'no-repeat',
+          'backgroundSize': 'cover'
+        }"
+          >
+            <!-- <md-tag
+              class="image-reader-item-del"
+              size="small"
+              shape="quarter"
+              fill-color="#111A34"
+              type="fill"
+              font-color="#fff"
+              @click.native="onDeleteImage('reader0', index)"
+            >
+              <md-icon name="close"></md-icon>
+            </md-tag>-->
+            <div v-for="(img1, index1) in checkedList" :key="index1" v-show="img === img1">
+              <img class="selectclass" src="@/assets/images/houseServicer/selecticon-done.png" />
+            </div>
+          </li>
         </ul>
       </div>
       <div class="bottomClass">
-        <button>取消</button>
-        <button>确定插入</button>
+        <button @click="closeMask">取消</button>
+        <button @click="insertMask">确定插入</button>
       </div>
-      <div class="close-btn" @click="closeMask">
+      <!-- <div class="close-btn" @click="closeMask">
         <i class="iconfont icon-close"></i>
-      </div>
+      </div>-->
     </div>
   </div>
 </template>
 
 <script>
-
 import {
   Toast,
   DropMenu,
@@ -62,7 +65,8 @@ import {
   Switch,
   Tag,
   Dialog,
-  TextareaItem, Field
+  TextareaItem,
+  Field
 } from 'mand-mobile';
 
 export default {
@@ -80,7 +84,7 @@ export default {
     [Switch.name]: Switch,
     [Tag.name]: Tag,
     [TextareaItem.name]: TextareaItem,
-    [Field.name]: Field,
+    [Field.name]: Field
   },
 
   props: {
@@ -102,9 +106,19 @@ export default {
         ],
         reader1: []
       },
+      checkedList: [],
     };
   },
   methods: {
+    checkTab(img) {
+      const index = this.checkedList.indexOf(img);
+      if (index === -1) {
+        this.checkedList.push(img);
+      } else {
+        this.checkedList.splice(index, 1);
+      }
+    },
+    // 相册获取图片代理
     onReaderSelect(name, { files }) {
       files.forEach((file) => {
         console.log(
@@ -122,7 +136,7 @@ export default {
       );
       setTimeout(() => {
         const demoImageList = this.imageList[name] || [];
-        demoImageList.push(dataUrl);
+        demoImageList.unshift(dataUrl);
         this.$set(this.imageList, name, demoImageList);
       }, 100);
     },
@@ -134,9 +148,19 @@ export default {
       demoImageList.splice(index, 1);
       this.$set(this.imageList, name, demoImageList);
     },
+    // 取消
     closeMask() {
-      this.$emit('clickCloseMask', '123');
+      this.$emit('clickCloseMask', '');
     },
+    // 确定插入
+    insertMask() {
+      console.log('确定插入');
+      if (this.checkedList !== undefined && this.checkedList.length > 0) {
+        this.$emit('insertList', this.checkedList);
+      } else {
+        Toast.info('请点击图片，选中要插入的图片');
+      }
+    }
   }
 };
 </script>
@@ -151,10 +175,10 @@ export default {
   background: rgba(0, 0, 0, 0.6);
   z-index: 9999;
   .dialog-container {
+    // overflow-y: auto;
     width: 689px;
-    height: 819px;
+    height: 869px;
     background: #ffffff;
-    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -180,13 +204,16 @@ export default {
 }
 .md-example-child-reader {
   .image-reader-list {
+    overflow-y: auto;
     float: left;
     width: 100%;
+    height: 700px;
   }
   .image-reader-item {
     position: relative;
     float: left;
     width: 193px;
+    height: 193px;
     padding-bottom: 23.5%;
 
     background: #fff;
@@ -210,11 +237,36 @@ export default {
     .image-reader-item-del {
       background: #ff0000;
     }
+    .selectclass {
+      position: absolute;
+      width: 36px;
+      height: 36px;
+      right: 10px;
+      top: 10px;
+    }
   }
-  .bottomClass {
-    display: flex;
-    flex-direction: row;
-    background: #4a90e2;
-  }
+}
+.bottomClass {
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  bottom: 40px;
+  right: 20px;
+}
+.bottomClass button {
+  border: 1px solid #1969c6;
+  color: #1969c6;
+  border-radius: 28px;
+  background: #fff;
+  height: 56px;
+  margin-left: 20px;
+  padding-left: 15px;
+  padding-right: 15px;
+  font-size: 25px;
+}
+</style>
+<style lang="scss" scope>
+.md-toast .md-popup {
+    z-index: 99700;
 }
 </style>

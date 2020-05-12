@@ -114,7 +114,7 @@ export default {
       mySuccessPlan: [
         // 我的已入户计划用户信息
       ],
-      hoseStoreList: [1, 2, 3, 4, 5],
+      hoseStoreList: [],
       appraiseData: {},
       analysisData: {},
       userinfo: {}
@@ -127,7 +127,7 @@ export default {
     this.getOtherPlan(); // 其他入户计划列表查询
     this.getMySuccessPlan(); // 查询已入户计划列表
     this.dealAppraise();
-    // this.postStoryList();
+    this.postStoryList(); // 查询入户故事列表
   },
   created() {
     this.userinfo = JSON.parse(localStorage.getItem('userinfo'));
@@ -135,17 +135,18 @@ export default {
   methods: {
     rhgsListAction(a) {
       // 我的 全国
-      this.postStoryList();
+      this.postStoryList(a);
     },
     // 入户故事列表
     postStoryList(a) {
-      // 新增
       const data = {
-        createdBy: '',
+        createdBy: a, // 创建故事的直销员id 我的
         sortType: '0'
       };
       this.houseService.queryByCondition(data, {}).then((res) => {
+        debugger;
         if (res.code === 1) {
+          this.hoseStoreList = res.data.result;
         }
       });
     },
