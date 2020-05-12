@@ -39,7 +39,15 @@
       </div>
       <div class="orderUploadInvoice-tips mt16">
         <p class="orderUploadInvoice-tips-title">温馨提示：</p>
-        <p>{{warmTips}}</p>
+        <p v-if="typeof warmTips==='string'">{{warmTips}} </p>
+        <ol v-else>
+          <li
+            v-for="(item,index) in warmTips"
+            :key="index"
+          >
+            <p>{{index + 1}}.{{item}}</p>
+          </li>
+        </ol>
       </div>
       <div
         class="orderUploadInvoice-question mt16"
@@ -209,8 +217,11 @@ export default {
     ]),
     warmTips() {
       /* 温馨提示 */
-      let tips = '';
-      const rightsTips = '包含权益的订单必须上传购机凭证。';
+      let tips;
+      const rightsTips = [
+        '发票校验通过才可领取权益',
+        '卡萨帝单品权益、尊享卡权益，用户必须扫码领取'
+      ];
       if (this.isMustUploadInvoice) {
         tips = {
           1: rightsTips,
