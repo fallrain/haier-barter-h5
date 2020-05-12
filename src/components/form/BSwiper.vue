@@ -15,6 +15,8 @@
       :is-loop="false"
       :useNative-driver="false"
       :autoplay="0"
+      :has-dots="false"
+      @after-change="afterChange"
       v-bind="$attrs"
     >
       <md-swiper-item
@@ -28,6 +30,12 @@
         >
       </md-swiper-item>
     </md-swiper>
+    <div
+      v-show="imgs.length"
+      class="bSwiper-page"
+    >
+      {{curIndex}}/{{imgs.length}}
+    </div>
   </div>
 </template>
 
@@ -53,10 +61,28 @@ export default {
       type: Array
     }
   },
+  data() {
+    return {
+      // 当前的图片序号
+      curIndex: 1
+    };
+  },
+  watch: {
+    show(val) {
+      // 打开的时候修改
+      if (val) {
+        this.curIndex = this.$refs.swiper.getIndex() + 1;
+      }
+    }
+  },
   methods: {
     handleHide() {
       this.$emit('update:show', false);
+    },
+    afterChange(from, to) {
+      this.curIndex = to + 1;
     }
+
   }
 };
 </script>
@@ -98,13 +124,21 @@ export default {
 
   .bSwiper-img {
     width: 100%;
-    max-height: 800px;
+    max-height: 100%;
   }
 
   .bSwiper-wrap {
     width: 650px;
+    height: 800px;
     margin-left: auto;
     margin-right: auto;
-    margin-top: percentage(120/375);
+    margin-top: percentage(100/375);
+  }
+
+  .bSwiper-page{
+    text-align: center;
+    color: #fff;
+    font-size: 24px;
+    margin-top: 50px;
   }
 </style>
