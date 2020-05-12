@@ -15,7 +15,7 @@
         更换封面图片</span>
     </div>-->
     <div class="content">
-      <div class="title">
+      <!-- <div class="title">
         <input
           type="text"
           v-show="this.customerInfo.status !== 1"
@@ -30,32 +30,37 @@
           disabled
           placeholder="请输入标题"
         />
-        <!-- <div>{{customerInfo.tag}}</div> -->
-      </div>
+        <!-- <div>{{customerInfo.tag}}</div>
+      </div>-->
       <div class="mainbody">
-            <!-- <input
+        <!-- <input
           type="text"
           v-show="this.customerInfo.status !== 1"
           v-model="customerInfo.mainbody"
           @input="judgemainbodyWord()"
           placeholder="正文"
-        /> -->
-           <md-textarea-item
-        ref="demo0"
-        title=""
-        autosize
-        class="example"
-        v-model="customerInfo.mainbody"
-        placeholder="正文"
-        rows = '20'
-      />
+        />-->
+
+        <rich-editor
+          class="dasfgh"
+          :title.sync="customerInfo.title"
+          :description.sync="customerInfo.mainbody"
+          placeholder="请输入标题"
+          contentplaceholder="正文"
+          :hasTitle="true"
+        ></rich-editor>
+        <!-- <md-textarea-item
+          ref="demo0"
+          title
+          autosize
+          class="example"
+          v-model="customerInfo.mainbody"
+          placeholder="正文"
+          rows="20"
+        />
         <div class="addBtnClass">
-          <img
-            class=""
-            @click="addAction"
-            src="@/assets/images/houseServicer/rugsAdd_icon.png"
-          />
-        </div>
+          <img class @click="addAction" src="@/assets/images/houseServicer/rugsAdd_icon.png" />
+        </div>-->
       </div>
       <!-- <div class="templete-item">
         <div class="text-center mb16 mt16">心动之选</div>
@@ -144,43 +149,55 @@
         </div>
         <div class="add-new" v-show="customerInfo.status !== 1" @click="addInfor(3)">+</div>
       </div>-->
-      <div class="switch-item">
-        <div class="switch-info">
-          <div class="fs28 text-666">用户是否同意在企业内部宣传展示</div>
-          <div class="fs24 text-999">用户姓名、地址、电话严格保密，不会展示</div>
+      <div class="bottomThreeClass">
+        <div class="switch-item">
+          <div class="switch-info">
+            <div class="fs28 text-666">用户是否同意在企业内部宣传展示</div>
+            <div class="fs24 text-999">用户姓名、地址、电话严格保密，不会展示</div>
+          </div>
+          <md-switch v-show="customerInfo.status !== 1" v-model="switch1"></md-switch>
+          <md-switch v-show="customerInfo.status === 1" v-model="switch1" disabled></md-switch>
         </div>
-        <md-switch v-show="customerInfo.status !== 1" v-model="switch1"></md-switch>
-        <md-switch v-show="customerInfo.status === 1" v-model="switch1" disabled></md-switch>
-      </div>
-      <div class="switch-item">
-        <div class="switch-info">
-          <div class="fs28 text-666">提交申请作为优秀服务案例</div>
-          <div class="fs24 text-999">勾选后，将提交中心和总部人员进行审核</div>
+        <div class="switch-item">
+          <div class="switch-info">
+            <div class="fs28 text-666">提交申请作为优秀服务案例</div>
+            <div class="fs24 text-999">勾选后，将提交中心和总部人员进行审核</div>
+          </div>
+          <md-switch v-show="customerInfo.status !== 1" v-model="switch2"></md-switch>
+          <md-switch v-show="customerInfo.status === 1" v-model="switch2" disabled></md-switch>
         </div>
-        <md-switch v-show="customerInfo.status !== 1" v-model="switch2"></md-switch>
-        <md-switch v-show="customerInfo.status === 1" v-model="switch2" disabled></md-switch>
+        <!--    底部按钮-->
+        <div class="footer">
+          <template>
+            <div
+              v-show="customerInfo.status !== 1"
+              class="md-example-child md-example-child-button"
+            >
+              <div class="md-example-section">
+                <md-button type="primary" class="wp48" inline @click="submit(1)">保存</md-button>
+                <md-button type="primary" class="wp48" inline plain @click="submit(0)">取消</md-button>
+                <!--            <md-button type="primary" inline plain >预览</md-button>-->
+              </div>
+            </div>
+            <div
+              v-show="customerInfo.status === 1"
+              class="md-example-child md-example-child-button"
+            >
+              <div class="md-example-section">
+                <md-button class="w100per" type="primary" inline @click="goBack">返回</md-button>
+              </div>
+            </div>
+          </template>
+        </div>
       </div>
     </div>
-    <!--    底部按钮-->
-    <div class="footer">
-      <template>
-        <div v-show="customerInfo.status !== 1" class="md-example-child md-example-child-button">
-          <div class="md-example-section">
-            <md-button type="primary" class="wp48" inline @click="submit(1)">保存</md-button>
-            <md-button type="primary" class="wp48" inline plain @click="submit(0)">取消</md-button>
-            <!--            <md-button type="primary" inline plain >预览</md-button>-->
-          </div>
-        </div>
-        <div v-show="customerInfo.status === 1" class="md-example-child md-example-child-button">
-          <div class="md-example-section">
-            <md-button class="w100per" type="primary" inline @click="goBack">返回</md-button>
-          </div>
-        </div>
-      </template>
-    </div>
+
     <!-- SelectPhotosTools -->
-     <select-photos-tools  :showMask = 'showMaska' @clickCloseMask = 'clickCloseMask'
-      ></select-photos-tools>
+    <select-photos-tools
+      :showMask="showMaska"
+      @clickCloseMask="clickCloseMask"
+      @insertList="insertList"
+    ></select-photos-tools>
   </div>
 </template>
 
@@ -195,7 +212,8 @@ import {
   Switch,
   Tag,
   Dialog,
-  TextareaItem, Field
+  TextareaItem,
+  Field
 } from 'mand-mobile';
 import {
   BUpload, BWxUpload
@@ -204,6 +222,10 @@ import {
 import {
   SelectPhotosTools
 } from '@/components/houseService';
+
+import {
+  RichEditor
+} from '@/components/haierHouse';
 
 export default {
   name: 'CompleteServiceStory',
@@ -222,6 +244,7 @@ export default {
     [TextareaItem.name]: TextareaItem,
     [Field.name]: Field,
     [SelectPhotosTools.name]: SelectPhotosTools,
+    [RichEditor.name]: RichEditor,
   },
   data() {
     return {
@@ -239,6 +262,7 @@ export default {
       headers: {
         Authorization: ''
       },
+      imgList: [],
       switch1: true,
       switch2: true,
       defaultInfo: {},
@@ -313,7 +337,14 @@ export default {
     }
   },
   methods: {
-    clickCloseMask(meg) {
+    // 确定插入
+    insertList(data) {
+      debugger;
+      this.imgList = data;
+      this.showMaska = false;
+    },
+    // 取消
+    clickCloseMask() {
       this.showMaska = false;
     },
 
@@ -342,7 +373,10 @@ export default {
     judgemainbodyWord() {
       if (this.customerInfo.mainbody.length > 200) {
         Toast.failed('最多输入200个字符！');
-        this.customerInfo.mainbody = this.customerInfo.mainbody.substring(0, 200);
+        this.customerInfo.mainbody = this.customerInfo.mainbody.substring(
+          0,
+          200
+        );
       }
     },
     judgeContentWord(key, index) {
@@ -501,9 +535,16 @@ textarea:disabled,
 input:disabled {
   background: #fff;
 }
-.app-container{
+.app-container {
   background: white;
+}
+.service-story {
+  .dasfgh {
+    .editable {
+      // height: 800px;
+    }
   }
+}
 .service-story .g-core-image-upload-btn {
   width: 100%;
   height: 100%;
@@ -557,7 +598,7 @@ input:disabled {
   background: #fff;
   .title {
     padding-right: 10px;
-    border-bottom: 1px solid #EEEEEE;
+    border-bottom: 1px solid #eeeeee;
     input {
       background: rgba(0, 0, 0, 0);
       border: none;
@@ -574,8 +615,7 @@ input:disabled {
   }
   .mainbody {
     position: relative;
-    height: 618px;
-     input {
+    input {
       background: rgba(0, 0, 0, 0);
       border: none;
       margin: 24px 0;
@@ -588,7 +628,7 @@ input:disabled {
       right: 10px;
       bottom: 10px;
     }
-    .addBtnClass img{
+    .addBtnClass img {
       width: 47px;
       height: 47px;
     }
@@ -653,6 +693,7 @@ input:disabled {
     justify-content: space-between;
   }
 }
+
 .footer {
   padding: 24px;
   .md-example-section {
@@ -723,6 +764,14 @@ input:disabled {
 .text-bold {
   font-weight: bold;
 }
-
-
+.bottomThreeClass {
+  margin-top: 30px;
+  // position: absolute;
+  // bottom: 10px;
+  // width: 95%;
+  // padding-left: 10px;
+  // padding-right: 10px;
+}
+</style>
+<style lang="scss" scoped>
 </style>

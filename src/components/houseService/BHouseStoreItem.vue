@@ -10,18 +10,18 @@
     <div class="panel-body" @click="addStoreDetail()" v-for="(item,index) in list" :key="index">
       <div class="itemHeader">
         <img class="iconClass" src="@/assets/images/houseServicer/head.png" alt />
-        <span>蜘蛛侠</span>
-        <span class="dateclass">2020.04.27</span>
+        <span class="userNameClass">{{item.visitServicePlanDTO.servicerName}}</span>
+        <span class="dateclass">{{item.updatedTime}}</span>
       </div>
       <div class="img-show">
-        <img src="@/assets/images/houseServicer/default.png" />
+        <img :src="item.coverImage"/>
       </div>
-      <div class="title-show">我是入户服务的标题和内容</div>
+      <div class="title-show">{{item.title}}</div>
       <div class="bottomClass">
-        <span>被浏览 100次</span>
-        <div class="bot-right">
+        <span v-if="item.readCount">被浏览 {{item.readCount}}次</span>
+        <div v-if="item.praiseCount" class="bot-right">
           <img class="zanclass" src="@/assets/images/houseServicer/icon-zan.png" />
-          <span>12</span>
+          <span>{{item.praiseCount}}</span>
         </div>
       </div>
     </div>
@@ -29,10 +29,12 @@
 </template>
 
 <script>
-import { DropMenu } from "mand-mobile";
+import {
+  DropMenu
+} from 'mand-mobile';
 
 export default {
-  name: "",
+  name: '',
   components: {
     [DropMenu.name]: DropMenu
   },
@@ -48,16 +50,20 @@ export default {
       quanguo: true
     };
   },
+  created() {
+    const userinfostr = localStorage.getItem('userinfo');
+    this.userinfo = JSON.parse(userinfostr);
+  },
   methods: {
     allList() {
-      const createdBy = "";
+      const createdBy = '';
       this.quanguo = true;
-      this.$emit("rhgsListAction", createdBy);
+      this.$emit('rhgsListAction', createdBy);
     },
     mineList() {
-      const createdBy = '01467897';
+      const createdBy = this.userinfo.hmcid;
       this.quanguo = false;
-      this.$emit("rhgsListAction", createdBy);
+      this.$emit('rhgsListAction', createdBy);
     },
     xialaAction() {
       debugger;
@@ -65,8 +71,8 @@ export default {
     // 跳到故事詳情
     addStoreDetail() {
       this.$router.push({
-        name: "Houseservice.HouseStoreDetailEntry",
-        params: { test: {}, tag: "test" }
+        name: 'Houseservice.HouseStoreDetailEntry',
+        params: { test: {}, tag: 'test' }
       });
     }
   }
@@ -119,6 +125,9 @@ export default {
 }
 .img-show img {
   width: 100%;
+  height: 300px;
+  background-size: cover;
+    background-position: center 0;
 }
 .title-show {
   height: 95.5px;
@@ -144,5 +153,8 @@ export default {
 .zanclass {
   height: 29.65px;
   margin-right: 10px;
+}
+.userNameClass{
+  -webkit-line-clamp: 10;
 }
 </style>
