@@ -24,7 +24,14 @@
         v-show="isShowDescription"
       >
         <li>1.点击下方扫码按钮启动摄像头后，对准顾客所购产品的样机机身上的能效标识二维码（右图红框内）扫描，即可自动获取产品型号。</li>
-        <li>2.扫描完成一个后可点击扫描按钮继续添加商品</li>
+        <li class="dis-flex-sb">
+          <span>2.扫描完成一个后可点击扫描按钮继续添加商品</span>
+          <button
+            type="button"
+            class="searchProduct-scan-description-btn"
+            @click="isShowDescription=false"
+          >收起</button>
+        </li>
       </ol>
       <div class="searchProduct-scan-cnt">
         <div class="searchProduct-scan-icon-par" @click="scanQRCodeAndShow()">
@@ -45,7 +52,7 @@
         </div>
       </div>
     </div>
-    <div
+    <!--<div
       class="searchProduct-scan-product"
       v-if="scanQRCodeProductList.length"
     >
@@ -74,7 +81,7 @@
         >完成
         </button>
       </div>
-    </div>
+    </div>-->
     <div class="searchProduct-scan mt20">
       <div class="searchProduct-scan-head">
         <p class="searchProduct-scan-head-title">方式二：手工搜索</p>
@@ -177,40 +184,10 @@ export default {
       isProductList: [],
       recordMode: '',
       // 是否显示扫码说明
-      isShowDescription: false,
+      isShowDescription: true,
       // 扫码之后获取的产品列表
-      scanQRCodeProductList: [
-        {
-          productBrandName: 'ds',
-          productGroupName: 'ds',
-          productModel: 'ds',
-          productCode: 1
-        },
-        {
-          productBrandName: 'ds',
-          productGroupName: 'ds',
-          productModel: 'ds',
-          productCode: 2
-        },
-        {
-          productBrandName: 'ds',
-          productGroupName: 'ds',
-          productModel: 'ds',
-          productCode: 3
-        },
-        {
-          productBrandName: 'ds',
-          productGroupName: 'ds',
-          productModel: 'ds',
-          productCode: 4
-        },
-        {
-          productBrandName: 'ds',
-          productGroupName: 'ds',
-          productModel: 'ds',
-          productCode: 5
-        },
-      ]
+      // 2020-05-20,接口不支持，暂时去掉
+      scanQRCodeProductList: []
     };
   },
   computed: {
@@ -295,7 +272,7 @@ export default {
           const {
             productCode
           } = product;
-          // 不添加重复产品
+            // 不添加重复产品
           if (this.scanQRCodeProductList.find(v => v.productCode === productCode)) {
             return;
           }
@@ -309,6 +286,7 @@ export default {
               ...product,
               ...data
             });
+            this.choseProductsAndBack();
           });
         }
       }
@@ -410,8 +388,9 @@ export default {
   },
   beforeRouteLeave(to, from, next) {
     if (to.name === 'Order.OrderEntry' || to.name === 'Order.OrderModify' || to.name === 'Order.OrderSupplement') {
+      // 2020-05-12,product的值改为choseProducts[0],批量传产品接口未支持
       const obj = {
-        product: this.choseProducts
+        product: this.choseProducts[0]
       };
       to.query.temp = JSON.stringify(obj);
       to.params.orderNo = this.orderNo;
@@ -590,6 +569,18 @@ export default {
     color: #333;
     font-size: 24px;
     line-height: 40px;
+  }
+
+  .searchProduct-scan-description-btn {
+    width: 66px;
+    height: 34px;
+    line-height: 34px;
+    text-align: center;
+    border: 1px solid #1969C6;
+    color: #1969C6;
+    font-size: 20px;
+    border-radius:17px;
+    background: #fff;
   }
 
   .searchProduct-scan-product {
