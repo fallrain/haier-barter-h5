@@ -500,17 +500,18 @@ export default {
   }
 
   .searchProduct-scan-head-tips {
+    display: flex;
+    align-items: center;
     color: #1969C6;
     font-size: 28px;
-    line-height: 28px;
 
     .iconfont {
       margin-left: 16px;
+      font-size: 26px;
 
       &.reverse {
         display: inline-block;
         transform: rotateX(180deg);
-        vertical-align: top;
       }
     }
   }
