@@ -16,10 +16,10 @@
             @click="checkboxClick(item)"
           >
             <span class="b-pop-checkList-item-name">{{item.name}}</span>
-              <i
-                class="b-pop-checkList-icon iconfont"
-                :class="[checkIds.some(v=>v===item.id) && 'icon-duihao']"
-              ></i>
+            <i
+              class="b-pop-checkList-icon iconfont"
+              :class="[checkIds.some(v=>v===item.id) && 'icon-duihao']"
+            ></i>
           </li>
         </ul>
       </div>
@@ -113,10 +113,16 @@ export default {
         color: #1969C6;
       }
     }
-     .md-popup-mask{
-    height: 1160px;
-    top: 180px;
-  }
+
+    .md-popup-mask {
+      height: 1160px;
+      top: 180px;
+    }
+
+    .md-popup-box{
+      margin-top: 160px;
+    }
+
   }
 
   .b-pop-checkList-cnt {
@@ -132,6 +138,7 @@ export default {
     padding-right: 24px;
     height: 80px;
     border-bottom: 1px solid #D0D0D0;
+
     &.active {
       .b-pop-checkList-item-name {
         color: #1969C6;
@@ -159,8 +166,4 @@ export default {
     width: 320px;
     padding-right: 10px;
   }
-  .md-popup-box{
-    margin-top: 160px !important;
-  }
-
 </style>
