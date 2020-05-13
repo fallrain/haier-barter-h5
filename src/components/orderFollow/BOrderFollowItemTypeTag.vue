@@ -40,7 +40,7 @@ export default {
           className: 'orderFollowItem-type-tag-smld'
         },
         SGLD: {
-          name: '手工录单',
+          name: '手动录单',
           className: 'orderFollowItem-type-tag-sgld'
         },
         RC: {

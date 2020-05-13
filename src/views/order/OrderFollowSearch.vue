@@ -173,7 +173,7 @@
       v-model="handEntryCon"
       :btns="basicDialog.btns"
     >
-      您本月还有{{handCount}}个手工录单名额，超出限制后本月将不能手工录单！同时，手工录入的订单不能发放购机权益
+      您本月还有{{handCount}}个手动录单名额，超出限制后本月将不能手动录单！同时，手动录入的订单不能发放购机权益
     </md-dialog>
     <!--健康换新核销-->
     <md-dialog
@@ -1006,7 +1006,7 @@ export default {
       //IOS系统 input输入框失去焦点，软键盘关闭后，
       //被撑起的页面无法回退到原来正常的位置，导致弹框里的按钮响应区域错位
       var scrollHeight = document.documentElement.scrollTop || document.body.scrollTop || 0;
-      window.scrollTo(0, Math.max(scrollHeight - 1, 0)); 
+      window.scrollTo(0, Math.max(scrollHeight - 1, 0));
     },
     doVerification(){
       this.orderService.updateOrderFollowByType(

@@ -381,7 +381,7 @@ export default {
       const orderMode = JSON.parse(localStorage.getItem('userinfo')).orderMode;
       if (orderMode === 'Casarte') {
         if (item.businessScenarios === 'SGLD') {
-          Toast.failed('卡萨帝模式，不支持手工录单');
+          Toast.failed('卡萨帝模式，不支持手动录单');
           return;
         }
       }
