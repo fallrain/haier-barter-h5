@@ -306,6 +306,8 @@ export default {
           },
         ],
       },
+      // 顾客手机号
+      customerMobile: ''
     };
   },
   activated() {
@@ -494,11 +496,13 @@ export default {
     },
     search() {
       // this.searchEnd = true;
+      // todo 此页面应该大范围重构
       if (!(/^1[3456789]\d{9}$/.test(this.customerInfo.consigneeUserPhone))) {
         Toast.failed('手机格式错误');
         this.customerInfo.consigneeUserPhone = '';
         return;
       }
+      this.customerMobile = this.customerInfo.consigneeUserPhone;
       this.productService.deafaultCustomerAddress(this.customerInfo.consigneeUserPhone).then((res) => {
         if (res.code === 1) {
           if (res.data) {
@@ -508,6 +512,7 @@ export default {
             this.customerInfo.customerId = res.data.customerId;
             this.customerInfo.consigneeUserName = res.data.consigneeUserName;
             this.customerInfo.consigneeUserPhone = res.data.consigneeUserPhone;
+            this.customerMobile = res.data.mobile;
             this.defaultAddress.push(res.data.province);
             this.defaultAddress.push(res.data.city);
             this.defaultAddress.push(res.data.district);
@@ -677,7 +682,7 @@ export default {
   },
   beforeRouteLeave(to, from, next) {
     const obj = {
-      tel: this.customerInfo.consigneeUserPhone,
+      tel: this.customerMobile,
       smld: this.smld,
       customerInfo: this.customerInfo,
       region: this.region
