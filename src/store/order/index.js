@@ -20,7 +20,7 @@ export default {
   getters: {
     [ORDER.GET_INCLUDE_RIGHTS](state) {
       /* 是否包含权益 */
-      return state.userInfo;
+      return state.isIncludeRights;
     },
   }
 };
