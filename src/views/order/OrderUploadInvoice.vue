@@ -7,28 +7,52 @@
     >
     </b-notice-bar>
     <div class="orderUploadInvoice">
-      <div class="orderUploadInvoice-head">上传产品购机凭证</div>
-      <!-- <b-radio-item
-        :inline="true"
-        :list="uploadTypes"
-        v-model="uploadType"
-      ></b-radio-item> -->
-      <div class="orderUploadInvoice-cnt">
-        <b-product-mult-upload
-          :products="products"
-          :merge="uploadType===1"
-          v-model="invoiceImg"
-          @uploadSuccess="uploadSuccess"
-          @uploadErr="uploadErr"
-          @delImg="delImg"
-        ></b-product-mult-upload>
+      <div v-if="isMustUploadInvoice">
+        <div class="orderUploadInvoice-head">请选择领取权益方式</div>
+        <div class="orderUploadInvoice-head-radio-wrap">
+          <b-radio-item
+            class="orderUploadInvoice-head-radios"
+            :inline="true"
+            :list="uploadTypes"
+            v-model="rightsReceiveType"
+          ></b-radio-item>
+        </div>
+      </div>
+      <div v-show="rightsReceiveType===1 || !isMustUploadInvoice">
+        <div class="orderUploadInvoice-head mt23">
+          <span>上传产品购机凭证</span>
+          <span
+            class="orderUploadInvoice-head-btn"
+            @click="showExample"
+          >查看示例</span>
+        </div>
+        <div class="orderUploadInvoice-cnt">
+          <b-product-mult-upload
+            :products="products"
+            v-model="invoiceImg"
+            @uploadSuccess="uploadSuccess"
+            @uploadErr="uploadErr"
+            @delImg="delImg"
+            @imgClick="imgClick"
+          ></b-product-mult-upload>
+        </div>
       </div>
       <div class="orderUploadInvoice-tips mt16">
         <p class="orderUploadInvoice-tips-title">温馨提示：</p>
-        <!-- <p>购机凭证必须上传，在3个月内，允许补传正规购机凭证。</p>-->
-        <p>包含权益的订单必须上传购机凭证。</p>
+        <p v-if="typeof warmTips==='string'">{{warmTips}} </p>
+        <ol v-else>
+          <li
+            v-for="(item,index) in warmTips"
+            :key="index"
+          >
+            <p>{{index + 1}}.{{item}}</p>
+          </li>
+        </ol>
       </div>
-      <div class="orderUploadInvoice-question mt16">
+      <div
+        class="orderUploadInvoice-question mt16"
+        v-show="rightsReceiveType!==2"
+      >
         <p class="orderUploadInvoice-question-title">问题解答：</p>
         <ul>
           <li
@@ -62,13 +86,37 @@
         >跳过
         </button>
         <button
+          v-else
+          type="button"
+          class="common-submit-btn-primary"
+          @click="$mBack"
+        >上一步
+        </button>
+        <button
+          v-show="rightsReceiveType===1 || !isMustUploadInvoice"
           type="button"
           class="common-submit-btn-default"
           @click="updateSubmit"
         >上传凭证
         </button>
+        <button
+          v-show="rightsReceiveType===2"
+          type="button"
+          class="common-submit-btn-default"
+          @click="updateSubmit"
+        >下一步
+        </button>
       </div>
     </div>
+    <b-swiper
+      :show.sync="isShowInvoice"
+      :imgs="invoiceExampleList"
+    ></b-swiper>
+    <b-swiper
+      :show.sync="invoicePreviewShow"
+      :imgs="invoiceImgList"
+      ref="bSwiper"
+    ></b-swiper>
   </div>
 </template>
 
@@ -90,33 +138,41 @@ import {
 } from '@/store/mutationsTypes';
 
 import {
-  BNoticeBar
+  BNoticeBar,
+  BRadioItem
 } from '@/components/form';
+import BSwiper from '../../components/form/BSwiper';
+
+import invoiceExample1 from '@/assets/images/uploadInvoice/invoiceExample1@2x.jpg';
+import invoiceExample2 from '@/assets/images/uploadInvoice/invoiceExample2@2x.jpg';
+import invoiceExample3 from '@/assets/images/uploadInvoice/invoiceExample3@2x.jpg';
 
 export default {
   name: 'OrderUploadInvoice',
   components: {
+    BSwiper,
+    BRadioItem,
     BNoticeBar,
     BProductMultUpload,
   },
   data() {
     return {
-      isUpload: false, // 是否必须上传发票标识
+      // isUpload: false, // 是否必须上传发票标识
       invoiceList: [],
       fileMap: {},
       // 上传类型类型单选
       uploadTypes: [
         {
           key: 1,
-          value: '合并上传发票'
+          value: '上传发票'
         },
         {
           key: 2,
-          value: '单台上传发票'
+          value: '用户扫机身码'
         }
       ],
-      // 上传类型
-      uploadType: 2,
+      // 权益领取方式（0：默认，1：上传发票，2：用户扫机身码）
+      rightsReceiveType: 0,
       // 产品
       products: [],
       // 发票图片地址
@@ -125,12 +181,18 @@ export default {
       // 必须上传发票
       isMustUploadInvoice: false,
       // 提示显示隐藏
-      noticeShow: true
+      noticeShow: true,
+      // 预览发票显示隐藏
+      invoicePreviewShow: false,
+      // 预览的图片列表
+      invoiceImgList: [],
+      // 轮播默认的索引
+      invoiceDefaultIndex: 0,
+      // 是否显示发票示例
+      isShowInvoice: false,
+      // 发票图片数组
+      invoiceExampleList: []
     };
-  },
-  created() {
-    // 第一次进去才查询是否可以上传发票
-    // this.checkMustUploadInvoice();
   },
   activated() {
     console.log('tag', this.$route.params);
@@ -139,35 +201,75 @@ export default {
       this.orderFollowId = this.$route.params.orderFollowId;
       this.getData();
     }
-    if (this.$route.params.subInfo) {
-      const subInfo = this.$route.params.subInfo;
-      if (subInfo.rightsUserJson !== '' || subInfo.orderType === 1) {
-        this.isUpload = true;
-      } else {
-        this.isUpload = false;
-      }
-    }
+    // 去掉是否必须上传发票标识判断
+    // if (this.$route.params.subInfo) {
+    //   const subInfo = this.$route.params.subInfo;
+    //   if (subInfo.rightsUserJson !== '' || subInfo.orderType === 1) {
+    //     this.isUpload = true;
+    //   } else {
+    //     this.isUpload = false;
+    //   }
+    // }
   },
   computed: {
     ...mapGetters([
       GET_USER
-    ])
+    ]),
+    warmTips() {
+      /* 温馨提示 */
+      let tips;
+      const rightsTips = [
+        '发票校验通过才可领取权益',
+        '卡萨帝单品权益、尊享卡权益，用户必须扫码领取'
+      ];
+      if (this.isMustUploadInvoice) {
+        tips = {
+          1: rightsTips,
+          2: '用户扫码激活后才可领取权益'
+        }[this.rightsReceiveType];
+      } else {
+        tips = rightsTips;
+      }
+      return tips;
+    }
   },
   methods: {
+    showExample() {
+      /* 显示发票示例 */
+      this.isShowInvoice = true;
+      this.invoiceExampleList = [
+
+        {
+          src: invoiceExample1
+        },
+        {
+          src: invoiceExample2
+        },
+        {
+          src: invoiceExample3
+        }
+      ];
+    },
     async checkMustUploadInvoice() {
       /* 检查是否必须上传发票 */
       const { code, data } = await this.orderService.ifUploadInvoice({
-        hmcId: this[GET_USER].hmcid
+        hmcId: this[GET_USER].hmcid,
+        orderNo: this.$route.params.orderNo
       });
       if (code === 1) {
         this.isMustUploadInvoice = data;
       }
+      return {
+        checkCode: code,
+        status: data
+      };
     },
     skipUpload() {
-      if (this.isUpload) {
-        Toast.failed('套购订单及权益订单必须上传发票，不能“跳过”，否则将无法提交订单和发放权益!');
-        return;
-      }
+      /* 跳过 */
+      //  if (this.isUpload) {
+      //   Toast.failed('套购订单及权益订单必须上传发票，不能“跳过”，否则将无法提交订单和发放权益!');
+      //   return;
+      // }
       this.$router.push({
         name: 'Order.OrderConfirm',
         params: {
@@ -183,6 +285,15 @@ export default {
       if (invoiceObj) {
         invoiceObj.invoiceUrl = data.invoiceUrl;
       }
+    },
+    imgClick(src) {
+      /* 图片点击事件 */
+      this.invoiceImgList = this.invoiceList.filter(v => v.invoiceUrl).map(product => ({ src: product.invoiceUrl }));
+      // 设置第一个显示的图的索引
+      const invoiceDefaultIndex = this.invoiceImgList.findIndex(v => v.src === src);
+      this.invoiceDefaultIndex = invoiceDefaultIndex > -1 ? invoiceDefaultIndex : 0;
+      this.$refs.bSwiper.$refs.swiper.goto(invoiceDefaultIndex);
+      this.invoicePreviewShow = true;
     },
     addInvoiceList(data, id) {
       /* 发票数据添加进发票list */
@@ -224,13 +335,23 @@ export default {
         this.splice(index, 1);
       }
     },
-
     updateSubmit() {
-      if (!this.invoiceList.find(v => v.invoiceUrl)) {
-        Toast.failed('请上传凭证！');
-        return;
+      const invoiceList = JSON.parse(JSON.stringify(this.invoiceList));
+      if (this.rightsReceiveType === 2) {
+        // 选择扫码，是无需上传的情况，invoiceUrl重置为null
+        invoiceList.forEach((v) => {
+          v.invoiceUrl = null;
+        });
+      } else {
+        if (!this.invoiceList.find(v => v.invoiceUrl)) {
+          Toast.failed('请上传凭证！');
+          return;
+        }
       }
-      this.orderService.uploadInvoice(this.invoiceList, { orderNo: this.orderNo }).then((res) => {
+      this.orderService.uploadInvoice(invoiceList, {
+        orderNo: this.orderNo,
+        rightsReceiveType: this.rightsReceiveType
+      }).then((res) => {
         if (res.code === 1) {
           Toast.succeed('上传成功');
           setTimeout(() => {
@@ -246,11 +367,29 @@ export default {
       });
     },
     getData() {
-      this.orderService.queryOrderDetailAndInvoice({}, { orderNo: this.orderNo }).then(({ code, data }) => {
+      // 改为接口多种情况判断
+      const checkMustUploadInvoice = this.checkMustUploadInvoice();
+      const queryOrderDetailAndInvoice = this.orderService.queryOrderDetailAndInvoice({}, { orderNo: this.orderNo });
+      Promise.all([checkMustUploadInvoice, queryOrderDetailAndInvoice]).then(([
+        { status },
+        { code, data }
+      ]) => {
         if (code === 1) {
-          this.products = data;
+          const {
+            orderDetailAndInvoiceDtoList,
+            rightsReceiveType
+          } = data;
+          this.products = orderDetailAndInvoiceDtoList;
+          // 必须上传的时候，如果rightsReceiveType返回了0，则置为1
+          let type;
+          if (status && !rightsReceiveType) {
+            type = 1;
+          } else {
+            type = rightsReceiveType || 0;
+          }
+          this.rightsReceiveType = type;
           // 生成发票
-          this.genInvoiceList(data);
+          this.genInvoiceList(this.products);
         }
       });
     },
@@ -299,12 +438,39 @@ export default {
   }
 
   .orderUploadInvoice-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     color: #333;
-    font-size: 28px;
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 42px;
+  }
+
+  .orderUploadInvoice-head-btn {
+    color: #1969C6;
+    font-size: 24px;
+    font-weight: 400;
+  }
+
+  .orderUploadInvoice-head-radio-wrap {
+    display: flex;
+    align-items: center;
+    height: 88px;
+    background: #fff;
+    margin-top: 23px;
+
+    .orderUploadInvoice-head-radios {
+      flex-grow: 1;
+      display: flex;
+      justify-content: space-between;
+      padding-left: 70px;
+      padding-right: 70px;
+    }
   }
 
   .orderUploadInvoice-cnt {
-    margin-top: 36px;
+    margin-top: 23px;
   }
 
   .orderUploadInvoice-tips {
@@ -344,5 +510,11 @@ export default {
 
   .orderUploadInvoice-question-item-answer {
     color: #1969C6;
+  }
+
+  .bSwiper-showExample {
+    .md-swiper-item {
+      width: 100% !important;
+    }
   }
 </style>
