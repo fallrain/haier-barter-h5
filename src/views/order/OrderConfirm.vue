@@ -1,4 +1,4 @@
-<template xmlns:v-slot="">
+<template>
   <div>
     <div class="orderConfirm-no">
       <span class="orderConfirm-p">订单号：</span>
@@ -7,15 +7,15 @@
     <!-- <div class="orderEntry-header">
       <span class="orderEntry-header-name">门店：{{shopName}}</span>
     </div> -->
-        <b-item
+    <b-item
       class="mt16"
       title="门店："
       :value="shopName"
     >
     </b-item>
-     <div class="orderEntry-header-cus">
-            <span class="name mr16">顾客信息:{{username}}</span>
-            <span class="name mr16">{{phone}}</span>
+    <div class="orderEntry-header-cus">
+      <span class="name mr16">顾客信息:{{username}}</span>
+      <span class="name mr16">{{phone}}</span>
     </div>
 
     <div class="orderEntry-user">
@@ -95,120 +95,90 @@
       >确认订单
       </button>
     </div>
-    <div v-show="tipState1" class="shade-style">
-      <div v-show="timeShow" class="time-style">{{totalTime}}s</div>
+    <div v-show="tipState" class="shade-style">
       <div class="content">
-        <p class="title">直销员权益录单合规提示函</p>
-        <p class="text-indent2 fs28">
+        <div v-show="timeShow" class="time-style">{{totalTime}}s</div>
+        <p class="title">权益录单合规提示函</p>
+        <p>请保证订单录入真实，并遵循《中国区权益资源使用机制平台》，虚假订单将关闭兑呗权益使用权限并承担双倍买损责任！ </p>
+        <!--<p class="text-indent2 fs28">
           各小微在使用权益资源的同时，应做好资源管理监控和闭环，杜绝权益虚假和恶意占用，保证直销员/门店录入订单的合理、合规，资源直达用户。
         </p>
-        <p class="title2">一、	中国区权益资源使用虚假判定基本原则</p>
+        <p class="title2">一、 中国区权益资源使用虚假判定基本原则</p>
         <p class="lh40 fs28">
-          第一条	严禁录入未产生真实销售的虚假订单;<br />
-          第二条	严禁代用户领取积分权益；<br />
-          第三条	严禁录入非当前活动期间购买的订单从而占用当前活动资源;<br />
-          第四条	严禁拼凑订单占用套购资源/单品资源;<br />
-          第五条	严禁将自己的兑呗账号借与他人，出现问题将由账号主人买损，后果自负；<br />
-          第六条	所有订单系统留痕，将不定期抽查，订单真实性以购机凭证为准；<br />
+          第一条 严禁录入未产生真实销售的虚假订单;<br/>
+          第二条 严禁代用户领取积分权益；<br/>
+          第三条 严禁录入非当前活动期间购买的订单从而占用当前活动资源;<br/>
+          第四条 严禁拼凑订单占用套购资源/单品资源;<br/>
+          第五条 严禁将自己的兑呗账号借与他人，出现问题将由账号主人买损，后果自负；<br/>
+          第六条 所有订单系统留痕，将不定期抽查，订单真实性以购机凭证为准；<br/>
         </p>
-        <p class="title2">二、	适用范围</p>
+        <p class="title2">二、 适用范围</p>
         <p class="lh40 fs28">中国区整合营销套购权益、产业单品权益及产业内套、卡萨帝单品权益等其他用户权益；</p>
-        <p class="title2">三、	虚假处罚机制：</p>
+        <p class="title2">三、 虚假处罚机制：</p>
         <p class="lh40 fs28">
-          1、违反以上《基本原则》的均视为虚假订单；<br />
-          2、小微自查套购虚假案例：直销员及相关参与者出现虚假，按录入虚假订单的发放权益价值双倍买单，并返还礼品，永久冻结权益使用权限。<br />
-          3、二次虚假者，按录入虚假订单的发放权益价值双倍买损，由平台拟定散单通报，人力，产业，小微总会签后直接散出企业，并将相关人员加入职场征信黑名单。<br />
-          4、造假情节严重者，追究其刑事责任，由内控和法务审核，中心配合交予公安机关按刑法处理。<br />
+          1、违反以上《基本原则》的均视为虚假订单；<br/>
+          2、小微自查套购虚假案例：直销员及相关参与者出现虚假，按录入虚假订单的发放权益价值双倍买单，并返还礼品，永久冻结权益使用权限。<br/>
+          3、二次虚假者，按录入虚假订单的发放权益价值双倍买损，由平台拟定散单通报，人力，产业，小微总会签后直接散出企业，并将相关人员加入职场征信黑名单。<br/>
+          4、造假情节严重者，追究其刑事责任，由内控和法务审核，中心配合交予公安机关按刑法处理。<br/>
         </p>
         <p class="title2">四、补充条款</p>
         <p class="lh40 fs28">
-          1.真订单但发票不合规，如上传发票模糊，发票不完整，冻结权益使用权限1个月。<br />
-          2.真订单但重复录入，如上传发票上的型号与录入的订单不一致，发票多次使用，冻结权益使用权限3个月。<br />
-          3.假订单假发票，永久冻结权益使用权限。<br />
-          4.假套购订单并申报工资，永久冻结权益使用权限。<br />
+          1.真订单但发票不合规，如上传发票模糊，发票不完整，冻结权益使用权限1个月。<br/>
+          2.真订单但重复录入，如上传发票上的型号与录入的订单不一致，发票多次使用，冻结权益使用权限3个月。<br/>
+          3.假订单假发票，永久冻结权益使用权限。<br/>
+          4.假套购订单并申报工资，永久冻结权益使用权限。<br/>
         </p>
         <p class="text-danger text-indent2 mt20">
           我已认真阅读《购机权益录单合规提示函》知晓其中内容，我郑重承诺，认同《购机权益录单合规提示函》中各项规定并严格遵守，保证录单真实规范，若有违反公司规章内容的，自愿接受公司相关规章制度的管理处罚。
-        </p>
+        </p>-->
         <div class="tip-button">
-          <md-button class="mr28" v-show="timeShow" type="disabled" size="small" inline>取消</md-button>
-          <md-button v-show="timeShow" type="disabled" size="small" inline>确定</md-button>
-          <md-button class="mr28" v-show="!timeShow" type="primary" size="small" inline
-                     @click="cancleTip" plain>取消</md-button>
-          <md-button v-show="!timeShow" type="primary" size="small" inline
-                     @click="sureTip">确定</md-button>
+          <md-button
+            class="mr28"
+            :type="timeShow?'disabled':'primary'"
+            size="small"
+            inline
+            @click="cancelTip"
+            plain
+          >取消
+          </md-button>
+          <md-button
+            :type="timeShow?'disabled':'primary'"
+            size="small"
+            inline
+            @click="sureTip"
+          >确定
+          </md-button>
         </div>
       </div>
     </div>
-    <div v-show="tipState2" class="shade-style">
-      <div v-show="timeShow" class="time-style">{{totalTime}}s</div>
-      <div class="content">
-        <p class="title">海尔专卖店权益录单合规提示函</p>
-        <p class="text-indent2 fs28">
-          专卖店客户作为海尔中国区的销售渠道，在使用海尔投放的各项套餐、单品、卡萨帝等购机权益资源时，需遵循《中国区权益资源使用虚假判定基本原则》（以下简称基本原则）：
-        </p>
-        <p class="title2">一、	中国区权益资源使用虚假判定基本原则</p>
-        <p class="lh40 fs28">
-          第一条	严禁录入未产生真实销售的虚假订单（包含不符合活动的预售单使用权益）;<br />
-          第二条	严禁代用户领取积分权益；<br />
-          第三条	严禁录入非当前活动期间购买的订单从而占用当前活动资源;<br />
-          第四条	严禁拼凑订单占用套购资源/单品资源;<br />
-          第五条	严禁将自己的兑呗账号借与他人，出现问题将由账号主人买损，后果自负；使用易理货方式登录的专卖店，后台绑定所有微信账号产生的订单由客户负责，严禁私自绑定，如因易理货密码泄露导致他人绑定，造成的后果专卖店客户自行自负；<br />
-          第六条	所有订单系统留痕，将不定期抽查，订单真实性以购机凭证为准；<br />
-        </p>
-        <p class="title2">二、	适用范围</p>
-        <p class="lh40 fs28">中国区整合营销套购权益、产业单品权益及产业内套、卡萨帝单品权益等其他用户权益；</p>
-        <p class="title2">三、	虚假处罚机制：</p>
-        <p class="lh40 fs28">
-          1、违反以上《基本原则》的均视为虚假订单；<br />
-          2、一年内首次发现虚假，给予客户黄牌警示，按录入虚假订单的发放权益价值双倍买单，并返还礼品，冻结权益使用权限6个月；<br />
-          3、二次虚假者，给予客户红牌警示，按录入虚假订单的发放权益价值双倍买损，永久停止海知友资源权益使用；<br />
-          4、虚假买损由专卖店客户到当地财务缴纳后出具缴费凭证，拒不买损的，取消相关所有资源及系统权限，包括且不限于：365开单、EStore系统等。<br />
-          5、造假情节严重者，追究其刑事责任，由内控和法务审核，中心配合交予公安机关按刑法处理。<br />
-        </p>
-        <p class="title2">四、补充条款</p>
-        <p class="lh40 fs28">
-          1.真订单但发票不合规，如上传发票模糊，发票不完整，冻结权益使用权限1个月。<br />
-          2.真订单但重复录入，如上传发票上的型号与录入的订单不一致，发票多次使用，冻结权益使用权限3个月。<br />
-          3.假订单假发票，永久冻结权益使用权限。<br />
-        </p>
-        <p class="text-danger text-indent2 mt20">
-          我已认真阅读《购机权益录单合规提示函》知晓其中内容，我郑重承诺，认同《购机权益录单合规提示函》中各项规定并严格遵守，保证录单真实规范，若有违反公司规章内容的，自愿接受公司相关规章制度的管理处罚。
-        </p>
-        <div class="tip-button">
-          <md-button class="mr28" v-show="timeShow" type="disabled" size="small" inline>取消</md-button>
-          <md-button v-show="timeShow" type="disabled" size="small" inline>确定</md-button>
-          <md-button class="mr28" v-show="!timeShow" type="primary" size="small" inline
-                     @click="cancleTip" plain>取消</md-button>
-          <md-button v-show="!timeShow" type="primary" size="small" inline
-                     @click="sureTip">确定</md-button>
-        </div>
-      </div>
-
-    </div>
+    <md-dialog
+      title=""
+      :closable="true"
+      v-model="basicDialog.open"
+      :btns="basicDialog.btns"
+    >
+      {{basicDialog.countdown}}请保证订单录入真实，并遵循《中国区权益资源使用机制平台》，虚假订单将关闭兑呗权益使用权限并承担双倍买损责任！
+    </md-dialog>
   </div>
 </template>
 
 <script>
 import {
-  Toast, Dialog, Button
+  Button,
+  Dialog
 } from 'mand-mobile';
 import {
   BActivityList,
-  BDatePicker,
   BFieldset,
   BItem,
-  BOrderProduct,
   BOrderProductConfirm,
-  BPop,
-  BPopAddressList,
-  BPopCheckList,
-  BRadioItem
 } from '@/components/form';
 
 import {
-  BMultbuyCheck
-} from '@/components/business';
+  mapGetters
+} from 'vuex';
+
+import orderTypes from '@/store/mutationsTypes/orderTypes';
 
 export default {
   name: 'OrderModify',
@@ -216,24 +186,17 @@ export default {
     [Dialog.name]: Dialog,
     [Button.name]: Button,
     BActivityList,
-    BDatePicker,
     BFieldset,
     BItem,
-    BMultbuyCheck,
-    BOrderProduct,
-    BPop,
-    BPopAddressList,
-    BPopCheckList,
-    BRadioItem,
     BOrderProductConfirm
   },
   data() {
     return {
       kind: -1,
-      tipState1: false,
+      tipState: false,
       tipState2: false,
       timeShow: true,
-      totalTime: 15,
+      totalTime: 5,
       // 是否详情模式
       isDetail: true,
       // 门店名称
@@ -241,9 +204,9 @@ export default {
 
       // 收货人信息
       consignee: {
-        /* name: '',
-              sex: '男士',
-              phone: '15067543689' */
+        // name: '',
+        // sex: '男士',
+        // phone: '15067543689'
       },
 
       // 订单类型
@@ -259,8 +222,7 @@ export default {
       // 选择礼品pop显示隐藏
       chooseGiftPopShow: false,
       // pop礼品列表
-      giftList: [
-      ],
+      giftList: [],
       orderNo: '',
       createdTime: '',
       deliveryTime: '',
@@ -268,10 +230,30 @@ export default {
       username: '',
       phone: '',
       rightsJson: '',
-      orderInfo: {}
+      orderInfo: {},
+      basicDialog: {
+        open: false,
+        countdown: 5,
+        disabled: true,
+        btns: [
+          {
+            text: '取消',
+            handler: this.onBasicCancel,
+          },
+          {
+            text: '确认',
+            handler: this.onBasicConfirm,
+          },
+        ],
+      },
+      interval: null
     };
   },
-  computed: {},
+  computed: {
+    ...mapGetters([
+      orderTypes.GET_INCLUDE_RIGHTS
+    ])
+  },
   created() {
     this.orderNo = this.$route.params.orderNo;
     this.orderFollowId = this.$route.params.orderFollowId;
@@ -343,7 +325,7 @@ export default {
           const d = dt.getDate();
           const h = dt.getHours();
           const ha = h + 1;
-          const time = `${y}-${m}-${d} ${h}:00` + `-${ha}:00`;
+          const time = `${y}-${m}-${d} ${h}:00-${ha}:00`;
           this.deliveryTime = time;
           this.createdTime = resData.createdTime;
           this.orderNo = resData.orderNo;
@@ -372,83 +354,29 @@ export default {
         }
       });
     },
-
-
     next() {
-      const lastTipTime = localStorage.getItem('tipTime'); debugger;
-      if (!lastTipTime) {
-        if (this.kind == 88) {
-          this.tipState2 = true;
-        } else {
-          this.tipState1 = true;
-        }
+      // 有权益才弹出文字提示
+      if (this[orderTypes.GET_INCLUDE_RIGHTS]) {
+        this.tipState = true;
         const clock = setInterval(() => {
           this.totalTime--;
           if (this.totalTime < 1) {
             this.timeShow = false;
-            this.totalTime = 15;
+            this.totalTime = 5;
             clearInterval(clock);
           }
         }, 1000);
-        const time = new Date().getTime();
-        localStorage.setItem('tipTime', time);
       } else {
-        const time = new Date().getTime();
-        localStorage.setItem('tipTime', time);
-        const oneDayTime = 1000 * 60 * 60 * 24;
-        const old_count = parseInt(parseInt(lastTipTime) / oneDayTime);
-        const now_count = parseInt(new Date().getTime() / oneDayTime);
-        if (now_count !== old_count) {
-          if (this.kind == 88) {
-            this.tipState2 = true;
-          } else {
-            this.tipState1 = true;
-          }
-          const clock = setInterval(() => {
-            this.totalTime--;
-            if (this.totalTime < 1) {
-              this.timeShow = false;
-              this.totalTime = 15;
-              clearInterval(clock);
-            }
-          }, 1000);
-        } else {
-          this.orderService.createOrderSubmit({}, { orderNo: this.orderNo }).then((res) => {
-            if (res.code === 1) {
-              localStorage.removeItem('orderFollowId');
-              this.$router.push({
-                name: 'Order.OrderFollowCommitResult',
-                params: { orderInfo: res.data }
-              });
-            }
-          });
-          /*Dialog.confirm({
-            content: '请务必上传真实、清晰、完整的发票。否则，将影响用户权益的领取，而且将影响您的工资核算与发放！',
-            confirmText: '确定',
-            onConfirm: () => {
-              this.orderService.createOrderSubmit({}, { orderNo: this.orderNo }).then((res) => {
-                if (res.code === 1) {
-                  localStorage.removeItem('orderFollowId');
-                  this.$router.push({
-                    name: 'Order.OrderFollowCommitResult',
-                    params: { orderInfo: res.data }
-                  });
-                }
-              });
-            },
-          });*/
-        }
+        this.sureTip();
       }
     },
-    cancleTip() {
+    cancelTip() {
       this.timeShow = true;
-      this.tipState1 = false;
-      this.tipState2 = false;
+      this.tipState = false;
     },
     sureTip() {
       this.timeShow = true;
-      this.tipState1 = false;
-      this.tipState2 = false;
+      this.tipState = false;
       this.orderService.createOrderSubmit({}, { orderNo: this.orderNo }).then((res) => {
         if (res.code === 1) {
           localStorage.removeItem('orderFollowId');
@@ -458,26 +386,29 @@ export default {
           });
         }
       });
-      /*Dialog.confirm({
-        content: '请务必上传真实、清晰、完整的发票。否则，将影响用户权益的领取，而且将影响您的工资核算与发放！',
-        confirmText: '确定',
-        onConfirm: () => {
-          this.orderService.createOrderSubmit({}, { orderNo: this.orderNo }).then((res) => {
-            if (res.code === 1) {
-              localStorage.removeItem('orderFollowId');
-              this.$router.push({
-                name: 'Order.OrderFollowCommitResult',
-                params: { orderInfo: res.data }
-              });
-            }
-          });
-        },
-      });*/
+      /* Dialog.confirm({
+                content: '请务必上传真实、清晰、完整的发票。否则，将影响用户权益的领取，而且将影响您的工资核算与发放！',
+                confirmText: '确定',
+                onConfirm: () => {
+                  this.orderService.createOrderSubmit({}, { orderNo: this.orderNo }).then((res) => {
+                    if (res.code === 1) {
+                      localStorage.removeItem('orderFollowId');
+                      this.$router.push({
+                        name: 'Order.OrderFollowCommitResult',
+                        params: { orderInfo: res.data }
+                      });
+                    }
+                  });
+                },
+              }); */
     },
     changeOrder() {
       this.$router.push({
         name: 'Order.OrderModify',
-        params: { orderNo: this.orderNo, orderFollowId: this.orderFollowId }
+        params: {
+          orderNo: this.orderNo,
+          orderFollowId: this.orderFollowId
+        }
       });
     },
     saveOrder() {
@@ -494,7 +425,7 @@ export default {
           const cache = this.$vnode.parent.componentInstance.cache;
           const keys = this.$vnode.parent.componentInstance.keys;
           if (to.name === 'Order.OrderModify') {
-            keys.forEach((k, index) => {
+            keys.forEach((k) => {
               if (cache[k]) {
                 if (cache[k].tag.indexOf('OrderEntry') > -1) {
                   delete cache[k];
@@ -523,33 +454,42 @@ export default {
 </script>
 
 <style lang="scss">
-  .text-indent2{
-      text-indent:2em;
+  .text-indent2 {
+    text-indent: 2em;
   }
-  .lh40{
+
+  .lh40 {
     line-height: 40px;
   }
-  .fs28{
+
+  .fs28 {
     font-size: 28px;
   }
-  .text-danger{
+
+  .text-danger {
     color: #f05b4b;
   }
-  .tip-button{
+
+  .tip-button {
     margin-top: 30px;
     display: flex;
     justify-content: center;
   }
-  .shade-style{
-    position: relative;
+
+  .shade-style {
+    position: fixed;
     padding: 50px;
     width: 100%;
     height: 100%;
-    position: fixed;
     left: 0;
     top: 0;
-    background: rgba(0,0,0,0.7);
-    .time-style{
+    background: rgba(0, 0, 0, 0.7);
+
+    .time-style {
+      position: absolute;
+      left: 24px;
+      top: 16px;
+      z-index: 999;
       width: 80px;
       height: 80px;
       border-radius: 50%;
@@ -558,32 +498,36 @@ export default {
       border: 1px solid #1969c6;
       color: #1969c6;
       background: #fff;
-      position: absolute;
-      left: 60px;
-      top: 60px;
-      z-index: 999;
     }
-    .content{
+
+    .content {
+      position: absolute;
       background: #fff;
       border-radius: 10px;
       overflow: auto;
       padding: 40px;
-      width: 100%;
-      height: 100%;
-      .title{
+      width: 650px;
+      // height: 100%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+
+      .title {
         font-size: 34px;
         font-weight: 600;
         text-align: center;
         line-height: 50px;
         margin-bottom: 20px;
       }
-      .title2{
+
+      .title2 {
         font-size: 30px;
         font-weight: 600;
         line-height: 50px;
       }
     }
   }
+
   .orderEntry-header {
     display: flex;
     align-items: center;
@@ -697,11 +641,12 @@ export default {
     .orderConfirm-s {
       height: 80px;
       line-height: 80px;
-     position: absolute;
+      position: absolute;
       right: 24px;
     }
   }
-  .orderEntry-header-cus{
+
+  .orderEntry-header-cus {
     display: flex;
     align-items: center;
 
@@ -710,7 +655,7 @@ export default {
     background: #fff;
     padding-left: 27px;
     padding-right: 25px;
-  color: #333;
+    color: #333;
     margin-top: 20px;
   }
 </style>

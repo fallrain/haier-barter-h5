@@ -1,6 +1,5 @@
 import Vuex from 'vuex';
 import Vue from 'vue';
-import mutationType from '../mutationsTypes';
 
 Vue.use(Vuex);
 export default {

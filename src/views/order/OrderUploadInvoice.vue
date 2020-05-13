@@ -82,7 +82,8 @@ import {
 } from '@/components/business';
 
 import {
-  mapGetters
+  mapGetters,
+  mapMutations
 } from 'vuex';
 
 import {
@@ -92,6 +93,8 @@ import {
 import {
   BNoticeBar
 } from '@/components/form';
+
+import orderTypes from '@/store/mutationsTypes/orderTypes';
 
 export default {
   name: 'OrderUploadInvoice',
@@ -141,11 +144,9 @@ export default {
     }
     if (this.$route.params.subInfo) {
       const subInfo = this.$route.params.subInfo;
-      if (subInfo.rightsUserJson !== '' || subInfo.orderType === 1) {
-        this.isUpload = true;
-      } else {
-        this.isUpload = false;
-      }
+      this.isUpload = subInfo.rightsUserJson || subInfo.orderType === 1;
+      // 更新store是否有权益
+      this[orderTypes.UPDATE_INCLUDE_RIGHTS](!!subInfo.rightsUserJson);
     }
   },
   computed: {
@@ -154,6 +155,9 @@ export default {
     ])
   },
   methods: {
+    ...mapMutations([
+      orderTypes.UPDATE_INCLUDE_RIGHTS
+    ]),
     async checkMustUploadInvoice() {
       /* 检查是否必须上传发票 */
       const { code, data } = await this.orderService.ifUploadInvoice({
