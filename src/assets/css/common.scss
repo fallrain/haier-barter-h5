@@ -61,6 +61,12 @@
   display: flex;
 }
 
+.dis-flex-sb {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .pseudo-clear:after {
   clear: both;
   display: block;

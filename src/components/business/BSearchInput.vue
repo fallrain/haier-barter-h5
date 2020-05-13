@@ -85,6 +85,7 @@ export default {
     padding-right: 24px;
     border-radius: 30px;
     background: #fff;
+    font-size: 0;
 
     .iconfont {
       font-size: 32px;
