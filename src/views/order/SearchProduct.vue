@@ -88,7 +88,7 @@
       </div>
       <b-search-input
         v-model="searchVal"
-        @search="search"
+        @search="search()"
         placeholder="点击搜索型号"
         @input="inputFunction()"
       >
