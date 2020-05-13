@@ -130,7 +130,8 @@ import {
 } from '@/components/business';
 
 import {
-  mapGetters
+  mapGetters,
+  mapMutations
 } from 'vuex';
 
 import {
@@ -146,6 +147,8 @@ import BSwiper from '../../components/form/BSwiper';
 import invoiceExample1 from '@/assets/images/uploadInvoice/invoiceExample1@2x.jpg';
 import invoiceExample2 from '@/assets/images/uploadInvoice/invoiceExample2@2x.jpg';
 import invoiceExample3 from '@/assets/images/uploadInvoice/invoiceExample3@2x.jpg';
+
+import orderTypes from '@/store/mutationsTypes/orderTypes';
 
 export default {
   name: 'OrderUploadInvoice',
@@ -201,15 +204,11 @@ export default {
       this.orderFollowId = this.$route.params.orderFollowId;
       this.getData();
     }
-    // 去掉是否必须上传发票标识判断
-    // if (this.$route.params.subInfo) {
-    //   const subInfo = this.$route.params.subInfo;
-    //   if (subInfo.rightsUserJson !== '' || subInfo.orderType === 1) {
-    //     this.isUpload = true;
-    //   } else {
-    //     this.isUpload = false;
-    //   }
-    // }
+    if (this.$route.params.subInfo) {
+      const subInfo = this.$route.params.subInfo;
+      // 更新store是否有权益
+      this[orderTypes.UPDATE_INCLUDE_RIGHTS](!!subInfo.rightsUserJson);
+    }
   },
   computed: {
     ...mapGetters([
@@ -234,6 +233,9 @@ export default {
     }
   },
   methods: {
+    ...mapMutations([
+      orderTypes.UPDATE_INCLUDE_RIGHTS
+    ]),
     showExample() {
       /* 显示发票示例 */
       this.isShowInvoice = true;
