@@ -91,4 +91,12 @@ export default {
     /* 查询历史入户服务故事列表 */
     return axPostJson(urls.queryByCondition, data, param);
   },
+  // shareToList(storyId) {
+  //   /* 分享入户服务故事到列表 */
+  //   return axGet(urls.shareToList, storyId);
+  // },
+  shareToList(storyId) {
+    /* 查询家电图片 (添加入户故事用) */
+    return axGet(urls.shareToList(storyId));
+  },
 };

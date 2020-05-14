@@ -61,7 +61,7 @@
           </div>
         </div>-->
         <div class="bottomClass">
-          <div class="shareClass" v-show="item.storyFlag === 1" @click="shareAction">
+          <div class="shareClass" v-show="item.storyFlag === 1" @click="shareAction(item)">
             <img src="@/assets/images/houseServicer/shareIcon.png" />
             分享
           </div>
@@ -82,31 +82,35 @@
     <!-- 底部菜单 -->
     <div :class="{'CustomPopup':showCustomPopup}" @click="maskClick"></div>
     <div class="CustomPopupContent" :class="{'CustomPopupContentShow':showCustomPopup}">
-       <div class="shareIconItem" >
-          <img  src="@/assets/images/houseServicer/ruhgsIcon.png" />
-           入户故事
-        </div>
-         <div class="shareIconItem">
-          <img src="@/assets/images/houseServicer/bendiIcon.png" />
-          保存到本地
-        </div>
+      <div class="shareIconItem" @click="pushRuhuAction">
+        <img src="@/assets/images/houseServicer/ruhgsIcon.png" />
+        入户故事
+      </div>
+      <!-- <div class="shareIconItem" @click="saveLocalAction">
+        <img src="@/assets/images/houseServicer/bendiIcon.png" />
+        保存到本地
+      </div> -->
     </div>
   </div>
 </template>
 
 
 <script>
-import { Icon, Toast, Popup, PopupTitleBar, Button, Dialog } from "mand-mobile";
-import { BPopSortType, BPopButton } from "@/components/form";
+import {
+  Icon, Toast, Popup, PopupTitleBar, Button, Dialog
+} from 'mand-mobile';
+import {
+  BPopSortType, BPopButton
+} from '@/components/form';
 
 export default {
-  name: "",
+  name: '',
   components: {
     [Icon.name]: Icon,
     [Toast.name]: Toast,
     BPopButton,
     BPopSortType,
-    "md-popup": Popup,
+    'md-popup': Popup,
     [PopupTitleBar.name]: PopupTitleBar,
     [Button.name]: Button,
     [Dialog.name]: Dialog
@@ -119,31 +123,51 @@ export default {
   },
   data() {
     return {
-      searchWord: "",
-      showCustomPopup: false
+      searchWord: '',
+      showCustomPopup: false,
+      selectIetm: {}
     };
   },
   created() {},
   methods: {
-   
+    // 推到入户故事
+    pushRuhuAction() {
+      console.log('推到入户故事');
+
+      this.houseService
+        .shareToList(
+          this.selectIetm.id
+        )
+        .then((res) => {
+          if (res.code === 1) {
+            Toast.succeed('分享成功');
+          }
+        });
+      this.showCustomPopup = false;
+    },
+    // 保存到本地
+    saveLocalAction() {
+      console.log('保存到本地');
+      this.showCustomPopup = false;
+    },
     maskClick() {
       this.showCustomPopup = false;
     },
-    //分享
-    shareAction() {
-      //分享
+    // 分享
+    shareAction(item) {
+      this.selectIetm = item;
       this.showCustomPopup = true;
     },
     // 搜索
     fuzzySearch() {
-      this.$emit("fuzzySearchFather", this.searchWord);
+      this.$emit('fuzzySearchFather', this.searchWord);
     },
     // 邀请评价
     yaoqClick(item) {
       Dialog.confirm({
-        title: "确认",
-        content: "确定要推送邀请评价信息吗？",
-        confirmText: "确定",
+        title: '确认',
+        content: '确定要推送邀请评价信息吗？',
+        confirmText: '确定',
         onConfirm: () => {
           this.houseService
             .sendWeiXinMsg({
@@ -156,7 +180,7 @@ export default {
             // eslint-disable-next-line arrow-parens
             .then(res => {
               if (res.code === 1) {
-                Toast.succeed("邀请评价成功，请用户评价！");
+                Toast.succeed('邀请评价成功，请用户评价！');
               }
             });
         }
@@ -167,7 +191,7 @@ export default {
     },
     completeUserInfo(item) {
       // 完善用户资料
-      this.$emit("completeUserInfo", item);
+      this.$emit('completeUserInfo', item);
     },
     dealOrder(item) {
       // 成交录单
@@ -178,24 +202,24 @@ export default {
           userId: item.userId,
           userName: item.userName,
           userMobile: item.userPhone,
-          recordMode: "Haier",
+          recordMode: 'Haier',
           sourceSn: item.id
         })
-        .then(res => {
+        .then((res) => {
           if (res.code === 1) {
             const orderFollowId = res.data.id;
-            this.orderService.checkCreateOrder().then(res1 => {
+            this.orderService.checkCreateOrder().then((res1) => {
               // 判断店铺是否冻结
               if (res1.code != -1) {
                 const freezeMsg = res1.data;
                 this.$router.push({
-                  name: "Order.OrderEntry",
+                  name: 'Order.OrderEntry',
                   params: {
                     customerConsigneeInfo: {
                       username: item.userName,
                       mobile: item.userPhone,
                       userId: item.userId,
-                      recordMode: "Haier",
+                      recordMode: 'Haier',
                       // businessScenarios: info.businessScenarios,
                       sourceSn: item.id,
                       smld: true,
@@ -203,7 +227,7 @@ export default {
                       freezeMsg
                       // oldForNew
                     },
-                    region: "new"
+                    region: 'new'
                   }
                 });
               }
@@ -212,15 +236,17 @@ export default {
         });
     },
     storyDetail(item) {
+      // 修改入户服务故事
       this.$router.push({
-        name: "Houseservice.CompleteServiceStory",
-        query: { planId: item.id }
+        name: 'Houseservice.CompleteServiceStory',
+        query: { planId: item.id, customerId: item.customerId, editor: 'true' }
       });
     },
     storyNew(item) {
+      // 新建入户服务故事
       this.$router.push({
-        name: "Houseservice.CompleteServiceStory",
-        query: { planId: item.id }
+        name: 'Houseservice.CompleteServiceStory',
+        query: { planId: item.id, customerId: item.customerId, editor: 'false' }
       });
     }
   }
@@ -240,8 +266,8 @@ export default {
 }
 .btn-groups {
   position: absolute;
-  right: -10px;  
-button {
+  right: -10px;
+  button {
     font-size: 24px;
     margin-right: 25px;
     border-radius: 3.333vw;
@@ -375,45 +401,45 @@ button {
   margin-right: 10px;
 }
 .CustomPopup {
-        height: 100%;
-        position: fixed;
-        z-index: 1000;
-        top: 0;
-        right: 0;
-        left: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.6);
-    }
+  height: 100%;
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+}
 
-    .CustomPopupContent {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        transition: all 0.3s ease;
-        transform: translateY(100%);
-        z-index: 3000;
-          display: flex;
-        justify-content: space-around;
-    }
+.CustomPopupContent {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  transition: all 0.3s ease;
+  transform: translateY(100%);
+  z-index: 3000;
+  display: flex;
+  justify-content: space-around;
+}
 
-    .CustomPopupContentShow {
-        transform: translateY(0);
-        background: #fff;
-        height: 200px;
-        display: flex;
-        justify-content: space-around;
-    }
-  .shareIconItem{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    font-size: 24px;
-  }
-  .shareIconItem img{
-    width: 80px;
-    height: 80px;
-    margin-bottom: 10px;
-  }
+.CustomPopupContentShow {
+  transform: translateY(0);
+  background: #fff;
+  height: 200px;
+  display: flex;
+  justify-content: space-around;
+}
+.shareIconItem {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+}
+.shareIconItem img {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 10px;
+}
 </style>

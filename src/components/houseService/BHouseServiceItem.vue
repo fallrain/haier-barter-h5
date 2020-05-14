@@ -57,11 +57,11 @@
                 @click="change(item)"
               ></span>
             </div>
-          </div> -->
+          </div>-->
           <div class="btn-groups">
             <!-- <button type="button" @click.stop="successPlan(item)">完成入户</button>
             <button type="button" @click.stop="checkPlan(item)">查看订单</button>
-            <button type="button" @click.stop="changePlan(item)">修改</button> -->
+            <button type="button" @click.stop="changePlan(item)">修改</button>-->
             <button type="button" @click.stop="deletePlan(item)" class="mn">删除</button>
           </div>
         </div>
@@ -95,7 +95,7 @@
           <div class="btn-groups">
             <button type="button">完善计划</button>
             <button type="button">修改</button>
-            <button  type="button" class="mn">删除</button>
+            <button type="button" class="mn">删除</button>
           </div>
         </div>
       </div>
@@ -110,7 +110,7 @@
         <!--        <span class="date">展开详情</span>-->
       </div>
       <div v-show="otherlist.length == 0" class="panel-body text-center text-666">暂无数据...</div>
-      <div class="panel-body ptn" v-for="(item,index) in otherlist" :key="index" >
+      <div class="panel-body ptn" v-for="(item,index) in otherlist" :key="index">
         <div class="title">{{item.title}}</div>
         <div class="rows mb20">
           <span class="info">
@@ -150,40 +150,30 @@
               @click="change(item)"
             ></span>
           </div>
-        </div> -->
+        </div>-->
         <div class="btn-groups">
           <a :href="'tel:'+item.userPhone" class="tel-style">电话联系Ta</a>
         </div>
       </div>
     </div>
     <div class="footer">
-      <template>
-        <div class="md-example-child md-example-child-button md-example-child-button-3">
-          <div class="md-example-section">
-            <md-button type="primary" inline plain @click="addServiceUser()">创建新用户入户</md-button>
-            <!--            <md-button type="primary" inline >查看优秀案例</md-button>-->
-          </div>
-        </div>
-      </template>
+      <img @click="addServiceUser()" class="ruhuaddclass"  src="@/assets/images/houseServicer/ruhuadd.png" />
     </div>
-        <md-dialog
+    <md-dialog
       title="确认"
       :closable="true"
       v-model="basicDialog.open"
       :btns="basicDialog.btns"
-    >请确认是否要删除该入户计划？
-    </md-dialog>
+    >请确认是否要删除该入户计划？</md-dialog>
   </div>
 </template>
 
 
 <script>
-import {
-  Icon, Toast, PopupTitleBar, Button, Dialog
-} from 'mand-mobile';
+import { Icon, Toast, PopupTitleBar, Button, Dialog } from "mand-mobile";
 
 export default {
-  name: '',
+  name: "",
   components: {
     [Icon.name]: Icon,
     [Toast.name]: Toast,
@@ -216,15 +206,15 @@ export default {
         open: false,
         btns: [
           {
-            text: '取消',
-            handler: this.onBasicCancel,
+            text: "取消",
+            handler: this.onBasicCancel
           },
           {
-            text: '确认',
-            handler: this.onBasicConfirm,
-          },
-        ],
-      },
+            text: "确认",
+            handler: this.onBasicConfirm
+          }
+        ]
+      }
     };
   },
   created() {
@@ -234,13 +224,13 @@ export default {
     onBasicConfirm() {
       const data = {};
       data.id = this.currentItem.id;
-      this.houseService.deletePlanService(data, {}).then((res) => {
+      this.houseService.deletePlanService(data, {}).then(res => {
         console.log(res);
         if (res.code === 1) {
-          Toast.succeed('删除计划成功');
-          this.$emit('updatePlan');
+          Toast.succeed("删除计划成功");
+          this.$emit("updatePlan");
         } else {
-          Toast.succeed('删除计划失败');
+          Toast.succeed("删除计划失败");
         }
       });
       this.basicDialog.open = false;
@@ -250,19 +240,19 @@ export default {
     },
     // 跳转入户详情
     clickDetail(item) {
-      this.$emit('clickDetail', item);
+      this.$emit("clickDetail", item);
     },
     // 跳到用户选择
     addServiceUser() {
       // const query =
       this.$router.push({
-        name: 'Houseservice.ChooseUser',
-        params: { test: {}, tag: 'test' }
+        name: "Houseservice.ChooseUser",
+        params: { test: {}, tag: "test" }
       });
     },
     clickMore() {
       // 查询更多
-      this.$emit('morePlan');
+      this.$emit("morePlan");
     },
     change(item) {
       item.arrowtag = !item.arrowtag;
@@ -283,18 +273,18 @@ export default {
     },
     changePlan(item) {
       // 修改计划 changePlan
-      this.$emit('changePlan', item);
+      this.$emit("changePlan", item);
     },
     checkPlan(item) {
       // 修改计划 changePlan
-      this.$emit('checkPlan', item);
+      this.$emit("checkPlan", item);
     },
     successPlan(item) {
       // 标注计划已入户
       item.status = 1;
-      this.houseService.changePlanService(item, {}).then((res) => {
+      this.houseService.changePlanService(item, {}).then(res => {
         if (res.code === 1) {
-          this.$emit('updatePlan');
+          this.$emit("updatePlan");
         }
       });
     }
@@ -314,7 +304,7 @@ export default {
   margin-bottom: 16px;
 }
 .btn-groups {
-  text-align: right;
+  text-align: left;
   button {
     font-size: 24px;
     margin-right: 25px;
@@ -353,12 +343,13 @@ export default {
   color: #2f77cb;
 }
 .footer {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  background: #fff;
-  padding: 10px;
-  width: 100%;
+  margin-top: 30px;
+  position: absolute;
+  right: 20px;
+}
+.ruhuaddclass{
+  width: 118px;
+  height: 118px;
 }
 .key-color {
   color: #8a8a8a;
@@ -390,11 +381,8 @@ export default {
 }
 .md-example-section {
   display: flex;
-  justify-content: space-between;
-  button {
-    width: 100%;
-    height: 80px;
-  }
+  position: absolute;
+  right: 10px;
 }
 .text-warning {
   color: #f5a623;
