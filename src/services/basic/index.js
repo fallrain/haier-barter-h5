@@ -56,6 +56,10 @@ export default {
     /* 查询家电图片 */
     return axGet(urls.queryHoseHoldPictures(customerFamilyAppliancesId));
   },
+  queryHoseHoldPicturesForStory(customerId) {
+    /* 查询家电图片 (添加入户故事用) */
+    return axGet(urls.queryHoseHoldPicturesForStory(customerId));
+  },
   sellerRemind(data, param) {
     /* 提交提醒 */
     return axPostJson(urls.sellerRemind, data, param);

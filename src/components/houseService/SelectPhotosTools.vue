@@ -68,6 +68,7 @@ import {
   TextareaItem,
   Field
 } from 'mand-mobile';
+import imageProcessor from 'mand-mobile/lib/image-reader/image-processor'; // 图片处理插件，用法参考#imageProcessor
 
 export default {
   name: 'SelectPhotosTools',
@@ -84,10 +85,12 @@ export default {
     [Switch.name]: Switch,
     [Tag.name]: Tag,
     [TextareaItem.name]: TextareaItem,
-    [Field.name]: Field
+    [Field.name]: Field,
+    [ImageReader.name]: ImageReader
   },
 
   props: {
+    customerIdSelect: String,
     list: {
       type: Array,
       require: true
@@ -106,10 +109,92 @@ export default {
         ],
         reader1: []
       },
-      checkedList: [],
+      checkedList: []
     };
   },
+  mounted() {
+    // this.getDefaultImgList(this.customerIdSelect);
+    // debugger;
+  },
+  created() {
+    if (this.customerIdSelect) {
+      this.getDefaultImgList(this.customerIdSelect);
+    }
+  },
   methods: {
+    // 拿到原始文件的base64的格式
+    getImgFun(originalImg) {
+      const that = this;
+      const base64Arr = originalImg.split(',');
+      let imgtype = '';
+      let base64String = '';
+      if (base64Arr.length > 1) {
+        // 如果是图片base64，去掉头信息
+        base64String = base64Arr[1];
+        imgtype = base64Arr[0].substring(
+          base64Arr[0].indexOf(':') + 1,
+          base64Arr[0].indexOf(';')
+        );
+      }
+      // 将base64解码
+      const bytes = atob(base64String);
+      // let bytes = base64;
+      const bytesCode = new ArrayBuffer(bytes.length);
+      // 转换为类型化数组
+      const byteArray = new Uint8Array(bytesCode);
+      // 将base64转换为ascii码
+      for (let i = 0; i < bytes.length; i++) {
+        byteArray[i] = bytes.charCodeAt(i);
+      }
+      // 生成Blob对象（文件对象）
+      const bolbObj = new Blob([bytesCode], { type: imgtype });
+      const reader = new FileReader(); // 这个方法读取文件的bolb对象
+      // 将图片转成base64格式
+      reader.readAsDataURL(bolbObj);
+      return new Promise((r) => {
+        reader.onloadend = function () {
+          const result = this.result;
+          const img = new Image();
+          img.src = result;
+          console.log('********未压缩前的图片大小********');
+          console.log(result.length / 1024);
+          img.onload = function () {
+            const data = that.compress(img, 0.01);
+            return r(data);
+          };
+        };
+      });
+    },
+    // 压缩图片
+    compress(img, size) {
+      // 创建canvas
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const initSize = img.src.length;
+      const width = img.width;
+      const height = img.height;
+      canvas.width = width;
+      canvas.height = height;
+      // 铺底色
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, width, height);
+      // 进行最小压缩
+      const ndata = canvas.toDataURL('image/jpeg', size);
+      console.log('*******压缩后的图片大小*******');
+      console.log(ndata.length / 1024);
+      return ndata;
+    },
+    getDefaultImgList(customerIdSelect) {
+      this.basicService
+        .queryHoseHoldPicturesForStory(customerIdSelect)
+        .then((res1) => {
+          debugger;
+          if (res1.code === 1) {
+            this.imageList.reader0 = res1.data;
+          }
+        });
+    },
     checkTab(img) {
       const index = this.checkedList.indexOf(img);
       if (index === -1) {
@@ -121,6 +206,7 @@ export default {
     // 相册获取图片代理
     onReaderSelect(name, { files }) {
       files.forEach((file) => {
+        debugger;
         console.log(
           '[Mand Mobile] ImageReader Selected:',
           `File Name ${file.name}`
@@ -128,7 +214,10 @@ export default {
       });
       Toast.loading('图片读取中...');
     },
+
     onReaderComplete(name, { dataUrl, file }) {
+      debugger;
+
       Toast.hide();
       console.log(
         '[Mand Mobile] ImageReader Complete:',
@@ -136,7 +225,11 @@ export default {
       );
       setTimeout(() => {
         const demoImageList = this.imageList[name] || [];
-        demoImageList.unshift(dataUrl);
+        this.getImgFun(dataUrl).then((data) => {
+          const newdataUrl = data;
+          demoImageList.unshift(newdataUrl);
+        });
+        //
         this.$set(this.imageList, name, demoImageList);
       }, 100);
     },
@@ -267,6 +360,6 @@ export default {
 </style>
 <style lang="scss" scope>
 .md-toast .md-popup {
-    z-index: 99700;
+  z-index: 99700;
 }
 </style>

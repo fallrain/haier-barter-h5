@@ -1,5 +1,6 @@
 <template>
   <div ref="editor" contenteditable="true" @input="update" :placeholder="contentplaceholder||'请输入文字'" class="editor v-html">
+    <slot></slot>
   </div>
 </template>
 <script>
@@ -39,7 +40,11 @@ export default {
   computed: {},
   methods: {
     update(event) {
-      this.$emit('update', event.target.innerHTML);
+      if (event.target.innerHTML == '') {
+        this.n = false;
+      } else {
+        this.$emit('update', event.target.innerHTML);
+      }
     },
     addImg(imgurl) {
       const imgelement = document.createElement('img');
@@ -48,6 +53,8 @@ export default {
       const br = document.createElement('br');
       this.$refs.editor.appendChild(br);
       this.$refs.editor.appendChild(imgelement);
+      this.$refs.editor.appendChild(br);
+      this.$refs.editor.appendChild(br);
       this.$emit('addimg', imgurl);
     },
     setText(text) {

@@ -1,58 +1,87 @@
 <template>
-  <div class="container">
-    <div class="header">
-      <img class="headerimg" src="@/assets/images/houseServicer/default.png" />
-      <span>我是一个大大的标题</span>
-      <div>
-        <img class="iconClass" src="@/assets/images/houseServicer/head.png" alt />
-        <span>合肥路加斯科店/李建国</span>
-        <span>2020/09/08</span>
-      </div>
-    </div>
-    <div class="content">
-      <img src="@/assets/images/houseServicer/default.png" />
-      <span>我是第一段</span>
-      <img src="@/assets/images/houseServicer/default.png" />
-      <span>我是第二段</span>
-      <img src="@/assets/images/houseServicer/default.png" />
-      <span class="imgms">我的图片描述</span>
-      <span>我是第三段</span>
-    </div>
-    <div class="bottomClass">
-      <img class="zanclass" src="@/assets/images/houseServicer/icon-zan.png" />
-      <span>12</span>
-      <div class="moreClass">
-        <img class="zanclass" src="@/assets/images/houseServicer/icon-zan.png" />
-        <span>更多</span>
-      </div>
-    </div>
+<div class="container">
+  <div class="header">
+    <img class="headerimg" :src="customerInfo.coverImage"/>
+    <span class="headTitle">{{customerInfo.title}}</span>
+    <!-- <div>
+      <img class="iconClass" src="@/assets/images/houseServicer/head.png" alt />
+      <span>合肥路加斯科店/李建国</span>
+      <span>{{customerInfo.createdTime}}</span>
+    </div> -->
   </div>
+   <div class="content" v-html="message">{{message}}</div>
+   </div>
+  <!-- <div class="content">
+    <img src="@/assets/images/houseServicer/default.png" />
+    <span>我是第一段</span>
+    <img src="@/assets/images/houseServicer/default.png" />
+    <span>我是第二段</span>
+    <img src="@/assets/images/houseServicer/default.png" />
+    <span class="imgms">我的图片描述</span>
+    <span>我是第三段</span>
+  </div> -->
+  <!-- <div class="bottomClass">
+    <img class="zanclass" src="@/assets/images/houseServicer/icon-zan.png" />
+    <span>12</span>
+    <div class="moreClass">
+      <img class="zanclass" src="@/assets/images/houseServicer/icon-zan.png" />
+      <span>更多</span>
+    </div>
+  </div> -->
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      message: 'html',
+      customerInfo: {}
+    };
+  },
+  created() {
+    debugger
+    this.houseService
+      .searchStoryByPlanId({
+        planId: this.$route.query.planId
+      })
+      .then((res) => {
+        debugger;
+        if (res.code === 1) {
+          this.customerInfo = res.data;
+          this.message = res.data.content;
+        }
+      });
+  }
+};
 </script>
 
 <style scoped lang="scss">
-.headerimg{
+.header{
+  display: flex;
+  flex-direction: column;
+  background: white;
+}
+.headerimg {
   width: 100%;
 }
-.iconClass{
+.headTitle{
+  font-size: 40px;;
+  font-weight: 500;
+}
+.iconClass {
   width: 30px;
   height: 30px;
 }
-.content img{
+.content img {
   width: 100%;
 }
-.bottomClass{
+.bottomClass {
   display: flex;
 }
-.zanclass{
+.zanclass {
   height: 29.65px;
 }
-.moreClass{
+.moreClass {
   display: flex;
 }
-
-
 </style>

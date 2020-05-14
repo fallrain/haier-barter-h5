@@ -33,21 +33,14 @@
         <!-- <div>{{customerInfo.tag}}</div>
       </div>-->
       <div class="mainbody">
-        <!-- <input
-          type="text"
-          v-show="this.customerInfo.status !== 1"
-          v-model="customerInfo.mainbody"
-          @input="judgemainbodyWord()"
-          placeholder="正文"
-        />-->
-
         <rich-editor
           class="dasfgh"
           :title.sync="customerInfo.title"
-          :description.sync="customerInfo.mainbody"
+          :description.sync="customerInfo.content"
           placeholder="请输入标题"
           contentplaceholder="正文"
           :hasTitle="true"
+          :customerId="this.customerInfo.customerId"
         ></rich-editor>
         <!-- <md-textarea-item
           ref="demo0"
@@ -158,14 +151,14 @@
           <md-switch v-show="customerInfo.status !== 1" v-model="switch1"></md-switch>
           <md-switch v-show="customerInfo.status === 1" v-model="switch1" disabled></md-switch>
         </div>
-        <div class="switch-item">
+        <!-- <div class="switch-item">
           <div class="switch-info">
             <div class="fs28 text-666">提交申请作为优秀服务案例</div>
             <div class="fs24 text-999">勾选后，将提交中心和总部人员进行审核</div>
           </div>
           <md-switch v-show="customerInfo.status !== 1" v-model="switch2"></md-switch>
           <md-switch v-show="customerInfo.status === 1" v-model="switch2" disabled></md-switch>
-        </div>
+        </div>-->
         <!--    底部按钮-->
         <div class="footer">
           <template>
@@ -174,8 +167,8 @@
               class="md-example-child md-example-child-button"
             >
               <div class="md-example-section">
+                <md-button type="primary" class="wp48" inline plain @click="submitBack(0)">取消</md-button>
                 <md-button type="primary" class="wp48" inline @click="submit(1)">保存</md-button>
-                <md-button type="primary" class="wp48" inline plain @click="submit(0)">取消</md-button>
                 <!--            <md-button type="primary" inline plain >预览</md-button>-->
               </div>
             </div>
@@ -184,7 +177,8 @@
               class="md-example-child md-example-child-button"
             >
               <div class="md-example-section">
-                <md-button class="w100per" type="primary" inline @click="goBack">返回</md-button>
+                <md-button type="primary" class="wp48" inline plain @click="submitBack(0)">取消</md-button>
+                <md-button type="primary" class="wp48" inline @click="submit(1)">确认修改</md-button>
               </div>
             </div>
           </template>
@@ -244,7 +238,7 @@ export default {
     [TextareaItem.name]: TextareaItem,
     [Field.name]: Field,
     [SelectPhotosTools.name]: SelectPhotosTools,
-    [RichEditor.name]: RichEditor,
+    [RichEditor.name]: RichEditor
   },
   data() {
     return {
@@ -269,6 +263,7 @@ export default {
       customerInfo: {
         coverImage: '',
         title: '',
+        content: '',
         mainbody: '',
         tag: '',
         authorizeFlag: 1,
@@ -302,41 +297,36 @@ export default {
     )}`;
     if (this.$route.query.planId) {
       this.customerInfo.planId = this.$route.query.planId;
+    }
+    if (this.$route.query.editor == 'true') {
+      this.customerInfo.status = 1;
+      // 编辑入户，先请求故事x详情信息
       this.houseService
         .searchStoryByPlanId({
           planId: this.customerInfo.planId
         })
         .then((res) => {
           if (res.code === 1) {
-            if (res.data === null) {
-              this.isAddState = false;
-            } else {
-              this.isAddState = true;
-              this.customerInfo = res.data;
-              const obj = JSON.parse(this.customerInfo.content);
-              this.customerInfo.heartInfo = obj.heartInfo;
-              this.customerInfo.lifeInfo = obj.lifeInfo;
-              this.customerInfo.userwordInfo = obj.userwordInfo;
-              this.switch1 = this.customerInfo.authorizeFlag === 1;
-              this.switch2 = this.customerInfo.applyFlag === 1;
-            }
-            return res;
+            this.customerInfo.id = res.data.id;
+            this.customerInfo.content = res.data.content;
+            this.customerInfo.title = res.data.title;
+            this.isAddState = true;
           }
-        })
-        .then(() => {
-          // 查询直销员信息
-          this.basicService.userInfo().then((res) => {
-            if (res.code === 1) {
-              const storeName = res.data.storeInfo.storeName;
-              const username = res.data.username;
-              this.customerInfo.tag = `${storeName}/${username}`;
-              console.log(this.customerInfo);
-            }
-          });
         });
+    }
+    if (this.$route.query.customerId) {
+      this.customerInfo.customerId = this.$route.query.customerId;
     }
   },
   methods: {
+    // 获取文本中的图片地址 默认取第一张 没有就提示
+    getimgsrc(htmlstr) {
+      const reg = /<img(\s|\S)*src="(\S*)"(\s|\S)*>/;
+      const matchAy = htmlstr.match(reg);
+      if (matchAy && matchAy.length) {
+        return matchAy[2] || '';
+      }
+    },
     // 确定插入
     insertList(data) {
       debugger;
@@ -402,89 +392,80 @@ export default {
         this.customerInfo.userwordInfo.push(obj);
       }
     },
+    submitBack() {
+      this.$mBack();
+    },
     submit(status) {
-      this.customerInfo.authorizeFlag = this.switch1 === true ? 1 : 0;
-      this.customerInfo.applyFlag = this.switch2 === true ? 1 : 0;
-      this.customerInfo.status = status;
-      const content = {
-        heartInfo: this.customerInfo.heartInfo,
-        lifeInfo: this.customerInfo.lifeInfo,
-        userwordInfo: this.customerInfo.userwordInfo
-      };
-      this.customerInfo.content = JSON.stringify(content);
-      if (status === 1) {
-        if (this.customerInfo.coverImage === '') {
-          Toast.failed('请上传封面图片！');
-          this.customerInfo.status = 0;
-          return;
-        }
-        if (this.customerInfo.title === '') {
-          Toast.failed('请输入故事标题！');
-          this.customerInfo.status = 0;
-          return;
-        }
-        if (
-          this.customerInfo.content
-          === '{"heartInfo":[{"url":"","descript":""}],"lifeInfo":[{"url":"","descript":""}],"userwordInfo":[{"url":"","descript":""}]}'
-        ) {
-          Toast.failed('请输入故事内容！');
-          this.customerInfo.status = 0;
-          return;
-        }
+      const coverImage = this.getimgsrc(this.customerInfo.content);
+      if (coverImage) {
+        this.customerInfo.coverImage = coverImage;
+      }
+
+
+      if (this.customerInfo.coverImage === '') {
+        Toast.failed('请上传封面图片！');
+        return;
+      }
+      if (this.customerInfo.title === '') {
+        Toast.failed('请输入故事标题！');
+        return;
+      }
+      if (this.customerInfo.content === '') {
+        Toast.failed('请输入故事内容！');
+        return;
       }
       if (!this.isAddState) {
         // 新增
         this.houseService.addStory(this.customerInfo).then((res) => {
+          debugger;
           if (res.code === 1) {
-            if (status === 0) {
-              Toast.succeed('暂存成功');
-              setTimeout(() => {
-                this.$router.go(-1);
-                this.$destroy();
-              }, 500);
-            } else {
-              Toast.succeed('提交成功');
-              this.houseService
-                .completeStory({
-                  planId: this.customerInfo.planId
-                })
-                .then((res) => {
-                  if (res.code === 1) {
-                    setTimeout(() => {
-                      this.$router.go(-1);
-                      this.$destroy();
-                    }, 500);
-                  }
-                });
-            }
+            // if (status === 0) {
+            //   Toast.succeed('暂存成功');
+            //   setTimeout(() => {
+            //     this.$router.go(-1);
+            //     // this.$destroy();
+            //   }, 500);
+            // } else {
+            Toast.succeed('提交成功');
+            this.$mBack();
+
+            this.houseService
+              .completeStory({
+                planId: this.customerInfo.planId
+              })
+              .then((res) => {
+                if (res.code === 1) {
+                  setTimeout(() => {
+                    this.$router.go(-1);
+                    // this.$destroy();
+                  }, 500);
+                }
+              });
           }
+          // }
         });
       } else if (this.isAddState) {
+        this.customerInfo;
         // 修改
         this.houseService.modifyStory(this.customerInfo).then((res) => {
           if (res.code === 1) {
-            if (status === 0) {
-              Toast.succeed('暂存成功');
-              setTimeout(() => {
-                this.$router.go(-1);
-                this.$destroy();
-              }, 500);
-            } else {
-              Toast.succeed('提交成功');
-              this.houseService
-                .completeStory({
-                  planId: this.customerInfo.planId
-                })
-                .then((res) => {
-                  if (res.code === 1) {
-                    setTimeout(() => {
-                      this.$router.go(-1);
-                      this.$destroy();
-                    }, 500);
-                  }
-                });
-            }
+            Toast.succeed('提交成功');
+            this.$mBack();
+            this.houseService
+              .completeStory({
+                planId: this.customerInfo.planId
+              })
+              .then((res) => {
+                if (res.code === 1) {
+                  debugger;
+                  setTimeout(() => {
+                    // this.$router.go(-1);
+                    // this.$destroy();
+                  }, 500);
+                }
+              });
           }
+          // }
         });
       }
     },
@@ -618,7 +599,7 @@ input:disabled {
     input {
       background: rgba(0, 0, 0, 0);
       border: none;
-      margin: 24px 0;
+      // margin: 24px 0;
       width: 100%;
       font-size: 32px;
       // font-weight: bold;

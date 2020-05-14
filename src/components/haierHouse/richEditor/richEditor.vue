@@ -21,6 +21,7 @@
       :showMask="showMaska"
       @clickCloseMask="clickCloseMask"
       @insertList="insertList"
+      :customerIdSelect = "customerId"
     ></select-photos-tools>
   </div>
 </template>
@@ -42,6 +43,7 @@ export default {
     };
   },
   props: {
+    customerId:String,
     placeholder: String,
     contentplaceholder: String,
     oldContent: String,
@@ -63,6 +65,10 @@ export default {
   components: { editable,
     [SelectPhotosTools.name]: SelectPhotosTools, },
   mounted() {},
+  created(){
+    debugger;
+    console.log(this.customerId)
+  },
   methods: {
     // 确定插入
     insertList(data) {
@@ -86,13 +92,12 @@ export default {
       });
     },
     addimg(imgurl) {
-      debugger ;
-      this.strContent = `<br>${this.strContent}<br>` + `<img class="rich-img" src="${imgurl}" style="max-width:100%">`;
+      this.strContent = `${this.strContent}<br><img class="rich-img" src="${imgurl}" style="max-width:100%"><br>`;
     }
   },
   watch: {
     strContent(o) {
-      this.$emit('update:description', this.strContent);
+      this.$emit('update:description', o);
     },
     strTitle(o) {
       this.$emit('update:title', this.strTitle);
@@ -134,6 +139,8 @@ export default {
   outline: none;
   -webkit-appearance: none;
   border-bottom: 1px solid #EEEEEE;
+  margin-bottom: 34px;
+  height: 40px;
 }
 .title-input:before {
   background-position: bottom;
@@ -157,4 +164,5 @@ export default {
   -webkit-box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 1px 3px 0 rgba(0, 0, 0, 0.12);
   box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 1px 3px 0 rgba(0, 0, 0, 0.12);
 }
+
 </style>

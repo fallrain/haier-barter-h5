@@ -22,6 +22,11 @@ const urls = {
   sendWeiXinMsg: '/visitService/evaluation/sendWeiXinMsg', // 发送模板消息邀请评价
   queryHistoryPlan: '/visitService/plan/queryHistoryPlan',// 查询历史入户服务接口
   queryByCondition: '/visitService/story/queryByCondition',// 查询入户服务故事列表
+  // shareToList: '/visitService/story/shareToList',// 分享入户服务故事到列表
+  shareToList(storeId) {
+    // 查询家电上传的产品图片(添加入户故事用)
+    return `/visitService/story/shareToList/${storeId}`; // 查询家电图片
+  },
   
 };
 

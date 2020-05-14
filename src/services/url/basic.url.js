@@ -33,6 +33,10 @@ const urls = {
     // 查询家电上传的产品图片
     return `/customer/appliances/picture/query/${customerFamilyAppliancesId}`; // 查询顾客的住宅信息、家庭成员、家电信息
   },
+  queryHoseHoldPicturesForStory(customerId) {
+    // 查询家电上传的产品图片(添加入户故事用)
+    return `/customer/appliances/picture/${customerId}`; // 查询家电图片
+  },
   sellerRemind: '/seller/remind', // 新增提醒
 };
 

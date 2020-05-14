@@ -24,7 +24,7 @@
     </div>
     <!--    内容-->
     <!--    计划入户-->
-    <div style="padding-bottom: 50px;" v-show="current === 1">
+    <div style="padding-bottom: 100px;" v-show="current === 1">
       <b-house-service-item
         @updatePlan="updatePlan"
         @changePlan="changePlan"
@@ -144,7 +144,6 @@ export default {
         sortType: '0'
       };
       this.houseService.queryByCondition(data, {}).then((res) => {
-        debugger;
         if (res.code === 1) {
           this.hoseStoreList = res.data.result;
         }

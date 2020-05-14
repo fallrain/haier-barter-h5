@@ -5,9 +5,9 @@
         <span class="itemClass" :class="{'active':quanguo}" @click="allList">全国</span>
         <span class="itemClass" :class="{'active':!quanguo}" @click="mineList">我的</span>
       </div>
-      <div @click="xialaAction">按时间排序</div>
+      <!-- <div @click="xialaAction">按时间排序</div> -->
     </div>
-    <div class="panel-body" @click="addStoreDetail()" v-for="(item,index) in list" :key="index">
+    <div class="panel-body" @click="addStoreDetail(item)" v-for="(item,index) in list" :key="index">
       <div class="itemHeader">
         <img class="iconClass" src="@/assets/images/houseServicer/head.png" alt />
         <span class="userNameClass">{{item.visitServicePlanDTO.servicerName}}</span>
@@ -69,10 +69,10 @@ export default {
       debugger;
     },
     // 跳到故事詳情
-    addStoreDetail() {
+    addStoreDetail(item) {
       this.$router.push({
         name: 'Houseservice.HouseStoreDetailEntry',
-        params: { test: {}, tag: 'test' }
+        query: { planId: item.planId }
       });
     }
   }
@@ -81,7 +81,7 @@ export default {
 
 <style scoped lang="scss">
 .container {
-  //  color: red;
+  //  color: cyan;
 }
 .header {
   height: 70px;
