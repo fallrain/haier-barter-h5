@@ -611,6 +611,7 @@ export default {
           if (res.code === 1) {
             Toast.succeed('地址添加成功');
             this.confirmClicked = true;
+            this.customerMobile = this.customerInfo.consigneeUserPhone;
             this.$router.go(-1);
           }
         });
@@ -620,6 +621,7 @@ export default {
           if (res.code === 1) {
             Toast.succeed('地址修改成功');
             this.confirmClicked = true;
+            this.customerMobile = this.customerInfo.consigneeUserPhone;
             this.$router.go(-1);
           }
         });
