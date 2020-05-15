@@ -133,14 +133,13 @@ export default {
   width: 100%;
   border-style: none;
   background-color: transparent;
-  line-height: 20px;
+  line-height: 50px;
   padding: 8px 0;
-  max-height: 32px;
   outline: none;
   -webkit-appearance: none;
   border-bottom: 1px solid #EEEEEE;
   margin-bottom: 34px;
-  height: 40px;
+  height: 50px;
 }
 .title-input:before {
   background-position: bottom;
