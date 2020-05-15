@@ -516,9 +516,9 @@ textarea:disabled,
 input:disabled {
   background: #fff;
 }
-.app-container {
-  background: white;
-}
+// .app-container {
+//   background: white;
+// }
 .service-story {
   .dasfgh {
     .editable {
