@@ -126,7 +126,7 @@ export default {
     this.getMyPlan(); // 入户计划列表查询
     this.getOtherPlan(); // 其他入户计划列表查询
     this.getMySuccessPlan(); // 查询已入户计划列表
-    this.dealAppraise();
+    // this.dealAppraise();
     this.postStoryList('','0'); // 查询入户故事列表
   },
   created() {
@@ -147,6 +147,7 @@ export default {
       this.houseService.queryByCondition(data, {}).then((res) => {
         if (res.code === 1) {
           this.hoseStoreList = res.data.result;
+          this.tagNum3 = res.data.result.length;
         }
       });
     },
@@ -250,7 +251,7 @@ export default {
       const data = {
         servicerId: this.userinfo.hmcid,
         pageNum: '1',
-        pageSize: '20',
+        pageSize: '200',
         searchContent: val // 搜索用
       };
       this.houseService.querySuccessPlanList(data, {}).then((res) => {
