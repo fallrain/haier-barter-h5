@@ -5,16 +5,28 @@
         <span class="itemClass" :class="{'active':quanguo}" @click="allList">全国</span>
         <span class="itemClass" :class="{'active':!quanguo}" @click="mineList">我的</span>
       </div>
-      <!-- <div @click="xialaAction">按时间排序</div> -->
+      <div class="selecTitleClass">
+        <div @click.stop="xialaAction">{{selectTitle}}</div>
+        <img class="zanclass" src="@/assets/images/houseServicer/down-icon.png" />
+      </div>
+
+      <div :class="{activeli: isShow, none: !isShow}">
+        <div
+          v-for="(item, index) in menus"
+          :key="index"
+          @click="didSelectItem(item)"
+          class="item-class"
+        >{{item.name}}</div>
+      </div>
     </div>
-    <div class="panel-body" @click="addStoreDetail(item)" v-for="(item,index) in list" :key="index">
+    <div class="panel-body"  v-for="(item,index) in list" :key="index">
       <div class="itemHeader">
         <img class="iconClass" src="@/assets/images/houseServicer/head.png" alt />
         <span class="userNameClass">{{item.visitServicePlanDTO.servicerName}}</span>
         <span class="dateclass">{{item.updatedTime}}</span>
       </div>
-      <div class="img-show">
-        <img :src="item.coverImage"/>
+      <div class="img-show" @click="addStoreDetail(item)">
+        <img :src="item.coverImage" />
       </div>
       <div class="title-show">{{item.title}}</div>
       <div class="bottomClass">
@@ -47,7 +59,21 @@ export default {
   data() {
     return {
       data: [],
-      quanguo: true
+      quanguo: true,
+      isShow: false,
+      selectTitle: '按时间排序',
+      menus: [
+        {
+          name: '按时间排序',
+          class: '0'
+        },
+        {
+          name: '按数量排序',
+          class: '1'
+        }
+      ],
+      createdBy: '',
+      paixuId: '0', // 排序id
     };
   },
   created() {
@@ -56,17 +82,23 @@ export default {
   },
   methods: {
     allList() {
-      const createdBy = '';
+      this.createdBy = '';
       this.quanguo = true;
-      this.$emit('rhgsListAction', createdBy);
+      this.$emit('rhgsListAction', this.createdBy, this.paixuId);
     },
     mineList() {
-      const createdBy = this.userinfo.hmcid;
+      this.createdBy = this.userinfo.hmcid;
       this.quanguo = false;
-      this.$emit('rhgsListAction', createdBy);
+      this.$emit('rhgsListAction', this.createdBy, this.paixuId);
     },
     xialaAction() {
-      debugger;
+      this.isShow = !this.isShow;
+    },
+    didSelectItem(item) {
+      this.selectTitle = item.name;
+      this.paixuId = item.class;
+      this.$emit('rhgsListAction', this.createdBy, this.paixuId);
+      this.isShow = !this.isShow;
     },
     // 跳到故事詳情
     addStoreDetail(item) {
@@ -124,10 +156,10 @@ export default {
   color: #666666;
 }
 .img-show img {
-  width: 100%;
-  height: 300px;
+  max-width: 100%;
+  // height: 300px;
   background-size: cover;
-    background-position: center 0;
+  background-position: center 0;
 }
 .title-show {
   height: 95.5px;
@@ -154,7 +186,36 @@ export default {
   height: 29.65px;
   margin-right: 10px;
 }
-.userNameClass{
+.userNameClass {
   -webkit-line-clamp: 10;
+}
+.none {
+  display: none;
+}
+.selecTitleClass {
+  position: relative;
+  right: 0px;
+  width: 5.68rem;
+  display: flex;
+}
+.selecTitleClass img{
+  position: absolute;
+  right: 10px;
+  bottom: 4px;
+  width: 32px;
+  height: 32px;
+}
+.activeli {
+  position: absolute;
+  // background-color: rgba(0, 0, 0, 0.2);
+  width: 5.68rem;
+  height: 4.8rem;
+  right: 15px;
+  top: 240px;
+  z-index: 100;
+}
+.item-class{
+  // height: 20px;
+  margin-top: 5px;
 }
 </style>
