@@ -127,21 +127,22 @@ export default {
     this.getOtherPlan(); // 其他入户计划列表查询
     this.getMySuccessPlan(); // 查询已入户计划列表
     this.dealAppraise();
-    this.postStoryList(); // 查询入户故事列表
+    this.postStoryList('','0'); // 查询入户故事列表
   },
   created() {
     this.userinfo = JSON.parse(localStorage.getItem('userinfo'));
   },
   methods: {
-    rhgsListAction(a) {
+    rhgsListAction(a,b) {
+      debugger ;
       // 我的 全国
-      this.postStoryList(a);
+      this.postStoryList(a,b);
     },
     // 入户故事列表
-    postStoryList(a) {
+    postStoryList(a,b) {
       const data = {
         createdBy: a, // 创建故事的直销员id 我的
-        sortType: '0'
+        sortType: b
       };
       this.houseService.queryByCondition(data, {}).then((res) => {
         if (res.code === 1) {
