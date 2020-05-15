@@ -29,7 +29,7 @@
         <img :src="item.coverImage" />
       </div>
       <div class="title-show">{{item.title}}</div>
-      <div class="bottomClass">
+      <div class="bottomClass" v-if="item.readCount && item.praiseCount">
         <span v-if="item.readCount">被浏览 {{item.readCount}}次</span>
         <div v-if="item.praiseCount" class="bot-right">
           <img class="zanclass" src="@/assets/images/houseServicer/icon-zan.png" />

@@ -306,12 +306,11 @@ export default {
       // 头部切换
       this.current = current;
       if (this.current === 3) {
-        // 更新评价数据
-        this.dealAppraise();
+        this.postStoryList('','0'); // 查询入户故事列表
       }
       if (this.current === 4) {
         // 更新数据分析
-        // this.dealAnalysis();
+        this.dealAnalysis();
       }
     },
     getQueryString(name) {

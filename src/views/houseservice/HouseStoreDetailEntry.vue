@@ -39,6 +39,9 @@ export default {
     };
   },
   created() {
+
+  },
+  activated() {
     this.houseService
       .searchStoryByPlanId({
         planId: this.$route.query.planId
