@@ -159,7 +159,7 @@ export default {
           console.log('********未压缩前的图片大小********');
           console.log(result.length / 1024);
           img.onload = function () {
-            const data = that.compress(img, 0.01);
+            const data = that.compress(img, 0.1);
             return r(data);
           };
         };
