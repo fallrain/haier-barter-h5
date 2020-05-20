@@ -165,7 +165,7 @@
     ></md-tab-picker>
     <button class="common-bottom-button" @click="confirm()" v-show="searchEnd">确认</button>
     <!--<button class="common-bottom-button" @click="search()" v-show="!searchEnd">搜索</button>-->
-    <button class="common-bottom-button" @click="creatCustomer" v-show="!searchEnd">创建新顾客</button>
+    <button class="common-bottom-button addAddress-create-btn" @click="creatCustomer" v-show="!searchEnd">创建新顾客</button>
     <md-dialog
       title="顾客不存在"
       :closable="true"
@@ -449,7 +449,7 @@ export default {
             cityCode,
             regionCode
           } = data;
-          // 为customerInfo添加值
+            // 为customerInfo添加值
           this.customerInfo.province = proCode;
           this.customerInfo.city = cityCode;
           this.customerInfo.district = regionCode;
@@ -565,9 +565,9 @@ export default {
         return;
       }
       /* if (this.customerInfo.username === '' || !this.customerInfo.username) {
-            Toast.failed('顾客姓名不能为空');
-            return;
-          } */
+                  Toast.failed('顾客姓名不能为空');
+                  return;
+                } */
       if (this.customerInfo.province === '') {
         Toast.failed('省份不能为空');
         return;
@@ -848,4 +848,15 @@ export default {
   .addAddress-search-btn {
     color: #1969C6;
   }
+
+  .addAddress-create-btn {
+    &.common-bottom-button {
+      position: static;
+      display: block;
+      margin-top: 100px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+
 </style>

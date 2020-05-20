@@ -72,7 +72,7 @@
               Q2、购机凭证都支持哪些类型
             </p>
             <p class="orderUploadInvoice-question-item-answer">
-              A：上传购机凭证包括：发票、购机小票、系统订单截图
+              A：上传购机凭证包括：正规机打发票和电子发票
             </p>
           </li>
         </ul>
