@@ -1,64 +1,94 @@
 <template>
-<div class="container">
-  <div class="header">
-    <img class="headerimg" :src="customerInfo.coverImage"/>
-    <span class="headTitle">{{customerInfo.title}}</span>
-    <!-- <div>
-      <img class="iconClass" src="@/assets/images/houseServicer/head.png" alt />
-      <span>合肥路加斯科店/李建国</span>
-      <span>{{customerInfo.createdTime}}</span>
-    </div> -->
-  </div>
-   <div class="content" v-html="message">{{message}}</div>
-   </div>
-  <!-- <div class="content">
-    <img src="@/assets/images/houseServicer/default.png" />
-    <span>我是第一段</span>
-    <img src="@/assets/images/houseServicer/default.png" />
-    <span>我是第二段</span>
-    <img src="@/assets/images/houseServicer/default.png" />
-    <span class="imgms">我的图片描述</span>
-    <span>我是第三段</span>
-  </div> -->
-  <!-- <div class="bottomClass">
-    <img class="zanclass" src="@/assets/images/houseServicer/icon-zan.png" />
-    <span>12</span>
-    <div class="moreClass">
-      <img class="zanclass" src="@/assets/images/houseServicer/icon-zan.png" />
-      <span>更多</span>
+  <div class="container">
+    <div class="header">
+      <span class="headTitle">{{customerInfo.title}}</span>
     </div>
-  </div> -->
+    <div id="capture" class="content" v-html="message"></div>
+    <div v-if="showSharebtn" class="shareClass" @click="shareImg">保存图片到相册</div>
+     <div class="popContainer" v-if="isShowPopContainer" @click="closeShare" style="z-index: 100000">
+      <img src="@/assets/images/activity/activity-share.png" alt="" class="activity-detail-share">
+    </div>
+  </div>
 </template>
 
 <script>
+import html2canvas from 'html2canvas';
+
 export default {
   data() {
     return {
-      message: 'html',
-      customerInfo: {}
+      message: '',
+      customerInfo: {},
+      showSharebtn: false,
+      isShowPopContainer: false,
     };
   },
-  created() {
-
-  },
+  created() {},
   activated() {
+    const that = this;
     this.houseService
       .searchStoryByPlanId({
         planId: this.$route.query.planId
       })
       .then((res) => {
-        debugger;
         if (res.code === 1) {
           this.customerInfo = res.data;
           this.message = res.data.content;
+          that.$nextTick(() => {
+            //
+            that.showSharebtn = true;
+          });
         }
       });
-  }
+  },
+  methods: {
+    closeShare() {
+      this.isShowPopContainer = false;
+    },
+    capture() {
+      const that = this;
+      // document.querySelector('#capture')
+      html2canvas(document.body, {
+        allowTaint: true,
+        useCORS: true
+      }).then((canvas) => {
+        // document.body.appendChild(canvas);
+        const imgUrl = canvas.toDataURL('image/png', 0.001); // 此方法可以设置截图质量（0-1）
+        console.log('base64编码数据：', imgUrl);
+        console.log('base64编码数据长度：', imgUrl.length);
+        that.updateImgToBack(imgUrl);
+      });
+    },
+    shareImg() {
+      const that = this;
+      that.capture();
+    },
+    // 上传base64
+    updateImgToBack(imgUrl) {
+      const data = {
+        base64Str: imgUrl,
+      };
+      this.houseService.uploadImage(data, {}).then((res) => {
+        if (res.code === 1) {
+          // this.isShowPopContainer = true;
+
+          wx.miniProgram.postMessage({
+            data: {
+              shareUrl: res.data
+            }
+          });
+          wx.miniProgram.navigateBack({ delta: 1 });
+        }
+      });
+    }
+  },
+  mounted() {},
+  watch: {}
 };
 </script>
 
 <style scoped lang="scss">
-.header{
+.header {
   display: flex;
   flex-direction: column;
   background: white;
@@ -66,8 +96,8 @@ export default {
 .headerimg {
   width: 100%;
 }
-.headTitle{
-  font-size: 40px;;
+.headTitle {
+  font-size: 40px;
   font-weight: 500;
 }
 .iconClass {
@@ -86,4 +116,22 @@ export default {
 .moreClass {
   display: flex;
 }
+.shareClass{
+   float: right;
+   margin: 30px;
+}
+  .popContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+  }
+    .activity-detail-share {
+    position: fixed;
+    right: 128px;
+    width: 493px;
+    height: 694px;
+  }
 </style>

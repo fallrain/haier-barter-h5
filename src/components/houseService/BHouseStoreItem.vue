@@ -102,19 +102,20 @@ export default {
     },
     // 跳到故事詳情
     addStoreDetail(item) {
-      this.$router.push({
-        name: 'Houseservice.HouseStoreDetailEntry',
-        query: { planId: item.planId }
+      // 此处跳小程序页面
+      wx.miniProgram.navigateTo({
+        url: `/barter2/pages/HomeService/HomeStoreDetail?planId=${item.planId}`
       });
+      // this.$router.push({
+      //   name: 'Houseservice.HouseStoreDetailEntry',
+      //   query: { planId: item.planId }
+      // });
     }
   }
 };
 </script>
 
 <style scoped lang="scss">
-.container {
-  //  color: cyan;
-}
 .header {
   height: 70px;
   display: flex;
