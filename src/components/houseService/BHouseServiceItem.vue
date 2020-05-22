@@ -1,5 +1,6 @@
 <template>
   <div class="houseServiceItemClass">
+   
     <div id="myPlan">
       <div class="rows header">
         <span class>我的入户计划</span>
@@ -156,9 +157,10 @@
         </div>
       </div>
     </div>
-    <div class="footer">
+      <div class="footerClass">
       <img @click="addServiceUser()" class="ruhuaddclass"  src="@/assets/images/houseServicer/ruhuadd.png" />
     </div>
+   
     <md-dialog
       title="确认"
       :closable="true"
@@ -170,10 +172,12 @@
 
 
 <script>
-import { Icon, Toast, PopupTitleBar, Button, Dialog } from "mand-mobile";
+import {
+  Icon, Toast, PopupTitleBar, Button, Dialog
+} from 'mand-mobile';
 
 export default {
-  name: "",
+  name: '',
   components: {
     [Icon.name]: Icon,
     [Toast.name]: Toast,
@@ -206,11 +210,11 @@ export default {
         open: false,
         btns: [
           {
-            text: "取消",
+            text: '取消',
             handler: this.onBasicCancel
           },
           {
-            text: "确认",
+            text: '确认',
             handler: this.onBasicConfirm
           }
         ]
@@ -224,13 +228,13 @@ export default {
     onBasicConfirm() {
       const data = {};
       data.id = this.currentItem.id;
-      this.houseService.deletePlanService(data, {}).then(res => {
+      this.houseService.deletePlanService(data, {}).then((res) => {
         console.log(res);
         if (res.code === 1) {
-          Toast.succeed("删除计划成功");
-          this.$emit("updatePlan");
+          Toast.succeed('删除计划成功');
+          this.$emit('updatePlan');
         } else {
-          Toast.succeed("删除计划失败");
+          Toast.succeed('删除计划失败');
         }
       });
       this.basicDialog.open = false;
@@ -240,19 +244,19 @@ export default {
     },
     // 跳转入户详情
     clickDetail(item) {
-      this.$emit("clickDetail", item);
+      this.$emit('clickDetail', item);
     },
     // 跳到用户选择
     addServiceUser() {
       // const query =
       this.$router.push({
-        name: "Houseservice.ChooseUser",
-        params: { test: {}, tag: "test" }
+        name: 'Houseservice.ChooseUser',
+        params: { test: {}, tag: 'test' }
       });
     },
     clickMore() {
       // 查询更多
-      this.$emit("morePlan");
+      this.$emit('morePlan');
     },
     change(item) {
       item.arrowtag = !item.arrowtag;
@@ -273,18 +277,18 @@ export default {
     },
     changePlan(item) {
       // 修改计划 changePlan
-      this.$emit("changePlan", item);
+      this.$emit('changePlan', item);
     },
     checkPlan(item) {
       // 修改计划 changePlan
-      this.$emit("checkPlan", item);
+      this.$emit('checkPlan', item);
     },
     successPlan(item) {
       // 标注计划已入户
       item.status = 1;
-      this.houseService.changePlanService(item, {}).then(res => {
+      this.houseService.changePlanService(item, {}).then((res) => {
         if (res.code === 1) {
-          this.$emit("updatePlan");
+          this.$emit('updatePlan');
         }
       });
     }
@@ -296,6 +300,7 @@ export default {
 .houseServiceItemClass {
   padding: 25px;
   font-size: 28px;
+  // position: relative;
 }
 .panel-body {
   background: #fff;
@@ -342,10 +347,8 @@ export default {
   background: #fff;
   color: #2f77cb;
 }
-.footer {
-  margin-top: 30px;
-  position: absolute;
-  right: 20px;
+.footerClass {
+   float: right;
 }
 .ruhuaddclass{
   width: 118px;
@@ -379,11 +382,11 @@ export default {
     color: #2f77cb;
   }
 }
-.md-example-section {
-  display: flex;
-  position: absolute;
-  right: 10px;
-}
+// .md-example-section {
+//   display: flex;
+//   position: absolute;
+//   right: 10px;
+// }
 .text-warning {
   color: #f5a623;
 }

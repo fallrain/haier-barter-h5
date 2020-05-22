@@ -91,6 +91,10 @@ export default {
     /* 查询历史入户服务故事列表 */
     return axPostJson(urls.queryByCondition, data, param);
   },
+  uploadImage(data, param) {
+    /* 查询历史入户服务故事列表 */
+    return axPostJson(urls.uploadImage, data, param);
+  },
   // shareToList(storyId) {
   //   /* 分享入户服务故事到列表 */
   //   return axGet(urls.shareToList, storyId);

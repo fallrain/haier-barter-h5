@@ -24,7 +24,7 @@
     </div>
     <!--    内容-->
     <!--    计划入户-->
-    <div style="padding-bottom: 100px;" v-show="current === 1">
+    <div  v-show="current === 1">
       <b-house-service-item
         @updatePlan="updatePlan"
         @changePlan="changePlan"

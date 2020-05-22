@@ -44,11 +44,13 @@
             <b-date-picker
               class="hourseService-date"
               slot="right"
-              type="datetime"
+              type = "custom"
               :defaultDate="customerInfo.serviceTime"
               title="请选择日期"
               :pattern="pattern"
               v-model="customerInfo.serviceTime"
+              :custom-types = "['yyyy', 'MM', 'dd', 'hh']"
+              :min-date="new Date()"
             ></b-date-picker>
           </template>
         </b-item>
@@ -93,10 +95,10 @@
             <span @click="deleteProduct(index)" class="icon iconfont icon-shanchu text-ccc"></span>
           </li>
         </ul>
-        <div class="rows br-b bg-white p24 mt16 fs28">
+        <!-- <div class="rows br-b bg-white p24 mt16 fs28">
           <label>加入我的日程提醒</label>
           <md-switch v-model="isTip" />
-        </div>
+        </div> -->
         <div v-show="isTip" class="br-b bg-white p24 fs28">
           <span :class="[{'active':activeOffset==='0'},'tag-style']" @click="clickTag('0')">提前三天</span>
           <span :class="[{'active':activeOffset==='1'},'tag-style']" @click="clickTag('1')">提前一天</span>
@@ -197,7 +199,7 @@ export default {
       addressList: [],
       consignee: {},
       isChangePlan: false,
-      pattern: 'yyyy-MM-dd hh:mm',
+      pattern: 'yyyy-MM-dd hh',
       usersex: 0,
       tag: [],
       tagList: [],
