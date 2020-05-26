@@ -554,35 +554,6 @@ export default {
     margin-top: 16px;
   }
 
-  .orderEntry-user-head {
-    display: flex;
-    align-items: center;
-
-    .name {
-      color: #333;
-      font-size: 28px;
-    }
-
-    .sex {
-      color: #333;
-      font-size: 24px;
-    }
-
-    .icon-dianhua {
-      font-size: 32px;
-      color: #1969C6;
-    }
-
-    .phone {
-      color: #1969C6;
-      font-size: 28px;
-    }
-
-    .common-btn-waring {
-      margin-left: auto;
-    }
-  }
-
   .orderEntry-user-address {
     color: #666;
     font-size: 28px;

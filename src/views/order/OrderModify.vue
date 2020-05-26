@@ -12,7 +12,7 @@
       class="mt16"
       title="收货人信息"
     >
-      <div class="orderEntry-user1">
+      <div class="orderEntry-user-consignee">
         <div>
           <div class="orderEntry-user-head">
             <span class="name mr16">收货人：{{consignee.name}}</span>
@@ -126,12 +126,22 @@
       <template
         v-slot:right=""
       >
-        <div
+        <button
+          type="button"
+          class="common-btn-primary orderModify-coupon-btn-query"
+          @click="showReceivedCoupons"
+        >查询优惠券</button>
+        <button
+          type="button"
+          class="common-btn-primary"
+          @click="showInputCoupons"
+        >输入优惠券</button>
+        <!--<div
           class="orderModify-coupon-btn-show"
           @click="showReceivedCoupons"
         >
           <span>查看</span> <i class="iconfont icon-youjiantou1"></i>
-        </div>
+        </div>-->
       </template>
     </b-item>
     <b-item
@@ -270,6 +280,9 @@
         </div>
       </div>
     </md-dialog>
+    <order-input-coupons
+      :is-show="isShowInputCoupons"
+    ></order-input-coupons>
   </div>
 </template>
 
@@ -294,11 +307,16 @@ import {
   BMultbuyCheck
 } from '@/components/business';
 import addressData from '@/lib/address';
+import oderEntryMix from '@/mixin/order/oderEntry.mix';
+import OrderInputCoupons from '../../components/business/orderEntry/OrderInputCoupons';
 
 export default {
   name: 'OrderModify',
+  mixins: [
+    oderEntryMix
+  ],
   components: {
-    Toast,
+    OrderInputCoupons,
     [Dialog.name]: Dialog,
     BActivityList,
     BDatePicker,
@@ -338,16 +356,6 @@ export default {
           {
             text: '确定',
             handler: this.onBasicConfirm1,
-          },
-        ],
-      },
-      // 模态框:已领优惠券
-      couponDialog: {
-        open: false,
-        btns: [
-          {
-            text: '确定',
-            handler: this.couponDialogConfirm,
           },
         ],
       },
@@ -616,32 +624,6 @@ export default {
     }
   },
   methods: {
-    showReceivedCoupons() {
-      /* 查看已领取的优惠券 */
-      const hasFridge = this.productList.find(v => v.productCategoryCode === 'AA' || v.productCategoryCode === 'AB');
-      if (hasFridge) {
-        const userPhone = this.customerInfo.mobile;
-        if (!userPhone) {
-          this.$dialog.alert({
-            content: '请添加顾客'
-          });
-          return;
-        }
-        this.orderService.queryAdjCouponInfo({
-          userPhone
-        }).then(({ code, data }) => {
-          if (code === 1) {
-            this.receivedCoupons = (data && data[0].service.split(',')) || [];
-            this.couponDialog.btns[0].text = this.receivedCoupons.length ? '核销' : '确定';
-            this.couponDialog.open = true;
-          }
-        });
-      } else {
-        this.$dialog.alert({
-          content: '暂无可用消费券'
-        });
-      }
-    },
     // 获取权益列表
     getActivityList() {
       const obj = {
@@ -1346,9 +1328,6 @@ export default {
     },
     onBasicConfirm1() {
       this.basicDialog1.open = false;
-    },
-    couponDialogConfirm() {
-      this.couponDialog.open = false;
     }
   },
   beforeRouteLeave(to, from, next) {
@@ -1426,46 +1405,6 @@ export default {
     font-size: 32px;
   }
 
-  .orderEntry-user1 {
-    background: #fff;
-    padding: 24px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-  }
-
-  .orderEntry-user-head {
-    display: flex;
-    align-items: center;
-
-    .name {
-      color: #333;
-      font-size: 28px;
-      width: 32vw;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: nowrap;
-    }
-
-    .sex {
-      color: #333;
-      font-size: 24px;
-    }
-
-    .icon-dianhua {
-      font-size: 32px;
-      color: #1969C6;
-    }
-
-    .phone {
-      color: #1969C6;
-      font-size: 28px;
-    }
-
-    .common-btn-waring {
-      margin-left: auto;
-    }
-  }
-
   .orderEntry-user-address {
     color: #666;
     font-size: 28px;
@@ -1509,11 +1448,6 @@ export default {
     .md-popup-mask {
       top: 0;
     }
-  }
-
-  .orderEntry-user1 {
-    background: #fff;
-    padding: 0;
   }
 
   .orderEntry-multBuySponsor {

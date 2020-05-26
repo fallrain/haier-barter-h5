@@ -25,7 +25,7 @@
 
         </div>
         <p class="orderEntry-user-address">
-         {{orderData.dispatchProvince}}{{orderData.dispatchCity}}{{orderData.dispatchArea}}{{orderData.dispatchAdd}}
+          {{orderData.dispatchProvince}}{{orderData.dispatchCity}}{{orderData.dispatchArea}}{{orderData.dispatchAdd}}
         </p>
       </div>
     </div>
@@ -138,10 +138,12 @@ import {
   BFieldset,
   BItem,
   BOrderProduct,
+  BOrderProductConfirm,
   BPop,
   BPopAddressList,
   BPopCheckList,
-  BRadioItem, BTimeSectionPicker, BOrderProductConfirm
+  BRadioItem,
+  BTimeSectionPicker
 } from '@/components/form';
 import {
   BMultbuyCheck
@@ -183,8 +185,7 @@ export default {
       // 选择礼品pop显示隐藏
       chooseGiftPopShow: false,
       // pop礼品列表
-      giftList: [
-      ],
+      giftList: [],
       // 退货原因pop show
       returnReasonPopShow: false,
       // pop 退货原因
@@ -213,19 +214,14 @@ export default {
       // 选择收货人列表pop show
       addressPopShow: false,
       // 收货人地址pop列表
-      addressList: [
-
-      ],
+      addressList: [],
       // 套购pop show
       multBuyPopShow: false,
       // 套购发起人
-      multBuySponsor: [
-
-      ],
+      multBuySponsor: [],
       multBuySponsorCheckedIds: [],
       // 套购参与人
-      multBuyParticipant: [
-      ],
+      multBuyParticipant: [],
       // 参与人选中id
       multBuyParticipantCheckIds: [],
       orderNo: '',
@@ -311,9 +307,11 @@ export default {
     isReportInstall(pro) {
       this.supplementProductList.push(pro);
       const orderDetailInfo = [
-        { hmcId: this.orderData.hmcId,
+        {
+          hmcId: this.orderData.hmcId,
           storeId: this.orderData.storeId,
-          productModel: pro.productModel }
+          productModel: pro.productModel
+        }
       ];
       this.orderService.isReportInstallNew({ orderDetailInfo }, {}).then((res) => {
         this.queryInstall = true;
@@ -570,7 +568,8 @@ export default {
     padding-right: 25px;
     color: #1969C6;
   }
-  .orderEntry-header-cus{
+
+  .orderEntry-header-cus {
     display: flex;
     align-items: center;
 
@@ -597,36 +596,6 @@ export default {
     padding: 24px;
   }
 
-  .orderEntry-user-head {
-    display: flex;
-    align-items: center;
-    padding-top: 10px;
-
-    .name {
-      color: #333;
-      font-size: 28px;
-    }
-
-    .sex {
-      color: #333;
-      font-size: 24px;
-    }
-
-    .icon-dianhua {
-      font-size: 32px;
-      color: #1969C6;
-    }
-
-    .phone {
-      color: #1969C6;
-      font-size: 28px;
-    }
-
-    .common-btn-waring {
-      margin-left: auto;
-    }
-  }
-
   .orderEntry-user-address {
     color: #666;
     font-size: 28px;
@@ -637,9 +606,11 @@ export default {
   .orderEntry-date1 {
     width: 400px !important;
   }
+
   .orderEntry-date {
     width: 260px;
   }
+
   .orderEntry-reportInf {
     color: #3078CC;
     font-size: 24px;
@@ -669,10 +640,7 @@ export default {
       top: 0;
     }
   }
-  .orderEntry-user1 {
-    background: #fff;
-    padding: 0;
-  }
+
   .orderConfirm-no {
     color: #1969C6;
     font-size: 28px;

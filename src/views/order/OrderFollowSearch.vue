@@ -432,12 +432,12 @@ export default {
       showVerificationDialog_ADJ: false,
       currentHeXiaoCode: null,
       currentHeXiaoId: null,
-      verificationRemark: ""
+      verificationRemark: ''
     };
   },
   activated() {
     // window.location.reload();
-    if(this.$route.params.refreshPage){
+    if (this.$route.params.refreshPage) {
       this.buttonClicked();
     }
   },
@@ -700,16 +700,16 @@ export default {
           }
         });
       } else if (val.name === '核销') {
-        if(info.businessScenarios === 'ADJ'){
+        if (info.businessScenarios === 'ADJ') {
           this.showVerificationDialog_ADJ = true;
-        }else{
+        } else {
           this.showVerificationDialog = true;
         }
-        this.verificationRemark = "";
+        this.verificationRemark = '';
         this.currentHeXiaoCode = info.add5;
         this.currentHeXiaoId = info.id;
       } else if (val.name === '补录票据') {
-        console.log("补录票据");
+        console.log('补录票据');
         this.$router.push({
           name: 'Order.OrderSupplementBill',
           params: {
@@ -763,10 +763,10 @@ export default {
           hmcId: this[GET_USER].hmcid,
           orderMark: this[this.curScrollViewName].orderMark
         };
-        if(this[this.curScrollViewName].orderMark == '1'){
+        if (this[this.curScrollViewName].orderMark == '1') {
           searchData.status = this[this.curScrollViewName].orderDelAudit || '';
         }
-        if(this[this.curScrollViewName].orderMark == '2'){
+        if (this[this.curScrollViewName].orderMark == '2') {
           searchData.status = this[this.curScrollViewName].orderSupplement || '';
         }
       } else {
@@ -840,29 +840,29 @@ export default {
           // item.buttonList = [{ name: '录新订单' }, { name: '退货' }, { name: '换货' }];// 已完成
           // item.buttonList = [{ name: '录新订单' },{ name: '补录订单' }];// 已完成
           item.buttonList = [{ name: '录新订单' }];
-          if(item.orderFreezeStatus == '1'){
+          if (item.orderFreezeStatus == '1') {
             item.buttonList.push({ name: '补录票据' });
           }
-          if(item.orderFreezeStatus == '2'){
-            item.buttonList.push({ name: '补录票据', disabled:true });
+          if (item.orderFreezeStatus == '2') {
+            item.buttonList.push({ name: '补录票据', disabled: true });
           }
         } else if (item.flowStatus === 0) {
           // item.buttonList = [{ name: '成交录单' }, { name: '发放卡券' }];
           item.buttonList = [{ name: '成交录单' }];
-          if(item.businessScenarios === 'JKHXJ_RC'){
-            if(item.writeOff == '0'){
+          if (item.businessScenarios === 'JKHXJ_RC') {
+            if (item.writeOff == '0') {
               item.buttonList.push({ name: '核销' });
-            }else if(item.writeOff == '1'){
-              item.buttonList.push({ name: '已核销', disabled:true });
-            }else if(item.writeOff == '2'){
-              item.buttonList.push({ name: '无法核销', disabled:true });
+            } else if (item.writeOff == '1') {
+              item.buttonList.push({ name: '已核销', disabled: true });
+            } else if (item.writeOff == '2') {
+              item.buttonList.push({ name: '无法核销', disabled: true });
             }
           }
-          if(item.businessScenarios === 'ADJ'){
-            if(item.writeOff == '0'){
+          if (item.businessScenarios === 'ADJ') {
+            if (item.writeOff == '0') {
               item.buttonList.push({ name: '核销' });
-            }else if(item.writeOff == '1'){
-              item.buttonList.push({ name: '已核销', disabled:true });
+            } else if (item.writeOff == '1') {
+              item.buttonList.push({ name: '已核销', disabled: true });
             }
           }
         } else if (item.flowStatus === 5) {
@@ -1002,13 +1002,13 @@ export default {
       });
       this.currentList = curList;
     },
-    inputBlur(){
-      //IOS系统 input输入框失去焦点，软键盘关闭后，
-      //被撑起的页面无法回退到原来正常的位置，导致弹框里的按钮响应区域错位
-      var scrollHeight = document.documentElement.scrollTop || document.body.scrollTop || 0;
+    inputBlur() {
+      // IOS系统 input输入框失去焦点，软键盘关闭后，
+      // 被撑起的页面无法回退到原来正常的位置，导致弹框里的按钮响应区域错位
+      const scrollHeight = document.documentElement.scrollTop || document.body.scrollTop || 0;
       window.scrollTo(0, Math.max(scrollHeight - 1, 0));
     },
-    doVerification(){
+    doVerification() {
       this.orderService.updateOrderFollowByType(
         {},
         {

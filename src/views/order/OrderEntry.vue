@@ -19,7 +19,7 @@
       :title="title"
       :showTitle="true"
     >
-      <div class="orderEntry-user1">
+      <div class="orderEntry-user-consignee">
         <div v-if="haveConsignee">
           <div class="orderEntry-user-head">
             <span class="name mr16">收货人：{{consignee.name}}</span>
@@ -313,9 +313,13 @@ import {
   BMultbuyCheck
 } from '@/components/business';
 import addressData from '@/lib/address';
+import oderEntryMix from '@/mixin/order/oderEntry.mix';
 
 export default {
   name: 'OrderEntry',
+  mixins: [
+    oderEntryMix
+  ],
   components: {
     [Toast.name]: Toast,
     [Dialog.name]: Dialog,
@@ -364,20 +368,9 @@ export default {
           },
         ],
       },
-      // 模态框:已领优惠券
-      couponDialog: {
-        open: false,
-        btns: [
-          {
-            text: '确定',
-            handler: this.couponDialogConfirm,
-          },
-        ],
-      },
       // 是否详情模式
       isDetail: false,
       orderSource: '',
-      orderInfo: {},
       sourceSn: '',
       orderFollowId: '',
       rightsList: [],
@@ -1414,9 +1407,6 @@ export default {
     },
     onBasicConfirm1() {
       this.basicDialog1.open = false;
-    },
-    couponDialogConfirm() {
-      this.couponDialog.open = false;
     }
   },
   // beforeRouteLeave(to,from,next){
@@ -1502,46 +1492,6 @@ export default {
 
   .orderEntry-header-icon {
     font-size: 32px;
-  }
-
-  .orderEntry-user1 {
-    background: #fff;
-    padding: 0;
-  }
-
-  .orderEntry-user-head {
-    display: flex;
-    align-items: center;
-    padding-top: 20px;
-
-    .name {
-      color: #333;
-      font-size: 28px;
-      width: 32vw;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: nowrap;
-    }
-
-    .sex {
-      color: #333;
-      font-size: 24px;
-    }
-
-    .icon-dianhua {
-      font-size: 32px;
-      color: #1969C6;
-    }
-
-    .phone {
-      color: #1969C6;
-      font-size: 28px;
-    }
-
-    .common-btn-waring {
-      margin-left: auto;
-      margin-top: 5px;
-    }
   }
 
   .orderEntry-user-address {

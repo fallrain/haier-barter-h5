@@ -106,7 +106,7 @@
         <b-activity-list
           :isDetail="isDetail"
           :data="activityList"
-          v-model="choosedActivitys"
+          v-model="choseActivities"
         ></b-activity-list>
       </div>
     </b-fieldset>
@@ -177,7 +177,7 @@ export default {
       // 活动列表
       activityList: [],
       // 选中的活动id
-      choosedActivitys: [],
+      choseActivities: [],
       // 选择礼品pop显示隐藏
       chooseGiftPopShow: false,
       // pop礼品列表
@@ -370,35 +370,6 @@ export default {
     background: #fff;
     padding: 24px;
     margin-top: 16px;
-  }
-
-  .orderEntry-user-head {
-    display: flex;
-    align-items: center;
-
-    .name {
-      color: #333;
-      font-size: 28px;
-    }
-
-    .sex {
-      color: #333;
-      font-size: 24px;
-    }
-
-    .icon-dianhua {
-      font-size: 32px;
-      color: #1969C6;
-    }
-
-    .phone {
-      color: #1969C6;
-      font-size: 28px;
-    }
-
-    .common-btn-waring {
-      margin-left: auto;
-    }
   }
 
   .orderEntry-user-address {

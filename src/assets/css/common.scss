@@ -627,19 +627,64 @@
 
 /*估价历史组件公共 end*/
 
-/*订单修改*/
+/*订单录入*/
 
-.orderModify-coupon-btn-show {
-  font-size: 28px;
-  color: #1969C6;
+.orderEntry-user-head {
   display: flex;
   align-items: center;
-  line-height: 1;
+  padding-top: 10px;
 
-  .iconfont {
-    font-size: 26px;
+  .name {
+    color: #333;
+    font-size: 28px;
+    width: 32vw;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .sex {
+    color: #333;
+    font-size: 24px;
+  }
+
+  .icon-dianhua {
+    font-size: 32px;
+    color: #1969C6;
+  }
+
+  .phone {
+    color: #1969C6;
+    font-size: 28px;
+  }
+
+  .common-btn-waring {
+    margin-left: auto;
+    margin-top: 5px;
   }
 }
+
+.orderEntry-user-consignee {
+  background: #fff;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+/*订单录入 end*/
+
+/*订单修改*/
+
+//.orderModify-coupon-btn-show {
+//  font-size: 28px;
+//  color: #1969C6;
+//  display: flex;
+//  align-items: center;
+//  line-height: 1;
+//
+//  .iconfont {
+//    font-size: 26px;
+//  }
+//}
 
 .orderModify-coupon-list {
   width: 100%;
@@ -672,6 +717,12 @@
 
 .orderModify-coupon-info {
   text-align: center;
+}
+
+.orderModify-coupon-btn-query {
+  border: 1px solid #29AB91;
+  color: #29AB91;
+  margin-right: 18px;
 }
 
 /*订单修改 end*/
