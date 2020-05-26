@@ -202,7 +202,7 @@ export default {
     .item-name{
       font-size: 30px;
       color: #2f2f2f;
-      width: 120px;
+      width: 200px;
       margin-right: 20px;
     }
     .taglist{

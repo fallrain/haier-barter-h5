@@ -1481,9 +1481,12 @@ header {
 .bItem-item-title {
   color: #666;
 }
-
+.bItem-item-right {
+width: 200px;
+}
 .bItem-item-right-val {
   color: #666;
+  width: 100px;
 }
 
 footer {
@@ -1514,7 +1517,7 @@ footer {
   }
 }
 
-.br-b {
+.br-b {  width: 100%;
   border-bottom: 1px solid #f5f5f5;
 }
 
