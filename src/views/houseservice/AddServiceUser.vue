@@ -57,15 +57,15 @@
         <b-item class="br-b mt16" title="服务人" :value="customerInfo.servicerName"></b-item>
         <b-item
           class="br-b join-person"
-          title="随行参与人"
+          title="随行参与人()"
           :value="customerInfo.accompanyingName"
           :arrow="true"
           @click.native="chooseJoinPerson()"
         >
-          <templet slot="left">
+          <!-- <div slot="left">
             <span>(选填)</span>
             <span class="icon iconfont icon-wenhao"></span>
-          </templet>
+          </div> -->
         </b-item>
         <div class="bg-white p24 fs28">
           <div class="rows">
@@ -197,6 +197,7 @@ export default {
       activeOffset: '0',
       addressPopShow: false,
       addressList: [],
+      queryHistoryList: [],
       consignee: {},
       isChangePlan: false,
       pattern: 'yyyy-MM-dd hh',
@@ -405,6 +406,7 @@ export default {
     },
     // 查看该用户历史服务资料
     checkhistoryList() {
+      debugger;
       const data = {
         servicerId: this.customerInfo.servicerId,
         pageNum: '1',
@@ -674,6 +676,7 @@ export default {
           topEndTime: endDate,
           topStartTime: ''
         };
+        // eslint-disable-next-line default-case
         switch (this.activeOffset) {
           case '0':
             tipInfo.topStartTime = this.getTipTime(3, 'd');
