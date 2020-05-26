@@ -75,10 +75,10 @@
                 <span @click="deleteProduct(index)" class="icon iconfont icon-shanchu text-ccc"></span>
               </li>
             </ul>-->
-            <div class="rows br-b bg-white p24 mt16 fs28">
+            <!-- <div class="rows br-b bg-white p24 mt16 fs28">
               <label>加入我的日程提醒</label>
               <md-switch v-model="isTip" />
-            </div>
+            </div> -->
             <!-- <div v-show="isTip" class="br-b bg-white p24 fs28">
         <span :class="[{'active':activeOffset==='0'},'tag-style']" @click="clickTag('0')">提前三天</span>
         <span :class="[{'active':activeOffset==='1'},'tag-style']" @click="clickTag('1')">提前一天</span>
@@ -490,6 +490,7 @@ export default {
     };
   },
   computed: {
+
     tagName() {
       const that = this;
       if (this.tag) {
@@ -507,6 +508,7 @@ export default {
     },
     houseAreaLevelName() {
       if (this.houseAreaLevelV) {
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
         this.familyCompleteInfo.gradeItemCode = this.houseAreaLevelV[0];
         const tagObj = this.GRADEList.find(
           v => v.id === this.houseAreaLevelV[0]
@@ -523,6 +525,7 @@ export default {
     },
     houseTypeName() {
       if (this.houseTypeV) {
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
         this.familyCompleteInfo.housetypItemCode = this.houseTypeV[0];
         const tagObj = this.HOUSETYPEList.find(
           v => v.id === this.houseTypeV[0]
@@ -539,6 +542,7 @@ export default {
     },
     addressRelationName() {
       if (this.addressRelationV) {
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
         this.familyCompleteInfo.familyItemCode = this.addressRelationV[0];
         const tagObj = this.FAMILYList.find(
           v => v.id === this.addressRelationV[0]
@@ -594,6 +598,7 @@ export default {
         }
       };
     },
+    // eslint-disable-next-line vue/return-in-computed-property
     groupCompositionCode() {
       if (this.familyCompleteInfo.groupCompositionCode) {
         return this.familyCompleteInfo.groupCompositionCode.split(',');
@@ -905,7 +910,8 @@ export default {
       // 查询家庭成员信息
       this.basicService.queryFamilyInfo(this.customerInfoId).then((res) => {
         if (res.code === 1) {
-          // this.familyCompleteInfo = res.data;
+          this.familyCompleteInfo = res.data;
+          this.familyCompleteInfo.familyType = `${this.familyCompleteInfo.familyType}`;
           this.houseAreaLevelV[0] = res.data.gradeItemCode; // 小区档次
           this.houseTypeV[0] = res.data.housetypItemCode; // 户型
           this.addressRelationV[0] = res.data.familyItemCode; // 用户与地址的关系
@@ -937,9 +943,6 @@ export default {
                 });
               }
             });
-            this.familyCompleteInfo = res.data;
-          } else {
-            this.familyCompleteInfo = res.data;
           }
         }
       });
