@@ -1,7 +1,6 @@
 import urls from '../url/haierhouse.url';
 import {
-  axPostJson,
-  axPost
+  axPostJson
 } from '@/lib/ajax';
 
 export default {
@@ -25,7 +24,7 @@ export default {
     /* 店铺申请信息查询接口 */
     return axPostJson(urls.queryShopAndDistrict, data, param);
   },
-  simpleUpload(data) {
-    return axPost(urls.simpleUpload, data);
-  },
+  queryCount(data, param) {
+    return axPostJson(urls.queryCount, data, param);
+  }
 };

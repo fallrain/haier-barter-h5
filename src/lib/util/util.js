@@ -56,7 +56,20 @@ const util = {
     if (!date) {
       return '';
     }
+
     if (!(date instanceof Date)) {
+      if (typeof date === 'string') {
+        // ios下必须以2000/01/01类似结构
+        date = date.replace(/-/g, '/');
+        const dateAy = date.split(' ');
+        const dateStr = dateAy[0];
+        const len = 3 - dateStr.split('/').length;
+        const timeSuffix = Array(len).fill('/01');
+        date = dateStr + timeSuffix.join('');
+        if (dateAy.length > 1) {
+          date += dateAy[1];
+        }
+      }
       date = new Date(date);
     }
     const numToStr = function (num) {
@@ -157,8 +170,8 @@ const util = {
 
     // 判断是不是ios端
     /* function isOS() {
-        return navigator.userAgent.match(/ipad|iphone/i);
-      } */
+          return navigator.userAgent.match(/ipad|iphone/i);
+        } */
 
     // 创建文本元素
     function createTextArea(text) {
@@ -173,18 +186,18 @@ const util = {
       // let selection;
 
       /* if (!isOS()) {
-           range = document.createRange();
-          range.selectNodeContents(textArea);
-          selection = window.getSelection();
-          selection.removeAllRanges();
-          selection.addRange(range);
-          textArea.setSelectionRange(0, 999999);
-          textArea.select();
-          document.body.removeChild(textArea);
-        } else {
-          textArea.select();
-          textArea.setSelectionRange(0, textArea.value.length);
-        } */
+             range = document.createRange();
+            range.selectNodeContents(textArea);
+            selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            textArea.setSelectionRange(0, 999999);
+            textArea.select();
+            document.body.removeChild(textArea);
+          } else {
+            textArea.select();
+            textArea.setSelectionRange(0, textArea.value.length);
+          } */
       textArea.focus();
       textArea.select();
       textArea.setSelectionRange(0, textArea.value.length);
@@ -274,7 +287,6 @@ const util = {
   },
   /** *****判断代报装时间是否符合要求******** */
   isReportInstallFit(productlist, deliveryTime) {
-    debugger;
     let change = true;
     // const now = new Date()
     const deT = Date.parse(deliveryTime.substring(0, 16).replace(/-/g, '/'));
@@ -334,9 +346,9 @@ const util = {
   }) {
     /* 检查是否溢出屏幕 */
     /*
-    * dom:检查的dom
-    * isDomShow：底部的dom
-    * */
+      * dom:检查的dom
+      * isDomShow：底部的dom
+      * */
     const screenHeight = document.documentElement.offsetHeight;
     let domHeight = dom.offsetHeight;
     let {
@@ -382,7 +394,7 @@ const util = {
   downloadFile(data) {
     /* 接受二进制文件，下载文件 */
     // 'filename=micro_model_1568343739576.xlsx';
-    debugger
+    debugger;
     const filename = 'pic.png';
     const url = window.URL.createObjectURL(new Blob([data]));
     const link = document.createElement('a');
@@ -391,7 +403,7 @@ const util = {
     link.setAttribute('download', filename);
     document.body.appendChild(link);
     link.click();
-    //window.URL.revokeObjectURL(link.href); // 释放URL 对象
+    // window.URL.revokeObjectURL(link.href); // 释放URL 对象
     // document.body.removeChild(link);
   },
   getUserInfo() {
@@ -419,6 +431,34 @@ const util = {
     const setArray = new Set(array1.concat(array2));
     return setArray.size < array1Len + array2Len;
   },
+  isSameValueOfOneDimensional(...arrays) {
+    /* 判断n个一维数组是否值一样 */
+    let valid = false;
+    const arraysLen = arrays.length;
+    const newArray = arrays.flat();
+    const newArrayLen = newArray.length;
+    // 不是整数说明长度肯定不一样，减少数组去重步骤
+    if (newArrayLen % arraysLen === 0) {
+      const unionAy = new Set(newArray);
+      if (unionAy.size === newArrayLen / arraysLen) {
+        valid = true;
+      }
+    }
+    return valid;
+  },
+  isIOS() {
+    return navigator.userAgent.toUpperCase().indexOf('ANDROID') === -1;
+  },
+  setEntryUrl() {
+    const isIOS = window.localStorage.getItem('isIOS');
+    if (!isIOS) {
+      const iosFlag = this.isIOS() ? '1' : '0';
+      window.localStorage.setItem('isIOS', iosFlag);
+    }
+    if (isIOS === '1') {
+      window.$mWxEntryUrl = window.location.href;
+    }
+  }
 };
 
 export default util;

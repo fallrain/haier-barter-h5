@@ -23,7 +23,7 @@ const urls = {
   isAccordDeadline: '/reportEhub/isAccordDeadline', // 校验 购买日期与其当月销量闸口是否关闭
   checkCreateOrder: '/orderManage/checkCreateOrder', // 校验 订单录入校验
   createOrderForSGLD: '/orderManage/createOrderForSGLD', // 手工录单接口
-  checkInvoiceByMediaId: '/orderManage/checkInvoiceByMediaId', // 上传发票并校验
+  checkInvoiceByMediaId: '/orderManage/uploadInvoiceByMediaId', // 上传发票并校验
   // 检查是否可以跳过上传发票
   ifUploadInvoice: '/orderManage/ifUploadInvoice',
   // 删除订单
@@ -32,8 +32,18 @@ const urls = {
   orderDeletionApprovalApply: '/orderDeletionApproval/apply',
   // 查询需要删除的订单的列表
   queryRightsReviewList: '/orderDeletionApproval/queryRightsReviewList',
-  createFollowByRHFW: '/orderFollow/createFollowByRHFW', // 检查是否可以跳过上传发票
-  queryUserNewestOrder: '/orderManage/queryUserNewestOrder', // 查询用户最新订单信息
+  // 检查重复录单
+  checkRepeatCreateOrder: '/orderManage/checkRepeatCreateOrder',
+  // 以旧换新标记手机号、微信是否添加或者无效
+  updateStatusForYJHX: '/orderFollow/updateStatusForYJHX',
+  // 查询领取优惠券信息
+  queryAdjCouponInfo: '/orderManage/queryAdjCouponInfo',
+  // 获取地址
+  getLocationByBaiduMap: '/buildHouse/getLocationByBaiduMap',
+  // 异常订单列表查询
+  queryExceptionOrder: '/orderManage/queryExceptionOrder',
+  // 补录票据
+  hmcUploadInvoiceForOrderFreeze: '/orderManage/hmcUploadInvoiceForOrderFreeze',
 };
 
 Object.entries(urls).forEach(([key, value]) => {

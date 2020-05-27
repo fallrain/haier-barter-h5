@@ -61,6 +61,12 @@
   display: flex;
 }
 
+.dis-flex-sb {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .pseudo-clear:after {
   clear: both;
   display: block;
@@ -459,6 +465,10 @@
   font-size: 26px;
 }
 
+.common-haier-blue {
+  color: $theme-color;
+}
+
 /*公共 end*/
 
 /*fix*/
@@ -516,7 +526,7 @@
 }
 
 .md-check-group-inline {
-  &.md-check-group{
+  &.md-check-group {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
@@ -616,3 +626,52 @@
 }
 
 /*估价历史组件公共 end*/
+
+/*订单修改*/
+
+.orderModify-coupon-btn-show {
+  font-size: 28px;
+  color: #1969C6;
+  display: flex;
+  align-items: center;
+  line-height: 1;
+
+  .iconfont {
+    font-size: 26px;
+  }
+}
+
+.orderModify-coupon-list {
+  width: 100%;
+}
+
+.orderModify-coupon-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 28px;
+  color: #29AB91;
+  margin-bottom: 10px;
+}
+
+.orderModify-coupon-item-num {
+  flex-shrink: 0;
+  margin-left: 20px;
+
+  .num {
+    color: #000;
+  }
+}
+
+.orderModify-coupon-dialog {
+  .md-dialog-body {
+    padding: 70px 16px 20px 16px;
+    min-height: 200px;
+    max-height: 600px;
+  }
+}
+
+.orderModify-coupon-info {
+  text-align: center;
+}
+
+/*订单修改 end*/

@@ -18,14 +18,18 @@
         <img src="@/assets/images/haierHouse/apply@2x.png" class="icon-class">
         <p class="bt2-house-menu-item-cnt">筑家申请</p>
       </li>
-      <!--     <li class="bt2-house-menu-item">
-        <img src="@/assets/images/haierHouse/activity@2x.png" @click="jump('/pages/haierHouse/ChooseLeader')">
+      <li class="bt2-house-menu-item" @click="haierHouseLink">
+        <img src="@/assets/images/haierHouse/activity@2x.png">
         <p class="bt2-house-menu-item-cnt">筑家活动</p>
       </li>
-      <li class="bt2-house-menu-item">
+      <li class="bt2-house-menu-item" @click="orderLink">
         <img src="@/assets/images/haierHouse/user@2x.png">
         <p class="bt2-house-menu-item-cnt">用户跟进</p>
-      </li> -->
+      </li>
+     <!-- <li class="bt2-house-menu-item" @click="dataAnalysis">
+        <img src="@/assets/images/haierHouse/data@2x.png">
+        <p class="bt2-house-menu-item-cnt">数据分析</p>
+      </li>-->
     </ul>
     <div class="bt2-myhouse mt16">
       <p @click="showMoreList()" class="bt2-myhouse-more" v-show="myAreaList.length === 3">显示更多</p>
@@ -33,6 +37,7 @@
            @click="showMoreList()"></img>
       <b-title cnt="我的一站筑家">
       </b-title>
+      <div v-show="myAreaList.length === 0" class="text-666 text-center p10">暂无数据。。。</div>
       <div class="bt2-myhouse-card" v-for="(item, index) in myAreaList" :key="index">
         <img v-if="item.imageUrl" :src="item.imageUrl" class="bt2-myhouse-card-portrait">
         <img v-else src="@/assets/images/haierHouse/Group@3x.png" class="bt2-myhouse-card-portrait"/>
@@ -66,6 +71,7 @@
     </div>
     <div class="bt2-myhouse mt16">
       <b-title cnt="优秀门店展示"></b-title>
+      <div v-show="shopList.length === 0" class="text-666 text-center p10">暂无数据。。。</div>
       <ul class="bt2-shopShow-par mt16">
         <md-scroll-view
           ref="scrollView"
@@ -109,7 +115,8 @@
     >
       <div class="pop-class">
         <img :src="areaImg" alt="" :mode='imageMode' class="pop-img-class">
-        <p class="pop-p">{{this.areaName}}</p>
+        <p class="pop-p">一站筑家店名称：{{this.areaName}}</p>
+        <p class="pop-p">所属客户：{{this.adminName}}</p>
       </div>
     </uni-popup>
   </div>
@@ -161,6 +168,7 @@ export default {
       pass: false,
       refresh: false,
       informationComplete: false,
+      adminName: '',
       areaName: '',
       areaImg: '',
       imageMode: 'aspectFit',
@@ -191,12 +199,14 @@ export default {
     this.mescroll && this.mescroll.onPageScroll(e);
   },
   activated() {
+    console.log('activated');
     // 获取我的一站筑家
     this.getDatalist();
     // 获取优秀门店
     this.getStoreList();
   },
   created() {
+    console.log('create');
     this.userInfo = JSON.parse(localStorage.getItem('userinfo'));
   },
   methods: {
@@ -213,8 +223,9 @@ export default {
     },
     showPic(item) {
       this.alert = true;
-      this.areaName = item.name;
-      this.areaImg = item.pic;
+      this.areaName = item.shopName;
+      this.adminName = item.adminName;
+      this.areaImg = item.imageUrl;
     },
     hidePopupAlert() {
       this.alert = false;
@@ -239,10 +250,10 @@ export default {
       }).then((res) => {
         console.log(res);
         if (res.code === 1) {
-          if (res.data.length === 0) {
-            Toast.failed('一站筑家暂无信息');
-            return;
-          }
+          // if (res.data.length === 0) {
+          //   Toast.failed('一站筑家暂无信息');
+          //   return;
+          // }
           this.myAreaList = res.data;
         }
       });
@@ -252,6 +263,24 @@ export default {
       this.$router.push({
         name: 'Haierhouse.HaierhouseApply',
         params: {}
+      });
+    },
+    haierHouseLink() {
+      this.$router.push({
+        name: 'Activity.MarketingActivities',
+        query: { checkIds: '2' }
+      });
+    },
+    orderLink() {
+      this.$router.push({
+        name: 'Order.OrderFollowSearch',
+        query: { businessScenarios: 'YZZJ' }
+      });
+    },
+    dataAnalysis() {
+      this.$router.push({
+        name: 'Haierhouse.DataAnalysis',
+        query: { hmcId: this.userInfo.hmcid }
       });
     },
     showAl() {
@@ -321,6 +350,9 @@ export default {
   .fs22{
     font-size: 22px;
   }
+  .p10{
+    padding: 10px;
+  }
   .main-img-class{
     width: 280px;
     height: 134px;
@@ -354,13 +386,14 @@ export default {
   .bt2- {
     &house-menu {
       display: flex;
+      justify-content: left;
       padding: 24px 44px;
       padding-bottom: 10px;
       background: #fff;
     }
 
     &house-menu-item {
-      margin-left: 100px;
+      margin-left: 60px;
       text-align: center;
       &:first-child{
         margin-left: 0;
@@ -406,7 +439,7 @@ export default {
     color: #4A90E2;
     position: absolute;
     right: 76px;
-    top: 10px;
+    top: 15px;
     font-size: 30px;
   }
   .bt2-myhouse-card-cnt{
@@ -502,24 +535,21 @@ export default {
 
   .pop-class {
     width: 600px;
-    height: 500px;
+    height: 550px;
+    padding: 20px;
     text-align: center
   }
 
   .pop-img-class {
-    width: 500px;
+    width: 100%;
     height: 400px;
-    /* background-color: red; */
-    position: absolute;
-    right: 13%;
-    top: 50px
   }
 
   .pop-p {
     text-align: center;
-    position: absolute;
-    width: 90%
-
+    line-height: 50px;
+    height: 50px;
+    width: 100%
   }
 
   .uni-popup-middle.uni-popup-fixed[data-v-728667af] {

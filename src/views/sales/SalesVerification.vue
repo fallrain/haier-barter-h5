@@ -9,7 +9,7 @@
         <b-month-pop
           @choosed="confirmDate"
         ></b-month-pop>
-        <i class="iconfont icon-wenhao"></i>
+        <i class="iconfont icon-wenhao" @click="showVertificalTipDialog"></i>
       </div>
     </b-search-input>
     <md-tab-bar
@@ -18,6 +18,9 @@
       :items="tabs"
       :hasInk="false"
     ></md-tab-bar>
+    <div class="top_tip" v-show="curTab==2 || curTab==4">
+      由于渠道传输数据时间有差异，导致部分销量尚未验证，请耐心等待或沟通相关业务代表。
+    </div>
     <div
       v-show="curScrollViewName==='scrollView'"
       class="reportInstallList-view mt24"
@@ -182,6 +185,29 @@
         </div>
       </div>
     </md-dialog>
+    <md-dialog
+      title="销量验证说明"
+      :closable="false"
+      v-model="vertificalTipDialog.show"
+      class="verificationDialog"
+    >
+      <div>
+        <p>
+          1. 条码验证——录入20位机编码后系统实时验证，验证成功后，兑呗第二天更新验证结果
+        </p>
+        <p class="margin-top-xs">
+          2. 联网验证——根据国美苏宁等渠道给兑呗传输的数据进行联网验证（及时性可能受渠道影响），验证成功后，兑呗第二天更新验证结果
+        </p>
+      </div>
+      <div class="margin-top text-center">
+        <button
+          type="button"
+          class="common-submit-btn-default"
+          @click="hideVertificalTipDialog"
+        >知道了
+        </button>
+      </div>
+    </md-dialog>
   </div>
 </template>
 
@@ -324,6 +350,15 @@ export default {
         hmcId: ''
       },
       userinfo: {},
+      vertificalTipDialog: {
+        show: false,
+        btns: [
+          {
+            text: '知道了',
+            handler: this.hideVertificalTipDialog,
+          },
+        ]
+      },
     };
   },
   created() {
@@ -363,6 +398,12 @@ export default {
     this.bUtil.scroviewTabChange(this.curScrollViewName, this);
   },
   methods: {
+    showVertificalTipDialog(){
+      this.vertificalTipDialog.show = true;
+    },
+    hideVertificalTipDialog(){
+      this.vertificalTipDialog.show = false;
+    },
     getQueryString(name) {
       const reg = new RegExp(`(^|&)${name}=([^&]*)(&|$)`, 'i');
       const r = window.location.search.substr(1).match(reg);
@@ -372,7 +413,7 @@ export default {
     confirmDate(dates) {
       /* 确认时间 */
       if (dates) {
-        this.curSearchDate = `${dates[0].value}-${dates[1].value}`;
+        this.curSearchDate = `${dates[0].value}/${dates[1].value}`;
         this[this.curScrollViewName].mescroll.triggerDownScroll();
       }
     },
@@ -405,7 +446,7 @@ export default {
         // todo 门店id需从接口取
         mdId: this.userinfo.shopId,
         // 购机时间
-        gjTime: this.curSearchDate,
+        gjTime: this.bUtil.formatDate(this.curSearchDate, 'yyyy-MM'),
         // 直销员产品线编码 todo 接口取
         productLineCode: this.userinfo.productGroups,
         productCode: this.searchVal
@@ -464,7 +505,7 @@ export default {
       this.salesService.getReportEhubByProductList({
         dbDataStatus: this.curTab,
         mdId: this.userinfo.shopId,
-        gjTime: this.curSearchDate,
+        gjTime: this.bUtil.formatDate(this.curSearchDate, 'yyyy-MM'),
         productCode: item.product
       }).then(({ code, data }) => {
         if (code === 1) {
@@ -522,7 +563,7 @@ export default {
       const argsObj = {
         mdId: this.userinfo.shopId,
         productCode: itemInfo.product,
-        gjTime: this.curSearchDate
+        gjTime: this.bUtil.formatDate(this.curSearchDate, 'yyyy-MM')
       };
       this.$router.push({
         name: 'Sales.SalesChooseOrder',
@@ -665,5 +706,35 @@ export default {
   .reportInstallList-view {
     height: calc(100vh - 184px);
   }
-
+  .top_tip{
+    color: #f7c36e;
+    background-color: #FFFFFF;
+    padding: 10px 30px;
+    font-size: 24px;
+  }
+  .verificationDialog{
+    .md-dialog-body{
+      max-height: 100vw !important;
+      color: #333333;
+    }
+    .margin-top{
+      margin-top: 30px;
+    }
+    .text-center{
+      text-align: center;
+    }
+    .common-submit-btn-default{
+      margin-top: 24px;
+      width: 50%;
+    }
+    .margin-top-xs{
+      margin-top: 10px;
+    }
+    .margin-left{
+      margin-left: 30px;
+    }
+    .text-df{
+      font-size: 28px;
+    }
+  }
 </style>

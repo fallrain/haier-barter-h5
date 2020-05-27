@@ -53,13 +53,18 @@
         @gujiaClick="gujiaClick"
         @userService="userService"
         @maybeBuyer="maybeBuyer"
+        @setWeixinStatus="setWeixinStatus"
+        @setInvalidWeixinStatus="setInvalidWeixinStatus"
       ></b-order-follow-item>
     </div>
     <b-order-follow-search-bar
       v-show="curScrollViewName==='scrollViewFinished'"
       :scenarioList="scenarioList"
+      :orderStatusList="orderStatusList"
+      :isShowOrderStatus="true"
       :businessType.sync="scrollViewFinished.businessType"
       :sortType.sync="scrollViewFinished.sortType"
+      :orderStatus.sync="scrollViewFinished.orderStatus"
       @checkClick="checkClicked"
       @popButtonClicked="buttonClicked"
     ></b-order-follow-search-bar>
@@ -78,13 +83,21 @@
         @gujiaClick="gujiaClick"
         @userService="userService"
         @maybeBuyer="maybeBuyer"
+        @setWeixinStatus="setWeixinStatus"
+        @setInvalidWeixinStatus="setInvalidWeixinStatus"
       ></b-order-follow-item>
     </div>
     <b-order-follow-search-bar
       v-show="curScrollViewName==='scrollViewOdd'"
       :sortArray="oddOrderSortList"
-      :scenarioList="oddScenarioList"
-      :businessType.sync="scrollViewOdd.businessType"
+      :isShowScenario="false"
+      :isShowOrderDelAudit="true"
+      :isShowOrderSupplement="true"
+      :orderDelAuditList="oddScenarioList"
+      :orderDelAudit.sync="scrollViewOdd.orderDelAudit"
+      :orderSupplementList="oddOrderSupplementList"
+      :orderSupplement.sync="scrollViewOdd.orderSupplement"
+      :orderMark.sync="scrollViewOdd.orderMark"
       businessCheckType="radio"
       :businessTypeRadioCancel="true"
       :sortType.sync="scrollViewOdd.sortType"
@@ -92,22 +105,23 @@
       @popButtonClicked="buttonClicked"
     ></b-order-follow-search-bar>
     <div
-    id="scrollViewOdd"
-    ref="scrollViewOdd"
-    class="mescroll"
-    v-show="curScrollViewName==='scrollViewOdd'"
-  >
-    <b-order-follow-item
-      type="odd"
-      :list="scrollViewOdd.list"
-      @updateOrderType="updateOrderType"
-      @followButtonClick="followButtonClicked"
-      @itemClick="itemClick"
-      @gujiaClick="gujiaClick"
-    ></b-order-follow-item>
-  </div>
+      id="scrollViewOdd"
+      ref="scrollViewOdd"
+      class="mescroll"
+      v-show="curScrollViewName==='scrollViewOdd'"
+    >
+      <b-order-follow-item
+        type="odd"
+        :list="scrollViewOdd.list"
+        @updateOrderType="updateOrderType"
+        @followButtonClick="followButtonClicked"
+        @itemClick="itemClick"
+        @gujiaClick="gujiaClick"
+      ></b-order-follow-item>
+    </div>
     <b-order-follow-search-bar
       v-show="curScrollViewName==='scrollViewProgress'"
+      :defalutCheckedsortId="defalutCheckedsortId"
       :scenarioList="scenarioList"
       :businessType.sync="scrollViewProgress.businessType"
       :sortType.sync="scrollViewProgress.sortType"
@@ -128,6 +142,8 @@
         @itemClick="itemClick"
         @gujiaClick="gujiaClick"
         @maybeBuyer="maybeBuyer"
+        @setWeixinStatus="setWeixinStatus"
+        @setInvalidWeixinStatus="setInvalidWeixinStatus"
       ></b-order-follow-item>
     </div>
     <div class="js-md-tab-bar md-example-child md-example-child-tabs md-example-child-tab-bar-4">
@@ -157,7 +173,57 @@
       v-model="handEntryCon"
       :btns="basicDialog.btns"
     >
-      您本月还有{{handCount}}个手工录单名额，超出限制后本月将不能手工录单！同时，手工录入的订单不能发放购机权益
+      您本月还有{{handCount}}个手动录单名额，超出限制后本月将不能手动录单！同时，手动录入的订单不能发放购机权益
+    </md-dialog>
+    <!--健康换新核销-->
+    <md-dialog
+      title="确定核销"
+      :closable="true"
+      v-model="showVerificationDialog"
+      class="verificationDialog"
+    >
+      <div>
+        <div class="verification-code">{{currentHeXiaoCode}}</div>
+        <div>
+          <button
+            type="button"
+            class="common-submit-btn-default"
+            @click="doVerification"
+          >确定
+          </button>
+        </div>
+      </div>
+
+    </md-dialog>
+    <!--爱到家核销-->
+    <md-dialog
+      title="确定核销"
+      :closable="true"
+      v-model="showVerificationDialog_ADJ"
+      class="verificationDialog"
+    >
+      <div>
+        <div class="flex text-df algin-center justify-center line-height padding-top padding-bottom">
+          <span>优惠券号：</span>
+          <input v-model="verificationRemark" class="margin-left text-input" placeholder="请输入优惠券号"
+           @blur="inputBlur"/>
+        </div>
+        <div class="flex">
+          <button
+            type="button"
+            class="common-submit-btn-default"
+            @click="()=>{return showVerificationDialog_ADJ=false}"
+          >取消
+          </button>
+          <button
+            type="button"
+            class="common-submit-btn-default margin-left"
+            @click="doVerification"
+          >确定
+          </button>
+        </div>
+      </div>
+
     </md-dialog>
   </div>
 </template>
@@ -203,6 +269,7 @@ export default {
   },
   data() {
     return {
+      defalutCheckedsortId: '',
       updateList: false,
       pageNum: 1,
       searchWord: '',
@@ -254,6 +321,8 @@ export default {
       scrollViewFinished: {
         // 场景值
         businessType: '',
+        // 订单状态
+        orderStatus: '',
         // 排序方式
         sortType: '2',
         mescroll: null,
@@ -264,6 +333,15 @@ export default {
       scrollViewOdd: {
         // 场景值
         businessType: '',
+        // 删单审核
+        orderDelAudit: '',
+        // 订单录单
+        orderSupplement: '',
+        // 订单删除状态：0-待审核，1-审核通过，2-审核驳回，3-人工处理
+        // 订单冻结状态：0-正常，1-冻结，2-补录待审核，3-审核通过
+        status: '',
+        // 订单标签 1：删除订单  2：补录订单
+        orderMark: '',
         // 排序方式
         sortType: '1',
         mescroll: null,
@@ -298,6 +376,13 @@ export default {
       },
       // 业务场景下拉数据
       scenarioList: [],
+      // 订单状态
+      orderStatusList: [
+        {
+          itemCode: '1',
+          itemName: '订单冻结'
+        }
+      ],
       // 异常订单场景
       oddScenarioList: [
         {
@@ -317,6 +402,21 @@ export default {
           itemName: '人工处理'
         }
       ],
+      // 异常订单补录审核选项
+      oddOrderSupplementList: [
+        {
+          itemCode: '2',
+          itemName: '补传待审核'
+        },
+        {
+          itemCode: '1',
+          itemName: '审核驳回'
+        },
+        {
+          itemCode: '3',
+          itemName: '审核通过'
+        }
+      ],
       // 异常订单-排序方式
       oddOrderSortList: [
         {
@@ -327,13 +427,27 @@ export default {
           id: '2',
           name: '按照创建时间降序'
         }
-      ]
+      ],
+      showVerificationDialog: false,
+      showVerificationDialog_ADJ: false,
+      currentHeXiaoCode: null,
+      currentHeXiaoId: null,
+      verificationRemark: ""
     };
   },
   activated() {
     // window.location.reload();
+    if(this.$route.params.refreshPage){
+      this.buttonClicked();
+    }
   },
   created() {
+    if (this.$route.query.businessScenarios) {
+      // 一站筑家跳转过来的
+      this.scrollViewProgress.businessType = this.$route.query.businessScenarios;
+      this.defalutCheckedsortId = this.$route.query.businessScenarios;
+      console.log(this.scrollViewProgress);
+    }
     if (localStorage.getItem('confirm') === 'list') {
       this.curTab = 3;
       localStorage.setItem('confirm', '');
@@ -474,7 +588,7 @@ export default {
         orderNo: item.orderNo,
         businessScenarios
       };
-      // 爱到家需要传add4，add4是预留字段，由其他系统传递而来
+        // 爱到家需要传add4，add4是预留字段，由其他系统传递而来
       if (businessScenarios === 'ADJ') {
         args.add4 = item.add4;
         args.sourceSn = item.sourceSn;
@@ -585,6 +699,24 @@ export default {
             });
           }
         });
+      } else if (val.name === '核销') {
+        if(info.businessScenarios === 'ADJ'){
+          this.showVerificationDialog_ADJ = true;
+        }else{
+          this.showVerificationDialog = true;
+        }
+        this.verificationRemark = "";
+        this.currentHeXiaoCode = info.add5;
+        this.currentHeXiaoId = info.id;
+      } else if (val.name === '补录票据') {
+        console.log("补录票据");
+        this.$router.push({
+          name: 'Order.OrderSupplementBill',
+          params: {
+            orderNo: info.orderNo,
+            orderFollowId: info.id,
+          }
+        });
       } else {
         // val.name === '录新订单'
         this.orderService.checkCreateOrder().then((res) => { // 判断店铺是否冻结
@@ -624,13 +756,19 @@ export default {
       let searchData;
       // 异常订单是单独的接口
       if (this.curScrollViewName === 'scrollViewOdd') {
-        queryServiceName = 'queryRightsReviewList';
+        queryServiceName = 'queryExceptionOrder';
         searchData = {
           keyWord: this.searchWord,
           sortType: this[this.curScrollViewName].sortType * 1,
-          status: this[this.curScrollViewName].businessType || '',
-          hmcId: this[GET_USER].hmcid
+          hmcId: this[GET_USER].hmcid,
+          orderMark: this[this.curScrollViewName].orderMark
         };
+        if(this[this.curScrollViewName].orderMark == '1'){
+          searchData.status = this[this.curScrollViewName].orderDelAudit || '';
+        }
+        if(this[this.curScrollViewName].orderMark == '2'){
+          searchData.status = this[this.curScrollViewName].orderSupplement || '';
+        }
       } else {
         queryServiceName = 'queryOrderFollowList';
         searchData = {
@@ -648,7 +786,8 @@ export default {
           sourceSystem: '',
           orderFollowStartDate: '',
           orderFollowEndDate: '',
-          keyWord: this.searchWord
+          keyWord: this.searchWord,
+          orderFreezeStatus: this[this.curScrollViewName].orderStatus,
         };
       }
       return this.orderService[queryServiceName](
@@ -701,9 +840,31 @@ export default {
           // item.buttonList = [{ name: '录新订单' }, { name: '退货' }, { name: '换货' }];// 已完成
           // item.buttonList = [{ name: '录新订单' },{ name: '补录订单' }];// 已完成
           item.buttonList = [{ name: '录新订单' }];
+          if(item.orderFreezeStatus == '1'){
+            item.buttonList.push({ name: '补录票据' });
+          }
+          if(item.orderFreezeStatus == '2'){
+            item.buttonList.push({ name: '补录票据', disabled:true });
+          }
         } else if (item.flowStatus === 0) {
           // item.buttonList = [{ name: '成交录单' }, { name: '发放卡券' }];
           item.buttonList = [{ name: '成交录单' }];
+          if(item.businessScenarios === 'JKHXJ_RC'){
+            if(item.writeOff == '0'){
+              item.buttonList.push({ name: '核销' });
+            }else if(item.writeOff == '1'){
+              item.buttonList.push({ name: '已核销', disabled:true });
+            }else if(item.writeOff == '2'){
+              item.buttonList.push({ name: '无法核销', disabled:true });
+            }
+          }
+          if(item.businessScenarios === 'ADJ'){
+            if(item.writeOff == '0'){
+              item.buttonList.push({ name: '核销' });
+            }else if(item.writeOff == '1'){
+              item.buttonList.push({ name: '已核销', disabled:true });
+            }
+          }
         } else if (item.flowStatus === 5) {
           item.buttonList = [{ name: '刷新' }, { name: '修改订单' }, { name: '录新订单' }];
         } else if (item.flowStatus === 2) {
@@ -762,8 +923,8 @@ export default {
               }
             ];
           }
-          // 扫码录单 爱到家添加入户服务、潜在顾客
-          if (item.businessScenarios === 'SMLD' || item.businessScenarios === 'ADJ') {
+          // 扫码录单 爱到家添加入户服务、潜在顾客、健康换新
+          if (item.businessScenarios === 'SMLD' || item.businessScenarios === 'ADJ' || item.businessScenarios === 'JKHXJ_RC') {
             item.showList.push({
               id: '20',
               name: '入户服务'
@@ -776,6 +937,43 @@ export default {
         } else if (this.curTab === 3) {
           item.showList = [];
         }
+        // 以旧换新,添加标记'已加微信' '无效微信'
+        if (item.businessScenarios === 'YJHX') {
+          const {
+            add5
+          } = item;
+          if (add5 === '1') {
+            item.showList.push({
+              id: '22',
+              name: '取消已加微信'
+            },
+            {
+              id: '23',
+              name: '无效微信',
+              hide: true
+            });
+          } else if (add5 === '2') {
+            item.showList.push({
+              id: '22',
+              name: '已加微信',
+              hide: true
+            },
+            {
+              id: '23',
+              name: '取消无效微信'
+            });
+          } else {
+            item.showList.push({
+              id: '22',
+              name: '已加微信'
+            },
+            {
+              id: '23',
+              name: '无效微信'
+            });
+          }
+        }
+
         if (item.orderNo !== '') {
           item.showDetail = true;
           if (item.flowStatus !== 2) {
@@ -804,6 +1002,29 @@ export default {
       });
       this.currentList = curList;
     },
+    inputBlur(){
+      //IOS系统 input输入框失去焦点，软键盘关闭后，
+      //被撑起的页面无法回退到原来正常的位置，导致弹框里的按钮响应区域错位
+      var scrollHeight = document.documentElement.scrollTop || document.body.scrollTop || 0;
+      window.scrollTo(0, Math.max(scrollHeight - 1, 0));
+    },
+    doVerification(){
+      this.orderService.updateOrderFollowByType(
+        {},
+        {
+          orderFollowId: this.currentHeXiaoId,
+          type: '8',
+          remark: this.verificationRemark
+        }
+      ).then((res) => {
+        if (res.code === 1) {
+          Toast.succeed('核销成功！');
+          this.showVerificationDialog = false;
+          this.showVerificationDialog_ADJ = false;
+          this.updateOrderType();
+        }
+      });
+    },
     fuzzySearch() {
       // 刷新页面、重置页码
       this[this.curScrollViewName].mescroll.resetUpScroll();
@@ -814,6 +1035,58 @@ export default {
       // 刷新页面、重置页码
       this[this.curScrollViewName].mescroll.resetUpScroll();
     },
+    updateStatusForYJHX(item, status) {
+      /* 更新有效微信or无效微信状态 */
+      return this.orderService.updateStatusForYJHX({
+        orderFollowId: item.id,
+        status
+      });
+    },
+    showWeixinOptions(item) {
+      /* 显示设置已加微信or无效微信选项 */
+      for (let i = 0; i < item.showList.length; i++) {
+        const option = item.showList[i];
+        if (option.id === '22' || option.id === '23') {
+          option.hide = false;
+        }
+      }
+    },
+    setWeixinStatus(item, index) {
+      /* 设置是否已加微信 */
+      const status = item.add5 === '1' ? '0' : '1';
+      this.updateStatusForYJHX(item, status).then(({ code }) => {
+        if (code === 1) {
+          item.add5 = status;
+          if (status === '1') {
+            item.showList[index].name = '取消已加微信';
+            const validWxOption = item.showList.find(v => v.id === '23');
+            // 隐藏设置无效微信
+            this.$set(validWxOption, 'hide', true);
+          } else {
+            item.showList[index].name = '已加微信';
+            this.showWeixinOptions(item);
+          }
+        }
+      });
+    },
+    setInvalidWeixinStatus(item, index) {
+      /* 设置是否是无效微信 */
+      const status = item.add5 === '2' ? '0' : '2';
+      this.updateStatusForYJHX(item, status).then(({ code }) => {
+        if (code === 1) {
+          item.add5 = status;
+          if (status === '2') {
+            item.showList[index].name = '取消无效微信';
+            const validWxOption = item.showList.find(v => v.id === '22');
+            // 隐藏设置有效微信
+            this.$set(validWxOption, 'hide', true);
+          } else {
+            item.showList[index].name = '无效微信';
+            this.showWeixinOptions(item);
+          }
+        }
+      });
+    }
   },
   beforeRouteEnter(to, from, next) {
     if (from.name === 'Order.OrderFollowCommitResult' || from.name === 'Order.OrderConfirm' || from.name === 'Order.OrderEntry' || from.name === 'Order.OrderModify') {
@@ -834,6 +1107,9 @@ export default {
       wx.miniProgram.switchTab({ url: '/pages/tool/tool' });
       // wx.miniProgram.navigateTo({ url: '/pages/tool/tool' });
       // next();
+    } else if (to.name === 'Haierhouse.HaierhouseEntry') {
+      this.$destroy();
+      next();
     } else {
       next();
     }
@@ -990,6 +1266,53 @@ export default {
       display: inline-block;
       width: 300px;
       border-right: 1px #1969C6 solid;
+    }
+  }
+  .verificationDialog{
+    ::v-deep.md-dialog-body{
+      max-height: 60vw !important;
+      text-align: center;
+    }
+    .verification-code{
+      font-size:40px;
+      font-family:PingFang SC;
+      font-weight:bold;
+      line-height:27px;
+      color:rgba(25,105,198,1);
+    }
+    .common-submit-btn-default{
+      margin-top: 24px;
+    }
+    .flex{
+      display: flex;
+    }
+    .margin-left{
+      margin-left: 30px;
+    }
+    .text-df{
+      font-size: 28px;
+    }
+    .algin-center{
+      align-items: center;
+    }
+    .justify-center{
+      justify-content: center;
+    }
+    .text-input{
+      line-height: 30px;
+      padding: 0 20px;
+      width: 260px;
+      height: 50px;
+    }
+    .line-height{
+      line-height: 50px;
+      height: 50px;
+    }
+    .padding-top{
+      padding-top: 60px;
+    }
+    .padding-bottom{
+      padding-bottom: 60px;
     }
   }
 </style>

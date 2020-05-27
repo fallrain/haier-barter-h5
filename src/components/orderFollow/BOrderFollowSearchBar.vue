@@ -42,6 +42,33 @@
       @popButtonClicked="buttonClicked"
       @popupHide="popupHide"
     ></b-pop-button>
+    <b-pop-button
+      :radioCancel="true"
+      :show.sync="orderStatusShow"
+      :list="orderStatusList"
+      type="radio"
+      v-model="orderStatusTemp"
+      @popButtonClicked="buttonClicked"
+      @popupHide="popupHide"
+    ></b-pop-button>
+    <b-pop-button
+      :radioCancel="true"
+      :show.sync="orderDelAuditShow"
+      :list="orderDelAuditList"
+      v-model="orderDelAuditTemp"
+      type="radio"
+      @popButtonClicked="buttonClicked"
+      @popupHide="popupHide"
+    ></b-pop-button>
+    <b-pop-button
+      :radioCancel="true"
+      :show.sync="orderSupplementShow"
+      :list="orderSupplementList"
+      v-model="orderSupplementTemp"
+      type="radio"
+      @popButtonClicked="buttonClicked"
+      @popupHide="popupHide"
+    ></b-pop-button>
   </div>
 </template>
 
@@ -85,6 +112,10 @@ export default {
     sortType: {
       type: String
     },
+    // 排序类型
+    defalutCheckedsortId: {
+      type: String
+    },
     // 是否显示业务场景
     isShowScenario: {
       type: Boolean,
@@ -98,7 +129,52 @@ export default {
     // 额外的搜索区按钮，结构同headList
     otherHeadList: {
       type: Array
-    }
+    },
+    // 是否显示订单状态
+    isShowOrderStatus: {
+      type: Boolean,
+      default: false
+    },
+    // 订单状态下拉数据
+    orderStatusList: {
+      type: Array,
+      default: () => []
+    },
+    // 订单状态
+    orderStatus: {
+      type: String
+    },
+    // 是否显示删单审核
+    isShowOrderDelAudit: {
+      type: Boolean,
+      default: false
+    },
+    // 订单删单审核下拉数据
+    orderDelAuditList: {
+      type: Array,
+      default: () => []
+    },
+    // 删单审核状态
+    orderDelAudit: {
+      type: String
+    },
+    // 是否显示补录审核
+    isShowOrderSupplement: {
+      type: Boolean,
+      default: false
+    },
+    // 订单补录审核下拉数据
+    orderSupplementList: {
+      type: Array,
+      default: () => []
+    },
+    // 补录审核状态
+    orderSupplement: {
+      type: String
+    },
+    orderMark: {
+      type: String
+    },
   },
   data() {
     return {
@@ -114,12 +190,36 @@ export default {
           name: '业务场景',
           isActive: false,
           activeClass: 'reverse'
+        },
+        {
+          show: this.isShowOrderStatus,
+          name: '订单状态',
+          isActive: false,
+          activeClass: 'reverse'
+        },
+        {
+          show: this.isShowOrderDelAudit,
+          name: '删单审核',
+          isActive: false,
+          activeClass: 'reverse'
+        },
+        {
+          show: this.isShowOrderSupplement,
+          name: '补录审核',
+          isActive: false,
+          activeClass: 'reverse'
         }
       ],
       businessTypeTemp: [],
       preIndex: '',
       sortShow: false,
       scenarioShow: false,
+      orderStatusShow: false,
+      orderStatusTemp: [],
+      orderDelAuditShow: false,
+      orderDelAuditTemp: [],
+      orderSupplementShow: false,
+      orderSupplementTemp: [],
       // 所有的排序类型
       sortListTemp: [
         {
@@ -138,6 +238,7 @@ export default {
   },
   created() {
     this.setSearchOptions();
+    this.businessTypeTemp.push(this.defalutCheckedsortId);
   },
   watch: {
     sortType(val) {
@@ -153,6 +254,39 @@ export default {
     businessTypeTemp(val) {
       // 更新场景id
       this.$emit('update:businessType', val.join(','));
+    },
+    orderStatus(val) {
+      this.orderStatusTemp = val.split(',');
+    },
+    orderStatusTemp(val) {
+      // 更新场景id
+      this.$emit('update:orderStatus', val.join(','));
+    },
+    orderDelAudit(val) {
+      this.orderDelAuditTemp = val.split(',');
+    },
+    orderDelAuditTemp(val) {
+      // 更新场景id
+      this.$emit('update:orderDelAudit', val.join(','));
+      if(val && val[0] != ''){
+        this.$emit('update:orderMark', '1');
+        this.$emit('update:orderSupplement', '');
+      }else if(this.orderDelAuditTemp.length==0 && this.orderDelAuditTemp.length==0){
+        this.$emit('update:orderMark', '');
+      }
+    },
+    orderSupplement(val) {
+      this.orderSupplementTemp = val.split(',');
+    },
+    orderSupplementTemp(val) {
+      // 更新场景id
+      this.$emit('update:orderSupplement', val.join(','));
+      if(val && val[0] != ''){
+        this.$emit('update:orderMark', '2');
+        this.$emit('update:orderDelAudit', '');
+      }else if(this.orderDelAuditTemp.length==0 && this.orderDelAuditTemp.length==0){
+        this.$emit('update:orderMark', '');
+      }
     },
   },
   methods: {
@@ -176,6 +310,9 @@ export default {
         this.preIndex = '';
         this.sortShow = false;
         this.scenarioShow = false;
+        this.orderStatusShow = false;
+        this.orderDelAuditShow = false;
+        this.orderSupplementShow = false;
       } else {
         for (let i = 0; i < this.headList.length; i++) {
           if (i === index) {
@@ -188,12 +325,39 @@ export default {
         if (index === 0) {
           this.sortShow = true;
           this.scenarioShow = false;
+          this.orderStatusShow = false;
+          this.orderDelAuditShow = false;
+          this.orderSupplementShow = false;
         } else if (index === 1) {
           this.sortShow = false;
           this.scenarioShow = true;
+          this.orderStatusShow = false;
+          this.orderDelAuditShow = false;
+          this.orderSupplementShow = false;
+        } else if (index === 2) {
+          this.sortShow = false;
+          this.scenarioShow = false;
+          this.orderStatusShow = true;
+          this.orderDelAuditShow = false;
+          this.orderSupplementShow = false;
+        } else if (index === 3) {
+          this.sortShow = false;
+          this.scenarioShow = false;
+          this.orderStatusShow = false;
+          this.orderDelAuditShow = true;
+          this.orderSupplementShow = false;
+        } else if (index === 4) {
+          this.sortShow = false;
+          this.scenarioShow = false;
+          this.orderStatusShow = false;
+          this.orderDelAuditShow = false;
+          this.orderSupplementShow = true;
         } else {
           this.sortShow = false;
           this.scenarioShow = false;
+          this.orderStatusShow = false;
+          this.orderDelAuditShow = false;
+          this.orderSupplementShow = false;
         }
       }
 
@@ -229,6 +393,9 @@ export default {
       /* 隐藏 */
       this.sortShow = false;
       this.scenarioShow = false;
+      this.orderStatusShow = false;
+      this.orderDelAuditShow = false;
+      this.orderSupplementShow = false;
       // 取消active状态
       this.headList.forEach((v) => {
         v.isActive = false;

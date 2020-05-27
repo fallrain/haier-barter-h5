@@ -19,7 +19,7 @@
       v-model="orderDelDialog.open"
       :btns="orderDelDialog.btns"
     >
-      订单删除申请已提交，请在“<strong>订单跟进-异常</strong>”中查看申请状态。
+      订单删除申请已提交，请在“<strong>订单录入-异常</strong>”中查看申请状态。
     </md-dialog>
   </div>
 </template>

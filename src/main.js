@@ -31,7 +31,10 @@ Vue.prototype.axGet = axGet;
 Vue.prototype.$toast = Toast;
 Vue.prototype.$dialog = Dialog;
 Vue.prototype.BValidate = BValidate;
-
+// 修复bug,todo 以后删除
+window.localStorage.removeItem('isIOS');
+// 设置ios flag
+bUtil.setEntryUrl();
 // 全局filter
 Object.keys(filterMap).forEach((filterName) => {
   Vue.filter(filterName, filterMap[filterName]);

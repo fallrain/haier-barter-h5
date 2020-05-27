@@ -63,23 +63,6 @@
   <div class="mb20">
     <div class="text-333 row-style">小区照片</div>
     <div class="bg-white p20">
-<!--      <b-upload-->
-<!--        :imgs="uploadImg"-->
-<!--        :crop="false"-->
-<!--        inputOfFile="file"-->
-<!--        :max-file-size="1024*1024*5"-->
-<!--        :maxWidth="1280"-->
-<!--        :maxLength="3"-->
-<!--        :compress="70"-->
-<!--        :headers="headers"-->
-<!--        @imageuploaded="(data, fileList)=>imageuploaded(data, fileList)"-->
-<!--        extensions="png,jpg,jpeg,gif"-->
-<!--        :url="uploadUrl"-->
-<!--        :multiple-size="1"-->
-<!--        @delFun="delImg"-->
-<!--        @errorhandle="uploadError"-->
-<!--      >-->
-<!--      </b-upload>-->
       <b-wx-upload
         :imgs="uploadImg"
         :maxLength="3"
@@ -410,8 +393,8 @@ export default {
             : this.$vnode.key;
           const cache = this.$vnode.parent.componentInstance.cache;
           const keys = this.$vnode.parent.componentInstance.keys;
-          if (to.name === 'Haierhouse.HaierhouseEntry') {
-            keys.forEach((k, index) => {
+          if (to.name === 'Haierhouse.HaierhouseApplyBuildList') {
+            keys.forEach((k) => {
               if (cache[k]) {
                 delete cache[k];
               }

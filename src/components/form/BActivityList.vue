@@ -22,6 +22,7 @@
         <span class="bActivityList-activity-state state-class-5" v-show="item.receivingStatus === 5">缺货</span>
         <span class="bActivityList-activity-state state-class-6" v-show="item.receivingStatus === 6">已发送</span>
         <span class="bActivityList-activity-state state-class-7" v-show="item.receivingStatus === 7">48小时之后激活</span>
+        <span class="bActivityList-activity-state state-class-8" v-show="item.receivingStatus === 8">权益冻结</span>
         <i class="iconfont icon-xialaactive-copy gift-line" v-show="item.giftShow"></i>
         <i class="iconfont icon-jiantou9 gift-line" v-show="!item.giftShow"></i>
       </li>

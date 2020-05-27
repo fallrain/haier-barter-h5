@@ -40,7 +40,7 @@ export default {
           className: 'orderFollowItem-type-tag-smld'
         },
         SGLD: {
-          name: '手工录单',
+          name: '手动录单',
           className: 'orderFollowItem-type-tag-sgld'
         },
         RC: {
@@ -50,6 +50,14 @@ export default {
         YYFW: {
           name: '预约服务',
           className: 'orderFollowItem-type-tag-adj'
+        },
+        JKHXJ_RC: {
+          name: '健康焕新',
+          className: 'orderFollowItem-type-tag-yjhx'
+        },
+        CASARTE_QZGK: {
+          name: '卡萨帝潜客',
+          className: 'orderFollowItem-type-tag-ksdqk'
         }
       }[this.businessScenarios];
     },
@@ -90,7 +98,10 @@ export default {
   .orderFollowItem-type-tag-yjhx {
     background: #4a90e2;
   }
-
+  .orderFollowItem-type-tag-ksdqk {
+    background: #4a90e2;
+    font-size: 18px;
+  }
   .orderFollowItem-type-tag-adj {
     background: #F05B4B;
   }

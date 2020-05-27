@@ -121,6 +121,21 @@
     </b-fieldset>
     <b-item
       class="mt16"
+      title="已领优惠券："
+    >
+      <template
+        v-slot:right=""
+      >
+        <div
+          class="orderModify-coupon-btn-show"
+          @click="showReceivedCoupons"
+        >
+          <span>查看</span> <i class="iconfont icon-youjiantou1"></i>
+        </div>
+      </template>
+    </b-item>
+    <b-item
+      class="mt16"
       title="选择送货时间："
     >
       <template
@@ -225,6 +240,36 @@
     >
       该月销量闸口已关闭，你录入的该订单非本月订单，将无法拿到销量提成，请确定是否继续？
     </md-dialog>
+    <md-dialog
+      class="orderModify-coupon-dialog"
+      :closable="false"
+      v-model="couponDialog.open"
+      :btns="couponDialog.btns"
+    >
+      <div>
+        <ul
+          v-if="receivedCoupons.length"
+          class="orderModify-coupon-list"
+        >
+          <li
+            class="orderModify-coupon-item"
+            v-for="(item,index) in receivedCoupons"
+            :key="index"
+          >
+            <span>{{item}}</span>
+            <span class="orderModify-coupon-item-num">
+              <span class="num">1</span> 张
+            </span>
+          </li>
+        </ul>
+        <div
+          v-else
+          class="orderModify-coupon-info"
+        >
+          暂无优惠券领用信息
+        </div>
+      </div>
+    </md-dialog>
   </div>
 </template>
 
@@ -293,6 +338,16 @@ export default {
           {
             text: '确定',
             handler: this.onBasicConfirm1,
+          },
+        ],
+      },
+      // 模态框:已领优惠券
+      couponDialog: {
+        open: false,
+        btns: [
+          {
+            text: '确定',
+            handler: this.couponDialogConfirm,
           },
         ],
       },
@@ -418,7 +473,9 @@ export default {
       // 保存类型，1:暂存 0:下一步
       saveType: 1,
       isProduct: false,
-      isProductList: []
+      isProductList: [],
+      // 已领优惠券
+      receivedCoupons: [],
     };
   },
   computed: {},
@@ -559,6 +616,32 @@ export default {
     }
   },
   methods: {
+    showReceivedCoupons() {
+      /* 查看已领取的优惠券 */
+      const hasFridge = this.productList.find(v => v.productCategoryCode === 'AA' || v.productCategoryCode === 'AB');
+      if (hasFridge) {
+        const userPhone = this.customerInfo.mobile;
+        if (!userPhone) {
+          this.$dialog.alert({
+            content: '请添加顾客'
+          });
+          return;
+        }
+        this.orderService.queryAdjCouponInfo({
+          userPhone
+        }).then(({ code, data }) => {
+          if (code === 1) {
+            this.receivedCoupons = (data && data[0].service.split(',')) || [];
+            this.couponDialog.btns[0].text = this.receivedCoupons.length ? '核销' : '确定';
+            this.couponDialog.open = true;
+          }
+        });
+      } else {
+        this.$dialog.alert({
+          content: '暂无可用消费券'
+        });
+      }
+    },
     // 获取权益列表
     getActivityList() {
       const obj = {
@@ -646,6 +729,7 @@ export default {
           this.customerInfo.customerId = resData.userId;
           this.customerInfo.mobile = resData.userPhone;
           this.customerInfo.familyId = resData.id;
+
           this.mobile = resData.userPhone;
           this.phone = resData.userPhone;
           this.hmcId = resData.hmcId;
@@ -907,12 +991,12 @@ export default {
       /* 选择活动 */
       this.generateSubInfo(2);
     },
-    generateSubInfo(type) {
+    async generateSubInfo(type) {
       /* 生成订单信息 */
       /*
-        * @type 1:生成订单信息并保存 2：生成订单信息并跳转选择权益界面，查询权益
-        *
-        * */
+          * @type 1:生成订单信息并保存 2：生成订单信息并跳转选择权益界面，查询权益
+          *
+          * */
       if (!this.bUtil.isReportInstallFit(this.productList, this.deliveryTime) && this.saveType == 0) {
         return;
       }
@@ -987,7 +1071,7 @@ export default {
       subInfo.dispatchProvince = this.consignee.address.provinceName;
       subInfo.dispatchCityId = this.customerInfo.city;
       subInfo.dispatchCity = this.consignee.address.cityName;
-      subInfo.dispatchAreaId = this.customerInfo.area;
+      subInfo.dispatchAreaId = this.customerInfo.district;
       subInfo.dispatchArea = this.consignee.address.districtName;
       subInfo.dispatchAdd = this.consignee.address.street;
       subInfo.buyTime = this.buyDate;
@@ -1022,78 +1106,102 @@ export default {
         //   name: 'Order.ResidueGift',
         // });
       } else {
-        const orderSource = this.subInfo.orderSource;
-        if (this.rightsList.length === 0 && this.saveType === 0 && orderSource !== 'SGLD' && orderSource !== 'YJHX') {
-          this.rightsService.queryOrderOptionalRights(this.subInfo, {
-            pageNum: 0,
-            pageSize: 10,
-            requestNoToast: true
-          })
-            .then((res) => {
-              if (res.code === 1 && res.data.result.length > 0) {
-                this.rightsName = res.data.result[0].rightsName;
-                this.basicDialog.open = true;
-              } else {
-                if (this.orderNo !== '') {
-                  // if (!this.orderFollowId) {
-                  //   this.orderFollowId = localStorage.getItem('orderFollowId');
-                  // }
-                  this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
-                    .then((createOrderRes) => {
-                      if (createOrderRes.code === 1) {
-                        if (this.saveType === 1) {
-                          Toast.succeed('订单暂存成功');
-                          this.$router.replace({
-                            name: 'Order.OrderFollowSearch',
-                            params: {}
-                          });
-                          // this.$router.go(-1);
-                        }
-                        if (this.saveType === 0) {
-                          localStorage.setItem('orderFollowId', this.orderFollowId);
-                          this.$router.push({
-                            name: 'Order.OrderUploadInvoice',
-                            params: { orderNo: this.orderNo,
-                              subInfo: this.subInfo }
-                          });
-                        }
+        // 检查重复录单
+        const { code, msg } = await this.orderService.checkRepeatCreateOrder(this.subInfo);
+        if (code === 1) {
+          this.submitOrder();
+        } else {
+          Dialog.confirm({
+            content: msg,
+            confirmText: '确认提交',
+            onConfirm: () => {
+              this.submitOrder();
+            }
+          });
+        }
+      }
+    },
+    submitOrder() {
+      /* 提交订单 */
+      const orderSource = this.subInfo.orderSource;
+      if (this.rightsList.length === 0 && this.saveType === 0 && orderSource !== 'SGLD' && orderSource !== 'YJHX') {
+        this.rightsService.queryOrderOptionalRights(this.subInfo, {
+          pageNum: 0,
+          pageSize: 10,
+          requestNoToast: true
+        })
+          .then((res) => {
+            if (res.code === 1 && res.data.result.length > 0) {
+              this.rightsName = res.data.result[0].rightsName;
+              this.basicDialog.open = true;
+            } else {
+              if (this.orderNo !== '') {
+                // if (!this.orderFollowId) {
+                //   this.orderFollowId = localStorage.getItem('orderFollowId');
+                // }
+                this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
+                  .then((createOrderRes) => {
+                    if (createOrderRes.code === 1) {
+                      if (this.saveType === 1) {
+                        Toast.succeed('订单暂存成功');
+                        this.$router.replace({
+                          name: 'Order.OrderFollowSearch',
+                          params: {}
+                        });
+                        // this.$router.go(-1);
                       }
-                    });
+                      if (this.saveType === 0) {
+                        localStorage.setItem('orderFollowId', this.orderFollowId);
+                        this.$router.push({
+                          name: 'Order.OrderUploadInvoice',
+                          params: {
+                            orderNo: this.orderNo,
+                            subInfo: this.subInfo
+                          }
+                        });
+                      }
+                    }
+                  });
+              }
+            }
+          });
+      } else {
+        if (this.orderNo !== '') {
+          // if (!this.orderFollowId) {
+          //   this.orderFollowId = localStorage.getItem('orderFollowId');
+          // }
+          this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
+            .then((res) => {
+              if (res.code === 1) {
+                if (this.saveType === 1) {
+                  Toast.succeed('订单暂存成功');
+                  localStorage.setItem('confirm', 'caogao');
+                  // this.$router.go(-1);
+                  this.$router.replace({
+                    name: 'Order.OrderFollowSearch',
+                    params: {}
+                  });
+                }
+                if (this.saveType === 0) {
+                  this.$router.push({
+                    name: 'Order.OrderUploadInvoice',
+                    params: {
+                      orderNo: this.orderNo,
+                      subInfo: this.subInfo
+                    }
+                  });
+                  // this.$destroy();
                 }
               }
             });
-        } else {
-          if (this.orderNo !== '') {
-            // if (!this.orderFollowId) {
-            //   this.orderFollowId = localStorage.getItem('orderFollowId');
-            // }
-            this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
-              .then((res) => {
-                if (res.code === 1) {
-                  if (this.saveType === 1) {
-                    Toast.succeed('订单暂存成功');
-                    localStorage.setItem('confirm', 'caogao');
-                    // this.$router.go(-1);
-                    this.$router.replace({
-                      name: 'Order.OrderFollowSearch',
-                      params: {}
-                    });
-                  }
-                  if (this.saveType === 0) {
-                    this.$router.push({
-                      name: 'Order.OrderUploadInvoice',
-                      params: { orderNo: this.orderNo,
-                        subInfo: this.subInfo }
-                    });
-                    // this.$destroy();
-                  }
-                }
-              });
-          }
         }
       }
     },
     selectAddress(item) {
+      debugger;
+      this.customerInfo.province = item.province;
+      this.customerInfo.city = item.city;
+      this.customerInfo.district = item.district;
       // 修改收货人地址
       this.consignee.address.provinceName = item.consignee.provinceName;
       this.consignee.address.cityName = item.consignee.cityName;
@@ -1238,6 +1346,9 @@ export default {
     },
     onBasicConfirm1() {
       this.basicDialog1.open = false;
+    },
+    couponDialogConfirm() {
+      this.couponDialog.open = false;
     }
   },
   beforeRouteLeave(to, from, next) {

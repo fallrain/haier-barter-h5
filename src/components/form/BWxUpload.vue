@@ -11,11 +11,13 @@
       >
         <i class="iconfont del icon-shanchu" @click="delFun(index)"></i>
         <img
-          :src="item" class="images"
+          :src="item"
+          class="images"
+          @click="imgClick(item,index)"
         >
       </div>
     </div>
-    <div class="click-upload" @click="chooseImg">
+    <div @click="chooseImg">
       <div class="bUpload" v-show="imgs.length < maxLength">
         <i class="iconfont icon-jiahao bUpload-icon"></i>
       </div>
@@ -28,7 +30,7 @@ import {
 } from 'mand-mobile';
 
 export default {
-  name: 'BUpload',
+  name: 'BWxUpload',
   components: {
   },
   data() {
@@ -60,6 +62,9 @@ export default {
   created() {
     localStorage.setItem('picFinishedStatus', 'true');
   },
+  activated() {
+    localStorage.setItem('picFinishedStatus', 'true');
+  },
   methods: {
     imageuploaded(data) {
       Toast.hide();
@@ -72,7 +77,7 @@ export default {
       Toast.loading('上传中');
     },
     chooseImg() {
-      this.isFinished = localStorage.getItem('picFinishedStatus')
+      this.isFinished = localStorage.getItem('picFinishedStatus');
       if (this.isFinished === 'false') {
         return;
       }
@@ -111,6 +116,10 @@ export default {
           }
         });
       });
+    },
+    imgClick(src) {
+      /* 图片点击事件 */
+      this.$emit('imgClick', src);
     }
   }
 };

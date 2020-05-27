@@ -4,8 +4,8 @@ const urls = {
   list(keyWords, pageNo, pageSize) {
     return `/product/list/${keyWords}/${pageNo}/${pageSize}`;
   },
-  price(productCode, productGroup ) {
-    return `/product/price/${productCode}/${productGroup }`;
+  price(productCode, productGroup) {
+    return `/product/price/${productCode}/${productGroup}`;
   },
   // 查询顾客地址列表
   customerAddressList(mobile) {

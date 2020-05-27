@@ -1,17 +1,7 @@
 <template>
-  <li
-    @click="toDetail(data)"
-    class="bEvaluateProductItem"
-  >
-    <div
-      v-if="checkMode"
-      class="bEvaluateProductItem-check"
-      @click="selectItem"
-    >
-      <i
-        v-show="isChecked"
-        class="iconfont icon-duihao"
-      ></i>
+  <li @click="toDetail(data)" class="bEvaluateProductItem">
+    <div v-if="checkMode" class="bEvaluateProductItem-check" @click="selectItem">
+      <i v-show="isChecked" class="iconfont icon-duihao"></i>
     </div>
     <div class="bEvaluateProductItem-cnt">
       <div class="bEvaluateProductItem-cnt-person mb22">
@@ -19,25 +9,30 @@
         <!--<span class="mr16">先生</span>-->
         <span>
           <i class="iconfont icon-dianhua mr16"></i>
-          <a :href="'tel:'+data.userPhone">{{data.userPhone}}</a>
+          <a :href="'tel:'+data.userPhone" @click.stop="recordCall(data)">{{hidePhoneNum(data.userPhone)}}</a>
         </span>
       </div>
       <div class="bEvaluateProductItem-cnt-price mb22">
         <span class="name">{{data.industryName}}</span>
         <span class="price">￥{{data.totalPrice}}</span>
+        <span class="state">{{{1:'已加微信',2:'无效微信'}[data.addWxStatus] || ''}}</span>
       </div>
-      <div class="bEvaluateProductItem-cnt-time">
-        <i class="iconfont icon-shizhong"></i>{{data.crTime}}
+      <div class="c-container">
+        <div class="bEvaluateProductItem-cnt-time">
+          <i class="iconfont icon-shizhong"></i>
+          {{data.crTime}}
+        </div>
+        <div class="cliclMore" @click.stop="barCodeClick(data)">查看沟通记录</div>
       </div>
     </div>
-    <!--<div class="bEvaluateProductItem-btn-par">
-      &lt;!&ndash;<span class="bEvaluateProductItem-tips">{{orderStatusFilter(data)}}</span>&ndash;&gt;
-      &lt;!&ndash;<button
+    <div class="bEvaluateProductItem-btn-par">
+      <span class="bEvaluateProductItem-tips">{{orderStatusFilter(data)}}</span>
+      <!--<button
         type="button"
         class="common-btn-primary"
       >促成交
-      </button>&ndash;&gt;
-    </div>-->
+      </button>-->
+    </div>
   </li>
 </template>
 
@@ -62,10 +57,19 @@ export default {
   },
   filters: {
     orderStatus() {
-
     }
   },
   methods: {
+    barCodeClick(item) {
+      /* 查看记录click */
+      this.$router.push({
+        name: 'EvaluateProductHistoryList.evaluateProductDetail',
+        params: {
+          region: 'history',
+          memberInfo: item
+        }
+      });
+    },
     selectItem(e) {
       /* 选中本item */
       e.stopPropagation();
@@ -77,22 +81,35 @@ export default {
         url: `/pages/message/valuationInfo/valuationInfo?odlfornewdbId=${item.id}`
       });
     },
-    orderStatusFilter({ orderStatus, orderSource }) {
+    orderStatusFilter({ orderStatus }) {
       /* 订单转状态筛选 */
       const orderStatusMap = {
         0: '未成交',
         1: '已成交'
       };
-      const orderSourceMap = {
-        DB: '兑呗',
-        YLH: '易理货'
-      };
-      let name = orderStatusMap[orderStatus] || '';
-      if (orderSourceMap[orderSource]) {
-        name += `（${orderSourceMap[orderSource]}）`;
-      }
+        // const orderSourceMap = {
+        //   DB: '兑呗',
+        //   YLH: '易理货'
+        // };
+      const name = orderStatusMap[orderStatus] || '';
+      //  if (orderSourceMap[orderSource]) {
+      //   name += `（${orderSourceMap[orderSource]}）`;
+      // }
       return name;
+    },
+    recordCall(item) {
+      /* 记录以旧换新打电话 */
+      const { id } = item;
+      this.campaignService.recordFrequency({
+        id,
+        type: 1
+      });
     }
+  },
+  computed: {
+    hidePhoneNum() {
+      return num => num.replace(num.substring(3, 7), '****');
+    },
   }
 };
 </script>
@@ -103,12 +120,13 @@ export default {
     align-items: center;
     padding-top: 32px;
     padding-bottom: 32px;
-    border-bottom: 1px solid #D9D9D9;
+    border-bottom: 1px solid #d9d9d9;
     word-break: break-all;
   }
 
   .bEvaluateProductItem-cnt {
-    // width: 480px;
+    width: 480px;
+    // max-width: 100%;
     overflow: hidden;
     flex-grow: 1;
     flex-shrink: 0;
@@ -120,13 +138,14 @@ export default {
     flex-wrap: wrap;
     color: #333;
     font-size: 28px;
+
     & > .name {
       font-size: 36px;
     }
 
     .iconfont {
       font-size: 32px;
-      color: #1969C6;
+      color: #1969c6;
     }
 
     a {
@@ -144,20 +163,37 @@ export default {
     }
 
     & > .price {
-      color: #1969C6;
+      color: #1969c6;
     }
+
+    & > .state {
+      color: #f5a623;
+      font-size: 24px;
+      margin-left: 16px;
+    }
+  }
+
+  .c-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
   }
 
   .bEvaluateProductItem-cnt-time {
     line-height: 1;
     font-size: 28px;
-    color: #1969C6;
+    color: #1969c6;
 
     .iconfont {
       font-size: 28px;
       margin-right: 18px;
       color: #bbb;
     }
+  }
+
+  .cliclMore {
+    color: #1969c6;
+    font-size: 28px;
   }
 
   .bEvaluateProductItem-btn-par {
@@ -167,6 +203,6 @@ export default {
 
   .bEvaluateProductItem-tips {
     font-size: 20px;
-    color: #29AB91;
+    color: #29ab91;
   }
 </style>

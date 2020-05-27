@@ -149,6 +149,10 @@ export default {
       height: 1160px;
       top: 180px;
     }
+
+    .md-popup-box {
+      margin-top: 160px;
+    }
   }
 
   .b-pop-button-cnt {
@@ -221,9 +225,4 @@ export default {
     width: 320px;
     padding-right: 10px;
   }
-
-  .md-popup-box {
-    margin-top: 160px !important;
-  }
-
 </style>

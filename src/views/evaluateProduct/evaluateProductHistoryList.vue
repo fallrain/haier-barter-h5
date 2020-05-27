@@ -24,14 +24,19 @@
         :list="list"
         :multiChooseMode="isMultiChooseMode"
         @confirmCoupon="confirmSendCoupon"
+        @shareClick="shareClick"
         :chooseAll.sync="chooseAll"
       ></b-evaluate-product-list>
     </div>
     <b-float-search
       :show.sync="filterListShow"
       :filterList="filterList"
-      @confirm="queryByCondition"
+      :conditions="conditions"
+      @confirm="confirmSearch"
     ></b-float-search>
+    <div class="popContainer" v-if="isShowPopContainer" @click="closeShare" style="z-index: 100000">
+      <img src="@/assets/images/activity/activity-share.png" alt="" class="activity-detail-share">
+    </div>
   </div>
 </template>
 
@@ -63,11 +68,12 @@ export default {
   },
   data() {
     return {
+      isShowPopContainer: false,
       // 排序方式
       orderSortList: [
         {
           id: '1',
-          name: '按名字降序'
+          name: '按名字升序'
         },
         {
           id: '0',
@@ -103,20 +109,46 @@ export default {
       searchForm: {
         customer: '',
         buyIntention: '',
+        distributeStatus: '',
         industryList: [],
         years: [],
-        sortType: '0'
+        sneakType: '',
+        sortType: '0',
+        addWxStatus: ''
       },
       list: [],
       // 右侧浮动筛选显示隐藏
       filterListShow: false,
       // 右侧浮动筛选的数据
       filterList: [],
+      // 浮动搜索key,type
+      conditions: [
+        {
+          key: 'industryList',
+          type: 'checkbox'
+        },
+        {
+          key: 'sneakType',
+          type: 'radio'
+        },
+        {
+          key: 'buyIntention',
+          type: 'radio'
+        },
+        {
+          key: 'distributeStatus',
+          type: 'radio'
+        },
+        {
+          key: 'addWxStatus',
+          type: 'radio'
+        }
+      ],
       // 选择所有
       chooseAll: false,
       // 产品组数据
       industryAy: [],
-      industryData: {}
+      industryData: {},
     };
   },
   created() {
@@ -152,6 +184,9 @@ export default {
     }
   },
   methods: {
+    closeShare() {
+      this.isShowPopContainer = false;
+    },
     preventDefault(e) {
       if (!document.querySelector('.bFloatSearch-cnt-list').contains(e.target)) {
         e.preventDefault();
@@ -192,18 +227,38 @@ export default {
       // 查询产业数据
       const getIndustryList = this.getIndustryList();
       // 查询年限
-      const getStatisticalParameter = this.campaignService.statisticalParameter();
+      // const getStatisticalParameter = this.campaignService.statisticalParameter();
+      // 查询潜客
+      const getSneakType = this.productService.commonTypeQuery('SNEAK_TYPE');
       // 查询购买意愿
       const getBuyIntention = this.basicService.getBuyIntention();
-      Promise.all([getIndustryList, getStatisticalParameter, getBuyIntention]).then(([
+      // 查询分配状态
+      const getDistributeStatus = this.basicService.dictionary('distribute_status');
+      // 获取微信状态
+      const getWxStatus = this.basicService.dictionary('add_wx_status');
+      Promise.all([
+        getIndustryList,
+        getSneakType,
+        getBuyIntention,
+        getDistributeStatus,
+        getWxStatus,
+      ]).then(([
         industryData,
         {
-          code: yearCode,
-          data: yearData
+          code: sneakCode,
+          data: sneakData
         },
         {
           code: buyIntentionCode,
           data: buyIntentionData
+        },
+        {
+          code: distributeStatusCode,
+          data: distributeStatusData
+        },
+        {
+          code: wxStatusCode,
+          data: wxStatusData
         }
       ]) => {
         if (industryData) {
@@ -220,16 +275,16 @@ export default {
           }));
           this.filterList.push(industry);
         }
-        if (yearCode === 1) {
+        if (sneakCode === 1) {
           const buyTime = {
-            name: '购买时间',
+            name: '潜客类型',
             isExpand: true,
-            type: 'checkbox',
+            type: 'radio',
             data: []
           };
-          buyTime.data = yearData.yeasList.map(v => ({
-            key: v.outputYear,
-            value: v.outputYear,
+          buyTime.data = sneakData.map(v => ({
+            key: v.itemCode,
+            value: v.itemName,
             isChecked: false
           }));
           this.filterList.push(buyTime);
@@ -249,6 +304,36 @@ export default {
           }));
           this.filterList.push(buyIntention);
         }
+        // 分配状态
+        if (distributeStatusCode === 1) {
+          const distributeStatus = {
+            name: '分配状态',
+            isExpand: true,
+            type: 'radio',
+            data: []
+          };
+          distributeStatus.data = distributeStatusData.map(v => ({
+            key: v.itemCode,
+            value: v.itemName,
+            isChecked: false
+          }));
+          this.filterList.push(distributeStatus);
+        }
+        // 加微信状态
+        if (wxStatusCode === 1) {
+          const wxStatus = {
+            name: '加微信状态',
+            isExpand: true,
+            type: 'radio',
+            data: []
+          };
+          wxStatus.data = wxStatusData.map(v => ({
+            key: v.itemCode,
+            value: v.itemName,
+            isChecked: false
+          }));
+          this.filterList.push(wxStatus);
+        }
       });
     },
     upCallback(page) {
@@ -263,13 +348,18 @@ export default {
           this.$nextTick(() => {
             this.getIndustryList().then(() => {
               result.forEach((v) => {
-                v.isChecked = false;
+                if (this.chooseAll === true) {
+                  v.isChecked = true;
+                } else {
+                  v.isChecked = false;
+                }
                 v.industryName = this.industryData[v.industry];
               });
               if (page.num === 1) {
                 this.list = result;
                 document.querySelector('.evaluateProductList-scrollView').scrollTo(0, 0);
               } else {
+                // this.chooseAll = false;
                 this.list = this.list.concat(result);
               }
               // 通过当前页的数据条数，和总数据量来判断是否加载完
@@ -290,8 +380,22 @@ export default {
         pageSize: page.size,
       });
     },
+    confirmSearch(searchForm) {
+      // 检查搜索值是否不一样
+      if (
+        // !this.bUtil.isSameValueOfOneDimensional(this.searchForm.industryList, searchForm.industryList)
+        !this.judgeArrsSame(this.searchForm.industryList, searchForm.industryList)
+        || this.searchForm.sneakType !== searchForm.sneakType
+        || this.searchForm.buyIntention !== searchForm.buyIntention
+        || this.searchForm.distributeStatus !== searchForm.distributeStatus
+        || this.searchForm.addWxStatus !== searchForm.addWxStatus
+      ) {
+        this.queryByCondition(searchForm);
+      }
+    },
     queryByCondition(searchForm) {
       /* 按条件搜索 */
+      this.chooseAll = false;
       if (searchForm) {
         this.searchForm = {
           ...this.searchForm,
@@ -307,7 +411,7 @@ export default {
         this.queryByCondition();
       });
     },
-    confirmSendCoupon() {
+    confirmSendCoupon(ids) {
       /* 确认发卡券 */
       const messageVos = [];
       this.list.forEach((order) => {
@@ -317,7 +421,7 @@ export default {
             industry: order.industryName,
             mobile: order.userPhone,
             price: order.totalPrice,
-            sendType: 1,
+            sendType: ids[0],
             userName: order.userName,
           });
         }
@@ -335,8 +439,31 @@ export default {
           });
         }
       });
+    },
+    shareClick() {
+      this.isShowPopContainer = true;
+      const idList = [];
+      this.list.forEach((order) => {
+        if (order.isChecked) {
+          idList.push(order.id);
+        }
+      });
+      console.log(idList);
+      wx.ready(() => {
+        wx.miniProgram.postMessage({
+          data: {
+            oldForNewIds: idList
+          }
+        });
+      });
+    },
+    judgeArrsSame(arr1, arr2) {
+      if (arr1.sort().toString() === arr2.sort().toString()) {
+        return true;
+      }
+      return false;
     }
-  }
+  },
 };
 </script>
 
@@ -348,6 +475,18 @@ export default {
       padding-bottom: 120px;
     }
   }
-
-
+  .popContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+  }
+  .activity-detail-share {
+    position: fixed;
+    right: 128px;
+    width: 493px;
+    height: 694px;
+  }
 </style>
