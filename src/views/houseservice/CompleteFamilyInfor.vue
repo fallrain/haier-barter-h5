@@ -138,6 +138,7 @@
             :value="houseAreaLevelName"
             :arrow="true"
             @rightClick="serviceScape(1)"
+            @arrowClick ="serviceScape(1)"
           ></b-item>
           <!-- <div class="addressInfor-item br-b">
             <label>建筑面积</label>
@@ -158,6 +159,7 @@
             :value="houseTypeName"
             :arrow="true"
             @rightClick="serviceScape(2)"
+            @arrowClick ="serviceScape(2)"
           ></b-item>
           <!-- <div class="addressInfor-item br-b">
             <label>均价</label>
@@ -191,6 +193,7 @@
             :value="addressRelationName"
             :arrow="true"
             @rightClick="serviceScape(3)"
+            @arrowClick ="serviceScape(3)"
           ></b-item>
           <div class="br-b family-tag-area">
             <label class="fs28">该地址家庭标签</label>

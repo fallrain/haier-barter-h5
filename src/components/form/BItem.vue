@@ -88,7 +88,6 @@ export default {
     display: flex;
     // flex-direction: row-reverse;
     align-items: center;
-    min-width: 60px;
     & > .iconfont {
       margin-left: 12px;
       font-size: 26px;
