@@ -49,7 +49,7 @@
               title="请选择日期"
               :pattern="pattern"
               v-model="customerInfo.serviceTime"
-              :custom-types = "['yyyy', 'MM', 'dd', 'hh']"
+              :custom-types = "['yyyy', 'MM', 'dd', 'hh','mm']"
               :min-date="new Date()"
             ></b-date-picker>
           </template>
@@ -200,7 +200,7 @@ export default {
       queryHistoryList: [],
       consignee: {},
       isChangePlan: false,
-      pattern: 'yyyy-MM-dd hh',
+      pattern: 'yyyy-MM-dd hh:mm',
       usersex: 0,
       tag: [],
       tagList: [],
