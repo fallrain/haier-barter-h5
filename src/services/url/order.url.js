@@ -37,7 +37,9 @@ const urls = {
   // 以旧换新标记手机号、微信是否添加或者无效
   updateStatusForYJHX: '/orderFollow/updateStatusForYJHX',
   // 查询领取优惠券信息
-  queryAdjCouponInfo: '/orderManage/queryAdjCouponInfo',
+  queryAdjCouponInfo: '/loveHome/queryAdjCouponInfo',
+  // 校验用户输入的核销码是否准确
+  checkAdjCouponNum: '/loveHome/checkAdjCouponNum',
   // 获取地址
   getLocationByBaiduMap: '/buildHouse/getLocationByBaiduMap',
   // 异常订单列表查询

@@ -98,6 +98,7 @@ button:focus, input:focus, textarea:focus {
 }
 
 input[type='text'] {
+  -webkit-appearance: none;
 }
 
 label {
@@ -118,7 +119,7 @@ b {
 }
 
 button {
-  -webkit-appearance:none;
+  -webkit-appearance: none;
   border: none;
   outline: 0;
 }

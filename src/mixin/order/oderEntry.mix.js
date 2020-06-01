@@ -3,61 +3,108 @@ export default {
     return {
       // 模态框:已领优惠券
       couponDialog: {
-        open: false,
-        btns: [
-          {
-            text: '取消',
-            handler: this.couponDialogCancel,
-          },
-          {
-            text: '确定',
-            handler: this.couponDialogConfirm,
-          }
-        ],
+        open: true,
       },
       // 显示隐藏输入优惠券对话框
-      isShowInputCoupons: false
+      isShowInputCoupons: false,
+      // 显示优惠券对话框
+      isShowCoupons: false,
+      // 已领优惠券
+      receivedCoupons: [],
+      // 已选择的优惠券
+      choseCoupons: []
     };
   },
+  computed: {
+    queryCouponsTitle() {
+      /* 查询优惠券按钮文字 */
+      return this.choseCoupons.length ? '重新选择' : '查询优惠券';
+    },
+    inputCouponsTitle() {
+      /* 修改优惠券按钮文字 */
+      return this.choseCoupons.length ? '重新选择' : '输入优惠券';
+    }
+  },
   methods: {
-    couponDialogConfirm() {
-      /* 查看优惠券对话框确认 */
-      this.couponDialog.open = false;
-    },
-    couponDialogCancel() {
-      /* 查看优惠券对话框取消 */
-      this.couponDialog.open = false;
-    },
-    showReceivedCoupons() {
-      /* 查看已领取的优惠券 */
-      const hasFridge = this.productList.find(v => v.productCategoryCode === 'AA' || v.productCategoryCode === 'AB');
-      // 冰箱 冰柜才有优惠券
-      if (hasFridge) {
-        const userPhone = this.customerInfo.mobile;
-        if (!userPhone) {
-          this.$dialog.alert({
-            content: '请添加顾客'
-          });
-          return;
-        }
-        this.orderService.queryAdjCouponInfo({
-          userPhone
-        }).then(({ code, data }) => {
-          if (code === 1) {
-            this.receivedCoupons = (data && data[0].service.split(',')) || [];
-            this.couponDialog.btns[0].text = this.receivedCoupons.length ? '核销' : '确定';
-            this.couponDialog.open = true;
-          }
-        });
-      } else {
+    showChooseCoupons() {
+      /* 查看可选的优惠券 */
+      const userPhone = this.customerInfo.mobile;
+      if (!userPhone) {
         this.$dialog.alert({
-          content: '暂无可用消费券'
+          content: '请添加顾客'
         });
+        return;
       }
+      this.orderService.queryAdjCouponInfo({
+        userPhone
+      }).then(({ code, data }) => {
+        if (code === 1) {
+          const receivedCoupons = data || [];
+          this.receivedCoupons = receivedCoupons.map(v => ({
+            ...v,
+            couponName: v.activityName
+          }));
+          this.isShowCoupons = true;
+        }
+      });
+      // this.$dialog.alert({
+      //   content: '暂无可用消费券'
+      // });
     },
     showInputCoupons() {
       /* 展示输入优惠券对话框 */
       this.isShowInputCoupons = true;
+    },
+    showCoupons() {
+      /* 展示输入优惠券对话框 */
+      this.isShowCoupons = true;
+    },
+    chooseCouponsConfirm(choseCoupons) {
+      /* 选择卡券确认 */
+      const choseCouponsTemp = [...this.choseCoupons, ...choseCoupons];
+      // activityId不能重复
+      this.choseCoupons = choseCouponsTemp.filter((v, index) => {
+        const { activityId } = v;
+        return choseCouponsTemp.findIndex(searchCoupon => searchCoupon.activityId === activityId) === index;
+      });
+    },
+    orderInputCouponsConfirm(data) {
+      /* 核销确认 */
+      this.choseCoupons = data.map(v => ({
+        couponName: v.msg,
+        ...v
+      }));
+    },
+    genChoseCouponsByDetail(data) {
+      /* 组合已选优惠券list */
+      const {
+        couponNum,
+        couponName
+      } = data;
+      const couponNumAy = couponNum.split(',');
+      const couponNameAy = couponName.split('&&');
+      return couponNumAy.map((v, index) => ({
+        entryID: v,
+        couponName: couponNameAy[index],
+        msg: couponNameAy[index]
+      }));
+    },
+    genCouponName() {
+      /* 组合couponNum couponName */
+      const couponNumAy = [];
+      const couponNameAy = [];
+      this.choseCoupons.forEach((v) => {
+        couponNumAy.push(v.entryID);
+        couponNameAy.push(v.msg);
+      });
+      // 优惠券id
+      const couponNum = couponNumAy.join(',');
+      // 优惠券名字
+      const couponName = couponNameAy.join('&&');
+      return {
+        couponNum,
+        couponName
+      };
     }
   }
 };

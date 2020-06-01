@@ -132,14 +132,44 @@
       <template
         v-slot:right=""
       >
-        <div
+        <button
+          type="button"
+          class="common-btn-primary orderModify-coupon-btn-query"
+          @click="showChooseCoupons"
+        >查询优惠券
+        </button>
+        <button
+          type="button"
+          class="common-btn-primary"
+          @click="showInputCoupons"
+        >{{inputCouponsTitle}}
+        </button>
+        <!--<div
           class="orderModify-coupon-btn-show"
           @click="showReceivedCoupons"
         >
           <span>查看</span> <i class="iconfont icon-youjiantou1"></i>
-        </div>
+        </div>-->
       </template>
     </b-item>
+    <b-fieldset
+      v-if="choseCoupons.length"
+      class="mt16"
+      title="已选择："
+      :showTitle="true"
+    >
+      <template>
+        <ul class="orderModify-receivedCoupons-list">
+          <li
+            class="orderModify-receivedCoupons-item"
+            v-for="(item,index) in choseCoupons"
+            :key="index"
+          >
+            {{item.couponName}}
+          </li>
+        </ul>
+      </template>
+    </b-fieldset>
     <b-item
       class="mt16"
       title="选择送货时间："
@@ -254,36 +284,15 @@
     >
       该月销量闸口已关闭，你录入的该订单非本月订单，将无法拿到销量提成，请确定是否继续？
     </md-dialog>
-    <md-dialog
-      class="orderModify-coupon-dialog"
-      :closable="false"
-      v-model="couponDialog.open"
-      :btns="couponDialog.btns"
-    >
-      <div>
-        <ul
-          v-if="receivedCoupons.length"
-          class="orderModify-coupon-list"
-        >
-          <li
-            class="orderModify-coupon-item"
-            v-for="(item,index) in receivedCoupons"
-            :key="index"
-          >
-            <span>{{item}}</span>
-            <span class="orderModify-coupon-item-num">
-              <span class="num">1</span> 张
-            </span>
-          </li>
-        </ul>
-        <div
-          v-else
-          class="orderModify-coupon-info"
-        >
-          暂无优惠券领用信息
-        </div>
-      </div>
-    </md-dialog>
+    <order-coupons
+      :is-show.sync="isShowCoupons"
+      :coupons="receivedCoupons"
+    ></order-coupons>
+    <order-input-coupons
+      :is-show.sync="isShowInputCoupons"
+      :userPhone="customerInfo.mobile"
+      @confirm="orderInputCouponsConfirm"
+    ></order-input-coupons>
   </div>
 </template>
 
@@ -314,6 +323,8 @@ import {
 } from '@/components/business';
 import addressData from '@/lib/address';
 import oderEntryMix from '@/mixin/order/oderEntry.mix';
+import OrderInputCoupons from '../../components/business/orderEntry/OrderInputCoupons';
+import OrderCoupons from '../../components/business/orderEntry/OrderCoupons';
 
 export default {
   name: 'OrderEntry',
@@ -321,6 +332,8 @@ export default {
     oderEntryMix
   ],
   components: {
+    OrderCoupons,
+    OrderInputCoupons,
     [Toast.name]: Toast,
     [Dialog.name]: Dialog,
     BActivityList,
@@ -478,21 +491,19 @@ export default {
       multyBuy: false,
       // 0：下一步 1：暂存
       saveType: 1,
-      isYJHX: false,
-      // 已领优惠券
-      receivedCoupons: [],
+      isYJHX: false
     };
   },
   watch: {
-    buyDate(newV, oldV) {
+    buyDate(newV) {
       console.log(this.userParam.hmcid);
-      if (newV != '') {
+      if (newV !== '') {
         this.orderService.isAccordDeadline({}, {
           hmcId: this.userParam.hmcid,
           orderCrTime: newV,
           requestNoToast: true
         }).then((res) => {
-          if (res.code == -1) {
+          if (res.code === -1) {
             this.basicDialog1.open = true;
           }
         });
@@ -582,7 +593,7 @@ export default {
       params,
       query
     } = this.$route;
-    // 是否手工录单
+      // 是否手工录单
     const isHand = params.region === 'hand' || query.region === 'hand';
     const customerConsigneeInfo = params.customerConsigneeInfo || {};
     if (customerConsigneeInfo.id) {
@@ -678,32 +689,6 @@ export default {
     }
   },
   methods: {
-    showReceivedCoupons() {
-      /* 查看已领取的优惠券 */
-      const hasFridge = this.productList.find(v => v.productCategoryCode === 'AA' || v.productCategoryCode === 'AB');
-      if (hasFridge) {
-        const userPhone = this.customerInfo.mobile;
-        if (!userPhone) {
-          this.$dialog.alert({
-            content: '请添加顾客'
-          });
-          return;
-        }
-        this.orderService.queryAdjCouponInfo({
-          userPhone
-        }).then(({ code, data }) => {
-          if (code === 1) {
-            this.receivedCoupons = (data && data[0].service.split(',')) || [];
-            this.couponDialog.btns[0].text = this.receivedCoupons.length ? '核销' : '确定';
-            this.couponDialog.open = true;
-          }
-        });
-      } else {
-        this.$dialog.alert({
-          content: '暂无可用消费券'
-        });
-      }
-    },
     // 获取权益列表
     getActivityList() {
       const obj = {
@@ -994,9 +979,9 @@ export default {
     async generateSubInfo(type) {
       /* 生成订单信息 */
       /*
-        * @type 1:生成订单信息并保存 2：生成订单信息并跳转选择权益界面，查询权益
-        *
-        * */
+          * @type 1:生成订单信息并保存 2：生成订单信息并跳转选择权益界面，查询权益
+          *
+          * */
       if (!this.bUtil.isReportInstallFit(this.productList, this.deliveryTime) && this.saveType == 0) {
         return;
       }
@@ -1088,7 +1073,15 @@ export default {
       subInfo.remark = ''; // 备注，记录订单创建、订单修改原因等信息
       subInfo.rightsUserJson = this.rightsJson;
       subInfo.orderDetailSaveQoList = this.productList;
-
+      // 组合优惠券数据
+      if (this.choseCoupons) {
+        const {
+          couponNum,
+          couponName
+        } = this.genCouponName();
+        subInfo.couponNum = couponNum;
+        subInfo.couponName = couponName;
+      }
       this.subInfo = subInfo;
       if (type === 2) {
         const info = JSON.stringify(this.subInfo);

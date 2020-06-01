@@ -58,7 +58,6 @@ export default {
   }
 
   .b-fieldset-default-cnt {
-    padding-left: 24px;
-    padding-right: 24px;
+    padding: 10px 24px;
   }
 </style>

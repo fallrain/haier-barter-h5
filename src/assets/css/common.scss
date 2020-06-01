@@ -686,43 +686,32 @@
 //  }
 //}
 
-.orderModify-coupon-list {
-  width: 100%;
-}
-
-.orderModify-coupon-item {
-  display: flex;
-  justify-content: space-between;
-  font-size: 28px;
-  color: #29AB91;
-  margin-bottom: 10px;
-}
-
-.orderModify-coupon-item-num {
-  flex-shrink: 0;
-  margin-left: 20px;
-
-  .num {
-    color: #000;
-  }
-}
-
-.orderModify-coupon-dialog {
-  .md-dialog-body {
-    padding: 70px 16px 20px 16px;
-    min-height: 200px;
-    max-height: 600px;
-  }
-}
-
-.orderModify-coupon-info {
-  text-align: center;
-}
 
 .orderModify-coupon-btn-query {
   border: 1px solid #29AB91;
   color: #29AB91;
   margin-right: 18px;
+}
+
+.orderModify-receivedCoupons-list{
+
+}
+
+
+.orderModify-receivedCoupons-item{
+  height: 68px;
+  line-height: 60px;
+  margin-bottom: 22px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 22px;
+  background: #fff;
+  border-radius: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  border: 1px solid #29AB91;
+  color: #29AB91;
 }
 
 /*订单修改 end*/

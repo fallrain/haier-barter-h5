@@ -111,6 +111,13 @@ export default {
     /* 查询领取优惠券信息 */
     return axPostJson(urls.queryAdjCouponInfo, null, params);
   },
+  checkAdjCouponNum(params) {
+    /* 校验用户输入的核销码是否准确 */
+    return axPostJson(urls.checkAdjCouponNum, null, {
+      ...params,
+      requestNoToast: true
+    });
+  },
   getLocationByBaiduMap(param) {
     /* 查询地理位置 */
     return axGet(urls.getLocationByBaiduMap, param);

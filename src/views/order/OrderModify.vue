@@ -1,4 +1,4 @@
-<template xmlns:v-slot="">
+<template>
   <div>
     <div class="orderEntry-header">
       <span class="orderEntry-header-name">门店：{{shopName}}</span>
@@ -129,13 +129,15 @@
         <button
           type="button"
           class="common-btn-primary orderModify-coupon-btn-query"
-          @click="showReceivedCoupons"
-        >查询优惠券</button>
+          @click="showChooseCoupons"
+        >查询优惠券
+        </button>
         <button
           type="button"
           class="common-btn-primary"
           @click="showInputCoupons"
-        >输入优惠券</button>
+        >{{inputCouponsTitle}}
+        </button>
         <!--<div
           class="orderModify-coupon-btn-show"
           @click="showReceivedCoupons"
@@ -144,6 +146,24 @@
         </div>-->
       </template>
     </b-item>
+    <b-fieldset
+      v-if="choseCoupons.length"
+      class="mt16"
+      title="已选择："
+      :showTitle="true"
+    >
+      <template>
+        <ul class="orderModify-receivedCoupons-list">
+          <li
+            class="orderModify-receivedCoupons-item"
+            v-for="(item,index) in choseCoupons"
+            :key="index"
+          >
+            {{item.couponName}}
+          </li>
+        </ul>
+      </template>
+    </b-fieldset>
     <b-item
       class="mt16"
       title="选择送货时间："
@@ -250,38 +270,14 @@
     >
       该月销量闸口已关闭，你录入的该订单非本月订单，将无法拿到销量提成，请确定是否继续？
     </md-dialog>
-    <md-dialog
-      class="orderModify-coupon-dialog"
-      :closable="false"
-      v-model="couponDialog.open"
-      :btns="couponDialog.btns"
-    >
-      <div>
-        <ul
-          v-if="receivedCoupons.length"
-          class="orderModify-coupon-list"
-        >
-          <li
-            class="orderModify-coupon-item"
-            v-for="(item,index) in receivedCoupons"
-            :key="index"
-          >
-            <span>{{item}}</span>
-            <span class="orderModify-coupon-item-num">
-              <span class="num">1</span> 张
-            </span>
-          </li>
-        </ul>
-        <div
-          v-else
-          class="orderModify-coupon-info"
-        >
-          暂无优惠券领用信息
-        </div>
-      </div>
-    </md-dialog>
+    <order-coupons
+      :is-show.sync="isShowCoupons"
+      :coupons="receivedCoupons"
+    ></order-coupons>
     <order-input-coupons
-      :is-show="isShowInputCoupons"
+      :is-show.sync="isShowInputCoupons"
+      :userPhone="customerInfo.mobile"
+      @confirm="orderInputCouponsConfirm"
     ></order-input-coupons>
   </div>
 </template>
@@ -309,6 +305,7 @@ import {
 import addressData from '@/lib/address';
 import oderEntryMix from '@/mixin/order/oderEntry.mix';
 import OrderInputCoupons from '../../components/business/orderEntry/OrderInputCoupons';
+import OrderCoupons from '../../components/business/orderEntry/OrderCoupons';
 
 export default {
   name: 'OrderModify',
@@ -316,6 +313,7 @@ export default {
     oderEntryMix
   ],
   components: {
+    OrderCoupons,
     OrderInputCoupons,
     [Dialog.name]: Dialog,
     BActivityList,
@@ -468,8 +466,6 @@ export default {
       mobile: '',
       region: '',
       hmcId: '',
-      rightsList: [],
-      subInfo: {},
       rightsJson: '',
       userParam: {},
       orderSource: '',
@@ -481,20 +477,17 @@ export default {
       // 保存类型，1:暂存 0:下一步
       saveType: 1,
       isProduct: false,
-      isProductList: [],
-      // 已领优惠券
-      receivedCoupons: [],
+      isProductList: []
     };
   },
-  computed: {},
   watch: {
-    buyDate(newV, oldV) {
+    buyDate(newV) {
       this.orderService.isAccordDeadline({}, {
         hmcId: this.userParam.hmcid,
         orderCrTime: newV,
         requestNoToast: true
       }).then((res) => {
-        if (res.code == -1) {
+        if (res.code === -1) {
           this.basicDialog1.open = true;
         }
       });
@@ -758,6 +751,10 @@ export default {
           this.multBuyExceptHmc = arr.join('、');
           this.multBuyExceptHmcId = resData.mayEditCoupleOrderId.split(',').splice(hmc_index, 1);
           console.log(this.multBuyExceptHmc);
+          // 组合已选的优惠券
+          if (resData.couponNum) {
+            this.choseCoupons = this.genChoseCouponsByDetail(resData);
+          }
           if (!this.isProduct) {
             if (resData.orderDetailDtoList.length !== 0) {
               this.productList = resData.orderDetailDtoList;
@@ -976,9 +973,9 @@ export default {
     async generateSubInfo(type) {
       /* 生成订单信息 */
       /*
-          * @type 1:生成订单信息并保存 2：生成订单信息并跳转选择权益界面，查询权益
-          *
-          * */
+            * @type 1:生成订单信息并保存 2：生成订单信息并跳转选择权益界面，查询权益
+            *
+            * */
       if (!this.bUtil.isReportInstallFit(this.productList, this.deliveryTime) && this.saveType == 0) {
         return;
       }
@@ -1072,6 +1069,15 @@ export default {
       subInfo.rightsUserJson = this.rightsJson;
 
       subInfo.orderDetailSaveQoList = this.productList;
+      // 组合优惠券数据
+      if (this.choseCoupons) {
+        const {
+          couponNum,
+          couponName
+        } = this.genCouponName();
+        subInfo.couponNum = couponNum;
+        subInfo.couponName = couponName;
+      }
       this.subInfo = subInfo;
       if (type === 2) {
         const info = JSON.stringify(this.subInfo);
@@ -1111,42 +1117,41 @@ export default {
           pageNum: 0,
           pageSize: 10,
           requestNoToast: true
-        })
-          .then((res) => {
-            if (res.code === 1 && res.data.result.length > 0) {
-              this.rightsName = res.data.result[0].rightsName;
-              this.basicDialog.open = true;
-            } else {
-              if (this.orderNo !== '') {
-                // if (!this.orderFollowId) {
-                //   this.orderFollowId = localStorage.getItem('orderFollowId');
-                // }
-                this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
-                  .then((createOrderRes) => {
-                    if (createOrderRes.code === 1) {
-                      if (this.saveType === 1) {
-                        Toast.succeed('订单暂存成功');
-                        this.$router.replace({
-                          name: 'Order.OrderFollowSearch',
-                          params: {}
-                        });
-                        // this.$router.go(-1);
-                      }
-                      if (this.saveType === 0) {
-                        localStorage.setItem('orderFollowId', this.orderFollowId);
-                        this.$router.push({
-                          name: 'Order.OrderUploadInvoice',
-                          params: {
-                            orderNo: this.orderNo,
-                            subInfo: this.subInfo
-                          }
-                        });
-                      }
+        }).then((res) => {
+          if (res.code === 1 && res.data.result.length > 0) {
+            this.rightsName = res.data.result[0].rightsName;
+            this.basicDialog.open = true;
+          } else {
+            if (this.orderNo !== '') {
+              // if (!this.orderFollowId) {
+              //   this.orderFollowId = localStorage.getItem('orderFollowId');
+              // }
+              this.orderService.createOrder(this.subInfo, { orderFollowId: this.orderFollowId })
+                .then((createOrderRes) => {
+                  if (createOrderRes.code === 1) {
+                    if (this.saveType === 1) {
+                      Toast.succeed('订单暂存成功');
+                      this.$router.replace({
+                        name: 'Order.OrderFollowSearch',
+                        params: {}
+                      });
+                      // this.$router.go(-1);
                     }
-                  });
-              }
+                    if (this.saveType === 0) {
+                      localStorage.setItem('orderFollowId', this.orderFollowId);
+                      this.$router.push({
+                        name: 'Order.OrderUploadInvoice',
+                        params: {
+                          orderNo: this.orderNo,
+                          subInfo: this.subInfo
+                        }
+                      });
+                    }
+                  }
+                });
             }
-          });
+          }
+        });
       } else {
         if (this.orderNo !== '') {
           // if (!this.orderFollowId) {

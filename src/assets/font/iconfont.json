@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "608292",
+      "name": "减去",
+      "font_class": "jianquminus24",
+      "unicode": "e689",
+      "unicode_decimal": 59017
+    },
+    {
+      "icon_id": "13314435",
+      "name": "加号",
+      "font_class": "jiahao1",
+      "unicode": "e6cd",
+      "unicode_decimal": 59085
+    },
+    {
       "icon_id": "3670126",
       "name": "扫码",
       "font_class": "tubiaolunkuo-",
