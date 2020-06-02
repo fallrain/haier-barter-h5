@@ -70,10 +70,15 @@ export default {
     },
     orderInputCouponsConfirm(data) {
       /* 核销确认 */
-      this.choseCoupons = data.map(v => ({
+      const choseCoupons = data.map(v => ({
         couponName: v.msg,
         ...v
       }));
+      this.choseCoupons = choseCoupons.filter((v, index) => {
+        const { entryID } = v;
+        return choseCoupons.findIndex(searchCoupon => searchCoupon.entryID === entryID) === index;
+      });
+      console.log(this.choseCoupons);
     },
     genChoseCouponsByDetail(data) {
       /* 组合已选优惠券list */

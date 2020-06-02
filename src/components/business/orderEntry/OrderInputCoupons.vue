@@ -172,7 +172,7 @@ export default {
     getNewCoupons() {
       return {
         id: new Date().getTime(),
-        isError: false,
+        errorMsg: '',
         code: ''
       };
     },
