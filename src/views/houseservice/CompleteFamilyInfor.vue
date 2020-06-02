@@ -134,6 +134,7 @@
 
           <b-item
             class="br-b"
+             v-show="familyCompleteInfo.familyType==1"
             title="小区档次"
             :value="houseAreaLevelName"
             :arrow="true"
@@ -154,6 +155,7 @@
             </div>
           </div>-->
           <b-item
+            v-show="familyCompleteInfo.familyType==1"
             class="br-b"
             title="户型"
             :value="houseTypeName"

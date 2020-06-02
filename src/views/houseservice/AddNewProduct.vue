@@ -78,6 +78,7 @@
               title="请选择购买日期"
               :defaultDate="productInfo.purchaseDate"
               v-model="productInfo.purchaseDate"
+              :max-date="currentDate"
           ></b-date-picker>
         </template>
       </b-item>
@@ -202,6 +203,7 @@ export default {
   data() {
     return {
       uploadUrl: '/api/file/simpleUpload',
+      currentDate: new Date(),
       headers: {
         Authorization: ''
       },
