@@ -29,6 +29,7 @@
                 :class="[item.errorMsg && 'error']"
                 v-model="item.code"
                 maxlength="20"
+                v-resetInput
                 @input="codeInput(item)"
               >
               <div
