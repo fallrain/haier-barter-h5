@@ -28,6 +28,7 @@
                 class="orderInputCoupons-dialog-cnt-item-ipt"
                 :class="[item.errorMsg && 'error']"
                 v-model="item.code"
+                maxlength="20"
                 @input="codeInput(item)"
               >
               <div
