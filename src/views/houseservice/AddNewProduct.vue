@@ -24,14 +24,23 @@
 <!--    表单信息-->
     <div class="content-infor">
       <div class="fs30 mt24 mb22 ml25 text-333">入户服务计划详情</div>
+
       <b-item
-        class="br-b text-666"
+        class="br-b text-666 pinpai"
         title="品牌"
         placeholder="请选择或输入品牌"
         :value="BrandName"
         :arrow="true"
         @rightClick="chooseBrand()"
       >
+     <!-- <div class="pinpaitmpl" slot="right">
+        <input class="text-333 br-n fs28"
+                 type="number"
+                 placeholder="请输入产"
+                 v-model="productInfo.price"
+          >
+      </div> -->
+
       </b-item>
       <b-item
         class="br-b text-666"
@@ -731,6 +740,12 @@ export default {
         }
       }
     }
+  }
+  .pinpai{
+    position: relative;
+  }
+  .pinpaitmpl{
+    // position: absolute;
   }
   .ph24{
     padding: 0 24px;

@@ -13,7 +13,7 @@
         <!-- 预约信息 -->
         <div v-show="tabIndex==0" class="tab-item">
           <form class>
-            <b-item class="br-b mt16" title="顾客信息:" :value="customerInfo.servicerName"></b-item>
+            <b-item class="br-b mt16" title="顾客信息:" :value="gukeInfo"></b-item>
             <b-item
               class="br-b mt16"
               title="入户服务场景"
@@ -100,7 +100,7 @@
 
         <!-- 住宅信息 -->
         <div v-show="tabIndex==1" class="tab-item">
-          <b-item class="br-b mt16" title="顾客信息:" :value="customerInfo.servicerName"></b-item>
+          <b-item class="br-b mt16" title="顾客信息:" :value="gukeInfo"></b-item>
           <div class="addressInfor-item mt16 br-b">
             <label>小区名称</label>
             <div class="address-form-item">
@@ -189,14 +189,14 @@
               人
             </div>
           </div>
-          <b-item
+          <!-- <b-item
             class="br-b"
             title="与地址家庭于用户关系"
             :value="addressRelationName"
             :arrow="true"
             @rightClick="serviceScape(3)"
             @arrowClick ="serviceScape(3)"
-          ></b-item>
+          ></b-item> -->
           <div class="br-b family-tag-area">
             <label class="fs28">该地址家庭标签</label>
             <div class="tagList">
@@ -224,7 +224,7 @@
         </div>
         <!-- 家电产品 -->
         <div v-show="tabIndex==2" class="tab-item">
-          <b-item class="br-b mt16" title="顾客信息:" :value="customerInfo.servicerName"></b-item>
+          <b-item class="br-b mt16" title="顾客信息:" :value="gukeInfo"></b-item>
           <div class="products-total">
             <div class="total-item">
               <div class="mt30">品牌</div>
@@ -368,6 +368,9 @@ import {
 // eslint-disable-next-line no-unused-vars
 import addressData from '@/lib/address';
 
+import SearchAccompanying from './SearchAccompanying.vue';
+
+
 export default {
   name: 'CompleteFamilyInfor',
   components: {
@@ -495,7 +498,10 @@ export default {
     };
   },
   computed: {
-
+    gukeInfo() {
+      const info = `${this.customerInfo.userName} ${this.customerInfo.userPhone}`;
+      return info;
+    },
     tagName() {
       const that = this;
       if (this.tag) {
@@ -665,6 +671,7 @@ export default {
       // 查询客户地址列表
       this.queryCustomerAddressList();
     }
+    this.customerInfo.accompanyingName = localStorage.getItem('chooseJoinUser');
   },
   created() {
     this.addressData = addressData;
@@ -914,6 +921,7 @@ export default {
     getFamilyInfo() {
       // 查询家庭成员信息
       this.basicService.queryFamilyInfo(this.customerInfoId).then((res) => {
+        debugger;
         if (res.code === 1) {
           this.familyCompleteInfo = res.data;
           this.familyCompleteInfo.familyType = `${this.familyCompleteInfo.familyType}`;
@@ -1061,6 +1069,7 @@ export default {
         Toast.failed('服务人不能为空');
         return;
       }
+
       if (
         this.customerInfo.serviceAddress === undefined
         || this.customerInfo.serviceAddress === ''

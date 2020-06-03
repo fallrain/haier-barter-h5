@@ -6,16 +6,19 @@
       placeholder="通过员工姓名或员工ID查询随行参与人"
     >
     </b-search-input>
-    <ul
-      class="searchProduct-history"
-      v-if="searchData.username"
-    >
-      <li
-        class="searchProduct-history-item"
-        @click="onItemClick()"
-      >{{searchData.username}}
-      </li>
-    </ul>
+       <div class="list-item" @click="onItemClick(item)" v-for="(item, index) in searchData" :key="index">
+        <div class="img-style">
+          <img src="@/assets/images/houseServicer/head.png" alt="">
+        </div>
+        <div class="right-content">
+            <div class="item-name">
+              {{item.username}}
+            </div>
+             <div class="item-name">
+              {{item.mobile}}
+            </div>
+        </div>
+      </div>
   </div>
 </template>
 
@@ -52,6 +55,11 @@ export default {
       searchList: []
     };
   },
+
+  // eslint-disable-next-line no-dupe-keys
+  created() {
+    this.search();
+  },
   methods: {
     search() {
       const param = {};
@@ -59,9 +67,10 @@ export default {
       /* 搜索随行参与人 */
       this.basicService.queryAccompanier(param).then((res) => {
         if (res.code === 1) {
-          this.searchData = res.data;
-          if (res.data === null) {
-            Toast.failed('暂无信息，请重新搜索');
+          if (res.data.length > 0) {
+            this.searchData = res.data;
+          } else {
+            Toast.failed('随行参与人:无');
             this.searchVal = '';
             this.searchData = {
               username: '',
@@ -71,8 +80,11 @@ export default {
         }
       });
     },
-    onItemClick() {
+    onItemClick(item) {
       this.searchVal = '';
+      // this.$emit('chooseJoinUser', item.username);  //给父路由传值，让父路由重新请求数据
+      localStorage.setItem('chooseJoinUser', item.username);
+
       this.$router.go(-1);
     },
 
@@ -82,7 +94,7 @@ export default {
     if (to.name === 'Houseservice.AddServiceUser') {
       to.params.accompanyingData = this.searchData;
     }
-    this.$destroy();
+    // this.$destroy();
     next();// 必须要有这个，否则无法跳转
   },
 };
@@ -149,4 +161,20 @@ export default {
     font-size: 10px;
     writing-mode: vertical-lr;
   }
+   .list-item{
+    display: flex;
+    background: #fff;
+    border-bottom: 1px solid #dbdbdb;
+    padding: 20px;
+    .img-style{
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      display:inline;
+      img{
+        /*width: 100%;*/
+        height: 100%;
+      }
+    }
+   }
 </style>

@@ -8,22 +8,27 @@
     </div>
     <div
       class="bItem-item-right"
-      @click="rightHandle"
     >
-      <span
-        v-if="placeholder"
-        class="bItem-item-right-val"
-      >{{value || placeholder}}</span>
-      <span
-        v-else
-        class="bItem-item-right-val"
-        v-show="value"
-      >{{value}}</span>
-      <slot name="right"></slot>
+      <div
+        @click="rightHandle"
+        class="bItem-item-val-par"
+      >
+        <span
+          v-if="placeholder"
+          class="bItem-item-right-val"
+        >{{value || placeholder}}</span>
+        <span
+          v-else
+          class="bItem-item-right-val"
+          v-show="value"
+        >{{value}}</span>
+        <slot name="right"></slot>
+      </div>
       <i
         v-if="arrow"
         class="iconfont"
         :class="[iconClass]"
+        @click="arrowHandle"
       ></i>
     </div>
   </div>
@@ -58,8 +63,12 @@ export default {
   },
   methods: {
     rightHandle() {
-      /* 右箭头点击事件 */
+      /* 右箭击事件 */
       this.$emit('rightClick', this);
+    },
+    arrowHandle() {
+      /* 右边图标点击事件 */
+      this.$emit('arrowClick', this);
     }
   }
 };
@@ -93,6 +102,11 @@ export default {
       font-size: 26px;
       color: #D9D9D9;
     }
+  }
+
+  .bItem-item-val-par {
+    display: flex;
+    align-items: center;
   }
 
   .bItem-item-right-val {
