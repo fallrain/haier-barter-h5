@@ -126,7 +126,8 @@ export default {
         customer: this.searchWord,
         pageNo: 1,
         pageSize: 20,
-        groupType: 0
+        groupType: 0,
+        isExistUserId: 1
       };
       // JSON.stringify(param)
       this.basicService.queryCustomerList(data, '').then((res) => {
