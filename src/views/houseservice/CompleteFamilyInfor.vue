@@ -1153,13 +1153,13 @@ export default {
         Toast.failed('类型不能为空');
         return;
       }
-      if (
-        familyCompleteInfo.familyItemCode === ''
-        || !familyCompleteInfo.familyItemCode
-      ) {
-        Toast.failed('该地址与用户关系不能为空');
-        return;
-      }
+      // if (
+      //   familyCompleteInfo.familyItemCode === ''
+      //   || !familyCompleteInfo.familyItemCode
+      // ) {
+      //   Toast.failed('该地址与用户关系不能为空');
+      //   return;
+      // }
       // 修改住宅信息状态
       if (!this.isTaizhang) {
         this.houseService
