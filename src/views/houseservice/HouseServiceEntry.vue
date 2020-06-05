@@ -4,17 +4,17 @@
     <div class="houseService-header">
       <span @click="changeStep(1)" class="header-item" :class="{'active':current==1}">
         <img src="@/assets/images/houseServicer/home_icons/icon_rhjh.png" class="header-item-img" />
-        <span class="tagNum">{{tagNum1}}</span>
+        <!-- <span class="tagNum">{{tagNum1}}</span> -->
         <p class="title">入户计划</p>
       </span>
       <span @click="changeStep(2)" class="header-item" :class="{'active':current==2}">
         <img src="@/assets/images/houseServicer/home_icons/icon_yrh.png" />
-        <span class="tagNum">{{tagNum2}}</span>
+        <!-- <span class="tagNum">{{tagNum2}}</span> -->
         <p class="title">已入户</p>
       </span>
       <span @click="changeStep(3)" class="header-item" :class="{'active':current==3}">
         <img src="@/assets/images/houseServicer/home_icons/icon_rhgs.png" />
-        <span class="tagNum">{{tagNum3}}</span>
+        <!-- <span class="tagNum">{{tagNum3}}</span> -->
         <p class="title">入户故事</p>
       </span>
       <span @click="changeStep(4)" class="header-item" :class="{'active':current==4}">
@@ -127,19 +127,19 @@ export default {
     this.getOtherPlan(); // 其他入户计划列表查询
     this.getMySuccessPlan(); // 查询已入户计划列表
     // this.dealAppraise();
-    this.postStoryList('','0'); // 查询入户故事列表
+    this.postStoryList('', '0'); // 查询入户故事列表
   },
   created() {
     this.userinfo = JSON.parse(localStorage.getItem('userinfo'));
   },
   methods: {
-    rhgsListAction(a,b) {
-      debugger ;
+    rhgsListAction(a, b) {
+      debugger;
       // 我的 全国
-      this.postStoryList(a,b);
+      this.postStoryList(a, b);
     },
     // 入户故事列表
-    postStoryList(a,b) {
+    postStoryList(a, b) {
       const data = {
         createdBy: a, // 创建故事的直销员id 我的
         sortType: b
@@ -292,6 +292,7 @@ export default {
         });
     },
     dealAnalysis(obj) {
+      debugger;
       this.houseService
         .analysis({
           ...obj
@@ -306,11 +307,11 @@ export default {
       // 头部切换
       this.current = current;
       if (this.current === 3) {
-        this.postStoryList('','0'); // 查询入户故事列表
+        this.postStoryList('', '0'); // 查询入户故事列表
       }
       if (this.current === 4) {
         // 更新数据分析
-        this.dealAnalysis();
+        // this.dealAnalysis();
       }
     },
     getQueryString(name) {

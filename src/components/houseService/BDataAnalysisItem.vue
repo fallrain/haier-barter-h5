@@ -21,6 +21,7 @@
           title="请选择日期"
           :defaultDate="endTime"
           :min-date="getdate(startTime)"
+          :max-date = "currentDate"
           v-model="endTime"
         ></b-date-picker>
       </div>
@@ -139,7 +140,8 @@ export default {
         serviceCount: '',
         servicerId: '',
         shareCount: ''
-      }
+      },
+      currentDate: new Date(),
     };
   },
   created() {
@@ -153,6 +155,7 @@ export default {
   },
   methods: {
     searchResult() {
+      debugger;
       if (this.startTime === '' || this.endTime === '') {
         return;
       }

@@ -28,7 +28,7 @@
             <span class="text-warning" v-show="item.applianceFlag == 2">已邀请</span>
             <span class="text-warning" v-show="item.applianceFlag == 1">已评价</span>
             <span
-              class="text-warning"
+              class="text-warning text-primary"
               v-show="item.applianceFlag == 0"
               @click="yaoqClick(item)"
             >邀请评价</span>
@@ -326,6 +326,7 @@ export default {
   color: #333333;
   font-size: 28px;
 }
+
 .text-primary {
   color: #1969c6;
 }

@@ -44,12 +44,13 @@
             <b-date-picker
               class="hourseService-date"
               slot="right"
-              type = "custom"
+              type="custom"
               :defaultDate="customerInfo.serviceTime"
               title="请选择日期"
               :pattern="pattern"
               v-model="customerInfo.serviceTime"
-              :custom-types = "['yyyy', 'MM', 'dd', 'hh','mm']"
+              :custom-types="['yyyy', 'MM', 'dd', 'hh']"
+              :unit-text = "['年', '月', '日', '时']"
               :min-date="new Date()"
             ></b-date-picker>
           </template>
@@ -57,7 +58,7 @@
         <b-item class="br-b mt16" title="服务人" :value="customerInfo.servicerName"></b-item>
         <b-item
           class="br-b join-person"
-          title="随行参与人()"
+          title="随行参与人"
           :value="customerInfo.accompanyingName"
           :arrow="true"
           @click.native="chooseJoinPerson()"
@@ -65,7 +66,7 @@
           <!-- <div slot="left">
             <span>(选填)</span>
             <span class="icon iconfont icon-wenhao"></span>
-          </div> -->
+          </div>-->
         </b-item>
         <div class="bg-white p24 fs28">
           <div class="rows">
@@ -98,7 +99,7 @@
         <!-- <div class="rows br-b bg-white p24 mt16 fs28">
           <label>加入我的日程提醒</label>
           <md-switch v-model="isTip" />
-        </div> -->
+        </div>-->
         <div v-show="isTip" class="br-b bg-white p24 fs28">
           <span :class="[{'active':activeOffset==='0'},'tag-style']" @click="clickTag('0')">提前三天</span>
           <span :class="[{'active':activeOffset==='1'},'tag-style']" @click="clickTag('1')">提前一天</span>
@@ -200,7 +201,7 @@ export default {
       queryHistoryList: [],
       consignee: {},
       isChangePlan: false,
-      pattern: 'yyyy-MM-dd hh:mm',
+      pattern: 'yyyy-MM-dd hh',
       usersex: 0,
       tag: [],
       tagList: [],
@@ -273,8 +274,13 @@ export default {
       return '';
     }
   },
+  mounted() {
+    // 当前页面挂载的时候调用 返回键的监听方法
+    this.listeningBack();
+  },
   activated() {
     debugger;
+
     if (this.$route.params.choosedInfo) {
       this.productNames = [];
       this.productCodes = [];
@@ -390,17 +396,30 @@ export default {
       // 查询客户地址列表
       this.queryCustomerAddressList();
     }
-    if (this.$route.params.accompanyingData) {
-      // 选择随行参与人
-      this.customerInfo.accompanyingId = this.$route.params.accompanyingData.hmcId;
-      this.customerInfo.accompanyingName = this.$route.params.accompanyingData.username;
-    }
+    this.customerInfo.accompanyingName = localStorage.getItem(
+      'chooseJoinUsername'
+    );
+    this.customerInfo.accompanyingId = localStorage.getItem('chooseJoinUserid');
+  },
+  beforeRouteLeave(to, from, next) {
+    debugger;
+
+    next(); // 必须要有这个，否则无法跳转
   },
   created() {
     this.addressData = addressData;
     this.getServiceEle();
   },
   methods: {
+    // 监听返回键
+    listeningBack() {
+      const that = this; // window.onpopstate方法指向window,所以要储存一下当前的vue实例
+      const route = '上一页'; // 根据业务逻辑的上一页决定
+      window.onpopstate = function () {
+        localStorage.removeItem('chooseJoinUsername');
+        localStorage.removeItem('chooseJoinUserid');
+      };
+    },
     closeMask() {
       this.showMask = false;
     },
@@ -410,7 +429,7 @@ export default {
       const data = {
         servicerId: this.customerInfo.servicerId,
         pageNum: '1',
-        pageSize: '100',
+        pageSize: '100'
       };
       this.houseService.queryHistoryPlan(data, {}).then((res) => {
         if (res.code === 1) {
@@ -963,9 +982,8 @@ footer {
     border-radius: 8px;
     position: relative;
     padding-top: 90px;
-
   }
-  .listClass{
+  .listClass {
     overflow-y: auto;
     padding: 15px;
     width: 689px;

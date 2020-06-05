@@ -26,10 +26,12 @@
                 <b-date-picker
                   class="hourseService-date"
                   slot="right"
-                  type="datetime"
+                  type="custom"
                   :defaultDate="customerInfo.serviceTime"
                   title="请选择日期"
                   :pattern="pattern"
+                 :custom-types="['yyyy', 'MM', 'dd', 'hh']"
+                  :unit-text = "['年', '月', '日', '时']"
                   v-model="customerInfo.serviceTime"
                 ></b-date-picker>
               </template>
@@ -398,7 +400,7 @@ export default {
       addressList: [],
       isTip: false,
       productNames: [],
-      pattern: 'yyyy-MM-dd hh:mm',
+      pattern: 'yyyy-MM-dd hh',
       isTaizhang: false,
       tabIndex: 0,
       tagPopShow0: false, // 服务场景
@@ -616,7 +618,6 @@ export default {
       }
     }
   },
-  mounted() {},
   activated() {
     let customerInfo = {};
     const {
@@ -671,7 +672,20 @@ export default {
       // 查询客户地址列表
       this.queryCustomerAddressList();
     }
-    this.customerInfo.accompanyingName = localStorage.getItem('chooseJoinUser');
+    debugger;
+    if (localStorage.getItem('chooseJoinUsername')) {
+      this.customerInfo.accompanyingName = localStorage.getItem('chooseJoinUsername');
+      this.customerInfo.accompanyingId = localStorage.getItem('chooseJoinUserid');
+    }
+  },
+  beforeRouteLeave(to, from, next) {
+    localStorage.removeItem('chooseJoinUsername');
+    localStorage.removeItem('chooseJoinUserid');
+    next();// 必须要有这个，否则无法跳转
+  },
+  mounted() {
+    // 当前页面挂载的时候调用 返回键的监听方法
+    this.listeningBack();
   },
   created() {
     this.addressData = addressData;
@@ -772,6 +786,15 @@ export default {
     }
   },
   methods: {
+    // 监听返回键
+    listeningBack() {
+      const that = this; // window.onpopstate方法指向window,所以要储存一下当前的vue实例
+      const route = '上一页'; // 根据业务逻辑的上一页决定
+      window.onpopstate = function () {
+        localStorage.removeItem('chooseJoinUsername');
+        localStorage.removeItem('chooseJoinUserid');
+      };
+    },
     addAddress() {
       // 添加新地址
       this.region = 'add';

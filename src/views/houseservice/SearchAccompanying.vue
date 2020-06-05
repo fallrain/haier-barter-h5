@@ -83,8 +83,8 @@ export default {
     onItemClick(item) {
       this.searchVal = '';
       // this.$emit('chooseJoinUser', item.username);  //给父路由传值，让父路由重新请求数据
-      localStorage.setItem('chooseJoinUser', item.username);
-
+      localStorage.setItem('chooseJoinUsername', item.username);
+      localStorage.setItem('chooseJoinUserid', item.hmcId);
       this.$router.go(-1);
     },
 
@@ -98,6 +98,7 @@ export default {
     next();// 必须要有这个，否则无法跳转
   },
 };
+
 </script>
 
 <style lang="scss">

@@ -309,7 +309,7 @@ export default {
   margin-bottom: 16px;
 }
 .btn-groups {
-  text-align: left;
+  text-align: right;
   button {
     font-size: 24px;
     margin-right: 25px;
@@ -348,7 +348,9 @@ export default {
   color: #2f77cb;
 }
 .footerClass {
-   float: right;
+   display: flex;
+   justify-content: center;
+   align-items: center;
 }
 .ruhuaddclass{
   width: 118px;

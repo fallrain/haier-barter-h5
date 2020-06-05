@@ -155,7 +155,7 @@ export default {
       }).then((res) => {
         if (res.code === 1) {
           this.count = res.data;
-          debugger
+
           if (!res.data || res.data.length == 0) {
             Toast.info('暂无数据');
           }
