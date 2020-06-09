@@ -1,24 +1,24 @@
 <template xmlns:v-slot="">
   <div>
-<!--    头部用户基本信息-->
+    <!--    头部用户基本信息-->
     <header>
       <img src="@/assets/images/houseServicer/head.png" alt="">
       <div class="right-content">
         <div class="user-info">
           <div>
             <span class="">{{this.customerInfo.userName}}</span>
-<!--            <span v-show="this.usersex == 0">先生</span>-->
-<!--            <span v-show="this.usersex == 1">小姐</span>-->
+            <!--            <span v-show="this.usersex == 0">先生</span>-->
+            <!--            <span v-show="this.usersex == 1">小姐</span>-->
           </div>
           <div class="mobile">
             {{this.customerInfo.userPhone}}
             <span class="icon iconfont icon-dianhua"></span>
           </div>
         </div>
-<!--        <div class="focus-tag">-->
-<!--          <span class="focused">已关注海之友</span>-->
-<!--          <span class="focused">已关注卡萨帝</span>-->
-<!--        </div>-->
+        <!--        <div class="focus-tag">-->
+        <!--          <span class="focused">已关注海之友</span>-->
+        <!--          <span class="focused">已关注卡萨帝</span>-->
+        <!--        </div>-->
       </div>
     </header>
     <div class="content">
@@ -26,7 +26,8 @@
       <div class="panel">
         <div class="panel-title">
           <div class="fs30 text-333">入户服务总结</div>
-          <div class="text-666">已完成<span class="text-primary">{{complete}}</span>项，未完成<span class="text-danger">{{uncomplete}}</span>项</div>
+          <div class="text-666">已完成<span class="text-primary">{{complete}}</span>项，未完成<span class="text-danger">{{uncomplete}}</span>项
+          </div>
         </div>
         <div class="panel-body">
           <div class="body-item" :class="{'active': flagInfo.appraise_flag !== 0}" @click="changeState(0)">
@@ -79,7 +80,7 @@
         </div>
       </div>
     </div>
-<!--    温馨提示-->
+    <!--    温馨提示-->
     <div class="footer-tip">
       <p class="title text-333 lh36">温馨提示:</p>
       <p class="content-rows text-333 lh36">入户服务后，需要完善入户服务资料后可计入入户服务用户数，包括:</p>
@@ -92,37 +93,17 @@
 
 <script>
 import {
-  Toast, Popup, PopupTitleBar, Button, Icon
+  Button,
+  Icon,
+  Popup,
+  PopupTitleBar,
+  Toast
 } from 'mand-mobile';
-import {
-  BActivityList,
-  BDatePicker,
-  BFieldset,
-  BItem,
-  BOrderProduct,
-  BPop,
-  BPopAddressList,
-  BPopCheckList,
-  BRadioItem,
-} from '@/components/form';
-import {
-  BMultbuyCheck
-} from '@/components/business';
 
 export default {
   name: 'CompleteUserInfor',
   components: {
     [Toast.name]: Toast,
-    BActivityList,
-    BDatePicker,
-    BFieldset,
-    BItem,
-    BMultbuyCheck,
-    BOrderProduct,
-    BPop,
-    BPopAddressList,
-    BPopCheckList,
-    BRadioItem,
     [Popup.name]: Popup,
     [PopupTitleBar.name]: PopupTitleBar,
     [Button.name]: Button,
@@ -141,12 +122,10 @@ export default {
       tagPopShow: false,
       tagPopShow1: false,
       flagInfo: {},
-      customerInfo: {
-      },
+      customerInfo: {},
     };
   },
-  computed: {
-  },
+  computed: {},
   mounted() {
   },
   activated() {
@@ -190,15 +169,15 @@ export default {
             servicerName: this.customerInfo.servicerName
           }).then((res) => {
             if (res.code === 1) {
-              Toast.succeed('邀请评价成功，请用户评价！')
+              Toast.succeed('邀请评价成功，请用户评价！');
             }
           });
           /* let host = `${window.location.protocol}//${window.location.host}`;
-          if (host.indexOf('localhost') > -1) {
-            host = 'https://testdb.haier.net';
-          }
-          const url = `${host}/houseservice/serviceEvaluate?planId=${this.customerInfo.id}&userId=${this.customerInfo.userId}&userName=${this.customerInfo.userName}&servicerName=${this.customerInfo.servicerName}`;
-          window.open(url); */
+            if (host.indexOf('localhost') > -1) {
+              host = 'https://testdb.haier.net';
+            }
+            const url = `${host}/houseservice/serviceEvaluate?planId=${this.customerInfo.id}&userId=${this.customerInfo.userId}&userName=${this.customerInfo.userName}&servicerName=${this.customerInfo.servicerName}`;
+            window.open(url); */
           break;
         case 1: // 完善小区住宅信息
           this.judgeTabState = 1;
@@ -269,31 +248,38 @@ export default {
     height: 191px;
     background: #fff;
     padding: 27px 24px;
+
     img {
       width: 144px;
       height: 144px;
       border-radius: 50%;
     }
-    .right-content{
+
+    .right-content {
       flex-grow: 1;
       padding: 4px 0 0 26px;
-      .user-info{
+
+      .user-info {
         display: flex;
         justify-content: space-between;
-        span:nth-child(1){
+
+        span:nth-child(1) {
           font-size: 30px;
           color: #333;
           margin-right: 30px;
         }
-        span:nth-child(2){
+
+        span:nth-child(2) {
           font-size: 28px;
           color: #999999;
         }
-        span:nth-child(3){
+
+        span:nth-child(3) {
           font-size: 28px;
           color: #999999;
         }
-        .mobile{
+
+        .mobile {
           height: 48px;
           line-height: 48px;
           background: #4A90E2;
@@ -301,7 +287,8 @@ export default {
           padding: 0 24px 0 60px;
           color: #fff;
           position: relative;
-          span{
+
+          span {
             color: #fff;
             position: absolute;
             left: 20px;
@@ -309,9 +296,11 @@ export default {
           }
         }
       }
-      .focus-tag{
+
+      .focus-tag {
         margin-top: 28px;
-        .focused{
+
+        .focused {
           height: 48px;
           line-height: 48px;
           color: #F5A623;
@@ -324,19 +313,23 @@ export default {
       }
     }
   }
-  .content{
+
+  .content {
     padding: 16px 24px 0;
-    .active{
-      .title,.words{
+
+    .active {
+      .title, .words {
         color: #DCDCDC !important;
       }
-      .content-right{
+
+      .content-right {
         color: #DCDCDC !important;
         text-underline: none !important;
       }
     }
-    .panel{
-      .panel-title{
+
+    .panel {
+      .panel-title {
         background: #fff;
         height: 76px;
         line-height: 76px;
@@ -345,92 +338,116 @@ export default {
         justify-content: space-between;
         border-bottom: 1px solid #F5F5F5;
       }
-      .panel-body{
-        .body-item{
+
+      .panel-body {
+        .body-item {
           background: #fff;
           height: 100px;
           padding: 20px 24px 0 20px;
           display: flex;
           border-bottom: 1px solid #F5F5F5;
-          img{
+
+          img {
             width: 60px;
             height: 60px;
             margin-right: 20px;
           }
-          .content-center{
-            flex-grow:1;
-            .title{
+
+          .content-center {
+            flex-grow: 1;
+
+            .title {
               font-size: 28px;
               color: #666;
             }
-            .words{
+
+            .words {
               font-size: 24px;
               color: #999;
             }
           }
-          .content-right{
+
+          .content-right {
             font-size: 28px;
             color: #1969C6;
-            text-decoration:underline;
+            text-decoration: underline;
           }
         }
       }
     }
   }
-  .footer-tip{
+
+  .footer-tip {
     margin-top: 30px;
     font-size: 24px;
     padding: 0 24px;
-    .title{
+
+    .title {
 
     }
-    .content-rows{
-      text-indent:35px
+
+    .content-rows {
+      text-indent: 35px
     }
   }
-  .br-b{
+
+  .br-b {
     border-bottom: 1px solid #f5f5f5;
   }
-  .ml10{
+
+  .ml10 {
     margin-left: 10px;
   }
-  .mt16{
+
+  .mt16 {
     margin-top: 16px;
   }
-  .mbn{
-    margin-bottom: 0!important;
+
+  .mbn {
+    margin-bottom: 0 !important;
   }
-  .lh36{
+
+  .lh36 {
     line-height: 36px;
   }
-  .lh60{
+
+  .lh60 {
     line-height: 60px;
   }
-  .fs30{
+
+  .fs30 {
     font-size: 30px;
   }
-  .fs34{
+
+  .fs34 {
     font-size: 34px;
   }
-  .icon-color{
+
+  .icon-color {
     color: #4A90E2;
   }
-  .text-333{
+
+  .text-333 {
     color: #333333;
   }
-  .text-666{
+
+  .text-666 {
     color: #666666;
   }
-  .text-ccc{
+
+  .text-ccc {
     color: #CCCCCC;
   }
-  .text-primary{
+
+  .text-primary {
     color: #1969C6;
   }
-  .text-danger{
+
+  .text-danger {
     color: #FF0000;
   }
-  .text-bold{
+
+  .text-bold {
     font-weight: bold;
   }
 </style>

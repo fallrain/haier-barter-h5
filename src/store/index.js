@@ -4,6 +4,7 @@ import createPersistedState from '@/lib/vuexPlugin/persistedstate';
 import user from '@/store/user';
 import install from '@/store/install';
 import order from '@/store/order';
+import houseService from '@/store/houseService';
 
 Vue.use(Vuex);
 export default new Vuex.Store({
@@ -56,6 +57,7 @@ export default new Vuex.Store({
   modules: {
     user,
     install,
-    order
+    order,
+    houseService
   }
 });

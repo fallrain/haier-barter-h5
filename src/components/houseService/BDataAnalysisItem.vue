@@ -155,7 +155,6 @@ export default {
   },
   methods: {
     searchResult() {
-      debugger;
       if (this.startTime === '' || this.endTime === '') {
         return;
       }

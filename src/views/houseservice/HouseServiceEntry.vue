@@ -3,28 +3,28 @@
     <!--    头部-->
     <div class="houseService-header">
       <span @click="changeStep(1)" class="header-item" :class="{'active':current==1}">
-        <img src="@/assets/images/houseServicer/home_icons/icon_rhjh.png" class="header-item-img" />
+        <img src="@/assets/images/houseServicer/home_icons/icon_rhjh.png" class="header-item-img"/>
         <!-- <span class="tagNum">{{tagNum1}}</span> -->
         <p class="title">入户计划</p>
       </span>
       <span @click="changeStep(2)" class="header-item" :class="{'active':current==2}">
-        <img src="@/assets/images/houseServicer/home_icons/icon_yrh.png" />
+        <img src="@/assets/images/houseServicer/home_icons/icon_yrh.png"/>
         <!-- <span class="tagNum">{{tagNum2}}</span> -->
         <p class="title">已入户</p>
       </span>
       <span @click="changeStep(3)" class="header-item" :class="{'active':current==3}">
-        <img src="@/assets/images/houseServicer/home_icons/icon_rhgs.png" />
+        <img src="@/assets/images/houseServicer/home_icons/icon_rhgs.png"/>
         <!-- <span class="tagNum">{{tagNum3}}</span> -->
         <p class="title">入户故事</p>
       </span>
       <span @click="changeStep(4)" class="header-item" :class="{'active':current==4}">
-        <img src="@/assets/images/houseServicer/home_icons/icon_sjfx.png" />
+        <img src="@/assets/images/houseServicer/home_icons/icon_sjfx.png"/>
         <p class="title">数据分析</p>
       </span>
     </div>
-    <!--    内容-->
-    <!--    计划入户-->
-    <div  v-show="current === 1">
+    <!--内容-->
+    <!--计划入户-->
+    <div v-show="current === 1">
       <b-house-service-item
         @updatePlan="updatePlan"
         @changePlan="changePlan"
@@ -82,6 +82,13 @@ import {
   BHouseStoreItem
 } from '@/components/houseService';
 
+import {
+  mapMutations
+} from 'vuex';
+import {
+  HOUSE_SERVICE
+} from '../../store/mutationsTypes';
+
 export default {
   name: 'HouseServiceEntry',
   components: {
@@ -123,25 +130,29 @@ export default {
     };
   },
   computed: {},
-  mounted() {},
+  mounted() {
+  },
   activated() {
     this.getMyPlan(); // 入户计划列表查询
     this.getOtherPlan(); // 其他入户计划列表查询
     this.getMySuccessPlan(); // 查询已入户计划列表
     // this.dealAppraise();
-    this.postStoryList('','0'); // 查询入户故事列表
+    this.postStoryList('', '0'); // 查询入户故事列表
   },
   created() {
     this.userinfo = JSON.parse(localStorage.getItem('userinfo'));
   },
   methods: {
-    rhgsListAction(a,b) {
-      debugger ;
+    ...mapMutations([
+      HOUSE_SERVICE.UPDATE_PARTICIPANT
+    ]),
+    rhgsListAction(a, b) {
+      debugger;
       // 我的 全国
-      this.postStoryList(a,b);
+      this.postStoryList(a, b);
     },
     // 入户故事列表
-    postStoryList(a,b) {
+    postStoryList(a, b) {
       const data = {
         createdBy: a, // 创建故事的直销员id 我的
         sortType: b
@@ -218,6 +229,11 @@ export default {
     clickDetail(item) {
       // 进入入户详情
       this.currentItem = item;
+      // 更新随行参与人
+      this[HOUSE_SERVICE.UPDATE_PARTICIPANT]({
+        accompanyingId: item.accompanyingId || '',
+        accompanyingName: item.accompanyingName || ''
+      });
       this.$router.push({
         name: 'Houseservice.CompleteFamilyInfor',
         query: {

@@ -37,17 +37,17 @@
             </div>
           </div>
           <div class="content">
-<!--            <span class="keyword">用户价值:</span> <span class="value">{{item.userval}}</span>-->
+            <!--            <span class="keyword">用户价值:</span> <span class="value">{{item.userval}}</span>-->
             <span class="keyword">购买统计:</span>
             <span class="value">{{item.totalOrder}}次/{{item.totalQuantity}}个/￥{{item.totalAmount}}万</span>
           </div>
         </div>
       </div>
     </div>
-<!--    <div class="footer">-->
-<!--      <span>用户会员等级有问题?</span>-->
-<!--      <button class="btn" type="button">点击查看解决方法</button>-->
-<!--    </div>-->
+    <!--    <div class="footer">-->
+    <!--      <span>用户会员等级有问题?</span>-->
+    <!--      <button class="btn" type="button">点击查看解决方法</button>-->
+    <!--    </div>-->
     <md-dialog
       title="其他入户服务计划"
       :closable="false"
@@ -63,8 +63,19 @@
 
 <script>
 import {
-  Toast, Popup, PopupTitleBar, Button, Icon, Dialog
+  Button,
+  Dialog,
+  Icon,
+  Popup,
+  PopupTitleBar,
+  Toast
 } from 'mand-mobile';
+import {
+  mapMutations
+} from 'vuex';
+import {
+  HOUSE_SERVICE
+} from '../../store/mutationsTypes';
 
 export default {
   name: 'HouseServiceEntry',
@@ -80,8 +91,7 @@ export default {
     return {
       searchWord: '',
       // 用户列表
-      list: [
-      ],
+      list: [],
       item: {},
       slotDialog: {
         open: false,
@@ -111,16 +121,13 @@ export default {
       },
     };
   },
-  computed: {},
-  mounted() {
-
-  },
   activated() {
     this.queryCostumerList();
   },
-  created() {
-  },
   methods: {
+    ...mapMutations([
+      HOUSE_SERVICE.UPDATE_PARTICIPANT
+    ]),
     queryCostumerList() {
       const data = {
         customer: this.searchWord,
@@ -129,7 +136,7 @@ export default {
         groupType: 0,
         isExistUserId: 1
       };
-      // JSON.stringify(param)
+        // JSON.stringify(param)
       this.basicService.queryCustomerList(data, '').then((res) => {
         this.list = res.data.result;
         this.list.forEach((item, index) => {
@@ -146,6 +153,7 @@ export default {
     },
     addServicePlan(item) {
       this.item = item;
+      this[HOUSE_SERVICE.UPDATE_PARTICIPANT]({});
       this.$router.push({
         name: 'Houseservice.AddServiceUser',
         params: { choseInfo: this.item }
@@ -159,7 +167,8 @@ export default {
   .search-view {
     position: relative;
     padding: 22px;
-    .search-image{
+
+    .search-image {
       position: absolute;
       right: 46px;
       top: 36px;
@@ -167,6 +176,7 @@ export default {
       height: 35px;
     }
   }
+
   .input-class {
     width: 100%;
     background-color: white;
@@ -178,44 +188,53 @@ export default {
     font-size: 28px;
     padding-right: 50px !important;
   }
+
   .list-view {
     padding-bottom: 105px;
   }
-  .list-item{
+
+  .list-item {
     display: flex;
     background: #fff;
     border-bottom: 1px solid #dbdbdb;
     padding: 20px;
-    .img-style{
+
+    .img-style {
       width: 100px;
       height: 100px;
       border-radius: 50%;
-      display:inline;
-      img{
+      display: inline;
+
+      img {
         /*width: 100%;*/
         height: 100%;
       }
     }
-    .right-content{
+
+    .right-content {
 
     }
-    .item-name{
+
+    .item-name {
       font-size: 30px;
       color: #2f2f2f;
       width: 200px;
       margin-right: 20px;
     }
-    .taglist{
+
+    .taglist {
       padding-right: 30px;
       position: relative;
-      .btn-arrow{
+
+      .btn-arrow {
         position: absolute;
         right: 10px;
         top: 0px;
         color: #1969C6;
       }
     }
-    .tag{
+
+    .tag {
       float: left;
       font-size: 22px;
       color: #f1bd69;
@@ -224,19 +243,23 @@ export default {
       margin-right: 14px;
       margin-bottom: 20px;
     }
-    .content{
+
+    .content {
       font-size: 24px;
       color: #1969C6;
-      .keyword{
+
+      .keyword {
         margin-right: 20px;
         color: #333;
       }
-      .value{
+
+      .value {
         margin-right: 20px;
       }
     }
   }
-  .footer{
+
+  .footer {
     position: fixed;
     background: #DADADA;
     z-index: 100;
@@ -246,25 +269,30 @@ export default {
     width: 100%;
     padding-top: 22px;
     text-align: center;
-    span{
+
+    span {
       margin-right: 20px;
     }
   }
-  .btn{
+
+  .btn {
     font-size: 28px;
     background: #fff;
     padding: 11px 17px;
     color: #195cad;
-    border:1px solid rgba(25,105,198,1);
-    border-radius:26px;
+    border: 1px solid rgba(25, 105, 198, 1);
+    border-radius: 26px;
   }
-  .clear{
-    clear:both;
+
+  .clear {
+    clear: both;
   }
-  .of-h{
+
+  .of-h {
     overflow: hidden;
   }
-  .hide-height{
+
+  .hide-height {
     height: 50px;
   }
 </style>

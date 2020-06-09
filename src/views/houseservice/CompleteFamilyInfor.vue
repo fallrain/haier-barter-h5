@@ -4,14 +4,14 @@
     <div class="content-infor">
       <nav class="mt16">
         <ul>
-          <li :class="{'active':tabIndex==0}" @click="tabChange(0)">预约信息</li>
-          <li :class="{'active':tabIndex==1}" @click="tabChange(1)">住宅信息</li>
-          <li :class="{'active':tabIndex==2}" @click="tabChange(2)">家电产品</li>
+          <li :class="{'active':tabIndex===0}" @click="tabChange(0)">预约信息</li>
+          <li :class="{'active':tabIndex===1}" @click="tabChange(1)">住宅信息</li>
+          <li :class="{'active':tabIndex===2}" @click="tabChange(2)">家电产品</li>
         </ul>
       </nav>
       <div class="tab-show">
         <!-- 预约信息 -->
-        <div v-show="tabIndex==0" class="tab-item">
+        <div v-show="tabIndex===0" class="tab-item">
           <form class>
             <b-item class="br-b mt16" title="顾客信息:" :value="gukeInfo"></b-item>
             <b-item
@@ -101,7 +101,7 @@
         </div>
 
         <!-- 住宅信息 -->
-        <div v-show="tabIndex==1" class="tab-item">
+        <div v-show="tabIndex===1" class="tab-item">
           <b-item class="br-b mt16" title="顾客信息:" :value="gukeInfo"></b-item>
           <div class="addressInfor-item mt16 br-b">
             <label>小区名称</label>
@@ -225,7 +225,7 @@
           </div>
         </div>
         <!-- 家电产品 -->
-        <div v-show="tabIndex==2" class="tab-item">
+        <div v-show="tabIndex===2" class="tab-item">
           <b-item class="br-b mt16" title="顾客信息:" :value="gukeInfo"></b-item>
           <div class="products-total">
             <div class="total-item">
@@ -374,6 +374,14 @@ import {
 // eslint-disable-next-line no-unused-vars
 import addressData from '@/lib/address';
 
+import {
+  mapGetters,
+  mapMutations
+} from 'vuex';
+
+import {
+  HOUSE_SERVICE
+} from '@/store/mutationsTypes';
 
 export default {
   name: 'CompleteFamilyInfor',
@@ -501,7 +509,168 @@ export default {
       imgList: {}
     };
   },
+  created() {
+    this.addressData = addressData;
+    this.getServiceEle();
+    const clientHeight = document.documentElement.clientHeight || document.body.clientHeight;
+    window.onresize = function () {
+      const nowClientHeight = document.documentElement.clientHeight || document.body.clientHeight;
+      if (clientHeight - nowClientHeight > 60) {
+        // 因为ios有自带的底部高度
+        // 键盘弹出的事件处理
+        document.getElementById('apply').classList.add('focusState');
+      } else {
+        // 键盘收起的事件处理
+        document.getElementById('apply').classList.remove('focusState');
+      }
+    };
+    /* 获取字典数据 */
+    // 品牌类型
+    this.productService.commonTypeQuery('VISITSERVICE_BRAND').then((res) => {
+      if (res.code === 1) {
+        res.data.forEach((item) => {
+          item.name = item.itemName;
+          delete item.itemName;
+        });
+        this.BRANDList = res.data;
+      }
+    });
+    // 家庭住址类型字典
+    this.productService.commonTypeQuery('FAMILY-ITEM').then((res) => {
+      if (res.code === 1) {
+        // 统一数据key
+        res.data.forEach((item) => {
+          item.name = item.itemName;
+          delete item.itemName;
+        });
+        this.FAMILYList = res.data;
+      }
+    });
+    // 家庭户型字典
+    this.productService.commonTypeQuery('HOUSETYPE_ITEM').then((res) => {
+      if (res.code === 1) {
+        res.data.forEach((item) => {
+          item.name = item.itemName;
+          delete item.itemName;
+        });
+        this.HOUSETYPEList = res.data;
+      }
+    });
+    // 小区档次字典
+    this.productService.commonTypeQuery('GRADE_ITEM').then((res) => {
+      if (res.code === 1) {
+        // 统一数据key
+        res.data.forEach((item) => {
+          item.name = item.itemName;
+          delete item.itemName;
+        });
+        this.GRADEList = res.data;
+      }
+    });
+    // 产品类别字典
+    this.productGroupName = [
+      {
+        id: '1',
+        groupCode: 'BX',
+        groupName: '冰箱'
+      },
+      {
+        id: '2',
+        groupCode: 'XYJ',
+        groupName: '洗衣机'
+      },
+      {
+        id: '3',
+        groupCode: 'DS',
+        groupName: '电视'
+      },
+      {
+        id: '4',
+        groupCode: 'KT',
+        groupName: '空调'
+      },
+      {
+        id: '5',
+        groupCode: 'KX',
+        groupName: '烤箱'
+      },
+      {
+        id: '6',
+        groupCode: 'BG',
+        groupName: '冰柜'
+      },
+      {
+        id: '7',
+        groupCode: 'DN',
+        groupName: '电脑'
+      },
+      {
+        id: '8',
+        groupCode: 'RSQ',
+        groupName: '热水器'
+      },
+      {
+        id: '9',
+        groupCode: 'JSQ',
+        groupName: '净水器'
+      },
+      {
+        id: '10',
+        groupCode: 'XDG',
+        groupName: '消毒柜'
+      },
+      {
+        id: '11',
+        groupCode: 'RQZ',
+        groupName: '燃气灶'
+      },
+      {
+        id: '12',
+        groupCode: 'XWJ',
+        groupName: '洗碗机'
+      },
+      {
+        id: '13',
+        groupCode: 'YYJ',
+        groupName: '油烟机'
+      },
+      {
+        id: '14',
+        groupCode: 'SJ',
+        groupName: '手机'
+      },
+      {
+        id: '15',
+        groupCode: 'QT',
+        groupName: '其他'
+      }
+    ];
+    // 家庭结构字典
+    this.productService.commonTypeQuery('group_composition_code').then((res) => {
+      if (res.code === 1) {
+        const arr = [];
+        res.data.forEach((item) => {
+          arr.push(item.itemName);
+        });
+        this.familyTagList = arr;
+      }
+    });
+    if (this.$route.query.customerInfoId) {
+      // 台账过来的
+      this.isTaizhang = true;
+      this.tabIndex = this.$route.query.tabState;
+      this.customerInfoId = this.$route.query.customerInfoId;
+      this.customerId = this.$route.query.customerId;
+      this.customerInfo.userName = this.$route.query.userName;
+      this.customerInfo.userPhone = this.$route.query.userPhone;
+      this.getFamilyInfo();
+      // this.queryDetail(this.$route.query.customerInfoId);
+    }
+  },
   computed: {
+    ...mapGetters([
+      HOUSE_SERVICE.GET_PARTICIPANT
+    ]),
     gukeInfo() {
       const info = `${this.customerInfo.userName} ${this.customerInfo.userPhone}`;
       return info;
@@ -674,189 +843,16 @@ export default {
       // 查询客户地址列表
       this.queryCustomerAddressList();
     }
-    debugger;
-    if (localStorage.getItem('chooseJoinUsername')) {
-      this.customerInfo.accompanyingName = localStorage.getItem('chooseJoinUsername');
-      this.customerInfo.accompanyingId = localStorage.getItem('chooseJoinUserid');
-    }
-  },
-  beforeRouteLeave(to, from, next) {
-    localStorage.removeItem('chooseJoinUsername');
-    localStorage.removeItem('chooseJoinUserid');
-    next();// 必须要有这个，否则无法跳转
-  },
-  mounted() {
-    // 当前页面挂载的时候调用 返回键的监听方法
-    this.listeningBack();
-  },
-  created() {
-    this.addressData = addressData;
-    this.getServiceEle();
-    const clientHeight = document.documentElement.clientHeight || document.body.clientHeight;
-    window.onresize = function () {
-      const nowClientHeight = document.documentElement.clientHeight || document.body.clientHeight;
-      if (clientHeight - nowClientHeight > 60) {
-        // 因为ios有自带的底部高度
-        // 键盘弹出的事件处理
-        document.getElementById('apply').classList.add('focusState');
-      } else {
-        // 键盘收起的事件处理
-        document.getElementById('apply').classList.remove('focusState');
-      }
-    };
-    /* 获取字典数据 */
-    // 品牌类型
-    this.productService.commonTypeQuery('VISITSERVICE_BRAND').then((res) => {
-      if (res.code === 1) {
-        res.data.forEach((item) => {
-          item.name = item.itemName;
-          delete item.itemName;
-        });
-        this.BRANDList = res.data;
-      }
-    });
-    // 家庭住址类型字典
-    this.productService.commonTypeQuery('FAMILY-ITEM').then((res) => {
-      if (res.code === 1) {
-        // 统一数据key
-        res.data.forEach((item) => {
-          item.name = item.itemName;
-          delete item.itemName;
-        });
-        this.FAMILYList = res.data;
-      }
-    });
-    // 家庭户型字典
-    this.productService.commonTypeQuery('HOUSETYPE_ITEM').then((res) => {
-      if (res.code === 1) {
-        res.data.forEach((item) => {
-          item.name = item.itemName;
-          delete item.itemName;
-        });
-        this.HOUSETYPEList = res.data;
-      }
-    });
-    // 小区档次字典
-    this.productService.commonTypeQuery('GRADE_ITEM').then((res) => {
-      if (res.code === 1) {
-        // 统一数据key
-        res.data.forEach((item) => {
-          item.name = item.itemName;
-          delete item.itemName;
-        });
-        this.GRADEList = res.data;
-      }
-    });
-    // 产品类别字典
-    this.productGroupName = [
-      {
-        id: '1',
-        groupCode: 'BX',
-        groupName: '冰箱'
-      },
-      {
-        id: '2',
-        groupCode: 'XYJ',
-        groupName: '洗衣机'
-      },
-      {
-        id: '3',
-        groupCode: 'DS',
-        groupName: '电视'
-      },
-      {
-        id: '4',
-        groupCode: 'KT',
-        groupName: '空调'
-      },
-      {
-        id: '5',
-        groupCode: 'KX',
-        groupName: '烤箱'
-      },
-      {
-        id: '6',
-        groupCode: 'BG',
-        groupName: '冰柜'
-      },
-      {
-        id: '7',
-        groupCode: 'DN',
-        groupName: '电脑'
-      },
-      {
-        id: '8',
-        groupCode: 'RSQ',
-        groupName: '热水器'
-      },
-      {
-        id: '9',
-        groupCode: 'JSQ',
-        groupName: '净水器'
-      },
-      {
-        id: '10',
-        groupCode: 'XDG',
-        groupName: '消毒柜'
-      },
-      {
-        id: '11',
-        groupCode: 'RQZ',
-        groupName: '燃气灶'
-      },
-      {
-        id: '12',
-        groupCode: 'XWJ',
-        groupName: '洗碗机'
-      },
-      {
-        id: '13',
-        groupCode: 'YYJ',
-        groupName: '油烟机'
-      },
-      {
-        id: '14',
-        groupCode: 'SJ',
-        groupName: '手机'
-      },
-      {
-        id: '15',
-        groupCode: 'QT',
-        groupName: '其他'
-      }
-    ];
-    // 家庭结构字典
-    this.productService.commonTypeQuery('group_composition_code').then((res) => {
-      if (res.code === 1) {
-        const arr = [];
-        res.data.forEach((item) => {
-          arr.push(item.itemName);
-        });
-        this.familyTagList = arr;
-      }
-    });
-    if (this.$route.query.customerInfoId) {
-      // 台账过来的
-      this.isTaizhang = true;
-      this.tabIndex = this.$route.query.tabState;
-      this.customerInfoId = this.$route.query.customerInfoId;
-      this.customerId = this.$route.query.customerId;
-      this.customerInfo.userName = this.$route.query.userName;
-      this.customerInfo.userPhone = this.$route.query.userPhone;
-      this.getFamilyInfo();
-      // this.queryDetail(this.$route.query.customerInfoId);
+    // 随行参与人
+    if (this[HOUSE_SERVICE.GET_PARTICIPANT]) {
+      this.customerInfo.accompanyingName = this[HOUSE_SERVICE.GET_PARTICIPANT].accompanyingName || '';
+      this.customerInfo.accompanyingId = this[HOUSE_SERVICE.GET_PARTICIPANT].accompanyingId || '';
     }
   },
   methods: {
-    // 监听返回键
-    listeningBack() {
-      const that = this; // window.onpopstate方法指向window,所以要储存一下当前的vue实例
-      const route = '上一页'; // 根据业务逻辑的上一页决定
-      window.onpopstate = function () {
-        localStorage.removeItem('chooseJoinUsername');
-        localStorage.removeItem('chooseJoinUserid');
-      };
-    },
+    ...mapMutations([
+      HOUSE_SERVICE.UPDATE_PARTICIPANT
+    ]),
     addAddress() {
       // 添加新地址
       this.region = 'add';
@@ -1015,7 +1011,6 @@ export default {
     getFamilyInfo() {
       // 查询家庭成员信息
       this.basicService.queryFamilyInfo(this.customerInfoId).then((res) => {
-        debugger;
         if (res.code === 1) {
           this.familyCompleteInfo = res.data;
           this.familyCompleteInfo.familyType = `${this.familyCompleteInfo.familyType}`;
@@ -1289,6 +1284,9 @@ export default {
     }
   },
   beforeRouteLeave(to, from, next) {
+    localStorage.removeItem('chooseJoinUsername');
+    localStorage.removeItem('chooseJoinUserid');
+
     if (to.name === 'Houseservice.AddNewProduct') {
       const obj = { customerInfo: this.customerInfo };
       to.query.customerInfo = JSON.stringify(obj);

@@ -2,7 +2,7 @@
   <div>
     <!--    头部用户基本信息-->
     <header>
-      <img src="@/assets/images/houseServicer/head.png" alt />
+      <img src="@/assets/images/houseServicer/head.png" alt/>
       <div class="right-content">
         <div class="user-info">
           <div>
@@ -28,7 +28,7 @@
             @click="checkhistoryList"
           >查看该用户历史入户服务资料</span>
         </div>
-        <div>2、只创建计划后执行的入户服务才记入考核</div>
+        <div>2、创建计划并入户服务才记入考核</div>
       </div>
       <form class>
         <div class="form-title text-bold">入户服务计划详情</div>
@@ -50,7 +50,7 @@
               :pattern="pattern"
               v-model="customerInfo.serviceTime"
               :custom-types="['yyyy', 'MM', 'dd', 'hh']"
-              :unit-text = "['年', '月', '日', '时']"
+              :unit-text="['年', '月', '日', '时']"
               :min-date="new Date()"
             ></b-date-picker>
           </template>
@@ -156,7 +156,7 @@
         </div>
 
         <div class="close-btn" @click="closeMask">
-          <img class="zanclass" src="@/assets/images/houseServicer/ruhulistIcon.png" />
+          <img class="zanclass" src="@/assets/images/houseServicer/ruhulistIcon.png"/>
         </div>
       </div>
     </div>
@@ -165,7 +165,12 @@
 
 <script>
 import {
-  Toast, Popup, PopupTitleBar, Button, Icon, Switch
+  Button,
+  Icon,
+  Popup,
+  PopupTitleBar,
+  Switch,
+  Toast
 } from 'mand-mobile';
 
 import {
@@ -175,6 +180,15 @@ import {
   BPopCheckList
 } from '@/components/form';
 import addressData from '@/lib/address';
+
+import {
+  mapGetters,
+  mapMutations
+} from 'vuex';
+
+import {
+  HOUSE_SERVICE
+} from '@/store/mutationsTypes';
 
 export default {
   name: 'AddServiceUser',
@@ -243,6 +257,9 @@ export default {
     };
   },
   computed: {
+    ...mapGetters([
+      HOUSE_SERVICE.GET_PARTICIPANT
+    ]),
     tagName() {
       const that = this;
       if (this.tag) {
@@ -273,10 +290,6 @@ export default {
       }
       return '';
     }
-  },
-  mounted() {
-    // 当前页面挂载的时候调用 返回键的监听方法
-    this.listeningBack();
   },
   activated() {
     if (this.$route.params.choseInfo) {
@@ -328,19 +341,19 @@ export default {
       });
       // 查询入户服务礼品卡券
       /* this.houseService.getCanBeIssuedRights({
-        userId: this.customerInfo.userId,
-        type: 2
-      }).then((res) => {
-        if (res.code === '200') {
-          res.data.forEach((item) => {
-            const name = `${item.cardTypeName} &nbsp; <span class="text-warning fs20">${item.rightsList[0].residualNum}</span>`;
-            this.tagList1.push({
-              id: item.rightsList[0].id,
-              name: name
-            })
-          });
-        }
-      }); */
+          userId: this.customerInfo.userId,
+          type: 2
+        }).then((res) => {
+          if (res.code === '200') {
+            res.data.forEach((item) => {
+              const name = `${item.cardTypeName} &nbsp; <span class="text-warning fs20">${item.rightsList[0].residualNum}</span>`;
+              this.tagList1.push({
+                id: item.rightsList[0].id,
+                name: name
+              })
+            });
+          }
+        }); */
     }
     // 修改计划
     if (this.$route.params.customerInfo) {
@@ -394,28 +407,21 @@ export default {
       // 查询客户地址列表
       this.queryCustomerAddressList();
     }
-    this.customerInfo.accompanyingName = localStorage.getItem(
-      'chooseJoinUsername'
-    );
-    this.customerInfo.accompanyingId = localStorage.getItem('chooseJoinUserid');
-  },
-  beforeRouteLeave(to, from, next) {
-    next(); // 必须要有这个，否则无法跳转
+
+    // 随行参与人
+    if (this[HOUSE_SERVICE.GET_PARTICIPANT]) {
+      this.customerInfo.accompanyingName = this[HOUSE_SERVICE.GET_PARTICIPANT].accompanyingName || '';
+      this.customerInfo.accompanyingId = this[HOUSE_SERVICE.GET_PARTICIPANT].accompanyingId || '';
+    }
   },
   created() {
     this.addressData = addressData;
     this.getServiceEle();
   },
   methods: {
-    // 监听返回键
-    listeningBack() {
-      const that = this; // window.onpopstate方法指向window,所以要储存一下当前的vue实例
-      const route = '上一页'; // 根据业务逻辑的上一页决定
-      window.onpopstate = function () {
-        localStorage.removeItem('chooseJoinUsername');
-        localStorage.removeItem('chooseJoinUserid');
-      };
-    },
+    ...mapMutations([
+      HOUSE_SERVICE.UPDATE_PARTICIPANT
+    ]),
     closeMask() {
       this.showMask = false;
     },
@@ -570,9 +576,18 @@ export default {
     // 查询 入户服务场景 数据字典
     getServiceEle() {
       const data = [
-        { id: 1, name: '购买后指导家电使用' },
-        { id: 2, name: '用户关怀（上门清洗保养）' },
-        { id: 3, name: '未购买用户上门测量' }
+        {
+          id: 1,
+          name: '购买后指导家电使用'
+        },
+        {
+          id: 2,
+          name: '用户关怀（上门清洗保养）'
+        },
+        {
+          id: 3,
+          name: '未购买用户上门测量'
+        }
       ];
       this.tagList = data;
     },
@@ -606,28 +621,28 @@ export default {
     dealSave() {
       if (
         this.customerInfo.servicescape === undefined
-        || this.customerInfo.servicescape === ''
+          || this.customerInfo.servicescape === ''
       ) {
         Toast.failed('入户服务场景不能为空');
         return;
       }
       if (
         this.customerInfo.serviceTime === undefined
-        || this.customerInfo.serviceTime === ''
+          || this.customerInfo.serviceTime === ''
       ) {
         Toast.failed('计划服务时间不能为空');
         return;
       }
       if (
         this.customerInfo.servicerName === undefined
-        || this.customerInfo.servicerName === ''
+          || this.customerInfo.servicerName === ''
       ) {
         Toast.failed('服务人不能为空');
         return;
       }
       if (
         this.customerInfo.serviceAddress === undefined
-        || this.customerInfo.serviceAddress === ''
+          || this.customerInfo.serviceAddress === ''
       ) {
         Toast.failed('入户服务地址不能为空');
         return;
@@ -688,7 +703,7 @@ export default {
           topEndTime: endDate,
           topStartTime: ''
         };
-        // eslint-disable-next-line default-case
+          // eslint-disable-next-line default-case
         switch (this.activeOffset) {
           case '0':
             tipInfo.topStartTime = this.getTipTime(3, 'd');
@@ -745,269 +760,326 @@ export default {
 };
 </script>
 <style lang="scss">
-header {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  height: 191px;
-  background: #fff;
-  padding: 27px 24px;
-  img {
-    width: 144px;
-    height: 144px;
-    border-radius: 50%;
-  }
-  .right-content {
-    flex-grow: 1;
-    padding: 4px 0 0 26px;
-    .user-info {
-      display: flex;
-      justify-content: space-between;
-      span:nth-child(1) {
-        font-size: 30px;
-        color: #333;
-        margin-right: 30px;
-      }
-      span:nth-child(2) {
-        font-size: 28px;
-        color: #999999;
-      }
-      span:nth-child(3) {
-        font-size: 28px;
-        color: #999999;
-      }
-      .mobile {
-        height: 48px;
-        line-height: 48px;
-        background: #4a90e2;
-        border-radius: 24px;
-        padding: 0 24px 0 60px;
-        color: #fff;
-        position: relative;
-        span {
+  header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: 191px;
+    background: #fff;
+    padding: 27px 24px;
+
+    img {
+      width: 144px;
+      height: 144px;
+      border-radius: 50%;
+    }
+
+    .right-content {
+      flex-grow: 1;
+      padding: 4px 0 0 26px;
+
+      .user-info {
+        display: flex;
+        justify-content: space-between;
+
+        span:nth-child(1) {
+          font-size: 30px;
+          color: #333;
+          margin-right: 30px;
+        }
+
+        span:nth-child(2) {
+          font-size: 28px;
+          color: #999999;
+        }
+
+        span:nth-child(3) {
+          font-size: 28px;
+          color: #999999;
+        }
+
+        .mobile {
+          height: 48px;
+          line-height: 48px;
+          background: #4a90e2;
+          border-radius: 24px;
+          padding: 0 24px 0 60px;
           color: #fff;
-          position: absolute;
-          left: 20px;
-          top: 3px;
+          position: relative;
+
+          span {
+            color: #fff;
+            position: absolute;
+            left: 20px;
+            top: 3px;
+          }
         }
       }
     }
   }
-}
-.cue {
-  font-size: 24px;
-  line-height: 36px;
-  padding: 24px 25px;
-}
-form {
-  .form-title {
-    margin-left: 25px;
+
+  .cue {
+    font-size: 24px;
+    line-height: 36px;
+    padding: 24px 25px;
   }
-  .hourseService-date {
-    width: 320px;
-    color: #999;
-    font-size: 28px;
-    .b-date-picker-ipt {
-      border: none !important;
+
+  form {
+    .form-title {
+      margin-left: 25px;
     }
-    .iconfont {
-      display: none;
+
+    .hourseService-date {
+      width: 320px;
+      color: #999;
+      font-size: 28px;
+
+      .b-date-picker-ipt {
+        border: none !important;
+      }
+
+      .iconfont {
+        display: none;
+      }
     }
-  }
-  .icon-dingwei {
-    color: #1969c6 !important;
-    font-size: 5.333vw !important;
-  }
-  .address-item {
-    height: 74px;
-    line-height: 74px;
-    background: #fff;
-    font-size: 28px;
-    padding-left: 24px;
-    padding-right: 24px;
-    display: flex;
-    justify-content: space-between;
-    .address-form-item {
-      input {
-        width: 470px;
-        text-align: right;
+
+    .icon-dingwei {
+      color: #1969c6 !important;
+      font-size: 5.333vw !important;
+    }
+
+    .address-item {
+      height: 74px;
+      line-height: 74px;
+      background: #fff;
+      font-size: 28px;
+      padding-left: 24px;
+      padding-right: 24px;
+      display: flex;
+      justify-content: space-between;
+
+      .address-form-item {
+        input {
+          width: 470px;
+          text-align: right;
+          font-size: 28px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          border: none;
+        }
+      }
+    }
+
+    .join-person templet {
+      span:nth-child(1) {
+        color: #999999;
+        margin-right: 10px;
+      }
+
+      span:nth-child(2) {
+        color: #4a90e2;
+        font-size: 30px;
+      }
+    }
+
+    .choosedProduces {
+      padding: 24px;
+
+      span:nth-child(1) {
+        margin-right: 13px;
+      }
+
+      .product-item {
         font-size: 28px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        color: #333;
+      }
+    }
+
+    .remarks {
+      margin-top: 24px;
+      background: #fff;
+      color: #666;
+
+      div {
+      }
+
+      padding: 24px 23px 24px 28px;
+
+      textarea {
+        line-height: 33px;
+        margin-top: 24px;
+        font-size: 28px;
         border: none;
       }
     }
-  }
-  .join-person templet {
-    span:nth-child(1) {
-      color: #999999;
-      margin-right: 10px;
+
+    .b-date-picker-ipt {
+      text-align: right;
+      padding: 0;
+
+      span {
+        width: 100%;
+      }
     }
-    span:nth-child(2) {
-      color: #4a90e2;
+  }
+
+  footer {
+    padding: 24px;
+
+    .md-example-section {
+      display: flex;
+      justify-content: space-between;
+
+      button {
+        width: 48%;
+        height: 84px;
+      }
+    }
+  }
+
+  .rows {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .tag-style {
+    padding: 5px 10px;
+    background: #eee;
+    color: #333;
+    border-radius: 8px;
+    margin-right: 16px;
+  }
+
+  .tag-style.active {
+    background: #2f86f6;
+    color: #fff;
+  }
+
+  .bg-white {
+    background: #fff;
+  }
+
+  .p24 {
+    padding: 24px;
+  }
+
+  .br-b {
+    border-bottom: 1px solid #d0d0d0;
+  }
+
+  .mt2 {
+    margin-top: 2px;
+  }
+
+  .ml10 {
+    margin-left: 10px;
+  }
+
+  .mbn {
+    margin-bottom: 0 !important;
+  }
+
+  .fs20 {
+    font-size: 20px;
+  }
+
+  .fs28 {
+    font-size: 28px;
+  }
+
+  .fs34 {
+    font-size: 34px;
+  }
+
+  .icon-color {
+    color: #4a90e2;
+  }
+
+  .text-333 {
+    color: #333333;
+  }
+
+  .text-666 {
+    color: #666666;
+  }
+
+  .text-ccc {
+    color: #cccccc;
+  }
+
+  .text-warning {
+    color: #f5a623;
+  }
+
+  .text-primary {
+    color: #1969c6;
+  }
+
+  .text-bold {
+    font-weight: bold;
+  }
+
+  .dialog {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 9999;
+
+    .dialog-container {
+      width: 689px;
+      height: 719px;
+      background: #ffffff;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 8px;
+      position: relative;
+      padding-top: 90px;
+
+    }
+
+    .listClass {
+      overflow-y: auto;
+      padding: 15px;
+      width: 689px;
+      height: 619px;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 26px;
+      right: 26px;
+
+      cursor: pointer;
+
+      &:hover {
+        font-weight: 600;
+      }
+
+      img {
+        width: 30px;
+        height: 30px;
+      }
+    }
+
+    .leftClass {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .rowClass {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      height: 120px;
+      border-bottom: 1px solid #eeeeee;
+      align-items: center;
       font-size: 30px;
     }
   }
-  .choosedProduces {
-    padding: 24px;
-    span:nth-child(1) {
-      margin-right: 13px;
-    }
-    .product-item {
-      font-size: 28px;
-      color: #333;
-    }
-  }
-  .remarks {
-    margin-top: 24px;
-    background: #fff;
-    color: #666;
-    div {
-    }
-    padding: 24px 23px 24px 28px;
-    textarea {
-      line-height: 33px;
-      margin-top: 24px;
-      font-size: 28px;
-      border: none;
-    }
-  }
-  .b-date-picker-ipt {
-    text-align: right;
-    padding: 0;
-    span {
-      width: 100%;
-    }
-  }
-}
-footer {
-  padding: 24px;
-  .md-example-section {
-    display: flex;
-    justify-content: space-between;
-    button {
-      width: 48%;
-      height: 84px;
-    }
-  }
-}
-.rows {
-  display: flex;
-  justify-content: space-between;
-}
-.tag-style {
-  padding: 5px 10px;
-  background: #eee;
-  color: #333;
-  border-radius: 8px;
-  margin-right: 16px;
-}
-.tag-style.active {
-  background: #2f86f6;
-  color: #fff;
-}
-.bg-white {
-  background: #fff;
-}
-.p24 {
-  padding: 24px;
-}
-.br-b {
-  border-bottom: 1px solid #d0d0d0;
-}
-.mt2 {
-  margin-top: 2px;
-}
-.ml10 {
-  margin-left: 10px;
-}
-.mbn {
-  margin-bottom: 0 !important;
-}
-.fs20 {
-  font-size: 20px;
-}
-.fs28 {
-  font-size: 28px;
-}
-.fs34 {
-  font-size: 34px;
-}
-.icon-color {
-  color: #4a90e2;
-}
-.text-333 {
-  color: #333333;
-}
-.text-666 {
-  color: #666666;
-}
-.text-ccc {
-  color: #cccccc;
-}
-.text-warning {
-  color: #f5a623;
-}
-.text-primary {
-  color: #1969c6;
-}
-.text-bold {
-  font-weight: bold;
-}
-.dialog {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 9999;
-  .dialog-container {
-    width: 689px;
-    height: 719px;
-    background: #ffffff;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 8px;
-    position: relative;
-    padding-top: 90px;
-
-  }
-  .listClass{
-    overflow-y: auto;
-    padding: 15px;
-    width: 689px;
-    height: 619px;
-  }
-  .close-btn {
-    position: absolute;
-    top: 26px;
-    right: 26px;
-
-    cursor: pointer;
-    &:hover {
-      font-weight: 600;
-    }
-    img {
-      width: 30px;
-      height: 30px;
-    }
-  }
-  .leftClass {
-    display: flex;
-    flex-direction: column;
-  }
-  .rowClass {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    height: 120px;
-    border-bottom: 1px solid #eeeeee;
-    align-items: center;
-    font-size: 30px;
-  }
-}
 </style>
