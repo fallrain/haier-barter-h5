@@ -75,17 +75,17 @@ export default {
     /* 数据分析 */
     return axPostJson(urls.analysis, data, param);
   },
-  appraiseAdd(data, param) {
+  appraiseAdd(data) {
     /* 邀请评价 */
-    return axPostJson(urls.appraiseAdd, data, param);
+    return axPostJson(urls.appraiseAdd, data, { noToken: true });
   },
   sendWeiXinMsg(data, param) {
     /* 发送模板消息邀请评价 */
     return axPostJson(urls.sendWeiXinMsg, data, param);
   },
-  queryHistoryPlan(data, param) {
+  queryHistoryPlan(data) {
     /* 查询历史入户服务接口 */
-    return axPostJson(urls.queryHistoryPlan, data, param);
+    return axPostJson(urls.queryHistoryPlan, data);
   },
   queryByCondition(data, param) {
     /* 查询历史入户服务故事列表 */

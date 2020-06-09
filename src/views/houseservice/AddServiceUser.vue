@@ -66,7 +66,7 @@
           <!-- <div slot="left">
             <span>(选填)</span>
             <span class="icon iconfont icon-wenhao"></span>
-          </div>-->
+          </div> -->
         </b-item>
         <div class="bg-white p24 fs28">
           <div class="rows">
@@ -99,7 +99,7 @@
         <!-- <div class="rows br-b bg-white p24 mt16 fs28">
           <label>加入我的日程提醒</label>
           <md-switch v-model="isTip" />
-        </div>-->
+        </div> -->
         <div v-show="isTip" class="br-b bg-white p24 fs28">
           <span :class="[{'active':activeOffset==='0'},'tag-style']" @click="clickTag('0')">提前三天</span>
           <span :class="[{'active':activeOffset==='1'},'tag-style']" @click="clickTag('1')">提前一天</span>
@@ -279,22 +279,20 @@ export default {
     this.listeningBack();
   },
   activated() {
-    debugger;
-
-    if (this.$route.params.choosedInfo) {
+    if (this.$route.params.choseInfo) {
       this.productNames = [];
       this.productCodes = [];
       this.productCategory = [];
       this.productCategoryName = [];
       this.tag = [];
       this.tagList1 = [];
-      this.customerInfo.userName = this.$route.params.choosedInfo.username;
-      this.customerInfo.userId = this.$route.params.choosedInfo.userId;
-      this.customerInfo.userPhone = this.$route.params.choosedInfo.mobile;
-      // this.customerInfo.customerId = this.$route.params.choosedInfo.id;
-      this.customerInfo.servicerId = this.$route.params.choosedInfo.servicerId;
-      this.orderFollowId = this.$route.params.choosedInfo.orderFollowId;
-      this.usersex = this.$route.params.choosedInfo.sex;
+      this.customerInfo.userName = this.$route.params.choseInfo.username;
+      this.customerInfo.userId = this.$route.params.choseInfo.userId;
+      this.customerInfo.userPhone = this.$route.params.choseInfo.mobile;
+      // this.customerInfo.customerId = this.$route.params.choseInfo.id;
+      this.customerInfo.servicerId = this.$route.params.choseInfo.servicerId;
+      this.orderFollowId = this.$route.params.choseInfo.orderFollowId;
+      this.usersex = this.$route.params.choseInfo.sex;
       // this.title = this.createdType + this.customerInfo.username;
 
       // 查询默认地址
@@ -371,14 +369,14 @@ export default {
       // });
       if (
         this.customerInfo.productCodes !== ''
-        && this.customerInfo.productCodes !== null
+          && this.customerInfo.productCodes !== null
       ) {
         this.productNames = this.customerInfo.productNames.split(',');
         this.productCodes = this.customerInfo.productCodes.split(',');
       }
       if (
         this.customerInfo.productCategory !== ''
-        && this.customerInfo.productCategory !== null
+          && this.customerInfo.productCategory !== null
       ) {
         this.productCategory = this.customerInfo.productCategory.split(',');
         this.productCategoryName = this.customerInfo.productCategoryName.split(
@@ -402,8 +400,6 @@ export default {
     this.customerInfo.accompanyingId = localStorage.getItem('chooseJoinUserid');
   },
   beforeRouteLeave(to, from, next) {
-    debugger;
-
     next(); // 必须要有这个，否则无法跳转
   },
   created() {
@@ -425,20 +421,18 @@ export default {
     },
     // 查看该用户历史服务资料
     checkhistoryList() {
-      debugger;
+      const {
+        customerInfo
+      } = this;
       const data = {
-        servicerId: this.customerInfo.servicerId,
+        userId: customerInfo.userId,
         pageNum: '1',
-        pageSize: '100'
+        pageSize: '100',
       };
-      this.houseService.queryHistoryPlan(data, {}).then((res) => {
+      this.houseService.queryHistoryPlan(data).then((res) => {
         if (res.code === 1) {
           this.showMask = true;
-          debugger;
           this.queryHistoryList = res.data.result;
-          // res.data.result.forEach((item, index) => {
-          //    debugger
-          // });
         }
       });
     },
@@ -631,7 +625,6 @@ export default {
         Toast.failed('服务人不能为空');
         return;
       }
-      debugger;
       if (
         this.customerInfo.serviceAddress === undefined
         || this.customerInfo.serviceAddress === ''
@@ -719,7 +712,6 @@ export default {
           )
           .then((res) => {
             if (res.code === 1) {
-              debugger;
               this.$router.push({
                 name: 'Houseservice.HouseServiceEntry'
               });
@@ -982,8 +974,9 @@ footer {
     border-radius: 8px;
     position: relative;
     padding-top: 90px;
+
   }
-  .listClass {
+  .listClass{
     overflow-y: auto;
     padding: 15px;
     width: 689px;

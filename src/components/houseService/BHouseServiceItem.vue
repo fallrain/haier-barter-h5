@@ -1,6 +1,6 @@
 <template>
   <div class="houseServiceItemClass">
-   
+
     <div id="myPlan">
       <div class="rows header">
         <span class>我的入户计划</span>
@@ -12,7 +12,7 @@
         <div v-if="item.flag == 0">
           <div class="rows mb20">
             <span class="info">
-              <span class="key-color">购入户服务用户:</span>
+              <span class="key-color">服务用户:</span>
               <span class="value-color">{{item.userName}}</span>
             </span>
             <span class="deal">
@@ -115,7 +115,7 @@
         <div class="title">{{item.title}}</div>
         <div class="rows mb20">
           <span class="info">
-            <span class="key-color">购入户服务用户:</span>
+            <span class="key-color">服务用户:</span>
             <span class="value-color">{{item.userName}}</span>
           </span>
           <span class="deal">
@@ -157,27 +157,35 @@
         </div>
       </div>
     </div>
-      <div class="footerClass">
-      <img @click="addServiceUser()" class="ruhuaddclass"  src="@/assets/images/houseServicer/ruhuadd.png" />
+    <div class="bHouseServiceItem-add">
+      <i
+        class="iconfont icon-jia"
+        @click="addServiceUser()"
+      ></i>
     </div>
-   
+
     <md-dialog
       title="确认"
       :closable="true"
       v-model="basicDialog.open"
       :btns="basicDialog.btns"
-    >请确认是否要删除该入户计划？</md-dialog>
+    >请确认是否要删除该入户计划？
+    </md-dialog>
   </div>
 </template>
 
 
 <script>
 import {
-  Icon, Toast, PopupTitleBar, Button, Dialog
+  Button,
+  Dialog,
+  Icon,
+  PopupTitleBar,
+  Toast
 } from 'mand-mobile';
 
 export default {
-  name: '',
+  name: 'BHouseServiceItem',
   components: {
     [Icon.name]: Icon,
     [Toast.name]: Toast,
@@ -251,7 +259,10 @@ export default {
       // const query =
       this.$router.push({
         name: 'Houseservice.ChooseUser',
-        params: { test: {}, tag: 'test' }
+        params: {
+          test: {},
+          tag: 'test'
+        }
       });
     },
     clickMore() {
@@ -297,133 +308,174 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.houseServiceItemClass {
-  padding: 25px;
-  font-size: 28px;
-  // position: relative;
-}
-.panel-body {
-  background: #fff;
-  padding: 24px;
-  border-radius: 4px;
-  margin-bottom: 16px;
-}
-.btn-groups {
+  .houseServiceItemClass {
+    padding: 25px;
+    font-size: 28px;
+    // position: relative;
+  }
+
+  .panel-body {
+    background: #fff;
+    padding: 24px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+  }
+
+  .btn-groups {
   text-align: right;
-  button {
-    font-size: 24px;
-    margin-right: 25px;
-    border-radius: 3.333vw;
-    background: #fff;
-    padding: 0vw 1.5vw;
-    line-height: 6vw;
-    border: 1px solid #195cad;
-    color: #195cad;
+    button {
+      font-size: 24px;
+      margin-right: 25px;
+      border-radius: 3.333vw;
+      background: #fff;
+      padding: 0vw 1.5vw;
+      line-height: 6vw;
+      border: 1px solid #195cad;
+      color: #195cad;
+    }
+
+    .tel-style {
+      font-size: 24px;
+      margin-right: 25px;
+      border-radius: 3.333vw;
+      background: #fff;
+      padding: 0.7vw 1.5vw;
+      line-height: 6vw;
+      border: 1px solid #195cad;
+      color: #195cad;
+    }
   }
-  .tel-style {
-    font-size: 24px;
-    margin-right: 25px;
-    border-radius: 3.333vw;
-    background: #fff;
-    padding: 0.7vw 1.5vw;
-    line-height: 6vw;
-    border: 1px solid #195cad;
-    color: #195cad;
+
+  #otherPlan .title {
+    color: #353535;
+    font-size: 3.733vw;
+    width: 100%;
+    line-height: 72px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #d2d2d2;
   }
-}
-#otherPlan .title {
-  color: #353535;
-  font-size: 3.733vw;
-  width: 100%;
-  line-height: 72px;
-  margin-bottom: 20px;
-  border-bottom: 1px solid #d2d2d2;
-}
-.more-question {
-  text-align: center;
-  line-height: 40px;
-  font-size: 26px;
-  margin-bottom: 16px;
-  background: #fff;
-  color: #2f77cb;
-}
-.footerClass {
-   display: flex;
-   justify-content: center;
-   align-items: center;
-}
-.ruhuaddclass{
-  width: 118px;
-  height: 118px;
-}
-.key-color {
-  color: #8a8a8a;
-  margin-right: 20px;
-}
-.value-color {
-  color: #353535;
-}
-.rows {
-  display: flex;
-  justify-content: space-between;
-}
-.mb20 {
-  margin-bottom: 20px;
-}
-.pt2 {
-  padding-top: 2px;
-}
-.iconfont {
-  font-size: 28px;
-  color: #2f77cb;
-}
-.header {
-  color: #333;
-  margin-bottom: 24px;
-  .date {
+
+  .more-question {
+    text-align: center;
+    line-height: 40px;
+    font-size: 26px;
+    margin-bottom: 16px;
+    background: #fff;
     color: #2f77cb;
   }
-}
-// .md-example-section {
-//   display: flex;
-//   position: absolute;
-//   right: 10px;
-// }
-.text-warning {
-  color: #f5a623;
-}
-.text-primary {
-  color: #1969c6;
-}
-.type-list {
-  width: 400px;
-  overflow: hidden;
-  height: 100%;
-  color: #999;
-  transition: all 0.3s ease-in;
-  li {
-    margin-bottom: 10px;
+
+  .footerClass {
+   float: right;
   }
-}
-.hide-height {
-  height: 38px;
-}
-.text-666 {
-  color: #666;
-}
-.mr22 {
-  margin-right: 22px;
-}
-.mb15 {
-  margin-bottom: 15px;
-}
-.mn {
-  margin: 0px !important;
-}
-.ptn {
-  padding-top: 0px !important;
-}
-.bg-white {
-  background: #fff;
-}
+
+  .key-color {
+    color: #8a8a8a;
+    margin-right: 20px;
+  }
+
+  .value-color {
+    color: #353535;
+  }
+
+  .rows {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .mb20 {
+    margin-bottom: 20px;
+  }
+
+  .pt2 {
+    padding-top: 2px;
+  }
+
+  .iconfont {
+    font-size: 28px;
+    color: #2f77cb;
+  }
+
+  .header {
+    color: #333;
+    margin-bottom: 24px;
+
+    .date {
+      color: #2f77cb;
+    }
+  }
+
+  // .md-example-section {
+  //   display: flex;
+  //   position: absolute;
+  //   right: 10px;
+  // }
+  .text-warning {
+    color: #f5a623;
+  }
+
+  .text-primary {
+    color: #1969c6;
+  }
+
+  .type-list {
+    width: 400px;
+    overflow: hidden;
+    height: 100%;
+    color: #999;
+    transition: all 0.3s ease-in;
+
+    li {
+      margin-bottom: 10px;
+    }
+  }
+
+  .hide-height {
+    height: 38px;
+  }
+
+  .text-666 {
+    color: #666;
+  }
+
+  .mr22 {
+    margin-right: 22px;
+  }
+
+  .mb15 {
+    margin-bottom: 15px;
+  }
+
+  .mn {
+    margin: 0px !important;
+  }
+
+  .ptn {
+    padding-top: 0px !important;
+  }
+
+  .bg-white {
+    background: #fff;
+  }
+
+  .bHouseServiceItem-add {
+    width: 118px;
+    height: 118px;
+    line-height: 118px;
+    background: #fff;
+    border: 1px solid #C7C7C7;
+    border-radius: 50%;
+    text-align: center;
+    float: right;
+
+    .iconfont {
+      font-size: 60px;
+      color: #C7C7C7;
+    }
+
+    &:after {
+      content: '';
+      display: block;
+      clear: both;
+    }
+  }
 </style>

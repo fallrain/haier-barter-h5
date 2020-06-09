@@ -4,7 +4,7 @@
       您的满意，是我们前进的方向，请您根据实际感受，留下 您的反馈和建议吧~
     </div>
     <div class="evaluate-point">
-      <div class="evaluate-title">为陆梦飞的上门服务打分</div>
+      <div class="evaluate-title">为{{servicerName}}的上门服务打分</div>
       <div class="star-style">
         <div class="start-item" @click="clickStar(1)">
           <img v-show="customerInfo.score > 0" src="@/assets/images/houseServicer/star.png" alt="" class="">
@@ -55,13 +55,13 @@
 
 <script>
 import {
-  Toast, Button
+  Toast,
+  Button
 } from 'mand-mobile';
 
 export default {
   name: 'SearchProduct',
   components: {
-    Toast,
     [Button.name]: Button,
   },
   created() {
@@ -115,7 +115,7 @@ export default {
       }
       this.houseService.appraiseAdd({
         ...this.customerInfo
-      }, {}).then(res => res).then((res) => {
+      }).then(res => res).then((res) => {
         if (res.code === 1) {
           this.houseService.completeAppraise({
             planId: this.customerInfo.planId

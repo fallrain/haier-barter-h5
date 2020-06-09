@@ -26,20 +26,15 @@
 import {
   Toast
 } from 'mand-mobile';
-import {
-  BNoticeBar
-} from '@/components/form';
 
 import {
   BSearchInput
 } from '@/components/business';
 
 export default {
-  name: 'SearchProduct',
+  name: 'SearchAccompanying',
   components: {
-    BNoticeBar,
     BSearchInput,
-    Toast
   },
   created() {
   },
@@ -90,7 +85,6 @@ export default {
 
   },
   beforeRouteLeave(to, from, next) {
-    debugger;
     if (to.name === 'Houseservice.AddServiceUser') {
       to.params.accompanyingData = this.searchData;
     }

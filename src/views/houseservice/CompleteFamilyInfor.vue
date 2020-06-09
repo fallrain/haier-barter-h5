@@ -290,7 +290,7 @@
       </div>
     </div>
     <!--    底部按钮-->
-    <footer v-show="tabIndex == '1'">
+    <footer v-show="tabIndex === '1'">
       <template>
         <div class="md-example-child md-example-child-button md-example-child-button-3">
           <div class="md-example-section">
@@ -299,7 +299,7 @@
         </div>
       </template>
     </footer>
-    <footer v-show="tabIndex == '0'">
+    <footer v-show="tabIndex === '0'">
       <template>
         <div class="md-example-child md-example-child-button md-example-child-button-3">
           <div class="md-example-section-q">
@@ -704,7 +704,7 @@ export default {
     };
     /* 获取字典数据 */
     // 品牌类型
-    this.productService.commonTypeQuery('BRAND').then((res) => {
+    this.productService.commonTypeQuery('VISITSERVICE_BRAND').then((res) => {
       if (res.code === 1) {
         res.data.forEach((item) => {
           item.name = item.itemName;

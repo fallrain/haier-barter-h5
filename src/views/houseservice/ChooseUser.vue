@@ -97,13 +97,13 @@ export default {
             handler: () => {
               // Toast.info('继续');
               this.slotDialog.open = false;
-              const choosedInfo = {};
-              choosedInfo.name = this.item.name;
-              choosedInfo.tel = this.item.tel;
-              choosedInfo.sex = this.item.sex;
+              const choseInfo = {};
+              choseInfo.name = this.item.name;
+              choseInfo.tel = this.item.tel;
+              choseInfo.sex = this.item.sex;
               this.$router.push({
                 name: 'Houseservice.AddServiceUser',
-                params: { choosedInfo }
+                params: { choseInfo }
               });
             }
           },
@@ -146,10 +146,9 @@ export default {
     },
     addServicePlan(item) {
       this.item = item;
-      // this.slotDialog.open = true;
       this.$router.push({
         name: 'Houseservice.AddServiceUser',
-        params: { choosedInfo: this.item }
+        params: { choseInfo: this.item }
       });
     }
   },

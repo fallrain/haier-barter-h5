@@ -5,7 +5,7 @@
     </div>
     <div id="capture" class="content" v-html="message"></div>
     <div v-if="showSharebtn" class="shareClass" @click="shareImg">保存图片到相册</div>
-     <div class="popContainer" v-if="isShowPopContainer" @click="closeShare" style="z-index: 100000">
+    <div class="popContainer" v-if="isShowPopContainer" @click="closeShare" style="z-index: 100000">
       <img src="@/assets/images/activity/activity-share.png" alt="" class="activity-detail-share">
     </div>
   </div>
@@ -23,7 +23,8 @@ export default {
       isShowPopContainer: false,
     };
   },
-  created() {},
+  created() {
+  },
   activated() {
     const that = this;
     this.houseService
@@ -82,44 +83,54 @@ export default {
       });
     }
   },
-  mounted() {},
+  mounted() {
+  },
   watch: {}
 };
 </script>
 
 <style scoped lang="scss">
-.header {
-  display: flex;
-  flex-direction: column;
-  background: white;
-}
-.headerimg {
-  width: 100%;
-}
-.headTitle {
-  font-size: 40px;
-  font-weight: 500;
-}
-.iconClass {
-  width: 30px;
-  height: 30px;
-}
-.content img {
-  width: 100%;
-}
-.bottomClass {
-  display: flex;
-}
-.zanclass {
-  height: 29.65px;
-}
-.moreClass {
-  display: flex;
-}
-.shareClass{
-   float: right;
-   margin: 30px;
-}
+  .header {
+    display: flex;
+    flex-direction: column;
+    background: white;
+  }
+
+  .headerimg {
+    width: 100%;
+  }
+
+  .headTitle {
+    font-size: 40px;
+    font-weight: 500;
+  }
+
+  .iconClass {
+    width: 30px;
+    height: 30px;
+  }
+
+  .content img {
+    width: 100%;
+  }
+
+  .bottomClass {
+    display: flex;
+  }
+
+  .zanclass {
+    height: 29.65px;
+  }
+
+  .moreClass {
+    display: flex;
+  }
+
+  .shareClass {
+    float: right;
+    margin: 30px;
+  }
+
   .popContainer {
     position: fixed;
     top: 0;
@@ -128,7 +139,8 @@ export default {
     bottom: 0;
     background: rgba(0, 0, 0, 0.5);
   }
-    .activity-detail-share {
+
+  .activity-detail-share {
     position: fixed;
     right: 128px;
     width: 493px;

@@ -25,8 +25,8 @@
             <span class="value-color">{{item.userName}}</span>
           </span>
           <span class="deal">
-            <span class="text-warning" v-show="item.applianceFlag == 2">已邀请</span>
-            <span class="text-warning" v-show="item.applianceFlag == 1">已评价</span>
+            <span class="text-warning" v-show="item.appraiseFlag === 2">已邀请</span>
+            <span class="text-warning" v-show="item.appraiseFlag === 1">已评价</span>
             <span
               class="text-warning text-primary"
               v-show="item.applianceFlag == 0"

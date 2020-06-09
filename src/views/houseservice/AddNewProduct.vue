@@ -1,30 +1,29 @@
 <template xmlns:v-slot="">
   <div>
-<!--    头部用户基本信息-->
+    <!--    头部用户基本信息-->
     <header>
       <img src="@/assets/images/houseServicer/head.png" alt="">
       <div class="right-content">
         <div class="user-info">
           <div>
             <span class="">{{this.customerInfo.userName}}</span>
-            <span v-show="this.customerInfo.userSex == 0">先生</span>
-            <span v-show="this.customerInfo.userSex == 1">小姐</span>
+            <span v-show="this.customerInfo.userSex === 0">先生</span>
+            <span v-show="this.customerInfo.userSex === 1">小姐</span>
           </div>
           <div class="mobile">
             {{this.customerInfo.userPhone}}
             <span class="icon iconfont icon-dianhua"></span>
           </div>
         </div>
-<!--        <div class="focus-tag">-->
-<!--          <span class="focused">已关注海之友</span>-->
-<!--          <span class="focused">已关注卡萨帝</span>-->
-<!--        </div>-->
+        <!--        <div class="focus-tag">-->
+        <!--          <span class="focused">已关注海之友</span>-->
+        <!--          <span class="focused">已关注卡萨帝</span>-->
+        <!--        </div>-->
       </div>
     </header>
 <!--    表单信息-->
     <div class="content-infor">
       <div class="fs30 mt24 mb22 ml25 text-333">入户服务计划详情</div>
-
       <b-item
         class="br-b text-666 pinpai"
         title="品牌"
@@ -33,14 +32,6 @@
         :arrow="true"
         @rightClick="chooseBrand()"
       >
-     <!-- <div class="pinpaitmpl" slot="right">
-        <input class="text-333 br-n fs28"
-                 type="number"
-                 placeholder="请输入产"
-                 v-model="productInfo.price"
-          >
-      </div> -->
-
       </b-item>
       <b-item
         class="br-b text-666"
@@ -178,14 +169,22 @@
 
 <script>
 import {
-  Toast, Popup, PopupTitleBar, Button, Icon, Radio, Field, FieldItem, Tag, Dialog
+  Button,
+  Dialog,
+  Field,
+  FieldItem,
+  Icon,
+  Popup,
+  PopupTitleBar,
+  Radio,
+  Tag,
+  Toast
 } from 'mand-mobile';
 import {
   BDatePicker,
   BItem,
   BPopCheckList,
   BRadioItem,
-  BUpload,
   BWxUpload
 } from '@/components/form';
 
@@ -195,7 +194,6 @@ export default {
     [Toast.name]: Toast,
     BDatePicker,
     BItem,
-    BUpload,
     BPopCheckList,
     BRadioItem,
     BWxUpload,
@@ -303,7 +301,6 @@ export default {
   activated() {
   },
   created() {
-    debugger;
     this.headers.Authorization = `Bearer  ${localStorage.getItem('acces_token')}`;
     if (this.$route.params.customerInfo) {
       this.customerInfo = this.$route.params.customerInfo;
@@ -492,7 +489,6 @@ export default {
     },
   },
   beforeRouteLeave(to, from, next) {
-    debugger;
     if (to.name === 'Houseservice.CompleteFamilyInfor') {
       to.query.tabState = 2;
       this.$destroy();

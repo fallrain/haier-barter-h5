@@ -68,14 +68,17 @@
 
 <script>
 import {
-  Toast, Popup, PopupTitleBar, Button, Icon
+  Button,
+  Icon,
+  Popup,
+  PopupTitleBar,
+  Toast
 } from 'mand-mobile';
 
 import {
-  BHouseServiceItem,
-  BFinishedItem,
-  BEvaluateItem,
   BDataAnalysisItem,
+  BFinishedItem,
+  BHouseServiceItem,
   BHouseStoreItem
 } from '@/components/houseService';
 
@@ -85,7 +88,6 @@ export default {
     [Toast.name]: Toast,
     BHouseServiceItem,
     BFinishedItem,
-    BEvaluateItem,
     BDataAnalysisItem,
     // eslint-disable-next-line vue/no-unused-components
     BHouseStoreItem,
@@ -127,19 +129,19 @@ export default {
     this.getOtherPlan(); // 其他入户计划列表查询
     this.getMySuccessPlan(); // 查询已入户计划列表
     // this.dealAppraise();
-    this.postStoryList('', '0'); // 查询入户故事列表
+    this.postStoryList('','0'); // 查询入户故事列表
   },
   created() {
     this.userinfo = JSON.parse(localStorage.getItem('userinfo'));
   },
   methods: {
-    rhgsListAction(a, b) {
-      debugger;
+    rhgsListAction(a,b) {
+      debugger ;
       // 我的 全国
-      this.postStoryList(a, b);
+      this.postStoryList(a,b);
     },
     // 入户故事列表
-    postStoryList(a, b) {
+    postStoryList(a,b) {
       const data = {
         createdBy: a, // 创建故事的直销员id 我的
         sortType: b
@@ -194,17 +196,18 @@ export default {
         pageNum: '1',
         pageSize: '10'
       };
-      // param.servicerId = this.userinfo.hmcid;
-      this.houseService.queryOtherPlanServiceList(param, '').then((res) => {
-        res.data.result.forEach((item, index) => {
-          res.data.result[index].arrowtag = false;
-          if (item.productNames !== '') {
-            res.data.result[index].dealproducts = item.productNames.split(',');
-          } else {
-            res.data.result[index].dealproducts = [];
-          }
-        });
-        this.otherPlanServices = res.data.result;
+      this.houseService.queryOtherPlanServiceList(param, '').then(({ code, data }) => {
+        if (code === 1 && data.result) {
+          data.result.forEach((item, index) => {
+            data.result[index].arrowtag = false;
+            if (item.productNames !== '') {
+              data.result[index].dealproducts = item.productNames.split(',');
+            } else {
+              data.result[index].dealproducts = [];
+            }
+          });
+          this.otherPlanServices = data.result;
+        }
       });
     },
     updatePlan() {
@@ -254,20 +257,20 @@ export default {
         pageSize: '200',
         searchContent: val // 搜索用
       };
-      this.houseService.querySuccessPlanList(data, {}).then((res) => {
-        if (res.code === 1) {
-          res.data.result.forEach((item, index) => {
-            res.data.result[index].arrowtag = false;
+      this.houseService.querySuccessPlanList(data, {}).then(({ code, data }) => {
+        if (code === 1) {
+          data.result.forEach((item, index) => {
+            data.result[index].arrowtag = false;
             if (item.productNames !== '') {
-              res.data.result[index].dealproducts = item.productNames.split(
+              data.result[index].dealproducts = item.productNames.split(
                 ','
               );
             } else {
-              res.data.result[index].dealproducts = [];
+              data.result[index].dealproducts = [];
             }
           });
-          this.mySuccessPlan = res.data.result;
-          this.tagNum2 = res.data.total;
+          this.mySuccessPlan = data.result;
+          this.tagNum2 = data.total;
         }
       });
     },
@@ -292,7 +295,6 @@ export default {
         });
     },
     dealAnalysis(obj) {
-      debugger;
       this.houseService
         .analysis({
           ...obj
@@ -331,51 +333,55 @@ export default {
 };
 </script>
 <style lang="scss">
-.houseService-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 180px;
-  background: #fff;
-  padding-left: 40px;
-  padding-right: 40px;
-}
-.header-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-}
-.header-item {
-  .title {
-    font: 12px;
-    margin-top: 10px;
-  }
-  .tagNum {
-    width: 40px;
-    height: 40px;
-    position: absolute;
-    background: red;
-    color: #fff;
+  .houseService-header {
     display: flex;
     align-items: center;
-    justify-content: center;
-    border-radius: 20px;
-    // font-size: 10px;
-    right: 10px;
-    top: -10px;
+    justify-content: space-between;
+    height: 180px;
+    background: #fff;
+    padding-left: 40px;
+    padding-right: 40px;
   }
-}
-.title {
-  font: 12px;
-}
-.header-item img {
-  width: 70px;
-  height: 70px;
-}
-.header-item.active {
+
+  .header-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+
+  .header-item {
+    .title {
+      margin-top: 10px;
+    }
+
+    .tagNum {
+      width: 40px;
+      height: 40px;
+      position: absolute;
+      background: red;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 20px;
+      // font-size: 10px;
+      right: 10px;
+      top: -10px;
+    }
+  }
+
   .title {
-    color: #1969c6;
   }
-}
+
+  .header-item img {
+    width: 70px;
+    height: 70px;
+  }
+
+  .header-item.active {
+    .title {
+      color: #1969c6;
+    }
+  }
 </style>
