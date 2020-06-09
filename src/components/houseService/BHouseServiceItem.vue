@@ -176,6 +176,7 @@
 
 
 <script>
+/* 此组件耦合度太大 */
 import {
   Button,
   Dialog,
@@ -446,36 +447,14 @@ export default {
   }
 
   .mn {
-    margin: 0px !important;
+    margin: 0 !important;
   }
 
   .ptn {
-    padding-top: 0px !important;
+    padding-top: 0 !important;
   }
 
   .bg-white {
     background: #fff;
-  }
-
-  .bHouseServiceItem-add {
-    width: 118px;
-    height: 118px;
-    line-height: 118px;
-    background: #fff;
-    border: 1px solid #C7C7C7;
-    border-radius: 50%;
-    text-align: center;
-    float: right;
-
-    .iconfont {
-      font-size: 60px;
-      color: #C7C7C7;
-    }
-
-    &:after {
-      content: '';
-      display: block;
-      clear: both;
-    }
   }
 </style>

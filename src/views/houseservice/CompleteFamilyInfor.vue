@@ -30,8 +30,8 @@
                   :defaultDate="customerInfo.serviceTime"
                   title="请选择日期"
                   :pattern="pattern"
-                 :custom-types="['yyyy', 'MM', 'dd', 'hh']"
-                  :unit-text = "['年', '月', '日', '时']"
+                  :custom-types="['yyyy', 'MM', 'dd', 'hh']"
+                  :unit-text="['年', '月', '日', '时']"
                   v-model="customerInfo.serviceTime"
                 ></b-date-picker>
               </template>
@@ -129,19 +129,19 @@
           <div class="addressInfor-item br-b leixClass">
             <label>类型</label>
             <div>
-              <md-radio name="1" v-model="familyCompleteInfo.familyType" label="城市" inline />
-              <md-radio name="0" v-model="familyCompleteInfo.familyType" label="农村" inline />
+              <md-radio name="1" v-model="familyCompleteInfo.familyType" label="城市" inline/>
+              <md-radio name="0" v-model="familyCompleteInfo.familyType" label="农村" inline/>
             </div>
           </div>
 
           <b-item
             class="br-b"
-             v-show="familyCompleteInfo.familyType==1"
+            v-show="familyCompleteInfo.familyType==1"
             title="小区档次"
             :value="houseAreaLevelName"
             :arrow="true"
             @rightClick="serviceScape(1)"
-            @arrowClick ="serviceScape(1)"
+            @arrowClick="serviceScape(1)"
           ></b-item>
           <!-- <div class="addressInfor-item br-b">
             <label>建筑面积</label>
@@ -163,7 +163,7 @@
             :value="houseTypeName"
             :arrow="true"
             @rightClick="serviceScape(2)"
-            @arrowClick ="serviceScape(2)"
+            @arrowClick="serviceScape(2)"
           ></b-item>
           <!-- <div class="addressInfor-item br-b">
             <label>均价</label>
@@ -254,8 +254,8 @@
             :key="index"
           >
             <!--            <img v-if="item.img" :src="item.img[0]">-->
-            <img v-if="imgList[item.id] !== '0'" :src="imgList[item.id]" />
-            <img v-else src="@/assets/images/houseServicer/no_img.png" />
+            <img v-if="imgList[item.id] !== '0'" :src="imgList[item.id]"/>
+            <img v-else src="@/assets/images/houseServicer/no_img.png"/>
             <div class="product-infor">
               <div class="infor-rows">
                 <span
@@ -285,7 +285,12 @@
               </div>
             </div>
           </div>
-          <div @click="addProduct" class="addProduct">+</div>
+          <div class="bHouseServiceItem-add completeFamilyInfor-add">
+            <i
+              class="iconfont icon-jia"
+              @click="addProduct"
+            ></i>
+          </div>
         </div>
       </div>
     </div>
@@ -339,25 +344,25 @@
       v-model="addressRelationV"
     ></b-pop-check-list>
     <md-dialog title="新建标签" :closable="true" v-model="basicDialog.open" :btns="basicDialog.btns">
-      <input type="text" class="dialog-input" v-model="addLabelValue" />
+      <input type="text" class="dialog-input" v-model="addLabelValue"/>
     </md-dialog>
   </div>
 </template>
 
 <script>
 import {
-  Toast,
+  Button,
+  Dialog,
+  Field,
+  FieldItem,
+  Icon,
   Popup,
   PopupTitleBar,
-  Button,
-  Icon,
-  Tabs,
-  TabPane,
-  Dialog,
-  Switch,
   Radio,
-  Field,
-  FieldItem
+  Switch,
+  TabPane,
+  Tabs,
+  Toast
 } from 'mand-mobile';
 
 import {
@@ -366,11 +371,8 @@ import {
   BPopAddressList,
   BPopCheckList
 } from '@/components/form';
-
 // eslint-disable-next-line no-unused-vars
 import addressData from '@/lib/address';
-
-import SearchAccompanying from './SearchAccompanying.vue';
 
 
 export default {
@@ -747,21 +749,81 @@ export default {
     });
     // 产品类别字典
     this.productGroupName = [
-      { id: '1', groupCode: 'BX', groupName: '冰箱' },
-      { id: '2', groupCode: 'XYJ', groupName: '洗衣机' },
-      { id: '3', groupCode: 'DS', groupName: '电视' },
-      { id: '4', groupCode: 'KT', groupName: '空调' },
-      { id: '5', groupCode: 'KX', groupName: '烤箱' },
-      { id: '6', groupCode: 'BG', groupName: '冰柜' },
-      { id: '7', groupCode: 'DN', groupName: '电脑' },
-      { id: '8', groupCode: 'RSQ', groupName: '热水器' },
-      { id: '9', groupCode: 'JSQ', groupName: '净水器' },
-      { id: '10', groupCode: 'XDG', groupName: '消毒柜' },
-      { id: '11', groupCode: 'RQZ', groupName: '燃气灶' },
-      { id: '12', groupCode: 'XWJ', groupName: '洗碗机' },
-      { id: '13', groupCode: 'YYJ', groupName: '油烟机' },
-      { id: '14', groupCode: 'SJ', groupName: '手机' },
-      { id: '15', groupCode: 'QT', groupName: '其他' }
+      {
+        id: '1',
+        groupCode: 'BX',
+        groupName: '冰箱'
+      },
+      {
+        id: '2',
+        groupCode: 'XYJ',
+        groupName: '洗衣机'
+      },
+      {
+        id: '3',
+        groupCode: 'DS',
+        groupName: '电视'
+      },
+      {
+        id: '4',
+        groupCode: 'KT',
+        groupName: '空调'
+      },
+      {
+        id: '5',
+        groupCode: 'KX',
+        groupName: '烤箱'
+      },
+      {
+        id: '6',
+        groupCode: 'BG',
+        groupName: '冰柜'
+      },
+      {
+        id: '7',
+        groupCode: 'DN',
+        groupName: '电脑'
+      },
+      {
+        id: '8',
+        groupCode: 'RSQ',
+        groupName: '热水器'
+      },
+      {
+        id: '9',
+        groupCode: 'JSQ',
+        groupName: '净水器'
+      },
+      {
+        id: '10',
+        groupCode: 'XDG',
+        groupName: '消毒柜'
+      },
+      {
+        id: '11',
+        groupCode: 'RQZ',
+        groupName: '燃气灶'
+      },
+      {
+        id: '12',
+        groupCode: 'XWJ',
+        groupName: '洗碗机'
+      },
+      {
+        id: '13',
+        groupCode: 'YYJ',
+        groupName: '油烟机'
+      },
+      {
+        id: '14',
+        groupCode: 'SJ',
+        groupName: '手机'
+      },
+      {
+        id: '15',
+        groupCode: 'QT',
+        groupName: '其他'
+      }
     ];
     // 家庭结构字典
     this.productService.commonTypeQuery('group_composition_code').then((res) => {
@@ -843,9 +905,18 @@ export default {
     // 查询 入户服务场景 数据字典
     getServiceEle() {
       const data = [
-        { id: 1, name: '购买后指导家电使用' },
-        { id: 2, name: '用户关怀（上门清洗保养）' },
-        { id: 3, name: '未购买用户上门测量' }
+        {
+          id: 1,
+          name: '购买后指导家电使用'
+        },
+        {
+          id: 2,
+          name: '用户关怀（上门清洗保养）'
+        },
+        {
+          id: 3,
+          name: '未购买用户上门测量'
+        }
       ];
       this.tagList = data;
     },
@@ -890,14 +961,14 @@ export default {
     inputChange() {
       if (
         this.familyCompleteInfo.area > 10000
-        || this.familyCompleteInfo.area < 0
+          || this.familyCompleteInfo.area < 0
       ) {
         Toast.failed('请输入正确范围数值0~10000');
         this.familyCompleteInfo.area = null;
       }
       if (
         this.familyCompleteInfo.avgPrice > 10000
-        || this.familyCompleteInfo.avgPrice < 0
+          || this.familyCompleteInfo.avgPrice < 0
       ) {
         Toast.failed('请输入正确范围数值0~10000');
         this.familyCompleteInfo.avgPrice = null;
@@ -1073,21 +1144,21 @@ export default {
       }
       if (
         this.customerInfo.servicescape === undefined
-        || this.customerInfo.servicescape === ''
+          || this.customerInfo.servicescape === ''
       ) {
         Toast.failed('入户服务场景不能为空');
         return;
       }
       if (
         this.customerInfo.serviceTime === undefined
-        || this.customerInfo.serviceTime === ''
+          || this.customerInfo.serviceTime === ''
       ) {
         Toast.failed('计划服务时间不能为空');
         return;
       }
       if (
         this.customerInfo.servicerName === undefined
-        || this.customerInfo.servicerName === ''
+          || this.customerInfo.servicerName === ''
       ) {
         Toast.failed('服务人不能为空');
         return;
@@ -1095,7 +1166,7 @@ export default {
 
       if (
         this.customerInfo.serviceAddress === undefined
-        || this.customerInfo.serviceAddress === ''
+          || this.customerInfo.serviceAddress === ''
       ) {
         Toast.failed('入户服务地址不能为空');
         return;
@@ -1133,14 +1204,14 @@ export default {
       console.log(familyCompleteInfo);
       if (
         familyCompleteInfo.communityName === ''
-        || !familyCompleteInfo.communityName
+          || !familyCompleteInfo.communityName
       ) {
         Toast.failed('小区名称不能为空');
         return;
       }
       if (
         familyCompleteInfo.gradeItemCode === ''
-        || !familyCompleteInfo.gradeItemCode
+          || !familyCompleteInfo.gradeItemCode
       ) {
         Toast.failed('小区档次不能为空');
         return;
@@ -1153,7 +1224,7 @@ export default {
       // }
       if (
         familyCompleteInfo.housetypItemCode === ''
-        || !familyCompleteInfo.housetypItemCode
+          || !familyCompleteInfo.housetypItemCode
       ) {
         Toast.failed('户型不能为空');
         return;
@@ -1164,14 +1235,14 @@ export default {
       // }
       if (
         familyCompleteInfo.memberNum === ''
-        || !familyCompleteInfo.memberNum
+          || !familyCompleteInfo.memberNum
       ) {
         Toast.failed('家庭成员人数不能为空');
         return;
       }
       if (
         familyCompleteInfo.familyType === ''
-        || !familyCompleteInfo.familyType
+          || !familyCompleteInfo.familyType
       ) {
         Toast.failed('类型不能为空');
         return;
@@ -1189,7 +1260,8 @@ export default {
           .completeFamily({
             planId: this.planId
           })
-          .then((res) => {});
+          .then((res) => {
+          });
       }
       /* 修改顾客的住宅信息、家庭成员 */
       this.basicService.updataFamilyInfo(familyCompleteInfo, {}).then((res) => {
@@ -1229,124 +1301,424 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.tab-item {
-  padding-bottom: 80px;
-}
-.focusState {
-  position: absolute;
-  left: 6px;
-}
-header {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  height: 191px;
-  background: #fff;
-  padding: 27px 24px;
-
-  img {
-    width: 144px;
-    height: 144px;
-    border-radius: 50%;
+  .tab-item {
+    padding-bottom: 80px;
   }
 
-  .right-content {
-    flex-grow: 1;
-    padding: 4px 0 0 26px;
+  .focusState {
+    position: absolute;
+    left: 6px;
+  }
 
-    .user-info {
-      display: flex;
-      justify-content: space-between;
+  header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: 191px;
+    background: #fff;
+    padding: 27px 24px;
 
-      span:nth-child(1) {
-        font-size: 30px;
-        color: #333;
-        margin-right: 30px;
-      }
+    img {
+      width: 144px;
+      height: 144px;
+      border-radius: 50%;
+    }
 
-      span:nth-child(2) {
-        font-size: 28px;
-        color: #999999;
-      }
+    .right-content {
+      flex-grow: 1;
+      padding: 4px 0 0 26px;
 
-      span:nth-child(3) {
-        font-size: 28px;
-        color: #999999;
-      }
+      .user-info {
+        display: flex;
+        justify-content: space-between;
 
-      .mobile {
-        height: 48px;
-        line-height: 48px;
-        background: #4a90e2;
-        border-radius: 24px;
-        padding: 0 24px 0 60px;
-        color: #fff;
-        position: relative;
+        span:nth-child(1) {
+          font-size: 30px;
+          color: #333;
+          margin-right: 30px;
+        }
 
-        span {
+        span:nth-child(2) {
+          font-size: 28px;
+          color: #999999;
+        }
+
+        span:nth-child(3) {
+          font-size: 28px;
+          color: #999999;
+        }
+
+        .mobile {
+          height: 48px;
+          line-height: 48px;
+          background: #4a90e2;
+          border-radius: 24px;
+          padding: 0 24px 0 60px;
           color: #fff;
-          position: absolute;
-          left: 20px;
-          top: 3px;
+          position: relative;
+
+          span {
+            color: #fff;
+            position: absolute;
+            left: 20px;
+            top: 3px;
+          }
         }
       }
     }
-  }
 
-  .focus-tag {
-    margin-top: 28px;
+    .focus-tag {
+      margin-top: 28px;
 
-    .focused {
-      height: 48px;
-      line-height: 48px;
-      color: #f5a623;
-      border: 1px solid #f5a623;
-      border-radius: 24px;
-      margin-right: 16px;
-      padding: 0 18px;
-      font-size: 26px;
+      .focused {
+        height: 48px;
+        line-height: 48px;
+        color: #f5a623;
+        border: 1px solid #f5a623;
+        border-radius: 24px;
+        margin-right: 16px;
+        padding: 0 18px;
+        font-size: 26px;
+      }
     }
   }
-}
 
-.content-infor {
-  color: #666;
-  font-size: 28px;
+  .content-infor {
+    color: #666;
+    font-size: 28px;
 
-  nav {
-    ul {
-      display: flex;
-      justify-content: center;
-      width: 706px;
-      margin: 0 auto;
-      border-radius: 8px;
+    nav {
+      ul {
+        display: flex;
+        justify-content: center;
+        width: 706px;
+        margin: 0 auto;
+        border-radius: 8px;
+        background: #fff;
+
+        li {
+          width: 50%;
+          height: 58px;
+          line-height: 60px;
+          text-align: center;
+          border-right: 1px solid #1969c6;
+          border-bottom: 1px solid #1969c6;
+          border-top: 1px solid #1969c6;
+          color: #1969c6;
+        }
+
+        li:first-child {
+          border-left: 1px solid #1969c6;
+        }
+
+        li.active {
+          background: #1969c6 !important;
+          color: #fff;
+        }
+      }
+    }
+
+    .tab-show {
+      padding: 0 !important;
+
+      .addressInfor-item {
+        height: 74px;
+        line-height: 74px;
+        background: #fff;
+        font-size: 28px;
+        padding-left: 24px;
+        padding-right: 24px;
+        display: flex;
+        justify-content: space-between;
+
+        input {
+          width: 470px;
+          text-align: right;
+          font-size: 28px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          border: none;
+        }
+      }
+
+      .beizhustr {
+        color: #888888;
+        background: #fff;
+        font-size: 28px;
+        padding-left: 24px;
+        padding-right: 24px;
+        padding-bottom: 48px;
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+
+    .family-tag-area {
+      padding: 20px 24px 4px;
       background: #fff;
-      li {
-        width: 50%;
-        height: 58px;
-        line-height: 60px;
+      font-size: 24px;
+
+      .tagList {
+        .familyTagActive {
+          color: #1969c6;
+          border-color: #1969c6 !important;
+        }
+
+        margin-top: 24px;
+
+        .family-tag {
+          line-height: 36px;
+          padding: 0 17px;
+          border: 1px solid #d0d0d0;
+          border-radius: 8px;
+          margin-right: 16px;
+          margin-bottom: 16px;
+          display: inline-block;
+        }
+
+        .add-family-tag {
+          line-height: 36px;
+          padding: 0 17px;
+          border: 1px dashed #d0d0d0;
+          border-radius: 8px;
+          margin-right: 16px;
+          margin-bottom: 16px;
+          display: inline-block;
+        }
+      }
+    }
+
+    .products-total {
+      margin-top: 16px;
+      background: #fff;
+      display: flex;
+      height: 150px;
+      justify-content: center;
+
+      .total-item {
+        width: 234px;
         text-align: center;
-        border-right: 1px solid #1969c6;
-        border-bottom: 1px solid #1969c6;
-        border-top: 1px solid #1969c6;
-        color: #1969c6;
+      }
+    }
+
+    .product-show-item {
+      background: #fff;
+      margin-top: 23px;
+      padding: 24px;
+      display: flex;
+      justify-content: space-between;
+
+      img {
+        width: 150px;
+        height: 150px;
+        margin-right: 17px;
       }
 
-      li:first-child {
-        border-left: 1px solid #1969c6;
+      .product-infor {
+        flex-grow: 1;
+
+        .infor-rows {
+          display: flex;
+          justify-content: space-between;
+        }
+
+        .product-tag {
+          font-size: 24px;
+          color: #1969c6;
+          background: #deebfa;
+          padding: 2px;
+          margin-right: 20px;
+          border-radius: 6px;
+        }
+
+        .btn-xs {
+          display: inline-block;
+          font-size: 24px;
+          padding: 5px 20px;
+          border: 1px solid #eee;
+          border-radius: 20px;
+          margin-right: 10px;
+        }
+
+        .btn-primary {
+          color: #1969c6;
+          border-color: #1969c6 !important;
+        }
+
+        .btn-danger {
+          color: #ff001f;
+          border-color: #ff001f !important;
+        }
+      }
+    }
+
+    .remarks {
+      background: #fff;
+      padding: 23px 25px;
+
+      div {
+        font-size: 28px;
+        color: #666;
+        margin-bottom: 16px;
       }
 
-      li.active {
-        background: #1969c6 !important;
-        color: #fff;
+      textarea {
+        border: none;
       }
     }
   }
 
-  .tab-show {
-    padding: 0 !important;
+  .dialog-input {
+    margin: 0 auto;
+    display: block;
+    padding: 0 24px;
+    border: 1px solid #999;
+    height: 46px;
+    line-height: 46px;
+    border-radius: 8px;
+  }
 
-    .addressInfor-item {
+  .bItem-item-title {
+    color: #666;
+  }
+
+  .bItem-item-right {
+    width: 200px;
+  }
+
+  .bItem-item-right-val {
+    color: #666;
+    width: 100px;
+  }
+
+  footer {
+    position: fixed;
+    background: #fff;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    padding: 24px;
+
+    .md-example-section {
+      display: flex;
+      justify-content: space-between;
+
+      button {
+        width: 100%;
+        height: 84px;
+      }
+    }
+
+    .md-example-section-q {
+      display: flex;
+      justify-content: space-between;
+
+      button {
+        width: 100%;
+        height: 84px;
+      }
+    }
+  }
+
+  .br-b {
+    width: 100%;
+    border-bottom: 1px solid #f5f5f5;
+  }
+
+  .mt2 {
+    margin-top: 2px;
+  }
+
+  .mt5 {
+    margin-top: 5px;
+  }
+
+  .mt24 {
+    margin-top: 24px;
+  }
+
+  .ml25 {
+    margin-left: 25px;
+  }
+
+  .ml10 {
+    margin-left: 10px;
+  }
+
+  .mbn {
+    margin-bottom: 0 !important;
+  }
+
+  .lh36 {
+    line-height: 36px;
+  }
+
+  .fs30 {
+    font-size: 30px;
+  }
+
+  .fs24 {
+    font-size: 24px;
+  }
+
+  .fs28 {
+    font-size: 28px;
+  }
+
+  .fs34 {
+    font-size: 34px;
+  }
+
+  .icon-color {
+    color: #4a90e2;
+  }
+
+  .text-333 {
+    color: #333333;
+  }
+
+  .text-666 {
+    color: #666666;
+  }
+
+  .text-ccc {
+    color: #cccccc;
+  }
+
+  .text-primary {
+    color: #1969c6;
+  }
+
+  .text-bold {
+    font-weight: bold;
+  }
+
+  form {
+    .form-title {
+      margin-left: 25px;
+    }
+
+    .hourseService-date {
+      width: 380px;
+      color: #999;
+      font-size: 28px;
+
+      .b-date-picker {
+        border: none !important;
+      }
+
+      .iconfont {
+        display: none;
+      }
+    }
+
+    .icon-dingwei {
+      color: #1969c6 !important;
+      font-size: 5.333vw !important;
+    }
+
+    .address-item {
       height: 74px;
       line-height: 74px;
       background: #fff;
@@ -1356,373 +1728,100 @@ header {
       display: flex;
       justify-content: space-between;
 
-      input {
-        width: 470px;
-        text-align: right;
-        font-size: 28px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        border: none;
+      .address-form-item {
+        input {
+          width: 470px;
+          text-align: right;
+          font-size: 28px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          border: none;
+        }
       }
     }
-    .beizhustr {
-      color: #888888;
-      background: #fff;
-      font-size: 28px;
-      padding-left: 24px;
-      padding-right: 24px;
-      padding-bottom: 48px;
-      display: flex;
-      justify-content: space-between;
-    }
-  }
 
-  .family-tag-area {
-    padding: 20px 24px 4px;
-    background: #fff;
-    font-size: 24px;
-
-    .tagList {
-      .familyTagActive {
-        color: #1969c6;
-        border-color: #1969c6 !important;
-      }
-
-      margin-top: 24px;
-
-      .family-tag {
-        line-height: 36px;
-        padding: 0 17px;
-        border: 1px solid #d0d0d0;
-        border-radius: 8px;
-        margin-right: 16px;
-        margin-bottom: 16px;
-        display: inline-block;
-      }
-
-      .add-family-tag {
-        line-height: 36px;
-        padding: 0 17px;
-        border: 1px dashed #d0d0d0;
-        border-radius: 8px;
-        margin-right: 16px;
-        margin-bottom: 16px;
-        display: inline-block;
-      }
-    }
-  }
-
-  .products-total {
-    margin-top: 16px;
-    background: #fff;
-    display: flex;
-    height: 150px;
-    justify-content: center;
-
-    .total-item {
-      width: 234px;
-      text-align: center;
-    }
-  }
-
-  .product-show-item {
-    background: #fff;
-    margin-top: 23px;
-    padding: 24px;
-    display: flex;
-    justify-content: space-between;
-
-    img {
-      width: 150px;
-      height: 150px;
-      margin-right: 17px;
-    }
-
-    .product-infor {
-      flex-grow: 1;
-
-      .infor-rows {
-        display: flex;
-        justify-content: space-between;
-      }
-
-      .product-tag {
-        font-size: 24px;
-        color: #1969c6;
-        background: #deebfa;
-        padding: 2px;
-        margin-right: 20px;
-        border-radius: 6px;
-      }
-
-      .btn-xs {
-        display: inline-block;
-        font-size: 24px;
-        padding: 5px 20px;
-        border: 1px solid #eee;
-        border-radius: 20px;
+    .join-person template {
+      span:nth-child(1) {
+        color: #999999;
         margin-right: 10px;
       }
 
-      .btn-primary {
-        color: #1969c6;
-        border-color: #1969c6 !important;
-      }
-
-      .btn-danger {
-        color: #ff001f;
-        border-color: #ff001f !important;
+      span:nth-child(2) {
+        color: #4a90e2;
+        font-size: 30px;
       }
     }
-  }
 
-  .addProduct {
-    width: 80px;
-    height: 80px;
-    line-height: 70px;
-    text-align: center;
-    border-radius: 50%;
-    background: #4a90e2;
-    color: #fff;
-    font-size: 80px;
-    position: fixed;
-    right: 20px;
-    bottom: 200px;
-  }
+    .choosedProduces {
+      padding: 24px;
 
-  .remarks {
-    background: #fff;
-    padding: 23px 25px;
-    div {
-      font-size: 28px;
-      color: #666;
-      margin-bottom: 16px;
-    }
-    textarea {
-      border: none;
-    }
-  }
-}
+      span:nth-child(1) {
+        margin-right: 13px;
+      }
 
-.dialog-input {
-  margin: 0 auto;
-  display: block;
-  padding: 0 24px;
-  border: 1px solid #999;
-  height: 46px;
-  line-height: 46px;
-  border-radius: 8px;
-}
-
-.bItem-item-title {
-  color: #666;
-}
-.bItem-item-right {
-width: 200px;
-}
-.bItem-item-right-val {
-  color: #666;
-  width: 100px;
-}
-
-footer {
-  position: fixed;
-  background: #fff;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  padding: 24px;
-
-  .md-example-section {
-    display: flex;
-    justify-content: space-between;
-
-    button {
-      width: 100%;
-      height: 84px;
-    }
-  }
-  .md-example-section-q {
-    display: flex;
-    justify-content: space-between;
-
-    button {
-      width: 100%;
-      height: 84px;
-    }
-  }
-}
-
-.br-b {  width: 100%;
-  border-bottom: 1px solid #f5f5f5;
-}
-
-.mt2 {
-  margin-top: 2px;
-}
-
-.mt5 {
-  margin-top: 5px;
-}
-
-.mt24 {
-  margin-top: 24px;
-}
-
-.ml25 {
-  margin-left: 25px;
-}
-
-.ml10 {
-  margin-left: 10px;
-}
-
-.mbn {
-  margin-bottom: 0 !important;
-}
-
-.lh36 {
-  line-height: 36px;
-}
-
-.fs30 {
-  font-size: 30px;
-}
-
-.fs24 {
-  font-size: 24px;
-}
-
-.fs28 {
-  font-size: 28px;
-}
-
-.fs34 {
-  font-size: 34px;
-}
-
-.icon-color {
-  color: #4a90e2;
-}
-
-.text-333 {
-  color: #333333;
-}
-
-.text-666 {
-  color: #666666;
-}
-
-.text-ccc {
-  color: #cccccc;
-}
-
-.text-primary {
-  color: #1969c6;
-}
-
-.text-bold {
-  font-weight: bold;
-}
-form {
-  .form-title {
-    margin-left: 25px;
-  }
-  .hourseService-date {
-    width: 380px;
-    color: #999;
-    font-size: 28px;
-    .b-date-picker {
-      border: none !important;
-    }
-    .iconfont {
-      display: none;
-    }
-  }
-  .icon-dingwei {
-    color: #1969c6 !important;
-    font-size: 5.333vw !important;
-  }
-  .address-item {
-    height: 74px;
-    line-height: 74px;
-    background: #fff;
-    font-size: 28px;
-    padding-left: 24px;
-    padding-right: 24px;
-    display: flex;
-    justify-content: space-between;
-    .address-form-item {
-      input {
-        width: 470px;
-        text-align: right;
+      .product-item {
         font-size: 28px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        color: #333;
+      }
+    }
+
+    .remarks {
+      margin-top: 24px;
+      background: #fff;
+      color: #666;
+
+      div {
+      }
+
+      padding: 24px 23px 24px 28px;
+
+      textarea {
+        line-height: 33px;
+        margin-top: 24px;
+        font-size: 28px;
         border: none;
       }
     }
-  }
-  .join-person template {
-    span:nth-child(1) {
-      color: #999999;
-      margin-right: 10px;
+
+    .b-date-picker {
+      text-align: right;
+      padding: 0;
+
+      span {
+        width: 100%;
+      }
     }
-    span:nth-child(2) {
-      color: #4a90e2;
-      font-size: 30px;
-    }
   }
-  .choosedProduces {
+
+  .rows {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .p24 {
     padding: 24px;
-    span:nth-child(1) {
-      margin-right: 13px;
-    }
-    .product-item {
-      font-size: 28px;
-      color: #333;
-    }
   }
-  .remarks {
-    margin-top: 24px;
+
+  .fs28 {
+    font-size: 28px;
+  }
+
+  .bg-white {
     background: #fff;
-    color: #666;
-    div {
-    }
-    padding: 24px 23px 24px 28px;
-    textarea {
-      line-height: 33px;
-      margin-top: 24px;
-      font-size: 28px;
-      border: none;
+  }
+
+  .leixClass {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .bHouseServiceItem-add {
+    &.completeFamilyInfor-add {
+      position: fixed;
+      right: 24px;
+      bottom: 40px;
     }
   }
-  .b-date-picker {
-    text-align: right;
-    padding: 0;
-    span {
-      width: 100%;
-    }
-  }
-}
-.rows {
-  display: flex;
-  justify-content: space-between;
-}
-.p24 {
-  padding: 24px;
-}
-.fs28 {
-  font-size: 28px;
-}
-.bg-white {
-  background: #fff;
-}
-.leixClass {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 </style>

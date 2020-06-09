@@ -21,7 +21,7 @@
         <!--        </div>-->
       </div>
     </header>
-<!--    表单信息-->
+    <!--    表单信息-->
     <div class="content-infor">
       <div class="fs30 mt24 mb22 ml25 text-333">入户服务计划详情</div>
       <b-item
@@ -69,16 +69,16 @@
         title="购买日期"
       >
         <template
-            v-slot:right=""
+          v-slot:right=""
         >
           <b-date-picker
-              class="product-date"
-              slot="right"
-              type="date"
-              title="请选择购买日期"
-              :defaultDate="productInfo.purchaseDate"
-              v-model="productInfo.purchaseDate"
-              :max-date="currentDate"
+            class="product-date"
+            slot="right"
+            type="date"
+            title="请选择购买日期"
+            :defaultDate="productInfo.purchaseDate"
+            v-model="productInfo.purchaseDate"
+            :max-date="currentDate"
           ></b-date-picker>
         </template>
       </b-item>
@@ -123,7 +123,7 @@
         </b-wx-upload>
       </div>
       <div class="br-b family-tag-area">
-        <label class="fs28 text-333">用户评价</label>
+        <label class="fs28 text-333">用户使用感受</label>
         <div class="tagList">
           <span :class="['family-tag',assessmentV.some(v => v===i) && 'familyTagActive']"
                 @click="clickFamilyTag(i)"
@@ -133,7 +133,7 @@
         </div>
       </div>
     </div>
-<!--    底部按钮-->
+    <!--    底部按钮-->
     <footer>
       <template>
         <div class="md-example-child-button md-example-child-button-3">
@@ -151,10 +151,10 @@
       v-model="brandV"
     ></b-pop-check-list>
     <b-pop-check-list
-        type="radio"
-        :show.sync="tagPopShow1"
-        :list="productGroupName"
-        v-model="productGroupV"
+      type="radio"
+      :show.sync="tagPopShow1"
+      :list="productGroupName"
+      v-model="productGroupV"
     ></b-pop-check-list>
     <md-dialog
       title="新建标签"
@@ -285,7 +285,7 @@ export default {
     productGroup() {
       if (this.productGroupV || this.productInfo.categoryItemCode) {
         const tagObj = this.productGroupName.find(v => v.id === this.productGroupV[0])
-		        || this.productGroupName.find(v => v.groupCode === this.productInfo.categoryItemCode);
+            || this.productGroupName.find(v => v.groupCode === this.productInfo.categoryItemCode);
         let name;
         if (tagObj) {
           this.productInfo.categoryItemCode = tagObj.groupCode;
@@ -507,6 +507,7 @@ export default {
     line-height: 46px;
     border-radius: 8px;
   }
+
   .addAddress-form-item {
     display: flex;
     align-items: center;
@@ -518,6 +519,7 @@ export default {
     font-size: 28px;
     color: #666;
   }
+
   header {
     display: flex;
     justify-content: space-between;
@@ -525,31 +527,38 @@ export default {
     height: 191px;
     background: #fff;
     padding: 27px 24px;
+
     img {
       width: 144px;
       height: 144px;
       border-radius: 50%;
     }
-    .right-content{
+
+    .right-content {
       flex-grow: 1;
       padding: 4px 0 0 26px;
-      .user-info{
+
+      .user-info {
         display: flex;
         justify-content: space-between;
-        span:nth-child(1){
+
+        span:nth-child(1) {
           font-size: 30px;
           color: #333;
           margin-right: 30px;
         }
-        span:nth-child(2){
+
+        span:nth-child(2) {
           font-size: 28px;
           color: #999999;
         }
-        span:nth-child(3){
+
+        span:nth-child(3) {
           font-size: 28px;
           color: #999999;
         }
-        .mobile{
+
+        .mobile {
           height: 48px;
           line-height: 48px;
           background: #4A90E2;
@@ -557,7 +566,8 @@ export default {
           padding: 0 24px 0 60px;
           color: #fff;
           position: relative;
-          span{
+
+          span {
             color: #fff;
             position: absolute;
             left: 20px;
@@ -566,9 +576,11 @@ export default {
         }
       }
     }
-    .focus-tag{
+
+    .focus-tag {
       margin-top: 28px;
-      .focused{
+
+      .focused {
         height: 48px;
         line-height: 48px;
         color: #F5A623;
@@ -580,11 +592,13 @@ export default {
       }
     }
   }
-  .content-infor{
+
+  .content-infor {
     padding-bottom: 50px;
     color: #666;
     font-size: 28px;
-    .product-item{
+
+    .product-item {
       height: 74px;
       line-height: 74px;
       background: #fff;
@@ -593,24 +607,30 @@ export default {
       padding-right: 24px;
       display: flex;
       justify-content: space-between;
-      input{
+
+      input {
         text-align: right;
         width: 370px;
       }
     }
-    .product-date{
+
+    .product-date {
       width: 300px;
     }
+
     .family-tag-area {
       padding: 20px 24px 4px;
       background: #fff;
       font-size: 24px;
+
       .tagList {
         .familyTagActive {
           color: #1969C6;
           border-color: #1969C6 !important;
         }
+
         margin-top: 24px;
+
         .family-tag {
           line-height: 36px;
           padding: 0 17px;
@@ -620,6 +640,7 @@ export default {
           margin-bottom: 16px;
           display: inline-block;
         }
+
         .add-family-tag {
           line-height: 36px;
           padding: 0 17px;
@@ -632,63 +653,77 @@ export default {
       }
     }
   }
-  .bItem-item-right-val{
+
+  .bItem-item-right-val {
     font-size: 26px;
     color: #666;
   }
-  .md-field{
+
+  .md-field {
     padding: 0;
-    .md-field-item-content{
+
+    .md-field-item-content {
       min-height: 74px !important;
       padding: 0 24px;
       display: flex;
       justify-content: space-between;
-      .md-field-item-title{
+
+      .md-field-item-title {
         font-size: 26px !important;
         color: #666;
       }
-      .md-field-item-control{
+
+      .md-field-item-control {
         text-align: right;
         font-size: 28px !important;
         color: #666;
       }
     }
-    .md-field-item-content>.md-field-item-title{
+
+    .md-field-item-content > .md-field-item-title {
       font-size: 28px !important;
     }
   }
-  footer{
+
+  footer {
     position: fixed;
     left: 0;
     bottom: 0;
     width: 100%;
     padding: 24px;
     background: #fff;
-    .md-example-section{
+
+    .md-example-section {
       display: flex;
       justify-content: space-between;
-      button{
+
+      button {
         width: 48%;
         height: 84px;
       }
     }
 
   }
-  .img-upload{
+
+  .img-upload {
     position: relative;
     overflow: hidden;
     background: #fff;
     padding: 10px 24px;
   }
-  .md-example-child-reader .image-reader-list .image-reader-item.add{
+
+  .md-example-child-reader .image-reader-list .image-reader-item.add {
     background: #EBEBEB !important;
   }
-  .md-example-child-reader{
+
+  .md-example-child-reader {
     overflow: hidden;
-    .image-reader-list{
+
+    .image-reader-list {
       float: left;
       width: 100%;
-      .image-reader-item{
+
+      .image-reader-item {
         position: relative;
         float: left;
         width: 23.5%;
@@ -702,18 +737,21 @@ export default {
         border-radius: 4px;
         background-size: cover;
         overflow: hidden;
-        &:nth-of-type(4n){
+
+        &:nth-of-type(4n) {
           margin-right: 0;
         }
-        &.add{
-          .md-icon{
+
+        &.add {
+          .md-icon {
             position: absolute;
             top: 40%;
             left: 50%;
             transform: translate(-50%, -50%);
             opacity: .5;
           }
-          p{
+
+          p {
             position: absolute;
             top: 50%;
             left: 0;
@@ -724,89 +762,115 @@ export default {
             text-align: center;
           }
         }
-        .image-reader-item-del{
+
+        .image-reader-item-del {
           position: absolute;
           top: 0;
           right: 0;
           z-index: 3;
           opacity: .8;
-          .md-icon-close{
+
+          .md-icon-close {
             font-size: 24px;
           }
         }
       }
     }
   }
-  .pinpai{
+
+  .pinpai {
     position: relative;
   }
-  .pinpaitmpl{
+
+  .pinpaitmpl {
     // position: absolute;
   }
-  .ph24{
+
+  .ph24 {
     padding: 0 24px;
   }
-  .bg-white{
+
+  .bg-white {
     background: #fff;
   }
-  .br-b{
+
+  .br-b {
     border-bottom: 1px solid #f5f5f5;
   }
-  .br-n{
+
+  .br-n {
     border: none;
   }
-  .mt2{
+
+  .mt2 {
     margin-top: 2px;
   }
-  .mt5{
+
+  .mt5 {
     margin-top: 5px;
   }
-  .mt24{
+
+  .mt24 {
     margin-top: 24px;
   }
-  .ml25{
+
+  .ml25 {
     margin-left: 25px;
   }
-  .ml10{
+
+  .ml10 {
     margin-left: 10px;
   }
-  .mbn{
-    margin-bottom: 0!important;
+
+  .mbn {
+    margin-bottom: 0 !important;
   }
-  .lh36{
+
+  .lh36 {
     line-height: 36px;
   }
-  .fs30{
+
+  .fs30 {
     font-size: 30px;
   }
-  .fs24{
+
+  .fs24 {
     font-size: 24px;
   }
-  .fs26{
+
+  .fs26 {
     font-size: 26px;
   }
-  .fs28{
+
+  .fs28 {
     font-size: 28px;
   }
-  .fs34{
+
+  .fs34 {
     font-size: 34px;
   }
-  .icon-color{
+
+  .icon-color {
     color: #4A90E2;
   }
-  .text-333{
+
+  .text-333 {
     color: #333333;
   }
-  .text-666{
+
+  .text-666 {
     color: #666666;
   }
-  .text-ccc{
+
+  .text-ccc {
     color: #CCCCCC;
   }
-  .text-primary{
+
+  .text-primary {
     color: #1969C6;
   }
-  .text-bold{
+
+  .text-bold {
     font-weight: bold;
   }
 </style>

@@ -715,3 +715,29 @@
 }
 
 /*订单修改 end*/
+
+/*入户服务首页*/
+
+.bHouseServiceItem-add {
+  width: 118px;
+  height: 118px;
+  line-height: 118px;
+  background: #fff;
+  border: 1px solid #C7C7C7;
+  border-radius: 50%;
+  text-align: center;
+  float: right;
+
+  .iconfont {
+    font-size: 60px;
+    color: #C7C7C7;
+  }
+
+  &:after {
+    content: '';
+    display: block;
+    clear: both;
+  }
+}
+
+/*入户服务首页 end*/
