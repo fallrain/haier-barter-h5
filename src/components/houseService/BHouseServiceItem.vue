@@ -24,7 +24,7 @@
               <span class="key-color">计划上门服务时间:</span>
               <span class="value-color">{{item.serviceTime}}</span>
             </span>
-            <span class="icon iconfont icon-shizhong pt2"></span>
+            <span class="icon bHouseServiceItem-icon iconfont icon-shizhong pt2"></span>
           </div>
           <div class="mb20" v-show="item.accompanyingName !== ''">
             <span class="key-color">随行参与人:</span>
@@ -36,7 +36,7 @@
               <span class="value-color">{{item.serviceAddress}}</span>
             </span>
             <span>
-              <span class="icon iconfont icon-dingwei"></span>
+              <span class="icon bHouseServiceItem-icon iconfont icon-dingwei"></span>
             </span>
           </div>
           <!-- <div class="mb20 rows" v-show="item.dealproducts.length > 0">
@@ -48,12 +48,12 @@
             </div>
             <div>
               <span
-                class="icon iconfont icon-jiantou9"
+                class="icon bHouseServiceItem-icon iconfont icon-jiantou9"
                 v-show="!item.arrowtag"
                 @click="change(item)"
               ></span>
               <span
-                class="icon iconfont icon-shangjiantou"
+                class="icon bHouseServiceItem-icon iconfont icon-shangjiantou"
                 v-show="item.arrowtag"
                 @click="change(item)"
               ></span>
@@ -144,9 +144,9 @@
             </ul>
           </div>
           <div>
-            <span class="icon iconfont icon-jiantou9" v-show="!item.arrowtag" @click="change(item)"></span>
+            <span class="icon bHouseServiceItem-icon iconfont icon-jiantou9" v-show="!item.arrowtag" @click="change(item)"></span>
             <span
-              class="icon iconfont icon-shangjiantou"
+              class="icon bHouseServiceItem-icon iconfont icon-shangjiantou"
               v-show="item.arrowtag"
               @click="change(item)"
             ></span>
@@ -391,7 +391,7 @@ export default {
     padding-top: 2px;
   }
 
-  .iconfont {
+  .bHouseServiceItem-icon {
     font-size: 28px;
     color: #2f77cb;
   }
