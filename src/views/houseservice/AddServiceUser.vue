@@ -145,7 +145,7 @@
         <div class="listClass">
           <li class="rowClass" v-for="(item, index) in queryHistoryList" :key="index">
             <div class="leftClass">
-              <span class="product-item">{{item.userName}}</span>
+              <span class="product-item">{{item.servicerName}}</span>
               <span class="product-item">{{item.serviceTime}}</span>
             </div>
             <!-- ，0-待入户，1-已入户，2-已完成 -->
@@ -253,7 +253,9 @@ export default {
         description: '', // 备注
         warnFlag: '', // 是否加入提醒
         flag: 0 // 服务计划类型
-      }
+      },
+      // 门店id
+      storeId: ''
     };
   },
   computed: {
@@ -315,29 +317,29 @@ export default {
       this.basicService.userInfo().then((res) => {
         this.customerInfo.servicerId = res.data.hmcId;
         this.customerInfo.servicerName = res.data.username;
-        this.orderService
-          .queryUserNewestOrder(
-            {},
-            {
-              hmcId: this.customerInfo.servicerId,
-              userPhone: this.customerInfo.userPhone,
-              requestNoToast: true
+        this.storeId = res.data.storeInfo.storeId;
+        this.orderService.queryUserNewestOrder(
+          {},
+          {
+            hmcId: this.customerInfo.servicerId,
+            userPhone: this.customerInfo.userPhone,
+            requestNoToast: true
+          }
+        ).then((queryUserNewestOrderRes) => {
+          if (queryUserNewestOrderRes.code === 1) {
+            const queryUserNewestOrderData = queryUserNewestOrderRes.data;
+            if (queryUserNewestOrderData.orderDetailDtoList.length > 0) {
+              queryUserNewestOrderData.orderDetailDtoList.forEach((item) => {
+                this.productNames.push(
+                  item.productModel + item.productCategoryName
+                );
+                this.productCodes.push(item.productCode);
+                this.productCategory.push(item.productCategoryCode);
+                this.productCategoryName.push(item.productCategoryName);
+              });
             }
-          )
-          .then((res) => {
-            if (res.code === 1) {
-              if (res.data.orderDetailDtoList.length > 0) {
-                res.data.orderDetailDtoList.forEach((item) => {
-                  this.productNames.push(
-                    item.productModel + item.productCategoryName
-                  );
-                  this.productCodes.push(item.productCode);
-                  this.productCategory.push(item.productCategoryCode);
-                  this.productCategoryName.push(item.productCategoryName);
-                });
-              }
-            }
-          });
+          }
+        });
       });
       // 查询入户服务礼品卡券
       /* this.houseService.getCanBeIssuedRights({
@@ -432,6 +434,7 @@ export default {
       } = this;
       const data = {
         userId: customerInfo.userId,
+        storeId: this.storeId,
         pageNum: '1',
         pageSize: '100',
       };
