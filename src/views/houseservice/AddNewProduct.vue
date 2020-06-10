@@ -28,9 +28,9 @@
         class="br-b text-666 pinpai"
         title="品牌"
         placeholder="请选择或输入品牌"
-        :value="BrandName"
+        :value="brandName"
         :arrow="true"
-        @rightClick="chooseBrand()"
+        @rightClick="chooseBrand"
       >
       </b-item>
       <b-item
@@ -56,11 +56,12 @@
       <div class="product-item br-b fs28">
         <label class="text-333">产品购买价格</label>
         <div class="address-form-item">
-          <input class="text-333 br-n fs28"
-                 type="number"
-                 placeholder="请输入产品购买价格"
-                 v-model="productInfo.price"
-                 @blur="judegNum"
+          <input
+            class="text-333 br-n fs28"
+            type="number"
+            placeholder="请输入产品购买价格"
+            v-model="productInfo.price"
+            @blur="judegNum"
           >
         </div>
       </div>
@@ -147,8 +148,9 @@
     <b-pop-check-list
       type="radio"
       :show.sync="tagPopShow"
-      :list="BRANDList"
+      :list="brandList"
       v-model="brandV"
+      @itemClick="showAddOtherBrand"
     ></b-pop-check-list>
     <b-pop-check-list
       type="radio"
@@ -162,7 +164,27 @@
       v-model="basicDialog.open"
       :btns="basicDialog.btns"
     >
-      <input type="text" class="dialog-input" v-model="addLabelValue">
+      <input
+        type="text"
+        class="dialog-input"
+        placeholder="请输入标签名"
+        v-model="addLabelValue"
+      >
+    </md-dialog>
+    <md-dialog
+      title="其他品牌"
+      :closable="true"
+      v-model="addOtherBrandDialog.open"
+      :btns="addOtherBrandDialog.btns"
+    >
+      <input
+        type="text"
+        class="dialog-input"
+        placeholder="请输入其他牌品名"
+        maxLength="10"
+        v-model="otherBrandNameTemp"
+        v-noSpace
+      >
     </md-dialog>
   </div>
 </template>
@@ -211,9 +233,6 @@ export default {
     return {
       uploadUrl: '/api/file/simpleUpload',
       currentDate: new Date(),
-      headers: {
-        Authorization: ''
-      },
       imageList: {
         reader0: []
       },
@@ -235,8 +254,22 @@ export default {
             handler: this.onBasicCancel,
           },
           {
-            text: '确认操作',
+            text: '确定',
             handler: this.onBasicConfirm,
+          },
+        ],
+      },
+      addOtherBrandDialog: {
+        open: false,
+        brandId: [],
+        btns: [
+          {
+            text: '取消',
+            handler: () => { this.addOtherBrandDialog.open = false; }
+          },
+          {
+            text: '确定',
+            handler: this.onAddOtherBrandDialogConfirm,
           },
         ],
       },
@@ -261,20 +294,30 @@ export default {
       tagPopShow: false,
       tagPopShow1: false,
       customerInfo: {},
-      BRANDList: [], // 品牌列表
+      brandList: [], // 品牌列表
       brandV: [],
       productGroupName: [], // 产品组列表
       productGroupV: [],
+      // 其他品牌品牌名
+      otherBrandName: '',
+      // 其他品牌品牌名缓存
+      otherBrandNameTemp: '',
     };
   },
   computed: {
-    BrandName() {
-      if (this.brandV || this.productInfo.brandItemCode) {
-        const tagObj = this.BRANDList.find(v => v.id === this.brandV[0]) || this.BRANDList.find(v => v.itemCode === this.productInfo.brandItemCode);
+    brandName() {
+      if (this.brandV) {
+        const tagObj = this.brandList.find(v => v.itemCode === this.brandV[0]);
         let name;
         if (tagObj) {
-          this.productInfo.brandItemCode = tagObj.itemCode;
-          name = tagObj.name;
+          const brandItemCode = tagObj.itemCode;
+          this.productInfo.brandItemCode = brandItemCode;
+          // 其他品牌的时候取 otherBrandName
+          if (brandItemCode !== '9999') {
+            name = tagObj.name;
+          } else {
+            name = this.otherBrandName;
+          }
         } else {
           name = '';
         }
@@ -298,14 +341,15 @@ export default {
       return '';
     }
   },
-  activated() {
-  },
   created() {
-    this.headers.Authorization = `Bearer  ${localStorage.getItem('acces_token')}`;
     if (this.$route.params.customerInfo) {
       this.customerInfo = this.$route.params.customerInfo;
-      this.BRANDList = this.$route.params.BRANDList;
-      this.$route.params.productGroupName.forEach((item, index) => {
+      const brandList = this.$route.params.BRANDList;
+      this.brandList = brandList.map(v => ({
+        ...v,
+        id: v.itemCode
+      }));
+      this.$route.params.productGroupName.forEach((item) => {
         item.name = item.groupName;
       });
       this.productGroupName = this.$route.params.productGroupName;
@@ -315,14 +359,27 @@ export default {
         // this.productInfo.buyingChannel = this.$route.params.productInfo.buyingChannel.toString();
         this.productInfo.purchaseDate = this.bUtil.formatDate(this.$route.params.productInfo.purchaseDate, 'yyyy-MM-dd');
         this.productInfo.havePicture = false;
-        if (this.$route.params.productInfo.img) {
-          this.productInfo.picUrlList = this.$route.params.productInfo.img;
+        const {
+          brandName,
+          brandItemCode,
+          img,
+          groupAppraiseCode
+        } = this.productInfo;
+        // 下拉选中
+        this.brandV = [brandItemCode];
+        // 其他品牌的时候需要给otherBrandName赋值做缓存
+        if (brandItemCode === '9999') {
+          this.otherBrandName = brandName;
+          this.otherBrandNameTemp = brandName;
+        }
+        if (img) {
+          this.productInfo.picUrlList = img;
         } else {
           this.productInfo.picUrlList = [];
         }
 
-        if (this.productInfo.groupAppraiseCode) {
-          this.assessmentV = this.productInfo.groupAppraiseCode.split(',');
+        if (groupAppraiseCode) {
+          this.assessmentV = groupAppraiseCode.split(',');
         }
 
         this.regio = 'edit';
@@ -385,7 +442,11 @@ export default {
         Toast.failed('请选择购买日期！');
         return;
       }
-      this.productInfo.name = this.BrandName + this.productGroup;
+      // 其他品牌的时候传额外传brandName字段，代表一个自定义品牌
+      if (this.productInfo.brandItemCode === '9999') {
+        this.productInfo.brandName = this.brandName;
+      }
+      this.productInfo.name = this.brandName + this.productGroup;
       this.productInfo.customerFamilyId = this.customerInfo.customerInfoId;
       this.productInfo.customerId = this.customerInfo.customerId;
       this.productInfo.groupAppraiseCode = this.assessmentV.join(',');
@@ -487,6 +548,27 @@ export default {
       const reg = /^(\d+)(.\d{0,2})?$/;
       return reg.test(num);
     },
+    showAddOtherBrand(ids) {
+      /* 展示添加其他品牌弹出框 */
+      if (ids[0] === '9999') {
+        this.tagPopShow = false;
+        this.addOtherBrandDialog.brandId = ids;
+        // 重置为之前已经确定的品牌名
+        this.otherBrandNameTemp = this.otherBrandName;
+        this.addOtherBrandDialog.open = true;
+      }
+    },
+    onAddOtherBrandDialogConfirm() {
+      /* 输入其他品牌名后的操作 */
+      if (this.otherBrandNameTemp) {
+        this.addOtherBrandDialog.open = false;
+        // 输入后才算选了brandV
+        this.brandV = this.addOtherBrandDialog.brandId;
+        this.otherBrandName = this.otherBrandNameTemp;
+      } else {
+        this.$toast.failed('请输入品牌名');
+      }
+    }
   },
   beforeRouteLeave(to, from, next) {
     if (to.name === 'Houseservice.CompleteFamilyInfor') {
@@ -499,11 +581,11 @@ export default {
 </script>
 <style lang="scss" scoped>
   .dialog-input {
-    margin: 0 auto;
     display: block;
+    width: 100%;
     padding: 0 24px;
-    border: 1px solid #999;
-    height: 46px;
+    border: 1px solid #ddd;
+    height: 60px;
     line-height: 46px;
     border-radius: 8px;
   }

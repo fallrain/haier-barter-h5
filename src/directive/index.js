@@ -32,5 +32,15 @@ export default {
         window.scrollTo(0, 0);
       });
     }
+  },
+  noSpace: {
+    bind(el) {
+      el.addEventListener('input', (e) => {
+        // const dom = e.currentTarget;l
+        // const tag = dom.getAttribute('data-hb-filter-no-space-tag');
+        const val = e.currentTarget.value;
+        e.currentTarget.value = val.trim();
+      });
+    }
   }
 };
