@@ -129,8 +129,8 @@
           <div class="addressInfor-item br-b leixClass">
             <label>类型</label>
             <div>
-              <md-radio name="1" v-model="familyCompleteInfo.familyType" label="城市" inline/>
-              <md-radio name="0" v-model="familyCompleteInfo.familyType" label="农村" inline/>
+              <md-radio name="1" v-model="familyCompleteInfo.familyType" label="城市" inline></md-radio>
+              <md-radio name="0" v-model="familyCompleteInfo.familyType" label="农村" inline></md-radio>
             </div>
           </div>
 
@@ -295,7 +295,7 @@
       </div>
     </div>
     <!--    底部按钮-->
-    <footer v-show="tabIndex === '1'">
+    <footer v-show="tabIndex === 1">
       <template>
         <div class="md-example-child md-example-child-button md-example-child-button-3">
           <div class="md-example-section">
@@ -304,7 +304,7 @@
         </div>
       </template>
     </footer>
-    <footer v-show="tabIndex === '0'">
+    <footer v-show="tabIndex === 0">
       <template>
         <div class="md-example-child md-example-child-button md-example-child-button-3">
           <div class="md-example-section-q">
@@ -658,7 +658,7 @@ export default {
     if (this.$route.query.customerInfoId) {
       // 台账过来的
       this.isTaizhang = true;
-      this.tabIndex = this.$route.query.tabState;
+      this.tabIndex = this.$route.query.tabState ? this.$route.query.tabState * 1 : 0;
       this.customerInfoId = this.$route.query.customerInfoId;
       this.customerId = this.$route.query.customerId;
       this.customerInfo.userName = this.$route.query.userName;
@@ -1188,9 +1188,7 @@ export default {
     },
     // 保存
     dealSave() {
-      this.familyCompleteInfo.groupCompositionCode = this.familyActiveTags.join(
-        ','
-      );
+      this.familyCompleteInfo.groupCompositionCode = this.familyActiveTags.join(',');
       const familyCompleteInfo = JSON.parse(
         JSON.stringify(this.familyCompleteInfo)
       );
@@ -1199,31 +1197,34 @@ export default {
       console.log(familyCompleteInfo);
       if (
         familyCompleteInfo.communityName === ''
-          || !familyCompleteInfo.communityName
+        || !familyCompleteInfo.communityName
       ) {
         Toast.failed('小区名称不能为空');
         return;
       }
-      if (
-        familyCompleteInfo.gradeItemCode === ''
+      if (this.familyCompleteInfo.familyType === '1') {
+        if (
+          familyCompleteInfo.gradeItemCode === ''
           || !familyCompleteInfo.gradeItemCode
-      ) {
-        Toast.failed('小区档次不能为空');
-        return;
+        ) {
+          Toast.failed('小区档次不能为空');
+          return;
+        }
+        if (
+          familyCompleteInfo.housetypItemCode === ''
+          || !familyCompleteInfo.housetypItemCode
+        ) {
+          Toast.failed('户型不能为空');
+          return;
+        }
       }
+
       familyCompleteInfo.area = '10';
       familyCompleteInfo.avgPrice = '10';
       // if (familyCompleteInfo.area === "" || !familyCompleteInfo.area) {
       //   Toast.failed("建筑面积不能为空");
       //   return;
       // }
-      if (
-        familyCompleteInfo.housetypItemCode === ''
-          || !familyCompleteInfo.housetypItemCode
-      ) {
-        Toast.failed('户型不能为空');
-        return;
-      }
       // if (familyCompleteInfo.avgPrice === "" || !familyCompleteInfo.avgPrice) {
       //   Toast.failed("均价不能为空");
       //   return;
