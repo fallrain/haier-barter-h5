@@ -924,10 +924,11 @@ export default {
             ];
           }
           // 扫码录单 爱到家添加入户服务、潜在顾客、健康换新
+          // 20200610-'入户服务'改为'发福利券'
           if (item.businessScenarios === 'SMLD' || item.businessScenarios === 'ADJ' || item.businessScenarios === 'JKHXJ_RC') {
             item.showList.push({
               id: '20',
-              name: '入户服务'
+              name: '发福利券'
             },
             {
               id: '21',
