@@ -29,7 +29,7 @@
             <span class="text-warning" v-show="item.appraiseFlag === 1">已评价</span>
             <span
               class="text-warning text-primary"
-              v-show="item.applianceFlag == 0"
+              v-show="item.appraiseFlag === 0"
               @click="yaoqClick(item)"
             >邀请评价</span>
           </span>
