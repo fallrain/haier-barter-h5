@@ -561,6 +561,10 @@ export default {
     onAddOtherBrandDialogConfirm() {
       /* 输入其他品牌名后的操作 */
       if (this.otherBrandNameTemp) {
+        if (this.otherBrandNameTemp.length > 10) {
+          this.$toast.failed('品牌名不能超过10个字符');
+          return;
+        }
         this.addOtherBrandDialog.open = false;
         // 输入后才算选了brandV
         this.brandV = this.addOtherBrandDialog.brandId;
@@ -588,6 +592,7 @@ export default {
     height: 60px;
     line-height: 46px;
     border-radius: 8px;
+    font-size: 26px;
   }
 
   .addAddress-form-item {
