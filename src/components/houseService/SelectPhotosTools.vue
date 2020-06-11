@@ -19,13 +19,13 @@
             :key="index"
             @click="checkTab(img)"
             :style="{
-              backgroundImage: `url(${img})`,
+              backgroundImage: `url(${img.img})`,
               backgroundPosition: 'center center',
               backgroundRepeat: 'no-repeat',
               backgroundSize: 'cover'
             }"
           >
-            <div v-for="(img1, index1) in checkedList" :key="index1" v-show="img === img1">
+            <div v-for="(img1, index1) in checkedList" :key="index1" v-show="img.id === img1.id">
               <img class="selectclass" src="@/assets/images/houseServicer/selecticon-done.png">
             </div>
           </li>
@@ -155,7 +155,6 @@ export default {
       // 创建canvas
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
-      const initSize = img.src.length;
       const width = img.width;
       const height = img.height;
       canvas.width = width;
@@ -171,16 +170,17 @@ export default {
       return ndata;
     },
     getDefaultImgList(customerIdSelect) {
-      this.basicService
-        .queryHoseHoldPicturesForStory(customerIdSelect)
-        .then((res1) => {
-          if (res1.code === 1) {
-            this.imageList.reader0 = res1.data;
-          }
-        });
+      this.basicService.queryHoseHoldPicturesForStory(customerIdSelect).then((res1) => {
+        if (res1.code === 1) {
+          this.imageList.reader0 = res1.data.map((v, index) => ({
+            id: `${new Date().getTime()}-${index}`,
+            img: v
+          }));
+        }
+      });
     },
     checkTab(img) {
-      const index = this.checkedList.indexOf(img);
+      const index = this.checkedList.findIndex(v => v.id === img.id);
       if (index === -1) {
         this.checkedList.push(img);
       } else {
@@ -197,7 +197,6 @@ export default {
       });
       Toast.loading('图片读取中...');
     },
-
     onReaderComplete(name, { dataUrl, file }) {
       Toast.hide();
       console.log(
@@ -207,10 +206,11 @@ export default {
       setTimeout(() => {
         const demoImageList = this.imageList[name] || [];
         this.getImgFun(dataUrl).then((data) => {
-          const newdataUrl = data;
-          demoImageList.unshift(newdataUrl);
+          demoImageList.unshift({
+            id: new Date().getTime(),
+            img: data
+          });
         });
-        //
         this.$set(this.imageList, name, demoImageList);
       }, 100);
     },
@@ -230,7 +230,7 @@ export default {
     insertMask() {
       console.log('确定插入');
       if (this.checkedList !== undefined && this.checkedList.length > 0) {
-        this.$emit('insertList', this.checkedList);
+        this.$emit('insertList', this.checkedList.map(v => v.img));
         // 重置选中
         this.checkedList = [];
         // 重置已上传的图片列表
