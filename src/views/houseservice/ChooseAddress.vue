@@ -150,7 +150,6 @@ export default {
     BPopCheckList,
     BItem,
     BRadioItem,
-    Toast
   },
 
   data() {
@@ -215,7 +214,6 @@ export default {
     };
   },
   activated() {
-    debugger;
     if (this.$route.params) {
       this.region = this.$route.params.region;
       if (this.region === 'edit') {

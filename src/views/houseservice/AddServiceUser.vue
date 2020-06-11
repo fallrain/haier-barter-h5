@@ -343,19 +343,19 @@ export default {
       });
       // 查询入户服务礼品卡券
       /* this.houseService.getCanBeIssuedRights({
-          userId: this.customerInfo.userId,
-          type: 2
-        }).then((res) => {
-          if (res.code === '200') {
-            res.data.forEach((item) => {
-              const name = `${item.cardTypeName} &nbsp; <span class="text-warning fs20">${item.rightsList[0].residualNum}</span>`;
-              this.tagList1.push({
-                id: item.rightsList[0].id,
-                name: name
-              })
-            });
-          }
-        }); */
+            userId: this.customerInfo.userId,
+            type: 2
+          }).then((res) => {
+            if (res.code === '200') {
+              res.data.forEach((item) => {
+                const name = `${item.cardTypeName} &nbsp; <span class="text-warning fs20">${item.rightsList[0].residualNum}</span>`;
+                this.tagList1.push({
+                  id: item.rightsList[0].id,
+                  name: name
+                })
+              });
+            }
+          }); */
     }
     // 修改计划
     if (this.$route.params.customerInfo) {
@@ -528,8 +528,10 @@ export default {
           });
         }
       });
-      this.customerInfo.serviceAddress = `${this.consignee.address.provinceName}/
-    ${this.consignee.address.cityName}/${this.consignee.address.districtName}/${address}`;
+      const {
+        address: serviceAddress
+      } = this.consignee;
+      this.customerInfo.serviceAddress = `${serviceAddress.provinceName}/${serviceAddress.cityName}/${serviceAddress.districtName}/${address}`;
     },
     chooseJoinPerson() {
       // 进入随行参与人页面

@@ -52,7 +52,11 @@
             <div class="bg-white p24 fs28">
               <div class="rows">
                 <div class="text-333">入户地址</div>
-                <button type="button" class="common-btn-waring" @click="queryAddress">修改地址</button>
+                <button
+                  type="button"
+                  class="common-btn-waring"
+                  @click="queryAddress"
+                >修改地址</button>
               </div>
               <div class>{{customerInfo.serviceAddress}}</div>
             </div>
@@ -880,13 +884,16 @@ export default {
       });
     },
     selectAddress(item) {
-      this.getAddressName(
-        item.province,
-        item.city,
-        item.district,
-        item.address
-      );
-      this.customerInfo.customerInfoId = item.id;
+      const {
+        id,
+        provinceName,
+        cityName,
+        districtName,
+        address
+      } = item;
+      this.customerInfo.serviceAddress = `${provinceName}/${cityName}/${districtName}/${address}`;
+
+      this.customerInfo.customerInfoId = id;
     },
     queryAddress() {
       this.addressPopShow = true;
