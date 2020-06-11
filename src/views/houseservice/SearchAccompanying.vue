@@ -78,10 +78,7 @@ export default {
   data() {
     return {
       searchVal: '',
-      searchData: {
-        username: '',
-        hmcId: ''
-      },
+      searchData: [],
       // 点击的数据
       currentClickItemData: {},
       searchList: [],
@@ -128,10 +125,7 @@ export default {
           } else {
             Toast.failed('随行参与人:无');
             this.searchVal = '';
-            this.searchData = {
-              username: '',
-              hmcId: ''
-            };
+            this.searchData = [];
           }
         }
       });
