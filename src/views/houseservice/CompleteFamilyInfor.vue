@@ -1815,12 +1815,4 @@ export default {
     justify-content: center;
     align-items: center;
   }
-
-  .bHouseServiceItem-add {
-    &.completeFamilyInfor-add {
-      position: fixed;
-      right: 24px;
-      bottom: 40px;
-    }
-  }
 </style>
