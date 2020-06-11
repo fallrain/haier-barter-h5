@@ -37,7 +37,7 @@ export default {
     bind(el) {
       let typing = false;
       el.addEventListener('input', (e) => {
-        // const dom = e.currentTarget;l
+        // const dom = e.currentTarget;
         // const tag = dom.getAttribute('data-hb-filter-no-space-tag');
         if (!typing) {
           const val = e.currentTarget.value;

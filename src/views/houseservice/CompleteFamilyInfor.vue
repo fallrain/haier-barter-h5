@@ -116,6 +116,7 @@
                 type="text"
                 placeholder="请输入入户小区"
                 v-model="familyCompleteInfo.communityName"
+                maxlength="16"
               />
             </div>
           </div>
@@ -127,6 +128,7 @@
                 type="text"
                 placeholder="请输入入户地理位置"
                 v-model="familyCompleteInfo.location"
+                maxlength="50"
               />
               <span class="icon iconfont icon-dingwei icon-color fs34 ml10"></span>
             </div>
@@ -190,8 +192,8 @@
                 class="text-666"
                 type="number"
                 placeholder="请输入家庭成员数量"
-                @input="inputDeal"
                 v-model="familyCompleteInfo.memberNum"
+                maxlength="2"
               />
               人
             </div>
@@ -1237,13 +1239,16 @@ export default {
       //   Toast.failed("均价不能为空");
       //   return;
       // }
-      if (
-        familyCompleteInfo.memberNum === ''
-          || !familyCompleteInfo.memberNum
-      ) {
+      if (!familyCompleteInfo.memberNum) {
         Toast.failed('家庭成员人数不能为空');
         return;
       }
+
+      if (!(familyCompleteInfo.memberNum * 1)) {
+        Toast.failed('家庭成员人数必须为大于0的数字');
+        return;
+      }
+
       if (
         familyCompleteInfo.familyType === ''
           || !familyCompleteInfo.familyType
@@ -1282,13 +1287,6 @@ export default {
             j--;
           }
         }
-      }
-    },
-    inputDeal() {
-      const reg = /^[+]{0,1}(\d+)$/g;
-      if (!reg.test(this.familyCompleteInfo.memberNum)) {
-        Toast.failed('输入格式错误，请重新输入');
-        this.familyCompleteInfo.memberNum = null;
       }
     }
   },
