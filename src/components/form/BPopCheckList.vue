@@ -94,6 +94,7 @@ export default {
       const i = this.checkIds.findIndex(v => id === v);
       if (this.type === 'radio') {
         this.checkIds = [id];
+        this.$emit('itemClick', this.checkIds);
         return;
       }
       if (i === -1) {
@@ -101,6 +102,7 @@ export default {
       } else {
         this.checkIds.splice(i, 1);
       }
+      this.$emit('itemClick', this.checkIds);
     },
     chooseGiftClick(item) {
       this.$emit('chooseGift', item);

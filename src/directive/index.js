@@ -32,5 +32,24 @@ export default {
         window.scrollTo(0, 0);
       });
     }
+  },
+  noSpace: {
+    bind(el) {
+      let typing = false;
+      el.addEventListener('input', (e) => {
+        // const dom = e.currentTarget;
+        // const tag = dom.getAttribute('data-hb-filter-no-space-tag');
+        if (!typing) {
+          const val = e.currentTarget.value;
+          e.currentTarget.value = val.trim();
+        }
+      });
+      el.addEventListener('compositionstart', () => {
+        typing = true;
+      });
+      el.addEventListener('compositionend', () => {
+        typing = false;
+      });
+    }
   }
 };

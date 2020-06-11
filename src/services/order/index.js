@@ -125,4 +125,10 @@ export default {
   hmcUploadInvoiceForOrderFreeze(data, param) {
     return axPostJson(urls.hmcUploadInvoiceForOrderFreeze, data, param);
   },
+  queryUserNewestOrder(data, param) {
+    return axPostJson(urls.queryUserNewestOrder, data, param);
+  },
+  createFollowByRHFW(data, param) {
+    return axPostJson(urls.createFollowByRHFW, data, param);
+  }
 };
