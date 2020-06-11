@@ -19,25 +19,14 @@
             :key="index"
             @click="checkTab(img)"
             :style="{
-          'backgroundImage': `url(${img})`,
-          'backgroundPosition': 'center center',
-          'backgroundRepeat': 'no-repeat',
-          'backgroundSize': 'cover'
-        }"
+              backgroundImage: `url(${img})`,
+              backgroundPosition: 'center center',
+              backgroundRepeat: 'no-repeat',
+              backgroundSize: 'cover'
+            }"
           >
-            <!-- <md-tag
-              class="image-reader-item-del"
-              size="small"
-              shape="quarter"
-              fill-color="#111A34"
-              type="fill"
-              font-color="#fff"
-              @click.native="onDeleteImage('reader0', index)"
-            >
-              <md-icon name="close"></md-icon>
-            </md-tag>-->
             <div v-for="(img1, index1) in checkedList" :key="index1" v-show="img === img1">
-              <img class="selectclass" src="@/assets/images/houseServicer/selecticon-done.png" />
+              <img class="selectclass" src="@/assets/images/houseServicer/selecticon-done.png">
             </div>
           </li>
         </ul>
@@ -55,20 +44,19 @@
 
 <script>
 import {
-  Toast,
-  DropMenu,
-  Popup,
-  PopupTitleBar,
   Button,
+  Dialog,
+  DropMenu,
+  Field,
   Icon,
   ImageReader,
+  Popup,
+  PopupTitleBar,
   Switch,
   Tag,
-  Dialog,
   TextareaItem,
-  Field
+  Toast
 } from 'mand-mobile';
-import imageProcessor from 'mand-mobile/lib/image-reader/image-processor'; // 图片处理插件，用法参考#imageProcessor
 
 export default {
   name: 'SelectPhotosTools',
@@ -103,10 +91,7 @@ export default {
   data() {
     return {
       imageList: {
-        reader0: [
-          '//img-hxy021.didistatic.com/static/strategymis/insurancePlatform_spu/uploads/27fb7f097ca218d743f816836bc7ea4a',
-          '//manhattan.didistatic.com/static/manhattan/insurancePlatform_spu/uploads/c2912793a222eb24b606a582fd849ab7'
-        ],
+        reader0: [],
         reader1: []
       },
       checkedList: []
@@ -189,7 +174,6 @@ export default {
       this.basicService
         .queryHoseHoldPicturesForStory(customerIdSelect)
         .then((res1) => {
-          debugger;
           if (res1.code === 1) {
             this.imageList.reader0 = res1.data;
           }
@@ -206,7 +190,6 @@ export default {
     // 相册获取图片代理
     onReaderSelect(name, { files }) {
       files.forEach((file) => {
-        debugger;
         console.log(
           '[Mand Mobile] ImageReader Selected:',
           `File Name ${file.name}`
@@ -216,8 +199,6 @@ export default {
     },
 
     onReaderComplete(name, { dataUrl, file }) {
-      debugger;
-
       Toast.hide();
       console.log(
         '[Mand Mobile] ImageReader Complete:',
@@ -250,6 +231,10 @@ export default {
       console.log('确定插入');
       if (this.checkedList !== undefined && this.checkedList.length > 0) {
         this.$emit('insertList', this.checkedList);
+        // 重置选中
+        this.checkedList = [];
+        // 重置已上传的图片列表
+        this.imageList.reader0 = [];
       } else {
         Toast.info('请点击图片，选中要插入的图片');
       }
@@ -259,107 +244,116 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.dialog {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 9999;
-  .dialog-container {
-    // overflow-y: auto;
-    width: 689px;
-    height: 869px;
-    background: #ffffff;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 8px;
-    position: relative;
-    padding: 15px;
-  }
-  .close-btn {
-    position: absolute;
-    background: yellow;
-    top: 16px;
-    right: 16px;
-    width: 30px;
-    height: 30px;
-    line-height: 30px;
-    text-align: center;
-    font-size: 18px;
-    cursor: pointer;
-    &:hover {
-      font-weight: 600;
-    }
-  }
-}
-.md-example-child-reader {
-  .image-reader-list {
-    overflow-y: auto;
-    float: left;
-    width: 100%;
-    height: 700px;
-  }
-  .image-reader-item {
-    position: relative;
-    float: left;
-    width: 193px;
-    height: 193px;
-    padding-bottom: 23.5%;
+  .dialog {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 9999;
 
-    background: #fff;
-    box-shadow: 0 5px 20px rgba(197, 202, 213, 0.25);
-    box-sizing: border-box;
-    list-style: none;
-    border-radius: 4px;
-    background-size: cover;
-    overflow: hidden;
-    // &: nth-of-type(4n)
-    margin-left: 20px;
-    margin-top: 40px;
-    //  &.add;
-    .md-icon {
-      position: absolute;
-      top: 40%;
+    .dialog-container {
+      // overflow-y: auto;
+      width: 689px;
+      height: 869px;
+      background: #ffffff;
+      top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      opacity: 0.5;
+      border-radius: 8px;
+      position: relative;
+      padding: 15px;
     }
-    .image-reader-item-del {
-      background: #ff0000;
-    }
-    .selectclass {
+
+    .close-btn {
       position: absolute;
-      width: 36px;
-      height: 36px;
-      right: 10px;
-      top: 10px;
+      background: yellow;
+      top: 16px;
+      right: 16px;
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
+      font-size: 18px;
+      cursor: pointer;
+
+      &:hover {
+        font-weight: 600;
+      }
     }
   }
-}
-.bottomClass {
-  display: flex;
-  flex-direction: row;
-  position: absolute;
-  bottom: 40px;
-  right: 20px;
-}
-.bottomClass button {
-  border: 1px solid #1969c6;
-  color: #1969c6;
-  border-radius: 28px;
-  background: #fff;
-  height: 56px;
-  margin-left: 20px;
-  padding-left: 15px;
-  padding-right: 15px;
-  font-size: 25px;
-}
+
+  .md-example-child-reader {
+    .image-reader-list {
+      overflow-y: auto;
+      float: left;
+      width: 100%;
+      height: 700px;
+    }
+
+    .image-reader-item {
+      position: relative;
+      float: left;
+      width: 193px;
+      height: 193px;
+      padding-bottom: 23.5%;
+
+      background: #fff;
+      box-shadow: 0 5px 20px rgba(197, 202, 213, 0.25);
+      box-sizing: border-box;
+      list-style: none;
+      border-radius: 4px;
+      background-size: cover;
+      overflow: hidden;
+      // &: nth-of-type(4n)
+      margin-left: 20px;
+      margin-top: 40px;
+      //  &.add;
+      .md-icon {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0.5;
+      }
+
+      .image-reader-item-del {
+        background: #ff0000;
+      }
+
+      .selectclass {
+        position: absolute;
+        width: 36px;
+        height: 36px;
+        right: 10px;
+        top: 10px;
+      }
+    }
+  }
+
+  .bottomClass {
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    bottom: 40px;
+    right: 20px;
+  }
+
+  .bottomClass button {
+    border: 1px solid #1969c6;
+    color: #1969c6;
+    border-radius: 28px;
+    background: #fff;
+    height: 56px;
+    margin-left: 20px;
+    padding-left: 15px;
+    padding-right: 15px;
+    font-size: 25px;
+  }
 </style>
 <style lang="scss" scope>
-.md-toast .md-popup {
-  z-index: 99700;
-}
+  .md-toast .md-popup {
+    z-index: 99700;
+  }
 </style>

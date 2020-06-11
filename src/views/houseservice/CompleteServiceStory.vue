@@ -30,7 +30,7 @@
           disabled
           placeholder="请输入标题"
         />
-        <!-- <div>{{customerInfo.tag}}</div>
+        <div>{{customerInfo.tag}}</div>
       </div>-->
       <div class="mainbody">
         <rich-editor
@@ -42,106 +42,7 @@
           :hasTitle="true"
           :customerId="this.customerInfo.customerId"
         ></rich-editor>
-        <!-- <md-textarea-item
-          ref="demo0"
-          title
-          autosize
-          class="example"
-          v-model="customerInfo.mainbody"
-          placeholder="正文"
-          rows="20"
-        />
-        <div class="addBtnClass">
-          <img class @click="addAction" src="@/assets/images/houseServicer/rugsAdd_icon.png" />
-        </div>-->
       </div>
-      <!-- <div class="templete-item">
-        <div class="text-center mb16 mt16">心动之选</div>
-        <div class="tip-style" v-show="customerInfo.status !== 1">编辑图文，描述用户购机原因</div>
-        <div class="appendArea">
-          <div class="append-item" v-for="(item, index) in customerInfo.heartInfo" :key="index">
-            <div class="img-show">
-              <div v-show="customerInfo.status !== 1">
-                <b-wx-upload
-                  :maxLength="-1"
-                  @imageuploaded="(data, fileList)=>imageuploaded(data, fileList, item)"
-                  :uploadFn="uploadImgFn"
-                  @errorhandle="uploadError"
-                >
-                </b-wx-upload>
-              </div>
-              <div v-show="item.url === ''" class="add-tag">+</div>
-              <img v-show="item.url!=''" :src="item.url" alt="">
-            </div>
-            <div class="text-input">
-              <textarea v-show="customerInfo.status !== 1" class="w100per"
-                        v-model="item.descript" rows="3"
-                        @input="judgeContentWord('heartInfo',index)"
-                        placeholder="添加对此图片的文字描述"></textarea>
-              <textarea v-show="customerInfo.status === 1" disabled class="w100per" v-model="item.descript" rows="3"></textarea>
-            </div>
-          </div>
-        </div>
-        <div v-show="customerInfo.status !== 1" class="add-new" @click="addInfor(1)">+</div>
-      </div>-->
-      <!-- <div class="templete-item">
-        <div class="text-center mb16 mt16">品质生活</div>
-        <div class="tip-style" v-show="customerInfo.status !== 1">编辑图文，描述用户产品使用场景</div>
-        <div class="appendArea">
-          <div class="append-item" v-for="(item, index) in customerInfo.lifeInfo" :key="index">
-            <div class="img-show">
-              <div v-show="customerInfo.status !== 1">
-                <b-wx-upload
-                  :maxLength="-1"
-                  @imageuploaded="(data, fileList)=>imageuploaded(data, fileList, item)"
-                  :uploadFn="uploadImgFn"
-                  @errorhandle="uploadError"
-                >
-                </b-wx-upload>
-              </div>
-              <div v-show="item.url === ''" class="add-tag">+</div>
-              <img v-show="item.url!=''" :src="item.url" alt="">
-            </div>
-            <div class="text-input">
-              <textarea v-show="customerInfo.status !== 1" class="w100per"
-                        v-model="item.descript" rows="3"
-                        @input="judgeContentWord('lifeInfo',index)"
-                        placeholder="添加对此图片的文字描述"></textarea>
-              <textarea v-show="customerInfo.status === 1" disabled class="w100per" v-model="item.descript" rows="3" placeholder=""></textarea>
-            </div>
-          </div>
-        </div>
-        <div class="add-new" v-show="customerInfo.status !== 1" @click="addInfor(2)">+</div>
-      </div>-->
-      <!-- <div class="templete-item">
-        <div class="text-center mb16 mt16">用户心声</div>
-        <div class="tip-style" v-show="customerInfo.status !== 1">编辑图文，描述用户产品使用场景</div>
-        <div class="appendArea">
-          <div class="append-item" v-for="(item, index) in customerInfo.userwordInfo" :key="index">
-            <div class="img-show">
-              <div v-show="customerInfo.status !== 1">
-                <b-wx-upload
-                  :maxLength="-1"
-                  @imageuploaded="(data, fileList)=>imageuploaded(data, fileList, item)"
-                  :uploadFn="uploadImgFn"
-                  @errorhandle="uploadError"
-                >
-                </b-wx-upload>
-              </div>
-              <div v-show="item.url === ''" class="add-tag">+</div>
-              <img v-show="item.url!=''" :src="item.url" alt="">
-            </div>
-            <div class="text-input">
-              <textarea class="w100per" v-show="customerInfo.status !== 1"
-                        v-model="item.descript"
-                        @input="judgeContentWord('userwordInfo',index)"
-                        rows="3" placeholder="添加对此图片的文字描述"></textarea>
-              <textarea class="w100per" v-show="customerInfo.status === 1" disabled v-model="item.descript" rows="3"></textarea>
-            </div>
-          </div>
-        </div>
-        <div class="add-new" v-show="customerInfo.status !== 1" @click="addInfor(3)">+</div>
-      </div>-->
       <div class="bottomThreeClass">
         <div class="switch-item">
           <div class="switch-info">
@@ -329,7 +230,6 @@ export default {
     },
     // 确定插入
     insertList(data) {
-      debugger;
       this.imgList = data;
       this.showMaska = false;
     },
@@ -417,7 +317,6 @@ export default {
       if (!this.isAddState) {
         // 新增
         this.houseService.addStory(this.customerInfo).then((res) => {
-          debugger;
           if (res.code === 1) {
             // if (status === 0) {
             //   Toast.succeed('暂存成功');
@@ -445,25 +344,14 @@ export default {
           // }
         });
       } else if (this.isAddState) {
-        this.customerInfo;
         // 修改
         this.houseService.modifyStory(this.customerInfo).then((res) => {
           if (res.code === 1) {
             Toast.succeed('提交成功');
             this.$mBack();
-            this.houseService
-              .completeStory({
-                planId: this.customerInfo.planId
-              })
-              .then((res) => {
-                if (res.code === 1) {
-                  debugger;
-                  setTimeout(() => {
-                    // this.$router.go(-1);
-                    // this.$destroy();
-                  }, 500);
-                }
-              });
+            this.houseService.completeStory({
+              planId: this.customerInfo.planId
+            });
           }
           // }
         });

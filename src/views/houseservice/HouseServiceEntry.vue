@@ -147,7 +147,6 @@ export default {
       HOUSE_SERVICE.UPDATE_PARTICIPANT
     ]),
     rhgsListAction(a, b) {
-      debugger;
       // 我的 全国
       this.postStoryList(a, b);
     },
@@ -172,7 +171,6 @@ export default {
         pageSize: '10'
       };
       this.houseService.queryPlanServiceList(data, {}).then((res) => {
-        // debugger;
         if (res.code === 1) {
           res.data.result.forEach((item, index) => {
             res.data.result[index].arrowtag = false;
