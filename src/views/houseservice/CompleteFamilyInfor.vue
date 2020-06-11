@@ -2,7 +2,7 @@
   <div id="apply">
     <!--    表单信息-->
     <div class="content-infor">
-      <nav class="mt16">
+      <nav>
         <ul>
           <li :class="{'active':tabIndex===0}" @click="tabChange(0)">预约信息</li>
           <li :class="{'active':tabIndex===1}" @click="tabChange(1)">住宅信息</li>
@@ -56,7 +56,8 @@
                   type="button"
                   class="common-btn-waring"
                   @click="queryAddress"
-                >修改地址</button>
+                >修改地址
+                </button>
               </div>
               <div class>{{customerInfo.serviceAddress}}</div>
             </div>
@@ -298,24 +299,24 @@
         </div>
       </div>
     </div>
-    <!--    底部按钮-->
-    <footer v-show="tabIndex === 1">
-      <template>
-        <div class="md-example-child md-example-child-button md-example-child-button-3">
-          <div class="md-example-section">
-            <md-button type="primary" inline @click="dealSave">保存</md-button>
-          </div>
-        </div>
-      </template>
-    </footer>
-    <footer v-show="tabIndex === 0">
-      <template>
-        <div class="md-example-child md-example-child-button md-example-child-button-3">
-          <div class="md-example-section-q">
-            <md-button type="primary" inline @click="yyxxdealSave">确认修改</md-button>
-          </div>
-        </div>
-      </template>
+    <footer
+      v-show="tabIndex === 1 || tabIndex === 0"
+      class="completeFamilyInfor-footer"
+    >
+      <button
+        v-show="tabIndex === 1"
+        type="button"
+        class="common-submit-btn-default"
+        @click="dealSave"
+      >保存
+      </button>
+      <button
+        v-show="tabIndex === 0"
+        type="button"
+        class="common-submit-btn-default"
+        @click="yyxxdealSave"
+      >确认修改
+      </button>
     </footer>
     <b-pop-check-list type="radio" :show.sync="tagPopShow0" :list="tagList" v-model="tag"></b-pop-check-list>
     <div class="orderentry-address">
@@ -1204,7 +1205,7 @@ export default {
       console.log(familyCompleteInfo);
       if (
         familyCompleteInfo.communityName === ''
-        || !familyCompleteInfo.communityName
+          || !familyCompleteInfo.communityName
       ) {
         Toast.failed('小区名称不能为空');
         return;
@@ -1212,14 +1213,14 @@ export default {
       if (this.familyCompleteInfo.familyType === '1') {
         if (
           familyCompleteInfo.gradeItemCode === ''
-          || !familyCompleteInfo.gradeItemCode
+            || !familyCompleteInfo.gradeItemCode
         ) {
           Toast.failed('小区档次不能为空');
           return;
         }
         if (
           familyCompleteInfo.housetypItemCode === ''
-          || !familyCompleteInfo.housetypItemCode
+            || !familyCompleteInfo.housetypItemCode
         ) {
           Toast.failed('户型不能为空');
           return;
@@ -1308,7 +1309,7 @@ export default {
 </script>
 <style lang="scss" scoped>
   .tab-item {
-    padding-bottom: 80px;
+    padding-bottom: 132px;
   }
 
   .focusState {
@@ -1394,6 +1395,10 @@ export default {
     font-size: 28px;
 
     nav {
+      display: flex;
+      height: 76px;
+      align-items: flex-end;
+
       ul {
         display: flex;
         justify-content: center;
@@ -1425,6 +1430,7 @@ export default {
     }
 
     .tab-show {
+      height: calc(100vh - 76px - 132px);
       padding: 0 !important;
 
       .addressInfor-item {
@@ -1598,33 +1604,17 @@ export default {
     width: 100px;
   }
 
-  footer {
+  .completeFamilyInfor-footer {
     position: fixed;
     background: #fff;
     left: 0;
     bottom: 0;
     width: 100%;
-    padding: 24px;
-
-    .md-example-section {
-      display: flex;
-      justify-content: space-between;
-
-      button {
-        width: 100%;
-        height: 84px;
-      }
-    }
-
-    .md-example-section-q {
-      display: flex;
-      justify-content: space-between;
-
-      button {
-        width: 100%;
-        height: 84px;
-      }
-    }
+    height: 132px;
+    padding-left: 24px;
+    padding-right: 24px;
+    display: flex;
+    align-items: center;
   }
 
   .br-b {
