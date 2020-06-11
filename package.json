@@ -15,7 +15,7 @@
     "core-js": "^2.6.5",
     "deepmerge": "^3.3.0",
     "eslint-plugin-html": "^6.0.0",
-    "html2canvas": "^1.0.0-rc.5",
+    "html2canvas": "^1.0.0-rc.4",
     "lrz": "^4.9.40",
     "mand-mobile": "^2.5.2",
     "mescroll.js": "^1.4.1",
