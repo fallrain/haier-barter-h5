@@ -119,7 +119,7 @@
       </form>
     </div>
     <!--    底部按钮-->
-    <footer>
+    <footer class="addServiceUser-footer">
       <template>
         <div class="md-example-child md-example-child-button md-example-child-button-3">
           <div class="md-example-section">
@@ -929,7 +929,7 @@ export default {
     }
   }
 
-  footer {
+  .addServiceUser-footer {
     padding: 24px;
 
     .md-example-section {
