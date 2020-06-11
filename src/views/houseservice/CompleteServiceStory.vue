@@ -306,7 +306,7 @@ export default {
         Toast.failed('请上传封面图片！');
         return;
       }
-      if (this.customerInfo.title === '') {
+      if (!this.customerInfo.title) {
         Toast.failed('请输入故事标题！');
         return;
       }

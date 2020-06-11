@@ -5,7 +5,14 @@
         <div class="addBtnClass">
           <img @click="addAction" src="@/assets/images/houseServicer/rugsAdd_icon.png"/>
         </div>
-        <input class="title-input" v-if="hasTitle" v-model="strTitle" :placeholder="placeholder||'标题'"/>
+        <input
+          class="title-input"
+          v-if="hasTitle"
+          v-model="strTitle"
+          :placeholder="placeholder||'标题'"
+          v-noSpace
+          maxlength="20"
+        >
         <input type="hidden" id="target" v-model="strContent">
         <editable class="editable" ref='editor' :content="strContent" :contentplaceholder="contentplaceholder"
                   @addimg="addimg($event)" @update="strContent = $event">
