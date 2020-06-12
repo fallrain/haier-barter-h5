@@ -36,12 +36,20 @@ export default {
   noSpace: {
     bind(el) {
       let typing = false;
+      let trigger = false;
       el.addEventListener('input', (e) => {
+        if (trigger) {
+          trigger = false;
+          return;
+        }
         // const dom = e.currentTarget;
         // const tag = dom.getAttribute('data-hb-filter-no-space-tag');
         if (!typing) {
           const val = e.currentTarget.value;
           e.currentTarget.value = val.trim();
+          trigger = true;
+          const event = new Event('input');
+          e.currentTarget.dispatchEvent(event);
         }
       });
       el.addEventListener('compositionstart', () => {

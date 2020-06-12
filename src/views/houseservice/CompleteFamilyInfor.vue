@@ -193,8 +193,7 @@
                 type="number"
                 placeholder="请输入家庭成员数量"
                 v-model="familyCompleteInfo.memberNum"
-                maxlength="2"
-              />
+              >
               人
             </div>
           </div>
@@ -228,6 +227,7 @@
               rows="3"
               v-model="familyCompleteInfo.memberRemarks"
               @input="delKeyNum"
+              maxlength="200"
             ></textarea>
           </div>
         </div>
@@ -389,6 +389,10 @@ import {
 import {
   HOUSE_SERVICE
 } from '@/store/mutationsTypes';
+
+import {
+  getIndustryGroupOptions
+} from '@/lib/dataDictionary';
 
 export default {
   name: 'CompleteFamilyInfor',
@@ -575,83 +579,9 @@ export default {
       }
     });
     // 产品类别字典
-    this.productGroupName = [
-      {
-        id: '1',
-        groupCode: 'BX',
-        groupName: '冰箱'
-      },
-      {
-        id: '2',
-        groupCode: 'XYJ',
-        groupName: '洗衣机'
-      },
-      {
-        id: '3',
-        groupCode: 'DS',
-        groupName: '电视'
-      },
-      {
-        id: '4',
-        groupCode: 'KT',
-        groupName: '空调'
-      },
-      {
-        id: '5',
-        groupCode: 'KX',
-        groupName: '烤箱'
-      },
-      {
-        id: '6',
-        groupCode: 'BG',
-        groupName: '冰柜'
-      },
-      {
-        id: '7',
-        groupCode: 'DN',
-        groupName: '电脑'
-      },
-      {
-        id: '8',
-        groupCode: 'RSQ',
-        groupName: '热水器'
-      },
-      {
-        id: '9',
-        groupCode: 'JSQ',
-        groupName: '净水器'
-      },
-      {
-        id: '10',
-        groupCode: 'XDG',
-        groupName: '消毒柜'
-      },
-      {
-        id: '11',
-        groupCode: 'RQZ',
-        groupName: '燃气灶'
-      },
-      {
-        id: '12',
-        groupCode: 'XWJ',
-        groupName: '洗碗机'
-      },
-      {
-        id: '13',
-        groupCode: 'YYJ',
-        groupName: '油烟机'
-      },
-      {
-        id: '14',
-        groupCode: 'SJ',
-        groupName: '手机'
-      },
-      {
-        id: '15',
-        groupCode: 'QT',
-        groupName: '其他'
-      }
-    ];
+    getIndustryGroupOptions().then((data) => {
+      this.productGroupName = data;
+    });
     // 家庭结构字典
     this.productService.commonTypeQuery('group_composition_code').then((res) => {
       if (res.code === 1) {
@@ -1246,6 +1176,11 @@ export default {
 
       if (!(familyCompleteInfo.memberNum * 1)) {
         Toast.failed('家庭成员人数必须为大于0的数字');
+        return;
+      }
+
+      if (familyCompleteInfo.memberNum * 1 > 99) {
+        Toast.failed('家庭成员人数最大为99');
         return;
       }
 

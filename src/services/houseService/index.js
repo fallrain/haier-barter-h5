@@ -38,7 +38,10 @@ export default {
   },
   completeAppraise(param) {
     /* 已评价 */
-    return axGet(urls.completeAppraise, param);
+    return axGet(urls.completeAppraise, {
+      ...param,
+      noToken: true
+    });
   },
   completeFamily(param) {
     /* 完善家庭信息 */

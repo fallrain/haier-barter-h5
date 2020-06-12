@@ -42,6 +42,8 @@ const urls = {
     return `/customer/appliances/picture/${customerId}`; // 查询家电图片
   },
   sellerRemind: '/seller/remind', // 新增提醒
+  industryGroup: '/common/product_group/list/1', // 获取全部产品组
+  microList: '/common/micro/list/codeName',
 };
 
 Object.entries(urls).forEach(([key, value]) => {
