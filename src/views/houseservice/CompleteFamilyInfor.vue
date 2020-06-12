@@ -1537,19 +1537,6 @@ export default {
     width: 100px;
   }
 
-  .completeFamilyInfor-footer {
-    position: fixed;
-    background: #fff;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    height: 132px;
-    padding-left: 24px;
-    padding-right: 24px;
-    display: flex;
-    align-items: center;
-  }
-
   .br-b {
     width: 100%;
     border-bottom: 1px solid #f5f5f5;

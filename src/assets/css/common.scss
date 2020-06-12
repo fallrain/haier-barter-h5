@@ -693,12 +693,12 @@
   margin-right: 18px;
 }
 
-.orderModify-receivedCoupons-list{
+.orderModify-receivedCoupons-list {
 
 }
 
 
-.orderModify-receivedCoupons-item{
+.orderModify-receivedCoupons-item {
   height: 68px;
   line-height: 60px;
   margin-bottom: 22px;
@@ -740,6 +740,19 @@
     display: block;
     clear: both;
   }
+}
+
+.completeFamilyInfor-footer {
+  position: fixed;
+  background: #fff;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 132px;
+  padding-left: 24px;
+  padding-right: 24px;
+  display: flex;
+  align-items: center;
 }
 
 /*入户服务首页 end*/
