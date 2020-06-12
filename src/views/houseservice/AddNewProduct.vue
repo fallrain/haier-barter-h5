@@ -135,15 +135,21 @@
       </div>
     </div>
     <!--    底部按钮-->
-    <footer>
-      <template>
-        <div class="md-example-child-button md-example-child-button-3">
-          <div class="md-example-section">
-            <md-button type="primary" inline plain @click="dealCancle">取消</md-button>
-            <md-button type="primary" inline @click="dealSave">保存</md-button>
-          </div>
-        </div>
-      </template>
+    <footer
+      class="completeFamilyInfor-footer"
+    >
+      <button
+        type="button"
+        class="common-submit-btn-primary mr16"
+        @click="dealCancle"
+      >取消
+      </button>
+      <button
+        type="button"
+        class="common-submit-btn-default"
+        @click="dealSave"
+      >保存
+      </button>
     </footer>
     <b-pop-check-list
       type="radio"
@@ -681,7 +687,7 @@ export default {
   }
 
   .content-infor {
-    padding-bottom: 50px;
+    padding-bottom: 152px;
     color: #666;
     font-size: 28px;
 
