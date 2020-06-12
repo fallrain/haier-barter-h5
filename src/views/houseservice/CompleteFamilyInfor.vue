@@ -193,8 +193,7 @@
                 type="number"
                 placeholder="请输入家庭成员数量"
                 v-model="familyCompleteInfo.memberNum"
-                maxlength="2"
-              />
+              >
               人
             </div>
           </div>
@@ -1177,6 +1176,11 @@ export default {
 
       if (!(familyCompleteInfo.memberNum * 1)) {
         Toast.failed('家庭成员人数必须为大于0的数字');
+        return;
+      }
+
+      if (familyCompleteInfo.memberNum * 1 > 99) {
+        Toast.failed('家庭成员人数最大为99');
         return;
       }
 
