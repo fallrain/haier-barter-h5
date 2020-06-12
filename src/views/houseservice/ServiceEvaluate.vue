@@ -47,6 +47,7 @@
           @input="dealKeyWord"
           v-model="customerInfo.description"
           placeholder="请输入您的评价内容（可不填）"
+          maxlength="200"
         ></textarea>
       </div>
     </div>

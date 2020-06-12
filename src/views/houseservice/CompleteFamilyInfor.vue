@@ -228,6 +228,7 @@
               rows="3"
               v-model="familyCompleteInfo.memberRemarks"
               @input="delKeyNum"
+              maxlength="200"
             ></textarea>
           </div>
         </div>
