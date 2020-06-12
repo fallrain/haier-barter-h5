@@ -97,5 +97,21 @@ export default {
   sellerRemind(data, param) {
     /* 提交提醒 */
     return axPostJson(urls.sellerRemind, data, param);
-  }
+  },
+  microList(data) {
+    /* 查询小微 */
+    return axGet(urls.microList, data);
+  },
+  sceneTypeList() {
+    /* 查询认筹活动列表 */
+    return axGet(urls.dictionary('REMIND_BUSINESS_SCENARIOS'));
+  },
+  virtualGiftType() {
+    /* 虚拟礼品 */
+    return axGet(urls.dictionary('virtual_gift_type'));
+  },
+  industryGroup() {
+    /* 查询全部产品组 */
+    return axGet(urls.industryGroup);
+  },
 };
