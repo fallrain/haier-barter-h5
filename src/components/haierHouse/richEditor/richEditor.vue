@@ -104,8 +104,8 @@ export default {
     strContent(o) {
       this.$emit('update:description', o);
     },
-    strTitle() {
-      this.$emit('update:title', this.strTitle);
+    strTitle(val) {
+      this.$emit('update:title', val.trim());
     },
     title(o) {
       this.strTitle = o;
