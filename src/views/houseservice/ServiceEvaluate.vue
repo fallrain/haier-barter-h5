@@ -1,66 +1,80 @@
 <template>
   <div style="padding-bottom: 60px;">
-    <div class="content-header">
-      您的满意，是我们前进的方向，请您根据实际感受，留下 您的反馈和建议吧~
-    </div>
-    <div class="evaluate-point">
-      <div class="evaluate-title">为{{servicerName}}的上门服务打分</div>
-      <div class="star-style">
-        <div class="start-item" @click="clickStar(1)">
-          <img v-show="customerInfo.score > 0" src="@/assets/images/houseServicer/star.png" alt="" class="">
-          <img v-show="customerInfo.score < 1" src="@/assets/images/houseServicer/star_default.png" alt="" class="">
-        </div>
-        <div class="start-item" @click="clickStar(2)">
-          <img v-show="customerInfo.score > 1" src="@/assets/images/houseServicer/star.png" alt="" class="">
-          <img v-show="customerInfo.score < 2" src="@/assets/images/houseServicer/star_default.png" alt="" class="">
-        </div>
-        <div class="start-item" @click="clickStar(3)">
-          <img v-show="customerInfo.score > 2" src="@/assets/images/houseServicer/star.png" alt="" class="">
-          <img v-show="customerInfo.score < 3" src="@/assets/images/houseServicer/star_default.png" alt="" class="">
-        </div>
-        <div class="start-item" @click="clickStar(4)">
-          <img v-show="customerInfo.score > 3" src="@/assets/images/houseServicer/star.png" alt="" class="">
-          <img v-show="customerInfo.score < 4" src="@/assets/images/houseServicer/star_default.png" alt="" class="">
-        </div>
-        <div class="start-item" @click="clickStar(5)">
-          <img v-show="customerInfo.score > 4" src="@/assets/images/houseServicer/star.png" alt="" class="">
-          <img v-show="customerInfo.score < 5" src="@/assets/images/houseServicer/star_default.png" alt="" class="">
+    <div class="serviceEvaluate-cnt">
+      <div class="content-header">
+        您的满意，是我们前进的方向，请您根据实际感受，留下 您的反馈和建议吧~
+      </div>
+      <div class="evaluate-point">
+        <div class="evaluate-title">为{{servicerName}}的上门服务打分</div>
+        <div class="star-style">
+          <div class="start-item" @click="clickStar(1)">
+            <img v-show="customerInfo.score > 0" src="@/assets/images/houseServicer/star.png" alt="" class="">
+            <img v-show="customerInfo.score < 1" src="@/assets/images/houseServicer/star_default.png" alt="" class="">
+          </div>
+          <div class="start-item" @click="clickStar(2)">
+            <img v-show="customerInfo.score > 1" src="@/assets/images/houseServicer/star.png" alt="" class="">
+            <img v-show="customerInfo.score < 2" src="@/assets/images/houseServicer/star_default.png" alt="" class="">
+          </div>
+          <div class="start-item" @click="clickStar(3)">
+            <img v-show="customerInfo.score > 2" src="@/assets/images/houseServicer/star.png" alt="" class="">
+            <img v-show="customerInfo.score < 3" src="@/assets/images/houseServicer/star_default.png" alt="" class="">
+          </div>
+          r
+          <div class="start-item" @click="clickStar(4)">
+            <img v-show="customerInfo.score > 3" src="@/assets/images/houseServicer/star.png" alt="" class="">
+            <img v-show="customerInfo.score < 4" src="@/assets/images/houseServicer/star_default.png" alt="" class="">
+          </div>
+          <div class="start-item" @click="clickStar(5)">
+            <img v-show="customerInfo.score > 4" src="@/assets/images/houseServicer/star.png" alt="" class="">
+            <img v-show="customerInfo.score < 5" src="@/assets/images/houseServicer/star_default.png" alt="" class="">
+          </div>
         </div>
       </div>
-    </div>
-    <div class="content-header">
-      您认为您的专属服务顾问还需要提升以下哪方面的能力 后会更加优秀？
-    </div>
-    <div class="tag-content">
-      <span :class="[{ active: tagList.indexOf('1')>-1 }, 'tag-item']" @click="clickTag('1')">服务态度</span>
-      <span :class="[{ active: tagList.indexOf('2')>-1 }, 'tag-item']" @click="clickTag('2')">服务流程</span>
-      <span :class="[{ active: tagList.indexOf('3')>-1 }, 'tag-item']" @click="clickTag('3')">服务质量</span>
-      <span :class="[{ active: tagList.indexOf('4')>-1 }, 'tag-item']" @click="clickTag('4')">人员素质</span>
-    </div>
-    <div class="evaluate-fb">评价内容</div>
-    <div class="evaluate-content">
-      <textarea rows="5" class="w100per"
-                @input="dealKeyWord"
-                v-model="customerInfo.description"
-                placeholder="请输入您的评价内容（可不填）"></textarea>
-    </div>
-    <div class="md-example-child  md-example-child-button md-example-child-button-3">
-      <div class="md-example-section">
-        <md-button type="primary" inline plain @click="dealCancle">取消</md-button>
-        <md-button type="primary" inline @click="dealSave">保存</md-button>
+      <div class="content-header">
+        您认为您的专属服务顾问还需要提升以下哪方面的能力 后会更加优秀？
       </div>
+      <div class="tag-content">
+        <span :class="[{ active: tagList.indexOf('1')>-1 }, 'tag-item']" @click="clickTag('1')">服务态度</span>
+        <span :class="[{ active: tagList.indexOf('2')>-1 }, 'tag-item']" @click="clickTag('2')">服务流程</span>
+        <span :class="[{ active: tagList.indexOf('3')>-1 }, 'tag-item']" @click="clickTag('3')">服务质量</span>
+        <span :class="[{ active: tagList.indexOf('4')>-1 }, 'tag-item']" @click="clickTag('4')">人员素质</span>
+      </div>
+      <div class="evaluate-fb">评价内容</div>
+      <div class="evaluate-content">
+        <textarea
+          rows="5"
+          class="w100per evaluate-content-ta"
+          @input="dealKeyWord"
+          v-model="customerInfo.description"
+          placeholder="请输入您的评价内容（可不填）"
+        ></textarea>
+      </div>
+    </div>
+    <div class="serviceEvaluate-btn-par">
+      <button
+        type="button"
+        class="common-submit-btn-primary"
+        @click="dealCancle"
+      >取消
+      </button>
+      <button
+        type="button"
+        class="common-submit-btn-default"
+        @click="dealSave"
+      >保存
+      </button>
     </div>
   </div>
 </template>
 
 <script>
 import {
-  Toast,
-  Button
+  Button,
+  Toast
 } from 'mand-mobile';
 
 export default {
-  name: 'SearchProduct',
+  name: 'ServiceEvaluate',
   components: {
     [Button.name]: Button,
   },
@@ -140,27 +154,31 @@ export default {
 </script>
 
 <style lang="scss">
-  .content-header{
+  .content-header {
     color: #333;
     font-size: 28px;
     line-height: 40px;
-    padding: 23px 25px ;
+    padding: 23px 25px;
   }
-  .evaluate-point{
+
+  .evaluate-point {
     text-align: center;
     color: #999;
     background: #fff;
     padding: 30px;
-    .star-style{
+
+    .star-style {
       text-align: center;
-      .start-item{
+
+      .start-item {
         width: 66px;
         height: 61px;
         display: inline-block;
         position: relative;
         margin-right: 24px;
         margin-top: 50px;
-        img{
+
+        img {
           position: absolute;
           left: 0px;
           top: 0px;
@@ -170,18 +188,21 @@ export default {
       }
     }
   }
-  .evaluate-content{
-    textarea{
+
+  .evaluate-content {
+    textarea {
       border: none;
       padding: 24px 25px;
       color: #666;
     }
   }
-  .tag-content{
+
+  .tag-content {
     padding: 24px;
     text-align: center;
     background: #fff;
-    .tag-item{
+
+    .tag-item {
       font-size: 24px;
       margin-right: 30px;
       padding: 7px;
@@ -189,27 +210,43 @@ export default {
       border-radius: 5px;
       color: #666;
     }
-    .tag-item.active{
+
+    .tag-item.active {
       color: #1969C6;
       border-color: #1969C6;
     }
   }
-  .evaluate-fb{
-    font-size:30px;
-    font-weight:bold;
-    color:#333;
-    line-height:70px;
+
+  .evaluate-fb {
+    font-size: 30px;
+    font-weight: bold;
+    color: #333;
+    line-height: 70px;
     height: 70px;
     padding-left: 20px;
   }
-  .md-example-child{
+
+  .serviceEvaluate-cnt {
+    padding-bottom: 132px;
+  }
+
+  .serviceEvaluate-btn-par {
     position: fixed;
-    left: 0;
     bottom: 0;
     width: 100%;
-    padding: 24px;
-    button{
-      width: 50%;
+    height: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+
+    .common-submit-btn-primary,
+    .common-submit-btn-default {
+      width: 49%;
     }
+  }
+
+  .evaluate-content-ta{
+    resize: none;
   }
 </style>
