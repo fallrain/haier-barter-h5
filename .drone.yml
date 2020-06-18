@@ -4,15 +4,14 @@ pipeline:
     environment:
       - AUTO_GENERATE=yes
     commands:
+      - cp ./Dockerfile ./context_Dockerfile
       - npm config set registry http://10.138.16.188:4873
       - npm install -g n
       - export N_NODE_MIRROR=https://npm.taobao.org/mirrors/node
       - n 10.16.3
-      - node -v
       - yarn config set registry http://10.138.16.188:4873
       - yarn
-      - yarn sit
-      - cp ./Dockerfile ./context_Dockerfile
+      - yarn prod
     volumes:
       - /data/npm/:/root/.npm
     when:
@@ -22,8 +21,8 @@ pipeline:
 
   publish:
     image: plugins/docker
-    registry: registry.haier.net
-    repo: registry.haier.net/duibei_gitlab/haier-barter-h5
+    registry: registry-bj.haier.net
+    repo: registry-bj.haier.net/duibei_gitlab/haier-barter-h5
     secrets: [ docker_username, docker_password ]
     dockerfile: ./context_Dockerfile
     context: .
@@ -37,7 +36,7 @@ pipeline:
 
   notify:
     name: notify
-    image: registry.haier.net/library/drone-notify:v0.0.33
+    image: registry-bj.haier.net/library/drone-notify:prod
     project: duibei
     pipelinegit: https://git.haier.net/hlht-duibei/haier-barter-h5.git
     receiver: haier-barter-h5
