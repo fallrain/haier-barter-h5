@@ -9,7 +9,7 @@
     >
       <b-order-follow-item-odd v-if="type==='odd'" :order="followItem"></b-order-follow-item-odd>
       <div v-else class="orderFollowItem-normal">
-        <b-order-follow-item-type-tag :businessScenarios="followItem.businessScenarios"></b-order-follow-item-type-tag>
+        <b-order-follow-item-type-tag :scenarioList="scenarioList" :businessScenarios="followItem.businessScenarios"></b-order-follow-item-type-tag>
         <b-order-follow-item-del
           v-if="followItem.flowStatus===1"
           :followItem="followItem"
@@ -92,9 +92,9 @@
               </span>
             </div>
           </div>
-		  <div class="row-class text-red" v-show="followItem.orderFreezeStatus === 1 || followItem.orderFreezeStatus === 2">
-			订单冻结（{{followItem.orderFreezeRemark}}）
-		  </div>
+          <div class="row-class text-red" v-show="followItem.orderFreezeStatus === 1 || followItem.orderFreezeStatus === 2">
+            订单冻结（{{followItem.orderFreezeRemark}}）
+          </div>
         </div>
         <!--<div-->
         <!--v-show="followItem.detailShow && followItem.showDetail"-->
@@ -259,6 +259,11 @@ export default {
     //   type: Object,
     //   require: true
     // },
+    // 业务场景数据
+    scenarioList: {
+      type: Array,
+      default: () => []
+    },
     list: {
       type: Array,
       require: true
@@ -375,7 +380,7 @@ export default {
     },
     followButtonClick(button, item) {
       console.log(item);
-      if(button.disabled){
+      if (button.disabled) {
         return;
       }
       const orderMode = JSON.parse(localStorage.getItem('userinfo')).orderMode;

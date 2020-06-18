@@ -45,6 +45,7 @@
       v-show="curScrollViewName==='scrollView'"
     >
       <b-order-follow-item
+        :scenarioList="scenarioList"
         :list="scrollView.list"
         @updateOrderType="updateOrderType"
         @followButtonClick="followButtonClicked"
@@ -75,6 +76,7 @@
       v-show="curScrollViewName==='scrollViewFinished'"
     >
       <b-order-follow-item
+        :scenarioList="scenarioList"
         :list="scrollViewFinished.list"
         @updateOrderType="updateOrderType"
         @followButtonClick="followButtonClicked"
@@ -135,6 +137,7 @@
       v-show="curScrollViewName==='scrollViewProgress'"
     >
       <b-order-follow-item
+        :scenarioList="scenarioList"
         :list="scrollViewProgress.list"
         @updateOrderType="updateOrderType"
         @followButtonClick="followButtonClicked"
@@ -206,7 +209,7 @@
         <div class="flex text-df algin-center justify-center line-height padding-top padding-bottom">
           <span>优惠券号：</span>
           <input v-model="verificationRemark" class="margin-left text-input" placeholder="请输入优惠券号"
-           @blur="inputBlur"/>
+                 @blur="inputBlur"/>
         </div>
         <div class="flex">
           <button
@@ -242,7 +245,6 @@ import {
 import {
   BOrderFollowItem
 } from '@/components/orderFollow';
-import BOrderFollowSearchBar from '../../components/orderFollow/BOrderFollowSearchBar';
 
 import {
   mapGetters
@@ -251,6 +253,8 @@ import {
 import {
   GET_USER
 } from '@/store/mutationsTypes';
+
+import BOrderFollowSearchBar from '../../components/orderFollow/BOrderFollowSearchBar';
 
 export default {
   name: '',
@@ -588,7 +592,7 @@ export default {
         orderNo: item.orderNo,
         businessScenarios
       };
-        // 爱到家需要传add4，add4是预留字段，由其他系统传递而来
+      // 爱到家需要传add4，add4是预留字段，由其他系统传递而来
       if (businessScenarios === 'ADJ') {
         args.add4 = item.add4;
         args.sourceSn = item.sourceSn;
@@ -834,8 +838,8 @@ export default {
     anylizeData(curList) {
       curList.forEach((item) => {
         /**
-           0-跟进中  1-已完成  2-草稿  3-暂不跟进 4-取消 5-异常
-           * */
+         0-跟进中  1-已完成  2-草稿  3-暂不跟进 4-取消 5-异常
+         * */
         if (item.flowStatus === 1) {
           // item.buttonList = [{ name: '录新订单' }, { name: '退货' }, { name: '换货' }];// 已完成
           // item.buttonList = [{ name: '录新订单' },{ name: '补录订单' }];// 已完成
