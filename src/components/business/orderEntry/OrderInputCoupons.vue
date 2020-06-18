@@ -58,6 +58,9 @@
 </template>
 
 <script>
+/**
+   * 输入卡券的组件，可自由输入卡券码，可增加可减少
+   * */
 import {
   Dialog
 } from 'mand-mobile';

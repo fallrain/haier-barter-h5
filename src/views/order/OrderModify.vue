@@ -95,11 +95,11 @@
           <b-order-product
             class="mb20"
             v-for="(item,index) in productList"
-            :key="index"
+            :key="item.id"
             :data="item"
             :index="index"
             :content="item.isInstall"
-            @onDel="onDelete"
+            @onDel="productDelete"
             @inputChange="inputChange"
           >
             <template
@@ -124,7 +124,7 @@
       title="已领优惠券："
     >
       <template
-        v-slot:right=""
+        v-slot:right
       >
         <button
           type="button"
@@ -159,7 +159,7 @@
             v-for="(item,index) in choseCoupons"
             :key="index"
           >
-            {{item.couponName}}
+            {{item.productModel}}：{{item.couponName}}
           </li>
         </ul>
       </template>
@@ -274,11 +274,12 @@
       :is-show.sync="isShowCoupons"
       :coupons="receivedCoupons"
     ></order-coupons>
-    <order-input-coupons
+    <order-input-coupons-with-product
       :is-show.sync="isShowInputCoupons"
       :userPhone="customerInfo.mobile"
+      :productList="productList"
       @confirm="orderInputCouponsConfirm"
-    ></order-input-coupons>
+    ></order-input-coupons-with-product>
   </div>
 </template>
 
@@ -304,8 +305,8 @@ import {
 } from '@/components/business';
 import addressData from '@/lib/address';
 import oderEntryMix from '@/mixin/order/oderEntry.mix';
-import OrderInputCoupons from '../../components/business/orderEntry/OrderInputCoupons';
 import OrderCoupons from '../../components/business/orderEntry/OrderCoupons';
+import OrderInputCouponsWithProduct from '../../components/business/orderEntry/OrderInputCouponsWithProduct';
 
 export default {
   name: 'OrderModify',
@@ -313,8 +314,6 @@ export default {
     oderEntryMix
   ],
   components: {
-    OrderCoupons,
-    OrderInputCoupons,
     [Dialog.name]: Dialog,
     BActivityList,
     BDatePicker,
@@ -326,7 +325,9 @@ export default {
     BPopAddressList,
     BPopCheckList,
     BRadioItem,
-    BTimeSectionPicker
+    BTimeSectionPicker,
+    OrderCoupons,
+    OrderInputCouponsWithProduct
   },
   data() {
     return {
@@ -532,7 +533,6 @@ export default {
         this.queryCustomerAddressList();
       }
       if (obj.rightsJson) {
-        const right = JSON.parse(obj.rightsJson);
         const rightsPro = JSON.parse(obj.rightsJson).rightName.split(',');
 
         this.rightsJson = obj.rightsJson;
@@ -1077,6 +1077,8 @@ export default {
         } = this.genCouponName();
         subInfo.couponNum = couponNum;
         subInfo.couponName = couponName;
+        // 更新产品列表的卡券信息
+        this.updateOrderDetailSaveQoList(this.choseCoupons, subInfo.orderDetailSaveQoList);
       }
       this.subInfo = subInfo;
       if (type === 2) {
@@ -1284,13 +1286,6 @@ export default {
     },
     saveOrder() {
 
-    },
-    onDelete(index) {
-      this.productList.splice(index, 1);
-      this.rightsList = [];
-      this.rightsJson = '';
-      this.rightName = '';
-      this.rightId = '';
     },
     // 模态框确认取消处理
     onBasicCancel() {

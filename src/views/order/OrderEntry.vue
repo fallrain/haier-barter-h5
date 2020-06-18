@@ -108,11 +108,11 @@
           <b-order-product
             class="mb20"
             v-for="(item,index) in productList"
-            :key="index"
+            :key="item.id"
             :data="item"
             :index="index"
             :content="item.isInstall"
-            @onDel="onDelete"
+            @onDel="productDelete"
             @inputChange="inputChange"
           >
           </b-order-product>
@@ -165,7 +165,7 @@
             v-for="(item,index) in choseCoupons"
             :key="index"
           >
-            {{item.couponName}}
+            {{item.productModel}}：{{item.couponName}}
           </li>
         </ul>
       </template>
@@ -288,11 +288,12 @@
       :is-show.sync="isShowCoupons"
       :coupons="receivedCoupons"
     ></order-coupons>
-    <order-input-coupons
+    <order-input-coupons-with-product
       :is-show.sync="isShowInputCoupons"
       :userPhone="customerInfo.mobile"
+      :productList="productList"
       @confirm="orderInputCouponsConfirm"
-    ></order-input-coupons>
+    ></order-input-coupons-with-product>
   </div>
 </template>
 
@@ -323,8 +324,8 @@ import {
 } from '@/components/business';
 import addressData from '@/lib/address';
 import oderEntryMix from '@/mixin/order/oderEntry.mix';
-import OrderInputCoupons from '../../components/business/orderEntry/OrderInputCoupons';
 import OrderCoupons from '../../components/business/orderEntry/OrderCoupons';
+import OrderInputCouponsWithProduct from '../../components/business/orderEntry/OrderInputCouponsWithProduct';
 
 export default {
   name: 'OrderEntry',
@@ -332,8 +333,6 @@ export default {
     oderEntryMix
   ],
   components: {
-    OrderCoupons,
-    OrderInputCoupons,
     [Toast.name]: Toast,
     [Dialog.name]: Dialog,
     BActivityList,
@@ -350,7 +349,9 @@ export default {
     [PopupTitleBar.name]: PopupTitleBar,
     [Button.name]: Button,
     [Icon.name]: Icon,
-    BTimeSectionPicker
+    BTimeSectionPicker,
+    OrderCoupons,
+    OrderInputCouponsWithProduct
   },
   data() {
     return {
@@ -1081,6 +1082,8 @@ export default {
         } = this.genCouponName();
         subInfo.couponNum = couponNum;
         subInfo.couponName = couponName;
+        // 更新产品列表的卡券信息
+        this.updateOrderDetailSaveQoList(this.choseCoupons, subInfo.orderDetailSaveQoList);
       }
       this.subInfo = subInfo;
       if (type === 2) {
@@ -1346,13 +1349,6 @@ export default {
     },
     saveOrder() {
 
-    },
-    onDelete(index) {
-      this.productList.splice(index, 1);
-      this.rightsList = [];
-      this.rightsJson = '';
-      this.rightName = '';
-      this.rightId = '';
     },
     inputChange() {
       this.rightId = '';
