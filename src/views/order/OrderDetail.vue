@@ -62,35 +62,24 @@
         </ul>
       </div>
     </b-fieldset>
-    <!--<b-fieldset
+    <b-fieldset
+      v-if="choseCoupons.length"
       class="mt16"
-      title="已领优惠券"
+      title="已选择优惠券："
       :showTitle="true"
-      v-show="receivedCoupons && receivedCoupons.length"
     >
-      <div>
-        <ul :class="['orderDetail-coupon-list',isCouponShowMore && 'active']">
+      <template>
+        <ul class="orderModify-receivedCoupons-list">
           <li
-            class="orderDetail-coupon-item"
-            v-for="(item,index) in receivedCoupons"
+            class="orderModify-receivedCoupons-item"
+            v-for="(item,index) in choseCoupons"
             :key="index"
           >
-            <span>{{item.activityName}}</span>
-            <span class="orderDetail-coupon-item-num">
-              <span class="num">1</span> 张
-            </span>
+            {{item.productModel}}：{{item.couponName}}
           </li>
         </ul>
-        <div
-          v-if="receivedCoupons.length > 2"
-          class="orderDetail-coupon-show-more"
-          @click="couponShowMore"
-        >
-          <span>{{isCouponShowMore?'收起':'查看更多'}}</span>
-          <i :class="['iconfont', 'icon-jiantou9',isCouponShowMore && 'reverse']"></i>
-        </div>
-      </div>
-    </b-fieldset>-->
+      </template>
+    </b-fieldset>
     <b-item
       class="mt16"
       title="送货时间："
@@ -135,9 +124,13 @@ import {
   BOrderProductConfirm,
 } from '@/components/form';
 
+import oderEntryMix from '@/mixin/order/oderEntry.mix';
 
 export default {
-  name: 'OrderModify',
+  name: 'OrderDetail',
+  mixins: [
+    oderEntryMix
+  ],
   components: {
     BActivityList,
     BFieldset,
@@ -189,9 +182,9 @@ export default {
       username: '',
       phone: '',
       // 已领优惠券
-      // receivedCoupons: [],
+      receivedCoupons: [],
       // 是否点了查看更多
-      // isCouponShowMore: false
+      isCouponShowMore: false
     };
   },
   computed: {},
@@ -238,9 +231,10 @@ export default {
           this.consignee.name = resData.consigneeName;
           this.username = resData.userName;
           this.phone = resData.userPhone;
-          // 查询已领优惠券信息
-          // 暂时去掉
-          // this.queryAdjCouponInfo(this.phone);
+          // 组合已选的优惠券
+          if (resData.couponNum) {
+            this.choseCoupons = this.genChoseCouponsByDetail(resData);
+          }
           this.consignee.phone = resData.consigneePhone;
           this.consignee.sex = resData.userSex;
           if (resData.userSex === 1) {
@@ -477,17 +471,4 @@ export default {
     }
   }
 
-  .orderDetail-coupon-show-more {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    font-size: 26px;
-    color: #1969C6;
-    padding-bottom: 16px;
-
-    .iconfont.reverse {
-      transform: rotateX(180deg);
-    }
-  }
 </style>

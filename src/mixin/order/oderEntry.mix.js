@@ -53,7 +53,20 @@ export default {
     },
     showInputCoupons() {
       /* 展示输入优惠券对话框 */
-      this.isShowInputCoupons = true;
+      const userPhone = this.customerInfo.mobile;
+      if (!userPhone) {
+        this.$dialog.alert({
+          content: '请添加顾客'
+        });
+        return;
+      }
+      if (this.productList.length) {
+        this.isShowInputCoupons = true;
+      } else {
+        this.$dialog.alert({
+          content: '请先选择产品'
+        });
+      }
     },
     showCoupons() {
       /* 展示输入优惠券对话框 */
@@ -78,21 +91,25 @@ export default {
         const { entryID } = v;
         return choseCoupons.findIndex(searchCoupon => searchCoupon.entryID === entryID) === index;
       });
-      console.log(this.choseCoupons);
     },
     genChoseCouponsByDetail(data) {
       /* 组合已选优惠券list */
       const {
-        couponNum,
-        couponName
+        orderDetailDtoList
       } = data;
-      const couponNumAy = couponNum.split(',');
-      const couponNameAy = couponName.split('&&');
-      return couponNumAy.map((v, index) => ({
-        entryID: v,
-        couponName: couponNameAy[index],
-        msg: couponNameAy[index]
-      }));
+      const coupons = [];
+      orderDetailDtoList.forEach((v, index) => {
+        if (v.couponNumDetail) {
+          coupons.push({
+            productModel: v.productModel,
+            codeIndex: index,
+            entryID: v.couponNumDetail,
+            couponName: v.couponNameDetail,
+            msg: v.couponNameDetail,
+          });
+        }
+      });
+      return coupons;
     },
     genCouponName() {
       /* 组合couponNum couponName */
@@ -110,6 +127,46 @@ export default {
         couponNum,
         couponName
       };
-    }
+    },
+    updateOrderDetailSaveQoList(choseCoupons, orderDetailSaveQoList) {
+      /* 更新产品列表里的卡券信息 */
+      // 先重置
+      orderDetailSaveQoList.forEach((v) => {
+        v.couponNumDetail = '';
+        v.couponNameDetail = '';
+      });
+      choseCoupons.forEach((v) => {
+        const {
+          codeIndex,
+          entryID,
+          couponName
+        } = v;
+        orderDetailSaveQoList[codeIndex].couponNumDetail = entryID;
+        orderDetailSaveQoList[codeIndex].couponNameDetail = couponName;
+      });
+    },
+    productDelete(index) {
+      /* 删除一条产品操作 */
+      this.rightsList = [];
+      this.rightsJson = '';
+      this.rightName = '';
+      this.rightId = '';
+      // 如果存在则删除已选
+      const beginIndex = this.choseCoupons.findIndex(v => v.codeIndex === index);
+      if (beginIndex > -1) {
+        this.choseCoupons.splice(beginIndex, 1);
+      }
+      const lastCoupons = this.choseCoupons[this.choseCoupons.length - 1];
+      // 如果删除的产品的下标没超过已经配置了卡券的产品的最大下标，则下标需要操作
+      if (lastCoupons && lastCoupons.codeIndex >= index) {
+        // 所有大于这个产品下标的，统统减1
+        this.choseCoupons.forEach((v) => {
+          if (v.codeIndex > index) {
+            v.codeIndex--;
+          }
+        });
+      }
+      this.productList.splice(index, 1);
+    },
   }
 };

@@ -19,7 +19,6 @@
             <img v-show="customerInfo.score > 2" src="@/assets/images/houseServicer/star.png" alt="" class="">
             <img v-show="customerInfo.score < 3" src="@/assets/images/houseServicer/star_default.png" alt="" class="">
           </div>
-          r
           <div class="start-item" @click="clickStar(4)">
             <img v-show="customerInfo.score > 3" src="@/assets/images/houseServicer/star.png" alt="" class="">
             <img v-show="customerInfo.score < 4" src="@/assets/images/houseServicer/star_default.png" alt="" class="">
