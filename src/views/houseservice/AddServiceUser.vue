@@ -432,16 +432,22 @@ export default {
       const {
         customerInfo
       } = this;
-      const data = {
+      const form = {
         userId: customerInfo.userId,
         storeId: this.storeId,
         pageNum: '1',
         pageSize: '100',
       };
-      this.houseService.queryHistoryPlan(data).then((res) => {
-        if (res.code === 1) {
+      this.houseService.queryHistoryPlan(form).then(({ code, data }) => {
+        if (code === 1) {
+          if (data.result) {
+            this.$dialog.alert({
+              content: '该用户没有历史服务记录'
+            });
+            return;
+          }
           this.showMask = true;
-          this.queryHistoryList = res.data.result;
+          this.queryHistoryList = data.result;
         }
       });
     },

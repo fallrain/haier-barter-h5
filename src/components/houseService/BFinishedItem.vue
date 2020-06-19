@@ -168,20 +168,18 @@ export default {
         content: '确定要推送邀请评价信息吗？',
         confirmText: '确定',
         onConfirm: () => {
-          this.houseService
-            .sendWeiXinMsg({
-              userId: item.userId,
-              userName: item.userName,
-              planDateTime: item.serviceTime,
-              planId: item.id,
-              servicerName: item.servicerName
-            })
-          // eslint-disable-next-line arrow-parens
-            .then(res => {
-              if (res.code === 1) {
-                Toast.succeed('邀请评价成功，请用户评价！');
-              }
-            });
+          this.houseService.sendWeiXinMsg({
+            userId: item.userId,
+            userName: item.userName,
+            planDateTime: item.serviceTime,
+            planId: item.id,
+            servicerName: item.servicerName
+          }).then((res) => {
+            if (res.code === 1) {
+              Toast.succeed('邀请评价成功，请用户评价！');
+              item.appraiseFlag = 2;
+            }
+          });
         }
       });
     },
