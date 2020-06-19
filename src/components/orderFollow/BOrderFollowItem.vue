@@ -38,7 +38,7 @@
           </span>
         </div>
         <div
-          :class="[['YZZJ','YJHX', 'ADJ', 'SMLD', 'SGLD', 'RC','YYFW','JKHXJ_RC','CASARTE_QZGK'].includes(followItem.businessScenarios) && 'pl56']"
+          :class="[scenarioCodeList.includes(followItem.businessScenarios) && 'pl56']"
         >
           <div class="row-class">
             <img
