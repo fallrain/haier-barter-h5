@@ -18,7 +18,7 @@
         ></b-order-follow-item-del>
         <div
           class="row-class pt10"
-          :class="[['YZZJ','YJHX', 'ADJ', 'SMLD', 'SGLD', 'RC','YYFW','JKHXJ_RC','CASARTE_QZGK'].includes(followItem.businessScenarios) && 'pl56']"
+          :class="[scenarioCodeList.includes(followItem.businessScenarios) && 'pl56']"
         >
           <span class="label-span">{{followItem.userName}}</span>
           <span class="sex-class" v-show="followItem.userSex === '1'">先生</span>
@@ -313,6 +313,11 @@ export default {
         ]
       }
     };
+  },
+  computed: {
+    scenarioCodeList() {
+      return this.scenarioList.map(v => v.itemCode);
+    }
   },
   created() {
     console.log(this.currentList);

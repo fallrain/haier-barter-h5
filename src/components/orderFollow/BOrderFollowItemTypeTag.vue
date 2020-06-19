@@ -41,6 +41,18 @@ export default {
           name: '认筹预约',
           className: 'orderFollowItem-type-tag-adj'
         },
+        PT: {
+          name: '拼团',
+          className: 'orderFollowItem-type-tag-adj'
+        },
+        MS: {
+          name: '秒杀',
+          className: 'orderFollowItem-type-tag-adj'
+        },
+        HD_PLUS: {
+          name: '活动PLUS',
+          className: 'orderFollowItem-type-tag-adj'
+        },
         SMLD: {
           name: '扫码录单',
           className: 'orderFollowItem-type-tag-smld'
