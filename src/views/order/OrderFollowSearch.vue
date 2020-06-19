@@ -593,7 +593,10 @@ export default {
         businessScenarios
       };
       // 爱到家需要传add4，add4是预留字段，由其他系统传递而来
-      if (businessScenarios === 'ADJ') {
+      if (businessScenarios === 'ADJ'
+        || businessScenarios === 'PT'
+        || businessScenarios === 'MS'
+        || businessScenarios === 'HD_PLUS') {
         args.add4 = item.add4;
         args.sourceSn = item.sourceSn;
       }
@@ -704,7 +707,10 @@ export default {
           }
         });
       } else if (val.name === '核销') {
-        if (info.businessScenarios === 'ADJ') {
+        if (info.businessScenarios === 'ADJ'
+          || info.businessScenarios === 'PT'
+          || info.businessScenarios === 'MS'
+          || info.businessScenarios === 'HD_PLUS') {
           this.showVerificationDialog_ADJ = true;
         } else {
           this.showVerificationDialog = true;
@@ -862,7 +868,10 @@ export default {
               item.buttonList.push({ name: '无法核销', disabled: true });
             }
           }
-          if (item.businessScenarios === 'ADJ') {
+          if (item.businessScenarios === 'ADJ'
+            || item.businessScenarios === 'PT'
+            || item.businessScenarios === 'MS'
+            || item.businessScenarios === 'HD_PLUS') {
             if (item.writeOff == '0') {
               item.buttonList.push({ name: '核销' });
             } else if (item.writeOff == '1') {
@@ -929,7 +938,12 @@ export default {
           }
           // 扫码录单 爱到家添加入户服务、潜在顾客、健康换新
           // 20200610-'入户服务'改为'发福利券'
-          if (item.businessScenarios === 'SMLD' || item.businessScenarios === 'ADJ' || item.businessScenarios === 'JKHXJ_RC') {
+          if (item.businessScenarios === 'SMLD'
+            || item.businessScenarios === 'ADJ'
+            || item.businessScenarios === 'PT'
+            || item.businessScenarios === 'MS'
+            || item.businessScenarios === 'HD_PLUS'
+            || item.businessScenarios === 'JKHXJ_RC') {
             item.showList.push({
               id: '20',
               name: '发福利券'

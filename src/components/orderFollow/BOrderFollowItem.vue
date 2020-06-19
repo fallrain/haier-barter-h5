@@ -61,7 +61,15 @@
             <span class="time-label">{{followItem.updatedTime}}</span>
             <div class="bOrderFollowItem-row-time-right">
               <span
-                v-show="followItem.flowStatus === 4 || followItem.flowStatus === 5 || followItem.businessScenarios === 'YYFW' || followItem.businessScenarios === 'ADJ' || followItem.businessScenarios === 'JKHXJ_RC' || followItem.businessScenarios === 'CASARTE_QZGK'"
+                v-show="followItem.flowStatus === 4
+                || followItem.flowStatus === 5
+                || followItem.businessScenarios === 'YYFW'
+                || followItem.businessScenarios === 'ADJ'
+                || followItem.businessScenarios === 'PT'
+                || followItem.businessScenarios === 'MS'
+                || followItem.businessScenarios === 'HD_PLUS'
+                || followItem.businessScenarios === 'JKHXJ_RC'
+                || followItem.businessScenarios === 'CASARTE_QZGK'"
                 @click="detailHide(followItem)"
                 class="information-class bOrderFollowItem-textBtn"
               >
@@ -110,13 +118,20 @@
         <!--爱获客、预约服务且订单正常下的详细信息-->
         <div
           v-if="
-          (followItem.businessScenarios === 'YYFW' || followItem.businessScenarios === 'ADJ')
+          (followItem.businessScenarios === 'YYFW'
+                || followItem.businessScenarios === 'ADJ'
+                || followItem.businessScenarios === 'PT'
+                || followItem.businessScenarios === 'MS'
+                || followItem.businessScenarios === 'HD_PLUS')
           && (followItem.flowStatus !== 4 && followItem.flowStatus !== 5)
         "
           class="information-p"
           v-show="followItem.detailShow"
         >
-          <p v-if="followItem.businessScenarios != 'ADJ'">
+          <p v-if="followItem.businessScenarios !== 'ADJ'
+                && followItem.businessScenarios !== 'PT'
+                && followItem.businessScenarios !== 'MS'
+                && followItem.businessScenarios !== 'HD_PLUS'">
             <strong>报名编号：</strong>
             {{followItem.sourceSn}}
           </p>
