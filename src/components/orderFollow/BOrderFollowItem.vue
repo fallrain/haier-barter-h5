@@ -9,7 +9,7 @@
     >
       <b-order-follow-item-odd v-if="type==='odd'" :order="followItem"></b-order-follow-item-odd>
       <div v-else class="orderFollowItem-normal">
-        <b-order-follow-item-type-tag :businessScenarios="followItem.businessScenarios"></b-order-follow-item-type-tag>
+        <b-order-follow-item-type-tag :scenarioList="scenarioList" :businessScenarios="followItem.businessScenarios"></b-order-follow-item-type-tag>
         <b-order-follow-item-del
           v-if="followItem.flowStatus===1"
           :followItem="followItem"
@@ -18,7 +18,7 @@
         ></b-order-follow-item-del>
         <div
           class="row-class pt10"
-          :class="[['YZZJ','YJHX', 'ADJ', 'SMLD', 'SGLD', 'RC','YYFW','JKHXJ_RC','CASARTE_QZGK'].includes(followItem.businessScenarios) && 'pl56']"
+          :class="[scenarioCodeList.includes(followItem.businessScenarios) && 'pl56']"
         >
           <span class="label-span">{{followItem.userName}}</span>
           <span class="sex-class" v-show="followItem.userSex === '1'">先生</span>
@@ -38,7 +38,7 @@
           </span>
         </div>
         <div
-          :class="[['YZZJ','YJHX', 'ADJ', 'SMLD', 'SGLD', 'RC','YYFW','JKHXJ_RC','CASARTE_QZGK'].includes(followItem.businessScenarios) && 'pl56']"
+          :class="[scenarioCodeList.includes(followItem.businessScenarios) && 'pl56']"
         >
           <div class="row-class">
             <img
@@ -61,7 +61,15 @@
             <span class="time-label">{{followItem.updatedTime}}</span>
             <div class="bOrderFollowItem-row-time-right">
               <span
-                v-show="followItem.flowStatus === 4 || followItem.flowStatus === 5 || followItem.businessScenarios === 'YYFW' || followItem.businessScenarios === 'ADJ' || followItem.businessScenarios === 'JKHXJ_RC' || followItem.businessScenarios === 'CASARTE_QZGK'"
+                v-show="followItem.flowStatus === 4
+                || followItem.flowStatus === 5
+                || followItem.businessScenarios === 'YYFW'
+                || followItem.businessScenarios === 'ADJ'
+                || followItem.businessScenarios === 'PT'
+                || followItem.businessScenarios === 'MS'
+                || followItem.businessScenarios === 'HD_PLUS'
+                || followItem.businessScenarios === 'JKHXJ_RC'
+                || followItem.businessScenarios === 'CASARTE_QZGK'"
                 @click="detailHide(followItem)"
                 class="information-class bOrderFollowItem-textBtn"
               >
@@ -92,9 +100,9 @@
               </span>
             </div>
           </div>
-		  <div class="row-class text-red" v-show="followItem.orderFreezeStatus === 1 || followItem.orderFreezeStatus === 2">
-			订单冻结（{{followItem.orderFreezeRemark}}）
-		  </div>
+          <div class="row-class text-red" v-show="followItem.orderFreezeStatus === 1 || followItem.orderFreezeStatus === 2">
+            订单冻结（{{followItem.orderFreezeRemark}}）
+          </div>
         </div>
         <!--<div-->
         <!--v-show="followItem.detailShow && followItem.showDetail"-->
@@ -110,13 +118,20 @@
         <!--爱获客、预约服务且订单正常下的详细信息-->
         <div
           v-if="
-          (followItem.businessScenarios === 'YYFW' || followItem.businessScenarios === 'ADJ')
+          (followItem.businessScenarios === 'YYFW'
+                || followItem.businessScenarios === 'ADJ'
+                || followItem.businessScenarios === 'PT'
+                || followItem.businessScenarios === 'MS'
+                || followItem.businessScenarios === 'HD_PLUS')
           && (followItem.flowStatus !== 4 && followItem.flowStatus !== 5)
         "
           class="information-p"
           v-show="followItem.detailShow"
         >
-          <p v-if="followItem.businessScenarios != 'ADJ'">
+          <p v-if="followItem.businessScenarios !== 'ADJ'
+                && followItem.businessScenarios !== 'PT'
+                && followItem.businessScenarios !== 'MS'
+                && followItem.businessScenarios !== 'HD_PLUS'">
             <strong>报名编号：</strong>
             {{followItem.sourceSn}}
           </p>
@@ -259,6 +274,11 @@ export default {
     //   type: Object,
     //   require: true
     // },
+    // 业务场景数据
+    scenarioList: {
+      type: Array,
+      default: () => []
+    },
     list: {
       type: Array,
       require: true
@@ -308,6 +328,11 @@ export default {
         ]
       }
     };
+  },
+  computed: {
+    scenarioCodeList() {
+      return this.scenarioList.map(v => v.itemCode);
+    }
   },
   created() {
     console.log(this.currentList);
@@ -375,7 +400,7 @@ export default {
     },
     followButtonClick(button, item) {
       console.log(item);
-      if(button.disabled){
+      if (button.disabled) {
         return;
       }
       const orderMode = JSON.parse(localStorage.getItem('userinfo')).orderMode;

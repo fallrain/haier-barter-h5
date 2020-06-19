@@ -11,18 +11,24 @@
 </template>
 
 <script>
+import merge from 'deepmerge';
+
 export default {
   name: 'BOrderFollowItemTypeTag',
   props: {
+    // 业务场景数据
+    scenarioList: {
+      type: Array,
+      default: () => []
+    },
     /* 来源类型 */
     businessScenarios: {
       type: String
     }
   },
-  computed: {
-    orderTypeMap() {
-      /* 获取订单类型名称和class */
-      return {
+  data() {
+    return {
+      localOrderTypeMap: {
         YZZJ: {
           name: '一站筑家',
           className: 'orderFollowItem-type-tag-yzzj'
@@ -32,7 +38,19 @@ export default {
           className: 'orderFollowItem-type-tag-yjhx'
         },
         ADJ: {
-          name: '爱获客',
+          name: '认筹预约',
+          className: 'orderFollowItem-type-tag-adj'
+        },
+        PT: {
+          name: '拼团',
+          className: 'orderFollowItem-type-tag-adj'
+        },
+        MS: {
+          name: '秒杀',
+          className: 'orderFollowItem-type-tag-adj'
+        },
+        HD_PLUS: {
+          name: '活动PLUS',
           className: 'orderFollowItem-type-tag-adj'
         },
         SMLD: {
@@ -59,10 +77,33 @@ export default {
           name: '卡萨帝潜客',
           className: 'orderFollowItem-type-tag-ksdqk'
         }
-      }[this.businessScenarios];
+      }
+    };
+  },
+  watch: {
+    scenarioList: {
+      handler() {
+        this.loadLocalOrderTypeMap();
+      },
+      deep: true,
+      immediate: true
+    }
+
+  },
+  computed: {
+    orderTypeMap() {
+      /* 获取订单类型名称和class */
+      return this.localOrderTypeMap[this.businessScenarios];
     },
   },
   methods: {
+    loadLocalOrderTypeMap() {
+      const map = {};
+      this.scenarioList.forEach((item) => {
+        map[item.itemCode] = { name: item.itemName };
+      });
+      this.localOrderTypeMap = merge(this.localOrderTypeMap, map);
+    }
   }
 };
 </script>
